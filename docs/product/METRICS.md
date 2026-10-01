@@ -28,6 +28,8 @@ fiabilité (ops).
 - Les événements métier critiques sont émis **côté serveur** (SQL/Functions), jamais seulement
   depuis l'app, pour qu'ils ne puissent pas manquer.
 - Aucune donnée personnelle dans `props` (pas de téléphone, d'email ni d'adresse).
+- Tout événement lié à une boutique porte `store_origin` (`marche`, `maison`, `magasin`) pour suivre
+  H11, et tout événement de commande porte `stores_count` pour suivre H2.
 
 ### Événements minimum de la phase 1
 
