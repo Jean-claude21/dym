@@ -1,110 +1,97 @@
 # DYM — Direction de design
 
-> Statut : **proposition, à choisir.** Trois concepts distincts, une recommandation.
-> Le concept retenu sera maquetté (`MOCKUPS.md`) puis testé sur le terrain avant tout code d'UI.
+> **Statut : validée le 2026-10-01.** Décision : [0009](../architecture/decisions/0009-design-direction.md).
+> Tokens : [`tokens/dym.tokens.json`](tokens/dym.tokens.json) · Écrans : [`screens/`](screens/).
 
-## Le constat
+![Écrans validés](screens/00-apercu.webp)
 
-L'ancien design system DYM était un Material générique (orange `#FF9800`, vert, gris), sans rien qui
-le distingue d'une app de livraison quelconque. Or DYM a un avantage que personne ne peut copier :
-**le marché ouest-africain lui-même**, avec ses étals, ses pagnes, ses cauris, ses zems et sa
-façon de vendre à la voix. Le design doit rendre DYM **reconnaissable en une seconde, joyeux, et
-plus simple que WhatsApp**.
+## La promesse visuelle
 
-## Contraintes qui ne bougent pas
+> **« Le marché de Lomé, livré chez toi. »**
 
-- Android d'entrée de gamme (2 Go RAM) : 60 images/s, animations légères, repli statique.
-- Plein soleil : contraste AA minimum partout, **mode soleil** à contraste renforcé.
-- Littératie variable : icône + mot sur chaque action, gros chiffres, cibles tactiles ≥ 48 dp.
-- Réseau instable : chaque écran a ses états vide, chargement, erreur et hors ligne, dessinés.
-- Générique : la devise, la langue et les moyens de paiement changent avec le pays sans casser la mise en page.
+L'ergonomie d'une app de courses de niveau mondial (Blinkit, Zepto, Instacart), habillée par les
+matières du marché ouest-africain, avec la **boutique** comme unité centrale : celle de l'étal au
+marché, celle de la vendeuse qui prépare depuis chez elle, celle de l'épicerie de quartier.
 
----
+## La trajectoire d'africanisation (règle de conception)
 
-## Concept A — « Le Marché Vivant »
+On part d'un standard universel irréprochable, puis on ajoute des couches locales. Une couche ne doit
+jamais retirer de vitesse ni de lisibilité.
 
-**Métaphore :** l'app est un marché qu'on parcourt.
+| Niveau | Contenu | Statut |
+|---|---|---|
+| 0 · Base universelle | Recherche d'abord, délai visible, « Racheter » en tête, ajout en un tap avec stepper, mini-panier flottant, jauge de livraison offerte, remplacements transparents | **Non négociable** |
+| 1 · Contenu local | Produits réels, unités du marché, quartiers, F CFA, cash et Mobile Money, boutiques nommées | **Obligatoire** |
+| 2 · Matières locales | Palette du marché, produits photographiés dans des contenants du marché (bassine émaillée, calebasse, panier tressé, sachet kraft) | **Identité de DYM** |
+| 3 · Signature | Dosée : 3 touches maximum par écran, voir ci-dessous | **Dosé** |
 
-- **Accueil = une allée de marché** de ta zone : chaque boutique est un **étal** avec son auvent.
-  Auvent levé = boutique ouverte ; volet baissé = fermée. On « flâne » au lieu de scroller une liste.
-- **Le panier tressé** : chaque article ajouté tombe dans un panier en osier ; on voit les petits
-  auvents des boutiques mélangées dedans. Le multi-boutiques devient visible et désirable (H2).
-- **Le suivi = la course du zem** : un moto-taxi avance sur un chemin, du stand de Fatou jusqu'à
-  la porte d'Awa, à chaque changement de statut.
-- **Le cauri comme symbole de valeur** (l'ancienne monnaie de la région) : récompenses, badges de
-  fiabilité, célébrations.
-- **Moments signature** : la **première vente** de Fatou fait pleuvoir des cauris, avec un son de
-  caisse, et produit une carte partageable « Ma première vente sur DYM » ; la **caisse du soir**
-  (récap de 19 h) compte les cauris de la journée.
+### Touches de signature autorisées (niveau 3)
 
-**Pour :** très mémorable ; rend le multi-boutiques concret ; parle aux deux personas.
-**Risques :** illustration lourde (coût de production, performances) ; ne doit jamais ralentir
-la recherche d'un produit précis.
+| Touche | Où | Rôle |
+|---|---|---|
+| Boutiques avec badge d'origine | Accueil, rayon, panier, page boutique | Confiance : on sait de qui on achète |
+| Le zem | Pastille de délai, suivi, ramassage côté vendeuse | Réalité de la livraison à Lomé |
+| Le motif kente éwé | **Splash uniquement** | Signature de marque |
 
-## Concept B — « Le Pagne »
+### Interdits
 
-**Métaphore :** DYM est un tissu ; chaque boutique a son motif.
+- Aucune monnaie fictive (cauris, points, jetons) : tout avantage est exprimé en **F CFA**.
+- Aucun motif derrière du texte.
+- Pas de puce de langues permanente : les langues locales apparaissent à l'appui sur le micro.
+- Pas d'interface sombre ni de verre flouté (lisibilité en plein soleil, performances sur 2 Go de RAM).
 
-- **Identité générative** : à l'onboarding, Fatou choisit son motif parmi trois motifs générés à
-  partir du nom et de la catégorie de sa boutique (géométries inspirées du kente éwé, du wax, de
-  l'adire). Elle obtient **une identité de marque en dix secondes**, sans logo ni photo. Fini les
-  avatars vides.
-- **Cartes « coupons de tissu »** : chaque produit est présenté sur la bande de motif de sa boutique ;
-  dans le panier, les bandes s'empilent comme des pagnes pliés.
-- **Étiquettes cousues** : prix, statuts et badges ont la forme d'étiquettes de tissu.
-- **Affiches pour le statut WhatsApp** : un tap génère une affiche produit dans le cadre du motif
-  de la boutique, avec un lien profond. Le canal où vend déjà Fatou devient **la machine
-  d'acquisition de DYM**.
-- **Transitions** : le tissu se déplie à l'ouverture d'une fiche.
+## La boutique et ses origines
 
-**Pour :** distinctif, très partageable, système graphique cohérent et extensible.
-**Risques :** surcharge visuelle si les motifs débordent des zones d'identité ; respect de
-l'origine et du sens des motifs (à valider avec des créateurs locaux).
+| Origine | Badge | Exemple | Mise en avant |
+|---|---|---|---|
+| Au marché | Vert tendre, icône d'étal | Étal d'Akossiwa · Bè | Fraîcheur, arrivage du matin |
+| Fait maison | Pêche, icône de maison | Les jus d'Esi · Tokoin | Savoir-faire, histoire |
+| Boutique | Indigo clair, icône de devanture | Alimentation Kodjo · Bè Kpota | Choix, horaires élargis |
 
-## Concept C — « La Voix du Marché »
+Pour une boutique « Fait maison », l'app n'affiche que le **quartier** ; l'adresse exacte n'est
+partagée qu'avec le livreur, au moment du ramassage.
 
-**Métaphore :** on vend et on achète en parlant, comme au marché et sur WhatsApp.
+## Système
 
-- **Tantie DYM** : un personnage animé, à la fois guide et voix de l'app, qui accompagne les
-  premiers pas, en français puis en langues locales (éwé, mina, fon).
-- **Publier en parlant** : photo + note vocale « trois pagnes wax, cinq mille francs » → la fiche
-  se remplit toute seule.
-- **Notifications vocales** façon note WhatsApp, pour les vendeuses qui lisent peu.
-- **Chercher en parlant** : bouton micro géant sur l'accueil.
+| Élément | Règle | Token |
+|---|---|---|
+| Action principale | Une seule couleur : vert gombo | `color.brand.gombo` |
+| Mises en avant | Jaune plantain (délai, jauges, bouton sur fond vert) | `color.accent.plantain` |
+| Promotions, compteurs, alertes | Rouge piment ; badges avec texte blanc en `piment-strong` | `color.accent.piment(-strong)` |
+| Fond | Crème chaud ; cartes blanches | `color.surface.*` |
+| Typographie | Grotesque arrondie grasse pour titres et prix (chiffres tabulaires) ; sans-serif lisible pour le texte ; 3 tailles max par écran | `typography.*` |
+| Formes | Cartes 24 px, tuiles 20 px, puces en pilule | `radius.*` |
+| Cibles tactiles | 48 px minimum | `size.touch-min` |
+| Contraste | AA (4,5:1) pour tout texte ; valeurs mesurées dans les tokens | — |
 
-**Pour :** le plus inclusif ; très différenciant ; s'appuie sur un usage réel (les notes vocales).
-**Risques :** dépend de l'IA (phase 4) ; un personnage peut paraître enfantin ; coût de production
-de la voix en langues locales.
+Typographies proposées (Nunito, Nunito Sans) : **à valider sur un Android d'entrée de gamme** avant
+de figer `dym_ui`.
 
----
+## Écrans validés
 
-## Recommandation : A × B, avec la voix en réserve
+| # | Écran | Fichier | Parcours (`MOCKUPS.md`) |
+|---|---|---|---|
+| 1 | Splash | [01-splash](screens/01-splash.webp) | — |
+| 2 | Accueil | [02-accueil](screens/02-accueil.webp) | 2 |
+| 3 | Rayon Légumes | [03-rayon-legumes](screens/03-rayon-legumes.webp) | 2, 3 |
+| 4 | Page boutique (fait maison) | [04-page-boutique](screens/04-page-boutique.webp) | 2 |
+| 5 | Panier multi-boutiques | [05-panier](screens/05-panier.webp) | 4, 5 |
+| 6 | Suivi | [06-suivi](screens/06-suivi.webp) | 7 |
+| 7 | Vendeuse · « Où vends-tu ? » | [07-vendeuse-ou-vends-tu](screens/07-vendeuse-ou-vends-tu.webp) | 9 |
+| 8 | Vendeuse · Commande reçue | [08-vendeuse-commande-recue](screens/08-vendeuse-commande-recue.webp) | 12 |
 
-- **Structure et moments forts de A** : allée d'étals, panier tressé, course du zem, cauris.
-- **Moteur d'identité de B** : le motif génératif est le « logo » de chaque boutique, et il habille
-  ses étals, ses cartes produits et ses affiches WhatsApp.
-- **C en phase 4** : la publication vocale et la recherche vocale arrivent avec la spec
-  `search-voice-image`, si H8 et H10 sont validées. Tantie DYM reste une option testée en maquette.
+Ce sont des **rendus de concept générés par IA** (ChatGPT, gpt-image-2), pas des fichiers de
+production. À reprendre lors de la construction :
 
-Pourquoi : A rend DYM mémorable et rend visible le multi-boutiques (H2) ; B résout un vrai problème
-(les boutiques informelles n'ont pas d'identité visuelle) et ouvre une boucle d'acquisition gratuite
-via les statuts WhatsApp ; aucun des deux ne dépend de l'IA pour fonctionner.
+- vraies photos des vendeuses et des produits (les visages générés ne sont pas constants d'un écran à l'autre) ;
+- vraie carte de Lomé dans le suivi (les quartiers sont réels, leurs positions approximatives) ;
+- logo DYM à dessiner (le splash n'utilise qu'un mot en typographie grasse) ;
+- illustration du jus de baobab à corriger.
 
-## Langage visuel proposé (pour A × B)
+## Explorations écartées
 
-| Élément | Proposition |
-|---|---|
-| Couleurs | Indigo adire (marque), ocre et terracotta (chaleur), vert kente (succès), sur un fond crème (lisible au soleil). Couleurs sémantiques distinctes des motifs. |
-| Typographie | Une display condensée et expressive pour les titres et les prix ; une sans-serif humaniste très lisible pour le texte. Chiffres tabulaires pour les montants. |
-| Formes | Coins généreux, bords « cousus » (pointillés) pour les étiquettes, auvents festonnés. |
-| Motion | Rive pour les moments signature (cauris, zem, panier) ; `flutter_animate` pour les micro-interactions ; tout est désactivable (mode économie). |
-| Son | Trois sons maximum : nouvelle commande (fort, distinctif), vente encaissée, erreur. Coupables. |
-| Illustration | Scènes de marché pour les états vides et hors ligne (« le marché est fermé, on revient vite »). |
-
-## Garde-fous
-
-- Les motifs ne servent qu'aux **zones d'identité** (auvent, bande de carte, affiche) ; jamais derrière du texte.
-- Tout moment « fun » doit être **plus rapide** que sa version neutre, ou désactivable.
-- Les motifs et symboles sont choisis avec leur sens et validés par des créatrices et créateurs
-  locaux ; pas de pastiche.
-- Chaque concept est testé en maquette avec 5 vendeuses et 5 clientes avant d'être figé.
+Explorées le 2026-10-01 puis écartées : « Marché Vivant » illustré, « Pagne » (motifs générés),
+« Voix du Marché » (personnage guide), « Lagune » (sombre, verre liquide), « Argile » (3D), « Couverture »
+(éditorial), « Brut » (néo-brutalisme). Les éléments réutilisables : la grille bento d'« Argile » pour
+le tableau de bord vendeuse, et le motif généré de « Pagne » comme identité par défaut d'une boutique
+sans photo.

@@ -1,0 +1,90 @@
+{
+  "$description": "DYM design tokens — direction « Le marché de Lomé, livré chez toi » (validée le 2026-10-01). Format W3C Design Tokens (DTCG). Source de vérité pour packages/ui/dym_ui.",
+  "color": {
+    "$type": "color",
+    "brand": {
+      "gombo": { "$value": "#3F7D32", "$description": "Marque et action principale unique (boutons, navigation active, logo). Blanc dessus : 5.01:1." },
+      "gombo-deep": { "$value": "#2E5E24", "$description": "Fond de l'app vendeuse, texte vert sur fonds clairs. Blanc dessus : 7.66:1." }
+    },
+    "accent": {
+      "plantain": { "$value": "#F2C14E", "$description": "Mises en avant : pastille de délai, jauges, bouton secondaire sur fond vert. Texte encre dessus : 10.29:1." },
+      "piment": { "$value": "#D9442B", "$description": "Aplats et grands textes uniquement (blanc dessus : 4.36:1, insuffisant pour le petit texte)." },
+      "piment-strong": { "$value": "#B8341E", "$description": "Badges promo et pastilles de compteur avec texte blanc : 5.92:1." },
+      "huile": { "$value": "#E8892B", "$description": "Touche secondaire décorative (motifs, illustrations). Pas de texte dessus." },
+      "indigo": { "$value": "#2B3A8F", "$description": "Touche secondaire, liens, badge « Boutique »." }
+    },
+    "surface": {
+      "background": { "$value": "#FBF6EC", "$description": "Fond crème chaud, lisible en plein soleil." },
+      "card": { "$value": "#FFFFFF" }
+    },
+    "text": {
+      "primary": { "$value": "#1F1A14", "$description": "Encre chaude. Sur crème : 16.03:1." },
+      "secondary": { "$value": "#6E6458", "$description": "Sur crème : 5.38:1 ; sur blanc : 5.79:1." },
+      "on-brand": { "$value": "#FFFFFF" }
+    },
+    "tint": {
+      "peche": { "$value": "#F8E3D3" },
+      "vert-tendre": { "$value": "#E9F1DC" },
+      "plantain-clair": { "$value": "#FBEFC9" },
+      "piment-clair": { "$value": "#F6DAD3" },
+      "indigo-clair": { "$value": "#E1E5F3" }
+    },
+    "origin": {
+      "$description": "Badges d'origine de boutique (fond + texte, contraste AA).",
+      "marche-bg": { "$value": "{color.tint.vert-tendre}" },
+      "marche-fg": { "$value": "{color.brand.gombo-deep}", "$description": "6.59:1" },
+      "maison-bg": { "$value": "{color.tint.peche}" },
+      "maison-fg": { "$value": "#8C4513", "$description": "5.69:1" },
+      "boutique-bg": { "$value": "{color.tint.indigo-clair}" },
+      "boutique-fg": { "$value": "{color.accent.indigo}", "$description": "7.94:1" }
+    }
+  },
+  "font": {
+    "family": {
+      "$type": "fontFamily",
+      "display": { "$value": ["Nunito", "sans-serif"], "$description": "Titres et prix : grotesque arrondie chaleureuse. À valider sur appareil." },
+      "body": { "$value": ["Nunito Sans", "sans-serif"], "$description": "Texte courant. À valider sur appareil." }
+    },
+    "weight": {
+      "$type": "fontWeight",
+      "regular": { "$value": 400 },
+      "semibold": { "$value": 600 },
+      "bold": { "$value": 700 },
+      "extrabold": { "$value": 800 }
+    }
+  },
+  "typography": {
+    "$type": "typography",
+    "display": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 800, "fontSize": "28px", "lineHeight": 1.15 }, "$description": "Titre d'écran." },
+    "title": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 800, "fontSize": "20px", "lineHeight": 1.2 }, "$description": "Titre de section." },
+    "price": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 800, "fontSize": "18px", "lineHeight": 1.2, "fontFeatureSettings": "tnum" }, "$description": "Prix, chiffres tabulaires." },
+    "body": { "$value": { "fontFamily": "{font.family.body}", "fontWeight": 400, "fontSize": "15px", "lineHeight": 1.4 } },
+    "label": { "$value": { "fontFamily": "{font.family.body}", "fontWeight": 600, "fontSize": "13px", "lineHeight": 1.3 }, "$description": "Badges, unités, boutique d'origine. Jamais en dessous de 12px." }
+  },
+  "space": {
+    "$type": "dimension",
+    "1": { "$value": "4px" },
+    "2": { "$value": "8px" },
+    "3": { "$value": "12px" },
+    "4": { "$value": "16px", "$description": "Marge latérale d'écran." },
+    "5": { "$value": "24px" },
+    "6": { "$value": "32px" }
+  },
+  "radius": {
+    "$type": "dimension",
+    "chip": { "$value": "999px" },
+    "tile": { "$value": "20px" },
+    "card": { "$value": "24px" },
+    "button": { "$value": "16px" }
+  },
+  "size": {
+    "$type": "dimension",
+    "touch-min": { "$value": "48px", "$description": "Cible tactile minimale." },
+    "add-button": { "$value": "40px" },
+    "avatar-boutique": { "$value": "56px" }
+  },
+  "shadow": {
+    "$type": "shadow",
+    "card": { "$value": { "color": "#1F1A1414", "offsetX": "0px", "offsetY": "4px", "blur": "16px", "spread": "0px" }, "$description": "Ombre très douce." }
+  }
+}
