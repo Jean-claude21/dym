@@ -1,13 +1,13 @@
 {
-  "$description": "DYM design tokens — direction « Le marché de Lomé, livré chez toi » (validée le 2026-10-01). Format W3C Design Tokens (DTCG). Source de vérité pour packages/ui/dym_ui.",
+  "$description": "DYM design tokens — direction « Le marché de Lomé, livré chez toi » (validée le 2026-10-01 ; vert profond adopté le 2026-10-02, décision 0011). Format W3C Design Tokens (DTCG). Source de vérité pour packages/ui/dym_ui.",
   "color": {
     "$type": "color",
     "brand": {
-      "gombo": { "$value": "#3F7D32", "$description": "Marque et action principale unique (boutons, navigation active, logo). Blanc dessus : 5.01:1." },
-      "gombo-deep": { "$value": "#2E5E24", "$description": "Fond de l'app vendeuse, texte vert sur fonds clairs. Blanc dessus : 7.66:1." }
+      "primary": { "$value": "#0B5D3F", "$description": "Vert profond : marque et action principale unique (boutons, navigation active, logo). Blanc dessus : 7.92:1 ; sur crème : 7.35:1." },
+      "primary-deep": { "$value": "#08452F", "$description": "Vert très profond : fond de l'app vendeuse, texte vert sur fonds clairs. Blanc dessus : 11.04:1." }
     },
     "accent": {
-      "plantain": { "$value": "#F2C14E", "$description": "Mises en avant : pastille de délai, jauges, bouton secondaire sur fond vert. Texte encre dessus : 10.29:1." },
+      "plantain": { "$value": "#F2C14E", "$description": "Mises en avant : pastille de délai, jauges, bouton sur fond vert (4.72:1 sur primary). Texte encre dessus : 10.29:1." },
       "piment": { "$value": "#D9442B", "$description": "Aplats et grands textes uniquement (blanc dessus : 4.36:1, insuffisant pour le petit texte)." },
       "piment-strong": { "$value": "#B8341E", "$description": "Badges promo et pastilles de compteur avec texte blanc : 5.92:1." },
       "huile": { "$value": "#E8892B", "$description": "Touche secondaire décorative (motifs, illustrations). Pas de texte dessus." },
@@ -32,7 +32,7 @@
     "origin": {
       "$description": "Badges d'origine de boutique (fond + texte, contraste AA).",
       "marche-bg": { "$value": "{color.tint.vert-tendre}" },
-      "marche-fg": { "$value": "{color.brand.gombo-deep}", "$description": "6.59:1" },
+      "marche-fg": { "$value": "{color.brand.primary-deep}", "$description": "9.5:1" },
       "maison-bg": { "$value": "{color.tint.peche}" },
       "maison-fg": { "$value": "#8C4513", "$description": "5.69:1" },
       "boutique-bg": { "$value": "{color.tint.indigo-clair}" },
