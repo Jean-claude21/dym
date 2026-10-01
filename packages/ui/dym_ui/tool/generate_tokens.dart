@@ -30,6 +30,8 @@ void main() {
   _writeDimensions(out, tokens, 'space', 'DymTokenSpace', prefix: 's');
   _writeDimensions(out, tokens, 'radius', 'DymTokenRadius');
   _writeDimensions(out, tokens, 'size', 'DymTokenSize');
+  _writeDimensions(out, tokens, 'breakpoint', 'DymTokenBreakpoints');
+  _writeDimensions(out, tokens, 'layout', 'DymTokenLayout');
   _writeFonts(out, tokens);
   _writeTypography(out, tokens);
   _writeShadows(out, tokens);
@@ -125,7 +127,8 @@ void _writeDimensions(
   for (final t in tokens.values.where((t) => t.path.startsWith('$group.'))) {
     final name = prefix + _camel(t.path.substring(group.length + 1));
     _doc(out, t);
-    out.writeln('  static const double $name = ${_px(t.value)};');
+    final value = _px(_resolve(tokens, t.value));
+    out.writeln('  static const double $name = $value;');
   }
   out
     ..writeln('}')

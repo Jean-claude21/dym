@@ -83,6 +83,46 @@ abstract final class DymTokenSize {
   static const double avatarBoutique = 56.0;
 }
 
+abstract final class DymTokenBreakpoints {
+  /// Compacte → moyenne (tablette portrait).
+  static const double medium = 600.0;
+
+  /// Moyenne → étendue (tablette paysage, téléphone paysage).
+  static const double expanded = 840.0;
+
+  /// Étendue → large (bureau).
+  static const double large = 1200.0;
+}
+
+abstract final class DymTokenLayout {
+  /// Marge latérale en classe compacte.
+  static const double gutterCompact = 16.0;
+
+  /// Marge latérale en classe moyenne.
+  static const double gutterMedium = 24.0;
+
+  /// Marge latérale en classe étendue.
+  static const double gutterExpanded = 32.0;
+
+  /// Marge latérale en classe large.
+  static const double gutterLarge = 32.0;
+
+  /// Largeur maximale d'un contenu (grilles, accueil).
+  static const double contentMax = 1200.0;
+
+  /// Largeur maximale d'un formulaire ou d'une page de lecture.
+  static const double formMax = 600.0;
+
+  /// Largeur maximale d'un élément flottant (mini-panier).
+  static const double floatingMax = 560.0;
+
+  /// Largeur du rail de navigation.
+  static const double railWidth = 88.0;
+
+  /// Largeur du rail de navigation étendu.
+  static const double railExtendedWidth = 220.0;
+}
+
 abstract final class DymTokenFonts {
   static const package = 'dym_ui';
 
