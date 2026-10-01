@@ -112,8 +112,15 @@ Changer un élément de ce tableau exige une décision dans `docs/architecture/d
 
 - Spec Kit : `/speckit-specify` → `/speckit-clarify` → `/speckit-plan` → `/speckit-tasks` →
   `/speckit-analyze` → `/speckit-implement`. Pas de code produit hors spec.
-- Une branche par spec (extension git de Spec Kit) ; commits conventionnels
-  (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
+- Modèle de branches :
+  - `main` : production. Ne reçoit que des fusions depuis `dev` (release) ou `hotfix/<slug>`.
+  - `dev` : intégration. Cible de toutes les pull requests de travail.
+  - `feat/NNN-<slug>` : une branche par spec, créée depuis `dev` par l'extension git de Spec Kit
+    (préfixe `feat`). Le numéro en tête du dernier segment est exigé par Spec Kit.
+  - `feat/<slug>` : travail hors spec (design, documentation), créé depuis `dev`.
+  - `hotfix/<slug>` : correctif urgent créé depuis `main`, fusionné dans `main` puis dans `dev`.
+- Aucun commit direct sur `main` ni sur `dev` : tout passe par une pull request.
+- Commits conventionnels (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
 - Relecture humaine obligatoire avant fusion pour : migrations, RLS, authentification, argent,
   transitions de statut, webhooks.
 - La CI exécute l'analyse, les tests Dart, pgTAP et la vérification des migrations sur une branche
@@ -130,4 +137,4 @@ Changer un élément de ce tableau exige une décision dans `docs/architecture/d
   toute dérogation est justifiée dans la section « Complexity Tracking ».
 - Guide opérationnel pour les agents : `AGENTS.md`.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
+**Version**: 1.1.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
