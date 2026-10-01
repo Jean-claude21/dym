@@ -38,6 +38,20 @@ melos run test
 
 Les scripts Melos sont définis dans le `pubspec.yaml` racine (créé par la spec `foundation`).
 
+## Branches
+
+| Branche | Rôle | Créée depuis | Fusionnée dans |
+|---|---|---|---|
+| `main` | Production | — | — |
+| `dev` | Intégration | `main` | `main` (release) |
+| `feat/NNN-<slug>` | Une spec Spec Kit | `dev` | `dev` |
+| `feat/<slug>` | Travail hors spec (design, docs) | `dev` | `dev` |
+| `hotfix/<slug>` | Correctif urgent | `main` | `main`, puis `dev` |
+
+- Toujours se placer sur `dev` à jour avant `/speckit-specify` : la branche de spec est créée
+  depuis la branche courante, avec le préfixe `feat`.
+- Pas de commit direct sur `main` ou `dev` : une pull request à chaque fois.
+
 ## Règles de code
 
 - **Où mettre une règle :** montant, statut, permission → SQL (fonction + RLS + test pgTAP).
