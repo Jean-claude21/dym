@@ -1,0 +1,33 @@
+name: dym_gallery
+description: Galerie de validation du design system DYM (outil interne, non publié).
+version: 0.1.0+1
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  dym_core:
+    path: ../../packages/foundation/dym_core
+  dym_ui:
+    path: ../../packages/ui/dym_ui
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^11.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/demo/products/
+    - assets/demo/aisles/
+    - assets/demo/people/
+    - assets/demo/stores/
+    - assets/demo/illustrations/
+    - assets/reference/
