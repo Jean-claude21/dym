@@ -20,7 +20,8 @@ dym/
 │  ├─ dym_client/        # Awa
 │  ├─ dym_vendor/        # Fatou
 │  ├─ dym_admin/         # Ops, Flutter Web
-│  └─ dym_delivery/      # Phase 5, créé sur déclencheur
+│  ├─ dym_delivery/      # Phase 5, créé sur déclencheur
+│  └─ dym_gallery/       # Outil : galerie de validation de dym_ui (non publiée)
 ├─ packages/
 │  ├─ foundation/
 │  │  ├─ dym_core/       # Result, Failure, Money, Country, Currency, validateurs, horloge

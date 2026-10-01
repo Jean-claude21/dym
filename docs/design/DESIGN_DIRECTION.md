@@ -1,6 +1,6 @@
 # DYM — Direction de design
 
-> **Statut : validée le 2026-10-01.** Décision : [0009](../architecture/decisions/0009-design-direction.md).
+> **Statut : validée le 2026-10-01.** Décisions : [0009](../architecture/decisions/0009-design-direction.md), couleur de marque [0011](../architecture/decisions/0011-brand-green.md) (vert profond, 2026-10-02).
 > Tokens : [`tokens/dym.tokens.json`](tokens/dym.tokens.json) · Écrans : [`screens/`](screens/).
 
 ![Écrans validés](screens/00-apercu.webp)
@@ -55,7 +55,7 @@ partagée qu'avec le livreur, au moment du ramassage.
 
 | Élément | Règle | Token |
 |---|---|---|
-| Action principale | Une seule couleur : vert gombo | `color.brand.gombo` |
+| Action principale | Une seule couleur : vert profond `#0B5D3F` | `color.brand.primary` |
 | Mises en avant | Jaune plantain (délai, jauges, bouton sur fond vert) | `color.accent.plantain` |
 | Promotions, compteurs, alertes | Rouge piment ; badges avec texte blanc en `piment-strong` | `color.accent.piment(-strong)` |
 | Fond | Crème chaud ; cartes blanches | `color.surface.*` |
