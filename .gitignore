@@ -1,0 +1,53 @@
+# --- OS / IDE ---
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+*.iml
+!.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# --- Flutter / Dart ---
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec_overrides.yaml
+coverage/
+**/ios/Pods/
+**/ios/.symlinks/
+**/android/.gradle/
+**/android/local.properties
+**/android/key.properties
+*.jks
+*.keystore
+
+# --- FVM (le SDK est local à la machine, seul .fvmrc est versionné) ---
+.fvm/
+
+# --- Node / Neon Functions ---
+node_modules/
+dist/
+.turbo/
+*.tsbuildinfo
+
+# --- Secrets : jamais versionnés ---
+.env
+.env.*
+!.env.example
+*.pem
+google-services.json
+GoogleService-Info.plist
+firebase_options*.dart
+!firebase_options.example.dart
+
+# --- Agents : on versionne les skills, pas l'état local ---
+.claude/settings.local.json
+.claude/*.local.*
+
+# --- Divers ---
+*.log
+tmp/
