@@ -15,3 +15,5 @@ Format : **Statut** · **Contexte** · **Décision** · **Conséquences** · **A
 | 0006 | [Version de Flutter](0006-flutter-version.md) | Acceptée |
 | 0007 | [Authentification Google + OTP email](0007-auth.md) | Acceptée |
 | 0008 | [Spec Kit comme flux de développement](0008-spec-kit.md) | Acceptée |
+| 0009 | [Direction de design « Le marché de Lomé, livré chez toi »](0009-design-direction.md) | Acceptée |
+| 0010 | [Courses au marché et boutique comme unité centrale](0010-market-groceries-boutiques.md) | Acceptée |

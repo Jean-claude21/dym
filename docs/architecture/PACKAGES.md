@@ -13,7 +13,7 @@
 
 ## Arborescence
 
-```
+```text
 dym/
 ├─ .fvmrc · pubspec.yaml (workspace + melos) · analysis_options.yaml
 ├─ apps/
@@ -54,7 +54,7 @@ dym/
 | `dym_platform` | Infra | Plugins Flutter | Apps, features | `foundation` |
 | `dym_models` | Domaine | `dym_core`, freezed | `dym_data`, features, apps | `foundation` |
 | `dym_data` | Données | `neon_kit`, `dym_models` | Features, apps | `foundation` |
-| `dym_ui` | UI | `dym_core`, `dym_l10n` | Features, apps | `foundation` |
+| `dym_ui` | UI (thème généré depuis `docs/design/tokens/dym.tokens.json`) | `dym_core`, `dym_l10n` | Features, apps | `foundation` |
 | `dym_auth` | Feature | Stacked, `dym_data`, `dym_ui` | 4 apps | `auth` |
 | `dym_notifications` | Feature | idem | Client, vendeur, livreur | `order-lifecycle` |
 | `dym_chat` | Feature | idem | Client, vendeur | `messaging` |

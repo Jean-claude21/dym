@@ -37,7 +37,7 @@ l'exclut de V1.
 
 | Livrable | Contenu | Heures |
 |---|---|---|
-| Direction de design | 3 concepts → 1 choisi (`docs/design/DESIGN_DIRECTION.md`) | 2 h |
+| Direction de design | **Fait (2026-10-01)** : « Le marché de Lomé, livré chez toi », 8 écrans validés, tokens (`docs/design/DESIGN_DIRECTION.md`) | 2 h |
 | Maquettes clés | 19 parcours cliquables (`docs/design/MOCKUPS.md`), états vide/chargement/erreur/hors ligne, 2 pays | 6-8 h |
 | Tests terrain | 5 vendeuses + 5 clientes, tâches chronométrées, verbatims | ~5 h de sessions |
 | Itération et gel | Corrections, puis gel de l'UI : les maquettes deviennent des critères d'acceptation | 2 h |
@@ -54,10 +54,10 @@ l'exclut de V1.
 
 | Spec | Contenu | IDs couverts | Heures |
 |---|---|---|---|
-| `store-onboarding` | Onboarding 7 étapes avec reprise, réglages boutique, ouverture/fermeture, horaires, zones et frais de livraison, délai de préparation | V-AUTH-03/04, V-SET-01..06, V-DEL-01..04 | 5 h |
+| `store-onboarding` | Onboarding 7 étapes avec reprise, **« Où vends-tu ? » (origine : au marché, fait maison, boutique)**, adresse de ramassage privée pour le fait maison, réglages boutique, ouverture/fermeture, horaires, zones et frais de livraison, délai de préparation | V-AUTH-03/04, V-SET-01..06, V-DEL-01..04 | 5 h |
 | `catalog` | Catégories boutique, produits, multi-photos, variantes, stock par variante, rupture en un geste, archivage, prix par variante, **photo → nom/catégorie/description proposés par l'IA** | V-CAT-01..03, V-PROD-01..09, V-PRIX-01/02 | 6 h |
-| `discovery` | Détection de zone, fil des boutiques proches, catégories, recherche plein texte, filtres, tri, page boutique, fiche produit | C-AUTH-05, C-HOME-01/02, C-SEARCH-01..03, C-CAT-01..07 | 5 h |
-| `cart-checkout` | Panier multi-boutiques persistant côté serveur, sous-paniers, frais par boutique, alertes rupture, adresses (saisie, GPS, sauvegarde), mode de livraison par boutique, récapitulatif, confirmation en un tap ; idempotence | C-CART-01..09, C-CHECK-01..05, C-ADDR-01..03, C-PROF-02 | 5 h |
+| `discovery` | Détection de zone, « Boutiques ouvertes près de toi » avec badges d'origine, rayons (dont « Fait maison »), unités du marché, recherche plein texte, filtres (dont par origine), tri, page boutique, fiche produit | C-AUTH-05, C-HOME-01/02, C-SEARCH-01..03, C-CAT-01..07 | 5 h |
+| `cart-checkout` | Panier multi-boutiques persistant côté serveur, sous-paniers, frais selon le nombre de ramassages, alertes rupture, adresses (saisie, GPS, sauvegarde), mode de livraison par boutique, récapitulatif, confirmation en un tap ; idempotence | C-CART-01..09, C-CHECK-01..05, C-ADDR-01..03, C-PROF-02 | 5 h |
 | `payments` | Interface `PaymentProvider` générique ; fournisseurs `cash` puis `moneroo` ; webhooks signés et journalisés ; confirmation automatique ; badge « paiement confirmé » ; file de vérification manuelle (remplace la capture photo vérifiée par IA) | C-PAY-01/02/06, V-PAY-01/02/04/05, A-LOG-03 | 6 h |
 | `order-lifecycle` | Machine à états serveur ; accepter/refuser, préparation, prête, livrée ; push + son ; centre de notifications ; suivi client avec ETA ; annulation avant préparation | V-ORD-01..09, C-ORD-01..04/07, C-NOTIF-01..05/09, C-PROF-03/06 | 6 h |
 | `disputes` | Signaler un problème, ouverture de litige, notification de réponse | C-ORD-08, C-NOTIF-06, A-LIT-01..06 | 3 h |

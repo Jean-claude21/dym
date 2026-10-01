@@ -11,8 +11,20 @@ Pour la cliente : 4 vendeuses = 4 DM, 4 négociations, 4 paiements, 4 livraisons
 
 ## 2. La promesse
 
-> **DYM transforme le marché informel en marketplace mobile : découvrir, comparer, commander,
-> payer, recevoir — simple, local, fiable.**
+> **« Le marché de Lomé, livré chez toi. »**
+> DYM réunit les boutiques d'un quartier (étals du marché, vendeuses qui préparent depuis chez
+> elles, épiceries) dans une app de courses : découvrir, commander chez plusieurs boutiques en un
+> panier, payer en cash ou Mobile Money, recevoir en zem.
+
+### Positionnement (décision [0010](../architecture/decisions/0010-market-groceries-boutiques.md))
+
+- **Les courses au marché sont le cœur de DYM** : produits frais, vivriers, poissons fumés, épices,
+  boissons, produits faits maison. Le textile, la beauté et l'artisanat sont des rayons parmi d'autres.
+- **La boutique est l'unité centrale.** Chaque vendeuse a la sienne, avec une origine affichée :
+  **Au marché** (étal), **Fait maison** (vend depuis chez elle), **Boutique** (commerce de quartier).
+  DYM donne une vitrine à celles qui n'en ont jamais eu.
+- **Pourquoi** : on fait ses courses chaque semaine (fréquence, rétention) et une recette réunit
+  naturellement plusieurs boutiques (le panier multi-boutiques devient évident).
 
 | Acteur | Promesse |
 |---|---|

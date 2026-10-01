@@ -6,6 +6,12 @@
 > (Togo en XOF, Ghana en GHS) pour vérifier que l'interface reste générique.
 > Une fois validées, les maquettes deviennent les critères d'acceptation des specs.
 
+## Avancement
+
+Direction validée le 2026-10-01 ([DESIGN_DIRECTION.md](DESIGN_DIRECTION.md)). Écrans déjà rendus
+dans [`screens/`](screens/) : parcours 2, 3, 4, 5, 7, 9 (étape « Où vends-tu ? ») et 12. Les autres
+parcours sont à produire dans la même direction, puis tous sont testés sur le terrain.
+
 ## Ordre de production
 
 Les trois parcours qui portent les hypothèses les plus risquées passent en premier : **4, 10, 12**.
@@ -22,7 +28,7 @@ Les trois parcours qui portent les hypothèses les plus risquées passent en pre
 | 6 | Cliente | Paiement MoMo : redirection, attente, échec, succès | C-PAY-01/02 | « Paie par MoMo. Que se passe-t-il si ça échoue ? » | État compris à chaque étape |
 | 7 | Cliente | Mes commandes : course du zem, statuts, annuler, signaler un problème | C-ORD-01..04/07/08 | « Où est ta commande ? Signale qu'il manque un article. » | Réponse sans DM |
 | 8 | Cliente | Centre de notifications, profil, adresses | C-NOTIF-09, C-PROF | « Ajoute l'adresse de ton bureau. » | Sans aide |
-| 9 | Vendeuse | Onboarding boutique en 7 étapes, **choix du motif généré** | V-AUTH-03/04 | « Ouvre ta boutique. » | < 10 min, motif choisi avec plaisir |
+| 9 | Vendeuse | Onboarding boutique en 7 étapes, dont **« Où vends-tu ? »** (au marché, fait maison, boutique) | V-AUTH-03/04 | « Ouvre ta boutique. » | < 10 min, origine choisie sans hésiter |
 | 10 | Vendeuse | **Publier un produit par photo** : nom, catégorie, description proposés ; variantes, stock | V-PROD-01..09 | « Mets en vente ce pagne. » | < 60 s (H1, H8) |
 | 11 | Vendeuse | Tableau de bord du jour, caisse du soir | V-DASH-01..05/08 | « Combien as-tu vendu aujourd'hui ? » | < 5 s |
 | 12 | Vendeuse | **Commande reçue** : son, accepter ou refuser, statuts, paiement confirmé, encaissement cash | V-ORD-01..09, V-PAY-01..05 | « Une commande arrive : traite-la jusqu'à livrée. » | Sans aide (H9) |

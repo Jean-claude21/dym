@@ -16,6 +16,8 @@
 | H8 | L'IA « photo → fiche produit » fait gagner du temps sans erreurs gênantes. | Moyen | Test sur 50 photos réelles de vendeuses. | ≥ 80 % de suggestions acceptées avec au plus une correction. | Garder la saisie manuelle, IA en option. | À tester |
 | H9 | Les notifications push suffisent pour que Fatou ne rate pas de commande. | Moyen | Pilote : délai commande → acceptation. | Médiane < 15 min. | Rappel SMS/WhatsApp après 10 min sans action. | À tester |
 | H10 | L'IA d'intention et la vidéo shoppable donnent envie (phase 2). | Moyen | Maquettes « vision » 18 et 19 en test d'envie. | 3/5 disent qu'elles l'utiliseraient cette semaine. | Rester sur la recherche classique ; reporter. | À tester |
+| H11 | Les vendeuses « Fait maison » sont une part significative de l'offre et veulent une vitrine. | Élevé | Recrutement pilote : part des inscriptions « Depuis chez moi » ; test de la page boutique avec 3 d'entre elles. | ≥ 25 % des boutiques pilotes ; 3/3 jugent la page boutique utile. | Rayon « Fait maison » en option, focus étals et épiceries. | À tester |
+| H12 | Les courses au marché créent un réachat hebdomadaire. | Élevé | Pilote : intervalle médian entre deux commandes d'une même cliente. | Médiane ≤ 10 jours ; réachat 30 j > 30 %. | Revoir l'offre (paniers récurrents, créneaux) avant d'élargir. | À tester |
 
 ## Règles
 

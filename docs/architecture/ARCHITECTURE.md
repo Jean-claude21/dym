@@ -45,8 +45,18 @@ Aucun serveur applicatif à maintenir : Neon fournit l'auth, l'API de données, 
 
 `countries` (code ISO, devise, indicatif, locale, fuseau, actif) · `currencies` (code ISO 4217,
 décimales, symbole) · `cities`, `zones` · `categories` · `payment_methods` par pays et fournisseur
-· `commission_rules` · `delivery_fee_defaults` · `feature_flags` · `ai_models` (usage → fournisseur
-+ modèle).
+· `commission_rules` · `delivery_fee_defaults` · `feature_flags` · `ai_models` (usage vers
+fournisseur et modèle) · `store_origins` (`marche`, `maison`, `magasin`, extensible par pays) · `units` (le tas,
+la botte, la boîte, le litre, le kilo…, par pays, avec poids ou volume indicatif).
+
+### Boutiques (décision [0010](decisions/0010-market-groceries-boutiques.md))
+
+- Toute vendeuse a une boutique, avec une `origin` issue de `store_origins` et une `zone_id` publique.
+- L'adresse de ramassage est stockée à part (`store_pickup_addresses`), lisible uniquement par la
+  vendeuse, l'admin et le livreur affecté à une commande en cours (RLS + pgTAP). Pour l'origine
+  `maison`, l'app cliente n'affiche que la zone.
+- Une commande multi-boutiques produit un ramassage par boutique ; les frais de livraison sont
+  calculés côté serveur selon les ramassages.
 
 ### Argent
 

@@ -48,6 +48,9 @@ firebase_options*.dart
 .claude/settings.local.json
 .claude/*.local.*
 
+# --- Design : explorations locales (seuls docs/design/screens et tokens sont versionnés) ---
+docs/design/concepts/
+
 # --- Divers ---
 *.log
 tmp/
