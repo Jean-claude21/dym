@@ -166,3 +166,39 @@ extension MaybeAnimate on Widget {
         );
   }
 }
+
+/// Liste défilante dont le contenu est borné à [maxWidth] et centré, la zone
+/// de défilement gardant toute la largeur (spec 002).
+///
+/// Sur téléphone, les marges latérales de [padding] s'appliquent telles
+/// quelles (rendu validé) ; au-delà, la marge de la classe de fenêtre.
+class BoundedListView extends StatelessWidget {
+  const new({
+    required this.padding,
+    required this.children,
+    super.key,
+    this.maxWidth = DymTokenLayout.formMax,
+  });
+
+  final EdgeInsets padding;
+  final List<Widget> children;
+  final double maxWidth;
+
+  @override
+  Widget build(BuildContext context) {
+    final compact = DymWindowClass.of(context) == DymWindowClass.compact;
+    return LayoutBuilder(
+      builder: (context, box) {
+        final inset = DymLayout.sideInset(
+          box.maxWidth,
+          gutter: compact ? padding.left : DymLayout.gutter(context),
+          maxWidth: maxWidth,
+        );
+        return ListView(
+          padding: padding.copyWith(left: inset, right: inset),
+          children: children,
+        );
+      },
+    );
+  }
+}

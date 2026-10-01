@@ -58,158 +58,228 @@ class _CartScreenState extends State<CartScreen> {
     );
     final remaining = threshold - subtotal;
     final total = subtotal + delivery;
-    final items = _quantities.values.fold(0, (a, b) => a + b);
+    final count = _quantities.values.fold(0, (a, b) => a + b);
+
+    final items = <Widget>[
+      DymFreeDeliveryGauge(
+        lead: 'Plus que',
+        amount: remaining.format(),
+        trail: 'pour la livraison offerte',
+        progress: subtotal.amountMinor / threshold.amountMinor,
+      ),
+      const SizedBox(height: 12),
+      _storeGroup('akossiwa', ['tomates', 'gombo']),
+      const SizedBox(height: 12),
+      _storeGroup('esi', ['bissap', 'gingembre']),
+      const SizedBox(height: 12),
+      WhiteCard(
+        child: Row(
+          children: [
+            Icon(Icons.sync_rounded, color: c.brand, size: 28),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Si un produit manque',
+                    style: t.label.copyWith(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    'La boutique propose un équivalent '
+                    'au même prix',
+                    style: t.label.copyWith(color: c.textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            Switch(
+              value: _replace,
+              activeTrackColor: c.brand,
+              onChanged: (v) => setState(() => _replace = v),
+            ),
+          ],
+        ),
+      ),
+    ];
+    final summary = <Widget>[
+      WhiteCard(
+        child: Row(
+          children: [
+            Image(image: DemoImages.zem, width: 44, height: 44),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Livraison',
+                    style: t.label.copyWith(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    '2 ramassages · 40-50 min',
+                    style: t.label.copyWith(color: c.textSecondary),
+                  ),
+                ],
+              ),
+            ),
+            TextButton(
+              onPressed: () {},
+              child: Text(
+                'Changer ›',
+                style: t.label.copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: c.brandDeep,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      WhiteCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Paiement',
+              style: t.label.copyWith(
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: DymPaymentOption(
+                    title: 'Cash à la livraison',
+                    selected: _cash,
+                    onTap: () => setState(() => _cash = true),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: DymPaymentOption(
+                    title: 'Mobile Money',
+                    subtitle: 'T-Money, Flooz',
+                    selected: !_cash,
+                    onTap: () => setState(() => _cash = false),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 12),
+      WhiteCard(
+        child: Column(
+          children: [
+            _sumRow('Sous-total', subtotal),
+            _sumRow('Livraison', delivery),
+            const Divider(height: 16),
+            _sumRow('Total', total, strong: true),
+          ],
+        ),
+      ),
+    ];
+    final order = DymButton(
+      label: 'Commander · ${total.format()}',
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onPressed: () {},
+    );
+    final header = DymContentWidth(
+      child: ScreenHeader(
+        title: 'Ton panier',
+        subtitle: '2 boutiques · $count articles',
+      ),
+    );
+
+    // Étendue et large : articles à gauche, récapitulatif à droite (FR-009).
+    if (DymWindowClass.of(context) >= DymWindowClass.expanded) {
+      return Scaffold(
+        backgroundColor: c.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              header,
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, box) {
+                    final inset = DymLayout.sideInset(
+                      box.maxWidth,
+                      gutter: DymLayout.gutter(context),
+                    );
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: inset),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ListView(
+                              padding: const EdgeInsets.only(
+                                top: 8,
+                                bottom: 16,
+                              ),
+                              children: items,
+                            ),
+                          ),
+                          const SizedBox(width: DymTokenSpace.s5),
+                          SizedBox(
+                            width: 400,
+                            child: Column(
+                              children: [
+                                Flexible(
+                                  child: ListView(
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.only(top: 8),
+                                    children: summary,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                order,
+                                const SizedBox(height: 12),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: c.background,
       body: SafeArea(
         child: Column(
           children: [
-            ScreenHeader(
-              title: 'Ton panier',
-              subtitle: '2 boutiques · $items articles',
-            ),
+            header,
             Expanded(
-              child: ListView(
+              // Téléphone et tablette portrait : une colonne, bornée à la
+              // largeur d'un formulaire (identique sur téléphone).
+              child: BoundedListView(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                children: [
-                  DymFreeDeliveryGauge(
-                    lead: 'Plus que',
-                    amount: remaining.format(),
-                    trail: 'pour la livraison offerte',
-                    progress: subtotal.amountMinor / threshold.amountMinor,
-                  ),
-                  const SizedBox(height: 12),
-                  _storeGroup('akossiwa', ['tomates', 'gombo']),
-                  const SizedBox(height: 12),
-                  _storeGroup('esi', ['bissap', 'gingembre']),
-                  const SizedBox(height: 12),
-                  WhiteCard(
-                    child: Row(
-                      children: [
-                        Icon(Icons.sync_rounded, color: c.brand, size: 28),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Si un produit manque',
-                                style: t.label.copyWith(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              Text(
-                                'La boutique propose un équivalent '
-                                'au même prix',
-                                style: t.label.copyWith(color: c.textSecondary),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Switch(
-                          value: _replace,
-                          activeTrackColor: c.brand,
-                          onChanged: (v) => setState(() => _replace = v),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  WhiteCard(
-                    child: Row(
-                      children: [
-                        Image(image: DemoImages.zem, width: 44, height: 44),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Livraison',
-                                style: t.label.copyWith(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w800,
-                                ),
-                              ),
-                              Text(
-                                '2 ramassages · 40-50 min',
-                                style: t.label.copyWith(color: c.textSecondary),
-                              ),
-                            ],
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Changer ›',
-                            style: t.label.copyWith(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: c.brandDeep,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  WhiteCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Paiement',
-                          style: t.label.copyWith(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w800,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: DymPaymentOption(
-                                title: 'Cash à la livraison',
-                                selected: _cash,
-                                onTap: () => setState(() => _cash = true),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: DymPaymentOption(
-                                title: 'Mobile Money',
-                                subtitle: 'T-Money, Flooz',
-                                selected: !_cash,
-                                onTap: () => setState(() => _cash = false),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  WhiteCard(
-                    child: Column(
-                      children: [
-                        _sumRow('Sous-total', subtotal),
-                        _sumRow('Livraison', delivery),
-                        const Divider(height: 16),
-                        _sumRow('Total', total, strong: true),
-                      ],
-                    ),
-                  ),
-                ],
+                children: [...items, const SizedBox(height: 12), ...summary],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-              child: DymButton(
-                label: 'Commander · ${total.format()}',
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onPressed: () {},
+            DymContentWidth.form(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+                child: order,
               ),
             ),
           ],

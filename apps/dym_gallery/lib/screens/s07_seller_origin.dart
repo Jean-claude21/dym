@@ -1,5 +1,6 @@
 import 'package:dym_gallery/demo/demo_assets.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
+import 'package:dym_gallery/screens/common.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -45,56 +46,61 @@ class _SellerOriginScreenState extends State<SellerOriginScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
-              child: Row(
-                children: [
-                  IconButton(
-                    tooltip: 'Retour',
-                    onPressed: () => Navigator.maybePop(context),
-                    icon: Icon(Icons.arrow_back_rounded, color: c.textPrimary),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          'Étape 2 sur 7',
-                          style: t.label.copyWith(
-                            fontSize: 15,
-                            color: c.textSecondary,
+            DymContentWidth.form(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 4, 16, 0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      tooltip: 'Retour',
+                      onPressed: () => Navigator.maybePop(context),
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: c.textPrimary,
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text(
+                            'Étape 2 sur 7',
+                            style: t.label.copyWith(
+                              fontSize: 15,
+                              color: c.textSecondary,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 6),
-                        Row(
-                          children: [
-                            for (var i = 0; i < 7; i++)
-                              Expanded(
-                                child: Container(
-                                  height: 8,
-                                  margin: const EdgeInsets.symmetric(
-                                    horizontal: 3,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: i < 2
-                                        ? c.brand
-                                        : c.textSecondary.withValues(
-                                            alpha: 0.18,
-                                          ),
-                                    borderRadius: BorderRadius.circular(4),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: [
+                              for (var i = 0; i < 7; i++)
+                                Expanded(
+                                  child: Container(
+                                    height: 8,
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: i < 2
+                                          ? c.brand
+                                          : c.textSecondary.withValues(
+                                              alpha: 0.18,
+                                            ),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
                                   ),
                                 ),
-                              ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 32),
-                ],
+                    const SizedBox(width: 32),
+                  ],
+                ),
               ),
             ),
             Expanded(
-              child: ListView(
+              child: BoundedListView(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
                 children: [
                   Text(
@@ -130,9 +136,11 @@ class _SellerOriginScreenState extends State<SellerOriginScreen> {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-              child: DymButton(label: 'Continuer', onPressed: () {}),
+            DymContentWidth.form(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+                child: DymButton(label: 'Continuer', onPressed: () {}),
+              ),
             ),
           ],
         ),

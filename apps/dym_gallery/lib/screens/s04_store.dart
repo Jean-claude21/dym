@@ -32,6 +32,7 @@ class _StoreScreenState extends State<StoreScreen> {
     final t = context.dym.text;
     final store = DemoCatalog.stores['esi']!;
     final country = widget.country;
+    final gutter = DymLayout.gutter(context);
     final tints = [
       c.tintPimentClair,
       c.tintVertTendre,
@@ -94,102 +95,121 @@ class _StoreScreenState extends State<StoreScreen> {
                         ],
                       ),
                     ),
-                    Positioned(
-                      left: 16,
-                      top: 176,
-                      child: DymAvatar(image: store.avatar, size: 124),
-                    ),
-                    Positioned(
-                      left: 152,
-                      right: 16,
-                      top: 228,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            store.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: t.display.copyWith(fontSize: 26),
-                          ),
-                          const SizedBox(height: 4),
-                          DymOriginBadge(
-                            origin: store.origin,
-                            label: originLabel(store.origin),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            '${store.area} · ${store.distance} · '
-                            "Ouvert jusqu'à 20 h",
-                            maxLines: 2,
-                            style: t.label.copyWith(
-                              fontSize: 14,
-                              color: c.textSecondary,
+                    // Avatar et nom alignés sur le contenu borné (spec 002).
+                    Positioned.fill(
+                      child: DymContentWidth(
+                        child: Stack(
+                          children: [
+                            Positioned(
+                              left: gutter,
+                              top: 176,
+                              child: DymAvatar(image: store.avatar, size: 124),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              left: gutter + 136,
+                              right: gutter,
+                              top: 228,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    store.name,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: t.display.copyWith(fontSize: 26),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  DymOriginBadge(
+                                    origin: store.origin,
+                                    label: originLabel(store.origin),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    '${store.area} · ${store.distance} · '
+                                    "Ouvert jusqu'à 20 h",
+                                    maxLines: 2,
+                                    style: t.label.copyWith(
+                                      fontSize: 14,
+                                      color: c.textSecondary,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 14),
-                    const WhiteCard(child: _Stats()),
-                    const SizedBox(height: 14),
-                    Text(
-                      'Je prépare mes jus chaque matin avec les fleurs de '
-                      "bissap du marché d'Adawlato.",
-                      style: t.body.copyWith(fontSize: 16),
-                    ),
-                    const SizedBox(height: 12),
-                    WhiteCard(
-                      color: c.tintVertTendre,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 10,
+              DymContentWidth(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(gutter, 4, gutter, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 14),
+                      const WhiteCard(child: _Stats()),
+                      const SizedBox(height: 14),
+                      Text(
+                        'Je prépare mes jus chaque matin avec les fleurs de '
+                        "bissap du marché d'Adawlato.",
+                        style: t.body.copyWith(fontSize: 16),
                       ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.lock_rounded,
-                            color: c.brandDeep,
-                            size: 20,
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              'Retrait chez Esi à ${store.area} · adresse '
-                              'partagée avec le livreur uniquement',
-                              style: t.label.copyWith(color: c.brandDeep),
+                      const SizedBox(height: 12),
+                      WhiteCard(
+                        color: c.tintVertTendre,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 10,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.lock_rounded,
+                              color: c.brandDeep,
+                              size: 20,
                             ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'Retrait chez Esi à ${store.area} · adresse '
+                                'partagée avec le livreur uniquement',
+                                style: t.label.copyWith(color: c.brandDeep),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      const DymSectionHeader(title: 'Ses produits'),
+                      const SizedBox(height: 8),
+                      ListenableBuilder(
+                        listenable: _cart,
+                        builder: (context, _) => LayoutBuilder(
+                          builder: (context, box) => GridView.count(
+                            crossAxisCount: DymLayout.columns(
+                              box.maxWidth,
+                              minTileWidth: 168,
+                              spacing: 12,
+                              min: 2,
+                              max: 6,
+                            ),
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            childAspectRatio: 0.66,
+                            children: [
+                              for (var i = 0; i < _products.length; i++)
+                                _productCard(_products[i], tints[i], country),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 18),
-                    const DymSectionHeader(title: 'Ses produits'),
-                    const SizedBox(height: 8),
-                    ListenableBuilder(
-                      listenable: _cart,
-                      builder: (context, _) => GridView.count(
-                        crossAxisCount: 2,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        childAspectRatio: 0.66,
-                        children: [
-                          for (var i = 0; i < _products.length; i++)
-                            _productCard(_products[i], tints[i], country),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

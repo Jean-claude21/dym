@@ -54,3 +54,4 @@ docs/design/concepts/
 # --- Divers ---
 *.log
 tmp/
+**/test/golden/failures/
