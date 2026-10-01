@@ -18,13 +18,14 @@ Règles communes :
 | `DymDeliveryPill` | Pastille de délai avec zem | `label`, `zemImage` | — |
 | `DymProductCard` | Carte produit | `image`, `name`, `unit`, `price`, `store` (nom + origine), `badge`, `quantity`, `onQuantityChanged`, `layout` (`grid`, `compact`) | quantité 0 (bouton « + ») ↔ quantité ≥ 1 (compteur compact animé sur sa propre ligne, pour garder le prix lisible et des cibles de 44 × 48) |
 | `DymQuantityStepper` | Compteur − n + | `quantity`, `onChanged`, `min`, `max`, `dense` (pastille 40, zones tactiles 44 × 48) | min atteint, max atteint |
-| `DymMiniCartBar` | Mini-panier flottant | `itemCount`, `storeCount`, `total`, `label`, `actionLabel`, `onTap`, `thumbnail` | caché (0 article, glisse vers le bas), visible (glisse vers le haut), mise à jour (rebond du compteur) |
+| `DymMiniCartBar` | Mini-panier flottant, ≤ 560 et centré (spec 002) | `itemCount`, `storeCount`, `total`, `label`, `actionLabel`, `onTap`, `thumbnail` | caché (0 article, glisse vers le bas), visible (glisse vers le haut), mise à jour (rebond du compteur) |
 | `DymStoreCard` | Carte boutique | `cover`, `avatar`, `name`, `origin`, `originLabel`, `meta` | — |
 | `DymAisleTile` | Tuile de rayon | `image`, `label`, `tint`, `badge` | — |
 | `DymFreeDeliveryGauge` | Jauge de livraison offerte | `remaining`, `progress` (0–1), `label` | progression animée |
 | `DymPaymentOption` | Option de paiement | `title`, `subtitle`, `icon` (facultative), `selected`, `onTap` | sélectionnée |
 | `DymTimeline` | Frise d'étapes horizontale | `steps` (libellé, état `done` / `current` / `todo`) | — |
 | `DymBottomNav` | Navigation basse | `items` (icône, libellé), `currentIndex`, `onTap` | élément actif |
+| `DymNavRail` | Navigation latérale (tablette, bureau), spec 002 | `items`, `currentIndex`, `onTap`, `extended`, `leading` | élément actif ; compact ou étendu |
 | `DymSelectableCard` | Carte de sélection (ex. « Où vends-tu ? ») | `image`, `title`, `description`, `selected`, `footer`, `onTap` | sélectionnée |
 | `DymAvatar` | Avatar rond | `image`, `size`, `presenceDot` | avec / sans pastille |
 | `DymSectionHeader` | Titre de section (une ligne, réduit si nécessaire) | `title`, `actionLabel`, `onAction` | avec / sans action |
@@ -32,3 +33,7 @@ Règles communes :
 
 Briques transverses exposées : `DymTheme.light()`, `context.dym` (couleurs, styles, espacements,
 rayons), `DymMotion`, `StoreOrigin`, `MoneyText` (affichage d'un `Money` avec style de prix).
+
+Mise en page adaptative (spec 002) : `DymWindowClass`, `DymLayout` (`gutter`, `sideInset`,
+`columns`), `DymContentWidth`, `DymAdaptiveScaffold`. Contrat détaillé dans
+[`specs/002-responsive-layout/contracts/dym_ui-layout.md`](../../002-responsive-layout/contracts/dym_ui-layout.md).

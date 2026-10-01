@@ -18,3 +18,4 @@ Format : **Statut** · **Contexte** · **Décision** · **Conséquences** · **A
 | 0009 | [Direction de design « Le marché de Lomé, livré chez toi »](0009-design-direction.md) | Acceptée |
 | 0010 | [Courses au marché et boutique comme unité centrale](0010-market-groceries-boutiques.md) | Acceptée |
 | 0011 | [Couleur de marque : vert profond](0011-brand-green.md) | Acceptée |
+| 0012 | [Mise en page adaptative](0012-mise-en-page-adaptative.md) | Acceptée |
