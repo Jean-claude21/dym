@@ -29,7 +29,7 @@ melos:
 
     tokens:check:
       description: Échoue si le thème généré n'est pas à jour avec les tokens.
-      run: melos run tokens && git diff --exit-code -- packages/ui/dym_ui/lib/src/tokens
+      run: dart run melos run tokens && git diff --exit-code -- packages/ui/dym_ui/lib/src/tokens
 
     analyze:
       description: Analyse statique de tous les packages et apps.
