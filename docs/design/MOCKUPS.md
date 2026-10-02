@@ -15,6 +15,9 @@ parcours 1 complet, « Moi » (parcours 8, suppression du compte), connexion ven
 étapes, écrans 16 à 22) et ouverture ou fermeture en un geste (parcours 13, écran 23), à valider.
 Spec 007 : parcours 10 (publier un produit par photo, écrans 24 à 27), à valider.
 Spec 008 : parcours 2 et 3 construits (écrans validés 02, 03, 04 ; nouveaux écrans 28 à 30, à valider).
+Spec 009 : parcours 4 et 5 (panier validé 05 ; livraison 34, mes adresses 35, nouvelle adresse 36,
+commande envoyée 37, à valider). Correction terrain du 2026-10-02 : aucune liste de quartiers
+affichée d'avance (position ou recherche), écran 12 compris.
 Les autres parcours sont produits spec par spec dans la même direction.
 
 ## Ordre de production
