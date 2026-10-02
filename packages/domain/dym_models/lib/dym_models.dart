@@ -1,0 +1,5 @@
+/// Entités du domaine DYM (Dart pur), reflet du schéma de la base.
+library;
+
+export 'src/reference/country_config.dart';
+export 'src/reference/reference_models.dart';

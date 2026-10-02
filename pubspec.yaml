@@ -10,6 +10,8 @@ workspace:
   - packages/foundation/dym_l10n
   - packages/infra/neon_kit
   - packages/infra/dym_platform
+  - packages/domain/dym_models
+  - packages/data/dym_data
   - packages/ui/dym_ui
   - apps/dym_gallery
   - apps/dym_client

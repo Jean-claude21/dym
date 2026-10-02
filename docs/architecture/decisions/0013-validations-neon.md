@@ -17,7 +17,7 @@ classé selon ce qui a été prouvé.
 | 2 | Data API via `postgrest`, RLS, RPC | Rôles `authenticated`/`anonymous`, `auth.uid()` et garde RLS imités et testés par pgTAP ; client testé (401, 403, 409) | `auth.uid()` de Neon lit-il les claims comme l'imitation ? Préfixe d'URL de la Data API | Fonctions d'identité locales alignées sur le comportement constaté ; seule l'imitation change |
 | 3 | Upload par URL présignée vers Object Storage | — (prévu avec `catalog`) | Tout | Function qui reçoit l'image et l'écrit elle-même dans le stockage |
 | 4 | Déploiement d'une Function, secret, appel depuis l'app, push FCM | Projet `functions/` : `neon.ts`, vérification JWT par JWKS, contrat d'erreurs (11 tests) | `neon deploy`, `/health` et `/me` avec un vrai jeton ; FCM avec `order-lifecycle` | Function sur Coolify (même code Hono) |
-| 5 | Stacked, freezed et json_serializable sur Flutter 3.47.5 | **Validé** : Stacked 3.5 + `stacked_generator` 2.0.4 résolus et générés dans 3 apps. freezed arrive avec `dym_models` (`reference-data`) | — | — |
+| 5 | Stacked, freezed et json_serializable sur Flutter 3.47.5 | **Stacked : validé** (3.5 + `stacked_generator` 2.0.4, 3 apps générées). **json_serializable : validé** (`dym_models`, spec 004). **freezed : no-go** : sur 3.47.5, `flutter_test` fige `test_api` (analyzer < 14), alors que freezed 4 exige analyzer 14 et que freezed 3 exige analyzer ≤ 12, incompatible avec `stacked_generator` 2.0.4 et `build_runner` 2.16 | Réessayer à chaque montée de Flutter (0006) | Classes immuables écrites à la main + `fromJson` par `json_serializable` (en place) |
 | 6 | Inscription par téléphone via le webhook `send.otp` | — | Tout (spec `phone-otp`) | OTP email maintenu (décision 0007) |
 
 ## Procédure dès l'accès Neon

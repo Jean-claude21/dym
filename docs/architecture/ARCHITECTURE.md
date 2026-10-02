@@ -49,6 +49,14 @@ décimales, symbole) · `cities`, `zones` · `categories` · `payment_methods` p
 fournisseur et modèle) · `store_origins` (`marche`, `maison`, `magasin`, extensible par pays) · `units` (le tas,
 la botte, la boîte, le litre, le kilo…, par pays, avec poids ou volume indicatif).
 
+Implémenté par la spec 004 (`db/migrations/0002` à `0004`) :
+- **Libellés** en `jsonb` avec le français obligatoire.
+- **Montants** en unités mineures et **commission** en points de base.
+- **Lecture** des seuls éléments actifs, dont tous les parents sont actifs, par les apps.
+- **Aucune écriture** par les apps.
+- **Événements** par `track_event`, avec une liste blanche, l'auteur imposé et une garde contre les données personnelles.
+- **Audit** en ajout seul.
+
 ### Boutiques (décision [0010](decisions/0010-market-groceries-boutiques.md))
 
 - Toute vendeuse a une boutique, avec une `origin` issue de `store_origins` et une `zone_id` publique.

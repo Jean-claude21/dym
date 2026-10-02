@@ -1,0 +1,18 @@
+name: dym_data
+description: Dépôts de données DYM (référentiel, événements…) sur neon_kit, résultats typés.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  dym_core: ^0.1.0
+  dym_models: ^0.1.0
+  meta: ^1.17.0
+  neon_kit: ^0.1.0
+
+dev_dependencies:
+  test: ^1.26.0
+  very_good_analysis: ^11.0.0
