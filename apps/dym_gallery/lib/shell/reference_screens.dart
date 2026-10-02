@@ -4,6 +4,7 @@ import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/demo/demo_store.dart';
+import 'package:dym_gallery/demo/demo_vendor_catalog.dart';
 import 'package:dym_gallery/demo/demo_vendor_navigator.dart';
 import 'package:dym_gallery/screens/s01_splash.dart';
 import 'package:dym_gallery/screens/s02_home.dart';
@@ -13,6 +14,9 @@ import 'package:dym_gallery/screens/s05_cart.dart';
 import 'package:dym_gallery/screens/s06_tracking.dart';
 import 'package:dym_gallery/screens/s07_seller_origin.dart';
 import 'package:dym_gallery/screens/s08_seller_new_order.dart';
+import 'package:dym_platform/dym_platform.dart';
+import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
+import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/ui/views/home/home_view.dart';
@@ -201,7 +205,57 @@ final referenceScreens = <ReferenceScreen>[
     builder: (c) => HomeView(
       service: DemoAuthService(country: c, app: AccountApp.vendor),
       stores: DemoStore.service(c),
+      catalog: DemoVendorCatalog.service(c),
       navigator: DemoVendorNavigator(),
+      initialTab: HomeTab.store,
+    ),
+  ),
+  // Spec 007 : catalogue de la vendeuse (maquettes à valider).
+  ReferenceScreen(
+    id: '24',
+    title: 'Mes produits',
+    surface: 'Vendeuse',
+    referenceFile: '24-produits.webp',
+    builder: (c) => HomeView(
+      service: DemoAuthService(country: c, app: AccountApp.vendor),
+      stores: DemoStore.service(c),
+      catalog: DemoVendorCatalog.service(c),
+      navigator: DemoVendorNavigator(),
+    ),
+  ),
+  ReferenceScreen(
+    id: '25',
+    title: 'Nouveau produit · photo',
+    surface: 'Vendeuse',
+    referenceFile: '25-produit-photo.webp',
+    builder: (c) => ProductEditorView(
+      service: DemoVendorCatalog.service(c),
+      initialSource: PhotoSource.camera,
+      onDone: (_) {},
+      onCancel: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '26',
+    title: 'Prix et stock',
+    surface: 'Vendeuse',
+    referenceFile: '26-produit-prix.webp',
+    builder: (c) => ProductEditorView(
+      service: DemoVendorCatalog.service(c),
+      product: DemoVendorCatalog.products(c).first,
+      initialStep: 2,
+      onDone: (_) {},
+      onCancel: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '27',
+    title: 'Mes catégories',
+    surface: 'Vendeuse',
+    referenceFile: '27-categories.webp',
+    builder: (c) => StoreCategoriesView(
+      service: DemoVendorCatalog.service(c),
+      onBack: () {},
     ),
   ),
 ];

@@ -1,4 +1,5 @@
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/app.router.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
@@ -107,6 +108,7 @@ class StackedAppNavigator implements AppNavigator {
     MaterialPageRoute(
       builder: (_) => ProductEditorView(
         service: _catalog,
+        initialSource: PhotoSource.camera,
         onDone: (_) => toHome(),
         onCancel: toHome,
       ),
@@ -119,6 +121,7 @@ class StackedAppNavigator implements AppNavigator {
       builder: (_) => ProductEditorView(
         service: _catalog,
         product: product,
+        initialSource: product == null ? PhotoSource.camera : null,
         onDone: (_) => _navigator.pop(),
         onCancel: () => _navigator.pop(),
       ),

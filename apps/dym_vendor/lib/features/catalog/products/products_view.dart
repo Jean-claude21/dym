@@ -376,7 +376,6 @@ class _ProductCard extends StatelessWidget {
                     ),
                   ],
                 ),
-              _Menu(viewModel: viewModel, product: product),
             ],
           ),
         ),
@@ -415,44 +414,4 @@ class _Badge extends StatelessWidget {
       ),
     ),
   );
-}
-
-enum _Action { edit, archive, delete }
-
-class _Menu extends StatelessWidget {
-  const new({required this.viewModel, required this.product});
-
-  final ProductsViewModel viewModel;
-  final Product product;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = DymLocalizations.of(context);
-    return PopupMenuButton<_Action>(
-      tooltip: l10n.productActions(product.name),
-      icon: const Icon(Icons.more_vert_rounded),
-      onSelected: (action) => switch (action) {
-        _Action.edit => viewModel.edit(product),
-        _Action.archive => viewModel.archive(
-          product,
-          archived: !product.isArchived,
-        ),
-        _Action.delete => viewModel.deleteDraft(product),
-      },
-      itemBuilder: (_) => [
-        PopupMenuItem(value: _Action.edit, child: Text(l10n.productEdit)),
-        PopupMenuItem(
-          value: _Action.archive,
-          child: Text(
-            product.isArchived ? l10n.productRestore : l10n.productArchive,
-          ),
-        ),
-        if (product.status == ProductStatus.draft)
-          PopupMenuItem(
-            value: _Action.delete,
-            child: Text(l10n.productDeleteDraft),
-          ),
-      ],
-    );
-  }
 }

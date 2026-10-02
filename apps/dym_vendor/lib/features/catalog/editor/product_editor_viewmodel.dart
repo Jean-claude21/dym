@@ -24,7 +24,17 @@ class VariantDraft {
 /// L'identifiant est fixé à l'ouverture : chaque enregistrement réécrit la
 /// même fiche (idempotence, FR-003).
 class ProductEditorViewModel extends BaseViewModel {
-  new({required this._service, required this._onDone, this.product});
+  new({
+    required this._service,
+    required this._onDone,
+    this.product,
+    this.initialSource,
+    this.initialStep = 1,
+    this._onClosed,
+  });
+
+  /// Fiche supprimée (brouillon).
+  final void Function()? _onClosed;
 
   final CatalogService _service;
 
@@ -33,6 +43,13 @@ class ProductEditorViewModel extends BaseViewModel {
 
   /// Produit modifié (`null` : nouveau).
   final Product? product;
+
+  /// Nouveau produit : ouvre directement l'appareil photo (un geste de
+  /// moins, parcours 10).
+  final PhotoSource? initialSource;
+
+  /// Produit existant : ouvre directement l'étape « Prix et stock ».
+  final int initialStep;
 
   static const maxPhotos = 5;
   static const maxVariants = 10;
@@ -139,10 +156,15 @@ class ProductEditorViewModel extends BaseViewModel {
         _config = cfg;
         _storeCategories = list;
         _apply(cfg);
+        if (product != null && initialStep == 2) _step = 2;
       case (Err(:final failure), _) || (_, Err(:final failure)):
         _loadFailure = failure;
     }
     setBusy(false);
+    final source = initialSource;
+    if (ready && isNew && source != null && photoKeys.isEmpty) {
+      await addPhoto(source);
+    }
   }
 
   void _apply(CountryConfig cfg) {
@@ -366,6 +388,43 @@ class ProductEditorViewModel extends BaseViewModel {
     _saveFailure = null;
     notifyListeners();
   }
+
+  /// Archive le produit existant (il reste restaurable).
+  Future<void> archive() => _close(() => _service.archive(id, archived: true));
+
+  /// Supprime un brouillon jamais publié.
+  Future<void> deleteDraft() async {
+    if (isBusy) return;
+    _saveFailure = null;
+    setBusy(true);
+    final result = await _service.deleteDraft(id);
+    setBusy(false);
+    switch (result) {
+      case Ok():
+        _onClosed?.call();
+      case Err(:final failure):
+        _saveFailure = failure;
+        notifyListeners();
+    }
+  }
+
+  Future<void> _close(Future<Result<Product>> Function() action) async {
+    if (isBusy) return;
+    _saveFailure = null;
+    setBusy(true);
+    final result = await action();
+    setBusy(false);
+    switch (result) {
+      case Ok(:final value):
+        _onDone(value);
+      case Err(:final failure):
+        _saveFailure = failure;
+        notifyListeners();
+    }
+  }
+
+  /// Brouillon : supprimable plutôt qu'archivable.
+  bool get isDraft => product != null && product!.status == ProductStatus.draft;
 
   /// Enregistre puis publie (une nouvelle tentative réécrit la même fiche).
   Future<void> publish() async {

@@ -18,6 +18,8 @@ class ProductEditorView extends StackedView<ProductEditorViewModel> {
     required this.onCancel,
     super.key,
     this.product,
+    this.initialSource,
+    this.initialStep = 1,
   });
 
   final CatalogService service;
@@ -25,12 +27,21 @@ class ProductEditorView extends StackedView<ProductEditorViewModel> {
   final VoidCallback onCancel;
   final Product? product;
 
+  /// Nouveau produit : source de la première photo, ouverte d'emblée.
+  final PhotoSource? initialSource;
+
+  /// Produit existant : étape ouverte (2 : prix et stock).
+  final int initialStep;
+
   @override
   ProductEditorViewModel viewModelBuilder(BuildContext context) =>
       ProductEditorViewModel(
         service: service,
         onDone: onDone,
         product: product,
+        initialSource: initialSource,
+        initialStep: initialStep,
+        onClosed: onCancel,
       );
 
   @override
@@ -213,6 +224,30 @@ class _PhotoStep extends StatelessWidget {
           Text(
             l10n.productSuggestionCheck,
             style: t.label.copyWith(color: c.textSecondary, fontSize: 14),
+          ),
+        ],
+        if (!vm.isNew && !(vm.product?.isArchived ?? false)) ...[
+          const SizedBox(height: DymTokenSpace.s4),
+          Center(
+            child: TextButton.icon(
+              onPressed: vm.isBusy
+                  ? null
+                  : vm.isDraft
+                  ? vm.deleteDraft
+                  : vm.archive,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(48, 48),
+                foregroundColor: c.pimentStrong,
+              ),
+              icon: Icon(
+                vm.isDraft
+                    ? Icons.delete_outline_rounded
+                    : Icons.archive_outlined,
+              ),
+              label: Text(
+                vm.isDraft ? l10n.productDeleteDraft : l10n.productArchive,
+              ),
+            ),
           ),
         ],
       ],

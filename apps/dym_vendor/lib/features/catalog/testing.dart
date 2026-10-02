@@ -19,7 +19,9 @@ class MemoryCatalogService implements CatalogService {
     this.pickedPhoto,
     this.suggestion,
     this.photoResolver,
+    List<String> uploadKeys = const [],
   }) {
+    _uploadKeys.addAll(uploadKeys);
     _products.addAll(products);
     _categories.addAll(categories);
   }
@@ -45,6 +47,7 @@ class MemoryCatalogService implements CatalogService {
   final _products = <Product>[];
   final _categories = <StoreCategory>[];
   final _photos = <String, Uint8List>{};
+  final _uploadKeys = <String>[];
   int _ids = 0;
 
   List<Product> get current => List.unmodifiable(_products);
@@ -303,8 +306,11 @@ class MemoryCatalogService implements CatalogService {
   Future<Result<String>> uploadPhoto(PickedPhoto photo) async {
     final failed = _fail<String>('uploadPhoto');
     if (failed != null) return failed;
-    final key = 'stores/$storeId/products/${newId()}.jpg';
-    _photos[key] = photo.bytes;
+    // Clés prévues d'avance (galerie : photos de démonstration).
+    final key = _uploadKeys.isNotEmpty
+        ? _uploadKeys.removeAt(0)
+        : 'stores/$storeId/products/${newId()}.jpg';
+    if (photo.bytes.isNotEmpty) _photos[key] = photo.bytes;
     return Ok(key);
   }
 

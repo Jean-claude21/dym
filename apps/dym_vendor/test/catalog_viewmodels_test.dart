@@ -177,6 +177,54 @@ void main() {
       expect(vm.suggestion, SuggestionState.idle);
     });
 
+    test("appareil photo ouvert d'emblée, puis proposition", () async {
+      final catalog = memoryCatalog(products: const []);
+      final vm = ProductEditorViewModel(
+        service: catalog,
+        onDone: (_) {},
+        initialSource: PhotoSource.camera,
+      );
+      await vm.load();
+      expect(catalog.calls, containsAllInOrder(['pickPhoto', 'suggest']));
+      expect(vm.suggestion, SuggestionState.received);
+    });
+
+    test('prix : produit existant ouvert à l’étape 2', () async {
+      final vm = ProductEditorViewModel(
+        service: memoryCatalog(),
+        onDone: (_) {},
+        product: esiProducts().first,
+        initialStep: 2,
+      );
+      await vm.load();
+      expect(vm.step, 2);
+    });
+
+    test('archiver depuis la fiche ; supprimer un brouillon', () async {
+      final catalog = memoryCatalog();
+      Product? done;
+      var closed = false;
+      final vm = ProductEditorViewModel(
+        service: catalog,
+        onDone: (p) => done = p,
+        product: esiProducts().first,
+      );
+      await vm.load();
+      await vm.archive();
+      expect(done?.isArchived, isTrue);
+      final draft = ProductEditorViewModel(
+        service: catalog,
+        onDone: (_) {},
+        onClosed: () => closed = true,
+        product: esiProducts()[2],
+      );
+      await draft.load();
+      expect(draft.isDraft, isTrue);
+      await draft.deleteDraft();
+      expect(closed, isTrue);
+      expect(catalog.current.any((p) => p.id == 'p3'), isFalse);
+    });
+
     test('nouvelle catégorie créée et sélectionnée', () async {
       final vm = ProductEditorViewModel(
         service: memoryCatalog(products: const []),

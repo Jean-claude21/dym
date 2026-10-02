@@ -135,6 +135,21 @@ avec `discovery`) ; photo de profil reportée au stockage d'objets.
   livrées ;
 - une ligne « Rayon » ajoutée aux réglages (le rayon se modifie comme les autres étapes).
 
+Écrans produits avec la spec 007 (catalogue de la vendeuse, **à valider**) :
+
+| # | Écran | Fichier | Parcours |
+|---|---|---|---|
+| 24 | Mes produits (filtres, stock en un geste) | [24-produits](screens/24-produits.webp) | 10 |
+| 25 | Nouveau produit : photo et fiche proposée | [25-produit-photo](screens/25-produit-photo.webp) | 10 |
+| 26 | Prix, variantes et stock | [26-produit-prix](screens/26-produit-prix.webp) | 10 |
+| 27 | Mes catégories | [27-categories](screens/27-categories.webp) | 10 |
+
+Écarts assumés du rendu :
+- la fiche proposée est directement modifiable dans sa carte ;
+- les variantes se saisissent en lignes (libellé, prix, stock) ;
+- « Archiver » et « Supprimer le brouillon » sont dans la fiche du produit ;
+- les catégories n'ont pas de photo.
+
 Ce sont des **rendus de concept générés par IA** (ChatGPT, gpt-image-2), pas des fichiers de
 production. À reprendre lors de la construction :
 

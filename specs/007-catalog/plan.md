@@ -71,3 +71,6 @@ Même pile que la spec 006. Nouvelles dépendances :
 | D6 | Stock `null` = non suivi (fait maison du jour) | Les vendeuses de plats ne comptent pas des unités |
 | D7 | `ai_product_suggestion_accepted` porte `fields_changed` (0 à 3), émis à la publication | Mesure de H8 sans donnée personnelle |
 | D8 | Suppression réservée aux brouillons ; publié → archivage | Les commandes futures référenceront les variantes |
+| D9 | « Ajouter un produit » ouvre directement l'appareil photo | Parcours photo d'abord : un geste de moins (objectif < 60 s, H1) |
+| D10 | Archiver et supprimer depuis la fiche, pas depuis la liste | Liste lisible à 360 dp (écran 24) ; « Restaurer » reste dans la liste des archivés |
+| D11 | Base publique des photos en configuration (`DYM_MEDIA_URL`) ; l'URL est recomposée depuis la clé | Aucune URL stockée en base ; changer de stockage ne touche pas les données |
