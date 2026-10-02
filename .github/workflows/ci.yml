@@ -1,8 +1,8 @@
 name: CI
 
 on:
+  # Toutes les pull requests, y compris celles empilées sur une autre spec.
   pull_request:
-    branches: [dev, main]
   push:
     branches: [dev, main]
 
