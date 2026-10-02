@@ -75,6 +75,13 @@ abstract final class DemoStore {
 
   static String _zoneId(String name) => name.toLowerCase().replaceAll(' ', '-');
 
+  /// Identifiant de démonstration d'un quartier.
+  static String zoneIdOf(String name) => _zoneId(name);
+
+  /// Quartiers de démonstration du pays.
+  static List<String> zoneNames(DemoCountry country) =>
+      _zones[country.code] ?? const [];
+
   static CountryConfig config(DemoCountry country) => CountryConfig(
     country: Country.fromJson({
       'code': country.code,

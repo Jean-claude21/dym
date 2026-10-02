@@ -53,3 +53,6 @@
 | D3 | Centres de quartier approximatifs ; la position propose, la cliente confirme | Pas de données géographiques fiables ; pas de PostGIS pour 16 quartiers |
 | D4 | Disponible = produit non en rupture et (stock non suivi ou une variante en stock) | Une seule définition pour la recherche, le rayon et la fiche |
 | D5 | Fonctions `SECURITY DEFINER` à filtres explicites plutôt que la RLS seule | Les jointures (photos, horaires, quartiers) restent rapides et la sortie est contrôlée champ par champ |
+| D6 | `neon_kit` : sans session, la Data API est appelée sans jeton (rôle anonyme) | Défaut découvert ici : toute lecture d'une visiteuse échouait. Une session dont le renouvellement échoue n'est jamais rétrogradée |
+| D7 | Quartier choisi gardé en mémoire pour la session, sans modifier le profil | La cliente peut regarder un autre quartier sans changer son adresse |
+| D8 | La galerie montre les vrais écrans 02, 03 et 04 (31 à 33) à côté des écrans figés validés | Les captures validées ne bougent pas ; l'écart réel reste visible |

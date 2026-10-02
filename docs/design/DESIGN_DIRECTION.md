@@ -150,6 +150,21 @@ avec `discovery`) ; photo de profil reportée au stockage d'objets.
 - « Archiver » et « Supprimer le brouillon » sont dans la fiche du produit ;
 - les catégories n'ont pas de photo.
 
+Écrans produits avec la spec 008 (découverte côté cliente, **à valider**) :
+
+| # | Écran | Fichier | Parcours |
+|---|---|---|---|
+| 28 | Fiche produit (photos, variantes, délai, disponibilité) | [28-fiche-produit](screens/28-fiche-produit.webp) | 3 |
+| 29 | Recherche (produits et boutiques) | [29-recherche](screens/29-recherche.webp) | 2 |
+| 30 | Filtres (tri, origine, prix, rayon, disponibilité) | [30-filtres](screens/30-filtres.webp) | 2 |
+
+Écarts assumés du rendu, y compris sur les écrans validés 02, 03 et 04 :
+- pas d'ajout au panier, de mini-panier ni de « Racheter » : ils arrivent avec `cart-checkout` ;
+- pas de note, de ventes ni d'ancienneté sur la page boutique ;
+- pas de recherche vocale ni par photo (hors contrat V1) ;
+- avatar de boutique : illustration de l'origine, en attendant les photos de boutique ;
+- distance non affichée (centres de quartier approximatifs).
+
 Ce sont des **rendus de concept générés par IA** (ChatGPT, gpt-image-2), pas des fichiers de
 production. À reprendre lors de la construction :
 

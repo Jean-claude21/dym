@@ -18,6 +18,7 @@ class SearchView extends StackedView<SearchViewModel> {
     required this.onOpenStore,
     super.key,
     this.debounce = const Duration(milliseconds: 350),
+    this.initialText = '',
   });
 
   final DiscoveryService service;
@@ -26,12 +27,16 @@ class SearchView extends StackedView<SearchViewModel> {
   final ValueChanged<String> onOpenStore;
   final Duration debounce;
 
+  /// Recherche lancée à l'ouverture (texte d'un rayon, d'une suggestion).
+  final String initialText;
+
   @override
   SearchViewModel viewModelBuilder(BuildContext context) =>
       SearchViewModel(service: service, debounce: debounce);
 
   @override
-  void onViewModelReady(SearchViewModel viewModel) => viewModel.init();
+  void onViewModelReady(SearchViewModel viewModel) =>
+      viewModel.init(initialText: initialText);
 
   @override
   Widget builder(
@@ -79,7 +84,9 @@ class SearchView extends StackedView<SearchViewModel> {
                     onPressed: onBack,
                     icon: Icon(Icons.arrow_back_rounded, color: c.textPrimary),
                   ),
-                  Expanded(child: _SearchField(viewModel: vm)),
+                  Expanded(
+                    child: _SearchField(viewModel: vm, initial: initialText),
+                  ),
                 ],
               ),
             ),
@@ -181,16 +188,17 @@ class _Message extends StatelessWidget {
 }
 
 class _SearchField extends StatefulWidget {
-  const new({required this.viewModel});
+  const new({required this.viewModel, this.initial = ''});
 
   final SearchViewModel viewModel;
+  final String initial;
 
   @override
   State<_SearchField> createState() => _SearchFieldState();
 }
 
 class _SearchFieldState extends State<_SearchField> {
-  final _controller = TextEditingController();
+  late final _controller = TextEditingController(text: widget.initial);
 
   @override
   void dispose() {
@@ -204,7 +212,7 @@ class _SearchFieldState extends State<_SearchField> {
     final l10n = DymLocalizations.of(context);
     return TextField(
       controller: _controller,
-      autofocus: true,
+      autofocus: widget.initial.isEmpty,
       textInputAction: TextInputAction.search,
       onChanged: widget.viewModel.setText,
       onSubmitted: (_) => widget.viewModel.submit(),
@@ -480,20 +488,21 @@ Future<SearchFilters?> showFiltersSheet(
   context: context,
   isScrollControlled: true,
   showDragHandle: true,
-  builder: (_) => _FiltersSheet(config: config, initial: current),
+  builder: (_) => SearchFiltersSheet(config: config, initial: current),
 );
 
-class _FiltersSheet extends StatefulWidget {
-  const new({required this.config, required this.initial});
+/// Contenu de la feuille des filtres (écran 30).
+class SearchFiltersSheet extends StatefulWidget {
+  const new({required this.config, required this.initial, super.key});
 
   final CountryConfig? config;
   final SearchFilters initial;
 
   @override
-  State<_FiltersSheet> createState() => _FiltersSheetState();
+  State<SearchFiltersSheet> createState() => _FiltersSheetState();
 }
 
-class _FiltersSheetState extends State<_FiltersSheet> {
+class _FiltersSheetState extends State<SearchFiltersSheet> {
   late SearchSort _sort = widget.initial.sort;
   late String? _origin = widget.initial.origin;
   late String? _category = widget.initial.categoryId;

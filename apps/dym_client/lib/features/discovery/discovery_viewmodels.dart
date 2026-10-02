@@ -367,10 +367,12 @@ class SearchViewModel extends BaseViewModel {
 
   int get activeFilters => _query(0).activeFilters;
 
-  Future<void> init() async {
+  Future<void> init({String initialText = ''}) async {
     final config = await _service.countryConfig();
     if (config case Ok(:final value)) _config = value;
+    text = initialText;
     notifyListeners();
+    if (!tooShort) await submit();
   }
 
   SearchQuery _query(int offset) => SearchQuery(

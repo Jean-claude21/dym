@@ -14,6 +14,7 @@ parcours 1 complet, « Moi » (parcours 8, suppression du compte), connexion ven
 (écrans 09 à 15, à valider). Spec 006 : parcours 9 complet (onboarding de la boutique en 7
 étapes, écrans 16 à 22) et ouverture ou fermeture en un geste (parcours 13, écran 23), à valider.
 Spec 007 : parcours 10 (publier un produit par photo, écrans 24 à 27), à valider.
+Spec 008 : parcours 2 et 3 construits (écrans validés 02, 03, 04 ; nouveaux écrans 28 à 30, à valider).
 Les autres parcours sont produits spec par spec dans la même direction.
 
 ## Ordre de production
