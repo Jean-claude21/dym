@@ -14,6 +14,7 @@ import 'package:dym_vendor/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/catalog_fixtures.dart';
 import 'support/store_fixtures.dart';
 
 class _Auth implements AuthService {
@@ -82,7 +83,14 @@ class _Navigator implements AppNavigator {
       routes.add('setting:${step.name}');
 
   @override
-  void toAddProduct(BuildContext context) => routes.add('addProduct');
+  void toAddProduct() => routes.add('addProduct');
+
+  @override
+  Future<void> toProductEditor({Product? product}) async =>
+      routes.add('editor:${product?.id ?? 'new'}');
+
+  @override
+  Future<void> toStoreCategories() async => routes.add('categories');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(
@@ -243,7 +251,7 @@ void main() {
   group('accueil : « Ma boutique » et « Moi »', () {
     for (final size in sizes) {
       for (final locale in const [Locale('fr'), Locale('en')]) {
-        for (final tab in [0, 1]) {
+        for (final tab in [0, 1, 2]) {
           testWidgets(
             'onglet $tab · ${size.width.toInt()}×${size.height.toInt()} · '
             '${locale.languageCode} · texte 130 %',
@@ -253,16 +261,21 @@ void main() {
                 HomeView(
                   service: _Auth(const Ok(AuthState.signedOut())),
                   stores: memoryStores(initial: openStore()),
+                  catalog: memoryCatalog(),
                   navigator: _Navigator(),
                 ),
                 size: size,
                 locale: locale,
                 textScale: 1.3,
               );
-              if (tab == 1) {
-                await tester.tap(
-                  find.text(locale.languageCode == 'fr' ? 'Moi' : 'Me').first,
-                );
+              final fr = locale.languageCode == 'fr';
+              final label = switch (tab) {
+                1 => fr ? 'Boutique' : 'Shop',
+                2 => fr ? 'Moi' : 'Me',
+                _ => null,
+              };
+              if (label != null) {
+                await tester.tap(find.text(label).last);
                 await tester.pump();
               }
               expect(tester.takeException(), isNull);
@@ -282,11 +295,12 @@ void main() {
         HomeView(
           service: auth,
           stores: memoryStores(initial: openStore()),
+          catalog: memoryCatalog(),
           navigator: nav,
         ),
       );
       await tester.pump();
-      expect(find.text('Ma boutique'), findsOneWidget);
+      expect(find.text('Mes produits'), findsOneWidget);
       await tester.tap(find.text('Moi').first);
       await tester.pump();
       await tester.tap(find.text('Se déconnecter'));

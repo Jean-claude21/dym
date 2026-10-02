@@ -73,8 +73,11 @@ class DymFilterChip extends StatelessWidget {
                         Icon(Icons.check_rounded, size: 20, color: ink),
                         const SizedBox(width: DymTokenSpace.s1),
                       ],
-                      Text(
+                      Flexible(
+                        child: Text(
                         label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: context.dym.text.label.copyWith(
                           fontSize: 15,
                           fontWeight: selected
@@ -82,6 +85,7 @@ class DymFilterChip extends StatelessWidget {
                               : FontWeight.w600,
                           color: ink,
                         ),
+                      ),
                       ),
                     ],
                   ),

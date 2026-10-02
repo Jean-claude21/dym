@@ -68,7 +68,22 @@ CountryConfig togoConfig() {
           'description': {'fr': description},
         }),
     ],
-    units: const [],
+    units: [
+      for (final (i, (code, fr, kind)) in const [
+        ('piece', 'la pièce', 'piece'),
+        ('litre', 'le litre', 'volume'),
+        ('bol', 'le bol', 'volume'),
+        ('sachet', 'le sachet', 'piece'),
+      ].indexed)
+        MarketUnit.fromJson({
+          'id': 'unit-$code',
+          'country_code': 'TG',
+          'code': code,
+          'label': {'fr': fr},
+          'kind': kind,
+          'sort': i,
+        }),
+    ],
     paymentMethods: [
       PaymentMethod.fromJson(const {
         'id': 'cash',

@@ -1,0 +1,180 @@
+import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/dym_models.dart';
+import 'package:dym_vendor/features/catalog/catalog_service.dart';
+import 'package:stacked/stacked.dart';
+
+/// « Mes produits » (écran 24) : filtres par catégorie, stock en un geste
+/// (US2), archivage.
+class ProductsViewModel extends BaseViewModel {
+  new({
+    required this._service,
+    required this._onEdit,
+    required this._onCategories,
+  });
+
+  final CatalogService _service;
+
+  /// Ouvre l'éditeur (`null` : nouveau produit) ; se termine au retour.
+  final Future<void> Function(Product? product) _onEdit;
+
+  /// Ouvre « Mes catégories » ; se termine au retour.
+  final Future<void> Function() _onCategories;
+
+  List<Product> _products = const [];
+  List<StoreCategory> _categories = const [];
+  CountryConfig? _config;
+  Failure? _loadFailure;
+  Failure? _actionFailure;
+  final Set<String> _pending = {};
+
+  /// Catégorie filtrée (`null` : tout).
+  String? filter;
+
+  /// Affiche les archivés.
+  bool showArchived = false;
+
+  CatalogService get service => _service;
+  CountryConfig? get config => _config;
+  Failure? get loadFailure => _loadFailure;
+  Failure? get actionFailure => _actionFailure;
+  bool get offline => _loadFailure is NetworkFailure;
+  bool get ready => _config != null && _loadFailure == null;
+  bool get isEmpty => _products.where((p) => !p.isArchived).isEmpty;
+  bool get hasArchived => _products.any((p) => p.isArchived);
+  bool isPending(String id) => _pending.contains(id);
+
+  /// Catégories actives (filtres).
+  List<StoreCategory> get categories =>
+      _categories.where((c) => !c.isArchived).toList();
+
+  List<Product> get visible => [
+    for (final p in _products)
+      if (showArchived
+          ? p.isArchived
+          : !p.isArchived &&
+                (filter == null || p.storeCategoryIds.contains(filter)))
+        p,
+  ];
+
+  Future<void> load() async {
+    _loadFailure = null;
+    setBusy(true);
+    final results = await Future.wait<Result<Object>>([
+      _service.countryConfig(),
+      _service.products(),
+      _service.storeCategories(),
+    ]);
+    switch (results) {
+      case [
+        Ok(value: final CountryConfig config),
+        Ok(value: final List<Product> products),
+        Ok(value: final List<StoreCategory> categories),
+      ]:
+        _config = config;
+        _products = products;
+        _categories = categories;
+        if (filter != null && !categories.any((c) => c.id == filter)) {
+          filter = null;
+        }
+      default:
+        _loadFailure = results
+            .whereType<Err<Object>>()
+            .map((e) => e.failure)
+            .first;
+    }
+    setBusy(false);
+  }
+
+  void selectFilter(String? categoryId) {
+    filter = categoryId;
+    showArchived = false;
+    notifyListeners();
+  }
+
+  void selectArchived() {
+    filter = null;
+    showArchived = true;
+    notifyListeners();
+  }
+
+  /// Rupture ou réactivation ; l'interrupteur suit l'état renvoyé.
+  Future<void> setAvailable(Product product, {required bool available}) =>
+      _apply(
+        product.id,
+        () => _service.setAvailable(product.id, available: available),
+      );
+
+  Future<void> archive(Product product, {required bool archived}) => _apply(
+    product.id,
+    () => _service.archive(product.id, archived: archived),
+  );
+
+  Future<void> deleteDraft(Product product) async {
+    _pending.add(product.id);
+    _actionFailure = null;
+    notifyListeners();
+    final result = await _service.deleteDraft(product.id);
+    if (result case Err(:final failure)) {
+      _actionFailure = failure;
+    } else {
+      _products = [
+        for (final p in _products)
+          if (p.id != product.id) p,
+      ];
+    }
+    _pending.remove(product.id);
+    notifyListeners();
+  }
+
+  Future<void> _apply(
+    String id,
+    Future<Result<Product>> Function() action,
+  ) async {
+    if (_pending.contains(id)) return;
+    _pending.add(id);
+    _actionFailure = null;
+    notifyListeners();
+    final result = await action();
+    switch (result) {
+      case Ok(:final value):
+        _products = [
+          for (final p in _products)
+            if (p.id == id) value else p,
+        ];
+      case Err(:final failure):
+        _actionFailure = failure;
+    }
+    _pending.remove(id);
+    notifyListeners();
+  }
+
+  Future<void> add() async {
+    await _onEdit(null);
+    await load();
+  }
+
+  Future<void> edit(Product product) async {
+    await _onEdit(product);
+    await load();
+  }
+
+  Future<void> manageCategories() async {
+    await _onCategories();
+    await load();
+  }
+
+  /// Unité lisible d'un produit (« la pièce »).
+  String? unitLabel(Product product, String locale) => _config?.units
+      .where((u) => u.id == product.unitId)
+      .firstOrNull
+      ?.label
+      .resolve(locale);
+
+  /// Prix de base en devise du pays.
+  Money? price(Product product) {
+    final config = _config;
+    final amount = product.priceMinor;
+    if (config == null || amount == null) return null;
+    return config.money(amount);
+  }
+}

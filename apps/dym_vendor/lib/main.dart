@@ -5,6 +5,7 @@ import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
 import 'package:dym_vendor/app/vendor_app.dart';
+import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:flutter/widgets.dart';
 
@@ -28,15 +29,27 @@ Future<void> main() async {
     google: PluginGoogleIdTokenProvider.fromDefines(),
     app: AccountApp.vendor,
   );
+  final stores = NeonStoreService(
+    stores: StoreRepository(neon.data),
+    reference: reference,
+    auth: auth,
+  );
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
     ..registerSingleton<AuthService>(auth)
-    ..registerSingleton<StoreService>(
-      NeonStoreService(
-        stores: StoreRepository(neon.data),
-        reference: reference,
-        auth: auth,
+    ..registerSingleton<StoreService>(stores)
+    ..registerSingleton<CatalogService>(
+      NeonCatalogService(
+        catalog: CatalogRepository(neon.data),
+        media: CatalogMediaRepository(
+          functions: neon.functions,
+          uploads: neon.uploads,
+        ),
+        events: EventsRepository(neon.data, app: EventApp.vendor),
+        stores: stores,
+        picker: PluginPhotoPicker(),
+        environment: environment,
       ),
     );
   runApp(const VendorApp());
