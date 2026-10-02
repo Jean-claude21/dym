@@ -94,7 +94,7 @@ Failure failureFromPostgrest(PostgrestException error) {
   return switch (code) {
     '23505' || '409' => ConflictFailure(message),
     '42501' || '403' => ForbiddenFailure(message),
-    'PGRST116' || '404' || '406' => NotFoundFailure(message),
+    'PGRST116' || 'P0002' || '404' || '406' => NotFoundFailure(message),
     'PGRST301' ||
     'PGRST302' ||
     'PGRST303' ||
