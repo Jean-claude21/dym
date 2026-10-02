@@ -15,9 +15,9 @@
 
 ## Phase 3: User Story 4 — chaîne et simulateur (P1)
 
-- [ ] T006 [US4] `PaymentProvider`, registre, simulateur (HMAC, page HTML, issues), garde production, dans `functions/src/payments/`
-- [ ] T007 [US4] Routes : commande avec paiement, réessai, cash, webhook journalisé, dans `functions/src/payments/routes.ts` et `functions/src/orders/routes.ts`
-- [ ] T008 [US4] Tests Function (signature invalide, rejeu, production refusée, issues du simulateur) dans `functions/test/payments.test.ts`
+- [X] T006 [US4] `PaymentProvider`, registre, simulateur (HMAC, page HTML, issues), garde production, dans `functions/src/payments/`
+- [X] T007 [US4] Routes : commande avec paiement, réessai, cash, webhook journalisé, dans `functions/src/payments/routes.ts` et `functions/src/orders/routes.ts`
+- [X] T008 [US4] Tests Function (signature invalide, rejeu, production refusée, issues du simulateur) dans `functions/test/payments.test.ts`
 
 ## Phase 4: User Stories 1 et 2 — cliente (P1)
 

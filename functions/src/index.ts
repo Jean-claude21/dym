@@ -12,6 +12,8 @@ import {
 import { neonAuthVerifier } from "./lib/auth.js";
 import { createPool } from "./lib/db.js";
 import { pgOrderStore } from "./orders/adapters.js";
+import { pgPaymentStore } from "./payments/adapters.js";
+import { availableProviders } from "./payments/simulator.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -41,4 +43,12 @@ export default createApp({
     suggester: openAiKey ? aiProductSuggester(openAiProviders(openAiKey)) : undefined,
   },
   orders: { store: pgOrderStore(pool) },
+  payments: {
+    store: pgPaymentStore(pool),
+    // Simulateur : secret présent et branche hors production (spec 010).
+    providers: availableProviders({
+      branch: process.env.NEON_BRANCH,
+      simulatorSecret: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
+    }),
+  },
 });

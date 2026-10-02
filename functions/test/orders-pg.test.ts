@@ -24,6 +24,7 @@ describe.skipIf(!pool)("commandes · Postgres", () => {
           substitutionAllowed: true,
           expectedTotalMinor: null,
         },
+        [],
       ),
     ).rejects.toMatchObject({ status: 422, message: "cart_empty" });
   });
