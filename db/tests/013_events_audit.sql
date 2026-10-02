@@ -64,7 +64,8 @@ select lives_ok(
 select tests.logout();
 
 select is(
-  (select count(*)::int from public.events where name = 'search_performed'),
+  (select count(*)::int from public.events where name = 'search_performed'
+     and occurred_at = now()),
   1,
   'un seul événement pour deux envois du même identifiant'
 );

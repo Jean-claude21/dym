@@ -6,7 +6,8 @@ import 'package:neon_kit/src/errors.dart';
 import 'package:postgrest/postgrest.dart';
 
 /// Data API (PostgREST) sous l'identité de l'utilisateur connecté (RLS), ou
-/// sous le rôle anonyme quand aucune session n'est ouverte (visiteur).
+/// sous le rôle anonyme quand aucune session n'est ouverte (visiteur, JWT
+/// anonyme de Neon Auth).
 ///
 /// Les nouvelles tentatives des lectures (GET, HEAD) sur erreur réseau ou 5xx
 /// sont faites par `postgrest` ; ce client ajoute le jeton et rejoue une fois
@@ -39,11 +40,12 @@ class NeonDataClient {
 
   /// Appelle une fonction SQL exposée (`/rpc/<fn>`).
   Future<Result<T>> rpc<T>(String fn, {Map<String, Object?>? params}) =>
-      run((db) => db.rpc<T>(fn, params: params));
+      // Toujours un objet : la Data API de Neon refuse un corps `null`.
+      run((db) => db.rpc<T>(fn, params: params ?? const <String, Object?>{}));
 }
 
 /// Client HTTP qui porte le JWT courant et rejoue une fois après un 401.
-/// Sans session : requête sans jeton (rôle anonyme). Une session dont le
+/// Sans session : JWT anonyme (rôle `anonymous`). Une session dont le
 /// renouvellement échoue n'est jamais rétrogradée en anonyme.
 class _AuthenticatedClient extends http.BaseClient {
   new(this._auth, this._inner);
@@ -54,7 +56,15 @@ class _AuthenticatedClient extends http.BaseClient {
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     final body = request is http.Request ? request.bodyBytes : null;
-    if (_auth.currentSession == null) return await _inner.send(request);
+    if (_auth.currentSession == null) {
+      final token = await _auth.anonymousAccessToken();
+      final value = switch (token) {
+        Ok(:final value) => value,
+        Err(:final failure) => throw NeonAuthAbort(failure),
+      };
+      request.headers['Authorization'] = 'Bearer $value';
+      return await _inner.send(request);
+    }
     final first = await _sendWithToken(request, body, refreshed: false);
     if (first.statusCode != 401 || body == null) return first;
     await first.stream.drain<void>();

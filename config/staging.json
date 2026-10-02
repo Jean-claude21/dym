@@ -1,0 +1,7 @@
+{
+  "DYM_ENV": "staging",
+  "DYM_AUTH_URL": "https://ep-patient-bonus-b122l4hc.neonauth.c-5.eu-central-1.aws.neon.tech/neondb/auth",
+  "DYM_DATA_API_URL": "https://ep-patient-bonus-b122l4hc.apirest.c-5.eu-central-1.aws.neon.tech/neondb/rest/v1",
+  "DYM_FUNCTIONS_URL": "https://br-autumn-base-b1sqtmn4-api.compute.c-5.eu-central-1.aws.neon.tech",
+  "DYM_MEDIA_URL": "https://br-autumn-base-b1sqtmn4.storage.c-5.eu-central-1.aws.neon.tech/product-photos"
+}

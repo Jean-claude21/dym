@@ -12,6 +12,7 @@ class NeonSession {
     required this.accessTokenExpiresAt,
     required this.userId,
     this.email,
+    this.sessionCookie,
   });
 
   /// Restaure une session sérialisée par [toJson].
@@ -23,6 +24,7 @@ class NeonSession {
     ),
     userId: json['userId']! as String,
     email: json['email'] as String?,
+    sessionCookie: json['sessionCookie'] as String?,
   );
 
   /// Jeton de session Better Auth (longue durée).
@@ -40,6 +42,11 @@ class NeonSession {
   /// Email de l'utilisateur, s'il est connu.
   final String? email;
 
+  /// Cookie de session (`nom=valeur`) rejoué en en-tête `Cookie` quand Neon
+  /// Auth n'accepte pas le jeton en `Bearer` (plugin bearer inactif). Nul sur
+  /// le web : le navigateur gère le cookie.
+  final String? sessionCookie;
+
   /// Copie avec un nouveau jeton d'accès.
   NeonSession withAccessToken(String token, DateTime expiresAt) => NeonSession(
     sessionToken: sessionToken,
@@ -47,6 +54,7 @@ class NeonSession {
     accessTokenExpiresAt: expiresAt,
     userId: userId,
     email: email,
+    sessionCookie: sessionCookie,
   );
 
   Map<String, Object?> toJson() => {
@@ -55,6 +63,7 @@ class NeonSession {
     'accessTokenExpiresAt': accessTokenExpiresAt.toUtc().toIso8601String(),
     'userId': userId,
     'email': email,
+    'sessionCookie': sessionCookie,
   };
 
   /// Sérialisation pour un stockage sécurisé.

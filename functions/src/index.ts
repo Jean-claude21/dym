@@ -12,14 +12,26 @@ import {
 import { neonAuthVerifier } from "./lib/auth.js";
 import { createPool } from "./lib/db.js";
 
-const env = parseEnv(config, "api");
+// Mode filtré : seules les variables de la plateforme utilisées sont exigées.
+// Les variables propres à la Function sont facultatives (vides : désactivées).
+const env = parseEnv(config, [
+  "DATABASE_URL",
+  "NEON_AUTH_BASE_URL",
+  "NEON_AUTH_JWKS_URL",
+  "AWS_ACCESS_KEY_ID",
+  "AWS_SECRET_ACCESS_KEY",
+  "AWS_ENDPOINT_URL_S3",
+  "AWS_REGION",
+]);
 const pool = createPool(env.postgres.databaseUrl);
-const openAiKey = env.function.OPENAI_API_KEY;
+const openAiKey = process.env.OPENAI_API_KEY ?? "";
+const allowedOrigins = process.env.ALLOWED_ORIGINS ?? "";
 
 export default createApp({
   verifyToken: neonAuthVerifier(env.auth),
   branch: process.env.NEON_BRANCH,
-  allowedOrigins: env.function.ALLOWED_ORIGINS.split(",")
+  allowedOrigins: allowedOrigins
+    .split(",")
     .map((o) => o.trim())
     .filter(Boolean),
   catalog: {

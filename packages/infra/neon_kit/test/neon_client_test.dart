@@ -85,6 +85,44 @@ void main() {
   }
 
   group('authentification (US2)', () {
+    test('Neon Auth réel : cookie de session rejoué, pas de bearer', () async {
+      const cookie = '__Secure-neon-auth.session_token=abc.signature%3D';
+      server
+        ..on(
+          'POST',
+          '/neondb/auth/sign-in/email-otp',
+          (_) => const FakeResponse(
+            200,
+            {
+              'token': 'abc',
+              'user': {'id': _user, 'email': 'awa@example.com'},
+            },
+            {
+              'set-cookie':
+                  '$cookie; Max-Age=604800; Path=/; HttpOnly; Secure; '
+                  'SameSite=None; Partitioned',
+            },
+          ),
+        )
+        ..on('GET', '/neondb/auth/token', (r) {
+          final sent = r.headers.entries
+              .where((e) => e.key.toLowerCase() == 'cookie')
+              .map((e) => e.value)
+              .firstOrNull;
+          return sent == cookie
+              ? FakeResponse(200, {
+                  'token': jwtValidFor(const Duration(minutes: 15)),
+                })
+              : const FakeResponse(401, {'message': 'UNAUTHORIZED'});
+        });
+      final result = await neon.auth.verifyEmailOtp('awa@example.com', '1');
+      expect(result.valueOrNull?.sessionCookie, cookie);
+      now = now.add(const Duration(minutes: 20));
+      expect((await neon.auth.refresh()).isOk, isTrue, reason: 'cookie rejoué');
+      final restored = NeonSession.decode((await store.read())!.encode());
+      expect(restored?.sessionCookie, cookie);
+    });
+
     test('OTP email : envoi puis vérification ouvrent une session', () async {
       authRoutes();
       expect((await neon.auth.sendEmailOtp(' Awa@Example.com ')).isOk, isTrue);
@@ -255,11 +293,23 @@ void main() {
     });
 
     test('sans session : requête anonyme, refus du serveur remonté', () async {
-      server.on(
-        'GET',
-        '/rest/v1/x',
-        (_) => const FakeResponse(401, {'code': 'PGRST301', 'message': 'jwt'}),
-      );
+      server
+        ..on(
+          'GET',
+          '/neondb/auth/token/anonymous',
+          (_) => FakeResponse(200, {
+            'token': fakeJwt(
+              sub: 'anonymous',
+              expiresAt: now.add(const Duration(hours: 1)),
+            ),
+          }),
+        )
+        ..on(
+          'GET',
+          '/rest/v1/x',
+          (_) =>
+              const FakeResponse(401, {'code': 'PGRST301', 'message': 'jwt'}),
+        );
       final result = await neon.data.run((db) => db.from('x').select());
       expect(result.failureOrNull, isA<UnauthenticatedFailure>());
       expect(
@@ -353,18 +403,26 @@ void main() {
       },
     );
 
-    test('Data API sans session : rôle anonyme, sans jeton', () async {
-      FakeRequest? sent;
-      server.on('POST', '/rest/v1/rpc/discover_stores', (r) {
-        sent = r;
-        return const FakeResponse(200, {'stores': <Object>[]});
-      });
-      final result = await neon.data.rpc<Object?>('discover_stores');
-      expect(result.isOk, isTrue);
-      expect(
-        sent?.headers.keys.map((k) => k.toLowerCase()),
-        isNot(contains('authorization')),
+    test('Data API sans session : JWT anonyme, mis en cache', () async {
+      final anonymous = fakeJwt(
+        sub: 'anonymous',
+        expiresAt: now.add(const Duration(hours: 1)),
       );
+      final sent = <String?>[];
+      server
+        ..on(
+          'GET',
+          '/neondb/auth/token/anonymous',
+          (_) => FakeResponse(200, {'token': anonymous}),
+        )
+        ..on('POST', '/rest/v1/rpc/discover_stores', (r) {
+          sent.add(r.bearer);
+          return const FakeResponse(200, {'stores': <Object>[]});
+        });
+      expect((await neon.data.rpc<Object?>('discover_stores')).isOk, isTrue);
+      expect((await neon.data.rpc<Object?>('discover_stores')).isOk, isTrue);
+      expect(sent, [anonymous, anonymous]);
+      expect(server.count('GET', '/neondb/auth/token/anonymous'), 1);
     });
 
     test('GET : réseau coupé puis rétabli', () async {

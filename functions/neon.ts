@@ -8,7 +8,8 @@ export const PRODUCT_PHOTOS_BUCKET = "product-photos";
 
 export default defineConfig({
   auth: true,
-  dataApi: true,
+  // Rôle anonyme : lectures publiques sans session (visiteuse), sous RLS.
+  dataApi: { settings: { dbAnonRole: "anonymous" } },
   buckets: {
     [PRODUCT_PHOTOS_BUCKET]: { access: "public_read" },
   },
@@ -25,8 +26,11 @@ export default defineConfig({
       },
     },
   },
+  // `main` (production) et `staging` sont durables ; les branches de
+  // prévisualisation (une par PR) expirent après 7 jours. La Data API refuse
+  // les branches qui expirent : elle n'y est donc pas exposée.
   branch: (branch) => ({
     protected: branch.name === "main",
-    ...(branch.isDefault ? {} : { ttl: "7d" }),
+    ...(branch.isDefault || branch.name === "staging" ? {} : { ttl: "7d" }),
   }),
 });

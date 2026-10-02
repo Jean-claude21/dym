@@ -43,7 +43,8 @@ select is(
   'audit : attributions, connexion admin et retrait'
 );
 select is(
-  (select count(*)::int from public.events where name = 'user_signed_in'),
+  (select count(*)::int from public.events where name = 'user_signed_in'
+     and occurred_at = now()),
   2, 'deux événements de connexion'
 );
 

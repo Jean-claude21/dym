@@ -1,7 +1,7 @@
 -- Catalogue : catégories, produits, variantes, publication, stock (spec 007,
 -- US1 à US4).
 
-select plan(34);
+select plan(35);
 
 create temporary table _t as
 select tests.create_user('esi@example.com') as esi,
@@ -83,6 +83,8 @@ select is(public.my_products() -> 0 -> 'store_category_ids', jsonb_build_array((
 select lives_ok(format($$select public.publish_product('%s')$$, (select p1 from _t)), 'publication');
 select lives_ok(format($$select public.publish_product('%s')$$, (select p1 from _t)), 'publication rejouée');
 select is(public.my_products() -> 0 ->> 'status', 'published', 'publié');
+select ok(not (public.my_products() -> 0 ? 'search') and not (public.my_store() ? 'search'),
+  'colonne technique search non servie');
 
 -- Stock et rupture.
 select lives_ok(format($$select public.set_product_available('%s', false)$$, (select p1 from _t)), 'rupture');
