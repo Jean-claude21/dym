@@ -51,7 +51,7 @@ Flutter des viewmodels et des vues.
 
 - [X] T024 Galerie : écrans 34 à 37 et vrai panier (38), goldens, dans `apps/dym_gallery/`
 - [X] T025 Tests de vues aux 7 tailles, fr et en, texte 130 %, et test du parcours nominal (panier → commande) dans `apps/dym_client/test/` — l'enchaînement fiche produit → panier est couvert par les tests séparés des deux écrans
-- [ ] T026 Migrations et pgTAP sur la branche Neon `staging` (fait, 339/339), Function redéployée (fait), essai réel sans données (fait : 400, 422 `cart_empty`, 401, RLS) ; parcours complet avec une vraie boutique : à faire avec une vendeuse testeuse
+- [X] T026 Migrations et pgTAP sur la branche Neon `staging` (339/339), Function redéployée, commande de bout en bout réelle (`packages/data/dym_data/test/order_flow_live_test.dart` : deux boutiques, adresse, panier, retrait, commande, rejeu, lecture limitée, nettoyage) verte sur staging
 - [X] T027 `ROADMAP.md`, `METRICS.md` (événements émis), quickstart vérifié ; analyse et tests verts
 
 ## Dependencies
