@@ -13,6 +13,7 @@ workspace:
   - packages/domain/dym_models
   - packages/data/dym_data
   - packages/ui/dym_ui
+  - packages/features/dym_auth
   - apps/dym_gallery
   - apps/dym_client
   - apps/dym_vendor

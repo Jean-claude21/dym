@@ -30,14 +30,15 @@ class DymFilterChip extends StatelessWidget {
       selected: selected,
       label: label,
       excludeSemantics: true,
-      child: SizedBox(
-        height: DymTokenSize.touchMin,
-        child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+      // Zone tactile de 48 dp ; la pastille dessinée fait 40 dp.
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+          child: SizedBox(
+            height: DymTokenSize.touchMin,
+            child: Center(
               child: AnimatedContainer(
                 duration: DymMotion.of(context, DymMotion.fast),
                 curve: DymMotion.standard,

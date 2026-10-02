@@ -1,0 +1,31 @@
+name: dym_auth
+description: Parcours de connexion DYM (bienvenue, email, code, Google, profil), partagé par les apps.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  dym_core: ^0.1.0
+  dym_data: ^0.1.0
+  dym_l10n: ^0.1.0
+  dym_models: ^0.1.0
+  dym_platform: ^0.1.0
+  dym_ui: ^0.1.0
+  flutter:
+    sdk: flutter
+  meta: ^1.17.0
+  neon_kit: ^0.1.0
+  stacked: ^3.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^11.0.0
+
+flutter:
+  assets:
+    - assets/
