@@ -49,8 +49,8 @@ restaurée au redémarrage.
 3. **Given** un code faux, **When** Awa le saisit, **Then** un message lui permet de réessayer
    sans perdre l'email ; après 60 s elle peut renvoyer un code.
 4. **Given** un code juste, **When** c'est sa première connexion, **Then** l'écran « Bienvenue sur
-   DYM ! » demande son prénom et son quartier. Le quartier est préchoisi si sa position est
-   connue, sinon elle le choisit dans la liste des quartiers actifs.
+   DYM ! » demande son prénom et son adresse : sa position choisit le quartier, sinon elle
+   cherche son quartier par son nom. Aucune liste de quartiers n'est affichée d'avance.
 5. **Given** le prénom et le quartier validés, **When** elle touche « C'est parti », **Then**
    plusieurs choses se produisent :
    - son profil est créé dans le pays du quartier ;
@@ -194,7 +194,8 @@ dans l'audit. L'inactivité simulée déconnecte.
   - la connexion Google, quand elle est configurée pour l'environnement.
 - **FR-002**: À la première connexion, l'app DOIT demander :
   - le prénom (1 à 40 caractères) ;
-  - le quartier, parmi les quartiers actifs, préchoisi si la position est connue ;
+  - le quartier, parmi les quartiers actifs : par la position, ou par une recherche (aucune
+    liste affichée d'avance) ;
   - une photo, facultative et reportée à l'écran profil.
 - **FR-003**: La base DOIT tenir un profil par utilisateur et des rôles (`client`, `vendor`,
   `admin`, `courier`). Une utilisatrice :
@@ -257,7 +258,7 @@ dans l'audit. L'inactivité simulée déconnecte.
 - **Google.** La connexion Google exige des identifiants OAuth par plateforme, configurés hors
   dépôt et passés à la compilation. Sans eux, le bouton Google est masqué.
 - **Détection du quartier.** Elle se fait sur l'appareil, par la position, avec la permission de
-  l'utilisatrice. Sans permission, elle choisit dans la liste.
+  l'utilisatrice. Sans permission, elle cherche son quartier par son nom.
 - **Photo de profil.** Elle arrive avec le stockage d'objets (spec `catalog`). Le champ existe dès
   maintenant.
 - **Admin.** La 2FA est imposée par Google Workspace (décision 0007). Les rôles fins de l'admin
@@ -265,3 +266,18 @@ dans l'audit. L'inactivité simulée déconnecte.
 - **Après la connexion.** L'accueil de l'app cliente est un écran provisoire jusqu'à la spec
   `discovery`. L'écran d'après connexion de la vendeuse est le début de l'onboarding, spec
   `store-onboarding`.
+
+## Correction terrain (2026-10-02)
+
+Retour du porteur produit sur l'app réelle : la liste de quartiers affichée d'emblée ne convient
+pas, car DYM sera déployée dans plusieurs pays. Aucun nom de lieu n'est donc affiché d'avance.
+La personne choisit son adresse :
+
+- soit par sa position (« Utiliser ma position ») : le quartier le plus proche est choisi, le
+  pays suit ;
+- soit en cherchant son quartier ou sa ville (recherche sans accents ni casse, 6 résultats au
+  plus).
+
+Ce choix est partagé par le profil (`dym_auth`) et le sélecteur de quartier de l'accueil
+(`DymPlacePicker` de `dym_ui`). L'adresse complète (repère, GPS conservé, adresses enregistrées)
+relève de la spec `cart-checkout` (C-ADDR-01..03).

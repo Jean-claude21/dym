@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
@@ -203,7 +205,7 @@ class _ZoneButton extends StatelessWidget {
   }
 }
 
-/// Choix du quartier : position proposée (à confirmer) ou liste.
+/// Choix du quartier : position proposée (à confirmer) ou recherche.
 Future<void> showZonePicker(
   BuildContext context,
   DiscoveryHomeViewModel viewModel,
@@ -256,42 +258,28 @@ Future<void> showZonePicker(
                     ),
                   ],
                 ),
-              )
-            else
-              DymButton(
-                label: viewModel.locating
-                    ? l10n.zoneLocating
-                    : l10n.zoneUseLocation,
-                icon: Icons.my_location_rounded,
-                variant: DymButtonVariant.secondary,
-                loading: viewModel.locating,
-                onPressed: viewModel.locating ? null : viewModel.locate,
               ),
-            if (viewModel.locationUnavailable) ...[
-              const SizedBox(height: DymTokenSpace.s2),
-              Text(
-                l10n.zoneLocationUnavailable,
-                style: t.label.copyWith(color: c.textSecondary, fontSize: 14),
-              ),
-            ],
-            const SizedBox(height: DymTokenSpace.s3),
-            for (final city in config?.cities ?? const <City>[]) ...[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
-                child: Text(city.name, style: t.title.copyWith(fontSize: 18)),
-              ),
-              Wrap(
-                spacing: DymTokenSpace.s2,
-                children: [
+            if (suggestion != null) const SizedBox(height: DymTokenSpace.s3),
+            DymPlacePicker(
+              places: [
+                for (final city in config?.cities ?? const <City>[])
                   for (final zone in config!.zonesOf(city.id))
-                    DymFilterChip(
-                      label: zone.name,
-                      selected: zone.id == viewModel.zoneId,
-                      onTap: () => pick(zone.id),
-                    ),
-                ],
-              ),
-            ],
+                    DymPlace(id: zone.id, name: zone.name, detail: city.name),
+              ],
+              selectedId: viewModel.zoneId,
+              onSelected: (id) => unawaited(pick(id)),
+              searchLabel: l10n.zoneSearchLabel,
+              searchHint: l10n.zoneSearchHint,
+              noResultLabel: l10n.zoneNoResult,
+              onLocate: suggestion == null ? viewModel.locate : null,
+              locateLabel: viewModel.locating
+                  ? l10n.zoneLocating
+                  : l10n.zoneUseLocation,
+              locating: viewModel.locating,
+              message: viewModel.locationUnavailable
+                  ? l10n.zoneLocationUnavailable
+                  : null,
+            ),
           ],
         ),
       );

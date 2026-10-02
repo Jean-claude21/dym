@@ -81,6 +81,18 @@ class DemoAuthService implements AuthService {
   Future<Result<List<Country>>> countries() async => Ok([_country]);
 
   @override
+  Future<Result<ZoneMatch?>> locateZone() async => Ok(
+    ZoneMatch(
+      zoneId: country.code == 'TG' ? 'be' : _zones[country.code]!.first,
+      zoneName: country.zone,
+      cityId: 'city',
+      cityName: country.city.split(',').last.trim(),
+      countryCode: country.code,
+      distanceM: 300,
+    ),
+  );
+
+  @override
   Future<Result<CountryConfig>> countryConfig(String countryCode) async {
     final city = country.city.split(',').last.trim();
     return Ok(

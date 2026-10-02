@@ -4,7 +4,8 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Prénom et quartier (maquette 12). La photo arrive avec le stockage.
+/// Prénom et adresse (maquette 12) : position ou recherche, sans liste de
+/// quartiers imposée. La photo arrive avec le stockage.
 class ProfileStep extends StatefulWidget {
   const new({required this.viewModel, super.key});
 
@@ -32,7 +33,6 @@ class _ProfileStepState extends State<ProfileStep> {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
-    final selected = vm.selectedZone;
     return StepScaffold(
       title: l10n.authProfileTitle,
       subtitle: Text(l10n.authProfileSubtitle),
@@ -51,7 +51,6 @@ class _ProfileStepState extends State<ProfileStep> {
               child: DymTextField(
                 label: l10n.authFirstNameLabel,
                 controller: _name,
-                hint: 'Awa',
                 maxLength: 40,
                 textCapitalization: TextCapitalization.words,
                 textInputAction: TextInputAction.done,
@@ -115,42 +114,31 @@ class _ProfileStepState extends State<ProfileStep> {
           ),
           const SizedBox(height: DymTokenSpace.s3),
         ],
-        if (selected != null)
-          Container(
-            margin: const EdgeInsets.only(bottom: DymTokenSpace.s3),
-            padding: const EdgeInsets.all(DymTokenSpace.s4),
-            decoration: BoxDecoration(
-              color: c.tintPlantainClair,
-              borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-              border: Border.all(color: c.card, width: 2),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.location_on_rounded, color: c.brand, size: 28),
-                const SizedBox(width: DymTokenSpace.s3),
-                Expanded(
-                  child: Text(
-                    [selected.name, ?vm.cityNameOf(selected)].join(', '),
-                    style: t.title.copyWith(fontSize: 19),
-                  ),
-                ),
-              ],
-            ),
-          ),
         if (vm.zones.isEmpty && vm.isBusy)
           Center(child: CircularProgressIndicator(color: c.brand))
         else
-          Wrap(
-            spacing: DymTokenSpace.s2,
-            runSpacing: DymTokenSpace.s2,
-            children: [
+          DymPlacePicker(
+            places: [
               for (final zone in vm.zones)
-                DymFilterChip(
-                  label: zone.name,
-                  selected: zone.id == vm.zoneId,
-                  onTap: () => vm.selectZone(zone.id),
+                DymPlace(
+                  id: zone.id,
+                  name: zone.name,
+                  detail: vm.cityNameOf(zone),
                 ),
             ],
+            selectedId: vm.zoneId,
+            onSelected: vm.selectZone,
+            searchLabel: l10n.zoneSearchLabel,
+            searchHint: l10n.zoneSearchHint,
+            noResultLabel: l10n.zoneNoResult,
+            onLocate: vm.locate,
+            locateLabel: vm.locating ? l10n.zoneLocating : l10n.zoneUseLocation,
+            locating: vm.locating,
+            message: switch (vm.location) {
+              ZoneLocation.unavailable => l10n.zoneLocationUnavailable,
+              ZoneLocation.outside => l10n.zoneOutsideArea,
+              ZoneLocation.found || null => null,
+            },
           ),
         const SizedBox(height: DymTokenSpace.s3),
         Text(

@@ -1,5 +1,7 @@
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -130,15 +132,21 @@ void main() {
     expect(find.text('Bienvenue sur DYM !'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, 'Awa');
-    await tester.tap(find.text('Tokoin'));
+    expect(find.textContaining('Tokoin'), findsNothing, reason: 'aucune liste');
+    await tester.enterText(find.byType(TextField).at(1), 'tok');
     await tester.pump();
+    await tester.tap(find.textContaining('Tokoin'));
+    await tester.pump();
+    expect(find.text('Tokoin, Lomé'), findsOneWidget);
     await tester.tap(find.text("C'est parti"));
     await tester.pump(const Duration(milliseconds: 400));
     expect(ready, ['Awa']);
     expect(service.calls.last, 'profile:Awa:z-tokoin:fr');
   });
 
-  testWidgets('cibles tactiles des quartiers ≥ 48 dp', (tester) async {
+  testWidgets('recherche de quartier : sans accents, cibles ≥ 48 dp', (
+    tester,
+  ) async {
     await _pump(
       tester,
       AuthFlowView(
@@ -147,9 +155,52 @@ void main() {
         startWithProfile: true,
       ),
     );
-    final chip = tester.getSize(
-      find.ancestor(of: find.text('Bè'), matching: find.byType(InkWell)).first,
+    await tester.enterText(find.byType(TextField).at(1), 'be');
+    await tester.pump();
+    expect(find.textContaining('Bè'), findsNWidgets(2), reason: 'Bè, Bè Kpota');
+    final row = tester.getSize(
+      find
+          .ancestor(
+            of: find.textContaining('Bè').first,
+            matching: find.byType(InkWell),
+          )
+          .first,
     );
-    expect(chip.height, greaterThanOrEqualTo(48));
+    expect(row.height, greaterThanOrEqualTo(48));
+    await tester.enterText(find.byType(TextField).at(1), 'zzz');
+    await tester.pump();
+    expect(find.textContaining('Aucun quartier trouvé'), findsOneWidget);
+  });
+
+  testWidgets('adresse par la position, ou message si indisponible', (
+    tester,
+  ) async {
+    final service = FakeAuthService()
+      ..locateResult = const Ok(
+        ZoneMatch(
+          zoneId: 'z-agoe',
+          zoneName: 'Agoè',
+          cityId: 'lome',
+          cityName: 'Lomé',
+          countryCode: 'TG',
+          distanceM: 240,
+        ),
+      );
+    await _pump(
+      tester,
+      AuthFlowView(service: service, onReady: (_) {}, startWithProfile: true),
+    );
+    await tester.tap(find.text('Utiliser ma position'));
+    await tester.pump();
+    expect(service.calls, contains('locate'));
+    expect(find.text('Agoè, Lomé'), findsOneWidget);
+
+    service.locateResult = const Ok(null);
+    await tester.tap(find.text('Utiliser ma position'));
+    await tester.pump();
+    expect(
+      find.text('Position indisponible : cherche ton quartier.'),
+      findsOneWidget,
+    );
   });
 }

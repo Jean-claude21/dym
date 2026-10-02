@@ -2,7 +2,8 @@ import 'package:dym_ui/src/theme/dym_theme.dart';
 import 'package:dym_ui/src/tokens/dym_tokens.g.dart';
 import 'package:flutter/material.dart';
 
-/// Tuile de rayon : contenant vu de dessus sur une teinte, libellé dessous.
+/// Tuile de rayon : contenant vu de dessus sur une teinte, libellé dessous
+/// (deux lignes au plus : « Céréales et farines »).
 class DymAisleTile extends StatelessWidget {
   /// Crée une tuile.
   const new({
@@ -53,7 +54,7 @@ class DymAisleTile extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       label,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: context.dym.text.label.copyWith(

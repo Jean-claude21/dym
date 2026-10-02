@@ -143,4 +143,41 @@ void main() {
     await vm.startProfile();
     expect(vm.back(), isFalse);
   });
+
+  test('position : quartier choisi, ou indisponible', () async {
+    final service = FakeAuthService()
+      ..locateResult = const Ok(
+        ZoneMatch(
+          zoneId: 'z-tokoin',
+          zoneName: 'Tokoin',
+          cityId: 'lome',
+          cityName: 'Lomé',
+          countryCode: 'TG',
+          distanceM: 120,
+        ),
+      );
+    final vm = AuthFlowViewModel(service: service, onReady: (_) {});
+    await vm.startProfile();
+    await vm.locate();
+    expect(vm.zoneId, 'z-tokoin');
+    expect(vm.location, ZoneLocation.found);
+
+    service.locateResult = const Ok(
+      ZoneMatch(
+        zoneId: 'ailleurs',
+        zoneName: 'Ailleurs',
+        cityId: 'x',
+        cityName: 'X',
+        countryCode: 'TG',
+        distanceM: 1,
+      ),
+    );
+    await vm.locate();
+    expect(vm.location, ZoneLocation.outside);
+    expect(vm.zoneId, 'z-tokoin', reason: 'choix précédent conservé');
+
+    service.locateResult = const Err(NetworkFailure('hors ligne'));
+    await vm.locate();
+    expect(vm.location, ZoneLocation.unavailable);
+  });
 }

@@ -60,6 +60,10 @@ abstract interface class AuthService {
 
   Future<Result<CountryConfig>> countryConfig(String countryCode);
 
+  /// Quartier le plus proche de la position de l'appareil, tous pays actifs
+  /// confondus. `Ok(null)` : position refusée ou hors des zones desservies.
+  Future<Result<ZoneMatch?>> locateZone();
+
   Future<Result<AuthState>> completeProfile({
     required String firstName,
     required String zoneId,
@@ -79,9 +83,12 @@ class NeonAuthService implements AuthService {
     required this._reference,
     required this._google,
     required this.app,
-  });
+    this._location = const PluginLocationProvider(),
+  }) : _discovery = DiscoveryRepository(_neon.data);
 
   final NeonClient _neon;
+  final LocationProvider _location;
+  final DiscoveryRepository _discovery;
   final AccountRepository _account;
   final ReferenceRepository _reference;
   final GoogleIdTokenProvider _google;
@@ -147,6 +154,18 @@ class NeonAuthService implements AuthService {
   @override
   Future<Result<CountryConfig>> countryConfig(String countryCode) =>
       _reference.countryConfig(countryCode);
+
+  @override
+  Future<Result<ZoneMatch?>> locateZone() async {
+    switch (await _location.current()) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(value: null):
+        return const Ok(null);
+      case Ok(value: final point?):
+        return await _discovery.nearestZone(point.latitude, point.longitude);
+    }
+  }
 
   @override
   Future<Result<AuthState>> completeProfile({

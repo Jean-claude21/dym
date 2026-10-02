@@ -49,7 +49,7 @@ suspendues ; vérifier la liste et l'ordre.
 3. **Given** la position autorisée, **When** Awa touche « Utiliser ma position », **Then** DYM
    propose le quartier le plus proche de sa ville. Elle le confirme ou en choisit un autre.
 4. **Given** la position refusée ou indisponible, **When** elle veut changer de quartier, **Then**
-   elle choisit dans la liste, sans blocage.
+   elle cherche son quartier par son nom, sans blocage (aucune liste affichée d'avance).
 
 ---
 
@@ -187,3 +187,18 @@ La fiche montre :
   terrain), puis arrondie. Elle n'est affichée que si la position a été donnée.
 - **Photos de boutique.** Elles arrivent plus tard : la couverture est la photo du premier
   produit publié, sinon l'illustration de l'origine.
+
+## Correction terrain (2026-10-02)
+
+Retour du porteur produit sur l'app réelle : la liste de quartiers affichée d'emblée ne convient
+pas, car DYM sera déployée dans plusieurs pays. Aucun nom de lieu n'est donc affiché d'avance.
+La personne choisit son adresse :
+
+- soit par sa position (« Utiliser ma position ») : le quartier le plus proche est choisi, le
+  pays suit ;
+- soit en cherchant son quartier ou sa ville (recherche sans accents ni casse, 6 résultats au
+  plus).
+
+Ce choix est partagé par le profil (`dym_auth`) et le sélecteur de quartier de l'accueil
+(`DymPlacePicker` de `dym_ui`). L'adresse complète (repère, GPS conservé, adresses enregistrées)
+relève de la spec `cart-checkout` (C-ADDR-01..03).

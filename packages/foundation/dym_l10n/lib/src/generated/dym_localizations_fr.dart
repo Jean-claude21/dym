@@ -165,7 +165,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get authPhotoOptional => 'Photo (facultatif)';
 
   @override
-  String get authZoneLabel => 'Ton quartier';
+  String get authZoneLabel => 'Ton adresse';
 
   @override
   String get authZoneHint =>
@@ -896,7 +896,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get zoneLocationUnavailable =>
-      'Position indisponible : choisis ton quartier dans la liste.';
+      'Position indisponible : cherche ton quartier.';
 
   @override
   String zoneSuggestion(String zone) {
@@ -905,6 +905,20 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get zoneConfirm => 'Oui, c\'est ça';
+
+  @override
+  String get zoneSearchLabel => 'Cherche ton quartier';
+
+  @override
+  String get zoneSearchHint => 'Quartier ou ville';
+
+  @override
+  String get zoneNoResult =>
+      'Aucun quartier trouvé. Essaie un autre nom ou utilise ta position.';
+
+  @override
+  String get zoneOutsideArea =>
+      'Ta position est hors des zones desservies : cherche ton quartier.';
 
   @override
   String get aisleAll => 'Tous';
