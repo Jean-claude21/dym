@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -102,12 +105,48 @@ class ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = DymLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
     final price = moneyOf(config, item.displayPriceMinor);
-    final origin = originOf(item.store.origin);
     final unit = item.unitLabel?.resolve(locale) ?? '';
+    final cart = CartScope.maybeOf(context);
+    if (cart == null || !item.available) return _card(context, price, unit, 0);
+    return ValueListenableBuilder(
+      valueListenable: cart.service.cart,
+      builder: (context, view, _) {
+        final variant = item.variantCount == 1 ? item.defaultVariantId : null;
+        return _card(
+          context,
+          price,
+          unit,
+          cartQuantityOf(view, variant),
+          onQuantity: (q) {
+            if (variant == null) {
+              onTap(); // plusieurs variantes : choix sur la fiche
+            } else if (cartQuantityOf(view, variant) == 0) {
+              unawaited(addToCart(context, variant, quantity: q));
+            } else {
+              unawaited(cart.service.setQuantity(variant, q));
+            }
+          },
+        );
+      },
+    );
+  }
+
+  Widget _card(
+    BuildContext context,
+    Money? price,
+    String unit,
+    int quantity, {
+    ValueChanged<int>? onQuantity,
+  }) {
+    final l10n = DymLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final origin = originOf(item.store.origin);
     return DymProductCard(
+      quantity: quantity,
+      onQuantityChanged: onQuantity,
+      addLabel: l10n.cartAddShort,
       image: item.photoKey == null
           ? storeFallback(item.store.origin)
           : service.photo(item.photoKey!),

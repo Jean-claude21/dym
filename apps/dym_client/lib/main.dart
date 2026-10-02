@@ -2,6 +2,7 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/app/client_app.dart';
 import 'package:dym_client/app/config_error_app.dart';
+import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -36,6 +37,19 @@ Future<void> main() async {
       () => NeonDiscoveryService(
         discovery: DiscoveryRepository(neon.data),
         reference: reference,
+        events: EventsRepository(neon.data, app: EventApp.client),
+        auth: auth,
+        location: const PluginLocationProvider(),
+        environment: environment,
+      ),
+    )
+    ..registerLazySingleton<CartService>(
+      () => NeonCartService(
+        cart: CartRepository(neon.data),
+        addresses: AddressRepository(neon.data),
+        orders: OrderRepository(functions: neon.functions, data: neon.data),
+        reference: reference,
+        discovery: DiscoveryRepository(neon.data),
         events: EventsRepository(neon.data, app: EventApp.client),
         auth: auth,
         location: const PluginLocationProvider(),

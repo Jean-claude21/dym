@@ -255,6 +255,7 @@ class ProductPageViewModel extends _LoadingViewModel {
   ProductPageData? _page;
   String? _variantId;
   int photoIndex = 0;
+  int _quantity = 1;
 
   DiscoveryService get service => _service;
   CountryConfig? get config => _config;
@@ -294,6 +295,14 @@ class ProductPageViewModel extends _LoadingViewModel {
 
   void selectVariant(String id) {
     _variantId = id;
+    notifyListeners();
+  }
+
+  /// Quantité à ajouter au panier (1 à 99).
+  int get quantity => _quantity;
+
+  void setQuantity(int value) {
+    _quantity = value.clamp(1, 99);
     notifyListeners();
   }
 

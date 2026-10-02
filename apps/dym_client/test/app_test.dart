@@ -76,6 +76,12 @@ class _Navigator implements AppNavigator {
 
   @override
   void toSearch() => routes.add('search');
+
+  @override
+  void toCart() => routes.add('cart');
+
+  @override
+  void toAddresses() => routes.add('addresses');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

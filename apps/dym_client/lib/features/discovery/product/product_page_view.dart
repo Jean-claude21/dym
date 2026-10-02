@@ -1,3 +1,4 @@
+import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
@@ -76,8 +77,45 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
     final delivery = page.zoneName == null
         ? l10n.productDeliveryEstimateShort(store.deliveryMinutes)
         : l10n.productDeliveryEstimate(store.deliveryMinutes, page.zoneName!);
+    final variantId = vm.variant?.id;
+    final canAdd = CartScope.maybeOf(context) != null && variantId != null;
     return Scaffold(
       backgroundColor: c.background,
+      bottomNavigationBar: canAdd
+          ? SafeArea(
+              child: DymContentWidth.form(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                  child: Row(
+                    children: [
+                      DymQuantityStepper(
+                        quantity: vm.quantity,
+                        min: 1,
+                        decreaseLabel: l10n.productStockDecrease,
+                        increaseLabel: l10n.productStockIncrease,
+                        onChanged: vm.setQuantity,
+                      ),
+                      const SizedBox(width: DymTokenSpace.s3),
+                      Expanded(
+                        child: DymButton(
+                          label: l10n.cartAdd,
+                          icon: Icons.add_shopping_cart_rounded,
+                          onPressed: vm.available
+                              ? () => addToCart(
+                                  context,
+                                  variantId,
+                                  quantity: vm.quantity,
+                                  confirm: true,
+                                )
+                              : null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : null,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, box) {
