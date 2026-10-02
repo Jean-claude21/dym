@@ -194,7 +194,7 @@ void main() {
         ),
         'cash',
       );
-      final cashId = (cash as List).first['id'] as String;
+      final cashId = ((cash as List).first as Map)['id'] as String;
 
       final (storeA, variantA) = await openStore(
         vendorA,
@@ -317,7 +317,7 @@ void main() {
           neon.data.run((db) => db.from('orders').select('store_id')),
           'commandes vendeuse',
         );
-        expect((rows as List).map((r) => r['store_id']), [store]);
+        expect((rows as List).map((r) => (r as Map)['store_id']), [store]);
       }
       final foreign = await OrderRepository(
         functions: other.functions,
