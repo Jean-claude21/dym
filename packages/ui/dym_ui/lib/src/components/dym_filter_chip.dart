@@ -12,6 +12,7 @@ class DymFilterChip extends StatelessWidget {
     required this.onTap,
     super.key,
     this.multiple = false,
+    this.icon,
   });
 
   /// Libellé.
@@ -25,6 +26,9 @@ class DymFilterChip extends StatelessWidget {
 
   /// Choix multiple : puce active teintée avec une coche (icône + couleur).
   final bool multiple;
+
+  /// Icône avant le libellé (choix d'un mode : livraison, retrait).
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +75,9 @@ class DymFilterChip extends StatelessWidget {
                     children: [
                       if (tinted) ...[
                         Icon(Icons.check_rounded, size: 20, color: ink),
+                        const SizedBox(width: DymTokenSpace.s1),
+                      ] else if (icon != null) ...[
+                        Icon(icon, size: 20, color: ink),
                         const SizedBox(width: DymTokenSpace.s1),
                       ],
                       Flexible(

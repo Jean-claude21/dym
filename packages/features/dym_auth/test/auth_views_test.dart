@@ -199,7 +199,7 @@ void main() {
     await tester.tap(find.text('Utiliser ma position'));
     await tester.pump();
     expect(
-      find.text('Position indisponible : cherche ton quartier.'),
+      find.text('Position indisponible : cherche ton quartier.'),
       findsOneWidget,
     );
   });

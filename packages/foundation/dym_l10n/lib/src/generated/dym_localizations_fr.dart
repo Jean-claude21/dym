@@ -896,7 +896,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get zoneLocationUnavailable =>
-      'Position indisponible : cherche ton quartier.';
+      'Position indisponible : cherche ton quartier.';
 
   @override
   String zoneSuggestion(String zone) {
@@ -918,7 +918,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get zoneOutsideArea =>
-      'Ta position est hors des zones desservies : cherche ton quartier.';
+      'Ta position est hors des zones desservies : cherche ton quartier.';
 
   @override
   String get aisleAll => 'Tous';
@@ -1060,4 +1060,290 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get shareLabel => 'Partager';
+
+  @override
+  String get cartTitle => 'Ton panier';
+
+  @override
+  String cartSummary(int stores, int items) {
+    String _temp0 = intl.Intl.pluralLogic(
+      stores,
+      locale: localeName,
+      other: '$stores boutiques',
+      one: '1 boutique',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      items,
+      locale: localeName,
+      other: '$items articles',
+      one: '1 article',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String cartMiniSummary(int stores, int items) {
+    String _temp0 = intl.Intl.pluralLogic(
+      items,
+      locale: localeName,
+      other: '$items articles',
+      one: '1 article',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      stores,
+      locale: localeName,
+      other: '$stores boutiques',
+      one: '1 boutique',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get cartView => 'Voir le panier';
+
+  @override
+  String get cartAdd => 'Ajouter au panier';
+
+  @override
+  String get cartAdded => 'Ajouté au panier';
+
+  @override
+  String get cartFreeLead => 'Plus que';
+
+  @override
+  String get cartFreeTrail => 'pour la livraison offerte';
+
+  @override
+  String get cartFreeReached => 'Livraison offerte !';
+
+  @override
+  String get cartSubstitutionTitle => 'Si un produit manque';
+
+  @override
+  String get cartSubstitutionSubtitle =>
+      'La boutique propose un équivalent au même prix';
+
+  @override
+  String get cartDelivery => 'Livraison';
+
+  @override
+  String cartDeliveryMeta(int pickups, int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pickups,
+      locale: localeName,
+      other: '$pickups ramassages',
+      one: '1 ramassage',
+      zero: 'Retrait sur place',
+    );
+    return '$_temp0 · $minutes min';
+  }
+
+  @override
+  String get cartChange => 'Changer';
+
+  @override
+  String get cartPayment => 'Paiement';
+
+  @override
+  String get cartSubtotal => 'Sous-total';
+
+  @override
+  String get cartTotal => 'Total';
+
+  @override
+  String cartOrder(String total) {
+    return 'Commander · $total';
+  }
+
+  @override
+  String get cartEmptyTitle => 'Ton panier est vide';
+
+  @override
+  String get cartEmptyMessage =>
+      'Ajoute des produits des boutiques ouvertes près de toi.';
+
+  @override
+  String get cartBrowse => 'Voir les boutiques';
+
+  @override
+  String get cartRemove => 'Retirer';
+
+  @override
+  String get cartIssueUnavailable => 'Rupture';
+
+  @override
+  String cartIssueStock(int count) {
+    return 'Plus que $count en stock';
+  }
+
+  @override
+  String get cartIssuePriceChanged => 'Prix modifié';
+
+  @override
+  String get cartIssueClosed => 'Fermée maintenant';
+
+  @override
+  String get cartIssueSuspended => 'Boutique indisponible';
+
+  @override
+  String get cartIssueNotDelivered =>
+      'Ne livre pas ton adresse : choisis le retrait ou une autre adresse';
+
+  @override
+  String get cartIssuePickupUnavailable =>
+      'Retrait non proposé par cette boutique';
+
+  @override
+  String get cartIssuePaymentNotAccepted =>
+      'Paiement non accepté par cette boutique';
+
+  @override
+  String get cartBlocked => 'Corrige les points signalés pour commander.';
+
+  @override
+  String get cartUnavailable => 'Ce produit n\'est plus disponible.';
+
+  @override
+  String get cartOtherCountry =>
+      'Ce produit vient d\'un autre pays que ton panier.';
+
+  @override
+  String get orderErrorAddressRequired => 'Choisis une adresse de livraison.';
+
+  @override
+  String get orderErrorTotalChanged =>
+      'Le panier a changé : vérifie le nouveau total.';
+
+  @override
+  String get orderErrorPaymentUnavailable =>
+      'Ce moyen de paiement n\'est pas encore disponible.';
+
+  @override
+  String get orderErrorEmpty => 'Ton panier est vide.';
+
+  @override
+  String get deliveryTitle => 'Livraison';
+
+  @override
+  String get deliveryWhere => 'Où te livrer ?';
+
+  @override
+  String get deliveryAddAddress => 'Ajouter une adresse';
+
+  @override
+  String get deliveryModes => 'Mode par boutique';
+
+  @override
+  String get deliveryModeDelivery => 'Livraison';
+
+  @override
+  String get deliveryModePickup => 'Je récupère';
+
+  @override
+  String get deliveryConfirm => 'Valider la livraison';
+
+  @override
+  String get deliveryNoAddress => 'Ajoute une adresse pour être livrée.';
+
+  @override
+  String get addressesTitle => 'Mes adresses';
+
+  @override
+  String get addressDefault => 'Par défaut';
+
+  @override
+  String get addressPositionSaved => 'Position enregistrée';
+
+  @override
+  String get addressSetDefault => 'Choisir par défaut';
+
+  @override
+  String get addressEdit => 'Modifier';
+
+  @override
+  String get addressDelete => 'Supprimer';
+
+  @override
+  String get addressMenu => 'Options de l\'adresse';
+
+  @override
+  String get addressesEmptyTitle => 'Aucune adresse';
+
+  @override
+  String get addressesEmptyMessage =>
+      'Ajoute ton adresse pour être livrée plus vite.';
+
+  @override
+  String get addressKindHome => 'Maison';
+
+  @override
+  String get addressKindWork => 'Bureau';
+
+  @override
+  String get addressKindOther => 'Autre';
+
+  @override
+  String get addressNewTitle => 'Nouvelle adresse';
+
+  @override
+  String get addressEditTitle => 'Modifier l\'adresse';
+
+  @override
+  String get addressWhere => 'Où ?';
+
+  @override
+  String get addressLabel => 'Nom de l\'adresse (facultatif)';
+
+  @override
+  String get addressLandmark => 'Repère';
+
+  @override
+  String get addressLandmarkHint => 'Ex. portail bleu après la pharmacie';
+
+  @override
+  String get addressLandmarkInvalid => 'Décris un repère (3 à 200 caractères)';
+
+  @override
+  String get addressPhone => 'Téléphone pour la livraison';
+
+  @override
+  String get addressPhoneInvalid => 'Numéro de téléphone invalide';
+
+  @override
+  String get addressMakeDefault => 'Adresse par défaut';
+
+  @override
+  String get addressSave => 'Enregistrer l\'adresse';
+
+  @override
+  String get orderSentTitle => 'Commande envoyée !';
+
+  @override
+  String get orderSentSubtitle =>
+      'Les vendeuses vont l\'accepter. Tu seras prévenue.';
+
+  @override
+  String get orderPending => 'En attente d\'acceptation';
+
+  @override
+  String orderItems(int items) {
+    String _temp0 = intl.Intl.pluralLogic(
+      items,
+      locale: localeName,
+      other: '$items articles',
+      one: '1 article',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String orderDeliveryTo(String place) {
+    return 'Livraison : $place';
+  }
+
+  @override
+  String get orderBackHome => 'Retour à l\'accueil';
+
+  @override
+  String get cartAddShort => 'Ajouter';
 }

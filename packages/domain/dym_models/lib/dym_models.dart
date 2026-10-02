@@ -2,6 +2,7 @@
 library;
 
 export 'src/account/account_models.dart';
+export 'src/cart/cart_models.dart';
 export 'src/catalog/catalog_models.dart';
 export 'src/discovery/discovery_models.dart';
 export 'src/reference/country_config.dart';

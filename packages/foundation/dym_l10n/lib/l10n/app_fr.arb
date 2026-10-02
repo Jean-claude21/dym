@@ -1167,7 +1167,7 @@
   "@zoneLocating": {
     "description": "Position en cours"
   },
-  "zoneLocationUnavailable": "Position indisponible : cherche ton quartier.",
+  "zoneLocationUnavailable": "Position indisponible : cherche ton quartier.",
   "@zoneLocationUnavailable": {
     "description": "Position refusée"
   },
@@ -1196,7 +1196,7 @@
   "@zoneNoResult": {
     "description": "Recherche de quartier vide"
   },
-  "zoneOutsideArea": "Ta position est hors des zones desservies : cherche ton quartier.",
+  "zoneOutsideArea": "Ta position est hors des zones desservies : cherche ton quartier.",
   "@zoneOutsideArea": {
     "description": "Position hors zone"
   },
@@ -1401,5 +1401,349 @@
   "shareLabel": "Partager",
   "@shareLabel": {
     "description": "Partager"
+  },
+  "cartTitle": "Ton panier",
+  "@cartTitle": {
+    "description": "Titre du panier"
+  },
+  "cartSummary": "{stores, plural, =1{1 boutique} other{{stores} boutiques}} · {items, plural, =1{1 article} other{{items} articles}}",
+  "@cartSummary": {
+    "description": "Boutiques et articles du panier",
+    "placeholders": {
+      "stores": {
+        "type": "int"
+      },
+      "items": {
+        "type": "int"
+      }
+    }
+  },
+  "cartMiniSummary": "{items, plural, =1{1 article} other{{items} articles}} · {stores, plural, =1{1 boutique} other{{stores} boutiques}}",
+  "@cartMiniSummary": {
+    "description": "Résumé du mini-panier",
+    "placeholders": {
+      "stores": {
+        "type": "int"
+      },
+      "items": {
+        "type": "int"
+      }
+    }
+  },
+  "cartView": "Voir le panier",
+  "@cartView": {
+    "description": "Ouvrir le panier"
+  },
+  "cartAdd": "Ajouter au panier",
+  "@cartAdd": {
+    "description": "Bouton d'ajout"
+  },
+  "cartAdded": "Ajouté au panier",
+  "@cartAdded": {
+    "description": "Confirmation d'ajout"
+  },
+  "cartFreeLead": "Plus que",
+  "@cartFreeLead": {
+    "description": "Jauge de livraison offerte (avant le montant)"
+  },
+  "cartFreeTrail": "pour la livraison offerte",
+  "@cartFreeTrail": {
+    "description": "Jauge de livraison offerte (après le montant)"
+  },
+  "cartFreeReached": "Livraison offerte !",
+  "@cartFreeReached": {
+    "description": "Seuil de gratuité atteint"
+  },
+  "cartSubstitutionTitle": "Si un produit manque",
+  "@cartSubstitutionTitle": {
+    "description": "Préférence de remplacement"
+  },
+  "cartSubstitutionSubtitle": "La boutique propose un équivalent au même prix",
+  "@cartSubstitutionSubtitle": {
+    "description": "Explication du remplacement"
+  },
+  "cartDelivery": "Livraison",
+  "@cartDelivery": {
+    "description": "Ligne livraison"
+  },
+  "cartDeliveryMeta": "{pickups, plural, =0{Retrait sur place} =1{1 ramassage} other{{pickups} ramassages}} · {minutes} min",
+  "@cartDeliveryMeta": {
+    "description": "Ramassages et délai",
+    "placeholders": {
+      "pickups": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "cartChange": "Changer",
+  "@cartChange": {
+    "description": "Modifier la livraison"
+  },
+  "cartPayment": "Paiement",
+  "@cartPayment": {
+    "description": "Choix du paiement"
+  },
+  "cartSubtotal": "Sous-total",
+  "@cartSubtotal": {
+    "description": "Sous-total"
+  },
+  "cartTotal": "Total",
+  "@cartTotal": {
+    "description": "Total"
+  },
+  "cartOrder": "Commander · {total}",
+  "@cartOrder": {
+    "description": "Bouton commander",
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "cartEmptyTitle": "Ton panier est vide",
+  "@cartEmptyTitle": {
+    "description": "Panier vide"
+  },
+  "cartEmptyMessage": "Ajoute des produits des boutiques ouvertes près de toi.",
+  "@cartEmptyMessage": {
+    "description": "Panier vide : piste"
+  },
+  "cartBrowse": "Voir les boutiques",
+  "@cartBrowse": {
+    "description": "Retour à l'accueil depuis le panier vide"
+  },
+  "cartRemove": "Retirer",
+  "@cartRemove": {
+    "description": "Retirer une ligne"
+  },
+  "cartIssueUnavailable": "Rupture",
+  "@cartIssueUnavailable": {
+    "description": "Ligne en rupture"
+  },
+  "cartIssueStock": "Plus que {count} en stock",
+  "@cartIssueStock": {
+    "description": "Stock insuffisant",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cartIssuePriceChanged": "Prix modifié",
+  "@cartIssuePriceChanged": {
+    "description": "Prix changé depuis l'ajout"
+  },
+  "cartIssueClosed": "Fermée maintenant",
+  "@cartIssueClosed": {
+    "description": "Boutique fermée"
+  },
+  "cartIssueSuspended": "Boutique indisponible",
+  "@cartIssueSuspended": {
+    "description": "Boutique suspendue"
+  },
+  "cartIssueNotDelivered": "Ne livre pas ton adresse : choisis le retrait ou une autre adresse",
+  "@cartIssueNotDelivered": {
+    "description": "Quartier non livré"
+  },
+  "cartIssuePickupUnavailable": "Retrait non proposé par cette boutique",
+  "@cartIssuePickupUnavailable": {
+    "description": "Retrait impossible"
+  },
+  "cartIssuePaymentNotAccepted": "Paiement non accepté par cette boutique",
+  "@cartIssuePaymentNotAccepted": {
+    "description": "Paiement refusé par la boutique"
+  },
+  "cartBlocked": "Corrige les points signalés pour commander.",
+  "@cartBlocked": {
+    "description": "Commande bloquée"
+  },
+  "cartUnavailable": "Ce produit n'est plus disponible.",
+  "@cartUnavailable": {
+    "description": "Ajout refusé : rupture"
+  },
+  "cartOtherCountry": "Ce produit vient d'un autre pays que ton panier.",
+  "@cartOtherCountry": {
+    "description": "Ajout refusé : autre pays"
+  },
+  "orderErrorAddressRequired": "Choisis une adresse de livraison.",
+  "@orderErrorAddressRequired": {
+    "description": "Refus : adresse manquante"
+  },
+  "orderErrorTotalChanged": "Le panier a changé : vérifie le nouveau total.",
+  "@orderErrorTotalChanged": {
+    "description": "Refus : total modifié"
+  },
+  "orderErrorPaymentUnavailable": "Ce moyen de paiement n'est pas encore disponible.",
+  "@orderErrorPaymentUnavailable": {
+    "description": "Refus : paiement indisponible"
+  },
+  "orderErrorEmpty": "Ton panier est vide.",
+  "@orderErrorEmpty": {
+    "description": "Refus : panier vide"
+  },
+  "deliveryTitle": "Livraison",
+  "@deliveryTitle": {
+    "description": "Titre de l'écran livraison"
+  },
+  "deliveryWhere": "Où te livrer ?",
+  "@deliveryWhere": {
+    "description": "Choix de l'adresse"
+  },
+  "deliveryAddAddress": "Ajouter une adresse",
+  "@deliveryAddAddress": {
+    "description": "Nouvelle adresse"
+  },
+  "deliveryModes": "Mode par boutique",
+  "@deliveryModes": {
+    "description": "Livraison ou retrait par boutique"
+  },
+  "deliveryModeDelivery": "Livraison",
+  "@deliveryModeDelivery": {
+    "description": "Mode livraison"
+  },
+  "deliveryModePickup": "Je récupère",
+  "@deliveryModePickup": {
+    "description": "Mode retrait"
+  },
+  "deliveryConfirm": "Valider la livraison",
+  "@deliveryConfirm": {
+    "description": "Valider l'écran livraison"
+  },
+  "deliveryNoAddress": "Ajoute une adresse pour être livrée.",
+  "@deliveryNoAddress": {
+    "description": "Aucune adresse"
+  },
+  "addressesTitle": "Mes adresses",
+  "@addressesTitle": {
+    "description": "Titre des adresses"
+  },
+  "addressDefault": "Par défaut",
+  "@addressDefault": {
+    "description": "Adresse par défaut"
+  },
+  "addressPositionSaved": "Position enregistrée",
+  "@addressPositionSaved": {
+    "description": "Position conservée"
+  },
+  "addressSetDefault": "Choisir par défaut",
+  "@addressSetDefault": {
+    "description": "Action : adresse par défaut"
+  },
+  "addressEdit": "Modifier",
+  "@addressEdit": {
+    "description": "Action : modifier"
+  },
+  "addressDelete": "Supprimer",
+  "@addressDelete": {
+    "description": "Action : supprimer"
+  },
+  "addressMenu": "Options de l'adresse",
+  "@addressMenu": {
+    "description": "Menu d'une adresse"
+  },
+  "addressesEmptyTitle": "Aucune adresse",
+  "@addressesEmptyTitle": {
+    "description": "Aucune adresse"
+  },
+  "addressesEmptyMessage": "Ajoute ton adresse pour être livrée plus vite.",
+  "@addressesEmptyMessage": {
+    "description": "Aucune adresse : piste"
+  },
+  "addressKindHome": "Maison",
+  "@addressKindHome": {
+    "description": "Adresse maison"
+  },
+  "addressKindWork": "Bureau",
+  "@addressKindWork": {
+    "description": "Adresse bureau"
+  },
+  "addressKindOther": "Autre",
+  "@addressKindOther": {
+    "description": "Autre adresse"
+  },
+  "addressNewTitle": "Nouvelle adresse",
+  "@addressNewTitle": {
+    "description": "Titre : nouvelle adresse"
+  },
+  "addressEditTitle": "Modifier l'adresse",
+  "@addressEditTitle": {
+    "description": "Titre : modifier l'adresse"
+  },
+  "addressWhere": "Où ?",
+  "@addressWhere": {
+    "description": "Choix du quartier"
+  },
+  "addressLabel": "Nom de l'adresse (facultatif)",
+  "@addressLabel": {
+    "description": "Libellé libre"
+  },
+  "addressLandmark": "Repère",
+  "@addressLandmark": {
+    "description": "Repère"
+  },
+  "addressLandmarkHint": "Ex. portail bleu après la pharmacie",
+  "@addressLandmarkHint": {
+    "description": "Exemple de repère"
+  },
+  "addressLandmarkInvalid": "Décris un repère (3 à 200 caractères)",
+  "@addressLandmarkInvalid": {
+    "description": "Repère invalide"
+  },
+  "addressPhone": "Téléphone pour la livraison",
+  "@addressPhone": {
+    "description": "Téléphone de contact"
+  },
+  "addressPhoneInvalid": "Numéro de téléphone invalide",
+  "@addressPhoneInvalid": {
+    "description": "Téléphone invalide"
+  },
+  "addressMakeDefault": "Adresse par défaut",
+  "@addressMakeDefault": {
+    "description": "Interrupteur adresse par défaut"
+  },
+  "addressSave": "Enregistrer l'adresse",
+  "@addressSave": {
+    "description": "Enregistrer"
+  },
+  "orderSentTitle": "Commande envoyée !",
+  "@orderSentTitle": {
+    "description": "Confirmation"
+  },
+  "orderSentSubtitle": "Les vendeuses vont l'accepter. Tu seras prévenue.",
+  "@orderSentSubtitle": {
+    "description": "Suite de la commande"
+  },
+  "orderPending": "En attente d'acceptation",
+  "@orderPending": {
+    "description": "Statut en attente"
+  },
+  "orderItems": "{items, plural, =1{1 article} other{{items} articles}}",
+  "@orderItems": {
+    "description": "Nombre d'articles d'une commande",
+    "placeholders": {
+      "items": {
+        "type": "int"
+      }
+    }
+  },
+  "orderDeliveryTo": "Livraison : {place}",
+  "@orderDeliveryTo": {
+    "description": "Adresse de livraison",
+    "placeholders": {
+      "place": {
+        "type": "String"
+      }
+    }
+  },
+  "orderBackHome": "Retour à l'accueil",
+  "@orderBackHome": {
+    "description": "Retour"
+  },
+  "cartAddShort": "Ajouter",
+  "@cartAddShort": {
+    "description": "Bouton d'ajout d'une carte produit"
   }
 }
