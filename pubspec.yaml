@@ -7,6 +7,8 @@ environment:
 
 workspace:
   - packages/foundation/dym_core
+  - packages/infra/neon_kit
+  - packages/infra/dym_platform
   - packages/ui/dym_ui
   - apps/dym_gallery
 
