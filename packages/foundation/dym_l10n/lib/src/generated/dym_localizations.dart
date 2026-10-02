@@ -143,7 +143,7 @@ abstract class DymLocalizations {
   /// Environnement technique affiché hors production.
   ///
   /// In fr, this message translates to:
-  /// **'Environnement : {name}'**
+  /// **'Environnement : {name}'**
   String environmentLabel(String name);
 
   /// L'app est compilée sans configuration valide.
@@ -209,7 +209,7 @@ abstract class DymLocalizations {
   /// Bienvenue, écran 2
   ///
   /// In fr, this message translates to:
-  /// **'Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.'**
+  /// **'Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.'**
   String get welcomeSlide2Body;
 
   /// Bienvenue, écran 3
@@ -287,7 +287,7 @@ abstract class DymLocalizations {
   /// Confidentialité de l'email
   ///
   /// In fr, this message translates to:
-  /// **'Ton email reste privé : les vendeuses ne le voient pas.'**
+  /// **'Ton email reste privé : les vendeuses ne le voient pas.'**
   String get authEmailPrivacy;
 
   /// Bouton envoyer le code
@@ -335,7 +335,7 @@ abstract class DymLocalizations {
   /// Astuce code
   ///
   /// In fr, this message translates to:
-  /// **'Astuce : le code arrive en moins d\'une minute. Regarde aussi dans les spams.'**
+  /// **'Astuce : le code arrive en moins d\'une minute. Regarde aussi dans les spams.'**
   String get authCodeTip;
 
   /// Code faux
@@ -347,7 +347,7 @@ abstract class DymLocalizations {
   /// Titre profil
   ///
   /// In fr, this message translates to:
-  /// **'Bienvenue sur DYM !'**
+  /// **'Bienvenue sur DYM !'**
   String get authProfileTitle;
 
   /// Sous-titre profil
@@ -473,7 +473,7 @@ abstract class DymLocalizations {
   /// Titre confirmation
   ///
   /// In fr, this message translates to:
-  /// **'Supprimer ton compte ?'**
+  /// **'Supprimer ton compte ?'**
   String get accountDeleteTitle;
 
   /// Texte confirmation
@@ -527,13 +527,13 @@ abstract class DymLocalizations {
   /// Après connexion vendeuse
   ///
   /// In fr, this message translates to:
-  /// **'Ton compte est prêt. Prochaine étape : ta boutique.'**
+  /// **'Ton compte est prêt. Prochaine étape : ta boutique.'**
   String get vendorNextStep;
 
   /// Accueil provisoire
   ///
   /// In fr, this message translates to:
-  /// **'Bonjour {name} !'**
+  /// **'Bonjour {name} !'**
   String homeHello(String name);
 
   /// Titre connexion admin

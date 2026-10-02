@@ -40,6 +40,9 @@ abstract interface class AuthService {
   /// Utilisateur connecté, s'il est connu.
   Me? get me;
 
+  /// Email de la session (affiché à sa propriétaire seulement).
+  String? get email;
+
   /// Au démarrage : session enregistrée → état.
   Future<Result<AuthState>> bootstrap();
 
@@ -49,6 +52,9 @@ abstract interface class AuthService {
 
   /// `Ok(null)` : la personne a annulé le choix du compte Google.
   Future<Result<AuthState?>> signInWithGoogle();
+
+  /// Connexion avec un `idToken` Google déjà obtenu (bouton Google du web).
+  Future<Result<AuthState>> signInWithGoogleIdToken(String idToken);
 
   Future<Result<List<Country>>> countries();
 
@@ -90,6 +96,9 @@ class NeonAuthService implements AuthService {
   bool get googleAvailable => _google.isAvailable;
 
   @override
+  String? get email => _neon.auth.currentSession?.email;
+
+  @override
   Future<Result<AuthState>> bootstrap() async {
     switch (await _neon.auth.restore()) {
       case Ok(value: null):
@@ -121,10 +130,15 @@ class NeonAuthService implements AuthService {
       case Ok(value: null):
         return const Ok(null);
       case Ok(:final value?):
-        final session = await _neon.auth.signInWithGoogleIdToken(value);
-        if (session case Err(:final failure)) return Err(failure);
-        return await _afterSession(recordSignIn: true);
+        return await signInWithGoogleIdToken(value);
     }
+  }
+
+  @override
+  Future<Result<AuthState>> signInWithGoogleIdToken(String idToken) async {
+    final session = await _neon.auth.signInWithGoogleIdToken(idToken);
+    if (session case Err(:final failure)) return Err(failure);
+    return await _afterSession(recordSignIn: true);
   }
 
   @override

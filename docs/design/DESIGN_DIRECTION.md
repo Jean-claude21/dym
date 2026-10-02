@@ -99,6 +99,22 @@ Captures de contrôle : `specs/002-responsive-layout/validation/`.
 | 7 | Vendeuse · « Où vends-tu ? » | [07-vendeuse-ou-vends-tu](screens/07-vendeuse-ou-vends-tu.webp) | 9 |
 | 8 | Vendeuse · Commande reçue | [08-vendeuse-commande-recue](screens/08-vendeuse-commande-recue.webp) | 12 |
 
+Écrans produits avec la spec 005 dans la même direction (**à valider par le porteur produit**) :
+
+| # | Écran | Fichier | Parcours |
+|---|---|---|---|
+| 9 | Bienvenue (3 écrans, Google ou email) | [09-bienvenue](screens/09-bienvenue.webp) | 1 |
+| 10 | Ton email | [10-email](screens/10-email.webp) | 1 |
+| 11 | Code à 6 chiffres | [11-code](screens/11-code.webp) | 1 |
+| 12 | Prénom et quartier | [12-prenom-quartier](screens/12-prenom-quartier.webp) | 1 |
+| 13 | Moi et suppression du compte | [13-compte-suppression](screens/13-compte-suppression.webp) | 8 |
+| 14 | Connexion vendeuse | [14-vendeuse-connexion](screens/14-vendeuse-connexion.webp) | 9 |
+| 15 | Connexion de l'équipe (admin web) | [15-admin-connexion](screens/15-admin-connexion.webp) | — |
+
+Écarts assumés du rendu : accroche générique « Le marché de ton quartier » (la ville n'est connue
+qu'après le choix du quartier) ; quartier choisi dans la liste, sans détection de position (arrive
+avec `discovery`) ; photo de profil reportée au stockage d'objets.
+
 Ce sont des **rendus de concept générés par IA** (ChatGPT, gpt-image-2), pas des fichiers de
 production. À reprendre lors de la construction :
 

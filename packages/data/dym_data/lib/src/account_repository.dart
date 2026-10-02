@@ -36,9 +36,8 @@ class AccountRepository {
   );
 
   /// Trace une connexion réussie ; refusée (403) pour l'admin sans rôle admin.
-  Future<Result<Me>> recordSignIn(AccountApp app) => _me(
-    _data.rpc<Object?>('record_sign_in', params: {'p_app': app.name}),
-  );
+  Future<Result<Me>> recordSignIn(AccountApp app) =>
+      _me(_data.rpc<Object?>('record_sign_in', params: {'p_app': app.name}));
 
   /// Supprime définitivement le compte (`public.delete_my_account`).
   Future<Result<void>> deleteMyAccount() =>

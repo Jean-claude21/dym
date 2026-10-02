@@ -1,5 +1,6 @@
 import 'package:dym_gallery/shell/device_frame.dart';
 import 'package:dym_gallery/shell/screen_viewer.dart';
+import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,6 +15,9 @@ Future<void> _pumpViewer(WidgetTester tester, String id) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: DymTheme.light(),
+      locale: const Locale('fr'),
+      localizationsDelegates: DymLocalizations.localizationsDelegates,
+      supportedLocales: DymLocalizations.supportedLocales,
       home: MediaQuery(
         data: const MediaQueryData(
           size: Size(1280, 900),

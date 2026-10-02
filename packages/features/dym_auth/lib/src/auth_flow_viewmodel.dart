@@ -29,7 +29,9 @@ class AuthFlowViewModel extends BaseViewModel {
     this.locale = 'fr',
     this.resendDelay = const Duration(seconds: 60),
     AuthStep initialStep = AuthStep.welcome,
-  }) : _step = initialStep;
+    String initialEmail = '',
+  }) : _step = initialStep,
+       _email = initialEmail;
 
   final AuthService _service;
 
@@ -48,7 +50,7 @@ class AuthFlowViewModel extends BaseViewModel {
 
   AuthStep _step;
   int _welcomePage = 0;
-  String _email = '';
+  String _email;
   String _code = '';
   int _resendSeconds = 0;
   Timer? _resendTimer;

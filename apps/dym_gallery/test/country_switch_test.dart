@@ -1,6 +1,7 @@
 import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/screens/s05_cart.dart';
 import 'package:dym_gallery/screens/s06_tracking.dart';
+import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +14,9 @@ Future<void> _pump(WidgetTester tester, Widget screen) async {
   await tester.pumpWidget(
     MaterialApp(
       theme: DymTheme.light(),
+      locale: const Locale('fr'),
+      localizationsDelegates: DymLocalizations.localizationsDelegates,
+      supportedLocales: DymLocalizations.supportedLocales,
       home: MediaQuery(
         data: const MediaQueryData(
           size: Size(412, 915),

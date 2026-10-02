@@ -1,3 +1,7 @@
+import 'package:dym_account/dym_account.dart';
+import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_data/dym_data.dart';
+import 'package:dym_gallery/demo/demo_auth_service.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/screens/s01_splash.dart';
 import 'package:dym_gallery/screens/s02_home.dart';
@@ -83,5 +87,73 @@ final referenceScreens = <ReferenceScreen>[
     surface: 'Vendeuse',
     referenceFile: '08-vendeuse-commande-recue.webp',
     builder: (c) => SellerNewOrderScreen(country: c),
+  ),
+  // Spec 005 : connexion et compte (maquettes générées dans la direction
+  // validée, à valider par le porteur produit).
+  ReferenceScreen(
+    id: '09',
+    title: 'Bienvenue',
+    surface: 'Cliente',
+    referenceFile: '09-bienvenue.webp',
+    builder: (c) => AuthFlowView(
+      service: DemoAuthService(country: c),
+      onReady: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '10',
+    title: 'Ton email',
+    surface: 'Cliente',
+    referenceFile: '10-email.webp',
+    builder: (c) => AuthFlowView(
+      service: DemoAuthService(country: c),
+      onReady: (_) {},
+      initialStep: AuthStep.email,
+      initialEmail: 'awa.mensah@gmail.com',
+    ),
+  ),
+  ReferenceScreen(
+    id: '11',
+    title: 'Code reçu par email',
+    surface: 'Cliente',
+    referenceFile: '11-code.webp',
+    builder: (c) => AuthFlowView(
+      service: DemoAuthService(country: c),
+      onReady: (_) {},
+      initialStep: AuthStep.code,
+      initialEmail: 'awa.mensah@gmail.com',
+    ),
+  ),
+  ReferenceScreen(
+    id: '12',
+    title: 'Prénom et quartier',
+    surface: 'Cliente',
+    referenceFile: '12-prenom-quartier.webp',
+    builder: (c) => AuthFlowView(
+      service: DemoAuthService(country: c),
+      onReady: (_) {},
+      startWithProfile: true,
+    ),
+  ),
+  ReferenceScreen(
+    id: '13',
+    title: 'Moi et suppression du compte',
+    surface: 'Cliente',
+    referenceFile: '13-compte-suppression.webp',
+    builder: (c) => AccountView(
+      service: DemoAuthService(country: c),
+      onSignedOut: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '14',
+    title: 'Connexion vendeuse',
+    surface: 'Vendeuse',
+    referenceFile: '14-vendeuse-connexion.webp',
+    builder: (c) => AuthFlowView(
+      service: DemoAuthService(country: c, app: AccountApp.vendor),
+      onReady: (_) {},
+      variant: AuthVariant.vendor,
+    ),
   ),
 ];

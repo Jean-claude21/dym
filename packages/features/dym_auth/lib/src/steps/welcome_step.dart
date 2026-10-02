@@ -77,8 +77,8 @@ class _WelcomeStepState extends State<WelcomeStep> {
             title,
             textAlign: TextAlign.center,
             style: t.display.copyWith(
-              fontSize: 32,
-              height: 1.1,
+              fontSize: 38,
+              height: 1.05,
               color: c.brandDeep,
             ),
           ),

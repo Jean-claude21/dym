@@ -16,6 +16,9 @@ class FakeAuthService implements AuthService {
   @override
   Me? me;
 
+  @override
+  String? email = 'awa.mensah@gmail.com';
+
   final calls = <String>[];
 
   Result<void> sendResult = const Ok(null);
@@ -103,6 +106,12 @@ class FakeAuthService implements AuthService {
   Future<Result<AuthState?>> signInWithGoogle() async {
     calls.add('google');
     return googleResult;
+  }
+
+  @override
+  Future<Result<AuthState>> signInWithGoogleIdToken(String idToken) async {
+    calls.add('googleToken:$idToken');
+    return verifyResult;
   }
 
   @override

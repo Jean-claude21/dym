@@ -28,7 +28,7 @@
   "@startupPreparing": {
     "description": "Démarrage de l'app."
   },
-  "environmentLabel": "Environnement : {name}",
+  "environmentLabel": "Environnement : {name}",
   "@environmentLabel": {
     "description": "Environnement technique affiché hors production.",
     "placeholders": {
@@ -65,7 +65,7 @@
   "@welcomeSlide2Title": {
     "description": "Bienvenue, écran 2"
   },
-  "welcomeSlide2Body": "Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.",
+  "welcomeSlide2Body": "Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.",
   "@welcomeSlide2Body": {
     "description": "Bienvenue, écran 2"
   },
@@ -125,7 +125,7 @@
   "@authEmailInvalid": {
     "description": "Email invalide"
   },
-  "authEmailPrivacy": "Ton email reste privé : les vendeuses ne le voient pas.",
+  "authEmailPrivacy": "Ton email reste privé : les vendeuses ne le voient pas.",
   "@authEmailPrivacy": {
     "description": "Confidentialité de l'email"
   },
@@ -167,7 +167,7 @@
   "@authResend": {
     "description": "Bouton renvoyer"
   },
-  "authCodeTip": "Astuce : le code arrive en moins d'une minute. Regarde aussi dans les spams.",
+  "authCodeTip": "Astuce : le code arrive en moins d'une minute. Regarde aussi dans les spams.",
   "@authCodeTip": {
     "description": "Astuce code"
   },
@@ -175,7 +175,7 @@
   "@authCodeWrong": {
     "description": "Code faux"
   },
-  "authProfileTitle": "Bienvenue sur DYM !",
+  "authProfileTitle": "Bienvenue sur DYM !",
   "@authProfileTitle": {
     "description": "Titre profil"
   },
@@ -264,7 +264,7 @@
   "@accountDelete": {
     "description": "Suppression"
   },
-  "accountDeleteTitle": "Supprimer ton compte ?",
+  "accountDeleteTitle": "Supprimer ton compte ?",
   "@accountDeleteTitle": {
     "description": "Titre confirmation"
   },
@@ -300,11 +300,11 @@
   "@vendorPoint3": {
     "description": "Avantage 3"
   },
-  "vendorNextStep": "Ton compte est prêt. Prochaine étape : ta boutique.",
+  "vendorNextStep": "Ton compte est prêt. Prochaine étape : ta boutique.",
   "@vendorNextStep": {
     "description": "Après connexion vendeuse"
   },
-  "homeHello": "Bonjour {name} !",
+  "homeHello": "Bonjour {name} !",
   "@homeHello": {
     "description": "Accueil provisoire",
     "placeholders": {

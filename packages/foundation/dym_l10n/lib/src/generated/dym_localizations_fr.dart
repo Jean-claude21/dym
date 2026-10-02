@@ -32,7 +32,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String environmentLabel(String name) {
-    return 'Environnement : $name';
+    return 'Environnement : $name';
   }
 
   @override
@@ -69,7 +69,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get welcomeSlide2Body =>
-      'Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.';
+      'Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.';
 
   @override
   String get welcomeSlide3Title => 'Cash ou Mobile Money';
@@ -114,7 +114,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get authEmailPrivacy =>
-      'Ton email reste privé : les vendeuses ne le voient pas.';
+      'Ton email reste privé : les vendeuses ne le voient pas.';
 
   @override
   String get authSendCode => 'Recevoir mon code';
@@ -143,14 +143,14 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get authCodeTip =>
-      'Astuce : le code arrive en moins d\'une minute. Regarde aussi dans les spams.';
+      'Astuce : le code arrive en moins d\'une minute. Regarde aussi dans les spams.';
 
   @override
   String get authCodeWrong =>
       'Ce code ne marche pas. Vérifie-le ou demande-en un nouveau.';
 
   @override
-  String get authProfileTitle => 'Bienvenue sur DYM !';
+  String get authProfileTitle => 'Bienvenue sur DYM !';
 
   @override
   String get authProfileSubtitle => 'Deux questions et c\'est parti.';
@@ -218,7 +218,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get accountDelete => 'Supprimer mon compte';
 
   @override
-  String get accountDeleteTitle => 'Supprimer ton compte ?';
+  String get accountDeleteTitle => 'Supprimer ton compte ?';
 
   @override
   String get accountDeleteBody =>
@@ -248,11 +248,11 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get vendorNextStep =>
-      'Ton compte est prêt. Prochaine étape : ta boutique.';
+      'Ton compte est prêt. Prochaine étape : ta boutique.';
 
   @override
   String homeHello(String name) {
-    return 'Bonjour $name !';
+    return 'Bonjour $name !';
   }
 
   @override

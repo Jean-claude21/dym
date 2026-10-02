@@ -53,7 +53,7 @@ class StepScaffold extends StatelessWidget {
                       const SizedBox(height: DymTokenSpace.s5),
                       Text(
                         title,
-                        style: t.display.copyWith(fontSize: 34, height: 1.1),
+                        style: t.display.copyWith(fontSize: 40, height: 1.1),
                       ),
                       if (subtitle != null) ...[
                         const SizedBox(height: DymTokenSpace.s2),

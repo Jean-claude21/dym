@@ -127,7 +127,7 @@ void main() {
     expect(find.text('Entre le code'), findsOneWidget);
     await tester.enterText(find.byType(TextField).first, '482913');
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Bienvenue sur DYM !'), findsOneWidget);
+    expect(find.text('Bienvenue sur DYM !'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, 'Awa');
     await tester.tap(find.text('Tokoin'));

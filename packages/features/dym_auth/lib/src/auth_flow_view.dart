@@ -23,6 +23,8 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
     super.key,
     this.variant = AuthVariant.client,
     this.startWithProfile = false,
+    this.initialStep = AuthStep.welcome,
+    this.initialEmail = '',
   });
 
   final AuthService service;
@@ -32,12 +34,19 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
   /// Session déjà ouverte mais profil à compléter (au démarrage de l'app).
   final bool startWithProfile;
 
+  /// Étape de départ (prévisualisation dans la galerie de validation).
+  final AuthStep initialStep;
+
+  /// Email déjà saisi (prévisualisation).
+  final String initialEmail;
+
   @override
   AuthFlowViewModel viewModelBuilder(BuildContext context) => AuthFlowViewModel(
     service: service,
     onReady: onReady,
     locale: Localizations.localeOf(context).languageCode,
-    initialStep: startWithProfile ? AuthStep.profile : AuthStep.welcome,
+    initialStep: startWithProfile ? AuthStep.profile : initialStep,
+    initialEmail: initialEmail,
   );
 
   @override
