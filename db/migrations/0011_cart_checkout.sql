@@ -146,6 +146,34 @@ grant select (
   subtotal_minor, delivery_fee_minor, total_minor, created_at, updated_at
 ) on public.orders to authenticated;
 
+-- Élément de liste : variante par défaut (ajout direct au panier quand le
+-- produit n'a qu'une variante).
+create or replace function app.catalog_item(p_product uuid) returns jsonb
+language sql stable security definer set search_path = ''
+as $$
+  select jsonb_build_object(
+    'id', p.id, 'name', p.name, 'category_id', p.category_id,
+    'price_minor', p.price_minor, 'min_price_minor', app.product_min_price(p.id),
+    'currency_code', p.currency_code,
+    'unit_label', u.label,
+    'photo_key', (select f.object_key from public.product_photos f where f.product_id = p.id order by f.sort limit 1),
+    'variant_count', (select count(*) from public.product_variants v where v.product_id = p.id),
+    'default_variant_id', (select v.id from public.product_variants v where v.product_id = p.id
+                           order by v.sort, v.created_at limit 1),
+    'available', app.product_available(p.id),
+    'store', jsonb_build_object('id', s.id, 'name', s.name, 'origin', s.origin, 'zone_name', z.name),
+    'store_category_ids', coalesce((
+      select jsonb_agg(pc.store_category_id) from public.product_store_categories pc
+      join public.store_categories sc on sc.id = pc.store_category_id and not sc.is_archived
+      where pc.product_id = p.id), '[]'::jsonb)
+  )
+  from public.products p
+  join public.stores s on s.id = p.store_id
+  join public.zones z on z.id = s.zone_id
+  left join public.units u on u.id = p.unit_id
+  where p.id = p_product and p.status = 'published' and s.status = 'active'
+$$;
+
 -- ------------------------------------------------------------------ calculs
 
 -- Prix courant d'une variante (le sien, sinon celui du produit).
@@ -211,8 +239,8 @@ begin
 
   -- Moyens actifs du pays acceptés par toutes les boutiques du panier.
   select coalesce(jsonb_agg(jsonb_build_object(
-           'id', pm.id, 'provider_code', pm.provider_code,
-           'operator_code', pm.operator_code, 'label', pm.label) order by pm.sort), '[]'::jsonb)
+           'id', pm.id, 'country_code', pm.country_code, 'provider_code', pm.provider_code,
+           'operator_code', pm.operator_code, 'label', pm.label, 'sort', pm.sort) order by pm.sort), '[]'::jsonb)
   into v_methods
   from public.payment_methods pm
   where pm.country_code = v_cart.country_code and pm.is_active
@@ -323,6 +351,8 @@ begin
   select jsonb_build_object(
     'country_code', v_cart.country_code,
     'currency_code', v_cart.currency_code,
+    'currency', (select to_jsonb(cu) - 'created_at' - 'updated_at' from public.currencies cu
+                 where cu.code = v_cart.currency_code),
     'stores', v_stores,
     'payment_methods', v_methods,
     'payment_method_id', v_method,
@@ -359,6 +389,8 @@ as $$
   select jsonb_build_object(
     'country_code', p_country,
     'currency_code', (select c.currency_code from public.countries c where c.code = p_country),
+    'currency', (select to_jsonb(cu) - 'created_at' - 'updated_at' from public.currencies cu
+                 join public.countries c on c.currency_code = cu.code where c.code = p_country),
     'stores', '[]'::jsonb, 'payment_methods', '[]'::jsonb, 'payment_method_id', null,
     'item_count', 0, 'pickup_count', 0, 'delivery_minutes', 0,
     'subtotal_minor', 0, 'delivery_fee_minor', 0, 'total_minor', 0,
@@ -615,7 +647,8 @@ as $$
   select jsonb_build_object(
     'id', pu.id, 'created_at', pu.created_at,
     'country_code', pu.country_code, 'currency_code', pu.currency_code,
-    'payment_method', jsonb_build_object('id', pm.id, 'provider_code', pm.provider_code,
+    'payment_method', jsonb_build_object('id', pm.id, 'country_code', pm.country_code,
+                                         'provider_code', pm.provider_code,
                                          'operator_code', pm.operator_code, 'label', pm.label),
     'address', pu.address, 'substitution_allowed', pu.substitution_allowed,
     'subtotal_minor', pu.subtotal_minor, 'delivery_fee_minor', pu.delivery_fee_minor,
