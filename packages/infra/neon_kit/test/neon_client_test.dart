@@ -254,10 +254,19 @@ void main() {
       expect(result.failureOrNull, isA<ConflictFailure>());
     });
 
-    test('sans session : UnauthenticatedFailure, aucune requête', () async {
+    test('sans session : requête anonyme, refus du serveur remonté', () async {
+      server.on(
+        'GET',
+        '/rest/v1/x',
+        (_) => const FakeResponse(401, {'code': 'PGRST301', 'message': 'jwt'}),
+      );
       final result = await neon.data.run((db) => db.from('x').select());
       expect(result.failureOrNull, isA<UnauthenticatedFailure>());
-      expect(server.requests, isEmpty);
+      expect(
+        server.count('GET', '/rest/v1/x'),
+        1,
+        reason: 'aucun renouvellement',
+      );
     });
 
     test("page HTML d'un proxy : ServerFailure", () async {
@@ -343,6 +352,20 @@ void main() {
         expect(server.count('PUT', '/b/k.jpg'), 1);
       },
     );
+
+    test('Data API sans session : rôle anonyme, sans jeton', () async {
+      FakeRequest? sent;
+      server.on('POST', '/rest/v1/rpc/discover_stores', (r) {
+        sent = r;
+        return const FakeResponse(200, {'stores': <Object>[]});
+      });
+      final result = await neon.data.rpc<Object?>('discover_stores');
+      expect(result.isOk, isTrue);
+      expect(
+        sent?.headers.keys.map((k) => k.toLowerCase()),
+        isNot(contains('authorization')),
+      );
+    });
 
     test('GET : réseau coupé puis rétabli', () async {
       await signIn();
