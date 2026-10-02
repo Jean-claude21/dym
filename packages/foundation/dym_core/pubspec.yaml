@@ -1,5 +1,5 @@
 name: dym_core
-description: Fondation DYM en Dart pur (argent, devises).
+description: Fondation DYM en Dart pur (argent, devises, résultats typés, environnement).
 version: 0.1.0
 publish_to: none
 resolution: workspace
