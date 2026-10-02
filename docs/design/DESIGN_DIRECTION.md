@@ -115,6 +115,26 @@ Captures de contrôle : `specs/002-responsive-layout/validation/`.
 qu'après le choix du quartier) ; quartier choisi dans la liste, sans détection de position (arrive
 avec `discovery`) ; photo de profil reportée au stockage d'objets.
 
+Écrans produits avec la spec 006 (onboarding et réglages de la boutique, **à valider**) :
+
+| # | Écran | Fichier | Parcours |
+|---|---|---|---|
+| 16 | Nom et présentation (étape 1) | [16-boutique-nom](screens/16-boutique-nom.webp) | 9 |
+| 17 | Quartier et adresse de ramassage (étape 3) | [17-boutique-adresse](screens/17-boutique-adresse.webp) | 9 |
+| 18 | Rayon principal (étape 4) | [18-boutique-rayon](screens/18-boutique-rayon.webp) | 9 |
+| 19 | Quartiers desservis, préparation, retrait (étape 5) | [19-boutique-livraison](screens/19-boutique-livraison.webp) | 9 |
+| 20 | Moyens de paiement (étape 6) | [20-boutique-paiement](screens/20-boutique-paiement.webp) | 9 |
+| 21 | Horaires (étape 7) | [21-boutique-horaires](screens/21-boutique-horaires.webp) | 9 |
+| 22 | Boutique ouverte | [22-boutique-ouverte](screens/22-boutique-ouverte.webp) | 9 |
+| 23 | Ma boutique (ouvrir ou fermer, réglages) | [23-boutique-reglages](screens/23-boutique-reglages.webp) | 13 |
+
+Écarts assumés du rendu :
+- rayons illustrés par les contenants du design system, pas par des photos ;
+- pas de photo de boutique ni de vendeuse (stockage d'objets à venir) : initiale du nom ;
+- onglets « Commandes » et « Produits » absents de « Ma boutique » tant que leurs specs ne sont pas
+  livrées ;
+- une ligne « Rayon » ajoutée aux réglages (le rayon se modifie comme les autres étapes).
+
 Ce sont des **rendus de concept générés par IA** (ChatGPT, gpt-image-2), pas des fichiers de
 production. À reprendre lors de la construction :
 

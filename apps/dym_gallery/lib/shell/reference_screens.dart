@@ -3,6 +3,8 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
+import 'package:dym_gallery/demo/demo_store.dart';
+import 'package:dym_gallery/demo/demo_vendor_navigator.dart';
 import 'package:dym_gallery/screens/s01_splash.dart';
 import 'package:dym_gallery/screens/s02_home.dart';
 import 'package:dym_gallery/screens/s03_aisle.dart';
@@ -11,6 +13,9 @@ import 'package:dym_gallery/screens/s05_cart.dart';
 import 'package:dym_gallery/screens/s06_tracking.dart';
 import 'package:dym_gallery/screens/s07_seller_origin.dart';
 import 'package:dym_gallery/screens/s08_seller_new_order.dart';
+import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
+import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
+import 'package:dym_vendor/ui/views/home/home_view.dart';
 import 'package:flutter/widgets.dart';
 
 /// Écran validé et sa reproduction avec dym_ui.
@@ -154,6 +159,49 @@ final referenceScreens = <ReferenceScreen>[
       service: DemoAuthService(country: c, app: AccountApp.vendor),
       onReady: (_) {},
       variant: AuthVariant.vendor,
+    ),
+  ),
+  // Spec 006 : onboarding et réglages de la boutique (maquettes générées
+  // dans la direction validée, à valider).
+  for (final (id, step, title, file) in const [
+    ('16', 1, 'Nom de la boutique', '16-boutique-nom.webp'),
+    ('17', 3, 'Adresse de ramassage', '17-boutique-adresse.webp'),
+    ('18', 4, 'Rayon principal', '18-boutique-rayon.webp'),
+    ('19', 5, 'Livraison et préparation', '19-boutique-livraison.webp'),
+    ('20', 6, 'Moyens de paiement', '20-boutique-paiement.webp'),
+    ('21', 7, 'Horaires', '21-boutique-horaires.webp'),
+  ])
+    ReferenceScreen(
+      id: id,
+      title: title,
+      surface: 'Vendeuse',
+      referenceFile: file,
+      builder: (c) => StoreOnboardingView(
+        service: DemoStore.service(c, step: step),
+        onOpened: (_, _) {},
+      ),
+    ),
+  ReferenceScreen(
+    id: '22',
+    title: 'Boutique ouverte',
+    surface: 'Vendeuse',
+    referenceFile: '22-boutique-ouverte.webp',
+    builder: (c) => StoreOpenedView(
+      store: DemoStore.store(c),
+      config: DemoStore.config(c),
+      onSeeStore: () {},
+      onAddProduct: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '23',
+    title: 'Ma boutique',
+    surface: 'Vendeuse',
+    referenceFile: '23-boutique-reglages.webp',
+    builder: (c) => HomeView(
+      service: DemoAuthService(country: c, app: AccountApp.vendor),
+      stores: DemoStore.service(c),
+      navigator: DemoVendorNavigator(),
     ),
   ),
 ];

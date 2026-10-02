@@ -685,9 +685,13 @@ class _DayRow extends StatelessWidget {
               ),
             ],
           )
-        : Text(
-            l10n.storeHoursClosed,
-            style: t.body.copyWith(color: c.textSecondary),
+        // Même largeur que les heures : les interrupteurs restent alignés.
+        : ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 2 * 88 + 8),
+            child: Text(
+              l10n.storeHoursClosed,
+              style: t.body.copyWith(color: c.textSecondary),
+            ),
           );
     final toggle = Semantics(
       label: name,
@@ -702,16 +706,14 @@ class _DayRow extends StatelessWidget {
       builder: (context, box) {
         final scale = MediaQuery.textScalerOf(context).scale(1);
         // Ligne unique si la place suffit, sinon heures sous le jour.
-        if (box.maxWidth / scale >= 400) {
+        // Jour (~90) + interrupteur (60) + heures (2 × 88 + 8) + marges.
+        if (box.maxWidth / scale >= 344) {
           return Row(
             children: [
-              Expanded(flex: 2, child: title),
+              Expanded(child: title),
               toggle,
               const SizedBox(width: DymTokenSpace.s3),
-              Expanded(
-                flex: 3,
-                child: Align(alignment: Alignment.centerRight, child: times),
-              ),
+              times,
             ],
           );
         }

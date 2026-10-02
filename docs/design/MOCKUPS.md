@@ -11,7 +11,9 @@
 Direction validée le 2026-10-01 ([DESIGN_DIRECTION.md](DESIGN_DIRECTION.md)). Écrans déjà rendus
 dans [`screens/`](screens/) : parcours 2, 3, 4, 5, 7, 9 (étape « Où vends-tu ? ») et 12. Spec 005 :
 parcours 1 complet, « Moi » (parcours 8, suppression du compte), connexion vendeuse et admin
-(écrans 09 à 15, à valider). Les autres parcours sont produits spec par spec dans la même direction.
+(écrans 09 à 15, à valider). Spec 006 : parcours 9 complet (onboarding de la boutique en 7
+étapes, écrans 16 à 22) et ouverture ou fermeture en un geste (parcours 13, écran 23), à valider.
+Les autres parcours sont produits spec par spec dans la même direction.
 
 ## Ordre de production
 

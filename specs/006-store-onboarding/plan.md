@@ -50,3 +50,7 @@ Même pile que les specs 003 à 005. Aucune nouvelle dépendance.
 | D3 | Lecture publique par `GRANT SELECT (colonnes)` sans `owner_id`, et RLS `status = 'active'` | Les privilèges par colonne empêchent la fuite de la propriétaire. La propriétaire lit tout par `my_store()` |
 | D4 | `update_store(jsonb)` n'accepte qu'une liste blanche de clés | Une seule fonction pour l'onboarding et les réglages, sans champ sensible |
 | D5 | Horaires en `time` locale du pays (le fuseau vient de `countries.timezone`) | Le calcul « ouvert maintenant » se fera en SQL avec le fuseau |
+| D6 | `store_payment_options()` (security definer) liste tous les moyens du pays de la boutique avec `is_available` | Les moyens inactifs sont masqués par la RLS ; l'étape 6 doit pourtant afficher Mobile Money « Bientôt » (US1-5) |
+| D7 | La galerie dépend de `dym_vendor` pour afficher les vrais écrans 16 à 23 | Outil interne non publié ; évite de dupliquer les écrans. Aucune app ne dépend d'une autre app |
+| D8 | `MemoryStoreService` (règles SQL reproduites en mémoire) dans `lib/features/store/testing.dart` | Partagé par les tests et la démo de la galerie, comme `neon_kit/testing.dart` ; jamais branché en production |
+| D9 | « Ajouter mon premier produit » annonce « Bientôt disponible » | Le catalogue arrive avec la spec `catalog` ; aucune fonction hors spec |
