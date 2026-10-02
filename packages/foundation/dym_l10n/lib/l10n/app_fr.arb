@@ -1065,5 +1065,325 @@
   "categoriesEmpty": "Aucune catégorie : crée la première.",
   "@categoriesEmpty": {
     "description": "Liste vide"
+  },
+  "navAisles": "Rayons",
+  "@navAisles": {
+    "description": "Onglet rayons"
+  },
+  "homeDeliveredIn": "Livré en {minutes} min",
+  "@homeDeliveredIn": {
+    "description": "Estimation de livraison",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "homeSearchHint": "Cherche tomates, gari, jus maison…",
+  "@homeSearchHint": {
+    "description": "Barre de recherche de l'accueil"
+  },
+  "homeOpenStores": "Boutiques ouvertes près de toi",
+  "@homeOpenStores": {
+    "description": "Section accueil"
+  },
+  "homeOtherStores": "Les autres boutiques du quartier",
+  "@homeOtherStores": {
+    "description": "Boutiques fermées qui livrent le quartier"
+  },
+  "homeNoOpenStore": "Aucune boutique ouverte pour l'instant dans ton quartier.",
+  "@homeNoOpenStore": {
+    "description": "Aucune boutique ouverte"
+  },
+  "homeAisles": "Rayons",
+  "@homeAisles": {
+    "description": "Section accueil"
+  },
+  "homeChangeZone": "Changer de quartier : {zone}",
+  "@homeChangeZone": {
+    "description": "Lecteur d'écran : sélecteur de quartier",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "storeOpenUntil": "Ouvert jusqu'à {time}",
+  "@storeOpenUntil": {
+    "description": "Boutique ouverte",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "storeOpenNow": "Ouvert",
+  "@storeOpenNow": {
+    "description": "Boutique ouverte"
+  },
+  "storeClosedNow": "Fermé",
+  "@storeClosedNow": {
+    "description": "Boutique fermée"
+  },
+  "distanceMeters": "{meters} m",
+  "@distanceMeters": {
+    "description": "Distance en mètres",
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "distanceKm": "{km} km",
+  "@distanceKm": {
+    "description": "Distance en kilomètres (texte déjà formaté)",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "placeAndMeta": "{place} · {meta}",
+  "@placeAndMeta": {
+    "description": "Quartier et information",
+    "placeholders": {
+      "place": {
+        "type": "String"
+      },
+      "meta": {
+        "type": "String"
+      }
+    }
+  },
+  "zonePickerTitle": "Où te livrer ?",
+  "@zonePickerTitle": {
+    "description": "Choix du quartier"
+  },
+  "zoneUseLocation": "Utiliser ma position",
+  "@zoneUseLocation": {
+    "description": "Proposer le quartier"
+  },
+  "zoneLocating": "Recherche de ta position…",
+  "@zoneLocating": {
+    "description": "Position en cours"
+  },
+  "zoneLocationUnavailable": "Position indisponible : choisis ton quartier dans la liste.",
+  "@zoneLocationUnavailable": {
+    "description": "Position refusée"
+  },
+  "zoneSuggestion": "Tu es à {zone} ?",
+  "@zoneSuggestion": {
+    "description": "Quartier proposé",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneConfirm": "Oui, c'est ça",
+  "@zoneConfirm": {
+    "description": "Confirmer le quartier"
+  },
+  "aisleAll": "Tous",
+  "@aisleAll": {
+    "description": "Filtre de rayon"
+  },
+  "aisleEmpty": "Rien dans ce rayon pour ton quartier pour l'instant.",
+  "@aisleEmpty": {
+    "description": "Rayon vide"
+  },
+  "searchHint": "Cherche un produit ou une boutique",
+  "@searchHint": {
+    "description": "Champ de recherche"
+  },
+  "searchClear": "Effacer la recherche",
+  "@searchClear": {
+    "description": "Bouton effacer"
+  },
+  "searchTabAll": "Tout",
+  "@searchTabAll": {
+    "description": "Onglet de résultats"
+  },
+  "searchTabProducts": "Produits",
+  "@searchTabProducts": {
+    "description": "Onglet de résultats"
+  },
+  "searchTabStores": "Boutiques",
+  "@searchTabStores": {
+    "description": "Onglet de résultats"
+  },
+  "searchFilters": "Filtres",
+  "@searchFilters": {
+    "description": "Bouton filtres"
+  },
+  "searchFiltersActive": "Filtres, {count} actifs",
+  "@searchFiltersActive": {
+    "description": "Lecteur d'écran",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchResultCount": "{count, plural, =0{Aucun résultat} =1{1 résultat} other{{count} résultats}}",
+  "@searchResultCount": {
+    "description": "Nombre de résultats",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchEmpty": "Rien trouvé. Essaie un autre mot.",
+  "@searchEmpty": {
+    "description": "Aucun résultat"
+  },
+  "searchPrompt": "Tape au moins 2 lettres.",
+  "@searchPrompt": {
+    "description": "Recherche trop courte"
+  },
+  "searchLoadMore": "Voir plus",
+  "@searchLoadMore": {
+    "description": "Pagination"
+  },
+  "sortRelevance": "Pertinence",
+  "@sortRelevance": {
+    "description": "Tri"
+  },
+  "sortPriceAsc": "Prix croissant",
+  "@sortPriceAsc": {
+    "description": "Tri"
+  },
+  "sortPriceDesc": "Prix décroissant",
+  "@sortPriceDesc": {
+    "description": "Tri"
+  },
+  "filtersTitle": "Filtres",
+  "@filtersTitle": {
+    "description": "Feuille des filtres"
+  },
+  "filtersClear": "Effacer",
+  "@filtersClear": {
+    "description": "Effacer les filtres"
+  },
+  "filtersSort": "Trier par",
+  "@filtersSort": {
+    "description": "Section tri"
+  },
+  "filtersOrigin": "Origine",
+  "@filtersOrigin": {
+    "description": "Section origine"
+  },
+  "filtersPrice": "Prix",
+  "@filtersPrice": {
+    "description": "Section prix"
+  },
+  "filtersMin": "Min",
+  "@filtersMin": {
+    "description": "Prix minimum"
+  },
+  "filtersMax": "Max",
+  "@filtersMax": {
+    "description": "Prix maximum"
+  },
+  "filtersAisle": "Rayon",
+  "@filtersAisle": {
+    "description": "Section rayon"
+  },
+  "filtersAvailable": "Disponible seulement",
+  "@filtersAvailable": {
+    "description": "Filtre de disponibilité"
+  },
+  "filtersApply": "Voir les résultats",
+  "@filtersApply": {
+    "description": "Appliquer les filtres"
+  },
+  "filtersPriceInvalid": "Le minimum dépasse le maximum.",
+  "@filtersPriceInvalid": {
+    "description": "Prix incohérents"
+  },
+  "productFrom": "dès {price}",
+  "@productFrom": {
+    "description": "Prix le plus bas",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "productChoose": "Choisis",
+  "@productChoose": {
+    "description": "Choix de variante"
+  },
+  "productDeliveryEstimate": "Livré en {minutes} min environ à {zone}",
+  "@productDeliveryEstimate": {
+    "description": "Délai estimé",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "productDeliveryEstimateShort": "Livré en {minutes} min environ",
+  "@productDeliveryEstimateShort": {
+    "description": "Délai estimé",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "productNotServed": "Cette boutique ne livre pas {zone}.",
+  "@productNotServed": {
+    "description": "Quartier non desservi",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "productPhotoPosition": "Photo {index} sur {count}",
+  "@productPhotoPosition": {
+    "description": "Galerie",
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "productUnavailableTitle": "Ce produit n'est plus proposé.",
+  "@productUnavailableTitle": {
+    "description": "Fiche retirée"
+  },
+  "storePagePickupNote": "Retrait possible à {zone} · adresse partagée avec le livreur uniquement",
+  "@storePagePickupNote": {
+    "description": "Page boutique",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "storePageProducts": "Ses produits",
+  "@storePageProducts": {
+    "description": "Page boutique"
+  },
+  "storePageEmpty": "Pas encore de produit publié.",
+  "@storePageEmpty": {
+    "description": "Page boutique vide"
+  },
+  "storePageUnavailable": "Cette boutique n'est plus disponible.",
+  "@storePageUnavailable": {
+    "description": "Boutique retirée"
+  },
+  "shareLabel": "Partager",
+  "@shareLabel": {
+    "description": "Partager"
   }
 }

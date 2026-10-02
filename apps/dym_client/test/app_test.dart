@@ -12,6 +12,8 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/discovery_fixtures.dart';
+
 class _Auth implements AuthService {
   new(this.bootstrapResult);
 
@@ -62,6 +64,18 @@ class _Navigator implements AppNavigator {
   @override
   void toSignIn({bool startWithProfile = false}) =>
       routes.add(startWithProfile ? 'signIn:profile' : 'signIn');
+
+  @override
+  void toAisle(String categoryId) => routes.add('aisle:$categoryId');
+
+  @override
+  void toStore(String storeId) => routes.add('store:$storeId');
+
+  @override
+  void toProduct(String productId) => routes.add('product:$productId');
+
+  @override
+  void toSearch() => routes.add('search');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(
@@ -186,10 +200,10 @@ void main() {
     });
   });
 
-  group('accueil et « Moi »', () {
+  group('accueil, rayons et « Moi »', () {
     for (final size in sizes) {
       for (final locale in const [Locale('fr'), Locale('en')]) {
-        for (final tab in [0, 1]) {
+        for (final tab in [0, 1, 2]) {
           testWidgets(
             'onglet $tab · ${size.width.toInt()}×${size.height.toInt()} · '
             '${locale.languageCode} · texte 130 %',
@@ -198,16 +212,21 @@ void main() {
                 tester,
                 HomeView(
                   service: _Auth(const Ok(AuthState.signedOut())),
+                  discovery: memoryDiscovery(),
                   navigator: _Navigator(),
                 ),
                 size: size,
                 locale: locale,
                 textScale: 1.3,
               );
-              if (tab == 1) {
-                await tester.tap(
-                  find.text(locale.languageCode == 'fr' ? 'Moi' : 'Me').first,
-                );
+              final fr = locale.languageCode == 'fr';
+              final label = switch (tab) {
+                1 => fr ? 'Rayons' : 'Aisles',
+                2 => fr ? 'Moi' : 'Me',
+                _ => null,
+              };
+              if (label != null) {
+                await tester.tap(find.text(label).last);
                 await tester.pump();
               }
               expect(tester.takeException(), isNull);
@@ -222,8 +241,12 @@ void main() {
     ) async {
       final auth = _Auth(const Ok(AuthState.signedOut()));
       final nav = _Navigator();
-      await _pump(tester, HomeView(service: auth, navigator: nav));
-      expect(find.text('Bonjour Awa !'), findsOneWidget);
+      await _pump(
+        tester,
+        HomeView(service: auth, discovery: memoryDiscovery(), navigator: nav),
+      );
+      await tester.pump();
+      expect(find.text('Boutiques ouvertes près de toi'), findsOneWidget);
       await tester.tap(find.text('Moi').first);
       await tester.pump();
       await tester.tap(find.text('Se déconnecter'));

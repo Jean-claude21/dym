@@ -75,17 +75,17 @@ class DymFilterChip extends StatelessWidget {
                       ],
                       Flexible(
                         child: Text(
-                        label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.dym.text.label.copyWith(
-                          fontSize: 15,
-                          fontWeight: selected
-                              ? FontWeight.w700
-                              : FontWeight.w600,
-                          color: ink,
+                          label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.dym.text.label.copyWith(
+                            fontSize: 15,
+                            fontWeight: selected
+                                ? FontWeight.w700
+                                : FontWeight.w600,
+                            color: ink,
+                          ),
                         ),
-                      ),
                       ),
                     ],
                   ),

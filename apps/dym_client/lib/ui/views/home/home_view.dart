@@ -1,77 +1,80 @@
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_client/app/app.locator.dart';
+import 'package:dym_client/features/discovery/aisle/aisles_view.dart';
+import 'package:dym_client/features/discovery/discovery_service.dart';
+import 'package:dym_client/features/discovery/home/discovery_home_view.dart';
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Accueil provisoire (spec 005) : salutation et onglet « Moi ». Le contenu
-/// arrive avec la spec `discovery`.
+/// Onglets de la cliente. Les commandes arrivent avec leur spec.
+enum ClientTab { home, aisles, me }
+
+/// Accueil de la cliente : découverte (écran 02), rayons et « Moi ».
 class HomeView extends StatefulWidget {
-  const new({super.key, this.service, this.navigator});
+  const new({
+    super.key,
+    this.service,
+    this.discovery,
+    this.navigator,
+    this.initialTab = ClientTab.home,
+  });
 
   /// Service d'authentification (tests).
   final AuthService? service;
 
+  /// Découverte (tests).
+  final DiscoveryService? discovery;
+
   /// Navigation (tests).
   final AppNavigator? navigator;
+
+  final ClientTab initialTab;
 
   @override
   State<HomeView> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  int _tab = 0;
+  late ClientTab _tab = widget.initialTab;
 
   late final AuthService _service = widget.service ?? locator<AuthService>();
+  late final DiscoveryService _discovery =
+      widget.discovery ?? locator<DiscoveryService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
-    final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final name = _service.me?.profile?.firstName ?? '';
     return DymAdaptiveScaffold(
       backgroundColor: c.background,
-      currentIndex: _tab,
-      onDestinationSelected: (i) => setState(() => _tab = i),
+      currentIndex: _tab.index,
+      onDestinationSelected: (i) => setState(() => _tab = ClientTab.values[i]),
       destinations: [
         DymNavItem(icon: Icons.home_rounded, label: l10n.navHome),
+        DymNavItem(icon: Icons.grid_view_rounded, label: l10n.navAisles),
         DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
       ],
-      body: _tab == 1
-          ? AccountView(service: _service, onSignedOut: _navigator.toSignIn)
-          : SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(DymLayout.gutter(context)),
-                  child: DymContentWidth.form(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          l10n.homeHello(name),
-                          textAlign: TextAlign.center,
-                          style: t.display.copyWith(fontSize: 34),
-                        ),
-                        const SizedBox(height: DymTokenSpace.s3),
-                        Text(
-                          l10n.comingSoon,
-                          textAlign: TextAlign.center,
-                          style: t.body.copyWith(
-                            fontSize: 17,
-                            color: c.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+      body: switch (_tab) {
+        ClientTab.home => DiscoveryHomeView(
+          service: _discovery,
+          onSearch: _navigator.toSearch,
+          onOpenStore: _navigator.toStore,
+          onOpenAisle: _navigator.toAisle,
+        ),
+        ClientTab.aisles => AislesView(
+          service: _discovery,
+          onOpenAisle: _navigator.toAisle,
+        ),
+        ClientTab.me => AccountView(
+          service: _service,
+          onSignedOut: _navigator.toSignIn,
+        ),
+      },
     );
   }
 }

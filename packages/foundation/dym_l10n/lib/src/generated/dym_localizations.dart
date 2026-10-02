@@ -1482,6 +1482,360 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Aucune catégorie : crée la première.'**
   String get categoriesEmpty;
+
+  /// Onglet rayons
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayons'**
+  String get navAisles;
+
+  /// Estimation de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livré en {minutes} min'**
+  String homeDeliveredIn(int minutes);
+
+  /// Barre de recherche de l'accueil
+  ///
+  /// In fr, this message translates to:
+  /// **'Cherche tomates, gari, jus maison…'**
+  String get homeSearchHint;
+
+  /// Section accueil
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques ouvertes près de toi'**
+  String get homeOpenStores;
+
+  /// Boutiques fermées qui livrent le quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Les autres boutiques du quartier'**
+  String get homeOtherStores;
+
+  /// Aucune boutique ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune boutique ouverte pour l\'instant dans ton quartier.'**
+  String get homeNoOpenStore;
+
+  /// Section accueil
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayons'**
+  String get homeAisles;
+
+  /// Lecteur d'écran : sélecteur de quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de quartier : {zone}'**
+  String homeChangeZone(String zone);
+
+  /// Boutique ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvert jusqu\'à {time}'**
+  String storeOpenUntil(String time);
+
+  /// Boutique ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvert'**
+  String get storeOpenNow;
+
+  /// Boutique fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé'**
+  String get storeClosedNow;
+
+  /// Distance en mètres
+  ///
+  /// In fr, this message translates to:
+  /// **'{meters} m'**
+  String distanceMeters(int meters);
+
+  /// Distance en kilomètres (texte déjà formaté)
+  ///
+  /// In fr, this message translates to:
+  /// **'{km} km'**
+  String distanceKm(String km);
+
+  /// Quartier et information
+  ///
+  /// In fr, this message translates to:
+  /// **'{place} · {meta}'**
+  String placeAndMeta(String place, String meta);
+
+  /// Choix du quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Où te livrer ?'**
+  String get zonePickerTitle;
+
+  /// Proposer le quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Utiliser ma position'**
+  String get zoneUseLocation;
+
+  /// Position en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche de ta position…'**
+  String get zoneLocating;
+
+  /// Position refusée
+  ///
+  /// In fr, this message translates to:
+  /// **'Position indisponible : choisis ton quartier dans la liste.'**
+  String get zoneLocationUnavailable;
+
+  /// Quartier proposé
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu es à {zone} ?'**
+  String zoneSuggestion(String zone);
+
+  /// Confirmer le quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Oui, c\'est ça'**
+  String get zoneConfirm;
+
+  /// Filtre de rayon
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous'**
+  String get aisleAll;
+
+  /// Rayon vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien dans ce rayon pour ton quartier pour l\'instant.'**
+  String get aisleEmpty;
+
+  /// Champ de recherche
+  ///
+  /// In fr, this message translates to:
+  /// **'Cherche un produit ou une boutique'**
+  String get searchHint;
+
+  /// Bouton effacer
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer la recherche'**
+  String get searchClear;
+
+  /// Onglet de résultats
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get searchTabAll;
+
+  /// Onglet de résultats
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits'**
+  String get searchTabProducts;
+
+  /// Onglet de résultats
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques'**
+  String get searchTabStores;
+
+  /// Bouton filtres
+  ///
+  /// In fr, this message translates to:
+  /// **'Filtres'**
+  String get searchFilters;
+
+  /// Lecteur d'écran
+  ///
+  /// In fr, this message translates to:
+  /// **'Filtres, {count} actifs'**
+  String searchFiltersActive(int count);
+
+  /// Nombre de résultats
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun résultat} =1{1 résultat} other{{count} résultats}}'**
+  String searchResultCount(int count);
+
+  /// Aucun résultat
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien trouvé. Essaie un autre mot.'**
+  String get searchEmpty;
+
+  /// Recherche trop courte
+  ///
+  /// In fr, this message translates to:
+  /// **'Tape au moins 2 lettres.'**
+  String get searchPrompt;
+
+  /// Pagination
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir plus'**
+  String get searchLoadMore;
+
+  /// Tri
+  ///
+  /// In fr, this message translates to:
+  /// **'Pertinence'**
+  String get sortRelevance;
+
+  /// Tri
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix croissant'**
+  String get sortPriceAsc;
+
+  /// Tri
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix décroissant'**
+  String get sortPriceDesc;
+
+  /// Feuille des filtres
+  ///
+  /// In fr, this message translates to:
+  /// **'Filtres'**
+  String get filtersTitle;
+
+  /// Effacer les filtres
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer'**
+  String get filtersClear;
+
+  /// Section tri
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier par'**
+  String get filtersSort;
+
+  /// Section origine
+  ///
+  /// In fr, this message translates to:
+  /// **'Origine'**
+  String get filtersOrigin;
+
+  /// Section prix
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix'**
+  String get filtersPrice;
+
+  /// Prix minimum
+  ///
+  /// In fr, this message translates to:
+  /// **'Min'**
+  String get filtersMin;
+
+  /// Prix maximum
+  ///
+  /// In fr, this message translates to:
+  /// **'Max'**
+  String get filtersMax;
+
+  /// Section rayon
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon'**
+  String get filtersAisle;
+
+  /// Filtre de disponibilité
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible seulement'**
+  String get filtersAvailable;
+
+  /// Appliquer les filtres
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les résultats'**
+  String get filtersApply;
+
+  /// Prix incohérents
+  ///
+  /// In fr, this message translates to:
+  /// **'Le minimum dépasse le maximum.'**
+  String get filtersPriceInvalid;
+
+  /// Prix le plus bas
+  ///
+  /// In fr, this message translates to:
+  /// **'dès {price}'**
+  String productFrom(String price);
+
+  /// Choix de variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis'**
+  String get productChoose;
+
+  /// Délai estimé
+  ///
+  /// In fr, this message translates to:
+  /// **'Livré en {minutes} min environ à {zone}'**
+  String productDeliveryEstimate(int minutes, String zone);
+
+  /// Délai estimé
+  ///
+  /// In fr, this message translates to:
+  /// **'Livré en {minutes} min environ'**
+  String productDeliveryEstimateShort(int minutes);
+
+  /// Quartier non desservi
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette boutique ne livre pas {zone}.'**
+  String productNotServed(String zone);
+
+  /// Galerie
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo {index} sur {count}'**
+  String productPhotoPosition(int index, int count);
+
+  /// Fiche retirée
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce produit n\'est plus proposé.'**
+  String get productUnavailableTitle;
+
+  /// Page boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait possible à {zone} · adresse partagée avec le livreur uniquement'**
+  String storePagePickupNote(String zone);
+
+  /// Page boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ses produits'**
+  String get storePageProducts;
+
+  /// Page boutique vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de produit publié.'**
+  String get storePageEmpty;
+
+  /// Boutique retirée
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette boutique n\'est plus disponible.'**
+  String get storePageUnavailable;
+
+  /// Partager
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager'**
+  String get shareLabel;
 }
 
 class _DymLocalizationsDelegate

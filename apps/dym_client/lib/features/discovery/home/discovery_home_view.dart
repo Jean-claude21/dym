@@ -1,0 +1,300 @@
+import 'package:dym_client/features/discovery/discovery_service.dart';
+import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
+import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
+import 'package:dym_ui/dym_ui.dart';
+import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
+
+/// Écran 02 : accueil (quartier, estimation, boutiques ouvertes, rayons).
+class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
+  const new({
+    required this.service,
+    required this.onSearch,
+    required this.onOpenStore,
+    required this.onOpenAisle,
+    super.key,
+  });
+
+  final DiscoveryService service;
+  final VoidCallback onSearch;
+  final ValueChanged<String> onOpenStore;
+  final ValueChanged<String> onOpenAisle;
+
+  @override
+  DiscoveryHomeViewModel viewModelBuilder(BuildContext context) =>
+      DiscoveryHomeViewModel(service: service);
+
+  @override
+  void onViewModelReady(DiscoveryHomeViewModel viewModel) => viewModel.load();
+
+  @override
+  Widget builder(
+    BuildContext context,
+    DiscoveryHomeViewModel viewModel,
+    Widget? child,
+  ) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final vm = viewModel;
+    if (!vm.ready) {
+      return SafeArea(
+        child: DiscoveryState(
+          failure: vm.isBusy ? null : vm.failure,
+          onRetry: vm.load,
+        ),
+      );
+    }
+    final open = vm.result.openStores;
+    final closed = vm.result.stores.where((s) => !s.openNow).toList();
+    Widget section(String title) => Padding(
+      padding: const EdgeInsets.only(
+        top: DymTokenSpace.s5,
+        bottom: DymTokenSpace.s3,
+      ),
+      child: Semantics(
+        header: true,
+        child: Text(title, style: t.title.copyWith(fontSize: 22)),
+      ),
+    );
+    Widget storeRow(List<PublicStore> stores) => SizedBox(
+      height: 252 * MediaQuery.textScalerOf(context).scale(1).clamp(1, 1.3),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: stores.length,
+        separatorBuilder: (_, _) => const SizedBox(width: DymTokenSpace.s3),
+        itemBuilder: (context, i) => StoreTile(
+          store: stores[i],
+          service: vm.service,
+          config: vm.config,
+          onTap: () => onOpenStore(stores[i].id),
+        ),
+      ),
+    );
+    return SafeArea(
+      child: LayoutBuilder(
+        builder: (context, box) {
+          final inset = DymLayout.sideInset(
+            box.maxWidth,
+            gutter: DymLayout.gutter(context),
+          );
+          final inner = box.maxWidth - inset * 2;
+          const spacing = DymTokenSpace.s2;
+          final columns = DymLayout.columns(
+            inner,
+            minTileWidth: 84 * MediaQuery.textScalerOf(context).scale(1),
+            spacing: spacing,
+            max: 8,
+            itemCount: vm.aisles.length,
+          );
+          final tile = (inner - spacing * (columns - 1)) / columns;
+          final tints = tileTints(c);
+          final locale = Localizations.localeOf(context).languageCode;
+          return RefreshIndicator(
+            onRefresh: vm.load,
+            child: ListView(
+              padding: EdgeInsets.fromLTRB(inset, 12, inset, 24),
+              children: [
+                Wrap(
+                  spacing: DymTokenSpace.s2,
+                  runSpacing: DymTokenSpace.s2,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    _ZoneButton(viewModel: vm),
+                    if (vm.result.estimateMinutes != null)
+                      DymDeliveryPill(
+                        label: l10n.homeDeliveredIn(vm.result.estimateMinutes!),
+                        zem: DymIllustrations.zem,
+                      ),
+                  ],
+                ),
+                const SizedBox(height: DymTokenSpace.s3),
+                DymSearchBar(hint: l10n.homeSearchHint, onTap: onSearch),
+                section(l10n.homeOpenStores),
+                if (open.isEmpty)
+                  Text(
+                    l10n.homeNoOpenStore,
+                    style: t.body.copyWith(color: c.textSecondary),
+                  )
+                else
+                  storeRow(open),
+                if (closed.isNotEmpty) ...[
+                  section(l10n.homeOtherStores),
+                  storeRow(closed),
+                ],
+                section(l10n.homeAisles),
+                Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  children: [
+                    for (final (i, aisle) in vm.aisles.indexed)
+                      SizedBox(
+                        width: tile,
+                        height: tile * 1.15,
+                        child: DymAisleTile(
+                          image:
+                              DymIllustrations.aisle(aisle.icon) ??
+                              DymIllustrations.storeOpened,
+                          label: aisle.label.resolve(locale),
+                          tint: tints[i % tints.length],
+                          onTap: () => onOpenAisle(aisle.id),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _ZoneButton extends StatelessWidget {
+  const new({required this.viewModel});
+
+  final DiscoveryHomeViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final zone = viewModel.zone?.name ?? '';
+    final city = viewModel.cityName;
+    final label = city == null ? zone : '$zone, $city';
+    return Semantics(
+      button: true,
+      label: l10n.homeChangeZone(label),
+      excludeSemantics: true,
+      child: Material(
+        color: c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+          onTap: () => showZonePicker(context, viewModel),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minHeight: 48),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.location_on_rounded, color: c.brand),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      label,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.title.copyWith(fontSize: 17),
+                    ),
+                  ),
+                  const Icon(Icons.expand_more_rounded),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Choix du quartier : position proposée (à confirmer) ou liste.
+Future<void> showZonePicker(
+  BuildContext context,
+  DiscoveryHomeViewModel viewModel,
+) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  showDragHandle: true,
+  builder: (sheet) => ListenableBuilder(
+    listenable: viewModel,
+    builder: (sheet, _) {
+      final c = sheet.dym.colors;
+      final t = sheet.dym.text;
+      final l10n = DymLocalizations.of(sheet);
+      final config = viewModel.config;
+      final suggestion = viewModel.suggestion;
+      Future<void> pick(String zoneId) async {
+        Navigator.pop(sheet);
+        await viewModel.selectZone(zoneId);
+      }
+
+      return DraggableScrollableSheet(
+        expand: false,
+        initialChildSize: 0.7,
+        maxChildSize: 0.95,
+        builder: (sheet, controller) => ListView(
+          controller: controller,
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          children: [
+            Text(l10n.zonePickerTitle, style: t.display.copyWith(fontSize: 28)),
+            const SizedBox(height: DymTokenSpace.s3),
+            if (suggestion != null)
+              Container(
+                padding: const EdgeInsets.all(DymTokenSpace.s3),
+                decoration: BoxDecoration(
+                  color: c.tintVertTendre,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      l10n.zoneSuggestion(suggestion.zoneName),
+                      style: t.title.copyWith(fontSize: 19),
+                    ),
+                    const SizedBox(height: DymTokenSpace.s2),
+                    DymButton(
+                      label: l10n.zoneConfirm,
+                      icon: Icons.check_rounded,
+                      onPressed: () => pick(suggestion.zoneId),
+                    ),
+                  ],
+                ),
+              )
+            else
+              DymButton(
+                label: viewModel.locating
+                    ? l10n.zoneLocating
+                    : l10n.zoneUseLocation,
+                icon: Icons.my_location_rounded,
+                variant: DymButtonVariant.secondary,
+                loading: viewModel.locating,
+                onPressed: viewModel.locating ? null : viewModel.locate,
+              ),
+            if (viewModel.locationUnavailable) ...[
+              const SizedBox(height: DymTokenSpace.s2),
+              Text(
+                l10n.zoneLocationUnavailable,
+                style: t.label.copyWith(color: c.textSecondary, fontSize: 14),
+              ),
+            ],
+            const SizedBox(height: DymTokenSpace.s3),
+            for (final city in config?.cities ?? const <City>[]) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+                child: Text(city.name, style: t.title.copyWith(fontSize: 18)),
+              ),
+              Wrap(
+                spacing: DymTokenSpace.s2,
+                children: [
+                  for (final zone in config!.zonesOf(city.id))
+                    DymFilterChip(
+                      label: zone.name,
+                      selected: zone.id == viewModel.zoneId,
+                      onTap: () => pick(zone.id),
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      );
+    },
+  ),
+);

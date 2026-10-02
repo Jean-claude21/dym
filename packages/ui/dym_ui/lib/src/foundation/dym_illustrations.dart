@@ -29,6 +29,12 @@ abstract final class DymIllustrations {
     package: 'dym_ui',
   );
 
+  /// Zem (moto-taxi) de la pastille de livraison.
+  static const ImageProvider zem = AssetImage(
+    'assets/scenes/zem.webp',
+    package: 'dym_ui',
+  );
+
   /// Illustration d'une origine de boutique (`store_origins.code`).
   static ImageProvider? origin(String? code) => _origins.contains(code)
       ? AssetImage('assets/origins/$code.webp', package: 'dym_ui')

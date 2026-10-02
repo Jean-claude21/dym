@@ -824,4 +824,220 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get categoriesEmpty => 'No categories yet: create the first one.';
+
+  @override
+  String get navAisles => 'Aisles';
+
+  @override
+  String homeDeliveredIn(int minutes) {
+    return 'Delivered in $minutes min';
+  }
+
+  @override
+  String get homeSearchHint => 'Search tomatoes, gari, homemade juice…';
+
+  @override
+  String get homeOpenStores => 'Shops open near you';
+
+  @override
+  String get homeOtherStores => 'Other shops in your area';
+
+  @override
+  String get homeNoOpenStore =>
+      'No shop is open in your neighbourhood right now.';
+
+  @override
+  String get homeAisles => 'Aisles';
+
+  @override
+  String homeChangeZone(String zone) {
+    return 'Change neighbourhood: $zone';
+  }
+
+  @override
+  String storeOpenUntil(String time) {
+    return 'Open until $time';
+  }
+
+  @override
+  String get storeOpenNow => 'Open';
+
+  @override
+  String get storeClosedNow => 'Closed';
+
+  @override
+  String distanceMeters(int meters) {
+    return '$meters m';
+  }
+
+  @override
+  String distanceKm(String km) {
+    return '$km km';
+  }
+
+  @override
+  String placeAndMeta(String place, String meta) {
+    return '$place · $meta';
+  }
+
+  @override
+  String get zonePickerTitle => 'Where should we deliver?';
+
+  @override
+  String get zoneUseLocation => 'Use my location';
+
+  @override
+  String get zoneLocating => 'Finding your location…';
+
+  @override
+  String get zoneLocationUnavailable =>
+      'Location unavailable: choose your neighbourhood from the list.';
+
+  @override
+  String zoneSuggestion(String zone) {
+    return 'Are you in $zone?';
+  }
+
+  @override
+  String get zoneConfirm => 'Yes, that\'s right';
+
+  @override
+  String get aisleAll => 'All';
+
+  @override
+  String get aisleEmpty => 'Nothing in this aisle for your neighbourhood yet.';
+
+  @override
+  String get searchHint => 'Search a product or a shop';
+
+  @override
+  String get searchClear => 'Clear search';
+
+  @override
+  String get searchTabAll => 'All';
+
+  @override
+  String get searchTabProducts => 'Products';
+
+  @override
+  String get searchTabStores => 'Shops';
+
+  @override
+  String get searchFilters => 'Filters';
+
+  @override
+  String searchFiltersActive(int count) {
+    return 'Filters, $count active';
+  }
+
+  @override
+  String searchResultCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count results',
+      one: '1 result',
+      zero: 'No results',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get searchEmpty => 'Nothing found. Try another word.';
+
+  @override
+  String get searchPrompt => 'Type at least 2 letters.';
+
+  @override
+  String get searchLoadMore => 'Show more';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortPriceAsc => 'Price: low to high';
+
+  @override
+  String get sortPriceDesc => 'Price: high to low';
+
+  @override
+  String get filtersTitle => 'Filters';
+
+  @override
+  String get filtersClear => 'Clear';
+
+  @override
+  String get filtersSort => 'Sort by';
+
+  @override
+  String get filtersOrigin => 'Origin';
+
+  @override
+  String get filtersPrice => 'Price';
+
+  @override
+  String get filtersMin => 'Min';
+
+  @override
+  String get filtersMax => 'Max';
+
+  @override
+  String get filtersAisle => 'Aisle';
+
+  @override
+  String get filtersAvailable => 'Available only';
+
+  @override
+  String get filtersApply => 'Show results';
+
+  @override
+  String get filtersPriceInvalid => 'The minimum is above the maximum.';
+
+  @override
+  String productFrom(String price) {
+    return 'from $price';
+  }
+
+  @override
+  String get productChoose => 'Choose';
+
+  @override
+  String productDeliveryEstimate(int minutes, String zone) {
+    return 'Delivered in about $minutes min to $zone';
+  }
+
+  @override
+  String productDeliveryEstimateShort(int minutes) {
+    return 'Delivered in about $minutes min';
+  }
+
+  @override
+  String productNotServed(String zone) {
+    return 'This shop doesn\'t deliver to $zone.';
+  }
+
+  @override
+  String productPhotoPosition(int index, int count) {
+    return 'Photo $index of $count';
+  }
+
+  @override
+  String get productUnavailableTitle => 'This product is no longer available.';
+
+  @override
+  String storePagePickupNote(String zone) {
+    return 'Pickup available in $zone · address shared with the rider only';
+  }
+
+  @override
+  String get storePageProducts => 'Its products';
+
+  @override
+  String get storePageEmpty => 'No products published yet.';
+
+  @override
+  String get storePageUnavailable => 'This shop is no longer available.';
+
+  @override
+  String get shareLabel => 'Share';
 }
