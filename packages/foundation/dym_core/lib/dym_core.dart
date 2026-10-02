@@ -2,7 +2,7 @@
 /// environnement.
 library;
 
-export 'src/env/environment.dart';
+export 'src/config/environment.dart';
 export 'src/money/currency.dart';
 export 'src/money/money.dart';
 export 'src/result/failure.dart';
