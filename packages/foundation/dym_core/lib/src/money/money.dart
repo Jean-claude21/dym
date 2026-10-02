@@ -13,6 +13,19 @@ class Money implements Comparable<Money> {
   /// Montant nul dans [currency].
   const new zero(this.currency) : amountMinor = 0;
 
+  /// Lit un montant saisi en unités principales (« 1 000 », « 12,50 »,
+  /// « 12.5 ») et le renvoie en unités mineures, sans calcul en virgule
+  /// flottante. `null` si la saisie est invalide ou porte trop de décimales.
+  static int? parseMajor(String input, Currency currency) {
+    final text = input.replaceAll(RegExp(r'[\s  ]'), '');
+    final match = RegExp(r'^(\d+)(?:[.,](\d+))?$').firstMatch(text);
+    if (match == null) return null;
+    final whole = match.group(1)!;
+    final fraction = match.group(2) ?? '';
+    if (fraction.length > currency.minorUnits || whole.length > 12) return null;
+    return int.parse(whole + fraction.padRight(currency.minorUnits, '0'));
+  }
+
   /// Montant en unités mineures (4100 = 4 100 F CFA ; 8815 = GH₵88,15).
   final int amountMinor;
 

@@ -66,5 +66,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>DYM utilise l'appareil photo pour photographier tes produits.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>DYM ouvre ta galerie pour choisir la photo d'un produit.</string>
 </dict>
 </plist>

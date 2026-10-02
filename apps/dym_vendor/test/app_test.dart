@@ -90,6 +90,7 @@ DymEnvironment _env(String name) => DymEnvironment.resolve(
   authUrl: 'https://auth.example.com',
   dataApiUrl: 'https://data.example.com',
   functionsUrl: 'https://fn.example.com',
+  mediaUrl: 'https://media.example.com/product-photos',
 );
 
 Future<void> _pump(

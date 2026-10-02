@@ -304,6 +304,46 @@ void main() {
       expect(server.count('POST', '/notify'), 1);
     });
 
+    test('envoi présigné : sans jeton, rejoué après une coupure', () async {
+      await signIn();
+      var calls = 0;
+      FakeRequest? last;
+      server.on('PUT', '/product-photos/stores/s/products/p.jpg', (r) {
+        calls++;
+        last = r;
+        return calls < 2 ? const NetworkDown() : const FakeResponse(200, '');
+      });
+      final result = await neon.uploads.put(
+        Uri.parse(
+          'https://s3.test/product-photos/stores/s/products/p.jpg?sig=1',
+        ),
+        [1, 2, 3],
+        contentType: 'image/jpeg',
+      );
+      expect(result.isOk, isTrue);
+      expect(calls, 2);
+      expect(last?.headers['content-type'], 'image/jpeg');
+      expect(last?.headers.containsKey('Authorization'), isFalse);
+    });
+
+    test(
+      'envoi présigné : 403 (signature expirée) sans nouvelle tentative',
+      () async {
+        server.on(
+          'PUT',
+          '/b/k.jpg',
+          (_) => const FakeResponse(403, '<Error>expired</Error>'),
+        );
+        final result = await neon.uploads.put(
+          Uri.parse('https://s3.test/b/k.jpg'),
+          [1],
+          contentType: 'image/jpeg',
+        );
+        expect(result.failureOrNull, isA<ForbiddenFailure>());
+        expect(server.count('PUT', '/b/k.jpg'), 1);
+      },
+    );
+
     test('GET : réseau coupé puis rétabli', () async {
       await signIn();
       var calls = 0;

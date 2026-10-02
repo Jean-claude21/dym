@@ -1074,6 +1074,414 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Rayon'**
   String get myStoreRowCategory;
+
+  /// Onglet produits
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits'**
+  String get navProducts;
+
+  /// Liste des produits
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes produits'**
+  String get productsTitle;
+
+  /// Filtre : tous les produits
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get productsAll;
+
+  /// Filtre : produits archivés
+  ///
+  /// In fr, this message translates to:
+  /// **'Archivés'**
+  String get productsArchived;
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun produit pour l\'instant.'**
+  String get productsEmpty;
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute ton premier produit : une photo suffit pour commencer.'**
+  String get productsEmptyHint;
+
+  /// Bouton d'ajout
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un produit'**
+  String get productsAdd;
+
+  /// Interrupteur de stock
+  ///
+  /// In fr, this message translates to:
+  /// **'En stock'**
+  String get productInStock;
+
+  /// Produit en rupture
+  ///
+  /// In fr, this message translates to:
+  /// **'Rupture'**
+  String get productOutOfStock;
+
+  /// Produit non publié
+  ///
+  /// In fr, this message translates to:
+  /// **'Brouillon'**
+  String get productDraft;
+
+  /// Stock suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} en stock'**
+  String productStockCount(int count);
+
+  /// Nombre de variantes
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 variante} other{{count} variantes}}'**
+  String productVariantCount(int count);
+
+  /// Restaurer un produit archivé
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer'**
+  String get productRestore;
+
+  /// Archiver un produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver'**
+  String get productArchive;
+
+  /// Supprimer un brouillon
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer le brouillon'**
+  String get productDeleteDraft;
+
+  /// Modifier un produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get productEdit;
+
+  /// Menu d'un produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions sur {name}'**
+  String productActions(String name);
+
+  /// Éditeur, étape 1
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau produit'**
+  String get productNewTitle;
+
+  /// Éditeur d'un produit existant
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le produit'**
+  String get productEditTitle;
+
+  /// Éditeur, étape 1
+  ///
+  /// In fr, this message translates to:
+  /// **'Prends une photo, DYM remplit la fiche.'**
+  String get productPhotoSubtitle;
+
+  /// Appareil photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre une photo'**
+  String get productTakePhoto;
+
+  /// Galerie
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir dans la galerie'**
+  String get productChoosePhoto;
+
+  /// Ajouter une photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo'**
+  String get productAddPhoto;
+
+  /// Nombre de photos
+  ///
+  /// In fr, this message translates to:
+  /// **'{count}/{max} photos'**
+  String productPhotoCount(int count, int max);
+
+  /// Retirer une photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer la photo'**
+  String get productRemovePhoto;
+
+  /// Envoi en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoi de la photo…'**
+  String get productPhotoUploading;
+
+  /// Échec d'envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'La photo n\'a pas pu être envoyée. Réessaie.'**
+  String get productPhotoFailed;
+
+  /// Proposition en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'DYM prépare la fiche…'**
+  String get productSuggesting;
+
+  /// Proposition reçue
+  ///
+  /// In fr, this message translates to:
+  /// **'Proposé par DYM'**
+  String get productSuggestedBy;
+
+  /// Proposition reçue
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifie et corrige si besoin.'**
+  String get productSuggestionCheck;
+
+  /// Proposition indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'Remplis la fiche toi-même.'**
+  String get productSuggestionUnavailable;
+
+  /// Champ nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get productNameLabel;
+
+  /// Indication nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : Jus de bissap 50 cl'**
+  String get productNameHint;
+
+  /// Nom invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'De 2 à 80 caractères.'**
+  String get productNameInvalid;
+
+  /// Rayon du produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon'**
+  String get productAisleLabel;
+
+  /// Champ description
+  ///
+  /// In fr, this message translates to:
+  /// **'Description (facultatif)'**
+  String get productDescriptionLabel;
+
+  /// Éditeur, étape 2
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix et stock'**
+  String get productPriceTitle;
+
+  /// Champ prix
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix'**
+  String get productPriceLabel;
+
+  /// Prix invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis un prix supérieur à zéro.'**
+  String get productPriceInvalid;
+
+  /// Unité du marché
+  ///
+  /// In fr, this message translates to:
+  /// **'Unité'**
+  String get productUnitLabel;
+
+  /// Bloc des variantes
+  ///
+  /// In fr, this message translates to:
+  /// **'Variantes'**
+  String get productVariantsTitle;
+
+  /// Stock suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'Je compte mon stock'**
+  String get productTrackStock;
+
+  /// Stock non suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'Sinon, le produit reste disponible tant que tu ne le mets pas en rupture.'**
+  String get productTrackStockHint;
+
+  /// Stock d'une variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Stock'**
+  String get productStockLabel;
+
+  /// Libellé de variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Variante (ex. : 1 L)'**
+  String get productVariantLabel;
+
+  /// Prix d'une variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix (facultatif)'**
+  String get productVariantPrice;
+
+  /// Ajout de variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une variante'**
+  String get productVariantAdd;
+
+  /// Retrait de variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer la variante'**
+  String get productVariantRemove;
+
+  /// Lecteur d'écran
+  ///
+  /// In fr, this message translates to:
+  /// **'Variante {label}'**
+  String productVariantNamed(String label);
+
+  /// Stock moins un
+  ///
+  /// In fr, this message translates to:
+  /// **'Un de moins'**
+  String get productStockDecrease;
+
+  /// Stock plus un
+  ///
+  /// In fr, this message translates to:
+  /// **'Un de plus'**
+  String get productStockIncrease;
+
+  /// Catégories de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie de ma boutique'**
+  String get productStoreCategoryTitle;
+
+  /// Nouvelle catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle'**
+  String get productStoreCategoryNew;
+
+  /// Publication
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier le produit'**
+  String get productPublish;
+
+  /// Photo manquante
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute au moins une photo pour publier.'**
+  String get productMissingPhoto;
+
+  /// Libellés manquants
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à chaque variante.'**
+  String get productVariantLabelsRequired;
+
+  /// Catégories de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes catégories'**
+  String get categoriesTitle;
+
+  /// Catégories
+  ///
+  /// In fr, this message translates to:
+  /// **'Range tes produits pour les clientes.'**
+  String get categoriesSubtitle;
+
+  /// Champ nouvelle catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle catégorie'**
+  String get categoriesNewHint;
+
+  /// Ajouter une catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get categoriesAdd;
+
+  /// Produits d'une catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun produit} =1{1 produit} other{{count} produits}}'**
+  String categoriesProductCount(int count);
+
+  /// Catégorie archivée
+  ///
+  /// In fr, this message translates to:
+  /// **'archivée'**
+  String get categoriesArchived;
+
+  /// Restaurer une catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Réactiver'**
+  String get categoriesRestore;
+
+  /// Renommer une catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer'**
+  String get categoriesRename;
+
+  /// Archiver une catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver'**
+  String get categoriesArchive;
+
+  /// Nom en double
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette catégorie existe déjà.'**
+  String get categoriesDuplicate;
+
+  /// Poignée de déplacement
+  ///
+  /// In fr, this message translates to:
+  /// **'Déplacer {name}'**
+  String categoriesMove(String name);
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune catégorie : crée la première.'**
+  String get categoriesEmpty;
 }
 
 class _DymLocalizationsDelegate

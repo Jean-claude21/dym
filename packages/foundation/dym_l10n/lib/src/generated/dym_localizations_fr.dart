@@ -595,4 +595,238 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get myStoreRowCategory => 'Rayon';
+
+  @override
+  String get navProducts => 'Produits';
+
+  @override
+  String get productsTitle => 'Mes produits';
+
+  @override
+  String get productsAll => 'Tout';
+
+  @override
+  String get productsArchived => 'Archivés';
+
+  @override
+  String get productsEmpty => 'Aucun produit pour l\'instant.';
+
+  @override
+  String get productsEmptyHint =>
+      'Ajoute ton premier produit : une photo suffit pour commencer.';
+
+  @override
+  String get productsAdd => 'Ajouter un produit';
+
+  @override
+  String get productInStock => 'En stock';
+
+  @override
+  String get productOutOfStock => 'Rupture';
+
+  @override
+  String get productDraft => 'Brouillon';
+
+  @override
+  String productStockCount(int count) {
+    return '$count en stock';
+  }
+
+  @override
+  String productVariantCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count variantes',
+      one: '1 variante',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get productRestore => 'Restaurer';
+
+  @override
+  String get productArchive => 'Archiver';
+
+  @override
+  String get productDeleteDraft => 'Supprimer le brouillon';
+
+  @override
+  String get productEdit => 'Modifier';
+
+  @override
+  String productActions(String name) {
+    return 'Actions sur $name';
+  }
+
+  @override
+  String get productNewTitle => 'Nouveau produit';
+
+  @override
+  String get productEditTitle => 'Modifier le produit';
+
+  @override
+  String get productPhotoSubtitle => 'Prends une photo, DYM remplit la fiche.';
+
+  @override
+  String get productTakePhoto => 'Prendre une photo';
+
+  @override
+  String get productChoosePhoto => 'Choisir dans la galerie';
+
+  @override
+  String get productAddPhoto => 'Photo';
+
+  @override
+  String productPhotoCount(int count, int max) {
+    return '$count/$max photos';
+  }
+
+  @override
+  String get productRemovePhoto => 'Retirer la photo';
+
+  @override
+  String get productPhotoUploading => 'Envoi de la photo…';
+
+  @override
+  String get productPhotoFailed =>
+      'La photo n\'a pas pu être envoyée. Réessaie.';
+
+  @override
+  String get productSuggesting => 'DYM prépare la fiche…';
+
+  @override
+  String get productSuggestedBy => 'Proposé par DYM';
+
+  @override
+  String get productSuggestionCheck => 'Vérifie et corrige si besoin.';
+
+  @override
+  String get productSuggestionUnavailable => 'Remplis la fiche toi-même.';
+
+  @override
+  String get productNameLabel => 'Nom';
+
+  @override
+  String get productNameHint => 'Ex. : Jus de bissap 50 cl';
+
+  @override
+  String get productNameInvalid => 'De 2 à 80 caractères.';
+
+  @override
+  String get productAisleLabel => 'Rayon';
+
+  @override
+  String get productDescriptionLabel => 'Description (facultatif)';
+
+  @override
+  String get productPriceTitle => 'Prix et stock';
+
+  @override
+  String get productPriceLabel => 'Prix';
+
+  @override
+  String get productPriceInvalid => 'Saisis un prix supérieur à zéro.';
+
+  @override
+  String get productUnitLabel => 'Unité';
+
+  @override
+  String get productVariantsTitle => 'Variantes';
+
+  @override
+  String get productTrackStock => 'Je compte mon stock';
+
+  @override
+  String get productTrackStockHint =>
+      'Sinon, le produit reste disponible tant que tu ne le mets pas en rupture.';
+
+  @override
+  String get productStockLabel => 'Stock';
+
+  @override
+  String get productVariantLabel => 'Variante (ex. : 1 L)';
+
+  @override
+  String get productVariantPrice => 'Prix (facultatif)';
+
+  @override
+  String get productVariantAdd => 'Ajouter une variante';
+
+  @override
+  String get productVariantRemove => 'Retirer la variante';
+
+  @override
+  String productVariantNamed(String label) {
+    return 'Variante $label';
+  }
+
+  @override
+  String get productStockDecrease => 'Un de moins';
+
+  @override
+  String get productStockIncrease => 'Un de plus';
+
+  @override
+  String get productStoreCategoryTitle => 'Catégorie de ma boutique';
+
+  @override
+  String get productStoreCategoryNew => 'Nouvelle';
+
+  @override
+  String get productPublish => 'Publier le produit';
+
+  @override
+  String get productMissingPhoto => 'Ajoute au moins une photo pour publier.';
+
+  @override
+  String get productVariantLabelsRequired => 'Donne un nom à chaque variante.';
+
+  @override
+  String get categoriesTitle => 'Mes catégories';
+
+  @override
+  String get categoriesSubtitle => 'Range tes produits pour les clientes.';
+
+  @override
+  String get categoriesNewHint => 'Nouvelle catégorie';
+
+  @override
+  String get categoriesAdd => 'Ajouter';
+
+  @override
+  String categoriesProductCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count produits',
+      one: '1 produit',
+      zero: 'Aucun produit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get categoriesArchived => 'archivée';
+
+  @override
+  String get categoriesRestore => 'Réactiver';
+
+  @override
+  String get categoriesRename => 'Renommer';
+
+  @override
+  String get categoriesArchive => 'Archiver';
+
+  @override
+  String get categoriesDuplicate => 'Cette catégorie existe déjà.';
+
+  @override
+  String categoriesMove(String name) {
+    return 'Déplacer $name';
+  }
+
+  @override
+  String get categoriesEmpty => 'Aucune catégorie : crée la première.';
 }

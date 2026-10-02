@@ -755,5 +755,315 @@
   "myStoreRowCategory": "Rayon",
   "@myStoreRowCategory": {
     "description": "Ligne rayon principal"
+  },
+  "navProducts": "Produits",
+  "@navProducts": {
+    "description": "Onglet produits"
+  },
+  "productsTitle": "Mes produits",
+  "@productsTitle": {
+    "description": "Liste des produits"
+  },
+  "productsAll": "Tout",
+  "@productsAll": {
+    "description": "Filtre : tous les produits"
+  },
+  "productsArchived": "Archivés",
+  "@productsArchived": {
+    "description": "Filtre : produits archivés"
+  },
+  "productsEmpty": "Aucun produit pour l'instant.",
+  "@productsEmpty": {
+    "description": "Liste vide"
+  },
+  "productsEmptyHint": "Ajoute ton premier produit : une photo suffit pour commencer.",
+  "@productsEmptyHint": {
+    "description": "Liste vide"
+  },
+  "productsAdd": "Ajouter un produit",
+  "@productsAdd": {
+    "description": "Bouton d'ajout"
+  },
+  "productInStock": "En stock",
+  "@productInStock": {
+    "description": "Interrupteur de stock"
+  },
+  "productOutOfStock": "Rupture",
+  "@productOutOfStock": {
+    "description": "Produit en rupture"
+  },
+  "productDraft": "Brouillon",
+  "@productDraft": {
+    "description": "Produit non publié"
+  },
+  "productStockCount": "{count} en stock",
+  "@productStockCount": {
+    "description": "Stock suivi",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "productVariantCount": "{count, plural, =1{1 variante} other{{count} variantes}}",
+  "@productVariantCount": {
+    "description": "Nombre de variantes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "productRestore": "Restaurer",
+  "@productRestore": {
+    "description": "Restaurer un produit archivé"
+  },
+  "productArchive": "Archiver",
+  "@productArchive": {
+    "description": "Archiver un produit"
+  },
+  "productDeleteDraft": "Supprimer le brouillon",
+  "@productDeleteDraft": {
+    "description": "Supprimer un brouillon"
+  },
+  "productEdit": "Modifier",
+  "@productEdit": {
+    "description": "Modifier un produit"
+  },
+  "productActions": "Actions sur {name}",
+  "@productActions": {
+    "description": "Menu d'un produit",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "productNewTitle": "Nouveau produit",
+  "@productNewTitle": {
+    "description": "Éditeur, étape 1"
+  },
+  "productEditTitle": "Modifier le produit",
+  "@productEditTitle": {
+    "description": "Éditeur d'un produit existant"
+  },
+  "productPhotoSubtitle": "Prends une photo, DYM remplit la fiche.",
+  "@productPhotoSubtitle": {
+    "description": "Éditeur, étape 1"
+  },
+  "productTakePhoto": "Prendre une photo",
+  "@productTakePhoto": {
+    "description": "Appareil photo"
+  },
+  "productChoosePhoto": "Choisir dans la galerie",
+  "@productChoosePhoto": {
+    "description": "Galerie"
+  },
+  "productAddPhoto": "Photo",
+  "@productAddPhoto": {
+    "description": "Ajouter une photo"
+  },
+  "productPhotoCount": "{count}/{max} photos",
+  "@productPhotoCount": {
+    "description": "Nombre de photos",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "productRemovePhoto": "Retirer la photo",
+  "@productRemovePhoto": {
+    "description": "Retirer une photo"
+  },
+  "productPhotoUploading": "Envoi de la photo…",
+  "@productPhotoUploading": {
+    "description": "Envoi en cours"
+  },
+  "productPhotoFailed": "La photo n'a pas pu être envoyée. Réessaie.",
+  "@productPhotoFailed": {
+    "description": "Échec d'envoi"
+  },
+  "productSuggesting": "DYM prépare la fiche…",
+  "@productSuggesting": {
+    "description": "Proposition en cours"
+  },
+  "productSuggestedBy": "Proposé par DYM",
+  "@productSuggestedBy": {
+    "description": "Proposition reçue"
+  },
+  "productSuggestionCheck": "Vérifie et corrige si besoin.",
+  "@productSuggestionCheck": {
+    "description": "Proposition reçue"
+  },
+  "productSuggestionUnavailable": "Remplis la fiche toi-même.",
+  "@productSuggestionUnavailable": {
+    "description": "Proposition indisponible"
+  },
+  "productNameLabel": "Nom",
+  "@productNameLabel": {
+    "description": "Champ nom"
+  },
+  "productNameHint": "Ex. : Jus de bissap 50 cl",
+  "@productNameHint": {
+    "description": "Indication nom"
+  },
+  "productNameInvalid": "De 2 à 80 caractères.",
+  "@productNameInvalid": {
+    "description": "Nom invalide"
+  },
+  "productAisleLabel": "Rayon",
+  "@productAisleLabel": {
+    "description": "Rayon du produit"
+  },
+  "productDescriptionLabel": "Description (facultatif)",
+  "@productDescriptionLabel": {
+    "description": "Champ description"
+  },
+  "productPriceTitle": "Prix et stock",
+  "@productPriceTitle": {
+    "description": "Éditeur, étape 2"
+  },
+  "productPriceLabel": "Prix",
+  "@productPriceLabel": {
+    "description": "Champ prix"
+  },
+  "productPriceInvalid": "Saisis un prix supérieur à zéro.",
+  "@productPriceInvalid": {
+    "description": "Prix invalide"
+  },
+  "productUnitLabel": "Unité",
+  "@productUnitLabel": {
+    "description": "Unité du marché"
+  },
+  "productVariantsTitle": "Variantes",
+  "@productVariantsTitle": {
+    "description": "Bloc des variantes"
+  },
+  "productTrackStock": "Je compte mon stock",
+  "@productTrackStock": {
+    "description": "Stock suivi"
+  },
+  "productTrackStockHint": "Sinon, le produit reste disponible tant que tu ne le mets pas en rupture.",
+  "@productTrackStockHint": {
+    "description": "Stock non suivi"
+  },
+  "productStockLabel": "Stock",
+  "@productStockLabel": {
+    "description": "Stock d'une variante"
+  },
+  "productVariantLabel": "Variante (ex. : 1 L)",
+  "@productVariantLabel": {
+    "description": "Libellé de variante"
+  },
+  "productVariantPrice": "Prix (facultatif)",
+  "@productVariantPrice": {
+    "description": "Prix d'une variante"
+  },
+  "productVariantAdd": "Ajouter une variante",
+  "@productVariantAdd": {
+    "description": "Ajout de variante"
+  },
+  "productVariantRemove": "Retirer la variante",
+  "@productVariantRemove": {
+    "description": "Retrait de variante"
+  },
+  "productVariantNamed": "Variante {label}",
+  "@productVariantNamed": {
+    "description": "Lecteur d'écran",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "productStockDecrease": "Un de moins",
+  "@productStockDecrease": {
+    "description": "Stock moins un"
+  },
+  "productStockIncrease": "Un de plus",
+  "@productStockIncrease": {
+    "description": "Stock plus un"
+  },
+  "productStoreCategoryTitle": "Catégorie de ma boutique",
+  "@productStoreCategoryTitle": {
+    "description": "Catégories de la boutique"
+  },
+  "productStoreCategoryNew": "Nouvelle",
+  "@productStoreCategoryNew": {
+    "description": "Nouvelle catégorie"
+  },
+  "productPublish": "Publier le produit",
+  "@productPublish": {
+    "description": "Publication"
+  },
+  "productMissingPhoto": "Ajoute au moins une photo pour publier.",
+  "@productMissingPhoto": {
+    "description": "Photo manquante"
+  },
+  "productVariantLabelsRequired": "Donne un nom à chaque variante.",
+  "@productVariantLabelsRequired": {
+    "description": "Libellés manquants"
+  },
+  "categoriesTitle": "Mes catégories",
+  "@categoriesTitle": {
+    "description": "Catégories de la boutique"
+  },
+  "categoriesSubtitle": "Range tes produits pour les clientes.",
+  "@categoriesSubtitle": {
+    "description": "Catégories"
+  },
+  "categoriesNewHint": "Nouvelle catégorie",
+  "@categoriesNewHint": {
+    "description": "Champ nouvelle catégorie"
+  },
+  "categoriesAdd": "Ajouter",
+  "@categoriesAdd": {
+    "description": "Ajouter une catégorie"
+  },
+  "categoriesProductCount": "{count, plural, =0{Aucun produit} =1{1 produit} other{{count} produits}}",
+  "@categoriesProductCount": {
+    "description": "Produits d'une catégorie",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categoriesArchived": "archivée",
+  "@categoriesArchived": {
+    "description": "Catégorie archivée"
+  },
+  "categoriesRestore": "Réactiver",
+  "@categoriesRestore": {
+    "description": "Restaurer une catégorie"
+  },
+  "categoriesRename": "Renommer",
+  "@categoriesRename": {
+    "description": "Renommer une catégorie"
+  },
+  "categoriesArchive": "Archiver",
+  "@categoriesArchive": {
+    "description": "Archiver une catégorie"
+  },
+  "categoriesDuplicate": "Cette catégorie existe déjà.",
+  "@categoriesDuplicate": {
+    "description": "Nom en double"
+  },
+  "categoriesMove": "Déplacer {name}",
+  "@categoriesMove": {
+    "description": "Poignée de déplacement",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categoriesEmpty": "Aucune catégorie : crée la première.",
+  "@categoriesEmpty": {
+    "description": "Liste vide"
   }
 }
