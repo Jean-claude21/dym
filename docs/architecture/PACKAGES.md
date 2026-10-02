@@ -51,10 +51,10 @@ dym/
 |---|---|---|---|---|
 | `dym_core` | Fondation | — | Tous | `foundation` |
 | `dym_l10n` | Fondation | `intl` | Apps, features, ui | `foundation` |
-| `neon_kit` | Infra (générique, publiable) | `dio`, `postgrest` | `dym_data` | `foundation` |
-| `dym_platform` | Infra | Plugins Flutter | Apps, features | `foundation` |
-| `dym_models` | Domaine | `dym_core`, freezed | `dym_data`, features, apps | `foundation` |
-| `dym_data` | Données | `neon_kit`, `dym_models` | Features, apps | `foundation` |
+| `neon_kit` | Infra (générique) | `dym_core` (`Result`, `Failure` seulement), `dio`, `postgrest` | `dym_data`, `dym_platform` | `foundation` (spec 003) |
+| `dym_platform` | Infra | `neon_kit`, plugins Flutter | Apps, features | `foundation` (spec 003 : session sécurisée, client Neon) |
+| `dym_models` | Domaine | `dym_core`, freezed | `dym_data`, features, apps | `reference-data` (premier usage) |
+| `dym_data` | Données | `neon_kit`, `dym_models` | Features, apps | `reference-data` (premier usage) |
 | `dym_ui` | UI (thème généré depuis `docs/design/tokens/dym.tokens.json`) | `dym_core`, `dym_l10n` | Features, apps | `foundation` |
 | `dym_auth` | Feature | Stacked, `dym_data`, `dym_ui` | 4 apps | `auth` |
 | `dym_notifications` | Feature | idem | Client, vendeur, livreur | `order-lifecycle` |

@@ -36,8 +36,28 @@ fvm dart run melos run tokens        # régénère le thème dym_ui depuis les t
 fvm dart run melos run analyze       # analyse stricte (very_good_analysis)
 fvm dart run melos run test          # tests Flutter (hors golden)
 fvm dart run melos run test:dart     # tests Dart purs (dym_core)
-fvm dart run melos run golden        # captures 412×915 de la galerie (machine de dev)
+fvm dart run melos run golden        # captures de la galerie (machine de dev)
+fvm dart run melos run generate      # génération Stacked (routes, injection) des apps
 ```
+
+Base de données (PostgreSQL 17 installé, **jamais de conteneur**) :
+
+```bash
+node db/scripts/dym-db.mjs local start    # cluster .local/pgdata sur 54329 + imitations Neon
+node db/scripts/dym-db.mjs migrate        # migrations db/migrations (empreintes vérifiées)
+node db/scripts/dym-db.mjs test           # pgTAP (db/tests), chaque fichier en transaction annulée
+node db/scripts/dym-db.mjs local reset    # base vierge
+```
+
+- Une migration appliquée ne se modifie jamais : on en crée une nouvelle.
+- Toute table de `public` active RLS et accorde ses droits explicitement. Sinon,
+  `000_security_guard.sql` échoue.
+
+Functions (`functions/`, Node ≥ 22 en local, Node 24 sur Neon) : `npm ci && npm test`.
+
+Apps : `cd apps/dym_client && fvm flutter run -d chrome --dart-define=DYM_ENV=dev`. En
+`staging` ou `production`, `DYM_AUTH_URL`, `DYM_DATA_API_URL` et `DYM_FUNCTIONS_URL` sont
+obligatoires.
 
 Galerie de validation du design system : `cd apps/dym_gallery && fvm flutter run -d chrome`.
 
