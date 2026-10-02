@@ -68,7 +68,8 @@ jobs:
         run: |
           sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh -y
           sudo apt-get install -y -q postgresql-17 postgresql-17-pgtap
-          sudo pg_ctlcluster 17 main start
+          # Le runner désactive la création automatique du cluster.
+          sudo pg_createcluster 17 main --start || sudo pg_ctlcluster 17 main start
           PORT=$(pg_lsclusters -h | awk '$1 == "17" { print $3 }')
           sudo -u postgres psql -p "$PORT" -c "alter user postgres password 'postgres'"
           sudo -u postgres createdb -p "$PORT" dym
