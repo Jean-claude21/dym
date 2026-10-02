@@ -35,6 +35,32 @@ Map<String, dynamic> _$StoreHoursToJson(StoreHours instance) =>
       'closes_at': instance.closesAt,
     };
 
+PaymentOption _$PaymentOptionFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'PaymentOption',
+      json,
+      ($checkedConvert) {
+        final val = PaymentOption(
+          id: $checkedConvert('id', (v) => v as String),
+          providerCode: $checkedConvert('provider_code', (v) => v as String),
+          kind: $checkedConvert('kind', (v) => v as String),
+          label: $checkedConvert(
+            'label',
+            (v) => const LocalizedTextConverter().fromJson(v),
+          ),
+          isAvailable: $checkedConvert('is_available', (v) => v as bool),
+          operatorCode: $checkedConvert('operator_code', (v) => v as String?),
+          sort: $checkedConvert('sort', (v) => (v as num?)?.toInt() ?? 0),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'providerCode': 'provider_code',
+        'isAvailable': 'is_available',
+        'operatorCode': 'operator_code',
+      },
+    );
+
 MyStore _$MyStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
   'MyStore',
   json,

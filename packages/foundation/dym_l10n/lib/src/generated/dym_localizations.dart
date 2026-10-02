@@ -583,6 +583,497 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Tu as été déconnecté après 30 minutes d\'inactivité.'**
   String get adminSignedOutInactive;
+
+  /// Onglet boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique'**
+  String get navStore;
+
+  /// Progression de l'onboarding
+  ///
+  /// In fr, this message translates to:
+  /// **'Étape {current} sur {total}'**
+  String storeStepLabel(int current, int total);
+
+  /// Étape suivante
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get storeContinue;
+
+  /// Enregistrer un réglage
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get storeSave;
+
+  /// Échec d'enregistrement
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrement impossible. Vérifie ta connexion et réessaie.'**
+  String get storeSaveError;
+
+  /// Ouverture refusée : boutique incomplète
+  ///
+  /// In fr, this message translates to:
+  /// **'Il manque encore des informations.'**
+  String get storeIncomplete;
+
+  /// Étape 1
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment s\'appelle ta boutique ?'**
+  String get storeNameTitle;
+
+  /// Étape 1
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est le nom que verront les clientes. Tu pourras le changer.'**
+  String get storeNameSubtitle;
+
+  /// Champ nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la boutique'**
+  String get storeNameLabel;
+
+  /// Nom invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'De 2 à 60 caractères.'**
+  String get storeNameInvalid;
+
+  /// Champ présentation
+  ///
+  /// In fr, this message translates to:
+  /// **'Présente ta boutique (facultatif)'**
+  String get storeDescriptionLabel;
+
+  /// Indication présentation
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que tu vends, ce qui te rend unique'**
+  String get storeDescriptionHint;
+
+  /// Compteur de caractères
+  ///
+  /// In fr, this message translates to:
+  /// **'{count}/{max}'**
+  String storeCharCount(int count, int max);
+
+  /// Aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu pour les clientes'**
+  String get storePreviewTitle;
+
+  /// Aperçu : quartier et état
+  ///
+  /// In fr, this message translates to:
+  /// **'{zone} · ouvert'**
+  String storePreviewPlace(String zone);
+
+  /// Étape 2
+  ///
+  /// In fr, this message translates to:
+  /// **'Où vends-tu ?'**
+  String get storeOriginTitle;
+
+  /// Étape 2
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque boutique a sa place sur DYM. Tu pourras changer plus tard.'**
+  String get storeOriginSubtitle;
+
+  /// Note fait maison
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton adresse reste privée : les clientes voient seulement ton quartier.'**
+  String get storeOriginPrivacy;
+
+  /// Étape 3
+  ///
+  /// In fr, this message translates to:
+  /// **'Où récupérer tes commandes ?'**
+  String get storeAddressTitle;
+
+  /// Étape 3
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livreur passe chercher les commandes ici.'**
+  String get storeAddressSubtitle;
+
+  /// Quartier de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton quartier'**
+  String get storeZoneLabel;
+
+  /// Quartier public
+  ///
+  /// In fr, this message translates to:
+  /// **'(visible par les clientes)'**
+  String get storeZoneVisible;
+
+  /// Champ adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse de ramassage'**
+  String get storeAddressLabel;
+
+  /// Indication adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Rue, maison, portail…'**
+  String get storeAddressHint;
+
+  /// Champ repère
+  ///
+  /// In fr, this message translates to:
+  /// **'Repère'**
+  String get storeLandmarkLabel;
+
+  /// Indication repère
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : derrière la pharmacie'**
+  String get storeLandmarkHint;
+
+  /// Adresse privée
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton adresse reste privée : les clientes voient seulement ton quartier. Seul le livreur de la commande la reçoit.'**
+  String get storeAddressPrivacy;
+
+  /// Étape 4
+  ///
+  /// In fr, this message translates to:
+  /// **'Que vends-tu surtout ?'**
+  String get storeCategoryTitle;
+
+  /// Étape 4
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta boutique apparaîtra dans ce rayon.'**
+  String get storeCategorySubtitle;
+
+  /// Étape 5
+  ///
+  /// In fr, this message translates to:
+  /// **'Où livres-tu ?'**
+  String get storeDeliveryTitle;
+
+  /// Étape 5
+  ///
+  /// In fr, this message translates to:
+  /// **'Les quartiers où tu acceptes les commandes. DYM s\'occupe du zem.'**
+  String get storeDeliverySubtitle;
+
+  /// Tous les quartiers
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout sélectionner'**
+  String get storeSelectAll;
+
+  /// Délai
+  ///
+  /// In fr, this message translates to:
+  /// **'Temps de préparation'**
+  String get storePrepTitle;
+
+  /// Délai en minutes
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String storePrepMinutes(int minutes);
+
+  /// Délai en heures
+  ///
+  /// In fr, this message translates to:
+  /// **'{hours} h'**
+  String storePrepHours(int hours);
+
+  /// Retrait sur place
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clientes peuvent venir chercher'**
+  String get storePickupTitle;
+
+  /// Retrait sur place
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait sur place, sans frais de livraison'**
+  String get storePickupSubtitle;
+
+  /// Étape 6
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment veux-tu être payée ?'**
+  String get storePaymentTitle;
+
+  /// Étape 6
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clientes choisissent parmi ces moyens.'**
+  String get storePaymentSubtitle;
+
+  /// Cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livreur te remet l\'argent.'**
+  String get storePaymentCashHint;
+
+  /// Badge moyen inactif
+  ///
+  /// In fr, this message translates to:
+  /// **'Bientôt'**
+  String get storePaymentSoon;
+
+  /// Moyen inactif
+  ///
+  /// In fr, this message translates to:
+  /// **'Bientôt disponible.'**
+  String get storePaymentSoonHint;
+
+  /// Note Mobile Money
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement Mobile Money arrive dès que DYM l\'active dans ton pays.'**
+  String get storePaymentMomoNote;
+
+  /// Étape 7
+  ///
+  /// In fr, this message translates to:
+  /// **'Quand es-tu ouverte ?'**
+  String get storeHoursTitle;
+
+  /// Étape 7
+  ///
+  /// In fr, this message translates to:
+  /// **'Les commandes arrivent seulement pendant tes horaires.'**
+  String get storeHoursSubtitle;
+
+  /// Jour fermé
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermé'**
+  String get storeHoursClosed;
+
+  /// Heure d'ouverture
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouverture'**
+  String get storeHoursOpens;
+
+  /// Heure de fermeture
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermeture'**
+  String get storeHoursCloses;
+
+  /// Copier le premier jour
+  ///
+  /// In fr, this message translates to:
+  /// **'Mêmes horaires tous les jours ouverts'**
+  String get storeHoursSameEveryDay;
+
+  /// Horaires inversés
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'ouverture doit précéder la fermeture.'**
+  String get storeHoursInvalid;
+
+  /// Jour 1
+  ///
+  /// In fr, this message translates to:
+  /// **'Lundi'**
+  String get weekday1;
+
+  /// Jour 2
+  ///
+  /// In fr, this message translates to:
+  /// **'Mardi'**
+  String get weekday2;
+
+  /// Jour 3
+  ///
+  /// In fr, this message translates to:
+  /// **'Mercredi'**
+  String get weekday3;
+
+  /// Jour 4
+  ///
+  /// In fr, this message translates to:
+  /// **'Jeudi'**
+  String get weekday4;
+
+  /// Jour 5
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendredi'**
+  String get weekday5;
+
+  /// Jour 6
+  ///
+  /// In fr, this message translates to:
+  /// **'Samedi'**
+  String get weekday6;
+
+  /// Jour 7
+  ///
+  /// In fr, this message translates to:
+  /// **'Dimanche'**
+  String get weekday7;
+
+  /// Publier la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir ma boutique'**
+  String get storeOpenAction;
+
+  /// Écran de réussite
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta boutique est ouverte !'**
+  String get storeOpenedTitle;
+
+  /// Nom et quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} · {zone}'**
+  String storeNamePlace(String name, String zone);
+
+  /// Résumé
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom et présentation'**
+  String get storeSummaryName;
+
+  /// Résumé origine
+  ///
+  /// In fr, this message translates to:
+  /// **'{origin} · adresse privée'**
+  String storeSummaryOrigin(String origin);
+
+  /// Résumé livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Livraison dans 1 quartier} other{Livraison dans {count} quartiers}}'**
+  String storeSummaryDelivery(int count);
+
+  /// Horaires identiques sur des jours consécutifs (last : numéro du dernier jour, 1 = lundi)
+  ///
+  /// In fr, this message translates to:
+  /// **'{first} au {last, select, 1{lundi} 2{mardi} 3{mercredi} 4{jeudi} 5{vendredi} 6{samedi} other{dimanche}}, {opens} – {closes}'**
+  String storeHoursRange(
+    String first,
+    String last,
+    String opens,
+    String closes,
+  );
+
+  /// Un seul jour
+  ///
+  /// In fr, this message translates to:
+  /// **'{day}, {opens} – {closes}'**
+  String storeHoursSingle(String day, String opens, String closes);
+
+  /// Horaires variés
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 jour par semaine} other{{count} jours par semaine}}'**
+  String storeHoursDays(int count);
+
+  /// Après ouverture
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter mon premier produit'**
+  String get storeAddFirstProduct;
+
+  /// Après ouverture
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir ma boutique'**
+  String get storeSeeMine;
+
+  /// Réglages de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma boutique'**
+  String get myStoreTitle;
+
+  /// Boutique ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouverte'**
+  String get myStoreOpen;
+
+  /// Boutique ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clientes peuvent commander'**
+  String get myStoreOpenHint;
+
+  /// Boutique fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermée'**
+  String get myStoreClosed;
+
+  /// Boutique fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clientes ne peuvent pas commander'**
+  String get myStoreClosedHint;
+
+  /// Boutique suspendue
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta boutique est suspendue par l\'équipe DYM. Contacte-nous pour la rouvrir.'**
+  String get myStoreSuspended;
+
+  /// Ligne origine
+  ///
+  /// In fr, this message translates to:
+  /// **'Où vends-tu'**
+  String get myStoreRowOrigin;
+
+  /// Adresse privée
+  ///
+  /// In fr, this message translates to:
+  /// **'privée'**
+  String get myStoreAddressPrivate;
+
+  /// Ligne livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get myStoreRowDelivery;
+
+  /// Valeur livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 quartier} other{{count} quartiers}} · {prep}'**
+  String myStoreDeliveryValue(int count, String prep);
+
+  /// Ligne paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get myStoreRowPayment;
+
+  /// Ligne horaires
+  ///
+  /// In fr, this message translates to:
+  /// **'Horaires'**
+  String get myStoreRowHours;
+
+  /// Ligne rayon principal
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon'**
+  String get myStoreRowCategory;
 }
 
 class _DymLocalizationsDelegate

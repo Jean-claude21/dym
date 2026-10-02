@@ -396,15 +396,37 @@ begin
 end
 $$;
 
+-- Moyens de paiement du pays de la boutique, disponibles ou à venir (« Bientôt »,
+-- spec 006 US1-5). Les inactifs restent invisibles par la Data API.
+create or replace function public.store_payment_options() returns jsonb
+language sql stable security definer set search_path = ''
+as $$
+  select coalesce(jsonb_agg(jsonb_build_object(
+      'id', pm.id,
+      'provider_code', pm.provider_code,
+      'operator_code', pm.operator_code,
+      'kind', pp.kind,
+      'label', pm.label,
+      'sort', pm.sort,
+      'is_available', pm.is_active and pp.is_active
+    ) order by pm.sort), '[]'::jsonb)
+  from public.stores s
+  join public.payment_methods pm on pm.country_code = s.country_code
+  join public.payment_providers pp on pp.code = pm.provider_code
+  where s.id = app.own_store_id()
+$$;
+
 revoke all on function
   public.my_store(), public.start_store(text, text), public.update_store(jsonb),
   public.set_store_pickup_address(text, text, numeric, numeric, text),
   public.set_store_delivery_zones(uuid[]), public.set_store_payment_methods(uuid[]),
-  public.set_store_hours(jsonb), public.publish_store(), public.set_store_open(boolean)
+  public.set_store_hours(jsonb), public.publish_store(), public.set_store_open(boolean),
+  public.store_payment_options()
   from public;
 grant execute on function
   public.my_store(), public.start_store(text, text), public.update_store(jsonb),
   public.set_store_pickup_address(text, text, numeric, numeric, text),
   public.set_store_delivery_zones(uuid[]), public.set_store_payment_methods(uuid[]),
-  public.set_store_hours(jsonb), public.publish_store(), public.set_store_open(boolean)
+  public.set_store_hours(jsonb), public.publish_store(), public.set_store_open(boolean),
+  public.store_payment_options()
   to authenticated;

@@ -25,6 +25,7 @@ flutter:
   assets:
     - assets/aisles/
     - assets/origins/
+    - assets/scenes/
   fonts:
     - family: Nunito
       fonts:

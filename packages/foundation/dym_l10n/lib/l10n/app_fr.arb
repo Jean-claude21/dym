@@ -344,5 +344,416 @@
   "adminSignedOutInactive": "Tu as été déconnecté après 30 minutes d'inactivité.",
   "@adminSignedOutInactive": {
     "description": "Déconnexion pour inactivité"
+  },
+  "navStore": "Boutique",
+  "@navStore": {
+    "description": "Onglet boutique"
+  },
+  "storeStepLabel": "Étape {current} sur {total}",
+  "@storeStepLabel": {
+    "description": "Progression de l'onboarding",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storeContinue": "Continuer",
+  "@storeContinue": {
+    "description": "Étape suivante"
+  },
+  "storeSave": "Enregistrer",
+  "@storeSave": {
+    "description": "Enregistrer un réglage"
+  },
+  "storeSaveError": "Enregistrement impossible. Vérifie ta connexion et réessaie.",
+  "@storeSaveError": {
+    "description": "Échec d'enregistrement"
+  },
+  "storeIncomplete": "Il manque encore des informations.",
+  "@storeIncomplete": {
+    "description": "Ouverture refusée : boutique incomplète"
+  },
+  "storeNameTitle": "Comment s'appelle ta boutique ?",
+  "@storeNameTitle": {
+    "description": "Étape 1"
+  },
+  "storeNameSubtitle": "C'est le nom que verront les clientes. Tu pourras le changer.",
+  "@storeNameSubtitle": {
+    "description": "Étape 1"
+  },
+  "storeNameLabel": "Nom de la boutique",
+  "@storeNameLabel": {
+    "description": "Champ nom"
+  },
+  "storeNameInvalid": "De 2 à 60 caractères.",
+  "@storeNameInvalid": {
+    "description": "Nom invalide"
+  },
+  "storeDescriptionLabel": "Présente ta boutique (facultatif)",
+  "@storeDescriptionLabel": {
+    "description": "Champ présentation"
+  },
+  "storeDescriptionHint": "Ce que tu vends, ce qui te rend unique",
+  "@storeDescriptionHint": {
+    "description": "Indication présentation"
+  },
+  "storeCharCount": "{count}/{max}",
+  "@storeCharCount": {
+    "description": "Compteur de caractères",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "storePreviewTitle": "Aperçu pour les clientes",
+  "@storePreviewTitle": {
+    "description": "Aperçu"
+  },
+  "storePreviewPlace": "{zone} · ouvert",
+  "@storePreviewPlace": {
+    "description": "Aperçu : quartier et état",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "storeOriginTitle": "Où vends-tu ?",
+  "@storeOriginTitle": {
+    "description": "Étape 2"
+  },
+  "storeOriginSubtitle": "Chaque boutique a sa place sur DYM. Tu pourras changer plus tard.",
+  "@storeOriginSubtitle": {
+    "description": "Étape 2"
+  },
+  "storeOriginPrivacy": "Ton adresse reste privée : les clientes voient seulement ton quartier.",
+  "@storeOriginPrivacy": {
+    "description": "Note fait maison"
+  },
+  "storeAddressTitle": "Où récupérer tes commandes ?",
+  "@storeAddressTitle": {
+    "description": "Étape 3"
+  },
+  "storeAddressSubtitle": "Le livreur passe chercher les commandes ici.",
+  "@storeAddressSubtitle": {
+    "description": "Étape 3"
+  },
+  "storeZoneLabel": "Ton quartier",
+  "@storeZoneLabel": {
+    "description": "Quartier de la boutique"
+  },
+  "storeZoneVisible": "(visible par les clientes)",
+  "@storeZoneVisible": {
+    "description": "Quartier public"
+  },
+  "storeAddressLabel": "Adresse de ramassage",
+  "@storeAddressLabel": {
+    "description": "Champ adresse"
+  },
+  "storeAddressHint": "Rue, maison, portail…",
+  "@storeAddressHint": {
+    "description": "Indication adresse"
+  },
+  "storeLandmarkLabel": "Repère",
+  "@storeLandmarkLabel": {
+    "description": "Champ repère"
+  },
+  "storeLandmarkHint": "Ex. : derrière la pharmacie",
+  "@storeLandmarkHint": {
+    "description": "Indication repère"
+  },
+  "storeAddressPrivacy": "Ton adresse reste privée : les clientes voient seulement ton quartier. Seul le livreur de la commande la reçoit.",
+  "@storeAddressPrivacy": {
+    "description": "Adresse privée"
+  },
+  "storeCategoryTitle": "Que vends-tu surtout ?",
+  "@storeCategoryTitle": {
+    "description": "Étape 4"
+  },
+  "storeCategorySubtitle": "Ta boutique apparaîtra dans ce rayon.",
+  "@storeCategorySubtitle": {
+    "description": "Étape 4"
+  },
+  "storeDeliveryTitle": "Où livres-tu ?",
+  "@storeDeliveryTitle": {
+    "description": "Étape 5"
+  },
+  "storeDeliverySubtitle": "Les quartiers où tu acceptes les commandes. DYM s'occupe du zem.",
+  "@storeDeliverySubtitle": {
+    "description": "Étape 5"
+  },
+  "storeSelectAll": "Tout sélectionner",
+  "@storeSelectAll": {
+    "description": "Tous les quartiers"
+  },
+  "storePrepTitle": "Temps de préparation",
+  "@storePrepTitle": {
+    "description": "Délai"
+  },
+  "storePrepMinutes": "{minutes} min",
+  "@storePrepMinutes": {
+    "description": "Délai en minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "storePrepHours": "{hours} h",
+  "@storePrepHours": {
+    "description": "Délai en heures",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "storePickupTitle": "Les clientes peuvent venir chercher",
+  "@storePickupTitle": {
+    "description": "Retrait sur place"
+  },
+  "storePickupSubtitle": "Retrait sur place, sans frais de livraison",
+  "@storePickupSubtitle": {
+    "description": "Retrait sur place"
+  },
+  "storePaymentTitle": "Comment veux-tu être payée ?",
+  "@storePaymentTitle": {
+    "description": "Étape 6"
+  },
+  "storePaymentSubtitle": "Les clientes choisissent parmi ces moyens.",
+  "@storePaymentSubtitle": {
+    "description": "Étape 6"
+  },
+  "storePaymentCashHint": "Le livreur te remet l'argent.",
+  "@storePaymentCashHint": {
+    "description": "Cash"
+  },
+  "storePaymentSoon": "Bientôt",
+  "@storePaymentSoon": {
+    "description": "Badge moyen inactif"
+  },
+  "storePaymentSoonHint": "Bientôt disponible.",
+  "@storePaymentSoonHint": {
+    "description": "Moyen inactif"
+  },
+  "storePaymentMomoNote": "Le paiement Mobile Money arrive dès que DYM l'active dans ton pays.",
+  "@storePaymentMomoNote": {
+    "description": "Note Mobile Money"
+  },
+  "storeHoursTitle": "Quand es-tu ouverte ?",
+  "@storeHoursTitle": {
+    "description": "Étape 7"
+  },
+  "storeHoursSubtitle": "Les commandes arrivent seulement pendant tes horaires.",
+  "@storeHoursSubtitle": {
+    "description": "Étape 7"
+  },
+  "storeHoursClosed": "Fermé",
+  "@storeHoursClosed": {
+    "description": "Jour fermé"
+  },
+  "storeHoursOpens": "Ouverture",
+  "@storeHoursOpens": {
+    "description": "Heure d'ouverture"
+  },
+  "storeHoursCloses": "Fermeture",
+  "@storeHoursCloses": {
+    "description": "Heure de fermeture"
+  },
+  "storeHoursSameEveryDay": "Mêmes horaires tous les jours ouverts",
+  "@storeHoursSameEveryDay": {
+    "description": "Copier le premier jour"
+  },
+  "storeHoursInvalid": "L'ouverture doit précéder la fermeture.",
+  "@storeHoursInvalid": {
+    "description": "Horaires inversés"
+  },
+  "weekday1": "Lundi",
+  "@weekday1": {
+    "description": "Jour 1"
+  },
+  "weekday2": "Mardi",
+  "@weekday2": {
+    "description": "Jour 2"
+  },
+  "weekday3": "Mercredi",
+  "@weekday3": {
+    "description": "Jour 3"
+  },
+  "weekday4": "Jeudi",
+  "@weekday4": {
+    "description": "Jour 4"
+  },
+  "weekday5": "Vendredi",
+  "@weekday5": {
+    "description": "Jour 5"
+  },
+  "weekday6": "Samedi",
+  "@weekday6": {
+    "description": "Jour 6"
+  },
+  "weekday7": "Dimanche",
+  "@weekday7": {
+    "description": "Jour 7"
+  },
+  "storeOpenAction": "Ouvrir ma boutique",
+  "@storeOpenAction": {
+    "description": "Publier la boutique"
+  },
+  "storeOpenedTitle": "Ta boutique est ouverte !",
+  "@storeOpenedTitle": {
+    "description": "Écran de réussite"
+  },
+  "storeNamePlace": "{name} · {zone}",
+  "@storeNamePlace": {
+    "description": "Nom et quartier",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "storeSummaryName": "Nom et présentation",
+  "@storeSummaryName": {
+    "description": "Résumé"
+  },
+  "storeSummaryOrigin": "{origin} · adresse privée",
+  "@storeSummaryOrigin": {
+    "description": "Résumé origine",
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      }
+    }
+  },
+  "storeSummaryDelivery": "{count, plural, =1{Livraison dans 1 quartier} other{Livraison dans {count} quartiers}}",
+  "@storeSummaryDelivery": {
+    "description": "Résumé livraison",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storeHoursRange": "{first} au {last, select, 1{lundi} 2{mardi} 3{mercredi} 4{jeudi} 5{vendredi} 6{samedi} other{dimanche}}, {opens} – {closes}",
+  "@storeHoursRange": {
+    "description": "Horaires identiques sur des jours consécutifs (last : numéro du dernier jour, 1 = lundi)",
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      },
+      "opens": {
+        "type": "String"
+      },
+      "closes": {
+        "type": "String"
+      }
+    }
+  },
+  "storeHoursSingle": "{day}, {opens} – {closes}",
+  "@storeHoursSingle": {
+    "description": "Un seul jour",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "opens": {
+        "type": "String"
+      },
+      "closes": {
+        "type": "String"
+      }
+    }
+  },
+  "storeHoursDays": "{count, plural, =1{1 jour par semaine} other{{count} jours par semaine}}",
+  "@storeHoursDays": {
+    "description": "Horaires variés",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storeAddFirstProduct": "Ajouter mon premier produit",
+  "@storeAddFirstProduct": {
+    "description": "Après ouverture"
+  },
+  "storeSeeMine": "Voir ma boutique",
+  "@storeSeeMine": {
+    "description": "Après ouverture"
+  },
+  "myStoreTitle": "Ma boutique",
+  "@myStoreTitle": {
+    "description": "Réglages de la boutique"
+  },
+  "myStoreOpen": "Ouverte",
+  "@myStoreOpen": {
+    "description": "Boutique ouverte"
+  },
+  "myStoreOpenHint": "Les clientes peuvent commander",
+  "@myStoreOpenHint": {
+    "description": "Boutique ouverte"
+  },
+  "myStoreClosed": "Fermée",
+  "@myStoreClosed": {
+    "description": "Boutique fermée"
+  },
+  "myStoreClosedHint": "Les clientes ne peuvent pas commander",
+  "@myStoreClosedHint": {
+    "description": "Boutique fermée"
+  },
+  "myStoreSuspended": "Ta boutique est suspendue par l'équipe DYM. Contacte-nous pour la rouvrir.",
+  "@myStoreSuspended": {
+    "description": "Boutique suspendue"
+  },
+  "myStoreRowOrigin": "Où vends-tu",
+  "@myStoreRowOrigin": {
+    "description": "Ligne origine"
+  },
+  "myStoreAddressPrivate": "privée",
+  "@myStoreAddressPrivate": {
+    "description": "Adresse privée"
+  },
+  "myStoreRowDelivery": "Livraison",
+  "@myStoreRowDelivery": {
+    "description": "Ligne livraison"
+  },
+  "myStoreDeliveryValue": "{count, plural, =1{1 quartier} other{{count} quartiers}} · {prep}",
+  "@myStoreDeliveryValue": {
+    "description": "Valeur livraison",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "prep": {
+        "type": "String"
+      }
+    }
+  },
+  "myStoreRowPayment": "Paiement",
+  "@myStoreRowPayment": {
+    "description": "Ligne paiement"
+  },
+  "myStoreRowHours": "Horaires",
+  "@myStoreRowHours": {
+    "description": "Ligne horaires"
+  },
+  "myStoreRowCategory": "Rayon",
+  "@myStoreRowCategory": {
+    "description": "Ligne rayon principal"
   }
 }

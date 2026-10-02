@@ -31,6 +31,23 @@ class StoreRepository {
         'p_contact_phone': address.contactPhone,
       });
 
+  /// Moyens de paiement du pays de la boutique, disponibles ou à venir.
+  Future<Result<List<PaymentOption>>> paymentOptions() async {
+    final result = await _data.rpc<Object?>('store_payment_options');
+    switch (result) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        if (value is! List) {
+          return const Err(ServerFailure('moyens de paiement illisibles'));
+        }
+        return Ok([
+          for (final item in value.cast<Map<String, dynamic>>())
+            PaymentOption.fromJson(item),
+        ]);
+    }
+  }
+
   Future<Result<MyStore?>> setDeliveryZones(List<String> zoneIds) =>
       _store('set_store_delivery_zones', {'p_zone_ids': zoneIds});
 

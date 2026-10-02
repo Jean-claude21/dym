@@ -284,4 +284,315 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get adminSignedOutInactive =>
       'Tu as été déconnecté après 30 minutes d\'inactivité.';
+
+  @override
+  String get navStore => 'Boutique';
+
+  @override
+  String storeStepLabel(int current, int total) {
+    return 'Étape $current sur $total';
+  }
+
+  @override
+  String get storeContinue => 'Continuer';
+
+  @override
+  String get storeSave => 'Enregistrer';
+
+  @override
+  String get storeSaveError =>
+      'Enregistrement impossible. Vérifie ta connexion et réessaie.';
+
+  @override
+  String get storeIncomplete => 'Il manque encore des informations.';
+
+  @override
+  String get storeNameTitle => 'Comment s\'appelle ta boutique ?';
+
+  @override
+  String get storeNameSubtitle =>
+      'C\'est le nom que verront les clientes. Tu pourras le changer.';
+
+  @override
+  String get storeNameLabel => 'Nom de la boutique';
+
+  @override
+  String get storeNameInvalid => 'De 2 à 60 caractères.';
+
+  @override
+  String get storeDescriptionLabel => 'Présente ta boutique (facultatif)';
+
+  @override
+  String get storeDescriptionHint => 'Ce que tu vends, ce qui te rend unique';
+
+  @override
+  String storeCharCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get storePreviewTitle => 'Aperçu pour les clientes';
+
+  @override
+  String storePreviewPlace(String zone) {
+    return '$zone · ouvert';
+  }
+
+  @override
+  String get storeOriginTitle => 'Où vends-tu ?';
+
+  @override
+  String get storeOriginSubtitle =>
+      'Chaque boutique a sa place sur DYM. Tu pourras changer plus tard.';
+
+  @override
+  String get storeOriginPrivacy =>
+      'Ton adresse reste privée : les clientes voient seulement ton quartier.';
+
+  @override
+  String get storeAddressTitle => 'Où récupérer tes commandes ?';
+
+  @override
+  String get storeAddressSubtitle =>
+      'Le livreur passe chercher les commandes ici.';
+
+  @override
+  String get storeZoneLabel => 'Ton quartier';
+
+  @override
+  String get storeZoneVisible => '(visible par les clientes)';
+
+  @override
+  String get storeAddressLabel => 'Adresse de ramassage';
+
+  @override
+  String get storeAddressHint => 'Rue, maison, portail…';
+
+  @override
+  String get storeLandmarkLabel => 'Repère';
+
+  @override
+  String get storeLandmarkHint => 'Ex. : derrière la pharmacie';
+
+  @override
+  String get storeAddressPrivacy =>
+      'Ton adresse reste privée : les clientes voient seulement ton quartier. Seul le livreur de la commande la reçoit.';
+
+  @override
+  String get storeCategoryTitle => 'Que vends-tu surtout ?';
+
+  @override
+  String get storeCategorySubtitle => 'Ta boutique apparaîtra dans ce rayon.';
+
+  @override
+  String get storeDeliveryTitle => 'Où livres-tu ?';
+
+  @override
+  String get storeDeliverySubtitle =>
+      'Les quartiers où tu acceptes les commandes. DYM s\'occupe du zem.';
+
+  @override
+  String get storeSelectAll => 'Tout sélectionner';
+
+  @override
+  String get storePrepTitle => 'Temps de préparation';
+
+  @override
+  String storePrepMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String storePrepHours(int hours) {
+    return '$hours h';
+  }
+
+  @override
+  String get storePickupTitle => 'Les clientes peuvent venir chercher';
+
+  @override
+  String get storePickupSubtitle =>
+      'Retrait sur place, sans frais de livraison';
+
+  @override
+  String get storePaymentTitle => 'Comment veux-tu être payée ?';
+
+  @override
+  String get storePaymentSubtitle =>
+      'Les clientes choisissent parmi ces moyens.';
+
+  @override
+  String get storePaymentCashHint => 'Le livreur te remet l\'argent.';
+
+  @override
+  String get storePaymentSoon => 'Bientôt';
+
+  @override
+  String get storePaymentSoonHint => 'Bientôt disponible.';
+
+  @override
+  String get storePaymentMomoNote =>
+      'Le paiement Mobile Money arrive dès que DYM l\'active dans ton pays.';
+
+  @override
+  String get storeHoursTitle => 'Quand es-tu ouverte ?';
+
+  @override
+  String get storeHoursSubtitle =>
+      'Les commandes arrivent seulement pendant tes horaires.';
+
+  @override
+  String get storeHoursClosed => 'Fermé';
+
+  @override
+  String get storeHoursOpens => 'Ouverture';
+
+  @override
+  String get storeHoursCloses => 'Fermeture';
+
+  @override
+  String get storeHoursSameEveryDay => 'Mêmes horaires tous les jours ouverts';
+
+  @override
+  String get storeHoursInvalid => 'L\'ouverture doit précéder la fermeture.';
+
+  @override
+  String get weekday1 => 'Lundi';
+
+  @override
+  String get weekday2 => 'Mardi';
+
+  @override
+  String get weekday3 => 'Mercredi';
+
+  @override
+  String get weekday4 => 'Jeudi';
+
+  @override
+  String get weekday5 => 'Vendredi';
+
+  @override
+  String get weekday6 => 'Samedi';
+
+  @override
+  String get weekday7 => 'Dimanche';
+
+  @override
+  String get storeOpenAction => 'Ouvrir ma boutique';
+
+  @override
+  String get storeOpenedTitle => 'Ta boutique est ouverte !';
+
+  @override
+  String storeNamePlace(String name, String zone) {
+    return '$name · $zone';
+  }
+
+  @override
+  String get storeSummaryName => 'Nom et présentation';
+
+  @override
+  String storeSummaryOrigin(String origin) {
+    return '$origin · adresse privée';
+  }
+
+  @override
+  String storeSummaryDelivery(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Livraison dans $count quartiers',
+      one: 'Livraison dans 1 quartier',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String storeHoursRange(
+    String first,
+    String last,
+    String opens,
+    String closes,
+  ) {
+    String _temp0 = intl.Intl.selectLogic(last, {
+      '1': 'lundi',
+      '2': 'mardi',
+      '3': 'mercredi',
+      '4': 'jeudi',
+      '5': 'vendredi',
+      '6': 'samedi',
+      'other': 'dimanche',
+    });
+    return '$first au $_temp0, $opens – $closes';
+  }
+
+  @override
+  String storeHoursSingle(String day, String opens, String closes) {
+    return '$day, $opens – $closes';
+  }
+
+  @override
+  String storeHoursDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count jours par semaine',
+      one: '1 jour par semaine',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storeAddFirstProduct => 'Ajouter mon premier produit';
+
+  @override
+  String get storeSeeMine => 'Voir ma boutique';
+
+  @override
+  String get myStoreTitle => 'Ma boutique';
+
+  @override
+  String get myStoreOpen => 'Ouverte';
+
+  @override
+  String get myStoreOpenHint => 'Les clientes peuvent commander';
+
+  @override
+  String get myStoreClosed => 'Fermée';
+
+  @override
+  String get myStoreClosedHint => 'Les clientes ne peuvent pas commander';
+
+  @override
+  String get myStoreSuspended =>
+      'Ta boutique est suspendue par l\'équipe DYM. Contacte-nous pour la rouvrir.';
+
+  @override
+  String get myStoreRowOrigin => 'Où vends-tu';
+
+  @override
+  String get myStoreAddressPrivate => 'privée';
+
+  @override
+  String get myStoreRowDelivery => 'Livraison';
+
+  @override
+  String myStoreDeliveryValue(int count, String prep) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count quartiers',
+      one: '1 quartier',
+    );
+    return '$_temp0 · $prep';
+  }
+
+  @override
+  String get myStoreRowPayment => 'Paiement';
+
+  @override
+  String get myStoreRowHours => 'Horaires';
+
+  @override
+  String get myStoreRowCategory => 'Rayon';
 }

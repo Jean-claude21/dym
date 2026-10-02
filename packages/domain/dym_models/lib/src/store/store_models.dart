@@ -1,3 +1,4 @@
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/src/json.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -52,6 +53,35 @@ class StoreHours {
     opensAt: opensAt ?? this.opensAt,
     closesAt: closesAt ?? this.closesAt,
   );
+}
+
+/// Moyen de paiement proposé à la boutique (`store_payment_options()`) :
+/// disponible, ou « Bientôt » tant qu'il n'est pas activé dans le pays.
+@immutable
+@JsonSerializable()
+class PaymentOption {
+  const new({
+    required this.id,
+    required this.providerCode,
+    required this.kind,
+    required this.label,
+    required this.isAvailable,
+    this.operatorCode,
+    this.sort = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => _$PaymentOptionFromJson(json);
+
+  final String id;
+  final String providerCode;
+  final String? operatorCode;
+
+  /// `cash`, `mobile_money`, `card` ou `digital`.
+  final String kind;
+  @LocalizedTextConverter()
+  final LocalizedText label;
+  final int sort;
+  final bool isAvailable;
 }
 
 /// La boutique de la vendeuse connectée (`public.my_store()`), adresse

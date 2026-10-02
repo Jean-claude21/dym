@@ -3,7 +3,8 @@ import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/ui/navigation.dart';
 import 'package:flutter/widgets.dart';
 
-/// Connexion (parcours partagé `dym_auth`), puis accueil.
+/// Connexion (parcours partagé `dym_auth`), puis démarrage (la boutique
+/// décide de la suite).
 class SignInView extends StatelessWidget {
   const new({super.key, this.startWithProfile = false});
 
@@ -15,6 +16,6 @@ class SignInView extends StatelessWidget {
     service: locator<AuthService>(),
     variant: AuthVariant.vendor,
     startWithProfile: startWithProfile,
-    onReady: (_) => StackedAppNavigator().toHome(),
+    onReady: (_) => StackedAppNavigator().toStartup(),
   );
 }

@@ -29,6 +29,8 @@ class DymTextField extends StatelessWidget {
     this.maxLength,
     this.inputFormatters,
     this.textCapitalization = TextCapitalization.none,
+    this.minLines,
+    this.maxLines = 1,
   });
 
   final String label;
@@ -49,6 +51,10 @@ class DymTextField extends StatelessWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
   final TextCapitalization textCapitalization;
+
+  /// Lignes affichées (champ multiligne : `maxLines` > 1).
+  final int? minLines;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +81,8 @@ class DymTextField extends StatelessWidget {
           maxLength: maxLength,
           inputFormatters: inputFormatters,
           textCapitalization: textCapitalization,
+          minLines: minLines,
+          maxLines: maxLines,
           style: t.body.copyWith(fontSize: 18, color: c.textPrimary),
           cursorColor: c.brand,
           decoration: InputDecoration(

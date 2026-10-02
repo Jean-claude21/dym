@@ -5,12 +5,16 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
+import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
+import 'package:dym_vendor/features/store/testing.dart';
 import 'package:dym_vendor/ui/navigation.dart';
 import 'package:dym_vendor/ui/views/home/home_view.dart';
 import 'package:dym_vendor/ui/views/startup/startup_view.dart';
 import 'package:dym_vendor/ui/views/startup/startup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'support/store_fixtures.dart';
 
 class _Auth implements AuthService {
   new(this.bootstrapResult);
@@ -62,6 +66,23 @@ class _Navigator implements AppNavigator {
   @override
   void toSignIn({bool startWithProfile = false}) =>
       routes.add(startWithProfile ? 'signIn:profile' : 'signIn');
+
+  @override
+  void toStartup() => routes.add('startup');
+
+  @override
+  void toStoreOnboarding() => routes.add('onboarding');
+
+  @override
+  void toStoreOpened(MyStore store, CountryConfig config) =>
+      routes.add('opened');
+
+  @override
+  Future<void> toStoreSetting(StoreStep step) async =>
+      routes.add('setting:${step.name}');
+
+  @override
+  void toAddProduct(BuildContext context) => routes.add('addProduct');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(
@@ -117,6 +138,7 @@ void main() {
       WidgetTester tester,
       Result<AuthState> result, {
       String env = 'dev',
+      MemoryStoreService? stores,
     }) async {
       final navigator = _Navigator();
       await _pump(
@@ -124,6 +146,7 @@ void main() {
         StartupView(
           viewModelFactory: () => StartupViewModel(
             auth: _Auth(result),
+            stores: stores ?? memoryStores(),
             environment: _env(env),
             navigator: navigator,
           ),
@@ -149,12 +172,43 @@ void main() {
       expect(nav.routes, ['signIn:profile']);
     });
 
-    testWidgets('prête : accueil', (tester) async {
+    const ready = Ok(AuthState(AuthStatus.ready, Me(userId: 'u', roles: {})));
+
+    testWidgets('prête sans boutique : onboarding', (tester) async {
+      final nav = await start(tester, ready);
+      expect(nav.routes, ['onboarding']);
+    });
+
+    testWidgets("boutique en brouillon : reprise de l'onboarding", (
+      tester,
+    ) async {
       final nav = await start(
         tester,
-        const Ok(AuthState(AuthStatus.ready, Me(userId: 'u', roles: {}))),
+        ready,
+        stores: memoryStores(
+          initial: openStore(open: false, status: StoreStatus.draft),
+        ),
+      );
+      expect(nav.routes, ['onboarding']);
+    });
+
+    testWidgets('boutique ouverte : « Ma boutique »', (tester) async {
+      final nav = await start(
+        tester,
+        ready,
+        stores: memoryStores(initial: openStore()),
       );
       expect(nav.routes, ['home']);
+    });
+
+    testWidgets('boutique illisible hors ligne : reprise proposée', (
+      tester,
+    ) async {
+      final stores = memoryStores()
+        ..failNext = const NetworkFailure('hors ligne');
+      final nav = await start(tester, ready, stores: stores);
+      expect(nav.routes, isEmpty);
+      expect(find.text('Réessayer'), findsOneWidget);
     });
 
     testWidgets('hors ligne : reprise proposée, rien de perdu', (tester) async {
@@ -185,7 +239,7 @@ void main() {
     });
   });
 
-  group('accueil et « Moi »', () {
+  group('accueil : « Ma boutique » et « Moi »', () {
     for (final size in sizes) {
       for (final locale in const [Locale('fr'), Locale('en')]) {
         for (final tab in [0, 1]) {
@@ -197,6 +251,7 @@ void main() {
                 tester,
                 HomeView(
                   service: _Auth(const Ok(AuthState.signedOut())),
+                  stores: memoryStores(initial: openStore()),
                   navigator: _Navigator(),
                 ),
                 size: size,
@@ -221,8 +276,16 @@ void main() {
     ) async {
       final auth = _Auth(const Ok(AuthState.signedOut()));
       final nav = _Navigator();
-      await _pump(tester, HomeView(service: auth, navigator: nav));
-      expect(find.text('Bonjour Awa !'), findsOneWidget);
+      await _pump(
+        tester,
+        HomeView(
+          service: auth,
+          stores: memoryStores(initial: openStore()),
+          navigator: nav,
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Ma boutique'), findsOneWidget);
       await tester.tap(find.text('Moi').first);
       await tester.pump();
       await tester.tap(find.text('Se déconnecter'));

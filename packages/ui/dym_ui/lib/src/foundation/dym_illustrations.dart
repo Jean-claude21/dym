@@ -23,6 +23,12 @@ abstract final class DymIllustrations {
       ? AssetImage('assets/aisles/$key.webp', package: 'dym_ui')
       : null;
 
+  /// Étal en fête : boutique ouverte (app vendeuse, écran 22).
+  static const ImageProvider storeOpened = AssetImage(
+    'assets/scenes/store_opened.webp',
+    package: 'dym_ui',
+  );
+
   /// Illustration d'une origine de boutique (`store_origins.code`).
   static ImageProvider? origin(String? code) => _origins.contains(code)
       ? AssetImage('assets/origins/$code.webp', package: 'dym_ui')

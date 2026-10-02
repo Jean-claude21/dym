@@ -102,9 +102,7 @@ class DymSelectableCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  AnimatedSize(
-                    duration: DymMotion.of(context, DymMotion.medium),
-                    curve: DymMotion.standard,
+                  _Reveal(
                     child: selected && footer != null
                         ? Padding(
                             padding: const EdgeInsets.only(
@@ -120,6 +118,26 @@ class DymSelectableCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Apparition du pied de carte ; sans animation (réglage d'accessibilité),
+/// le contenu change directement (`AnimatedSize` ne supporte pas une durée
+/// nulle pendant une mise en page).
+class _Reveal extends StatelessWidget {
+  const new({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final duration = DymMotion.of(context, DymMotion.medium);
+    if (duration == Duration.zero) return child;
+    return AnimatedSize(
+      duration: duration,
+      curve: DymMotion.standard,
+      child: child,
     );
   }
 }

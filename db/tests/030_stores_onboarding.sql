@@ -1,6 +1,6 @@
 -- Onboarding de la boutique (spec 006, US1, US2, FR-001 à FR-006).
 
-select plan(20);
+select plan(23);
 
 create temporary table _t as
 select tests.create_user('esi@example.com') as esi,
@@ -61,6 +61,13 @@ select throws_ok(format($$select public.set_store_payment_methods(array['%s'::uu
   (select tmoney from _t)), '22023', null, 'Mobile Money inactif refusé');
 select throws_ok(format($$select public.set_store_payment_methods(array['%s'::uuid])$$,
   (select cash_gh from _t)), '22023', null, 'moyen de paiement d''un autre pays refusé');
+
+select is(jsonb_array_length(public.store_payment_options()), 3,
+  'étape 6 : les 3 moyens du Togo, inactifs compris');
+select is((select o->>'is_available' from jsonb_array_elements(public.store_payment_options()) o
+            where o->>'operator_code' = 'tmoney'), 'false', 'T-Money proposé « Bientôt »');
+select is((select o->>'is_available' from jsonb_array_elements(public.store_payment_options()) o
+            where o->>'provider_code' = 'cash'), 'true', 'cash disponible');
 
 select throws_ok(
   $$select public.set_store_hours('[{"weekday": 1, "opens_at": "19:00", "closes_at": "07:00"}]')$$,

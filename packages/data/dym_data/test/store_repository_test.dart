@@ -115,6 +115,36 @@ void main() {
     });
   });
 
+  test('paymentOptions : disponibles et « Bientôt »', () async {
+    server.on(
+      'POST',
+      '/rest/v1/rpc/store_payment_options',
+      (_) => const FakeResponse(200, [
+        {
+          'id': 'm1',
+          'provider_code': 'cash',
+          'operator_code': null,
+          'kind': 'cash',
+          'label': {'fr': 'Cash à la livraison', 'en': 'Cash on delivery'},
+          'sort': 1,
+          'is_available': true,
+        },
+        {
+          'id': 'm2',
+          'provider_code': 'moneroo',
+          'operator_code': 'tmoney',
+          'kind': 'mobile_money',
+          'label': {'fr': 'T-Money'},
+          'sort': 2,
+          'is_available': false,
+        },
+      ]),
+    );
+    final options = (await stores.paymentOptions()).valueOrNull!;
+    expect(options.map((o) => o.isAvailable), [true, false]);
+    expect(options.last.label.resolve('en'), 'T-Money');
+  });
+
   test('publish incomplète : ValidationFailure', () async {
     server.on(
       'POST',
