@@ -1,0 +1,7 @@
+arb-dir: lib/l10n
+template-arb-file: app_fr.arb
+output-dir: lib/src/generated
+output-localization-file: dym_localizations.dart
+output-class: DymLocalizations
+nullable-getter: false
+preferred-supported-locales: [fr]

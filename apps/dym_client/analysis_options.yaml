@@ -1,0 +1,10 @@
+include: ../../analysis_options.yaml
+
+analyzer:
+  exclude:
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - lib/app/app.locator.dart
+    - lib/app/app.router.dart

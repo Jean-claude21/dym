@@ -1,0 +1,30 @@
+{
+  "@@locale": "fr",
+  "appNameClient": "DYM",
+  "@appNameClient": { "description": "Nom de l'app cliente." },
+  "appNameVendor": "DYM Vendeuse",
+  "@appNameVendor": { "description": "Nom de l'app vendeuse." },
+  "appNameAdmin": "DYM Admin",
+  "@appNameAdmin": { "description": "Nom de l'app d'administration." },
+  "tagline": "Le marché près de chez toi, livré chez toi",
+  "@tagline": { "description": "Accroche générique (sans ville : la ville vient de la configuration)." },
+  "vendorTagline": "Ta boutique, tes commandes, ta caisse",
+  "@vendorTagline": { "description": "Accroche de l'app vendeuse." },
+  "adminTagline": "Résoudre chaque incident en moins d'une heure",
+  "@adminTagline": { "description": "Accroche de l'admin." },
+  "startupPreparing": "Préparation…",
+  "@startupPreparing": { "description": "Démarrage de l'app." },
+  "environmentLabel": "Environnement : {name}",
+  "@environmentLabel": {
+    "description": "Environnement technique affiché hors production.",
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "configErrorTitle": "Configuration manquante",
+  "@configErrorTitle": { "description": "L'app est compilée sans configuration valide." },
+  "configErrorMessage": "Cette version de l'app n'est pas configurée. Installe la version officielle.",
+  "@configErrorMessage": { "description": "Explication de l'erreur de configuration." },
+  "navHome": "Accueil",
+  "navOrders": "Commandes",
+  "navStores": "Boutiques",
+  "navSettings": "Réglages"
+}

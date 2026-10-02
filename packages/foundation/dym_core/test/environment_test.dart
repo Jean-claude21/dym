@@ -13,7 +13,7 @@ void main() {
     test('production sans URL : refus de démarrer', () {
       expect(
         () => DymEnvironment.resolve(env: 'production'),
-        throwsA(isA<DymEnvironmentError>()),
+        throwsA(isA<DymConfigurationException>()),
       );
     });
 
@@ -25,7 +25,7 @@ void main() {
           dataApiUrl: 'https://b.example.com',
           functionsUrl: 'https://c.example.com',
         ),
-        throwsA(isA<DymEnvironmentError>()),
+        throwsA(isA<DymConfigurationException>()),
       );
     });
 
@@ -43,11 +43,11 @@ void main() {
     test('environnement inconnu ou URL invalide : refus', () {
       expect(
         () => DymEnvironment.resolve(env: 'prod'),
-        throwsA(isA<DymEnvironmentError>()),
+        throwsA(isA<DymConfigurationException>()),
       );
       expect(
         () => DymEnvironment.resolve(env: 'staging', authUrl: 'pas une url'),
-        throwsA(isA<DymEnvironmentError>()),
+        throwsA(isA<DymConfigurationException>()),
       );
     });
   });

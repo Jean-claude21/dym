@@ -7,10 +7,14 @@ environment:
 
 workspace:
   - packages/foundation/dym_core
+  - packages/foundation/dym_l10n
   - packages/infra/neon_kit
   - packages/infra/dym_platform
   - packages/ui/dym_ui
   - apps/dym_gallery
+  - apps/dym_client
+  - apps/dym_vendor
+  - apps/dym_admin
 
 dev_dependencies:
   melos: ^8.9.0
@@ -32,6 +36,14 @@ melos:
     tokens:check:
       description: Échoue si le thème généré n'est pas à jour avec les tokens.
       run: dart run melos run tokens && git diff --exit-code -- packages/ui/dym_ui/lib/src/tokens
+
+    generate:
+      description: Génération de code (routes et injection Stacked) dans les apps.
+      exec:
+        command: dart run build_runner build --delete-conflicting-outputs
+        concurrency: 1
+      packageFilters:
+        dependsOn: build_runner
 
     analyze:
       description: Analyse statique de tous les packages et apps.
