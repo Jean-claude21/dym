@@ -11,6 +11,7 @@ import {
 } from "./catalog/adapters.js";
 import { neonAuthVerifier } from "./lib/auth.js";
 import { createPool } from "./lib/db.js";
+import { pgOrderStore } from "./orders/adapters.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -39,4 +40,5 @@ export default createApp({
     signer: s3PhotoSigner({ ...env.storage, bucket: PRODUCT_PHOTOS_BUCKET }),
     suggester: openAiKey ? aiProductSuggester(openAiProviders(openAiKey)) : undefined,
   },
+  orders: { store: pgOrderStore(pool) },
 });
