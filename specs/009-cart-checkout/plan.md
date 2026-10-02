@@ -60,15 +60,17 @@ Même pile que les specs 006 à 008 : Postgres 17 (Neon), pgTAP, Functions Node 
 | D8 | Statut initial `pending` seul ; la contrainte s'étend avec `order-lifecycle` | Pas de transition construite hors de sa spec |
 | D9 | Paiement : seul le fournisseur `cash` est accepté par `place_order` ; un moyen actif d'un autre fournisseur est refusé (`payment_unavailable`) jusqu'à `payments` | Pas de commande sans moyen de la payer |
 | D10 | Prix vu à l'ajout (`unit_price_seen_minor`) pour signaler un prix modifié ; il est remis à jour à chaque modification de la ligne | Avertir sans bloquer ; le prix courant est toujours celui facturé |
+| D11 | Le devis sert aussi la devise du référentiel (`currency`) et `app.catalog_item` la variante par défaut (`default_variant_id`) | Le mini-panier formate sans devise écrite dans l'app ; le « + » d'une carte ajoute la variante unique |
+| D12 | `CartScope` (InheritedWidget) rend le `CartService` accessible aux écrans de découverte ; absent dans la galerie et les tests de découverte | Ajout et mini-panier sans faire dépendre chaque écran de découverte du panier |
 
 ## Project Structure
 
 ```text
 db/migrations/0011_cart_checkout.sql
 db/tests/060_addresses.sql · 061_cart.sql · 062_orders.sql
-functions/src/orders/{ports,routes,adapters}.ts · functions/test/orders*.test.ts
+functions/src/orders/{ports,routes,adapters}.ts · functions/test/orders.test.ts, orders-pg.test.ts
 packages/domain/dym_models/lib/src/cart/cart_models.dart
-packages/data/dym_data/lib/src/{cart,address,order}_repository.dart
+packages/data/dym_data/lib/src/cart_repository.dart (CartRepository, AddressRepository, OrderRepository)
 apps/dym_client/lib/features/cart/
   cart_service.dart · testing.dart · cart_viewmodels.dart
   cart/cart_view.dart · delivery/delivery_view.dart

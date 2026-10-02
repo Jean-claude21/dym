@@ -84,5 +84,5 @@ boutique, moyen de paiement, instant.
 3. Frais (ville du quartier, sinon pays) : boutiques livrées triées par sous-total décroissant ;
    la première porte la base (ou ses propres frais), les autres le supplément ; tout est
    gratuit si le sous-total livré atteint le seuil.
-4. Commission : taux du rayon du produit, sinon taux du pays ; arrondi à l'unité mineure
-   inférieure, par ligne.
+4. Commission (calculée par `app.place_order`, pas par le devis) : taux du rayon du produit,
+   sinon de son rayon parent, sinon du pays ; arrondi à l'unité mineure inférieure, par ligne.

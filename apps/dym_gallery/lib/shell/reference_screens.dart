@@ -1,5 +1,10 @@
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_client/features/cart/addresses/address_form_view.dart';
+import 'package:dym_client/features/cart/addresses/addresses_view.dart';
+import 'package:dym_client/features/cart/cart/cart_view.dart';
+import 'package:dym_client/features/cart/delivery/delivery_view.dart';
+import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
@@ -8,6 +13,7 @@ import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/ui/views/home/home_view.dart' as client;
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
+import 'package:dym_gallery/demo/demo_checkout.dart';
 import 'package:dym_gallery/demo/demo_client_navigator.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/demo/demo_discovery.dart';
@@ -354,6 +360,67 @@ final referenceScreens = <ReferenceScreen>[
       storeId: 'esi',
       onBack: () {},
       onOpenProduct: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '34',
+    title: 'Livraison',
+    surface: 'Cliente',
+    referenceFile: '34-livraison.webp',
+    builder: (c) => DeliveryView(
+      service: DemoCheckout.service(c),
+      onBack: () {},
+      onAddAddress: () async => false,
+    ),
+  ),
+  ReferenceScreen(
+    id: '35',
+    title: 'Mes adresses',
+    surface: 'Cliente',
+    referenceFile: '35-mes-adresses.webp',
+    builder: (c) => AddressesView(
+      service: DemoCheckout.service(c),
+      onBack: () {},
+      onEdit: (_) async => false,
+    ),
+  ),
+  ReferenceScreen(
+    id: '36',
+    title: 'Nouvelle adresse',
+    surface: 'Cliente',
+    referenceFile: '36-nouvelle-adresse.webp',
+    builder: (c) => AddressFormView(
+      service: DemoCheckout.service(c, addresses: const []),
+      onDone: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '37',
+    title: 'Commande envoyée',
+    surface: 'Cliente',
+    referenceFile: '37-commande-envoyee.webp',
+    builder: (c) => FutureBuilder(
+      future: DemoCheckout.purchase(c),
+      builder: (context, snapshot) => snapshot.data == null
+          ? const SizedBox.shrink()
+          : OrderSentView(
+              service: DemoCheckout.service(c),
+              purchase: snapshot.data!,
+              onHome: () {},
+            ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '38',
+    title: 'Panier (app)',
+    surface: 'Cliente',
+    referenceFile: '05-panier.webp',
+    builder: (c) => CartPageView(
+      service: DemoCheckout.service(c),
+      onBack: () {},
+      onDelivery: () {},
+      onOrdered: (_) {},
+      onBrowse: () {},
     ),
   ),
 ];
