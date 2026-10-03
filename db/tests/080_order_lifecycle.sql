@@ -152,7 +152,9 @@ select is(pg_temp._go((select esi from _t), (select e3 from _t), 'delivered') ->
 
 -- Achat 4 : payé en ligne (simulateur), puis refusé : remboursement à faire.
 insert into public.payment_methods (country_code, provider_code, label, sort, is_active)
-values ('TG', 'simulator', '{"fr": "Simulé"}', 9, true);
+values ('TG', 'simulator', '{"fr": "Simulé"}', 9, true)
+on conflict do nothing;
+update public.payment_methods set is_active = true where provider_code = 'simulator' and country_code = 'TG';
 insert into public.store_payment_methods (store_id, payment_method_id)
 select (select kodjo_store from _t), id from public.payment_methods where provider_code = 'simulator';
 select tests.login_as((select awa from _t));
