@@ -17,11 +17,15 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
     required this.purchase,
     required this.onHome,
     super.key,
+    this.onTrack,
   });
 
   final CartService service;
   final Purchase purchase;
   final VoidCallback onHome;
+
+  /// Onglet « Commandes » (suivi).
+  final VoidCallback? onTrack;
 
   @override
   OrderSentViewModel viewModelBuilder(BuildContext context) =>
@@ -138,10 +142,27 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
             DymContentWidth.form(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
-                child: DymButton(
-                  label: l10n.orderBackHome,
-                  icon: Icons.home_rounded,
-                  onPressed: onHome,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (onTrack != null) ...[
+                      DymButton(
+                        label: l10n.trackTitle,
+                        icon: Icons.local_shipping_rounded,
+                        onPressed: onTrack,
+                      ),
+                      const SizedBox(height: DymTokenSpace.s2),
+                    ],
+                    DymButton(
+                      label: l10n.orderBackHome,
+                      icon: Icons.home_rounded,
+                      variant: onTrack == null
+                          ? DymButtonVariant.primary
+                          : DymButtonVariant.secondary,
+                      onPressed: onHome,
+                    ),
+                  ],
                 ),
               ),
             ),

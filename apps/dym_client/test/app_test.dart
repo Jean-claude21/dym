@@ -82,6 +82,18 @@ class _Navigator implements AppNavigator {
 
   @override
   void toAddresses() => routes.add('addresses');
+
+  @override
+  void toOrders() => routes.add('orders');
+
+  @override
+  void toOrder(String orderId) => routes.add('order:$orderId');
+
+  @override
+  void toNotifications() => routes.add('notifications');
+
+  @override
+  void toNotificationSettings() => routes.add('notification-settings');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

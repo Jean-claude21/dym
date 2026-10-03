@@ -13,6 +13,9 @@ import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
+import 'package:dym_client/features/orders/orders_service.dart';
+import 'package:dym_client/features/orders/orders_views.dart';
+import 'package:dym_client/ui/views/home/home_view.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -40,6 +43,18 @@ abstract interface class AppNavigator {
 
   /// Mes adresses (écran 35).
   void toAddresses();
+
+  /// Onglet « Commandes » (écran 43), pile vidée.
+  void toOrders();
+
+  /// Suivi d'une commande (écran 06).
+  void toOrder(String orderId);
+
+  /// Centre de notifications (écran 44).
+  void toNotifications();
+
+  /// Réglages des notifications (écran 46).
+  void toNotificationSettings();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -49,13 +64,16 @@ class StackedAppNavigator implements AppNavigator {
     NavigationService? navigation,
     DiscoveryService? discovery,
     CartService? cart,
+    OrdersService? orders,
   ]) : _navigation = navigation ?? locator<NavigationService>(),
        _discovery = discovery ?? locator<DiscoveryService>(),
-       _cart = cart ?? locator<CartService>();
+       _cart = cart ?? locator<CartService>(),
+       _orders = orders ?? locator<OrdersService>();
 
   final NavigationService _navigation;
   final DiscoveryService _discovery;
   final CartService _cart;
+  final OrdersService _orders;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -168,8 +186,34 @@ class StackedAppNavigator implements AppNavigator {
               onBack: toHome,
               onSettled: _toOrderSent,
             )
-          : OrderSentView(service: _cart, purchase: purchase, onHome: toHome),
+          : OrderSentView(
+              service: _cart,
+              purchase: purchase,
+              onHome: toHome,
+              onTrack: toOrders,
+            ),
     ),
     (route) => route.isFirst,
   );
+
+  @override
+  void toOrders() => _navigator.pushAndRemoveUntil<void>(
+    MaterialPageRoute(
+      builder: (_) => const HomeView(initialTab: ClientTab.orders),
+    ),
+    (_) => false,
+  );
+
+  @override
+  void toOrder(String orderId) =>
+      _push(TrackingView(service: _orders, orderId: orderId, onBack: _back));
+
+  @override
+  void toNotifications() => _push(
+    NotificationsView(service: _orders, onBack: _back, onOpenOrder: toOrder),
+  );
+
+  @override
+  void toNotificationSettings() =>
+      _push(NotificationSettingsView(service: _orders, onBack: _back));
 }

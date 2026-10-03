@@ -4,6 +4,7 @@ import 'package:dym_client/app/client_app.dart';
 import 'package:dym_client/app/config_error_app.dart';
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
+import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_platform/dym_platform.dart';
@@ -41,6 +42,17 @@ Future<void> main() async {
         auth: auth,
         location: const PluginLocationProvider(),
         environment: environment,
+      ),
+    )
+    ..registerLazySingleton<OrdersService>(
+      () => NeonOrdersService(
+        orders: OrderTrackingRepository(
+          data: neon.data,
+          functions: neon.functions,
+        ),
+        notifications: NotificationRepository(neon.data),
+        reference: reference,
+        auth: auth,
       ),
     )
     ..registerLazySingleton<CartService>(
