@@ -26,4 +26,16 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toAddresses() {}
+
+  @override
+  void toOrders() {}
+
+  @override
+  void toOrder(String orderId) {}
+
+  @override
+  void toNotifications() {}
+
+  @override
+  void toNotificationSettings() {}
 }

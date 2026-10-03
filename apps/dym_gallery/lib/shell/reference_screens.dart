@@ -11,11 +11,13 @@ import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
+import 'package:dym_client/features/orders/orders_views.dart' as client_orders;
 import 'package:dym_client/ui/views/home/home_view.dart' as client;
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
 import 'package:dym_gallery/demo/demo_checkout.dart';
 import 'package:dym_gallery/demo/demo_client_navigator.dart';
+import 'package:dym_gallery/demo/demo_client_orders.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/demo/demo_discovery.dart';
 import 'package:dym_gallery/demo/demo_store.dart';
@@ -462,6 +464,85 @@ final referenceScreens = <ReferenceScreen>[
     title: 'Détail du paiement (vendeuse)',
     surface: 'Vendeuse',
     referenceFile: '42-vendeuse-detail-paiement.webp',
+    builder: (c) => OrderDetailView(
+      service: DemoVendorOrders.service(c),
+      orderId: 'o3',
+      onBack: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '43',
+    title: 'Mes commandes',
+    surface: 'Cliente',
+    referenceFile: '43-mes-commandes.webp',
+    builder: (c) => Scaffold(
+      body: client_orders.MyOrdersView(
+        service: DemoClientOrders.service(c),
+        onOpen: (_) {},
+        onNotifications: () {},
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '44',
+    title: 'Notifications',
+    surface: 'Cliente',
+    referenceFile: '44-notifications.webp',
+    builder: (c) => client_orders.NotificationsView(
+      service: DemoClientOrders.service(c),
+      onBack: () {},
+      onOpenOrder: (_) {},
+      clock: () => DemoClientOrders.now,
+    ),
+  ),
+  ReferenceScreen(
+    id: '45',
+    title: 'Refus de commande (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '45-vendeuse-refus.webp',
+    builder: (c) => Builder(
+      builder: (context) => ColoredBox(
+        color: const Color(0x66000000),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Material(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+            child: const Padding(
+              padding: EdgeInsets.only(top: 24),
+              child: RefusalSheet(),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '46',
+    title: 'Réglages des notifications',
+    surface: 'Cliente',
+    referenceFile: '46-parametres-notifications.webp',
+    builder: (c) => client_orders.NotificationSettingsView(
+      service: DemoClientOrders.service(c),
+      onBack: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '47',
+    title: 'Suivi (app)',
+    surface: 'Cliente',
+    referenceFile: '06-suivi.webp',
+    builder: (c) => client_orders.TrackingView(
+      service: DemoClientOrders.service(c),
+      orderId: 'o2',
+      onBack: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '48',
+    title: 'Nouvelle commande (app vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '08-vendeuse-commande-recue.webp',
     builder: (c) => OrderDetailView(
       service: DemoVendorOrders.service(c),
       orderId: 'o1',
