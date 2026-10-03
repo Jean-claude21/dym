@@ -2508,6 +2508,564 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'× {count}'**
   String vendorQuantity(int count);
+
+  /// Statut : en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get orderStatusPending;
+
+  /// Statut : acceptée
+  ///
+  /// In fr, this message translates to:
+  /// **'Acceptée'**
+  String get orderStatusAccepted;
+
+  /// Statut : en préparation
+  ///
+  /// In fr, this message translates to:
+  /// **'En préparation'**
+  String get orderStatusPreparing;
+
+  /// Statut : prête
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête'**
+  String get orderStatusReady;
+
+  /// Statut : en route
+  ///
+  /// In fr, this message translates to:
+  /// **'En route'**
+  String get orderStatusOutForDelivery;
+
+  /// Statut : livrée
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée'**
+  String get orderStatusDelivered;
+
+  /// Statut : retrait récupéré
+  ///
+  /// In fr, this message translates to:
+  /// **'Récupérée'**
+  String get orderStatusCollected;
+
+  /// Statut : refusée
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusée'**
+  String get orderStatusRefused;
+
+  /// Statut : annulée
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée'**
+  String get orderStatusCancelled;
+
+  /// Titre de l'onglet commandes (cliente)
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes commandes'**
+  String get ordersMineTitle;
+
+  /// Section en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get ordersActive;
+
+  /// Section terminées
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminées'**
+  String get ordersDone;
+
+  /// Liste cliente vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes commandes apparaissent ici.'**
+  String get ordersMineEmptyMessage;
+
+  /// Heure de livraison estimée
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée vers {time}'**
+  String orderEtaAt(String time);
+
+  /// Heure de retrait estimée
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête vers {time}'**
+  String orderPickupAt(String time);
+
+  /// Date d'une commande terminée
+  ///
+  /// In fr, this message translates to:
+  /// **'Le {date}'**
+  String orderOn(String date);
+
+  /// Titre du suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi de commande'**
+  String get trackTitle;
+
+  /// Frise : confirmée
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmée'**
+  String get trackConfirmed;
+
+  /// Frise : préparée
+  ///
+  /// In fr, this message translates to:
+  /// **'Préparée'**
+  String get trackPrepared;
+
+  /// Heure d'arrivée estimée
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrive vers {time}'**
+  String trackArrives(String time);
+
+  /// Heure de retrait estimée (suivi)
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête vers {time}'**
+  String trackReadyAt(String time);
+
+  /// Cash à payer
+  ///
+  /// In fr, this message translates to:
+  /// **'À payer à la livraison'**
+  String get trackPayOnDelivery;
+
+  /// Montant cash
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} en cash'**
+  String trackCashAmount(String amount);
+
+  /// Bouton annuler
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la commande'**
+  String get trackCancel;
+
+  /// Confirmation d'annulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la commande ?'**
+  String get trackCancelTitle;
+
+  /// Explication de l'annulation
+  ///
+  /// In fr, this message translates to:
+  /// **'La boutique sera prévenue. La commande ne pourra pas être reprise.'**
+  String get trackCancelBody;
+
+  /// Ne pas annuler
+  ///
+  /// In fr, this message translates to:
+  /// **'Garder la commande'**
+  String get trackCancelKeep;
+
+  /// Commande refusée
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusée par la boutique : {reason}'**
+  String trackRefused(String reason);
+
+  /// Annulée par la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as annulé cette commande.'**
+  String get trackCancelledByYou;
+
+  /// Remboursement à venir
+  ///
+  /// In fr, this message translates to:
+  /// **'Un remboursement est en cours.'**
+  String get trackRefundDue;
+
+  /// Conflit d'état
+  ///
+  /// In fr, this message translates to:
+  /// **'La commande a changé : elle vient d\'être mise à jour.'**
+  String get orderStatusChanged;
+
+  /// Raison : rupture
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit en rupture'**
+  String get reasonOutOfStock;
+
+  /// Raison : trop chargée
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique trop chargée'**
+  String get reasonTooBusy;
+
+  /// Raison : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison impossible dans ce quartier'**
+  String get reasonAreaNotServed;
+
+  /// Raison : autre
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre raison'**
+  String get reasonOther;
+
+  /// Titre du centre
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications'**
+  String get notificationsTitle;
+
+  /// Tout marquer lu
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout lire'**
+  String get notificationsReadAll;
+
+  /// Centre vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune notification'**
+  String get notificationsEmptyTitle;
+
+  /// Centre vide : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu seras prévenue à chaque étape de tes commandes.'**
+  String get notificationsEmptyMessage;
+
+  /// Compteur de non-lues
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 non lue} other{{count} non lues}}'**
+  String notificationsUnread(int count);
+
+  /// Notification vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle commande !'**
+  String get notifNewOrderTitle;
+
+  /// Notification vendeuse : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} a commandé.'**
+  String notifNewOrderBody(String name);
+
+  /// Annulée par la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande annulée'**
+  String get notifCancelledByClientTitle;
+
+  /// Annulée par la cliente : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente a annulé sa commande.'**
+  String get notifCancelledByClientBody;
+
+  /// Notification acceptée
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande acceptée'**
+  String get notifAcceptedTitle;
+
+  /// Acceptée : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'{store} a accepté ta commande.'**
+  String notifAcceptedBody(String store);
+
+  /// Notification refusée
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande refusée'**
+  String get notifRefusedTitle;
+
+  /// Refusée : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'{store} ne peut pas honorer ta commande.'**
+  String notifRefusedBody(String store);
+
+  /// En préparation : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'{store} prépare ta commande.'**
+  String notifPreparingBody(String store);
+
+  /// Notification prête
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande prête'**
+  String get notifReadyTitle;
+
+  /// Prête : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta commande chez {store} est prête.'**
+  String notifReadyBody(String store);
+
+  /// En route : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta commande arrive bientôt.'**
+  String get notifOnTheWayBody;
+
+  /// Livrée : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon appétit ! Dis-nous si tout va bien.'**
+  String get notifDeliveredBody;
+
+  /// Paiement confirmé : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta commande est payée.'**
+  String get notifPaidBody;
+
+  /// Notification paiement échoué
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement échoué'**
+  String get notifPaymentFailedTitle;
+
+  /// Paiement échoué : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton paiement n\'a pas abouti : réessaie ou paie à la livraison.'**
+  String get notifPaymentFailedBody;
+
+  /// Il y a moins d'une minute
+  ///
+  /// In fr, this message translates to:
+  /// **'à l\'instant'**
+  String get timeJustNow;
+
+  /// Il y a n minutes
+  ///
+  /// In fr, this message translates to:
+  /// **'il y a {count} min'**
+  String timeMinutesAgo(int count);
+
+  /// Il y a n heures
+  ///
+  /// In fr, this message translates to:
+  /// **'il y a {count} h'**
+  String timeHoursAgo(int count);
+
+  /// Hier
+  ///
+  /// In fr, this message translates to:
+  /// **'hier'**
+  String get timeYesterday;
+
+  /// Il y a n jours
+  ///
+  /// In fr, this message translates to:
+  /// **'il y a {count} j'**
+  String timeDaysAgo(int count);
+
+  /// Titre des réglages
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages des notifications'**
+  String get notifSettingsTitle;
+
+  /// Explication des réglages
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis ce que DYM peut t\'envoyer sur ce téléphone.'**
+  String get notifSettingsIntro;
+
+  /// Catégorie commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi de mes commandes'**
+  String get prefOrdersTitle;
+
+  /// Catégorie commandes : détail
+  ///
+  /// In fr, this message translates to:
+  /// **'Acceptée, en préparation, en route, livrée'**
+  String get prefOrdersBody;
+
+  /// Catégorie paiements
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements'**
+  String get prefPaymentsTitle;
+
+  /// Catégorie paiements : détail
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement confirmé ou échoué'**
+  String get prefPaymentsBody;
+
+  /// Catégorie messages
+  ///
+  /// In fr, this message translates to:
+  /// **'Messages des boutiques'**
+  String get prefMessagesTitle;
+
+  /// Catégorie messages : détail
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponses des vendeuses'**
+  String get prefMessagesBody;
+
+  /// Catégorie bons plans
+  ///
+  /// In fr, this message translates to:
+  /// **'Bons plans'**
+  String get prefPromotionsTitle;
+
+  /// Catégorie bons plans : détail
+  ///
+  /// In fr, this message translates to:
+  /// **'Promotions de mes boutiques'**
+  String get prefPromotionsBody;
+
+  /// Note des réglages
+  ///
+  /// In fr, this message translates to:
+  /// **'Les notifications importantes restent visibles dans l\'app.'**
+  String get notifSettingsNote;
+
+  /// Onglet nouvelles
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelles'**
+  String get vendorScopeNew;
+
+  /// Onglet en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get vendorScopeActive;
+
+  /// Onglet terminées
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminées'**
+  String get vendorScopeDone;
+
+  /// Rappel de réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponds vite : la cliente attend.'**
+  String get vendorReplyQuickly;
+
+  /// Montant encaissé
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu encaisses'**
+  String get vendorYouCollect;
+
+  /// Accepter la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter'**
+  String get vendorAccept;
+
+  /// Refuser la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get vendorRefuse;
+
+  /// Titre du refus
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser la commande ?'**
+  String get vendorRefuseTitle;
+
+  /// Explication du refus
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente sera prévenue. Choisis une raison.'**
+  String get vendorRefuseBody;
+
+  /// Précision du refus
+  ///
+  /// In fr, this message translates to:
+  /// **'Précise (facultatif)'**
+  String get vendorRefuseNote;
+
+  /// Confirmer le refus
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser la commande'**
+  String get vendorRefuseConfirm;
+
+  /// Geste préparation
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer la préparation'**
+  String get vendorStartPreparing;
+
+  /// Geste prête
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer prête'**
+  String get vendorMarkReady;
+
+  /// Geste en route
+  ///
+  /// In fr, this message translates to:
+  /// **'Partir livrer'**
+  String get vendorOutForDelivery;
+
+  /// Geste livrée
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer livrée'**
+  String get vendorMarkDelivered;
+
+  /// Geste récupérée
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer récupérée'**
+  String get vendorMarkCollected;
+
+  /// Confirmer l'encaissement
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai encaissé {amount}'**
+  String vendorConfirmCash(String amount);
+
+  /// Encaissement fait
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaissement confirmé'**
+  String get vendorCashCollected;
+
+  /// Alerte d'arrivée
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle commande reçue'**
+  String get vendorNewOrderAlert;
+
+  /// Remboursement à faire
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement à faire par l\'équipe DYM.'**
+  String get vendorRefundDue;
+
+  /// Raison du refus (vendeuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusée : {reason}'**
+  String vendorOrderRefusedReason(String reason);
 }
 
 class _DymLocalizationsDelegate

@@ -1459,4 +1459,332 @@ class DymLocalizationsFr extends DymLocalizations {
   String vendorQuantity(int count) {
     return '× $count';
   }
+
+  @override
+  String get orderStatusPending => 'En attente';
+
+  @override
+  String get orderStatusAccepted => 'Acceptée';
+
+  @override
+  String get orderStatusPreparing => 'En préparation';
+
+  @override
+  String get orderStatusReady => 'Prête';
+
+  @override
+  String get orderStatusOutForDelivery => 'En route';
+
+  @override
+  String get orderStatusDelivered => 'Livrée';
+
+  @override
+  String get orderStatusCollected => 'Récupérée';
+
+  @override
+  String get orderStatusRefused => 'Refusée';
+
+  @override
+  String get orderStatusCancelled => 'Annulée';
+
+  @override
+  String get ordersMineTitle => 'Mes commandes';
+
+  @override
+  String get ordersActive => 'En cours';
+
+  @override
+  String get ordersDone => 'Terminées';
+
+  @override
+  String get ordersMineEmptyMessage => 'Tes commandes apparaissent ici.';
+
+  @override
+  String orderEtaAt(String time) {
+    return 'Livrée vers $time';
+  }
+
+  @override
+  String orderPickupAt(String time) {
+    return 'Prête vers $time';
+  }
+
+  @override
+  String orderOn(String date) {
+    return 'Le $date';
+  }
+
+  @override
+  String get trackTitle => 'Suivi de commande';
+
+  @override
+  String get trackConfirmed => 'Confirmée';
+
+  @override
+  String get trackPrepared => 'Préparée';
+
+  @override
+  String trackArrives(String time) {
+    return 'Arrive vers $time';
+  }
+
+  @override
+  String trackReadyAt(String time) {
+    return 'Prête vers $time';
+  }
+
+  @override
+  String get trackPayOnDelivery => 'À payer à la livraison';
+
+  @override
+  String trackCashAmount(String amount) {
+    return '$amount en cash';
+  }
+
+  @override
+  String get trackCancel => 'Annuler la commande';
+
+  @override
+  String get trackCancelTitle => 'Annuler la commande ?';
+
+  @override
+  String get trackCancelBody =>
+      'La boutique sera prévenue. La commande ne pourra pas être reprise.';
+
+  @override
+  String get trackCancelKeep => 'Garder la commande';
+
+  @override
+  String trackRefused(String reason) {
+    return 'Refusée par la boutique : $reason';
+  }
+
+  @override
+  String get trackCancelledByYou => 'Tu as annulé cette commande.';
+
+  @override
+  String get trackRefundDue => 'Un remboursement est en cours.';
+
+  @override
+  String get orderStatusChanged =>
+      'La commande a changé : elle vient d\'être mise à jour.';
+
+  @override
+  String get reasonOutOfStock => 'Produit en rupture';
+
+  @override
+  String get reasonTooBusy => 'Boutique trop chargée';
+
+  @override
+  String get reasonAreaNotServed => 'Livraison impossible dans ce quartier';
+
+  @override
+  String get reasonOther => 'Autre raison';
+
+  @override
+  String get notificationsTitle => 'Notifications';
+
+  @override
+  String get notificationsReadAll => 'Tout lire';
+
+  @override
+  String get notificationsEmptyTitle => 'Aucune notification';
+
+  @override
+  String get notificationsEmptyMessage =>
+      'Tu seras prévenue à chaque étape de tes commandes.';
+
+  @override
+  String notificationsUnread(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count non lues',
+      one: '1 non lue',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notifNewOrderTitle => 'Nouvelle commande !';
+
+  @override
+  String notifNewOrderBody(String name) {
+    return '$name a commandé.';
+  }
+
+  @override
+  String get notifCancelledByClientTitle => 'Commande annulée';
+
+  @override
+  String get notifCancelledByClientBody => 'La cliente a annulé sa commande.';
+
+  @override
+  String get notifAcceptedTitle => 'Commande acceptée';
+
+  @override
+  String notifAcceptedBody(String store) {
+    return '$store a accepté ta commande.';
+  }
+
+  @override
+  String get notifRefusedTitle => 'Commande refusée';
+
+  @override
+  String notifRefusedBody(String store) {
+    return '$store ne peut pas honorer ta commande.';
+  }
+
+  @override
+  String notifPreparingBody(String store) {
+    return '$store prépare ta commande.';
+  }
+
+  @override
+  String get notifReadyTitle => 'Commande prête';
+
+  @override
+  String notifReadyBody(String store) {
+    return 'Ta commande chez $store est prête.';
+  }
+
+  @override
+  String get notifOnTheWayBody => 'Ta commande arrive bientôt.';
+
+  @override
+  String get notifDeliveredBody => 'Bon appétit ! Dis-nous si tout va bien.';
+
+  @override
+  String get notifPaidBody => 'Ta commande est payée.';
+
+  @override
+  String get notifPaymentFailedTitle => 'Paiement échoué';
+
+  @override
+  String get notifPaymentFailedBody =>
+      'Ton paiement n\'a pas abouti : réessaie ou paie à la livraison.';
+
+  @override
+  String get timeJustNow => 'à l\'instant';
+
+  @override
+  String timeMinutesAgo(int count) {
+    return 'il y a $count min';
+  }
+
+  @override
+  String timeHoursAgo(int count) {
+    return 'il y a $count h';
+  }
+
+  @override
+  String get timeYesterday => 'hier';
+
+  @override
+  String timeDaysAgo(int count) {
+    return 'il y a $count j';
+  }
+
+  @override
+  String get notifSettingsTitle => 'Réglages des notifications';
+
+  @override
+  String get notifSettingsIntro =>
+      'Choisis ce que DYM peut t\'envoyer sur ce téléphone.';
+
+  @override
+  String get prefOrdersTitle => 'Suivi de mes commandes';
+
+  @override
+  String get prefOrdersBody => 'Acceptée, en préparation, en route, livrée';
+
+  @override
+  String get prefPaymentsTitle => 'Paiements';
+
+  @override
+  String get prefPaymentsBody => 'Paiement confirmé ou échoué';
+
+  @override
+  String get prefMessagesTitle => 'Messages des boutiques';
+
+  @override
+  String get prefMessagesBody => 'Réponses des vendeuses';
+
+  @override
+  String get prefPromotionsTitle => 'Bons plans';
+
+  @override
+  String get prefPromotionsBody => 'Promotions de mes boutiques';
+
+  @override
+  String get notifSettingsNote =>
+      'Les notifications importantes restent visibles dans l\'app.';
+
+  @override
+  String get vendorScopeNew => 'Nouvelles';
+
+  @override
+  String get vendorScopeActive => 'En cours';
+
+  @override
+  String get vendorScopeDone => 'Terminées';
+
+  @override
+  String get vendorReplyQuickly => 'Réponds vite : la cliente attend.';
+
+  @override
+  String get vendorYouCollect => 'Tu encaisses';
+
+  @override
+  String get vendorAccept => 'Accepter';
+
+  @override
+  String get vendorRefuse => 'Refuser';
+
+  @override
+  String get vendorRefuseTitle => 'Refuser la commande ?';
+
+  @override
+  String get vendorRefuseBody =>
+      'La cliente sera prévenue. Choisis une raison.';
+
+  @override
+  String get vendorRefuseNote => 'Précise (facultatif)';
+
+  @override
+  String get vendorRefuseConfirm => 'Refuser la commande';
+
+  @override
+  String get vendorStartPreparing => 'Commencer la préparation';
+
+  @override
+  String get vendorMarkReady => 'Marquer prête';
+
+  @override
+  String get vendorOutForDelivery => 'Partir livrer';
+
+  @override
+  String get vendorMarkDelivered => 'Marquer livrée';
+
+  @override
+  String get vendorMarkCollected => 'Marquer récupérée';
+
+  @override
+  String vendorConfirmCash(String amount) {
+    return 'J\'ai encaissé $amount';
+  }
+
+  @override
+  String get vendorCashCollected => 'Encaissement confirmé';
+
+  @override
+  String get vendorNewOrderAlert => 'Nouvelle commande reçue';
+
+  @override
+  String get vendorRefundDue => 'Remboursement à faire par l\'équipe DYM.';
+
+  @override
+  String vendorOrderRefusedReason(String reason) {
+    return 'Refusée : $reason';
+  }
 }

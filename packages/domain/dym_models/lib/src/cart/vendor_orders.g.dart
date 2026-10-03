@@ -68,7 +68,14 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         'created_at',
         (v) => DateTime.parse(v as String),
       ),
-      status: $checkedConvert('status', (v) => v as String),
+      status: $checkedConvert(
+        'status',
+        (v) => $enumDecode(
+          _$OrderStatusEnumMap,
+          v,
+          unknownValue: OrderStatus.unknown,
+        ),
+      ),
       fulfillment: $checkedConvert(
         'fulfillment',
         (v) => $enumDecode(_$FulfillmentEnumMap, v),
@@ -125,6 +132,56 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
             ? null
             : VendorOrderPayment.fromJson(v as Map<String, dynamic>),
       ),
+      etaAt: $checkedConvert(
+        'eta_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      acceptedAt: $checkedConvert(
+        'accepted_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      deliveredAt: $checkedConvert(
+        'delivered_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      cashCollectedAt: $checkedConvert(
+        'cash_collected_at',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      statusReason: $checkedConvert(
+        'status_reason',
+        (v) => $enumDecodeNullable(
+          _$RefusalReasonEnumMap,
+          v,
+          unknownValue: RefusalReason.unknown,
+        ),
+      ),
+      statusNote: $checkedConvert('status_note', (v) => v as String?),
+      refundDue: $checkedConvert('refund_due', (v) => v as bool? ?? false),
+      history: $checkedConvert(
+        'history',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map(
+                  (e) => OrderStatusEvent.fromJson(e as Map<String, dynamic>),
+                )
+                .toList() ??
+            const [],
+      ),
+      nextStatuses: $checkedConvert(
+        'next_statuses',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map(
+                  (e) => $enumDecode(
+                    _$OrderStatusEnumMap,
+                    e,
+                    unknownValue: OrderStatus.unknown,
+                  ),
+                )
+                .toList() ??
+            const [],
+      ),
     );
     return val;
   },
@@ -140,8 +197,28 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
     'customerFirstName': 'customer_first_name',
     'zoneName': 'zone_name',
     'substitutionAllowed': 'substitution_allowed',
+    'etaAt': 'eta_at',
+    'acceptedAt': 'accepted_at',
+    'deliveredAt': 'delivered_at',
+    'cashCollectedAt': 'cash_collected_at',
+    'statusReason': 'status_reason',
+    'statusNote': 'status_note',
+    'refundDue': 'refund_due',
+    'nextStatuses': 'next_statuses',
   },
 );
+
+const _$OrderStatusEnumMap = {
+  OrderStatus.pending: 'pending',
+  OrderStatus.accepted: 'accepted',
+  OrderStatus.preparing: 'preparing',
+  OrderStatus.ready: 'ready',
+  OrderStatus.outForDelivery: 'out_for_delivery',
+  OrderStatus.delivered: 'delivered',
+  OrderStatus.refused: 'refused',
+  OrderStatus.cancelled: 'cancelled',
+  OrderStatus.unknown: 'unknown',
+};
 
 const _$FulfillmentEnumMap = {
   Fulfillment.delivery: 'delivery',
@@ -154,4 +231,12 @@ const _$PaymentStatusEnumMap = {
   PaymentStatus.paid: 'paid',
   PaymentStatus.failed: 'failed',
   PaymentStatus.unknown: 'unknown',
+};
+
+const _$RefusalReasonEnumMap = {
+  RefusalReason.outOfStock: 'out_of_stock',
+  RefusalReason.tooBusy: 'too_busy',
+  RefusalReason.areaNotServed: 'area_not_served',
+  RefusalReason.other: 'other',
+  RefusalReason.unknown: 'unknown',
 };

@@ -13,6 +13,7 @@ class AccountView extends StackedView<AccountViewModel> {
     required this.onSignedOut,
     super.key,
     this.onAddresses,
+    this.onNotifications,
   });
 
   final AuthService service;
@@ -20,6 +21,9 @@ class AccountView extends StackedView<AccountViewModel> {
 
   /// Mes adresses (app cliente) ; nul : « bientôt ».
   final VoidCallback? onAddresses;
+
+  /// Réglages des notifications ; nul : « bientôt ».
+  final VoidCallback? onNotifications;
 
   @override
   AccountViewModel viewModelBuilder(BuildContext context) =>
@@ -105,8 +109,13 @@ class AccountView extends StackedView<AccountViewModel> {
                   onTap: onAddresses ?? soon,
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
+                DymMenuRow(
+                  icon: Icons.notifications_rounded,
+                  label: l10n.accountNotifications,
+                  onTap: onNotifications ?? soon,
+                ),
+                const SizedBox(height: DymTokenSpace.s3),
                 for (final (icon, label) in [
-                  (Icons.notifications_rounded, l10n.accountNotifications),
                   (
                     Icons.language_rounded,
                     l10n.accountLanguage(l10n.languageName),

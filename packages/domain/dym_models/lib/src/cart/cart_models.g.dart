@@ -295,9 +295,10 @@ OrderStoreRef _$OrderStoreRefFromJson(Map<String, dynamic> json) =>
         id: $checkedConvert('id', (v) => v as String),
         name: $checkedConvert('name', (v) => v as String),
         origin: $checkedConvert('origin', (v) => v as String?),
+        zoneName: $checkedConvert('zone_name', (v) => v as String?),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'zoneName': 'zone_name'});
 
 OrderLine _$OrderLineFromJson(Map<String, dynamic> json) => $checkedCreate(
   'OrderLine',

@@ -1,4 +1,5 @@
 import 'package:dym_models/src/cart/cart_models.dart';
+import 'package:dym_models/src/cart/order_tracking.dart';
 import 'package:dym_models/src/json.dart';
 import 'package:dym_models/src/reference/reference_models.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -79,13 +80,23 @@ class VendorOrder {
     this.items = const [],
     this.delivery,
     this.payment,
+    this.etaAt,
+    this.acceptedAt,
+    this.deliveredAt,
+    this.cashCollectedAt,
+    this.statusReason,
+    this.statusNote,
+    this.refundDue = false,
+    this.history = const [],
+    this.nextStatuses = const [],
   });
 
   factory fromJson(Map<String, dynamic> json) => _$VendorOrderFromJson(json);
 
   final String id;
   final DateTime createdAt;
-  final String status;
+  @JsonKey(unknownEnumValue: OrderStatus.unknown)
+  final OrderStatus status;
   final Fulfillment fulfillment;
   final String currencyCode;
   @JsonKey(fromJson: minorFromJson)
@@ -107,5 +118,26 @@ class VendorOrder {
   final VendorOrderDelivery? delivery;
   final VendorOrderPayment? payment;
 
+  final DateTime? etaAt;
+  final DateTime? acceptedAt;
+  final DateTime? deliveredAt;
+  final DateTime? cashCollectedAt;
+  @JsonKey(unknownEnumValue: RefusalReason.unknown)
+  final RefusalReason? statusReason;
+  final String? statusNote;
+  final bool refundDue;
+
+  /// Détail seulement.
+  final List<OrderStatusEvent> history;
+
+  /// Étapes que la vendeuse peut déclencher maintenant.
+  @JsonKey(unknownEnumValue: OrderStatus.unknown)
+  final List<OrderStatus> nextStatuses;
+
   bool get isPaid => paymentStatus == PaymentStatus.paid;
+  bool get isCash => paymentStatus == PaymentStatus.cashOnDelivery;
+
+  /// Cash à encaisser : livrée, pas encore confirmé.
+  bool get awaitsCash =>
+      isCash && status == OrderStatus.delivered && cashCollectedAt == null;
 }
