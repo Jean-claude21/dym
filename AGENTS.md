@@ -47,6 +47,7 @@ node db/scripts/dym-db.mjs local start    # cluster .local/pgdata sur 54329 + im
 node db/scripts/dym-db.mjs migrate        # migrations db/migrations (empreintes vérifiées)
 node db/scripts/dym-db.mjs test           # pgTAP (db/tests), chaque fichier en transaction annulée
 node db/scripts/dym-db.mjs local reset    # base vierge
+node db/scripts/dym-db.mjs grant-admin <email> [--url <url>]   # rôle admin (audité)
 ```
 
 - Une migration appliquée ne se modifie jamais : on en crée une nouvelle.
@@ -67,7 +68,8 @@ cd apps/dym_client && fvm flutter run -d chrome --web-port 5555 --dart-define-fr
 # Migrations et pgTAP sur la branche (URL hors dépôt : functions/.env.local, écrit par neon deploy).
 node db/scripts/dym-db.mjs migrate --url "$DATABASE_URL_UNPOOLED" && node db/scripts/dym-db.mjs test --url "$DATABASE_URL_UNPOOLED"
 # Commande de bout en bout (comptes de test créés puis supprimés) :
-# NEON_LIVE_AUTH_URL, NEON_LIVE_DATA_API_URL, NEON_LIVE_FUNCTIONS_URL = URL de config/staging.json.
+# NEON_LIVE_AUTH_URL, NEON_LIVE_DATA_API_URL, NEON_LIVE_FUNCTIONS_URL = URL de config/staging.json ;
+# NEON_LIVE_DATABASE_URL (hors dépôt) active le scénario de l'admin (rôle accordé par grant-admin).
 cd packages/data/dym_data && fvm dart test test/order_flow_live_test.dart
 # Déploiement : clés lues dans un fichier hors dépôt.
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt>

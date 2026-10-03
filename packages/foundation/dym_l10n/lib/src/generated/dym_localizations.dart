@@ -3264,6 +3264,1242 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'L\'équipe DYM a traité ton signalement.'**
   String get notifDisputeResolvedBody;
+
+  /// Interrupteur : actif
+  ///
+  /// In fr, this message translates to:
+  /// **'Active'**
+  String get adminActive;
+
+  /// Bouton : catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une catégorie'**
+  String get adminAddCategory;
+
+  /// Bouton : ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une ville'**
+  String get adminAddCity;
+
+  /// Bouton : moyen de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un moyen de paiement'**
+  String get adminAddPaymentMethod;
+
+  /// Bouton : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un quartier'**
+  String get adminAddZone;
+
+  /// Journal : après
+  ///
+  /// In fr, this message translates to:
+  /// **'Après'**
+  String get adminAfter;
+
+  /// Filtre : toutes les valeurs
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes'**
+  String get adminAll;
+
+  /// Filtre du journal : action
+  ///
+  /// In fr, this message translates to:
+  /// **'Action'**
+  String get adminAuditAction;
+
+  /// Filtre du journal : entité
+  ///
+  /// In fr, this message translates to:
+  /// **'Entité'**
+  String get adminAuditEntity;
+
+  /// Recherche du journal
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher (action, entité, raison)'**
+  String get adminAuditSearch;
+
+  /// Sous-titre du journal
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les actions de l\'équipe, en ajout seul.'**
+  String get adminAuditSubtitle;
+
+  /// Titre du journal
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal d\'audit'**
+  String get adminAuditTitle;
+
+  /// Auteur d'un message : la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} (cliente)'**
+  String adminAuthorClient(String name);
+
+  /// Auteur d'un message : la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} (vendeuse)'**
+  String adminAuthorVendor(String name);
+
+  /// Champ : frais de base (symbole de la devise)
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de base {symbol}'**
+  String adminBaseFee(String symbol);
+
+  /// Journal : avant
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant'**
+  String get adminBefore;
+
+  /// Journal : détail
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant / après'**
+  String get adminBeforeAfter;
+
+  /// Motif de remboursement : annulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulation'**
+  String get adminCancellation;
+
+  /// Moyen : cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash'**
+  String get adminCash;
+
+  /// Champ : ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la ville'**
+  String get adminCityName;
+
+  /// Fermer le détail
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer'**
+  String get adminClose;
+
+  /// Décision : sans suite
+  ///
+  /// In fr, this message translates to:
+  /// **'Clore sans suite'**
+  String get adminCloseNoAction;
+
+  /// Liste de contrôle d'un pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant d\'activer un pays : au moins une ville avec des quartiers, un moyen de paiement et des frais de livraison.'**
+  String get adminCountryChecklist;
+
+  /// Carte : décision
+  ///
+  /// In fr, this message translates to:
+  /// **'Décision'**
+  String get adminDecision;
+
+  /// Champ : délai
+  ///
+  /// In fr, this message translates to:
+  /// **'Délai de livraison (minutes)'**
+  String get adminDeliveryMinutes;
+
+  /// Délai d'une ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison en {n} min environ'**
+  String adminDeliveryMinutesValue(int n);
+
+  /// Titre : catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la catégorie'**
+  String get adminEditCategory;
+
+  /// Titre : ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la ville'**
+  String get adminEditCity;
+
+  /// Titre : commission
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier la commission'**
+  String get adminEditCommission;
+
+  /// Titre : frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier les frais de livraison'**
+  String get adminEditFees;
+
+  /// Bouton : correction de boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Corriger les données'**
+  String get adminEditStore;
+
+  /// Titre : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier le quartier'**
+  String get adminEditZone;
+
+  /// Exécuter un remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Exécuter'**
+  String get adminExecute;
+
+  /// Champ : supplément par boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ramassage en plus {symbol}'**
+  String adminExtraPickupFee(String symbol);
+
+  /// Champ : seuil de gratuité
+  ///
+  /// In fr, this message translates to:
+  /// **'Gratuit dès {symbol}'**
+  String adminFreeThreshold(String symbol);
+
+  /// Aide : villes et quartiers
+  ///
+  /// In fr, this message translates to:
+  /// **'Saisis les villes et quartiers du pays : les clientes et les vendeuses les retrouvent par recherche ou par position.'**
+  String get adminGeographyHelp;
+
+  /// Champ : note interne
+  ///
+  /// In fr, this message translates to:
+  /// **'Note interne (visible par l\'équipe seulement)'**
+  String get adminInternalNote;
+
+  /// Champ : libellé anglais
+  ///
+  /// In fr, this message translates to:
+  /// **'Libellé en anglais'**
+  String get adminLabelEn;
+
+  /// Champ : libellé français
+  ///
+  /// In fr, this message translates to:
+  /// **'Libellé en français'**
+  String get adminLabelFr;
+
+  /// Champ : latitude
+  ///
+  /// In fr, this message translates to:
+  /// **'Latitude (facultatif)'**
+  String get adminLatitude;
+
+  /// Champ : longitude
+  ///
+  /// In fr, this message translates to:
+  /// **'Longitude (facultatif)'**
+  String get adminLongitude;
+
+  /// Remboursement cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Marquer remis en main propre'**
+  String get adminMarkCashRefunded;
+
+  /// Onglet : journal
+  ///
+  /// In fr, this message translates to:
+  /// **'Journal'**
+  String get adminNavAudit;
+
+  /// Onglet : litiges
+  ///
+  /// In fr, this message translates to:
+  /// **'Litiges'**
+  String get adminNavDisputes;
+
+  /// Onglet : finances
+  ///
+  /// In fr, this message translates to:
+  /// **'Finances'**
+  String get adminNavFinance;
+
+  /// Journal vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune action.'**
+  String get adminNoAudit;
+
+  /// Aucune ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune ville : ajoute la première.'**
+  String get adminNoCities;
+
+  /// Aucune commission
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commission : 0 %.'**
+  String get adminNoCommission;
+
+  /// Aucun litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun litige ouvert.'**
+  String get adminNoDisputes;
+
+  /// Aucun frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun frais de livraison.'**
+  String get adminNoFees;
+
+  /// Historique vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune action de l\'équipe.'**
+  String get adminNoHistory;
+
+  /// Catégorie parente : aucune
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune (catégorie principale)'**
+  String get adminNoParent;
+
+  /// Aucun moyen
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun moyen de paiement.'**
+  String get adminNoPaymentMethods;
+
+  /// Aucun paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun paiement en attente.'**
+  String get adminNoPendingPayments;
+
+  /// Aucun remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun remboursement.'**
+  String get adminNoRefunds;
+
+  /// Aucune boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune boutique.'**
+  String get adminNoStores;
+
+  /// Champ : retrait
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait sur place'**
+  String get adminOffersPickup;
+
+  /// Moyen : en ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement en ligne'**
+  String get adminOnlinePayment;
+
+  /// Titre : litiges
+  ///
+  /// In fr, this message translates to:
+  /// **'Litiges ouverts'**
+  String get adminOpenDisputes;
+
+  /// Indicateur : litiges
+  ///
+  /// In fr, this message translates to:
+  /// **'Litiges ouverts'**
+  String get adminOpenDisputesCount;
+
+  /// Champ : date d'ouverture
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouverte depuis le'**
+  String get adminOpenedOn;
+
+  /// Champ : opérateur
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérateur (facultatif)'**
+  String get adminOperator;
+
+  /// Indicateur : commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes · 7 j'**
+  String get adminOrders7d;
+
+  /// Litige de plus de 24 h
+  ///
+  /// In fr, this message translates to:
+  /// **'> 24 h'**
+  String get adminOver24h;
+
+  /// Total et moyen de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} en {method}'**
+  String adminPaidWith(String amount, String method);
+
+  /// Champ : parente
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie parente'**
+  String get adminParentCategory;
+
+  /// Carte : paiements en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements en attente'**
+  String get adminPendingPayments;
+
+  /// Champ : préparation
+  ///
+  /// In fr, this message translates to:
+  /// **'Préparation (minutes)'**
+  String get adminPrepMinutes;
+
+  /// Champ : fournisseur
+  ///
+  /// In fr, this message translates to:
+  /// **'Fournisseur'**
+  String get adminProvider;
+
+  /// Indicateur : produits
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits publiés'**
+  String get adminPublishedProducts;
+
+  /// Champ : taux
+  ///
+  /// In fr, this message translates to:
+  /// **'Taux (%)'**
+  String get adminRatePercent;
+
+  /// Taux affiché
+  ///
+  /// In fr, this message translates to:
+  /// **'{rate} %'**
+  String adminRateValue(String rate);
+
+  /// Bouton : réactiver
+  ///
+  /// In fr, this message translates to:
+  /// **'Réactiver la boutique'**
+  String get adminReactivateStore;
+
+  /// Décision : tout
+  ///
+  /// In fr, this message translates to:
+  /// **'Rembourser tout ({amount})'**
+  String adminRefundAll(String amount);
+
+  /// Champ : montant
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get adminRefundAmount;
+
+  /// Plafond du remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} au plus'**
+  String adminRefundMax(String amount);
+
+  /// Colonne : moyen
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen'**
+  String get adminRefundMethod;
+
+  /// Décision : partiel
+  ///
+  /// In fr, this message translates to:
+  /// **'Rembourser une partie'**
+  String get adminRefundPart;
+
+  /// Colonne : motif
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif'**
+  String get adminRefundReason;
+
+  /// Carte : remboursements
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursements'**
+  String get adminRefunds;
+
+  /// Filtre : effectués
+  ///
+  /// In fr, this message translates to:
+  /// **'Effectués'**
+  String get adminRefundsDone;
+
+  /// Filtre : échoués
+  ///
+  /// In fr, this message translates to:
+  /// **'Échoués'**
+  String get adminRefundsFailed;
+
+  /// Champ : message de l'équipe
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire à la cliente et à la vendeuse'**
+  String get adminReplyHint;
+
+  /// Colonne : demandé
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandé'**
+  String get adminRequested;
+
+  /// Bouton : trancher
+  ///
+  /// In fr, this message translates to:
+  /// **'Trancher le litige'**
+  String get adminResolve;
+
+  /// Relancer un remboursement échoué
+  ///
+  /// In fr, this message translates to:
+  /// **'Relancer'**
+  String get adminRetry;
+
+  /// Indicateur : ventes
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes · 7 j'**
+  String get adminSales7d;
+
+  /// Bouton : enregistrer
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get adminSave;
+
+  /// Sous-titre des réglages
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir un pays est une opération de configuration.'**
+  String get adminSettingsSubtitle;
+
+  /// Boutique : active
+  ///
+  /// In fr, this message translates to:
+  /// **'Active'**
+  String get adminStoreActive;
+
+  /// Champ : description
+  ///
+  /// In fr, this message translates to:
+  /// **'Description'**
+  String get adminStoreDescription;
+
+  /// Boutique : brouillon
+  ///
+  /// In fr, this message translates to:
+  /// **'Brouillon'**
+  String get adminStoreDraft;
+
+  /// Champ : nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la boutique'**
+  String get adminStoreName;
+
+  /// Recherche des boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la boutique ou de la vendeuse'**
+  String get adminStoreSearch;
+
+  /// Boutique : suspendue
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendue'**
+  String get adminStoreSuspended;
+
+  /// Filtre : actives
+  ///
+  /// In fr, this message translates to:
+  /// **'Actives · {n}'**
+  String adminStoresActive(int n);
+
+  /// Filtre : brouillons
+  ///
+  /// In fr, this message translates to:
+  /// **'Brouillons · {n}'**
+  String adminStoresDraft(int n);
+
+  /// Filtre : suspendues
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendues · {n}'**
+  String adminStoresSuspended(int n);
+
+  /// Aide : suspension
+  ///
+  /// In fr, this message translates to:
+  /// **'La suspension ferme la boutique et demande une raison.'**
+  String get adminSuspendHelp;
+
+  /// Bouton : suspendre
+  ///
+  /// In fr, this message translates to:
+  /// **'Suspendre la boutique'**
+  String get adminSuspendStore;
+
+  /// Onglet : catégories
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégories'**
+  String get adminTabCategories;
+
+  /// Onglet : commission
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission'**
+  String get adminTabCommission;
+
+  /// Onglet : pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays'**
+  String get adminTabCountries;
+
+  /// Onglet : frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison'**
+  String get adminTabFees;
+
+  /// Onglet : villes et quartiers
+  ///
+  /// In fr, this message translates to:
+  /// **'Villes et quartiers'**
+  String get adminTabGeography;
+
+  /// Titre : historique
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique des actions de l\'équipe'**
+  String get adminTeamHistory;
+
+  /// Case : avertir
+  ///
+  /// In fr, this message translates to:
+  /// **'Avertir la vendeuse'**
+  String get adminWarnVendor;
+
+  /// Portée : pays entier
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout le pays'**
+  String get adminWholeCountry;
+
+  /// Champ : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du quartier'**
+  String get adminZoneName;
+
+  /// Boutiques d'un quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucune boutique} =1{1 boutique} other{{n} boutiques}}'**
+  String adminZoneStores(int n);
+
+  /// Paiement d'un achat : payé en ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée'**
+  String get adminPaid;
+
+  /// Paiement d'un achat : en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de paiement'**
+  String get adminAwaitingPayment;
+
+  /// Auteur d'une étape : la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente'**
+  String get adminActorClient;
+
+  /// Auteur d'une étape : la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendeuse'**
+  String get adminActorVendor;
+
+  /// Auteur d'une étape : l'équipe DYM
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe'**
+  String get adminActorTeam;
+
+  /// Auteur d'une étape : automatique
+  ///
+  /// In fr, this message translates to:
+  /// **'Système'**
+  String get adminActorSystem;
+
+  /// Journal : connexion d'un membre
+  ///
+  /// In fr, this message translates to:
+  /// **'Connexion'**
+  String get adminAuditSignedIn;
+
+  /// Journal : statut forcé
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut forcé'**
+  String get adminAuditStatusForced;
+
+  /// Journal : annulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande annulée'**
+  String get adminAuditOrderCancelled;
+
+  /// Journal : livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur assigné'**
+  String get adminAuditCourierAssigned;
+
+  /// Journal : litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Litige tranché'**
+  String get adminAuditDisputeResolved;
+
+  /// Journal : remboursement réussi
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement effectué'**
+  String get adminAuditRefundSucceeded;
+
+  /// Journal : remboursement échoué
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement échoué'**
+  String get adminAuditRefundFailed;
+
+  /// Journal : suspension
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique suspendue'**
+  String get adminAuditStoreSuspended;
+
+  /// Journal : réactivation
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique réactivée'**
+  String get adminAuditStoreReactivated;
+
+  /// Journal : correction de boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Données corrigées'**
+  String get adminAuditStoreUpdated;
+
+  /// Journal : pays activé
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays activé'**
+  String get adminAuditCountryActivated;
+
+  /// Journal : pays désactivé
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays désactivé'**
+  String get adminAuditCountryDeactivated;
+
+  /// Journal : ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Ville modifiée'**
+  String get adminAuditCity;
+
+  /// Journal : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartier modifié'**
+  String get adminAuditZone;
+
+  /// Journal : moyen de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen de paiement modifié'**
+  String get adminAuditPaymentMethod;
+
+  /// Journal : commission
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission modifiée'**
+  String get adminAuditCommission;
+
+  /// Journal : frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison modifiés'**
+  String get adminAuditDeliveryFee;
+
+  /// Journal : catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie modifiée'**
+  String get adminAuditCategory;
+
+  /// Journal : rôle
+  ///
+  /// In fr, this message translates to:
+  /// **'Rôle modifié'**
+  String get adminAuditRole;
+
+  /// Entité : commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande'**
+  String get adminEntityOrder;
+
+  /// Entité : litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Litige'**
+  String get adminEntityDispute;
+
+  /// Entité : remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement'**
+  String get adminEntityRefund;
+
+  /// Entité : boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique'**
+  String get adminEntityStore;
+
+  /// Entité : pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays'**
+  String get adminEntityCountry;
+
+  /// Entité : ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Ville'**
+  String get adminEntityCity;
+
+  /// Entité : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartier'**
+  String get adminEntityZone;
+
+  /// Entité : moyen de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen de paiement'**
+  String get adminEntityPaymentMethod;
+
+  /// Entité : catégorie
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get adminEntityCategory;
+
+  /// Entité : membre
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe'**
+  String get adminEntityUser;
+
+  /// Refus : commande terminée
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette commande est terminée : passe par un litige.'**
+  String get adminOrderClosed;
+
+  /// Refus : paiement en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement de cette commande n\'est pas encore confirmé.'**
+  String get adminPaymentPendingRefusal;
+
+  /// Refus : raison
+  ///
+  /// In fr, this message translates to:
+  /// **'Indique une raison (3 caractères au moins).'**
+  String get adminReasonRequired;
+
+  /// Refus : livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Un livreur ne s\'assigne qu\'à une commande en cours de livraison.'**
+  String get adminCourierNotAllowed;
+
+  /// Refus : litige clos
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce litige est déjà tranché.'**
+  String get adminDisputeClosed;
+
+  /// Refus : montant
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant invalide : entre 1 et le total de la commande.'**
+  String get adminRefundAmountInvalid;
+
+  /// Refus : remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce remboursement est déjà en cours ou effectué.'**
+  String get adminRefundNotPending;
+
+  /// Refus : pays incomplet
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce pays n\'est pas prêt : complète ce qui manque.'**
+  String get adminCountryNotReady;
+
+  /// Refus : fournisseur
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce fournisseur de paiement est inactif.'**
+  String get adminProviderInactive;
+
+  /// Refus : statut inchangé
+  ///
+  /// In fr, this message translates to:
+  /// **'La boutique a déjà ce statut.'**
+  String get adminStoreStatusUnchanged;
+
+  /// Durée en minutes
+  ///
+  /// In fr, this message translates to:
+  /// **'{n} min'**
+  String adminMinutes(int n);
+
+  /// Durée en heures et minutes
+  ///
+  /// In fr, this message translates to:
+  /// **'{h} h {m}'**
+  String adminHoursMinutes(int h, String m);
+
+  /// Vue scindée : rien de sélectionné
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis un élément dans la liste.'**
+  String get adminSelectItem;
+
+  /// Champ de raison
+  ///
+  /// In fr, this message translates to:
+  /// **'Raison (obligatoire)'**
+  String get adminReasonLabel;
+
+  /// Recherche des commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'N° de commande, cliente ou boutique'**
+  String get adminOrderSearch;
+
+  /// Filtre : toutes
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes'**
+  String get adminFilterAll;
+
+  /// Filtre : en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get adminFilterActive;
+
+  /// Filtre : bloquées, avec leur nombre
+  ///
+  /// In fr, this message translates to:
+  /// **'Bloquées · {n}'**
+  String adminFilterStuck(int n);
+
+  /// Filtre : livrées
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrées'**
+  String get adminFilterDelivered;
+
+  /// Filtre : annulées ou refusées
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulées ou refusées'**
+  String get adminFilterClosed;
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande.'**
+  String get adminNoOrders;
+
+  /// Colonne : numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'N°'**
+  String get adminColNumber;
+
+  /// Colonne : boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique'**
+  String get adminColStore;
+
+  /// Colonne : cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente'**
+  String get adminColCustomer;
+
+  /// Colonne : statut
+  ///
+  /// In fr, this message translates to:
+  /// **'Statut'**
+  String get adminColStatus;
+
+  /// Colonne : paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get adminColPayment;
+
+  /// Colonne : montant
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get adminColAmount;
+
+  /// Colonne : ancienneté de la dernière étape
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis'**
+  String get adminColSince;
+
+  /// Commande sans étape depuis trop longtemps
+  ///
+  /// In fr, this message translates to:
+  /// **'Bloquée'**
+  String get adminStuck;
+
+  /// Pagination
+  ///
+  /// In fr, this message translates to:
+  /// **'{from} à {to} sur {total}'**
+  String adminPageRange(int from, int to, int total);
+
+  /// Pagination : précédente
+  ///
+  /// In fr, this message translates to:
+  /// **'Page précédente'**
+  String get adminPrevious;
+
+  /// Pagination : suivante
+  ///
+  /// In fr, this message translates to:
+  /// **'Page suivante'**
+  String get adminNext;
+
+  /// Champ : prénom
+  ///
+  /// In fr, this message translates to:
+  /// **'Prénom'**
+  String get adminFirstName;
+
+  /// Champ : téléphone
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get adminPhone;
+
+  /// Champ : adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse'**
+  String get adminAddress;
+
+  /// Titre du détail d'une commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande {reference}'**
+  String adminOrderTitle(String reference);
+
+  /// Pastille : bloquée
+  ///
+  /// In fr, this message translates to:
+  /// **'Bloquée depuis {duration}'**
+  String adminStuckSince(String duration);
+
+  /// Pastille : litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Litige ouvert'**
+  String get adminOpenDispute;
+
+  /// Chronologie : paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get adminActorPayment;
+
+  /// Chronologie : ligne de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'{status} ({method}, {reference})'**
+  String adminPaymentLine(String status, String method, String reference);
+
+  /// Livreur assigné
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur : {name} · {phone}'**
+  String adminCourierLine(String name, String phone);
+
+  /// Chronologie : remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement de {amount} · {status}'**
+  String adminRefundLine(String amount, String status);
+
+  /// Carte : chronologie
+  ///
+  /// In fr, this message translates to:
+  /// **'Chronologie'**
+  String get adminTimeline;
+
+  /// Chronologie : commande bloquée
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune étape depuis {duration}'**
+  String adminNoStepSince(String duration);
+
+  /// Annulation par l'équipe
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée par l\'équipe : {reason}'**
+  String adminCancelledNote(String reason);
+
+  /// Remboursement : à exécuter
+  ///
+  /// In fr, this message translates to:
+  /// **'À exécuter'**
+  String get adminRefundPending;
+
+  /// Remboursement : en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get adminRefundProcessing;
+
+  /// Remboursement : effectué
+  ///
+  /// In fr, this message translates to:
+  /// **'Effectué'**
+  String get adminRefundSucceeded;
+
+  /// Remboursement : échoué
+  ///
+  /// In fr, this message translates to:
+  /// **'Échoué'**
+  String get adminRefundFailed;
+
+  /// Total d'une commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Total'**
+  String get adminTotal;
+
+  /// Confirmation d'annulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la commande {reference} ?'**
+  String adminCancelTitle(String reference);
+
+  /// Annuler une commande payée
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler et rembourser'**
+  String get adminCancelRefund;
+
+  /// Annuler une commande en cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la commande'**
+  String get adminCancelOrder;
+
+  /// Carte : actions
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions'**
+  String get adminActions;
+
+  /// Forcer un statut
+  ///
+  /// In fr, this message translates to:
+  /// **'Forcer un statut'**
+  String get adminForceStatus;
+
+  /// Liste des statuts
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis un statut'**
+  String get adminChooseStatus;
+
+  /// Appliquer le statut
+  ///
+  /// In fr, this message translates to:
+  /// **'Appliquer'**
+  String get adminApply;
+
+  /// Assigner un livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison externe'**
+  String get adminExternalDelivery;
+
+  /// Champ : livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du livreur'**
+  String get adminCourierName;
+
+  /// Assigner le livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Assigner'**
+  String get adminAssign;
+
+  /// Chronologie : création
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande passée'**
+  String get adminOrderPlaced;
 }
 
 class _DymLocalizationsDelegate

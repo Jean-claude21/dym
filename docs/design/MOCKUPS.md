@@ -22,7 +22,10 @@ détail du paiement 42, à valider).
 Spec 011 : parcours 7, 8 et 12 (suivi validé 06, commande reçue validée 08 ; mes commandes 43,
 notifications 44, refus 45, réglages des notifications 46, à valider).
 Spec 012 : litiges (signaler un problème 49, suivi du signalement 50, litige côté vendeuse 51,
-à valider ; écrans de décision de l'équipe dans la spec admin-ops). Correction terrain du 2026-10-02 : aucune liste de quartiers
+à valider ; écrans de décision de l'équipe dans la spec admin-ops).
+Spec 013 : parcours 14 à 17 de l'admin, format bureau (commandes 52, détail d'une commande 53,
+litiges 54, boutiques 55, réglages 56, finances 57, journal d'audit 58, à valider). Aucun nom de
+ville ou de quartier : les lieux du pays hôte sont saisis par l'équipe. Correction terrain du 2026-10-02 : aucune liste de quartiers
 affichée d'avance (position ou recherche), écran 12 compris.
 Les autres parcours sont produits spec par spec dans la même direction.
 

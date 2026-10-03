@@ -6,6 +6,7 @@ import { type OrderDeps, registerOrderRoutes } from "./orders/routes.js";
 import { type PaymentDeps, registerPaymentRoutes } from "./payments/routes.js";
 import { type LifecycleStore, registerLifecycleRoutes } from "./orders/lifecycle.js";
 import { type DisputeStore, registerDisputeRoutes } from "./disputes/routes.js";
+import { type AdminStore, registerAdminRoutes } from "./admin/routes.js";
 import { dispatchPushes, type PushQueue, type PushSender } from "./notifications/push.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
 
@@ -25,6 +26,8 @@ export interface AppDeps {
   lifecycle?: LifecycleStore;
   /** Litiges (spec 012). */
   disputes?: DisputeStore;
+  /** Admin des opérations (spec 013). */
+  admin?: AdminStore;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -78,6 +81,7 @@ export function createApp(deps: AppDeps) {
   registerPaymentRoutes(app, deps.verifyToken, deps.payments);
   registerLifecycleRoutes(app, deps.verifyToken, deps.lifecycle);
   registerDisputeRoutes(app, deps.verifyToken, deps.disputes);
+  registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
 
   return app;
 }

@@ -5,6 +5,7 @@
 //   node db/scripts/dym-db.mjs local start|stop|reset|status
 //   node db/scripts/dym-db.mjs migrate [--url <url>] [--neon-shims]
 //   node db/scripts/dym-db.mjs test [--url <url>] [fichier…]
+//   node db/scripts/dym-db.mjs grant-admin <email> [--url <url>]
 //
 // Aucune dépendance npm : Node ≥ 22 et les binaires psql, initdb, pg_ctl.
 
@@ -346,6 +347,25 @@ async function test(args) {
   if (failed > 0) process.exit(1);
 }
 
+// ---------------------------------------------------------------- rôles
+
+// Rôle admin d'un compte existant (premier admin d'une base, comptes de test
+// de bout en bout). Passe par `app.grant_role` : l'attribution est auditée.
+function grantAdmin(args) {
+  const url = targetUrl(args);
+  const email = args[0];
+  if (!email || !email.includes('@')) fail('usage : grant-admin <email> [--url <url>]');
+  const r = psql(
+    url,
+    `select app.grant_role(
+       (select id from neon_auth."user" where lower(email) = lower(:'email')),
+       'admin', 'dym-db grant-admin');`,
+    ['-v', `email=${email}`],
+  );
+  if (r.status !== 0) fail(`compte introuvable ou refus : ${r.stderr.trim()}`);
+  console.log(`✓ rôle admin accordé (${describe(url)})`);
+}
+
 // ---------------------------------------------------------------- entrée
 
 const [command, ...rest] = process.argv.slice(2);
@@ -363,7 +383,10 @@ switch (command) {
   case 'test':
     await test(rest);
     break;
+  case 'grant-admin':
+    grantAdmin(rest);
+    break;
   default:
-    console.log('usage : dym-db local start|stop|reset|status · migrate [--url] [--neon-shims] · test [--url] [fichier…]');
+    console.log('usage : dym-db local start|stop|reset|status · migrate [--url] [--neon-shims] · test [--url] [fichier…] · grant-admin <email> [--url]');
     process.exitCode = command ? 1 : 0;
 }

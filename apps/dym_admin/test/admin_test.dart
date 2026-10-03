@@ -1,4 +1,5 @@
 import 'package:dym_admin/app/config_error_app.dart';
+import 'package:dym_admin/features/ops/testing.dart';
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_admin/ui/views/home/admin_home_view.dart';
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_view.dart';
@@ -228,6 +229,7 @@ void main() {
         tester,
         AdminHomeView(
           service: auth,
+          admin: MemoryAdminService(),
           navigator: nav,
           inactivity: const Duration(minutes: 1),
         ),
@@ -244,10 +246,19 @@ void main() {
     testWidgets('déconnexion depuis Réglages', (tester) async {
       final nav = _Navigator();
       final auth = _Auth();
-      await _pump(tester, AdminHomeView(service: auth, navigator: nav));
-      expect(find.text('Bonjour Kossi !'), findsOneWidget);
+      await _pump(
+        tester,
+        AdminHomeView(
+          service: auth,
+          admin: MemoryAdminService(),
+          navigator: nav,
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(find.text('7K2Q4F1A'), findsOneWidget);
       await tester.tap(find.text('Réglages'));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
       await tester.tap(find.text('Se déconnecter'));
       await tester.pump();
       expect(nav.routes, ['signIn']);
@@ -263,7 +274,11 @@ void main() {
       ) async {
         await _pump(
           tester,
-          AdminHomeView(service: _Auth(), navigator: _Navigator()),
+          AdminHomeView(
+            service: _Auth(),
+            admin: MemoryAdminService(),
+            navigator: _Navigator(),
+          ),
           size: size,
           textScale: 1.3,
         );

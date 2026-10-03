@@ -1,0 +1,314 @@
+import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/dym_models.dart';
+import 'package:neon_kit/neon_kit.dart';
+
+/// Admin des opérations (spec 013). Lectures et réglages par la Data API ;
+/// gestes qui préviennent quelqu'un ou appellent un fournisseur par la
+/// Function. La base vérifie le rôle admin (`ForbiddenFailure` sinon).
+class AdminRepository {
+  new({required this._data, required this._functions});
+
+  final NeonDataClient _data;
+  final NeonFunctionsClient _functions;
+
+  // ---------------------------------------------------------------- commandes
+
+  Future<Result<AdminOrderPage>> orders({
+    AdminOrderFilter filter = AdminOrderFilter.all,
+    String? query,
+    int limit = 50,
+    int offset = 0,
+  }) => _rpc('admin_orders', {
+    'p_filter': filter.code,
+    'p_query': query,
+    'p_limit': limit,
+    'p_offset': offset,
+  }, (json) => AdminOrderPage.fromJson(_map(json)));
+
+  Future<Result<AdminOrder>> order(String id) => _rpc('admin_order', {
+    'p_id': id,
+  }, (json) => AdminOrder.fromJson(_map(json)));
+
+  /// Refus (`ValidationFailure.message`) : `status_changed`, `order_closed`,
+  /// `payment_pending`, `transition_not_allowed`, `reason_required`.
+  Future<Result<AdminOrder>> forceStatus(
+    AdminOrder order,
+    OrderStatus to,
+    String reason,
+  ) => _post('/v1/admin/orders/${order.id}/status', {
+    'to': to.code,
+    'expected': order.status.code,
+    'reason': reason,
+  }, (json) => AdminOrder.fromJson(_map(json)));
+
+  /// Annulation ; remboursement du total créé si l'achat est payé en ligne.
+  Future<Result<AdminOrder>> cancel(AdminOrder order, String reason) => _post(
+    '/v1/admin/orders/${order.id}/cancel',
+    {'expected': order.status.code, 'reason': reason},
+    (json) => AdminOrder.fromJson(_map(json)),
+  );
+
+  /// Refus : `courier_not_allowed`.
+  Future<Result<AdminOrder>> assignCourier(
+    String orderId, {
+    required String name,
+    required String phone,
+  }) => _post('/v1/admin/orders/$orderId/courier', {
+    'name': name,
+    'phone': phone,
+  }, (json) => AdminOrder.fromJson(_map(json)));
+
+  // ---------------------------------------------------------------- litiges
+
+  Future<Result<List<AdminDisputeRow>>> disputes({bool open = true}) => _rpc(
+    'admin_disputes',
+    {'p_status': open ? 'open' : 'resolved', 'p_limit': 100},
+    (json) => [
+      for (final d in json! as List) AdminDisputeRow.fromJson(_map(d)),
+    ],
+  );
+
+  Future<Result<AdminDispute>> dispute(String id) => _rpc('admin_dispute', {
+    'p_id': id,
+  }, (json) => AdminDispute.fromJson(_map(json)));
+
+  Future<Result<Dispute>> replyDispute(String id, String body) => _post(
+    '/v1/disputes/$id/messages',
+    {'body': body},
+    (json) => Dispute.fromJson(_map(json)),
+  );
+
+  /// Décision. Refus : `dispute_closed`, `refund_amount_invalid`.
+  Future<Result<Dispute>> resolveDispute(
+    String id, {
+    required DisputeResolution resolution,
+    int? refundMinor,
+    String? internalNote,
+    bool warnVendor = false,
+  }) => _post('/v1/admin/disputes/$id/resolve', {
+    'resolution': switch (resolution) {
+      DisputeResolution.partialRefund => 'partial_refund',
+      DisputeResolution.fullRefund => 'full_refund',
+      _ => 'no_action',
+    },
+    'refund_minor': resolution == DisputeResolution.partialRefund
+        ? refundMinor
+        : null,
+    'internal_note': internalNote,
+    'warn_vendor': warnVendor,
+  }, (json) => Dispute.fromJson(_map(json)));
+
+  // ---------------------------------------------------------------- finances
+
+  Future<Result<List<AdminRefund>>> refunds({
+    RefundStatus status = RefundStatus.pending,
+  }) => _rpc('admin_refunds', {
+    'p_status': switch (status) {
+      RefundStatus.succeeded => 'succeeded',
+      RefundStatus.failed => 'failed',
+      _ => 'pending',
+    },
+    'p_limit': 100,
+  }, (json) => [for (final r in json! as List) AdminRefund.fromJson(_map(r))]);
+
+  Future<Result<List<AdminPendingPayment>>> pendingPayments() => _rpc(
+    'admin_pending_payments',
+    {'p_limit': 100},
+    (json) => [
+      for (final p in json! as List) AdminPendingPayment.fromJson(_map(p)),
+    ],
+  );
+
+  /// Exécution par le fournisseur. Refus : `refund_not_pending`,
+  /// `refund_not_provider`, `payment_not_found`.
+  Future<Result<AdminRefund>> executeRefund(String id) => _post(
+    '/v1/admin/refunds/$id/execute',
+    const {},
+    (json) => AdminRefund.fromJson(_map(json)),
+  );
+
+  /// Cash remis en main propre. Refus : `refund_not_cash`,
+  /// `refund_not_pending`.
+  Future<Result<AdminRefund>> markCashRefund(String id) => _post(
+    '/v1/admin/refunds/$id/cash',
+    const {},
+    (json) => AdminRefund.fromJson(_map(json)),
+  );
+
+  // ---------------------------------------------------------------- boutiques
+
+  Future<Result<AdminStorePage>> stores({
+    AdminStoreStatus status = AdminStoreStatus.active,
+    String? query,
+    int limit = 50,
+    int offset = 0,
+  }) => _rpc('admin_stores', {
+    'p_status': status.code,
+    'p_query': query,
+    'p_limit': limit,
+    'p_offset': offset,
+  }, (json) => AdminStorePage.fromJson(_map(json)));
+
+  Future<Result<AdminStore>> store(String id) => _rpc('admin_store', {
+    'p_id': id,
+  }, (json) => AdminStore.fromJson(_map(json)));
+
+  /// Suspendre ou réactiver. Refus : `reason_required`,
+  /// `store_status_unchanged`.
+  Future<Result<AdminStore>> setStoreStatus(
+    String id, {
+    required bool suspended,
+    required String reason,
+  }) => _post('/v1/admin/stores/$id/status', {
+    'status': suspended ? 'suspended' : 'active',
+    'reason': reason,
+  }, (json) => AdminStore.fromJson(_map(json)));
+
+  /// Corrections (nom, description, quartier, préparation, retrait).
+  Future<Result<AdminStore>> updateStore(
+    String id,
+    Map<String, Object?> patch,
+    String reason,
+  ) => _rpc('admin_update_store', {
+    'p_id': id,
+    'p_patch': patch,
+    'p_reason': reason,
+  }, (json) => AdminStore.fromJson(_map(json)));
+
+  // ---------------------------------------------------------------- réglages
+
+  Future<Result<List<AdminCountry>>> countries() => _rpc(
+    'admin_countries',
+    const {},
+    (json) => [for (final c in json! as List) AdminCountry.fromJson(_map(c))],
+  );
+
+  /// Refus : `country_not_ready`.
+  Future<Result<List<AdminCountry>>> setCountryActive(
+    String code, {
+    required bool active,
+  }) => _rpc('admin_set_country_active', {
+    'p_code': code,
+    'p_active': active,
+  }, (json) => [for (final c in json! as List) AdminCountry.fromJson(_map(c))]);
+
+  Future<Result<List<AdminCity>>> geography(String country) =>
+      _rpc('admin_geography', {'p_country': country}, _cities);
+
+  Future<Result<List<AdminCity>>> saveCity(Map<String, Object?> city) =>
+      _rpc('admin_save_city', {'p_city': city}, _cities);
+
+  Future<Result<List<AdminCity>>> saveZone(Map<String, Object?> zone) =>
+      _rpc('admin_save_zone', {'p_zone': zone}, _cities);
+
+  Future<Result<AdminPaymentSettings>> paymentMethods(String country) => _rpc(
+    'admin_payment_methods',
+    {'p_country': country},
+    (json) => AdminPaymentSettings.fromJson(_map(json)),
+  );
+
+  /// Refus : `provider_inactive`.
+  Future<Result<AdminPaymentSettings>> savePaymentMethod(
+    Map<String, Object?> method,
+  ) => _rpc('admin_save_payment_method', {
+    'p_method': method,
+  }, (json) => AdminPaymentSettings.fromJson(_map(json)));
+
+  Future<Result<AdminPricing>> pricing(String country) => _rpc(
+    'admin_pricing',
+    {'p_country': country},
+    (json) => AdminPricing.fromJson(_map(json)),
+  );
+
+  Future<Result<AdminPricing>> setCommission(
+    String country, {
+    required int rateBps,
+    String? categoryId,
+  }) => _rpc('admin_set_commission', {
+    'p_country': country,
+    'p_category': categoryId,
+    'p_rate_bps': rateBps,
+  }, (json) => AdminPricing.fromJson(_map(json)));
+
+  Future<Result<AdminPricing>> setDeliveryFee(
+    String country, {
+    required int baseFeeMinor,
+    required int extraPickupFeeMinor,
+    int? freeThresholdMinor,
+    String? cityId,
+  }) => _rpc('admin_set_delivery_fee', {
+    'p_country': country,
+    'p_city': cityId,
+    'p_base_fee_minor': baseFeeMinor,
+    'p_extra_pickup_fee_minor': extraPickupFeeMinor,
+    'p_free_threshold_minor': freeThresholdMinor,
+  }, (json) => AdminPricing.fromJson(_map(json)));
+
+  Future<Result<List<AdminCategory>>> categories() =>
+      _rpc('admin_categories', const {}, _categories);
+
+  Future<Result<List<AdminCategory>>> saveCategory(
+    Map<String, Object?> category,
+  ) => _rpc('admin_save_category', {'p_category': category}, _categories);
+
+  // ---------------------------------------------------------------- journal
+
+  Future<Result<AdminAuditPage>> audit({
+    String? query,
+    String? action,
+    String? entityType,
+    DateTime? from,
+    DateTime? to,
+    int limit = 50,
+    int offset = 0,
+  }) => _rpc('admin_audit', {
+    'p_query': query,
+    'p_action': action,
+    'p_entity_type': entityType,
+    'p_from': from?.toUtc().toIso8601String(),
+    'p_to': to?.toUtc().toIso8601String(),
+    'p_limit': limit,
+    'p_offset': offset,
+  }, (json) => AdminAuditPage.fromJson(_map(json)));
+
+  // ---------------------------------------------------------------- outils
+
+  static Map<String, dynamic> _map(Object? json) =>
+      json! as Map<String, dynamic>;
+
+  static List<AdminCity> _cities(Object? json) => [
+    for (final c in json! as List) AdminCity.fromJson(_map(c)),
+  ];
+
+  static List<AdminCategory> _categories(Object? json) => [
+    for (final c in json! as List) AdminCategory.fromJson(_map(c)),
+  ];
+
+  Future<Result<T>> _rpc<T>(
+    String name,
+    Map<String, Object?> params,
+    T Function(Object? json) decode,
+  ) async => _decode(await _data.rpc<Object?>(name, params: params), decode);
+
+  Future<Result<T>> _post<T>(
+    String path,
+    Map<String, Object?> body,
+    T Function(Object? json) decode,
+  ) async => _decode(
+    await _functions.post<Object?>(path, body: body, decode: (json) => json),
+    decode,
+  );
+
+  Result<T> _decode<T>(Result<Object?> result, T Function(Object? json) f) {
+    switch (result) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        try {
+          return Ok(f(value));
+        } on Object {
+          return const Err(ServerFailure('réponse illisible'));
+        }
+    }
+  }
+}

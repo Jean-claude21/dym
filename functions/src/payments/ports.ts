@@ -30,10 +30,29 @@ export interface NormalizedEvent {
   currencyCode: string;
 }
 
+/** Remboursement d'un paiement réussi (spec 013). */
+export interface RefundInput {
+  refundId: string;
+  paymentId: string;
+  /** Référence du paiement chez le fournisseur. */
+  providerReference: string | null;
+  amountMinor: number;
+  currencyCode: string;
+}
+
+export interface RefundResult {
+  ok: boolean;
+  providerReference?: string;
+  /** Raison technique d'un refus, sans donnée personnelle. */
+  error?: string;
+}
+
 export interface PaymentProvider {
   /** `payment_providers.code`. */
   readonly code: string;
   initiate(input: InitiateInput): Promise<InitiateResult>;
+  /** Absent : le fournisseur ne sait pas rembourser (refus enregistré). */
+  refund?(input: RefundInput): Promise<RefundResult>;
   /** Signature du corps brut (en-têtes en minuscules). */
   verifyWebhook(rawBody: string, headers: Record<string, string | undefined>): boolean;
   /** `null` : corps illisible. */
