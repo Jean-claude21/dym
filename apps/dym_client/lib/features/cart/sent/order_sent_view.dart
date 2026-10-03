@@ -90,6 +90,11 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
                 ),
               ],
             ),
+            const SizedBox(height: DymTokenSpace.s2),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: _PaymentBadge(paid: p.isPaid),
+            ),
             const Divider(height: 20),
             SumRow(
               label: l10n.cartTotal,
@@ -220,6 +225,49 @@ class _OrderCard extends StatelessWidget {
             ),
           ),
           if (total != null) MoneyText(total!, size: 17, color: c.brandDeep),
+        ],
+      ),
+    );
+  }
+}
+
+/// « Paiement confirmé » (vert) ou « Cash à la livraison » (crème).
+class _PaymentBadge extends StatelessWidget {
+  const new({required this.paid});
+
+  final bool paid;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final l10n = DymLocalizations.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DymTokenSpace.s2,
+        vertical: 4,
+      ),
+      decoration: BoxDecoration(
+        color: paid ? c.tintVertTendre : c.tintPlantainClair,
+        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            paid ? Icons.check_circle_rounded : Icons.payments_rounded,
+            size: 18,
+            color: c.brandDeep,
+          ),
+          const SizedBox(width: DymTokenSpace.s1),
+          Flexible(
+            child: Text(
+              paid ? l10n.paymentConfirmed : l10n.paymentCashOnDelivery,
+              style: context.dym.text.label.copyWith(
+                fontWeight: FontWeight.w800,
+                color: c.brandDeep,
+              ),
+            ),
+          ),
         ],
       ),
     );

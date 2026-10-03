@@ -106,6 +106,10 @@ class MemoryCartService implements CartService {
   final events = <String>[];
   final orderKeys = <String>[];
 
+  /// Pages de paiement ouvertes.
+  final openedPages = <String>[];
+  int _payments = 0;
+
   Result<T>? _fail<T>(String name) {
     calls.add(name);
     final failure = failNext;
@@ -411,7 +415,12 @@ class MemoryCartService implements CartService {
     }
     if (view.blocking) return const Err(ValidationFailure('cart_blocked'));
     final address = _address;
+    final online = view.paymentMethod?.isCash == false;
     final purchase = Purchase(
+      paymentStatus: online
+          ? PaymentStatus.awaitingPayment
+          : PaymentStatus.cashOnDelivery,
+      payment: online ? _attempt(view.paymentMethod!, view.totalMinor) : null,
       id: 'pu${_purchases.length + 1}',
       createdAt: DateTime.utc(2026, 10, 5, 10),
       countryCode: view.countryCode,
@@ -463,6 +472,98 @@ class MemoryCartService implements CartService {
     events.add('order_created');
     _publish();
     return Ok(purchase);
+  }
+
+  PurchasePayment _attempt(PaymentMethod method, int amount) {
+    final id = 'pay${++_payments}';
+    return PurchasePayment(
+      id: id,
+      status: PaymentAttemptStatus.pending,
+      providerCode: method.providerCode,
+      amountMinor: amount,
+      reference: 'PA-${id.toUpperCase()}',
+      checkoutUrl: 'https://paiement.example/$id',
+    );
+  }
+
+  Purchase _with(
+    Purchase p, {
+    required PaymentStatus status,
+    PurchasePayment? payment,
+    PaymentMethod? method,
+  }) => _purchases[p.id] = Purchase(
+    id: p.id,
+    createdAt: p.createdAt,
+    countryCode: p.countryCode,
+    currencyCode: p.currencyCode,
+    paymentMethod: method ?? p.paymentMethod,
+    address: p.address,
+    substitutionAllowed: p.substitutionAllowed,
+    subtotalMinor: p.subtotalMinor,
+    deliveryFeeMinor: p.deliveryFeeMinor,
+    totalMinor: p.totalMinor,
+    orders: p.orders,
+    paymentStatus: status,
+    payment: payment,
+  );
+
+  /// Issue choisie sur la page du fournisseur simulé (tests, galerie).
+  void simulatePayment(String purchaseId, PaymentAttemptStatus outcome) {
+    final p = _purchases[purchaseId]!;
+    final attempt = p.payment!;
+    _with(
+      p,
+      status: outcome == PaymentAttemptStatus.succeeded
+          ? PaymentStatus.paid
+          : PaymentStatus.failed,
+      payment: PurchasePayment(
+        id: attempt.id,
+        status: outcome,
+        providerCode: attempt.providerCode,
+        amountMinor: attempt.amountMinor,
+        reference: attempt.reference,
+        checkoutUrl: attempt.checkoutUrl,
+        completedAt: DateTime.utc(2026, 10, 5, 10, 1),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<Purchase>> purchase(String id) async =>
+      _fail<Purchase>('purchase') ??
+      (_purchases[id] == null
+          ? const Err(NotFoundFailure('achat'))
+          : Ok(_purchases[id]!));
+
+  @override
+  Future<Result<Purchase>> retryPayment(String purchaseId) async {
+    final failed = _fail<Purchase>('retryPayment');
+    if (failed != null) return failed;
+    final p = _purchases[purchaseId]!;
+    if (p.isPaid) return const Err(ValidationFailure('already_paid'));
+    return Ok(
+      _with(
+        p,
+        status: PaymentStatus.awaitingPayment,
+        payment: _attempt(p.paymentMethod, p.totalMinor),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<Purchase>> payOnDelivery(String purchaseId) async {
+    final failed = _fail<Purchase>('payOnDelivery');
+    if (failed != null) return failed;
+    final p = _purchases[purchaseId]!;
+    final cash = paymentMethods.where((m) => m.isCash).firstOrNull;
+    if (cash == null) return const Err(ValidationFailure('cash_not_accepted'));
+    return Ok(_with(p, status: PaymentStatus.cashOnDelivery, method: cash));
+  }
+
+  @override
+  Future<Result<bool>> openPaymentPage(String url) async {
+    openedPages.add(url);
+    return const Ok(true);
   }
 
   @override

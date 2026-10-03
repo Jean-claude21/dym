@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:stacked/stacked.dart';
 
 /// Base : chargement, échec, hors ligne ; référentiel du pays.
@@ -391,4 +392,150 @@ class OrderSentViewModel extends _CartLoadingViewModel {
 
   @override
   Future<void> load() => run(() async => null);
+}
+
+// ------------------------------------------------------------------ paiement
+
+/// Paiement en ligne (écrans 39 et 40) : ouvre la page du fournisseur, relit
+/// l'état toutes les [pollEvery] et au retour au premier plan, jusqu'à la
+/// réussite (ou le passage au cash), qui mène à l'écran 37.
+class PaymentViewModel extends _CartLoadingViewModel {
+  new({
+    required CartService service,
+    required this._purchase,
+    required this.onSettled,
+    this.pollEvery = const Duration(seconds: 3),
+    this.openAtStart = true,
+  }) : super(service);
+
+  /// Achat payé ou passé au cash.
+  final void Function(Purchase purchase) onSettled;
+  final Duration pollEvery;
+
+  /// Ouvre la page de paiement dès l'arrivée sur l'écran.
+  final bool openAtStart;
+
+  Purchase _purchase;
+  Timer? _poll;
+  AppLifecycleListener? _lifecycle;
+  bool _acting = false;
+  bool _openFailed = false;
+  bool _checkOffline = false;
+  bool _cashRefused = false;
+  Failure? _actionFailure;
+  bool _settled = false;
+
+  Purchase get purchase => _purchase;
+  bool get waiting => _purchase.awaitingPayment;
+  bool get failedPayment => _purchase.paymentFailed;
+  bool get ready => _config != null && !failed;
+  bool get acting => _acting;
+  bool get openFailed => _openFailed;
+  bool get checkOffline => _checkOffline;
+  bool get cashRefused => _cashRefused;
+  Failure? get actionFailure => _actionFailure;
+
+  @override
+  Future<void> load() => run(() async {
+    _lifecycle ??= AppLifecycleListener(onResume: () => unawaited(check()));
+    if (_settle()) return null;
+    if (waiting) {
+      _startPolling();
+      if (openAtStart) await openPage();
+    }
+    return null;
+  });
+
+  bool _settle() {
+    final settled =
+        _purchase.isPaid ||
+        _purchase.paymentStatus == PaymentStatus.cashOnDelivery;
+    if (settled && !_settled) {
+      _settled = true;
+      _poll?.cancel();
+      onSettled(_purchase);
+    }
+    return settled;
+  }
+
+  void _startPolling() {
+    _poll?.cancel();
+    _poll = Timer.periodic(pollEvery, (_) => unawaited(check()));
+  }
+
+  /// Relit l'état du paiement.
+  Future<void> check() async {
+    if (_settled) return;
+    final result = await service.purchase(_purchase.id);
+    switch (result) {
+      case Ok(:final value):
+        _checkOffline = false;
+        _update(value);
+      case Err(:final failure):
+        _checkOffline = failure is NetworkFailure;
+        notifyListeners();
+    }
+  }
+
+  void _update(Purchase value) {
+    _purchase = value;
+    if (_settle()) return;
+    if (!waiting) _poll?.cancel();
+    notifyListeners();
+  }
+
+  Future<void> openPage() async {
+    final url = _purchase.payment?.checkoutUrl;
+    if (url == null) return;
+    final result = await service.openPaymentPage(url);
+    _openFailed = result.valueOrNull != true;
+    notifyListeners();
+  }
+
+  Future<void> retry() => _act(() async {
+    final result = await service.retryPayment(_purchase.id);
+    switch (result) {
+      case Ok(:final value):
+        _update(value);
+        if (waiting) {
+          _startPolling();
+          await openPage();
+        }
+      case Err(:final failure):
+        _actionFailure = failure;
+        if (failure case ValidationFailure(message: 'already_paid')) {
+          await check();
+        }
+    }
+  });
+
+  Future<void> payOnDelivery() => _act(() async {
+    final result = await service.payOnDelivery(_purchase.id);
+    switch (result) {
+      case Ok(:final value):
+        _update(value);
+      case Err(failure: ValidationFailure(message: 'cash_not_accepted')):
+        _cashRefused = true;
+      case Err(:final failure):
+        _actionFailure = failure;
+    }
+  });
+
+  Future<void> _act(Future<void> Function() action) async {
+    if (_acting) return;
+    _acting = true;
+    _actionFailure = null;
+    _cashRefused = false;
+    notifyListeners();
+    await action();
+    _acting = false;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _poll?.cancel();
+    _lifecycle?.dispose();
+    super.dispose();
+  }
 }
