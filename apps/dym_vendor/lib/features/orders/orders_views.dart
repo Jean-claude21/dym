@@ -1,10 +1,14 @@
+import 'dart:async';
+
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_viewmodels.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 /// Chargement, échec ou hors ligne d'un écran de commandes.
@@ -81,6 +85,53 @@ class PaymentPill extends StatelessWidget {
   }
 }
 
+/// Libellé d'un statut (retrait : « Récupérée »).
+String vendorStatusLabel(DymLocalizations l10n, VendorOrder o) =>
+    switch (o.status) {
+      OrderStatus.pending => l10n.orderStatusPending,
+      OrderStatus.accepted => l10n.orderStatusAccepted,
+      OrderStatus.preparing => l10n.orderStatusPreparing,
+      OrderStatus.ready => l10n.orderStatusReady,
+      OrderStatus.outForDelivery => l10n.orderStatusOutForDelivery,
+      OrderStatus.delivered =>
+        o.fulfillment == Fulfillment.pickup
+            ? l10n.orderStatusCollected
+            : l10n.orderStatusDelivered,
+      OrderStatus.refused => l10n.orderStatusRefused,
+      OrderStatus.cancelled => l10n.orderStatusCancelled,
+      OrderStatus.unknown => l10n.errorGeneric,
+    };
+
+String reasonLabel(DymLocalizations l10n, RefusalReason? r) => switch (r) {
+  RefusalReason.outOfStock => l10n.reasonOutOfStock,
+  RefusalReason.tooBusy => l10n.reasonTooBusy,
+  RefusalReason.areaNotServed => l10n.reasonAreaNotServed,
+  _ => l10n.reasonOther,
+};
+
+/// Libellé du geste qui mène à [to].
+String stepLabel(DymLocalizations l10n, OrderStatus to, Fulfillment mode) =>
+    switch (to) {
+      OrderStatus.accepted => l10n.vendorAccept,
+      OrderStatus.preparing => l10n.vendorStartPreparing,
+      OrderStatus.ready => l10n.vendorMarkReady,
+      OrderStatus.outForDelivery => l10n.vendorOutForDelivery,
+      OrderStatus.delivered =>
+        mode == Fulfillment.pickup
+            ? l10n.vendorMarkCollected
+            : l10n.vendorMarkDelivered,
+      _ => l10n.vendorRefuse,
+    };
+
+IconData stepIcon(OrderStatus to) => switch (to) {
+  OrderStatus.accepted => Icons.check_rounded,
+  OrderStatus.preparing => Icons.soup_kitchen_rounded,
+  OrderStatus.ready => Icons.shopping_bag_rounded,
+  OrderStatus.outForDelivery => Icons.two_wheeler_rounded,
+  OrderStatus.delivered => Icons.task_alt_rounded,
+  _ => Icons.close_rounded,
+};
+
 String _title(DymLocalizations l10n, VendorOrder o) =>
     l10n.vendorOrderOf(o.customerFirstName ?? '…');
 
@@ -113,7 +164,15 @@ class OrdersView extends StackedView<OrdersViewModel> {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final vm = viewModel;
+    final vm = viewModel
+      // Nouvelle commande : son, vibration et message (avant le push FCM).
+      ..onArrival = () {
+        unawaited(SystemSound.play(SystemSoundType.alert));
+        unawaited(HapticFeedback.heavyImpact());
+        ScaffoldMessenger.maybeOf(context)
+          ?..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(l10n.vendorNewOrderAlert)));
+      };
     if (!vm.ready) {
       return SafeArea(
         child: _State(failure: vm.isBusy ? null : vm.failure, onRetry: vm.load),
@@ -147,6 +206,29 @@ class OrdersView extends StackedView<OrdersViewModel> {
                   ),
                 ),
               ),
+            const SizedBox(height: DymTokenSpace.s2),
+            DymContentWidth.form(
+              child: Wrap(
+                spacing: DymTokenSpace.s2,
+                children: [
+                  for (final (scope, label) in [
+                    (
+                      VendorOrderScope.newOrders,
+                      vm.newCount == 0
+                          ? l10n.vendorScopeNew
+                          : '${l10n.vendorScopeNew} (${vm.newCount})',
+                    ),
+                    (VendorOrderScope.active, l10n.vendorScopeActive),
+                    (VendorOrderScope.done, l10n.vendorScopeDone),
+                  ])
+                    DymFilterChip(
+                      label: label,
+                      selected: vm.scope == scope,
+                      onTap: () => vm.selectScope(scope),
+                    ),
+                ],
+              ),
+            ),
             const SizedBox(height: DymTokenSpace.s3),
             if (vm.orders.isEmpty)
               DymContentWidth.form(
@@ -217,7 +299,10 @@ class _OrderCard extends StatelessWidget {
                     MoneyText(total!, size: 18, color: c.brandDeep),
                 ],
               ),
-              Text(place, style: t.label.copyWith(color: c.textSecondary)),
+              Text(
+                [place, vendorStatusLabel(l10n, order)].join(' · '),
+                style: t.label.copyWith(color: c.textSecondary),
+              ),
               Text(
                 '${l10n.orderItems(order.itemCount)} · $mode',
                 style: t.label.copyWith(color: c.textSecondary),
@@ -312,6 +397,65 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
         ),
       );
     }
+    final pending = order.status == OrderStatus.pending;
+    final next = vm.nextStep;
+    Future<void> refuse() async {
+      final choice = await showRefusalSheet(context);
+      if (choice != null) await vm.refuse(choice.$1, choice.$2);
+    }
+
+    final actions = <Widget>[
+      if (vm.statusChanged)
+        _Note(text: l10n.orderStatusChanged, icon: Icons.sync_rounded),
+      if (vm.actionFailure != null && !vm.statusChanged)
+        _Note(
+          text: vm.actionFailure is NetworkFailure
+              ? l10n.errorOffline
+              : l10n.errorGeneric,
+          icon: Icons.error_outline_rounded,
+        ),
+      if (pending)
+        Row(
+          children: [
+            Expanded(
+              child: DymButton(
+                label: l10n.vendorRefuse,
+                icon: Icons.close_rounded,
+                variant: DymButtonVariant.secondary,
+                onPressed: vm.acting ? null : refuse,
+              ),
+            ),
+            const SizedBox(width: DymTokenSpace.s2),
+            Expanded(
+              child: DymButton(
+                label: l10n.vendorAccept,
+                icon: Icons.check_rounded,
+                variant: DymButtonVariant.plantain,
+                loading: vm.acting,
+                onPressed: vm.acting
+                    ? null
+                    : () => vm.advance(OrderStatus.accepted),
+              ),
+            ),
+          ],
+        )
+      else if (next != null)
+        DymButton(
+          label: stepLabel(l10n, next, order.fulfillment),
+          icon: stepIcon(next),
+          loading: vm.acting,
+          onPressed: vm.acting ? null : () => vm.advance(next),
+        )
+      else if (order.awaitsCash)
+        DymButton(
+          label: l10n.vendorConfirmCash(
+            vm.money(order.totalMinor)?.format() ?? '',
+          ),
+          icon: Icons.payments_rounded,
+          loading: vm.acting,
+          onPressed: vm.acting ? null : vm.confirmCash,
+        ),
+    ];
     final payment = order.payment;
     final delivery = order.delivery;
     Widget card(String title, List<Widget> children) => Container(
@@ -353,6 +497,54 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
     );
     final total = vm.money(order.totalMinor)?.format() ?? '';
     final children = <Widget>[
+      if (pending) ...[
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(DymTokenSpace.s4),
+          decoration: BoxDecoration(
+            color: c.brandDeep,
+            borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          ),
+          child: Column(
+            children: [
+              Text(
+                l10n.notifNewOrderTitle,
+                textAlign: TextAlign.center,
+                style: t.display.copyWith(fontSize: 30, color: c.onBrand),
+              ),
+              if (order.zoneName != null)
+                Text(
+                  '${order.customerFirstName ?? ''} · ${order.zoneName}',
+                  textAlign: TextAlign.center,
+                  style: t.title.copyWith(color: c.plantain),
+                ),
+              const SizedBox(height: DymTokenSpace.s1),
+              Text(
+                l10n.vendorReplyQuickly,
+                textAlign: TextAlign.center,
+                style: t.label.copyWith(color: c.onBrand),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
+      ],
+      if (order.status == OrderStatus.refused)
+        _Note(
+          text: l10n.vendorOrderRefusedReason(
+            reasonLabel(l10n, order.statusReason),
+          ),
+          icon: Icons.cancel_rounded,
+        ),
+      if (order.status == OrderStatus.cancelled)
+        _Note(
+          text: l10n.notifCancelledByClientBody,
+          icon: Icons.cancel_rounded,
+        ),
+      if (order.refundDue)
+        _Note(text: l10n.vendorRefundDue, icon: Icons.info_rounded),
+      if (order.cashCollectedAt != null)
+        _Note(text: l10n.vendorCashCollected, icon: Icons.verified_rounded),
       Container(
         width: double.infinity,
         padding: const EdgeInsets.all(DymTokenSpace.s4),
@@ -491,7 +683,154 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
                 ],
               ),
             ),
+            if (actions.isNotEmpty)
+              DymContentWidth.form(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: actions,
+                  ),
+                ),
+              ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Note extends StatelessWidget {
+  const new({required this.text, required this.icon});
+
+  final String text;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+      child: Row(
+        children: [
+          Icon(icon, color: c.brandDeep),
+          const SizedBox(width: DymTokenSpace.s2),
+          Expanded(
+            child: Text(
+              text,
+              style: context.dym.text.label.copyWith(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Écran 45 : refus avec une raison (et une précision facultative).
+Future<(RefusalReason, String?)?> showRefusalSheet(BuildContext context) =>
+    showModalBottomSheet<(RefusalReason, String?)>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      backgroundColor: context.dym.colors.card,
+      constraints: const BoxConstraints(maxWidth: DymTokenLayout.formMax),
+      builder: (_) => const RefusalSheet(),
+    );
+
+/// Contenu de la feuille de refus (écran 45).
+class RefusalSheet extends StatefulWidget {
+  const new({super.key});
+
+  @override
+  State<RefusalSheet> createState() => _RefusalSheetState();
+}
+
+class _RefusalSheetState extends State<RefusalSheet> {
+  RefusalReason _reason = RefusalReason.outOfStock;
+  final _note = TextEditingController();
+
+  @override
+  void dispose() {
+    _note.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          16,
+          0,
+          16,
+          16 + MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.vendorRefuseTitle,
+                textAlign: TextAlign.center,
+                style: t.title.copyWith(fontSize: 22),
+              ),
+              Text(
+                l10n.vendorRefuseBody,
+                textAlign: TextAlign.center,
+                style: t.label.copyWith(color: c.textSecondary, fontSize: 15),
+              ),
+              const SizedBox(height: DymTokenSpace.s3),
+              RadioGroup<RefusalReason>(
+                groupValue: _reason,
+                onChanged: (r) => setState(() => _reason = r ?? _reason),
+                child: Column(
+                  children: [
+                    for (final r in const [
+                      RefusalReason.outOfStock,
+                      RefusalReason.tooBusy,
+                      RefusalReason.areaNotServed,
+                      RefusalReason.other,
+                    ])
+                      RadioListTile<RefusalReason>(
+                        value: r,
+                        title: Text(reasonLabel(l10n, r)),
+                        activeColor: c.brand,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                  ],
+                ),
+              ),
+              DymTextField(
+                label: l10n.vendorRefuseNote,
+                controller: _note,
+                maxLength: 200,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+              const SizedBox(height: DymTokenSpace.s2),
+              DymButton(
+                label: l10n.vendorRefuseConfirm,
+                icon: Icons.close_rounded,
+                variant: DymButtonVariant.destructive,
+                onPressed: () => Navigator.pop(context, (
+                  _reason,
+                  _note.text.trim().isEmpty ? null : _note.text.trim(),
+                )),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(l10n.cancel),
+              ),
+            ],
+          ),
         ),
       ),
     );
