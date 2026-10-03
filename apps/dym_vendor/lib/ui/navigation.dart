@@ -5,6 +5,8 @@ import 'package:dym_vendor/app/app.router.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/orders/orders_service.dart';
+import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
@@ -38,6 +40,9 @@ abstract interface class AppNavigator {
 
   /// « Mes catégories » ; se termine au retour.
   Future<void> toStoreCategories();
+
+  /// Détail d'une commande (écran 42).
+  void toOrder(String orderId);
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -133,6 +138,17 @@ class StackedAppNavigator implements AppNavigator {
     MaterialPageRoute(
       builder: (_) => StoreCategoriesView(
         service: _catalog,
+        onBack: () => _navigator.pop(),
+      ),
+    ),
+  );
+
+  @override
+  void toOrder(String orderId) => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) => OrderDetailView(
+        service: locator<OrdersService>(),
+        orderId: orderId,
         onBack: () => _navigator.pop(),
       ),
     ),

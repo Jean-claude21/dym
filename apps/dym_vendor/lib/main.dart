@@ -6,6 +6,7 @@ import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
 import 'package:dym_vendor/app/vendor_app.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
+import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:flutter/widgets.dart';
 
@@ -39,6 +40,12 @@ Future<void> main() async {
     ..registerSingleton(neon)
     ..registerSingleton<AuthService>(auth)
     ..registerSingleton<StoreService>(stores)
+    ..registerSingleton<OrdersService>(
+      NeonOrdersService(
+        orders: VendorOrderRepository(neon.data),
+        stores: stores,
+      ),
+    )
     ..registerSingleton<CatalogService>(
       NeonCatalogService(
         catalog: CatalogRepository(neon.data),
