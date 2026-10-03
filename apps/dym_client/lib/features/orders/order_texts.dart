@@ -80,6 +80,14 @@ String timeAgo(DymLocalizations l10n, DateTime at, DateTime now) {
       l10n.notifCancelledByClientTitle,
       l10n.notifCancelledByClientBody,
     ),
+    'dispute_replied' => (
+      l10n.notifDisputeRepliedTitle,
+      l10n.notifDisputeRepliedBody(n.param('author') ?? ''),
+    ),
+    'dispute_resolved' => (
+      l10n.notifDisputeResolvedTitle,
+      l10n.notifDisputeResolvedBody,
+    ),
     _ => (l10n.notificationsTitle, ''),
   };
 }
@@ -93,5 +101,7 @@ IconData notificationIcon(String kind) => switch (kind) {
   'order_delivered' => Icons.home_rounded,
   'order_refused' || 'order_cancelled_by_client' => Icons.cancel_rounded,
   'payment_failed' => Icons.error_rounded,
+  'dispute_replied' => Icons.forum_rounded,
+  'dispute_resolved' => Icons.verified_rounded,
   _ => Icons.notifications_rounded,
 };

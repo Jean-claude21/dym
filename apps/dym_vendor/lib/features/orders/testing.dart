@@ -24,6 +24,7 @@ class MemoryOrdersService implements OrdersService {
 
   final CountryConfig config;
   final List<VendorOrder> _orders;
+  final _disputes = <String, Dispute>{};
 
   /// Prochain appel en échec (une fois).
   Failure? failNext;
@@ -113,6 +114,44 @@ class MemoryOrdersService implements OrdersService {
         current,
         status: current.status,
         cashCollectedAt: DateTime.utc(2026, 10, 5, 11, 30),
+      ),
+    );
+  }
+
+  /// Litige sur une commande (tests, galerie).
+  void seedDispute(Dispute d) => _disputes[d.orderId] = d;
+
+  @override
+  Future<Result<Dispute?>> dispute(String orderId) async =>
+      _fail<Dispute?>() ?? Ok(_disputes[orderId]);
+
+  @override
+  Future<Result<Dispute>> replyDispute(String disputeId, String body) async {
+    final failed = _fail<Dispute>();
+    if (failed != null) return failed;
+    final d = _disputes.values.firstWhere((d) => d.id == disputeId);
+    if (!d.isOpen) return const Err(ValidationFailure('dispute_closed'));
+    gestures.add('${d.orderId}:reply');
+    return Ok(
+      _disputes[d.orderId] = Dispute(
+        id: d.id,
+        orderId: d.orderId,
+        reason: d.reason,
+        description: d.description,
+        status: d.status,
+        createdAt: d.createdAt,
+        currencyCode: d.currencyCode,
+        storeName: d.storeName,
+        customerFirstName: d.customerFirstName,
+        messages: [
+          ...d.messages,
+          DisputeMessage(
+            id: 'm${d.messages.length}',
+            authorRole: 'vendor',
+            body: body,
+            createdAt: DateTime.utc(2026, 10, 5, 11, 10),
+          ),
+        ],
       ),
     );
   }

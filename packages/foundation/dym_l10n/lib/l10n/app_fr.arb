@@ -2364,5 +2364,160 @@
         "type": "String"
       }
     }
+  },
+  "disputeReport": "Signaler un problème",
+  "@disputeReport": {
+    "description": "Bouton et titre du signalement"
+  },
+  "disputeWhatHappened": "Que s'est-il passé ?",
+  "@disputeWhatHappened": {
+    "description": "Choix de la raison"
+  },
+  "disputeTellUs": "Raconte-nous",
+  "@disputeTellUs": {
+    "description": "Récit du problème"
+  },
+  "disputeDescriptionInvalid": "Décris le problème (3 à 500 caractères)",
+  "@disputeDescriptionInvalid": {
+    "description": "Récit invalide"
+  },
+  "disputeWhoAnswers": "La boutique et l'équipe DYM vont te répondre.",
+  "@disputeWhoAnswers": {
+    "description": "Qui répond"
+  },
+  "disputeSend": "Envoyer le signalement",
+  "@disputeSend": {
+    "description": "Envoyer"
+  },
+  "disputeReasonMissingItem": "Il manque un article",
+  "@disputeReasonMissingItem": {
+    "description": "Raison : article manquant"
+  },
+  "disputeReasonWrongItem": "Mauvais article",
+  "@disputeReasonWrongItem": {
+    "description": "Raison : mauvais article"
+  },
+  "disputeReasonDamaged": "Article abîmé",
+  "@disputeReasonDamaged": {
+    "description": "Raison : abîmé"
+  },
+  "disputeReasonQuality": "Qualité décevante",
+  "@disputeReasonQuality": {
+    "description": "Raison : qualité"
+  },
+  "disputeReasonNotDelivered": "Commande jamais reçue",
+  "@disputeReasonNotDelivered": {
+    "description": "Raison : jamais reçue"
+  },
+  "disputeReasonOther": "Autre",
+  "@disputeReasonOther": {
+    "description": "Raison : autre"
+  },
+  "disputeMine": "Mon signalement",
+  "@disputeMine": {
+    "description": "Titre du suivi du litige"
+  },
+  "disputeOpenStatus": "En cours de traitement",
+  "@disputeOpenStatus": {
+    "description": "Litige ouvert"
+  },
+  "disputeResolvedStatus": "Traité",
+  "@disputeResolvedStatus": {
+    "description": "Litige résolu"
+  },
+  "disputeYou": "Toi",
+  "@disputeYou": {
+    "description": "Auteur : la cliente elle-même"
+  },
+  "disputeTeam": "Équipe DYM",
+  "@disputeTeam": {
+    "description": "Auteur : l'équipe"
+  },
+  "disputeCustomer": "Cliente",
+  "@disputeCustomer": {
+    "description": "Auteur : la cliente (vue vendeuse)"
+  },
+  "disputeWriteMessage": "Écris un message…",
+  "@disputeWriteMessage": {
+    "description": "Champ de message"
+  },
+  "disputeSendMessage": "Envoyer",
+  "@disputeSendMessage": {
+    "description": "Envoyer un message"
+  },
+  "disputeRefunded": "Remboursement de {amount} décidé.",
+  "@disputeRefunded": {
+    "description": "Décision : remboursement",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "disputeNoAction": "Signalement clos sans remboursement.",
+  "@disputeNoAction": {
+    "description": "Décision : sans suite"
+  },
+  "disputeAlreadyOpen": "Un signalement est déjà en cours pour cette commande.",
+  "@disputeAlreadyOpen": {
+    "description": "Refus : déjà ouvert"
+  },
+  "disputeNotAllowed": "Cette commande ne peut plus être signalée.",
+  "@disputeNotAllowed": {
+    "description": "Refus : hors délai"
+  },
+  "disputeVendorBanner": "Problème signalé : {reason}",
+  "@disputeVendorBanner": {
+    "description": "Bandeau vendeuse",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "disputeReply": "Répondre",
+  "@disputeReply": {
+    "description": "Répondre au litige"
+  },
+  "disputeReplyHint": "Ta réponse à la cliente",
+  "@disputeReplyHint": {
+    "description": "Champ de réponse vendeuse"
+  },
+  "disputeSeeThread": "Voir le signalement",
+  "@disputeSeeThread": {
+    "description": "Ouvrir le fil"
+  },
+  "disputeMessageLine": "{author} : {body}",
+  "@disputeMessageLine": {
+    "description": "Ligne du fil de litige (auteur, message)",
+    "placeholders": {
+      "author": {
+        "type": "String"
+      },
+      "body": {
+        "type": "String"
+      }
+    }
+  },
+  "notifDisputeRepliedTitle": "Réponse à ton signalement",
+  "@notifDisputeRepliedTitle": {
+    "description": "Notification : réponse au litige"
+  },
+  "notifDisputeRepliedBody": "{author} t'a répondu.",
+  "@notifDisputeRepliedBody": {
+    "description": "Notification : qui a répondu au litige",
+    "placeholders": {
+      "author": {
+        "type": "String"
+      }
+    }
+  },
+  "notifDisputeResolvedTitle": "Signalement traité",
+  "@notifDisputeResolvedTitle": {
+    "description": "Notification : litige tranché"
+  },
+  "notifDisputeResolvedBody": "L'équipe DYM a traité ton signalement.",
+  "@notifDisputeResolvedBody": {
+    "description": "Notification : litige tranché (texte)"
   }
 }

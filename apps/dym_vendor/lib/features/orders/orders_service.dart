@@ -23,13 +23,20 @@ abstract interface class OrdersService {
   });
 
   Future<Result<VendorOrder>> confirmCash(VendorOrder order);
+
+  /// Dernier litige de la commande (`Ok(null)` : aucun).
+  Future<Result<Dispute?>> dispute(String orderId);
+
+  /// Réponse à la cliente. Refus : `dispute_closed`.
+  Future<Result<Dispute>> replyDispute(String disputeId, String body);
 }
 
 /// Implémentation Neon.
 class NeonOrdersService implements OrdersService {
-  new({required this._orders, required this._stores});
+  new({required this._orders, required this._disputes, required this._stores});
 
   final VendorOrderRepository _orders;
+  final DisputeRepository _disputes;
   final StoreService _stores;
 
   @override
@@ -59,4 +66,12 @@ class NeonOrdersService implements OrdersService {
   @override
   Future<Result<VendorOrder>> confirmCash(VendorOrder order) =>
       _orders.confirmCash(order.id);
+
+  @override
+  Future<Result<Dispute?>> dispute(String orderId) =>
+      _disputes.forOrder(orderId);
+
+  @override
+  Future<Result<Dispute>> replyDispute(String disputeId, String body) =>
+      _disputes.reply(disputeId, body);
 }

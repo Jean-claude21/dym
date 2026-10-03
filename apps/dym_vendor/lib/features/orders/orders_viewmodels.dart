@@ -124,10 +124,14 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
 
   final String orderId;
   VendorOrder? _order;
+  Dispute? _dispute;
   bool _acting = false;
   Failure? _actionFailure;
 
   VendorOrder? get order => _order;
+
+  /// Litige de la commande (bandeau 51), s'il y en a un.
+  Dispute? get dispute => _dispute;
   bool get ready => _order != null && _config != null && !failed;
   bool get acting => _acting;
   Failure? get actionFailure => _actionFailure;
@@ -148,8 +152,30 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
   Future<void> load() => run(() async {
     final result = await service.order(orderId);
     _order = result.valueOrNull;
+    if (await service.dispute(orderId) case Ok(:final value)) _dispute = value;
     return result.failureOrNull;
   });
+
+  /// Réponse à la cliente (51) ; `true` si envoyée.
+  Future<bool> replyDispute(String body) async {
+    final d = _dispute;
+    if (d == null || body.trim().isEmpty || _acting) return false;
+    _acting = true;
+    _actionFailure = null;
+    notifyListeners();
+    final result = await service.replyDispute(d.id, body.trim());
+    _acting = false;
+    switch (result) {
+      case Ok(:final value):
+        _dispute = value;
+        notifyListeners();
+        return true;
+      case Err(:final failure):
+        _actionFailure = failure;
+        notifyListeners();
+        return false;
+    }
+  }
 
   Future<void> advance(OrderStatus to) => _act((o) => service.advance(o, to));
 

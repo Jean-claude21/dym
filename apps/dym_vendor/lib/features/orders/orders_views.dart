@@ -496,7 +496,20 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
       ),
     );
     final total = vm.money(order.totalMinor)?.format() ?? '';
+    final dispute = vm.dispute;
+    Future<void> reply() async {
+      final body = await showDisputeReplySheet(context);
+      if (body != null) await vm.replyDispute(body);
+    }
+
     final children = <Widget>[
+      if (dispute != null) ...[
+        DisputeBanner(
+          dispute: dispute,
+          onReply: dispute.isOpen && !vm.acting ? reply : null,
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
+      ],
       if (pending) ...[
         Container(
           width: double.infinity,
@@ -695,6 +708,173 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
                 ),
               ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+String _disputeReason(DymLocalizations l10n, DisputeReason r) => switch (r) {
+  DisputeReason.missingItem => l10n.disputeReasonMissingItem,
+  DisputeReason.wrongItem => l10n.disputeReasonWrongItem,
+  DisputeReason.damaged => l10n.disputeReasonDamaged,
+  DisputeReason.quality => l10n.disputeReasonQuality,
+  DisputeReason.notDelivered => l10n.disputeReasonNotDelivered,
+  _ => l10n.disputeReasonOther,
+};
+
+/// Écran 51 : problème signalé par la cliente, fil et bouton « Répondre ».
+class DisputeBanner extends StatelessWidget {
+  const new({required this.dispute, required this.onReply, super.key});
+
+  final Dispute dispute;
+  final VoidCallback? onReply;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final d = dispute;
+    String author(DisputeMessage m) => switch (m.authorRole) {
+      'vendor' => l10n.disputeYou,
+      'admin' => l10n.disputeTeam,
+      _ => d.customerFirstName ?? l10n.disputeCustomer,
+    };
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(DymTokenSpace.s3),
+      decoration: BoxDecoration(
+        color: d.isOpen ? c.tintPimentClair : c.tintVertTendre,
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        border: Border.all(color: d.isOpen ? c.piment : c.brand),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                d.isOpen ? Icons.error_rounded : Icons.verified_rounded,
+                size: 36,
+                color: d.isOpen ? c.pimentStrong : c.brandDeep,
+              ),
+              const SizedBox(width: DymTokenSpace.s2),
+              Expanded(
+                child: Text(
+                  l10n.disputeVendorBanner(_disputeReason(l10n, d.reason)),
+                  style: t.title.copyWith(
+                    fontSize: 19,
+                    color: d.isOpen ? c.pimentStrong : c.brandDeep,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: DymTokenSpace.s1),
+          for (final m in d.messages)
+            Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: Text(
+                l10n.disputeMessageLine(author(m), m.body),
+                style: t.label.copyWith(
+                  fontSize: 15,
+                  fontWeight: m.authorRole == 'client'
+                      ? FontWeight.w600
+                      : FontWeight.w400,
+                ),
+              ),
+            ),
+          if (!d.isOpen)
+            Padding(
+              padding: const EdgeInsets.only(top: DymTokenSpace.s1),
+              child: Text(
+                l10n.disputeResolvedStatus,
+                style: t.title.copyWith(fontSize: 15, color: c.brandDeep),
+              ),
+            ),
+          if (d.isOpen) ...[
+            const SizedBox(height: DymTokenSpace.s2),
+            DymButton(
+              label: l10n.disputeReply,
+              icon: Icons.chat_bubble_outline_rounded,
+              variant: DymButtonVariant.secondary,
+              onPressed: onReply,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Feuille de réponse au litige (écran 51) ; renvoie le texte saisi.
+Future<String?> showDisputeReplySheet(BuildContext context) =>
+    showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      backgroundColor: context.dym.colors.card,
+      constraints: const BoxConstraints(maxWidth: DymTokenLayout.formMax),
+      builder: (_) => const DisputeReplySheet(),
+    );
+
+/// Contenu de la feuille de réponse (écran 51).
+class DisputeReplySheet extends StatefulWidget {
+  const new({super.key});
+
+  @override
+  State<DisputeReplySheet> createState() => _DisputeReplySheetState();
+}
+
+class _DisputeReplySheetState extends State<DisputeReplySheet> {
+  final _text = TextEditingController();
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          16,
+          0,
+          16,
+          16 + MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DymTextField(
+                label: l10n.disputeReplyHint,
+                hint: l10n.disputeWriteMessage,
+                controller: _text,
+                minLines: 3,
+                maxLines: 5,
+                maxLength: 1000,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+              const SizedBox(height: DymTokenSpace.s2),
+              ListenableBuilder(
+                listenable: _text,
+                builder: (context, _) => DymButton(
+                  label: l10n.disputeSendMessage,
+                  icon: Icons.send_rounded,
+                  onPressed: _text.text.trim().isEmpty
+                      ? null
+                      : () => Navigator.pop(context, _text.text.trim()),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -19,6 +19,7 @@ class MemoryOrdersService implements OrdersService {
   final List<CustomerOrder> _orders;
   final List<AppNotification> _notifications;
   final ValueNotifier<int> _unread = ValueNotifier(0);
+  final _disputes = <String, Dispute>{};
   final _prefs = <NotificationCategory, bool>{
     NotificationCategory.orders: true,
     NotificationCategory.payments: true,
@@ -120,6 +121,73 @@ class MemoryOrdersService implements OrdersService {
   }) async {
     _prefs[category] = enabled;
     return Ok(_list());
+  }
+
+  /// Litige déjà ouvert (tests, galerie).
+  void seedDispute(Dispute d) => _disputes[d.orderId] = d;
+
+  @override
+  Future<Result<Dispute?>> dispute(String orderId) async =>
+      _fail<Dispute?>() ?? Ok(_disputes[orderId]);
+
+  @override
+  Future<Result<Dispute>> openDispute(
+    String orderId, {
+    required DisputeReason reason,
+    required String description,
+  }) async {
+    final failed = _fail<Dispute>();
+    if (failed != null) return failed;
+    if (_disputes[orderId]?.isOpen ?? false) {
+      return const Err(ValidationFailure('dispute_already_open'));
+    }
+    final now = DateTime.utc(2026, 10, 5, 11);
+    return Ok(
+      _disputes[orderId] = Dispute(
+        id: 'd-$orderId',
+        orderId: orderId,
+        reason: reason,
+        description: description,
+        status: 'open',
+        createdAt: now,
+        currencyCode: config.currency.code,
+        messages: [
+          DisputeMessage(
+            id: 'm0',
+            authorRole: 'client',
+            body: description,
+            createdAt: now,
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Future<Result<Dispute>> replyDispute(String disputeId, String body) async {
+    final d = _disputes.values.firstWhere((d) => d.id == disputeId);
+    if (!d.isOpen) return const Err(ValidationFailure('dispute_closed'));
+    return Ok(
+      _disputes[d.orderId] = Dispute(
+        id: d.id,
+        orderId: d.orderId,
+        reason: d.reason,
+        description: d.description,
+        status: d.status,
+        createdAt: d.createdAt,
+        currencyCode: d.currencyCode,
+        storeName: d.storeName,
+        messages: [
+          ...d.messages,
+          DisputeMessage(
+            id: 'm${d.messages.length}',
+            authorRole: 'client',
+            body: body,
+            createdAt: DateTime.utc(2026, 10, 5, 11, 5),
+          ),
+        ],
+      ),
+    );
   }
 
   List<NotificationPreference> _list() => [

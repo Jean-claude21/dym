@@ -1787,4 +1787,115 @@ class DymLocalizationsFr extends DymLocalizations {
   String vendorOrderRefusedReason(String reason) {
     return 'Refusée : $reason';
   }
+
+  @override
+  String get disputeReport => 'Signaler un problème';
+
+  @override
+  String get disputeWhatHappened => 'Que s\'est-il passé ?';
+
+  @override
+  String get disputeTellUs => 'Raconte-nous';
+
+  @override
+  String get disputeDescriptionInvalid =>
+      'Décris le problème (3 à 500 caractères)';
+
+  @override
+  String get disputeWhoAnswers =>
+      'La boutique et l\'équipe DYM vont te répondre.';
+
+  @override
+  String get disputeSend => 'Envoyer le signalement';
+
+  @override
+  String get disputeReasonMissingItem => 'Il manque un article';
+
+  @override
+  String get disputeReasonWrongItem => 'Mauvais article';
+
+  @override
+  String get disputeReasonDamaged => 'Article abîmé';
+
+  @override
+  String get disputeReasonQuality => 'Qualité décevante';
+
+  @override
+  String get disputeReasonNotDelivered => 'Commande jamais reçue';
+
+  @override
+  String get disputeReasonOther => 'Autre';
+
+  @override
+  String get disputeMine => 'Mon signalement';
+
+  @override
+  String get disputeOpenStatus => 'En cours de traitement';
+
+  @override
+  String get disputeResolvedStatus => 'Traité';
+
+  @override
+  String get disputeYou => 'Toi';
+
+  @override
+  String get disputeTeam => 'Équipe DYM';
+
+  @override
+  String get disputeCustomer => 'Cliente';
+
+  @override
+  String get disputeWriteMessage => 'Écris un message…';
+
+  @override
+  String get disputeSendMessage => 'Envoyer';
+
+  @override
+  String disputeRefunded(String amount) {
+    return 'Remboursement de $amount décidé.';
+  }
+
+  @override
+  String get disputeNoAction => 'Signalement clos sans remboursement.';
+
+  @override
+  String get disputeAlreadyOpen =>
+      'Un signalement est déjà en cours pour cette commande.';
+
+  @override
+  String get disputeNotAllowed => 'Cette commande ne peut plus être signalée.';
+
+  @override
+  String disputeVendorBanner(String reason) {
+    return 'Problème signalé : $reason';
+  }
+
+  @override
+  String get disputeReply => 'Répondre';
+
+  @override
+  String get disputeReplyHint => 'Ta réponse à la cliente';
+
+  @override
+  String get disputeSeeThread => 'Voir le signalement';
+
+  @override
+  String disputeMessageLine(String author, String body) {
+    return '$author : $body';
+  }
+
+  @override
+  String get notifDisputeRepliedTitle => 'Réponse à ton signalement';
+
+  @override
+  String notifDisputeRepliedBody(String author) {
+    return '$author t\'a répondu.';
+  }
+
+  @override
+  String get notifDisputeResolvedTitle => 'Signalement traité';
+
+  @override
+  String get notifDisputeResolvedBody =>
+      'L\'équipe DYM a traité ton signalement.';
 }

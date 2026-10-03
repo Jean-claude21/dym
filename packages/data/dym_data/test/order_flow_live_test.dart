@@ -469,7 +469,8 @@ void main() {
   );
 
   test(
-    'cycle de vie : livrée et encaissée, refusée, annulée, notifications',
+    'cycle de vie : livrée et encaissée, litige, refusée, annulée, '
+    'notifications',
     () async {
       final vendor = await signUp('vl');
       final client = await signUp('cl3');
@@ -602,6 +603,46 @@ void main() {
       expect(tracked.status, OrderStatus.delivered);
       expect(tracked.canCancel, isFalse);
 
+      // 1 bis. Litige (spec 012) : la cliente signale, la vendeuse répond.
+      final disputes = DisputeRepository(
+        data: client.data,
+        functions: client.functions,
+      );
+      final vendorDisputes = DisputeRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+      );
+      expect(await ok(disputes.forOrder(first), 'aucun litige'), isNull);
+      final opened = await ok(
+        disputes.open(
+          first,
+          reason: DisputeReason.missingItem,
+          description: 'Article manquant (test)',
+        ),
+        'signalement',
+      );
+      expect(opened.isOpen, isTrue);
+      expect(opened.messages.single.authorRole, 'client');
+      final twice = await disputes.open(
+        first,
+        reason: DisputeReason.other,
+        description: 'Encore',
+      );
+      expect(twice.failureOrNull?.message, 'dispute_already_open');
+      final vendorView = await ok(
+        vendorDisputes.forOrder(first),
+        'litige vendeuse',
+      );
+      expect(vendorView?.id, opened.id);
+      expect(vendorView?.internalNote, isNull);
+      final replied = await ok(
+        vendorDisputes.reply(opened.id, 'Je rembourse (test)'),
+        'réponse vendeuse',
+      );
+      expect(replied.messages.last.authorRole, 'vendor');
+      final thread = await ok(disputes.forOrder(first), 'fil cliente');
+      expect(thread?.messages, hasLength(2));
+
       // 2. Refus avec raison.
       final second = await order();
       seen = await ok(
@@ -614,6 +655,12 @@ void main() {
         'refus',
       );
       expect(seen.statusReason, RefusalReason.tooBusy);
+      final notAllowed = await disputes.open(
+        second,
+        reason: DisputeReason.other,
+        description: 'Refusée',
+      );
+      expect(notAllowed.failureOrNull?.message, 'dispute_not_allowed');
 
       // 3. Annulation par la cliente avant la préparation.
       final third = await order();
@@ -643,6 +690,7 @@ void main() {
           'order_out_for_delivery',
           'order_delivered',
           'order_refused',
+          'dispute_replied',
         ]),
       );
       expect(await ok(clientNotifications.markRead(), 'tout lire'), 0);
@@ -652,7 +700,7 @@ void main() {
       );
       expect(
         vendorList.map((n) => n.kind),
-        contains('order_cancelled_by_client'),
+        containsAll(<String>['order_cancelled_by_client', 'dispute_opened']),
       );
       final mine = await ok(tracking.orders(), 'mes commandes');
       expect(mine.map((o) => o.status).toSet(), {
