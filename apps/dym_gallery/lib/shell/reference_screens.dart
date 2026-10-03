@@ -4,6 +4,7 @@ import 'package:dym_client/features/cart/addresses/address_form_view.dart';
 import 'package:dym_client/features/cart/addresses/addresses_view.dart';
 import 'package:dym_client/features/cart/cart/cart_view.dart';
 import 'package:dym_client/features/cart/delivery/delivery_view.dart';
+import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
@@ -20,6 +21,7 @@ import 'package:dym_gallery/demo/demo_discovery.dart';
 import 'package:dym_gallery/demo/demo_store.dart';
 import 'package:dym_gallery/demo/demo_vendor_catalog.dart';
 import 'package:dym_gallery/demo/demo_vendor_navigator.dart';
+import 'package:dym_gallery/demo/demo_vendor_orders.dart';
 import 'package:dym_gallery/screens/s01_splash.dart';
 import 'package:dym_gallery/screens/s02_home.dart';
 import 'package:dym_gallery/screens/s03_aisle.dart';
@@ -31,6 +33,7 @@ import 'package:dym_gallery/screens/s08_seller_new_order.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/ui/views/home/home_view.dart';
@@ -421,6 +424,48 @@ final referenceScreens = <ReferenceScreen>[
       onDelivery: () {},
       onOrdered: (_) {},
       onBrowse: () {},
+    ),
+  ),
+  for (final (id, title, file, failed) in const [
+    ('39', 'Paiement en cours', '39-paiement-en-cours.webp', false),
+    ('40', 'Paiement échoué', '40-paiement-echoue.webp', true),
+  ])
+    ReferenceScreen(
+      id: id,
+      title: title,
+      surface: 'Cliente',
+      referenceFile: file,
+      builder: (c) => FutureBuilder(
+        future: DemoCheckout.online(c, failed: failed),
+        builder: (context, snapshot) => snapshot.data == null
+            ? const SizedBox.shrink()
+            : PaymentView(
+                service: snapshot.data!.$1,
+                purchase: snapshot.data!.$2,
+                onSettled: (_) {},
+                onBack: () {},
+                openAtStart: false,
+              ),
+      ),
+    ),
+  ReferenceScreen(
+    id: '41',
+    title: 'Commandes (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '41-vendeuse-commandes.webp',
+    builder: (c) => Scaffold(
+      body: OrdersView(service: DemoVendorOrders.service(c), onOpen: (_) {}),
+    ),
+  ),
+  ReferenceScreen(
+    id: '42',
+    title: 'Détail du paiement (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '42-vendeuse-detail-paiement.webp',
+    builder: (c) => OrderDetailView(
+      service: DemoVendorOrders.service(c),
+      orderId: 'o1',
+      onBack: () {},
     ),
   ),
 ];
