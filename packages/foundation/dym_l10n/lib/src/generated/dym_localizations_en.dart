@@ -1338,4 +1338,116 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get cartAddShort => 'Add';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get paymentWaitingTitle => 'Waiting for payment';
+
+  @override
+  String get paymentWaitingBody =>
+      'Confirm the payment on the page that just opened, then come back here.';
+
+  @override
+  String get paymentAmount => 'Amount';
+
+  @override
+  String get paymentReference => 'Reference';
+
+  @override
+  String get paymentChecking => 'Checking automatically…';
+
+  @override
+  String get paymentOpenPage => 'Open the payment page';
+
+  @override
+  String get paymentPayOnDeliveryInstead => 'Pay on delivery instead';
+
+  @override
+  String get paymentFailedTitle => 'The payment didn\'t go through';
+
+  @override
+  String get paymentFailedBody =>
+      'Nothing was charged. Your order is kept: try again or pay on delivery.';
+
+  @override
+  String get paymentRetry => 'Try the payment again';
+
+  @override
+  String get paymentPayOnDelivery => 'Pay on delivery';
+
+  @override
+  String get paymentConfirmed => 'Payment confirmed';
+
+  @override
+  String get paymentCashOnDelivery => 'Cash on delivery';
+
+  @override
+  String get paymentCashNotAccepted =>
+      'A shop doesn\'t accept payment on delivery.';
+
+  @override
+  String get paymentOpenFailed => 'Couldn\'t open the payment page.';
+
+  @override
+  String get ordersEmptyTitle => 'No orders yet';
+
+  @override
+  String get ordersEmptyMessage => 'Paid and cash orders show up here.';
+
+  @override
+  String vendorOrderOf(String name) {
+    return 'Order from $name';
+  }
+
+  @override
+  String vendorOrderReceivedAt(String time) {
+    return 'Received at $time';
+  }
+
+  @override
+  String get vendorPaidTitle => 'Payment confirmed';
+
+  @override
+  String get vendorPaidBody => 'You can prepare the order.';
+
+  @override
+  String get vendorCashTitle => 'Cash on delivery';
+
+  @override
+  String vendorCashBody(String amount) {
+    return 'Collect $amount when handing over the order.';
+  }
+
+  @override
+  String get vendorItems => 'Items';
+
+  @override
+  String get vendorPayment => 'Payment';
+
+  @override
+  String get vendorPaymentMethod => 'Method';
+
+  @override
+  String get vendorPaymentDate => 'Date';
+
+  @override
+  String get vendorDelivery => 'Delivery';
+
+  @override
+  String get vendorPickup => 'Pickup in store';
+
+  @override
+  String vendorLandmark(String landmark) {
+    return 'Landmark: $landmark';
+  }
+
+  @override
+  String get vendorCall => 'Call';
+
+  @override
+  String vendorQuantity(int count) {
+    return '× $count';
+  }
 }

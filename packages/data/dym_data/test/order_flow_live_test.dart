@@ -85,7 +85,7 @@ void main() {
     required String zoneId,
     required List<String> zones,
     required String categoryId,
-    required String cashId,
+    required List<String> methodIds,
     required int price,
     bool pickup = false,
   }) async {
@@ -125,12 +125,7 @@ void main() {
           ],
         },
       ),
-      (
-        'set_store_payment_methods',
-        {
-          'p_method_ids': [cashId],
-        },
-      ),
+      ('set_store_payment_methods', {'p_method_ids': methodIds}),
       ('publish_store', <String, Object?>{}),
     ]) {
       await ok(data.rpc<Object?>(fn, params: params), fn);
@@ -203,7 +198,7 @@ void main() {
         zoneId: zones[0],
         zones: zones,
         categoryId: category,
-        cashId: cashId,
+        methodIds: [cashId],
         price: 900,
       );
       final (storeB, variantB) = await openStore(
@@ -213,7 +208,7 @@ void main() {
         zoneId: zones[1],
         zones: zones,
         categoryId: category,
-        cashId: cashId,
+        methodIds: [cashId],
         price: 400,
         pickup: true,
       );
@@ -328,6 +323,160 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 3)),
   );
+
+  test(
+    'paiement simulé : réussite, puis échec et paiement à la livraison',
+    () async {
+      final vendor = await signUp('vp');
+      final client = await signUp('cp');
+
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final methods = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id, provider_code')
+              .eq('country_code', country.code),
+        ),
+        'moyens',
+      );
+      String? methodOf(String provider) => (methods as List)
+          .map((m) => m as Map)
+          .where((m) => m['provider_code'] == provider)
+          .map((m) => m['id'] as String)
+          .firstOrNull;
+      final cashId = methodOf('cash')!;
+      final simId = methodOf('simulator');
+      if (simId == null) {
+        markTestSkipped('simulateur non activé pour ${country.code}');
+        return;
+      }
+
+      final (_, variant) = await openStore(
+        vendor,
+        name: 'E2E P $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [cashId, simId],
+        price: 1500,
+      );
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Payeuse',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      await ok(
+        AddressRepository(client.data).save(
+          AddressInput(
+            id: Uuid.v4(),
+            kind: AddressKind.home,
+            zoneId: zones[0],
+            landmark: 'Repère de test',
+            phone: '+000 0000 0000',
+          ),
+        ),
+        'adresse',
+      );
+      final cart = CartRepository(client.data);
+      final orders = OrderRepository(
+        functions: client.functions,
+        data: client.data,
+      );
+      final vendorOrders = VendorOrderRepository(vendor.data);
+
+      Future<Purchase> order() async {
+        await ok(cart.add(variant), 'ajout');
+        final quote = await ok(cart.cart(paymentMethodId: simId), 'devis');
+        expect(quote.paymentMethods.map((m) => m.id), contains(simId));
+        return await ok(
+          orders.place(
+            OrderRequest(
+              addressId: quote.addressId,
+              modes: quote.modes,
+              paymentMethodId: simId,
+              expectedTotalMinor: quote.totalMinor,
+            ),
+            idempotencyKey: Uuid.v4(),
+          ),
+          'commande',
+        );
+      }
+
+      Future<Purchase> waitFor(String id, PaymentStatus status) async {
+        for (var i = 0; i < 20; i++) {
+          final p = await ok(orders.purchase(id), 'relecture');
+          if (p.paymentStatus == status) return p;
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+        }
+        fail('état $status non atteint');
+      }
+
+      // 1. Réussite : page du simulateur, confirmation signée, vendeuse.
+      final first = await order();
+      expect(first.awaitingPayment, isTrue);
+      final page = first.payment!.checkoutUrl!;
+      expect(page, contains('/v1/payments/simulator/'));
+      expect(
+        await ok(vendorOrders.orders(), 'liste avant'),
+        isEmpty,
+        reason: 'commande non payée invisible',
+      );
+      expect(await _postForm('$page/succeeded'), 200);
+      final paid = await waitFor(first.id, PaymentStatus.paid);
+      expect(paid.payment?.status, PaymentAttemptStatus.succeeded);
+      final seen = await ok(vendorOrders.orders(), 'liste après');
+      expect(seen.single.isPaid, isTrue);
+      final detail = await ok(vendorOrders.order(seen.single.id), 'détail');
+      expect(detail.payment?.reference, first.payment!.reference);
+      expect(detail.delivery?.landmark, 'Repère de test');
+
+      // 2. Échec, réessai, échec, puis paiement à la livraison.
+      final second = await order();
+      expect(await _postForm('${second.payment!.checkoutUrl}/failed'), 200);
+      await waitFor(second.id, PaymentStatus.failed);
+      final retried = await ok(
+        orders.retryPayment(second.id, idempotencyKey: Uuid.v4()),
+        'réessai',
+      );
+      expect(retried.awaitingPayment, isTrue);
+      expect(retried.payment?.checkoutUrl, isNot(second.payment!.checkoutUrl));
+      expect(await _postForm('${retried.payment!.checkoutUrl}/cancelled'), 200);
+      await waitFor(second.id, PaymentStatus.failed);
+      final cash = await ok(orders.payOnDelivery(second.id), 'cash');
+      expect(cash.paymentStatus, PaymentStatus.cashOnDelivery);
+      final both = await ok(vendorOrders.orders(), 'liste finale');
+      expect(both.map((o) => o.paymentStatus).toSet(), {
+        PaymentStatus.paid,
+        PaymentStatus.cashOnDelivery,
+      });
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 3)),
+  );
+}
+
+/// POST sans corps (page du simulateur de paiement).
+Future<int> _postForm(String url) async {
+  final client = HttpClient();
+  try {
+    final request = await client.postUrl(Uri.parse(url));
+    final response = await request.close();
+    await response.drain<void>();
+    return response.statusCode;
+  } finally {
+    client.close();
+  }
 }
 
 /// POST JSON (Neon Auth) : corps et cookie de session.

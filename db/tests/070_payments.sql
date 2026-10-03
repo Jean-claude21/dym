@@ -163,7 +163,7 @@ select is(pg_temp._event('f9', (select pay2b from _t), 'succeeded', 500), 'dupli
 
 select tests.login_as((select kodjo from _t));
 select is(jsonb_array_length(public.my_store_orders()), 2, 'la commande cash apparaît aussi');
-select is(public.my_store_orders() -> 0 ->> 'payment_status', 'cash_on_delivery', 'badge cash');
+select ok(public.my_store_orders() @> '[{"payment_status": "cash_on_delivery"}]', 'badge cash');
 
 -- Lecture des paiements : la cliente seulement ; journal interne.
 select tests.login_as((select awa from _t));

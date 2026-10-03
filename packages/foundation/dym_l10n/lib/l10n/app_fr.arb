@@ -1745,5 +1745,162 @@
   "cartAddShort": "Ajouter",
   "@cartAddShort": {
     "description": "Bouton d'ajout d'une carte produit"
+  },
+  "paymentTitle": "Paiement",
+  "@paymentTitle": {
+    "description": "Titre de l'écran de paiement"
+  },
+  "paymentWaitingTitle": "En attente du paiement",
+  "@paymentWaitingTitle": {
+    "description": "Paiement en cours"
+  },
+  "paymentWaitingBody": "Valide le paiement sur la page qui vient de s'ouvrir, puis reviens ici.",
+  "@paymentWaitingBody": {
+    "description": "Explication de l'attente"
+  },
+  "paymentAmount": "Montant",
+  "@paymentAmount": {
+    "description": "Montant du paiement"
+  },
+  "paymentReference": "Référence",
+  "@paymentReference": {
+    "description": "Référence du paiement"
+  },
+  "paymentChecking": "Vérification automatique…",
+  "@paymentChecking": {
+    "description": "Relecture du statut"
+  },
+  "paymentOpenPage": "Ouvrir la page de paiement",
+  "@paymentOpenPage": {
+    "description": "Rouvrir la page du fournisseur"
+  },
+  "paymentPayOnDeliveryInstead": "Payer à la livraison à la place",
+  "@paymentPayOnDeliveryInstead": {
+    "description": "Passer au cash pendant l'attente"
+  },
+  "paymentFailedTitle": "Le paiement n'a pas abouti",
+  "@paymentFailedTitle": {
+    "description": "Paiement échoué"
+  },
+  "paymentFailedBody": "Aucun montant n'a été débité. Ta commande est gardée : réessaie ou paie à la livraison.",
+  "@paymentFailedBody": {
+    "description": "Explication de l'échec"
+  },
+  "paymentRetry": "Réessayer le paiement",
+  "@paymentRetry": {
+    "description": "Nouvelle tentative"
+  },
+  "paymentPayOnDelivery": "Payer à la livraison",
+  "@paymentPayOnDelivery": {
+    "description": "Passer au cash après un échec"
+  },
+  "paymentConfirmed": "Paiement confirmé",
+  "@paymentConfirmed": {
+    "description": "Badge paiement confirmé"
+  },
+  "paymentCashOnDelivery": "Cash à la livraison",
+  "@paymentCashOnDelivery": {
+    "description": "Badge cash"
+  },
+  "paymentCashNotAccepted": "Une boutique n'accepte pas le paiement à la livraison.",
+  "@paymentCashNotAccepted": {
+    "description": "Refus du cash"
+  },
+  "paymentOpenFailed": "Impossible d'ouvrir la page de paiement.",
+  "@paymentOpenFailed": {
+    "description": "Page de paiement non ouverte"
+  },
+  "ordersEmptyTitle": "Aucune commande pour l'instant",
+  "@ordersEmptyTitle": {
+    "description": "Liste vendeuse vide"
+  },
+  "ordersEmptyMessage": "Les commandes payées ou en cash apparaissent ici.",
+  "@ordersEmptyMessage": {
+    "description": "Liste vendeuse vide : explication"
+  },
+  "vendorOrderOf": "Commande de {name}",
+  "@vendorOrderOf": {
+    "description": "Titre d'une commande",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorOrderReceivedAt": "Reçue à {time}",
+  "@vendorOrderReceivedAt": {
+    "description": "Heure de réception",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorPaidTitle": "Paiement confirmé",
+  "@vendorPaidTitle": {
+    "description": "Bandeau payé"
+  },
+  "vendorPaidBody": "Tu peux préparer la commande.",
+  "@vendorPaidBody": {
+    "description": "Bandeau payé : explication"
+  },
+  "vendorCashTitle": "Cash à la livraison",
+  "@vendorCashTitle": {
+    "description": "Bandeau cash"
+  },
+  "vendorCashBody": "Encaisse {amount} à la remise de la commande.",
+  "@vendorCashBody": {
+    "description": "Bandeau cash : explication",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorItems": "Articles",
+  "@vendorItems": {
+    "description": "Section articles"
+  },
+  "vendorPayment": "Paiement",
+  "@vendorPayment": {
+    "description": "Section paiement"
+  },
+  "vendorPaymentMethod": "Moyen",
+  "@vendorPaymentMethod": {
+    "description": "Moyen de paiement"
+  },
+  "vendorPaymentDate": "Date",
+  "@vendorPaymentDate": {
+    "description": "Date du paiement"
+  },
+  "vendorDelivery": "Livraison",
+  "@vendorDelivery": {
+    "description": "Section livraison"
+  },
+  "vendorPickup": "Retrait sur place",
+  "@vendorPickup": {
+    "description": "Commande en retrait"
+  },
+  "vendorLandmark": "Repère : {landmark}",
+  "@vendorLandmark": {
+    "description": "Repère de livraison",
+    "placeholders": {
+      "landmark": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorCall": "Appeler",
+  "@vendorCall": {
+    "description": "Appeler la cliente"
+  },
+  "vendorQuantity": "× {count}",
+  "@vendorQuantity": {
+    "description": "Quantité d'une ligne",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -243,6 +243,9 @@ function migrate(args) {
     console.log(`✓ ${m.name}`);
     count += 1;
   }
+  // La Data API garde un cache du schéma : nouvelles fonctions visibles tout
+  // de suite (sans effet si personne n'écoute, en local par exemple).
+  if (count > 0) psql(url, "notify pgrst, 'reload schema';");
   console.log(
     count === 0
       ? `• aucune migration à appliquer (${describe(url)})`

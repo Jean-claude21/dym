@@ -8,3 +8,4 @@ export 'src/discovery_repository.dart';
 export 'src/events_repository.dart';
 export 'src/reference_repository.dart';
 export 'src/store_repository.dart';
+export 'src/vendor_order_repository.dart';

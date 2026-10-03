@@ -1346,4 +1346,117 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get cartAddShort => 'Ajouter';
+
+  @override
+  String get paymentTitle => 'Paiement';
+
+  @override
+  String get paymentWaitingTitle => 'En attente du paiement';
+
+  @override
+  String get paymentWaitingBody =>
+      'Valide le paiement sur la page qui vient de s\'ouvrir, puis reviens ici.';
+
+  @override
+  String get paymentAmount => 'Montant';
+
+  @override
+  String get paymentReference => 'Référence';
+
+  @override
+  String get paymentChecking => 'Vérification automatique…';
+
+  @override
+  String get paymentOpenPage => 'Ouvrir la page de paiement';
+
+  @override
+  String get paymentPayOnDeliveryInstead => 'Payer à la livraison à la place';
+
+  @override
+  String get paymentFailedTitle => 'Le paiement n\'a pas abouti';
+
+  @override
+  String get paymentFailedBody =>
+      'Aucun montant n\'a été débité. Ta commande est gardée : réessaie ou paie à la livraison.';
+
+  @override
+  String get paymentRetry => 'Réessayer le paiement';
+
+  @override
+  String get paymentPayOnDelivery => 'Payer à la livraison';
+
+  @override
+  String get paymentConfirmed => 'Paiement confirmé';
+
+  @override
+  String get paymentCashOnDelivery => 'Cash à la livraison';
+
+  @override
+  String get paymentCashNotAccepted =>
+      'Une boutique n\'accepte pas le paiement à la livraison.';
+
+  @override
+  String get paymentOpenFailed => 'Impossible d\'ouvrir la page de paiement.';
+
+  @override
+  String get ordersEmptyTitle => 'Aucune commande pour l\'instant';
+
+  @override
+  String get ordersEmptyMessage =>
+      'Les commandes payées ou en cash apparaissent ici.';
+
+  @override
+  String vendorOrderOf(String name) {
+    return 'Commande de $name';
+  }
+
+  @override
+  String vendorOrderReceivedAt(String time) {
+    return 'Reçue à $time';
+  }
+
+  @override
+  String get vendorPaidTitle => 'Paiement confirmé';
+
+  @override
+  String get vendorPaidBody => 'Tu peux préparer la commande.';
+
+  @override
+  String get vendorCashTitle => 'Cash à la livraison';
+
+  @override
+  String vendorCashBody(String amount) {
+    return 'Encaisse $amount à la remise de la commande.';
+  }
+
+  @override
+  String get vendorItems => 'Articles';
+
+  @override
+  String get vendorPayment => 'Paiement';
+
+  @override
+  String get vendorPaymentMethod => 'Moyen';
+
+  @override
+  String get vendorPaymentDate => 'Date';
+
+  @override
+  String get vendorDelivery => 'Livraison';
+
+  @override
+  String get vendorPickup => 'Retrait sur place';
+
+  @override
+  String vendorLandmark(String landmark) {
+    return 'Repère : $landmark';
+  }
+
+  @override
+  String get vendorCall => 'Appeler';
+
+  @override
+  String vendorQuantity(int count) {
+    return '× $count';
+  }
 }
