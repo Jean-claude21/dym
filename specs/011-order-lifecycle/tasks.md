@@ -15,7 +15,7 @@
 
 ## Phase 3: US1 et US2 — vendeuse (P1)
 
-- [ ] T006 [US1] Routes `POST /v1/orders/:id/transitions` et `/cash-collected`, `PushSender` (FCM, ignoré) et envoi après chaque route, tests, dans `functions/src/`
+- [X] T006 [US1] Routes `POST /v1/orders/:id/transitions` et `/cash-collected`, `PushSender` (FCM, ignoré) et envoi après chaque route, tests, dans `functions/src/`
 - [ ] T007 [P] [US1] Modèles et dépôts (transitions, historique, gestes permis)
 - [ ] T008 [US1] Onglets nouvelles / en cours / terminées, alerte à l'arrivée, nouvelle commande (08), refus (45) dans `apps/dym_vendor/lib/features/orders/`
 - [ ] T009 [US2] Gestes préparation, prête, en route, livrée, encaissement dans le détail (42)

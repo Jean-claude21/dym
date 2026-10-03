@@ -4,6 +4,8 @@ import { type AuthVariables, requireUser, type TokenVerifier } from "./lib/auth.
 import { type CatalogDeps, registerCatalogRoutes } from "./catalog/routes.js";
 import { type OrderDeps, registerOrderRoutes } from "./orders/routes.js";
 import { type PaymentDeps, registerPaymentRoutes } from "./payments/routes.js";
+import { type LifecycleStore, registerLifecycleRoutes } from "./orders/lifecycle.js";
+import { dispatchPushes, type PushQueue, type PushSender } from "./notifications/push.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
 
 export interface AppDeps {
@@ -18,6 +20,10 @@ export interface AppDeps {
   orders?: OrderDeps;
   /** Paiements en ligne (spec 010) ; absent : cash seulement. */
   payments?: PaymentDeps;
+  /** Cycle de vie des commandes (spec 011). */
+  lifecycle?: LifecycleStore;
+  /** Push : file en base et fournisseur (spec 011). */
+  push?: { queue: PushQueue; sender: PushSender };
 }
 
 /** App HTTP des Functions DYM. Les dépendances sont injectées (tests). */
@@ -32,6 +38,17 @@ export function createApp(deps: AppDeps) {
       allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     }),
   );
+
+  // Après tout geste réussi qui peut créer des notifications : envoi des push
+  // en attente (un échec d'envoi ne fait jamais échouer le geste).
+  app.use("/v1/*", async (c, next) => {
+    await next();
+    if (deps.push && c.req.method === "POST" && c.res.status < 400) {
+      await dispatchPushes(deps.push.queue, deps.push.sender).catch((error) =>
+        console.error("[push] file en échec", error),
+      );
+    }
+  });
 
   app.onError((error, c) => {
     const http = toHttpError(error);
@@ -56,6 +73,7 @@ export function createApp(deps: AppDeps) {
   registerCatalogRoutes(app, deps.verifyToken, deps.catalog);
   registerOrderRoutes(app, deps.verifyToken, deps.orders, deps.payments);
   registerPaymentRoutes(app, deps.verifyToken, deps.payments);
+  registerLifecycleRoutes(app, deps.verifyToken, deps.lifecycle);
 
   return app;
 }

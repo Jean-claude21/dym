@@ -565,6 +565,66 @@ $$;
 
 -- ------------------------------------------------------------------ file de push (Function)
 
+-- Textes des push (données de référence, par type et par langue) ; les
+-- variables {nom} viennent des paramètres de la notification.
+create table public.notification_templates (
+  kind text not null check (kind ~ '^[a-z]+(_[a-z]+)*$'),
+  locale text not null check (locale ~ '^[a-z]{2}$'),
+  title text not null check (length(title) between 1 and 80),
+  body text not null check (length(body) between 1 and 200),
+  primary key (kind, locale)
+);
+
+alter table public.notification_templates enable row level security;
+-- Lus par la Function seulement (aucun droit pour les rôles de l'API).
+
+insert into public.notification_templates (kind, locale, title, body) values
+  ('new_order', 'fr', 'Nouvelle commande !', '{customer_first_name} a commandé. Réponds vite.'),
+  ('new_order', 'en', 'New order!', '{customer_first_name} placed an order. Reply quickly.'),
+  ('order_cancelled_by_client', 'fr', 'Commande annulée', 'La cliente a annulé sa commande.'),
+  ('order_cancelled_by_client', 'en', 'Order cancelled', 'The customer cancelled the order.'),
+  ('order_accepted', 'fr', 'Commande acceptée', '{store_name} a accepté ta commande.'),
+  ('order_accepted', 'en', 'Order accepted', '{store_name} accepted your order.'),
+  ('order_refused', 'fr', 'Commande refusée', '{store_name} ne peut pas honorer ta commande.'),
+  ('order_refused', 'en', 'Order declined', '{store_name} can''t fulfil your order.'),
+  ('order_preparing', 'fr', 'En préparation', '{store_name} prépare ta commande.'),
+  ('order_preparing', 'en', 'Being prepared', '{store_name} is preparing your order.'),
+  ('order_ready', 'fr', 'Commande prête', 'Ta commande chez {store_name} est prête.'),
+  ('order_ready', 'en', 'Order ready', 'Your order at {store_name} is ready.'),
+  ('order_out_for_delivery', 'fr', 'En route', 'Ta commande arrive bientôt.'),
+  ('order_out_for_delivery', 'en', 'On the way', 'Your order is on its way.'),
+  ('order_delivered', 'fr', 'Livrée', 'Bon appétit ! Dis-nous si tout va bien.'),
+  ('order_delivered', 'en', 'Delivered', 'Enjoy! Tell us if everything is fine.'),
+  ('payment_succeeded', 'fr', 'Paiement confirmé', 'Ta commande est payée.'),
+  ('payment_succeeded', 'en', 'Payment confirmed', 'Your order is paid.'),
+  ('payment_failed', 'fr', 'Paiement échoué', 'Ton paiement n''a pas abouti : réessaie ou paie à la livraison.'),
+  ('payment_failed', 'en', 'Payment failed', 'Your payment didn''t go through: try again or pay on delivery.');
+
+-- Texte d'une notification dans une langue (sinon en français).
+create or replace function app.render_notification(p_kind text, p_locale text, p_params jsonb)
+returns jsonb
+language plpgsql stable security definer set search_path = ''
+as $$
+declare
+  v_title text;
+  v_body text;
+  v record;
+begin
+  select title, body into v_title, v_body from public.notification_templates
+  where kind = p_kind and locale in (p_locale, 'fr')
+  order by (locale = p_locale) desc
+  limit 1;
+  if v_title is null then
+    return null;
+  end if;
+  for v in select key, value from jsonb_each_text(coalesce(p_params, '{}'::jsonb)) loop
+    v_title := replace(v_title, '{' || v.key || '}', coalesce(v.value, ''));
+    v_body := replace(v_body, '{' || v.key || '}', coalesce(v.value, ''));
+  end loop;
+  return jsonb_build_object('title', v_title, 'body', v_body);
+end
+$$;
+
 -- Réserve les notifications à envoyer (jamais deux fois), avec les jetons de
 -- l'app destinataire et l'autorisation de la catégorie.
 create or replace function app.claim_pushes(p_limit int default 50) returns jsonb
@@ -588,6 +648,8 @@ begin
     'purchase_id', c.purchase_id, 'params', c.params,
     'locale', coalesce((select locale from public.profiles where user_id = c.user_id), 'fr'),
     'allowed', app.push_allowed(c.user_id, c.category),
+    'text', app.render_notification(c.kind,
+      coalesce((select locale from public.profiles where user_id = c.user_id), 'fr'), c.params),
     'tokens', coalesce((select jsonb_agg(t.token) from public.push_tokens t
                         where t.user_id = c.user_id and t.app = app.notification_app(c.kind)), '[]'::jsonb))),
     '[]'::jsonb)

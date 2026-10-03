@@ -1,7 +1,7 @@
 -- Notifications (spec 011) : nouvelle commande pour la vendeuse, étapes et
 -- paiement pour la cliente, centre, préférences, file de push sans doublon.
 
-select plan(22);
+select plan(24);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -103,5 +103,9 @@ select is((select jsonb_agg(distinct r -> 'allowed') from _c, jsonb_array_elemen
 select is((select r -> 'tokens' from _c, jsonb_array_elements(rows) r where r ->> 'kind' = 'new_order' limit 1),
   '["jeton-de-test-kodjo-001"]', 'nouvelle commande : jeton de l''app vendeuse');
 select is(jsonb_array_length(app.claim_pushes(100)), 0, 'jamais réservées deux fois');
+select is((select r -> 'text' ->> 'title' from _c, jsonb_array_elements(rows) r where r ->> 'kind' = 'order_preparing'),
+  'En préparation', 'texte du push : modèle de la langue');
+select is((select r -> 'text' ->> 'body' from _c, jsonb_array_elements(rows) r where r ->> 'kind' = 'order_preparing'),
+  'Étal de Kodjo prépare ta commande.', 'variables remplacées');
 
 select * from finish();

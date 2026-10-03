@@ -12,6 +12,8 @@ import {
 import { neonAuthVerifier } from "./lib/auth.js";
 import { createPool } from "./lib/db.js";
 import { pgOrderStore } from "./orders/adapters.js";
+import { pgLifecycleStore } from "./orders/lifecycle.js";
+import { fcmPushSender, noPushSender, pgPushQueue } from "./notifications/push.js";
 import { pgPaymentStore } from "./payments/adapters.js";
 import { availableProviders } from "./payments/simulator.js";
 
@@ -43,6 +45,12 @@ export default createApp({
     suggester: openAiKey ? aiProductSuggester(openAiProviders(openAiKey)) : undefined,
   },
   orders: { store: pgOrderStore(pool) },
+  lifecycle: pgLifecycleStore(pool),
+  // Push : FCM dès que le compte de service est fourni ; sinon ignorés.
+  push: {
+    queue: pgPushQueue(pool),
+    sender: process.env.FCM_SERVICE_ACCOUNT ? fcmPushSender(process.env.FCM_SERVICE_ACCOUNT) : noPushSender,
+  },
   payments: {
     store: pgPaymentStore(pool),
     // Simulateur : secret présent et branche hors production (spec 010).
