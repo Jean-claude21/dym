@@ -18,6 +18,8 @@ import 'package:dym_client/features/cart/delivery/delivery_view.dart';
 import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
+import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
+import 'package:dym_client/features/discovery/copilot/copilot_view.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
@@ -356,6 +358,23 @@ final referenceScreens = <ReferenceScreen>[
       onBack: () {},
       onOpenProduct: (_) {},
       onOpenStore: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '73',
+    title: 'Copilote d’intention',
+    surface: 'Cliente',
+    referenceFile: '73-copilote-intention.webp',
+    builder: (c) => CopilotView(
+      service: MemoryCopilotService(
+        discovery: DemoDiscovery.service(c),
+        proposal: _copilotProposal(c),
+      ),
+      ai: MemorySearchAiService(),
+      initialText: 'Une sauce gombo pour 4 personnes ce soir',
+      onBack: () {},
+      onSearchMyself: (_) {},
+      onAdded: () {},
     ),
   ),
   ReferenceScreen(
@@ -915,3 +934,55 @@ admin.MemoryAdminService _admin(DemoCountry c) =>
     admin.MemoryAdminService(currency: c.currency);
 
 DateTime _adminNow() => DateTime.utc(2026, 10, 5, 11);
+
+/// Panier proposé de démonstration (écran 73), aux prix du pays.
+CopilotProposal _copilotProposal(DemoCountry c) {
+  CopilotLine line(
+    String store,
+    String id,
+    String name,
+    int qty,
+    int xof, [
+    String unitLabel = 'tas',
+  ]) {
+    final unit = c.price(xof).amountMinor;
+    return CopilotLine(
+      variantId: '$id-v',
+      productId: id,
+      name: name,
+      quantity: qty,
+      unitLabel: unitLabel,
+      unitPriceMinor: unit,
+      lineMinor: qty * unit,
+      photoKey: 'stores/$store/products/$id.jpg',
+    );
+  }
+
+  final stores = [
+    CopilotStoreLines(
+      id: 'akossiwa',
+      name: "Étal d'Akossiwa",
+      lines: [
+        line('akossiwa', 'gombo', 'Gombo frais', 2, 300),
+        line('akossiwa', 'tomates', 'Tomates fraîches', 1, 500),
+        line('akossiwa', 'piment', 'Piment frais', 1, 400),
+      ],
+    ),
+    CopilotStoreLines(
+      id: 'afi',
+      name: 'Chez Afi',
+      lines: [
+        line('afi', 'huile-rouge', 'Huile rouge', 1, 1200, 'bouteille'),
+        line('afi', 'poisson-fume', 'Poisson fumé', 1, 1500, 'pièce'),
+      ],
+    ),
+  ];
+  return CopilotProposal(
+    currencyCode: c.currency.code,
+    totalMinor: stores
+        .expand((s) => s.lines)
+        .fold(0, (sum, l) => sum + l.lineMinor),
+    stores: stores,
+    missing: const ['Crevettes séchées'],
+  );
+}

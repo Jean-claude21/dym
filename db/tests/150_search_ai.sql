@@ -62,6 +62,8 @@ select is(public.search_suggestions('%', (select be from _t)), '[]'::jsonb, 'jok
 select ok(jsonb_array_length(public.search_suggestions('t', null)) <= 8, '8 suggestions au plus');
 
 -- Contexte IA : flag coupé par défaut, puis ouvert pour le pays.
+-- Base partagée (staging) : seuls les flags globaux comptent ici.
+delete from public.feature_flags where key = 'ai_search' and country_code is not null;
 select throws_ok($$select app.search_ai_context((select awa from _t), 'search_transcription')$$,
   'P0001', 'feature_disabled', 'flag coupé : refusé');
 update public.feature_flags set is_enabled = true where key = 'ai_search' and country_code is null;

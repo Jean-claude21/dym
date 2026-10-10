@@ -4314,5 +4314,80 @@
   "photoSearchAction": "Chercher en photo",
   "@photoSearchAction": {
     "description": "Bouton appareil photo"
+  },
+  "copilotTitle": "Dis-moi ce que tu veux cuisiner",
+  "@copilotTitle": {
+    "description": "Titre du copilote (73)"
+  },
+  "copilotEntry": "Dis-moi ce que tu veux cuisiner, je compose ton panier.",
+  "@copilotEntry": {
+    "description": "Point d'entrée du copilote (accueil)"
+  },
+  "copilotExample": "Par exemple : « Une sauce gombo pour 4 personnes ce soir »",
+  "@copilotExample": {
+    "description": "Exemple d'intention"
+  },
+  "copilotHint": "Écris ou parle…",
+  "@copilotHint": {
+    "description": "Champ de l'intention"
+  },
+  "copilotSend": "Envoyer",
+  "@copilotSend": {
+    "description": "Envoyer l'intention"
+  },
+  "copilotThinking": "Je compose ton panier…",
+  "@copilotThinking": {
+    "description": "Proposition en cours"
+  },
+  "copilotProposal": "Je te propose ce panier",
+  "@copilotProposal": {
+    "description": "Titre de la proposition"
+  },
+  "copilotMissing": "Je n'ai pas trouvé : {items}",
+  "@copilotMissing": {
+    "description": "Besoins sans produit",
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "copilotNothing": "Je n'ai rien trouvé pour ça.",
+  "@copilotNothing": {
+    "description": "Aucun produit trouvé"
+  },
+  "copilotUnavailable": "Le copilote ne répond pas pour l'instant. Cherche toi-même, c'est rapide.",
+  "@copilotUnavailable": {
+    "description": "IA indisponible"
+  },
+  "copilotPlusDelivery": "+ livraison",
+  "@copilotPlusDelivery": {
+    "description": "Total hors livraison"
+  },
+  "copilotAddAll": "Tout ajouter au panier",
+  "@copilotAddAll": {
+    "description": "Ajouter la proposition"
+  },
+  "copilotSearchMyself": "Chercher moi-même",
+  "@copilotSearchMyself": {
+    "description": "Retour à la recherche classique"
+  },
+  "copilotRemove": "Retirer {name}",
+  "@copilotRemove": {
+    "description": "Retirer une ligne",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "copilotRefused": "Plus disponible, pas ajouté : {items}",
+  "@copilotRefused": {
+    "description": "Lignes refusées par le panier",
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
   }
 }

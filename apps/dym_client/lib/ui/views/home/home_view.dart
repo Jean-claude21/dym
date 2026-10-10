@@ -85,6 +85,7 @@ class _HomeViewState extends State<HomeView> {
           child: DiscoveryHomeView(
             service: _discovery,
             onSearch: _navigator.toSearch,
+            onCopilot: _navigator.toCopilot,
             onOpenStore: _navigator.toStore,
             onOpenAisle: _navigator.toAisle,
           ),
