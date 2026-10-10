@@ -1,8 +1,11 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dym_client/features/discovery/discovery_service.dart';
+import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:stacked/stacked.dart';
 
 /// Base : chargement, échec, hors ligne.
@@ -346,10 +349,28 @@ class SearchViewModel extends BaseViewModel {
   new({
     required this._service,
     this.debounce = const Duration(milliseconds: 350),
+    this.ai,
   });
 
   final DiscoveryService _service;
   final Duration debounce;
+
+  /// Recherche augmentée (spec 018) ; absente : recherche texte seule.
+  final SearchAiService? ai;
+
+  /// Voix et photo proposées (flag `ai_search` du pays).
+  bool aiEnabled = false;
+  List<SearchHistoryEntry> history = const [];
+  List<SearchSuggestion> suggestions = const [];
+
+  /// Recherche lancée depuis une photo : vignette et texte reconnu (72).
+  ({Uint8List bytes, String query})? photo;
+  bool analyzingPhoto = false;
+
+  /// Échec de la photo ou rien de reconnu (`Ok(null)`).
+  Result<void>? photoOutcome;
+  Timer? _suggestTimer;
+  int _suggestGeneration = 0;
 
   static const minLength = 2;
   static const pageSize = 20;
@@ -376,12 +397,107 @@ class SearchViewModel extends BaseViewModel {
 
   int get activeFilters => _query(0).activeFilters;
 
-  Future<void> init({String initialText = ''}) async {
+  Future<void> init({String initialText = '', PhotoSource? photo}) async {
     final config = await _service.countryConfig();
     if (config case Ok(:final value)) _config = value;
     text = initialText;
+    final ai = this.ai;
+    if (ai != null) {
+      aiEnabled = await ai.aiEnabled();
+      if (await ai.history() case Ok(:final value)) history = value;
+    }
     notifyListeners();
+    if (photo != null) return await searchPhoto(photo);
     if (!tooShort) await submit();
+  }
+
+  /// Recherche validée (touche Rechercher, voix, photo, historique,
+  /// suggestion) : retenue dans l'historique.
+  Future<void> searchFor(String value, SearchSource source) async {
+    text = value.trim();
+    suggestions = const [];
+    if (source != SearchSource.photo) photo = null;
+    photoOutcome = null;
+    notifyListeners();
+    await submit();
+    await _remember(source);
+  }
+
+  /// Touche « Rechercher » du clavier.
+  Future<void> submitTyped() => searchFor(text, SearchSource.text);
+
+  /// Produit ouvert depuis les résultats : la recherche est retenue.
+  Future<void> openedResult() => _remember(SearchSource.text);
+
+  Future<void> _remember(SearchSource source) async {
+    final ai = this.ai;
+    if (ai == null || tooShort) return;
+    await ai.remember(text.trim(), source);
+    if (await ai.history() case Ok(:final value)) history = value;
+    notifyListeners();
+  }
+
+  Future<void> forgetHistory() async {
+    if (await ai?.forget() case Ok()) history = const [];
+    notifyListeners();
+  }
+
+  /// Photo prise ou choisie, décrite par l'IA, puis cherchée.
+  Future<void> searchPhoto(PhotoSource source) async {
+    final ai = this.ai;
+    if (ai == null) return;
+    final picked = await ai.pickPhoto(source);
+    switch (picked) {
+      case Err(:final failure):
+        photoOutcome = Err(failure);
+        notifyListeners();
+        return;
+      case Ok(value: null):
+        return;
+      case Ok(value: final p?):
+        analyzingPhoto = true;
+        photoOutcome = null;
+        notifyListeners();
+        final described = await ai.describePhoto(p);
+        analyzingPhoto = false;
+        switch (described) {
+          case Err(:final failure):
+            photoOutcome = Err(failure);
+            notifyListeners();
+          case Ok(value: null):
+            photoOutcome = const Ok(null);
+            notifyListeners();
+          case Ok(value: final query?):
+            photo = (bytes: p.bytes, query: query);
+            await searchFor(query, SearchSource.photo);
+        }
+    }
+  }
+
+  /// « Modifier » : le texte reconnu redevient une recherche ordinaire.
+  void editPhotoQuery() {
+    photo = null;
+    notifyListeners();
+  }
+
+  void _suggest() {
+    _suggestTimer?.cancel();
+    final ai = this.ai;
+    final prefix = text.trim();
+    if (ai == null || prefix.isEmpty) {
+      suggestions = const [];
+      return;
+    }
+    _suggestTimer = Timer(debounce ~/ 2, () async {
+      final generation = ++_suggestGeneration;
+      final result = await ai.suggestions(prefix);
+      if (generation != _suggestGeneration || text.trim() != prefix) return;
+      suggestions = [
+        for (final s in result.valueOrNull ?? const <SearchSuggestion>[])
+          if (s.label.resolve('fr').toLowerCase() != prefix.toLowerCase()) s,
+      ];
+      notifyListeners();
+    });
   }
 
   SearchQuery _query(int offset) => SearchQuery(
@@ -398,6 +514,8 @@ class SearchViewModel extends BaseViewModel {
   /// Saisie : recherche après une courte pause (pas de requête par lettre).
   void setText(String value) {
     text = value;
+    photo = null;
+    _suggest();
     _timer?.cancel();
     if (tooShort) {
       _results = null;
@@ -462,6 +580,7 @@ class SearchViewModel extends BaseViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    _suggestTimer?.cancel();
     super.dispose();
   }
 }

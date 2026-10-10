@@ -82,7 +82,8 @@ select is((select is_enabled from public.feature_flags where key = 'ai_search' a
   true, 'surcharge du pays créée');
 select throws_ok($$select public.admin_set_feature_flag('inconnu', null, true)$$, 'P0002', null, 'flag inconnu');
 select tests.logout();
-select is((select count(*)::int from public.audit_log where action = 'feature_flag_set'), 1, 'flag audité');
+select is((select count(*)::int from public.audit_log where action = 'feature_flag_set'
+  and occurred_at >= now()), 1, 'flag audité');
 
 -- Support : réponse de l'équipe, délai de première réponse, clôture.
 select tests.login_as((select awa from _t));
@@ -102,7 +103,8 @@ select is(public.admin_close_ticket((select t1 from _t)) ->> 'status', 'closed',
 -- Profil d'une cliente : lecture auditée.
 select is((public.admin_client((select awa from _t)) ->> 'order_count')::int, 1, 'commandes de la cliente');
 select tests.logout();
-select is((select count(*)::int from public.audit_log where action = 'client_viewed'), 1, 'consultation auditée');
+select is((select count(*)::int from public.audit_log where action = 'client_viewed'
+  and entity_id = (select awa from _t)::text), 1, 'consultation auditée');
 select tests.login_as((select admin from _t));
 
 -- Vendeuses : vue auditée ; suppression refusée avec des commandes, permise sinon.

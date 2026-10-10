@@ -12,6 +12,7 @@ import { httpErrors, toHttpError } from "./lib/errors.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
+import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -36,6 +37,8 @@ export interface AppDeps {
   messaging?: MessagingDeps;
   /** Avis (spec 016). */
   reviews?: ReviewStore;
+  /** Recherche vocale et par photo (spec 018). */
+  searchAi?: SearchAiDeps;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -93,6 +96,7 @@ export function createApp(deps: AppDeps) {
   registerVendorRecaps(app, deps.recaps);
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);
+  registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
 
   return app;
 }

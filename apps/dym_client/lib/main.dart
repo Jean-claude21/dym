@@ -6,6 +6,7 @@ import 'package:dym_client/app/client_app.dart';
 import 'package:dym_client/app/config_error_app.dart';
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
+import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -46,6 +47,18 @@ Future<void> main() async {
         location: const PluginLocationProvider(),
         environment: environment,
         reviews: ReviewRepository(data: neon.data, functions: neon.functions),
+      ),
+    )
+    ..registerLazySingleton<SearchAiService>(
+      () => NeonSearchAiService(
+        repository: SearchAiRepository(
+          data: neon.data,
+          functions: neon.functions,
+        ),
+        discovery: locator<DiscoveryService>(),
+        auth: auth,
+        recorder: PluginVoiceRecorder(),
+        photos: PluginPhotoPicker(),
       ),
     )
     ..registerLazySingleton<SupportService>(

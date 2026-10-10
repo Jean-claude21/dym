@@ -16,6 +16,7 @@ import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
+import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
@@ -87,7 +88,13 @@ class StackedAppNavigator implements AppNavigator {
     OrdersService? orders,
     ChatService? chat,
     SupportService? support,
+    SearchAiService? searchAi,
   ]) : _support = support ?? locator<SupportService>(),
+       _searchAi =
+           searchAi ??
+           (locator.isRegistered<SearchAiService>()
+               ? locator<SearchAiService>()
+               : null),
        _navigation = navigation ?? locator<NavigationService>(),
        _discovery = discovery ?? locator<DiscoveryService>(),
        _cart = cart ?? locator<CartService>(),
@@ -100,6 +107,9 @@ class StackedAppNavigator implements AppNavigator {
   final OrdersService _orders;
   final ChatService _chat;
   final SupportService _support;
+
+  /// Recherche augmentée (spec 018) ; absente : recherche texte seule.
+  final SearchAiService? _searchAi;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -166,6 +176,7 @@ class StackedAppNavigator implements AppNavigator {
     WithMiniCart(
       child: SearchView(
         service: _discovery,
+        ai: _searchAi,
         onBack: _back,
         onOpenProduct: toProduct,
         onOpenStore: toStore,
