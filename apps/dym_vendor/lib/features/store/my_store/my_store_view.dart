@@ -11,10 +11,18 @@ import 'package:stacked/stacked.dart';
 
 /// Écran 23 : « Ma boutique » (interrupteur d'ouverture et réglages).
 class MyStoreView extends StackedView<MyStoreViewModel> {
-  const new({required this.service, required this.onEdit, super.key});
+  const new({
+    required this.service,
+    required this.onEdit,
+    super.key,
+    this.onReviews,
+  });
 
   final StoreService service;
   final Future<void> Function(StoreStep step) onEdit;
+
+  /// Mes avis (écran 65) ; nul : non affiché.
+  final VoidCallback? onReviews;
 
   @override
   MyStoreViewModel viewModelBuilder(BuildContext context) =>
@@ -192,6 +200,14 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 StorePrivacyNote(text: l10n.myStoreSuspended)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
+              if (onReviews case final reviews?) ...[
+                DymMenuRow(
+                  icon: Icons.star_rounded,
+                  label: l10n.reviewMine,
+                  onTap: reviews,
+                ),
+                const SizedBox(height: DymTokenSpace.s2),
+              ],
               for (final (icon, label, value, step) in rows) ...[
                 DymMenuRow(
                   icon: icon,

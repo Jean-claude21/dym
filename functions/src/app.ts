@@ -11,6 +11,7 @@ import { dispatchPushes, type PushQueue, type PushSender } from "./notifications
 import { httpErrors, toHttpError } from "./lib/errors.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
+import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -33,6 +34,8 @@ export interface AppDeps {
   recaps?: VendorRecaps;
   /** Messagerie (spec 015). */
   messaging?: MessagingDeps;
+  /** Avis (spec 016). */
+  reviews?: ReviewStore;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -89,6 +92,7 @@ export function createApp(deps: AppDeps) {
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
+  registerReviewRoutes(app, deps.verifyToken, deps.reviews);
 
   return app;
 }

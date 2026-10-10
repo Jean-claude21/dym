@@ -21,6 +21,7 @@ import 'package:dym_client/features/discovery/search/search_view.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_views.dart' as client_orders;
+import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_client/ui/views/home/home_view.dart' as client;
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_assets.dart';
@@ -43,12 +44,13 @@ import 'package:dym_gallery/screens/s05_cart.dart';
 import 'package:dym_gallery/screens/s06_tracking.dart';
 import 'package:dym_gallery/screens/s07_seller_origin.dart';
 import 'package:dym_gallery/screens/s08_seller_new_order.dart';
-import 'package:dym_models/dym_models.dart' show ChatRole;
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
+import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/ui/views/home/home_view.dart';
@@ -723,6 +725,91 @@ final referenceScreens = <ReferenceScreen>[
       pickProduct: (_) async => null,
       clock: _chatNow,
       refreshEvery: null,
+    ),
+  ),
+  ReferenceScreen(
+    id: '63',
+    title: 'Laisser un avis',
+    surface: 'Cliente',
+    referenceFile: '63-cliente-laisser-avis.webp',
+    builder: (c) => ReviewFormView(
+      service: DemoClientOrders.service(c),
+      orderId: 'o3',
+      storeName: "Étal d'Akossiwa",
+      onBack: () {},
+      onSent: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '64',
+    title: 'Avis d’une boutique',
+    surface: 'Cliente',
+    referenceFile: '64-cliente-avis-boutique.webp',
+    builder: (c) => StoreReviewsView(
+      service: DemoDiscovery.service(c),
+      storeId: 'esi',
+      storeName: "Les jus d'Esi",
+      onBack: () {},
+      onMessage: () {},
+      clock: _chatNow,
+    ),
+  ),
+  ReferenceScreen(
+    id: '65',
+    title: 'Mes avis (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '65-vendeuse-avis.webp',
+    builder: (c) => VendorReviewsView(
+      service: MemoryVendorReviewsService(DemoDiscovery.reviews()),
+      onBack: () {},
+      clock: _chatNow,
+    ),
+  ),
+  ReferenceScreen(
+    id: '66',
+    title: 'Aide',
+    surface: 'Cliente',
+    referenceFile: '66-aide-support.webp',
+    builder: (c) => SupportView(
+      service: MemorySupportService(
+        orders: const [(id: 'o3', label: "7K2Q4F1A · Étal d'Akossiwa")],
+        tickets: [
+          SupportTicket(
+            id: 't1',
+            app: 'client',
+            subject: TicketSubject.order,
+            status: TicketStatus.open,
+            createdAt: DateTime.utc(2026, 10, 5, 10, 40),
+            lastActivityAt: DateTime.utc(2026, 10, 5, 10, 40),
+            messages: [
+              TicketMessage(
+                id: 'm0',
+                authorRole: 'user',
+                body: 'Je n’ai pas reçu ma monnaie',
+                createdAt: DateTime.utc(2026, 10, 5, 10, 40),
+              ),
+            ],
+          ),
+          SupportTicket(
+            id: 't0',
+            app: 'client',
+            subject: TicketSubject.account,
+            status: TicketStatus.closed,
+            createdAt: DateTime.utc(2026, 10, 3),
+            lastActivityAt: DateTime.utc(2026, 10, 3),
+            messages: [
+              TicketMessage(
+                id: 'm1',
+                authorRole: 'user',
+                body: 'Changer mon adresse',
+                createdAt: DateTime.utc(2026, 10, 3),
+              ),
+            ],
+          ),
+        ],
+      ),
+      onBack: () {},
+      clock: _chatNow,
     ),
   ),
 ];

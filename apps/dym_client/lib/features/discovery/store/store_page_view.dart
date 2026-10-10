@@ -1,6 +1,7 @@
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ class StorePageView extends StackedView<StorePageViewModel> {
     required this.onOpenProduct,
     super.key,
     this.onMessage,
+    this.onReviews,
   });
 
   final DiscoveryService service;
@@ -24,6 +26,9 @@ class StorePageView extends StackedView<StorePageViewModel> {
 
   /// Écrire à la boutique (spec 015) ; nul : non proposé.
   final VoidCallback? onMessage;
+
+  /// Avis de la boutique (écran 64).
+  final VoidCallback? onReviews;
 
   @override
   StorePageViewModel viewModelBuilder(BuildContext context) =>
@@ -148,6 +153,10 @@ class StorePageView extends StackedView<StorePageViewModel> {
                         ),
                       ],
                     ),
+                    if (onReviews case final reviews?) ...[
+                      const SizedBox(height: DymTokenSpace.s2),
+                      StoreRatingRow(store: store, onTap: reviews),
+                    ],
                     if (store.description != null) ...[
                       const SizedBox(height: DymTokenSpace.s3),
                       Text(store.description!, style: t.body),

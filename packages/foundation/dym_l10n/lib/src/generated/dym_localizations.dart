@@ -4800,6 +4800,288 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{sender} t\'a écrit.'**
   String notifNewMessageBody(String sender);
+
+  /// Réachat en un tap
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander à nouveau'**
+  String get reorder;
+
+  /// Réachat : rien ajouté
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus aucun article de cette commande n\'est en vente.'**
+  String get reorderNothing;
+
+  /// Réachat : articles écartés
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus en vente : {items}'**
+  String reorderSkipped(String items);
+
+  /// Note moyenne
+  ///
+  /// In fr, this message translates to:
+  /// **'{rating}/5'**
+  String reviewAverage(String rating);
+
+  /// Champ du commentaire
+  ///
+  /// In fr, this message translates to:
+  /// **'Raconte en quelques mots (facultatif)'**
+  String get reviewCommentLabel;
+
+  /// Nombre d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucun avis} =1{1 avis} other{{n} avis}}'**
+  String reviewCount(int n);
+
+  /// Modifier la réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier ma réponse'**
+  String get reviewEditReply;
+
+  /// Avis déjà donné
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as déjà donné ton avis sur cette commande.'**
+  String get reviewExists;
+
+  /// Bouton d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Donner mon avis'**
+  String get reviewGive;
+
+  /// Reporter l'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus tard'**
+  String get reviewLater;
+
+  /// Avis de la boutique (vendeuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes avis'**
+  String get reviewMine;
+
+  /// Réponse de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta réponse : {reply}'**
+  String reviewMyReply(String reply);
+
+  /// Aucun avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore d\'avis.'**
+  String get reviewNone;
+
+  /// Boutique sans avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle boutique'**
+  String get reviewNoneYet;
+
+  /// Avis trop tôt
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu pourras donner ton avis après la livraison.'**
+  String get reviewNotAllowed;
+
+  /// Publier l'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier mon avis'**
+  String get reviewPublish;
+
+  /// Publier la réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier la réponse'**
+  String get reviewPublishReply;
+
+  /// Question de l'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Comment s\'est passée ta commande ?'**
+  String get reviewQuestion;
+
+  /// Champ de réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta réponse'**
+  String get reviewReplyHint;
+
+  /// Titre de la réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta réponse à {name}'**
+  String reviewReplyTo(String name);
+
+  /// Étoiles (accessibilité)
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 étoile} other{{n} étoiles}}'**
+  String reviewStarsLabel(int n);
+
+  /// Réponse de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse de {store} : {reply}'**
+  String reviewStoreReply(String store, String reply);
+
+  /// Titre des avis d'une boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Avis'**
+  String get reviewStoreTitle;
+
+  /// Étiquette d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison rapide'**
+  String get reviewTagFast;
+
+  /// Étiquette d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits frais'**
+  String get reviewTagFresh;
+
+  /// Étiquette d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon accueil'**
+  String get reviewTagFriendly;
+
+  /// Étiquette d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Bien emballé'**
+  String get reviewTagWellPacked;
+
+  /// Avis donné
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci pour ton avis ({rating}/5) !'**
+  String reviewThanks(int rating);
+
+  /// Titre de l'écran d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton avis'**
+  String get reviewTitle;
+
+  /// Demande fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermée'**
+  String get supportClosed;
+
+  /// Demande en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get supportInProgress;
+
+  /// Liste des demandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes demandes'**
+  String get supportMine;
+
+  /// Formulaire d'aide
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle demande'**
+  String get supportNew;
+
+  /// Pas de commande liée
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune'**
+  String get supportNoOrder;
+
+  /// Aucune demande
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune demande pour l\'instant.'**
+  String get supportNone;
+
+  /// Commande liée
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande concernée'**
+  String get supportOrder;
+
+  /// Promesse du support
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM te répond en moins d\'une heure.'**
+  String get supportPromise;
+
+  /// Envoyer la demande
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get supportSend;
+
+  /// Demande envoyée
+  ///
+  /// In fr, this message translates to:
+  /// **'Demande envoyée : on te répond vite.'**
+  String get supportSent;
+
+  /// Sujet de la demande
+  ///
+  /// In fr, this message translates to:
+  /// **'Sujet'**
+  String get supportSubject;
+
+  /// Sujet : compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon compte'**
+  String get supportSubjectAccount;
+
+  /// Sujet : commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma commande'**
+  String get supportSubjectOrder;
+
+  /// Sujet : autre
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get supportSubjectOther;
+
+  /// Sujet : paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Un paiement'**
+  String get supportSubjectPayment;
+
+  /// Sujet : boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma boutique'**
+  String get supportSubjectStore;
+
+  /// Champ de la demande
+  ///
+  /// In fr, this message translates to:
+  /// **'Décris ton problème'**
+  String get supportDescribe;
+
+  /// Note et nombre d'avis
+  ///
+  /// In fr, this message translates to:
+  /// **'{rating}/5 · {n, plural, =1{1 avis} other{{n} avis}}'**
+  String reviewSummary(String rating, int n);
 }
 
 class _DymLocalizationsDelegate

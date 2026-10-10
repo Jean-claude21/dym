@@ -623,6 +623,55 @@ void main() {
       expect(tracked.status, OrderStatus.delivered);
       expect(tracked.canCancel, isFalse);
 
+      // Spec 016 : avis, réponse, note publique, réachat, demande d'aide.
+      final reviews = ReviewRepository(
+        data: client.data,
+        functions: client.functions,
+      );
+      final review = await ok(
+        reviews.leave(
+          first,
+          rating: 4,
+          tags: const [ReviewTag.fresh],
+          comment: 'Très frais (test e2e)',
+        ),
+        'avis',
+      );
+      final again = await reviews.leave(first, rating: 5);
+      expect(again.failureOrNull?.message, 'review_exists');
+      final reviewReply = await ok(
+        ReviewRepository(
+          data: vendor.data,
+          functions: vendor.functions,
+        ).reply(review.id, 'Merci (test e2e)'),
+        'réponse',
+      );
+      expect(reviewReply.reply, 'Merci (test e2e)');
+      final storeId = (await ok(vendorOrders.order(first), 'boutique')).id;
+      expect(storeId, isNotEmpty);
+      final reorder = await ok(
+        ReorderRepository(client.data).reorder(first),
+        'réachat',
+      );
+      expect(reorder.added, 1);
+      final ticket = await ok(
+        SupportRepository(client.data).open(
+          app: 'client',
+          subject: TicketSubject.order,
+          body: 'Question de test e2e',
+          orderId: first,
+        ),
+        'demande',
+      );
+      expect(ticket.status, TicketStatus.open);
+      expect(
+        await ok(
+          SupportRepository(client.data).myTickets('client'),
+          'mes demandes',
+        ),
+        hasLength(1),
+      );
+
       // 1 bis. Litige (spec 012) : la cliente signale, la vendeuse répond.
       final disputes = DisputeRepository(
         data: client.data,

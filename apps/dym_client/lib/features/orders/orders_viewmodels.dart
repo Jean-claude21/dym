@@ -99,11 +99,51 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   final String orderId;
   CustomerOrder? _order;
   Dispute? _dispute;
+  Review? _review;
+  bool _reordering = false;
+  ReorderResult? _reordered;
+  Failure? _reorderFailure;
   bool _cancelling = false;
   Failure? _cancelFailure;
 
   CustomerOrder? get order => _order;
   Dispute? get dispute => _dispute;
+
+  /// Mon avis sur la commande (nul : pas encore donné).
+  Review? get review => _review;
+  bool get canReview =>
+      _order?.status == OrderStatus.delivered && _review == null;
+  bool get reordering => _reordering;
+  ReorderResult? get reordered => _reordered;
+  Failure? get reorderFailure => _reorderFailure;
+
+  /// Réachat : livrée, refusée ou annulée.
+  bool get canReorder => switch (_order?.status) {
+    OrderStatus.delivered ||
+    OrderStatus.refused ||
+    OrderStatus.cancelled => true,
+    _ => false,
+  };
+
+  /// Remet les articles au panier ; `true` si au moins un a été ajouté.
+  Future<bool> reorder() async {
+    final o = _order;
+    if (o == null || _reordering) return false;
+    _reordering = true;
+    _reorderFailure = null;
+    notifyListeners();
+    final result = await service.reorder(o.id);
+    _reordering = false;
+    switch (result) {
+      case Ok(:final value):
+        _reordered = value;
+      case Err(:final failure):
+        _reorderFailure = failure;
+    }
+    notifyListeners();
+    return (_reordered?.added ?? 0) > 0 && result.isOk;
+  }
+
   bool get ready => _order != null && _config != null && !failed;
   bool get cancelling => _cancelling;
 
@@ -134,6 +174,11 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
     final result = await service.order(orderId);
     if (result case Ok(:final value)) _order = value;
     if (await service.dispute(orderId) case Ok(:final value)) _dispute = value;
+    if (_order?.status == OrderStatus.delivered) {
+      if (await service.orderReview(orderId) case Ok(:final value)) {
+        _review = value;
+      }
+    }
     return result.failureOrNull;
   }
 

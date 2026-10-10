@@ -15,8 +15,17 @@ class MemoryDiscoveryService implements DiscoveryService {
     this.zoneMatch,
     this.cityDeliveryMinutes = 20,
     this.photoResolver,
+    this.reviews = const {},
     String? initialZone,
   }) : _zone = ValueNotifier(initialZone);
+
+  /// Avis par boutique (tests, galerie).
+  final Map<String, StoreReviews> reviews;
+
+  @override
+  Future<Result<StoreReviews>> storeReviews(String storeId) async =>
+      _fail<StoreReviews>('storeReviews') ??
+      Ok(reviews[storeId] ?? const StoreReviews());
 
   final CountryConfig config;
   final List<PublicStore> stores;

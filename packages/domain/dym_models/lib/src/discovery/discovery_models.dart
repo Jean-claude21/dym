@@ -28,6 +28,8 @@ class PublicStore {
     this.closesAt,
     this.coverKey,
     this.productCount = 0,
+    this.rating,
+    this.reviewCount = 0,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$PublicStoreFromJson(json);
@@ -55,6 +57,10 @@ class PublicStore {
   /// Photo de couverture (premier produit publié).
   final String? coverKey;
   final int productCount;
+
+  /// Note moyenne sur 5 (nulle sans avis, spec 016).
+  final double? rating;
+  final int reviewCount;
 }
 
 /// Boutique d'un élément de liste.

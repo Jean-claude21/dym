@@ -97,6 +97,12 @@ class _Navigator implements AppNavigator {
 
   @override
   void toChat(String conversationId) => routes.add('chat:$conversationId');
+
+  @override
+  void toReviews() => routes.add('reviews');
+
+  @override
+  void toHelp() => routes.add('help');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

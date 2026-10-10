@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dym_account/dym_account.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/app/app.router.dart';
@@ -19,6 +20,7 @@ import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
+import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -70,6 +72,9 @@ abstract interface class AppNavigator {
 
   /// Conversation existante (notification, liste).
   void toChat(String conversationId);
+
+  /// Aide (écran 66).
+  void toHelp();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -81,7 +86,9 @@ class StackedAppNavigator implements AppNavigator {
     CartService? cart,
     OrdersService? orders,
     ChatService? chat,
-  ]) : _navigation = navigation ?? locator<NavigationService>(),
+    SupportService? support,
+  ]) : _support = support ?? locator<SupportService>(),
+       _navigation = navigation ?? locator<NavigationService>(),
        _discovery = discovery ?? locator<DiscoveryService>(),
        _cart = cart ?? locator<CartService>(),
        _orders = orders ?? locator<OrdersService>(),
@@ -92,6 +99,7 @@ class StackedAppNavigator implements AppNavigator {
   final CartService _cart;
   final OrdersService _orders;
   final ChatService _chat;
+  final SupportService _support;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -132,6 +140,11 @@ class StackedAppNavigator implements AppNavigator {
         onBack: _back,
         onOpenProduct: toProduct,
         onMessage: () => unawaited(toStoreChat(storeId)),
+        onReviews: () => _discovery.storePage(storeId).then((page) {
+          if (page case Ok(:final value)) {
+            _toStoreReviews(storeId, value.store.name);
+          }
+        }),
       ),
     ),
   );
@@ -233,8 +246,37 @@ class StackedAppNavigator implements AppNavigator {
       onBack: _back,
       onReport: _toReport,
       onDispute: _toDispute,
+      onReview: _toReview,
+      onReordered: toCart,
     ),
   );
+
+  Future<bool> _toReview(String orderId, String storeName) async =>
+      await _navigator.push<bool>(
+        MaterialPageRoute(
+          builder: (context) => ReviewFormView(
+            service: _orders,
+            orderId: orderId,
+            storeName: storeName,
+            onBack: () => Navigator.of(context).pop(false),
+            onSent: (_) => Navigator.of(context).pop(true),
+          ),
+        ),
+      ) ??
+      false;
+
+  void _toStoreReviews(String storeId, String storeName) => _push(
+    StoreReviewsView(
+      service: _discovery,
+      storeId: storeId,
+      storeName: storeName,
+      onBack: _back,
+      onMessage: () => unawaited(toStoreChat(storeId)),
+    ),
+  );
+
+  @override
+  void toHelp() => _push(SupportView(service: _support, onBack: _back));
 
   Future<bool> _toReport(String orderId, String storeName) async =>
       await _navigator.push<bool>(

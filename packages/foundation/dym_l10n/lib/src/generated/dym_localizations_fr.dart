@@ -2818,4 +2818,184 @@ class DymLocalizationsFr extends DymLocalizations {
   String notifNewMessageBody(String sender) {
     return '$sender t\'a écrit.';
   }
+
+  @override
+  String get reorder => 'Commander à nouveau';
+
+  @override
+  String get reorderNothing =>
+      'Plus aucun article de cette commande n\'est en vente.';
+
+  @override
+  String reorderSkipped(String items) {
+    return 'Plus en vente : $items';
+  }
+
+  @override
+  String reviewAverage(String rating) {
+    return '$rating/5';
+  }
+
+  @override
+  String get reviewCommentLabel => 'Raconte en quelques mots (facultatif)';
+
+  @override
+  String reviewCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n avis',
+      one: '1 avis',
+      zero: 'Aucun avis',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewEditReply => 'Modifier ma réponse';
+
+  @override
+  String get reviewExists => 'Tu as déjà donné ton avis sur cette commande.';
+
+  @override
+  String get reviewGive => 'Donner mon avis';
+
+  @override
+  String get reviewLater => 'Plus tard';
+
+  @override
+  String get reviewMine => 'Mes avis';
+
+  @override
+  String reviewMyReply(String reply) {
+    return 'Ta réponse : $reply';
+  }
+
+  @override
+  String get reviewNone => 'Pas encore d\'avis.';
+
+  @override
+  String get reviewNoneYet => 'Nouvelle boutique';
+
+  @override
+  String get reviewNotAllowed =>
+      'Tu pourras donner ton avis après la livraison.';
+
+  @override
+  String get reviewPublish => 'Publier mon avis';
+
+  @override
+  String get reviewPublishReply => 'Publier la réponse';
+
+  @override
+  String get reviewQuestion => 'Comment s\'est passée ta commande ?';
+
+  @override
+  String get reviewReplyHint => 'Ta réponse';
+
+  @override
+  String reviewReplyTo(String name) {
+    return 'Ta réponse à $name';
+  }
+
+  @override
+  String reviewStarsLabel(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n étoiles',
+      one: '1 étoile',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewStoreReply(String store, String reply) {
+    return 'Réponse de $store : $reply';
+  }
+
+  @override
+  String get reviewStoreTitle => 'Avis';
+
+  @override
+  String get reviewTagFast => 'Livraison rapide';
+
+  @override
+  String get reviewTagFresh => 'Produits frais';
+
+  @override
+  String get reviewTagFriendly => 'Bon accueil';
+
+  @override
+  String get reviewTagWellPacked => 'Bien emballé';
+
+  @override
+  String reviewThanks(int rating) {
+    return 'Merci pour ton avis ($rating/5) !';
+  }
+
+  @override
+  String get reviewTitle => 'Ton avis';
+
+  @override
+  String get supportClosed => 'Fermée';
+
+  @override
+  String get supportInProgress => 'En cours';
+
+  @override
+  String get supportMine => 'Mes demandes';
+
+  @override
+  String get supportNew => 'Nouvelle demande';
+
+  @override
+  String get supportNoOrder => 'Aucune';
+
+  @override
+  String get supportNone => 'Aucune demande pour l\'instant.';
+
+  @override
+  String get supportOrder => 'Commande concernée';
+
+  @override
+  String get supportPromise => 'L\'équipe DYM te répond en moins d\'une heure.';
+
+  @override
+  String get supportSend => 'Envoyer';
+
+  @override
+  String get supportSent => 'Demande envoyée : on te répond vite.';
+
+  @override
+  String get supportSubject => 'Sujet';
+
+  @override
+  String get supportSubjectAccount => 'Mon compte';
+
+  @override
+  String get supportSubjectOrder => 'Ma commande';
+
+  @override
+  String get supportSubjectOther => 'Autre';
+
+  @override
+  String get supportSubjectPayment => 'Un paiement';
+
+  @override
+  String get supportSubjectStore => 'Ma boutique';
+
+  @override
+  String get supportDescribe => 'Décris ton problème';
+
+  @override
+  String reviewSummary(String rating, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n avis',
+      one: '1 avis',
+    );
+    return '$rating/5 · $_temp0';
+  }
 }

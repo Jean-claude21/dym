@@ -3,6 +3,7 @@ import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_client/features/orders/order_texts.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_viewmodels.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -273,11 +274,19 @@ class TrackingView extends StackedView<TrackingViewModel> {
     super.key,
     this.onReport,
     this.onDispute,
+    this.onReview,
+    this.onReordered,
   });
 
   final OrdersService service;
   final String orderId;
   final VoidCallback onBack;
+
+  /// Écran 63 (commande, boutique) ; `true` si un avis est publié.
+  final Future<bool> Function(String orderId, String storeName)? onReview;
+
+  /// Réachat réussi : ouvrir le panier.
+  final VoidCallback? onReordered;
 
   /// Écran 49 (commande, boutique) ; `true` si un signalement est envoyé.
   final Future<bool> Function(String orderId, String storeName)? onReport;
@@ -329,6 +338,8 @@ class TrackingView extends StackedView<TrackingViewModel> {
                       order: order,
                       onReport: onReport,
                       onDispute: onDispute,
+                      onReview: onReview,
+                      onReordered: onReordered,
                     ),
             ),
           ],
@@ -344,12 +355,16 @@ class _Tracking extends StatelessWidget {
     required this.order,
     this.onReport,
     this.onDispute,
+    this.onReview,
+    this.onReordered,
   });
 
   final TrackingViewModel vm;
   final CustomerOrder order;
   final Future<bool> Function(String orderId, String storeName)? onReport;
   final ValueChanged<String>? onDispute;
+  final Future<bool> Function(String orderId, String storeName)? onReview;
+  final VoidCallback? onReordered;
 
   Future<void> _confirmCancel(BuildContext context) async {
     final l10n = DymLocalizations.of(context);
@@ -529,6 +544,48 @@ class _Tracking extends StatelessWidget {
             ],
           ),
         ),
+      ],
+      if (vm.canReview && onReview != null) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        DymButton(
+          label: l10n.reviewGive,
+          icon: Icons.star_rounded,
+          variant: DymButtonVariant.plantain,
+          onPressed: () async {
+            if (await onReview!(order.id, order.store.name)) await vm.refresh();
+          },
+        ),
+      ] else if (vm.review case final review?) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        CartIssue(label: l10n.reviewThanks(review.rating), blocking: false),
+      ],
+      if (vm.canReorder && onReordered != null) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        DymButton(
+          label: l10n.reorder,
+          icon: Icons.replay_rounded,
+          variant: DymButtonVariant.secondary,
+          loading: vm.reordering,
+          onPressed: vm.reordering
+              ? null
+              : () async {
+                  if (await vm.reorder()) onReordered!();
+                },
+        ),
+        if (vm.reordered case ReorderResult(:final skipped)
+            when skipped.isNotEmpty)
+          CartIssue(
+            label: l10n.reorderSkipped(skipped.join(', ')),
+            blocking: false,
+          ),
+        if (vm.reordered case ReorderResult(added: 0))
+          CartIssue(label: l10n.reorderNothing, blocking: false),
+        if (vm.reorderFailure != null)
+          CartIssue(
+            label: vm.reorderFailure is NetworkFailure
+                ? l10n.errorOffline
+                : l10n.errorGeneric,
+          ),
       ],
       if (vm.dispute != null && onDispute != null) ...[
         const SizedBox(height: DymTokenSpace.s3),

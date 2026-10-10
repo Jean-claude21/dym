@@ -38,6 +38,20 @@ abstract interface class OrdersService {
 
   Future<Result<Dispute>> replyDispute(String disputeId, String body);
 
+  /// Mon avis sur une commande (`Ok(null)` : pas encore donné).
+  Future<Result<Review?>> orderReview(String orderId);
+
+  /// Refus : `review_not_allowed`, `review_exists`.
+  Future<Result<Review>> leaveReview(
+    String orderId, {
+    required int rating,
+    List<ReviewTag> tags = const [],
+    String? comment,
+  });
+
+  /// Réachat en un tap : articles encore en vente remis au panier.
+  Future<Result<ReorderResult>> reorder(String orderId);
+
   Future<Result<List<NotificationPreference>>> setPreference(
     NotificationCategory category, {
     required bool enabled,
@@ -50,6 +64,8 @@ class NeonOrdersService implements OrdersService {
     required this._orders,
     required this._notifications,
     required this._disputes,
+    required this._reviews,
+    required this._reorders,
     required this._reference,
     required this._auth,
   });
@@ -57,6 +73,8 @@ class NeonOrdersService implements OrdersService {
   final OrderTrackingRepository _orders;
   final NotificationRepository _notifications;
   final DisputeRepository _disputes;
+  final ReviewRepository _reviews;
+  final ReorderRepository _reorders;
   final ReferenceRepository _reference;
   final AuthService _auth;
   final ValueNotifier<int> _unread = ValueNotifier(0);
@@ -129,6 +147,22 @@ class NeonOrdersService implements OrdersService {
   @override
   Future<Result<Dispute>> replyDispute(String disputeId, String body) =>
       _disputes.reply(disputeId, body);
+
+  @override
+  Future<Result<Review?>> orderReview(String orderId) =>
+      _reviews.orderReview(orderId);
+
+  @override
+  Future<Result<Review>> leaveReview(
+    String orderId, {
+    required int rating,
+    List<ReviewTag> tags = const [],
+    String? comment,
+  }) => _reviews.leave(orderId, rating: rating, tags: tags, comment: comment);
+
+  @override
+  Future<Result<ReorderResult>> reorder(String orderId) =>
+      _reorders.reorder(orderId);
 
   @override
   Future<Result<List<NotificationPreference>>> setPreference(

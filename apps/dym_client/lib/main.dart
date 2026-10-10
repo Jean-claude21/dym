@@ -1,3 +1,4 @@
+import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/app/app.locator.dart';
@@ -44,6 +45,22 @@ Future<void> main() async {
         auth: auth,
         location: const PluginLocationProvider(),
         environment: environment,
+        reviews: ReviewRepository(data: neon.data, functions: neon.functions),
+      ),
+    )
+    ..registerLazySingleton<SupportService>(
+      () => NeonSupportService(
+        repository: SupportRepository(neon.data),
+        app: 'client',
+        recentOrders: () async => [
+          for (final o
+              in (await locator<OrdersService>().orders()).valueOrNull ??
+                  const <CustomerOrder>[])
+            (
+              id: o.id,
+              label: '${o.id.substring(0, 8).toUpperCase()} · ${o.store.name}',
+            ),
+        ].take(10).toList(),
       ),
     )
     ..registerLazySingleton<OrdersService>(
@@ -54,6 +71,8 @@ Future<void> main() async {
         ),
         notifications: NotificationRepository(neon.data),
         disputes: DisputeRepository(data: neon.data, functions: neon.functions),
+        reviews: ReviewRepository(data: neon.data, functions: neon.functions),
+        reorders: ReorderRepository(neon.data),
         reference: reference,
         auth: auth,
       ),

@@ -118,10 +118,12 @@ class _HomeViewState extends State<HomeView> {
         HomeTab.store => MyStoreView(
           service: _stores,
           onEdit: _navigator.toStoreSetting,
+          onReviews: _navigator.toReviews,
         ),
         HomeTab.me => AccountView(
           service: _service,
           onSignedOut: _navigator.toSignIn,
+          onHelp: _navigator.toHelp,
         ),
       },
     );

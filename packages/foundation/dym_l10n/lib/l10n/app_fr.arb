@@ -3708,5 +3708,244 @@
         "type": "String"
       }
     }
+  },
+  "reorder": "Commander à nouveau",
+  "@reorder": {
+    "description": "Réachat en un tap"
+  },
+  "reorderNothing": "Plus aucun article de cette commande n'est en vente.",
+  "@reorderNothing": {
+    "description": "Réachat : rien ajouté"
+  },
+  "reorderSkipped": "Plus en vente : {items}",
+  "@reorderSkipped": {
+    "description": "Réachat : articles écartés",
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAverage": "{rating}/5",
+  "@reviewAverage": {
+    "description": "Note moyenne",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCommentLabel": "Raconte en quelques mots (facultatif)",
+  "@reviewCommentLabel": {
+    "description": "Champ du commentaire"
+  },
+  "reviewCount": "{n, plural, =0{Aucun avis} =1{1 avis} other{{n} avis}}",
+  "@reviewCount": {
+    "description": "Nombre d'avis",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewEditReply": "Modifier ma réponse",
+  "@reviewEditReply": {
+    "description": "Modifier la réponse"
+  },
+  "reviewExists": "Tu as déjà donné ton avis sur cette commande.",
+  "@reviewExists": {
+    "description": "Avis déjà donné"
+  },
+  "reviewGive": "Donner mon avis",
+  "@reviewGive": {
+    "description": "Bouton d'avis"
+  },
+  "reviewLater": "Plus tard",
+  "@reviewLater": {
+    "description": "Reporter l'avis"
+  },
+  "reviewMine": "Mes avis",
+  "@reviewMine": {
+    "description": "Avis de la boutique (vendeuse)"
+  },
+  "reviewMyReply": "Ta réponse : {reply}",
+  "@reviewMyReply": {
+    "description": "Réponse de la vendeuse",
+    "placeholders": {
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNone": "Pas encore d'avis.",
+  "@reviewNone": {
+    "description": "Aucun avis"
+  },
+  "reviewNoneYet": "Nouvelle boutique",
+  "@reviewNoneYet": {
+    "description": "Boutique sans avis"
+  },
+  "reviewNotAllowed": "Tu pourras donner ton avis après la livraison.",
+  "@reviewNotAllowed": {
+    "description": "Avis trop tôt"
+  },
+  "reviewPublish": "Publier mon avis",
+  "@reviewPublish": {
+    "description": "Publier l'avis"
+  },
+  "reviewPublishReply": "Publier la réponse",
+  "@reviewPublishReply": {
+    "description": "Publier la réponse"
+  },
+  "reviewQuestion": "Comment s'est passée ta commande ?",
+  "@reviewQuestion": {
+    "description": "Question de l'avis"
+  },
+  "reviewReplyHint": "Ta réponse",
+  "@reviewReplyHint": {
+    "description": "Champ de réponse"
+  },
+  "reviewReplyTo": "Ta réponse à {name}",
+  "@reviewReplyTo": {
+    "description": "Titre de la réponse",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewStarsLabel": "{n, plural, =1{1 étoile} other{{n} étoiles}}",
+  "@reviewStarsLabel": {
+    "description": "Étoiles (accessibilité)",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStoreReply": "Réponse de {store} : {reply}",
+  "@reviewStoreReply": {
+    "description": "Réponse de la boutique",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewStoreTitle": "Avis",
+  "@reviewStoreTitle": {
+    "description": "Titre des avis d'une boutique"
+  },
+  "reviewTagFast": "Livraison rapide",
+  "@reviewTagFast": {
+    "description": "Étiquette d'avis"
+  },
+  "reviewTagFresh": "Produits frais",
+  "@reviewTagFresh": {
+    "description": "Étiquette d'avis"
+  },
+  "reviewTagFriendly": "Bon accueil",
+  "@reviewTagFriendly": {
+    "description": "Étiquette d'avis"
+  },
+  "reviewTagWellPacked": "Bien emballé",
+  "@reviewTagWellPacked": {
+    "description": "Étiquette d'avis"
+  },
+  "reviewThanks": "Merci pour ton avis ({rating}/5) !",
+  "@reviewThanks": {
+    "description": "Avis donné",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewTitle": "Ton avis",
+  "@reviewTitle": {
+    "description": "Titre de l'écran d'avis"
+  },
+  "supportClosed": "Fermée",
+  "@supportClosed": {
+    "description": "Demande fermée"
+  },
+  "supportInProgress": "En cours",
+  "@supportInProgress": {
+    "description": "Demande en cours"
+  },
+  "supportMine": "Mes demandes",
+  "@supportMine": {
+    "description": "Liste des demandes"
+  },
+  "supportNew": "Nouvelle demande",
+  "@supportNew": {
+    "description": "Formulaire d'aide"
+  },
+  "supportNoOrder": "Aucune",
+  "@supportNoOrder": {
+    "description": "Pas de commande liée"
+  },
+  "supportNone": "Aucune demande pour l'instant.",
+  "@supportNone": {
+    "description": "Aucune demande"
+  },
+  "supportOrder": "Commande concernée",
+  "@supportOrder": {
+    "description": "Commande liée"
+  },
+  "supportPromise": "L'équipe DYM te répond en moins d'une heure.",
+  "@supportPromise": {
+    "description": "Promesse du support"
+  },
+  "supportSend": "Envoyer",
+  "@supportSend": {
+    "description": "Envoyer la demande"
+  },
+  "supportSent": "Demande envoyée : on te répond vite.",
+  "@supportSent": {
+    "description": "Demande envoyée"
+  },
+  "supportSubject": "Sujet",
+  "@supportSubject": {
+    "description": "Sujet de la demande"
+  },
+  "supportSubjectAccount": "Mon compte",
+  "@supportSubjectAccount": {
+    "description": "Sujet : compte"
+  },
+  "supportSubjectOrder": "Ma commande",
+  "@supportSubjectOrder": {
+    "description": "Sujet : commande"
+  },
+  "supportSubjectOther": "Autre",
+  "@supportSubjectOther": {
+    "description": "Sujet : autre"
+  },
+  "supportSubjectPayment": "Un paiement",
+  "@supportSubjectPayment": {
+    "description": "Sujet : paiement"
+  },
+  "supportSubjectStore": "Ma boutique",
+  "@supportSubjectStore": {
+    "description": "Sujet : boutique"
+  },
+  "supportDescribe": "Décris ton problème",
+  "@supportDescribe": {
+    "description": "Champ de la demande"
+  },
+  "reviewSummary": "{rating}/5 · {n, plural, =1{1 avis} other{{n} avis}}",
+  "@reviewSummary": {
+    "description": "Note et nombre d'avis",
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      },
+      "n": {
+        "type": "int"
+      }
+    }
   }
 }
