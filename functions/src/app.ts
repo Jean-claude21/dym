@@ -10,6 +10,7 @@ import { type AdminStore, registerAdminRoutes } from "./admin/routes.js";
 import { dispatchPushes, type PushQueue, type PushSender } from "./notifications/push.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
+import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -30,6 +31,8 @@ export interface AppDeps {
   /** Admin des opérations (spec 013). */
   admin?: AdminStore;
   recaps?: VendorRecaps;
+  /** Messagerie (spec 015). */
+  messaging?: MessagingDeps;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -85,6 +88,7 @@ export function createApp(deps: AppDeps) {
   registerDisputeRoutes(app, deps.verifyToken, deps.disputes);
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
+  registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
 
   return app;
 }

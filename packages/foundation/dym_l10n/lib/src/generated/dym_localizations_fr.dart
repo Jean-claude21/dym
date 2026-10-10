@@ -2708,4 +2708,114 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get dashboardStockHint => 'Remets-le en stock pour continuer à vendre';
+
+  @override
+  String get chatMessagesTitle => 'Messages';
+
+  @override
+  String chatUnread(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n non lus',
+      one: '1 non lu',
+      zero: 'Tout est lu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatEmptyList => 'Aucune conversation pour l\'instant.';
+
+  @override
+  String get chatEmptyThread => 'Écris ton premier message.';
+
+  @override
+  String get chatPhoto => 'Photo';
+
+  @override
+  String chatProductPreview(String name) {
+    return 'Produit : $name';
+  }
+
+  @override
+  String get chatWriteHint => 'Écris ton message…';
+
+  @override
+  String get chatSend => 'Envoyer';
+
+  @override
+  String get chatSendPhoto => 'Envoyer une photo';
+
+  @override
+  String get chatCamera => 'Prendre une photo';
+
+  @override
+  String get chatGallery => 'Choisir dans la galerie';
+
+  @override
+  String get chatShareProduct => 'Partager un produit';
+
+  @override
+  String get chatSearchProducts => 'Chercher dans mes produits';
+
+  @override
+  String get chatNoProducts => 'Aucun produit publié.';
+
+  @override
+  String get chatShare => 'Partager';
+
+  @override
+  String get chatAddToCart => 'Ajouter au panier';
+
+  @override
+  String get chatProductUnavailable => 'Ce produit n\'est plus en vente.';
+
+  @override
+  String get chatAttachProduct => 'Joindre ce produit';
+
+  @override
+  String get chatDismiss => 'Retirer';
+
+  @override
+  String get chatSendFailed => 'Message non envoyé. Réessaie.';
+
+  @override
+  String get chatOffline => 'Hors ligne : les derniers messages sont affichés.';
+
+  @override
+  String get chatWriteToStore => 'Écrire à la boutique';
+
+  @override
+  String get chatAskProduct => 'Poser une question';
+
+  @override
+  String get chatMyMessages => 'Mes messages';
+
+  @override
+  String get chatStoreUnavailable =>
+      'Cette boutique n\'accepte pas de messages pour l\'instant.';
+
+  @override
+  String dashboardUnreadMessages(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n messages non lus',
+      one: '1 message non lu',
+      zero: 'Aucun message non lu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dashboardUnreadMessagesHint => 'Réponds à tes clientes';
+
+  @override
+  String get notifNewMessageTitle => 'Nouveau message';
+
+  @override
+  String notifNewMessageBody(String sender) {
+    return '$sender t\'a écrit.';
+  }
 }

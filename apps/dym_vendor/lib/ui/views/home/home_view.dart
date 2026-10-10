@@ -1,5 +1,6 @@
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -15,7 +16,7 @@ import 'package:dym_vendor/ui/navigation.dart';
 import 'package:flutter/material.dart';
 
 /// Onglets de l'accueil de la vendeuse.
-enum HomeTab { dashboard, orders, products, store, me }
+enum HomeTab { dashboard, orders, messages, products, store, me }
 
 /// Accueil de la vendeuse : « Mes produits » (écran 24), « Ma boutique »
 /// (écran 23) et « Moi ».
@@ -27,6 +28,7 @@ class HomeView extends StatefulWidget {
     this.catalog,
     this.orders,
     this.dashboard,
+    this.chat,
     this.navigator,
     this.initialTab = HomeTab.dashboard,
   });
@@ -44,6 +46,9 @@ class HomeView extends StatefulWidget {
   final OrdersService? orders;
 
   final DashboardService? dashboard;
+
+  /// Messagerie (tests).
+  final ChatService? chat;
 
   /// Navigation (tests).
   final AppNavigator? navigator;
@@ -64,6 +69,7 @@ class _HomeViewState extends State<HomeView> {
   late final OrdersService _orders = widget.orders ?? locator<OrdersService>();
   late final DashboardService _dashboard =
       widget.dashboard ?? locator<DashboardService>();
+  late final ChatService _chat = widget.chat ?? locator<ChatService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
 
@@ -79,6 +85,10 @@ class _HomeViewState extends State<HomeView> {
         DymNavItem(icon: Icons.home_rounded, label: l10n.navHome),
         DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
         DymNavItem(
+          icon: Icons.chat_bubble_rounded,
+          label: l10n.chatMessagesTitle,
+        ),
+        DymNavItem(
           icon: Icons.shopping_basket_rounded,
           label: l10n.navProducts,
         ),
@@ -90,6 +100,11 @@ class _HomeViewState extends State<HomeView> {
           service: _dashboard,
           onOrders: () => setState(() => _tab = HomeTab.orders),
           onProducts: () => setState(() => _tab = HomeTab.products),
+          onMessages: () => setState(() => _tab = HomeTab.messages),
+        ),
+        HomeTab.messages => ConversationsView(
+          service: _chat,
+          onOpen: _navigator.toChat,
         ),
         HomeTab.orders => OrdersView(
           service: _orders,

@@ -94,6 +94,16 @@ class _Navigator implements AppNavigator {
 
   @override
   void toNotificationSettings() => routes.add('notification-settings');
+
+  @override
+  void toMessages() => routes.add('messages');
+
+  @override
+  Future<void> toStoreChat(String storeId, {String? productId}) async =>
+      routes.add('chat-store:$storeId');
+
+  @override
+  void toChat(String conversationId) => routes.add('chat:$conversationId');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

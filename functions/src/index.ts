@@ -1,7 +1,7 @@
 // Point d'entrée de la Function `api` sur Neon (Node 24) : export par défaut
 // d'un objet `fetch`, ici l'app Hono.
 import { parseEnv } from "@neon/env";
-import config, { PRODUCT_PHOTOS_BUCKET } from "../neon.js";
+import config, { CHAT_MEDIA_BUCKET, PRODUCT_PHOTOS_BUCKET } from "../neon.js";
 import { createApp } from "./app.js";
 import {
   aiProductSuggester,
@@ -19,6 +19,7 @@ import { fcmPushSender, noPushSender, pgPushQueue } from "./notifications/push.j
 import { pgPaymentStore } from "./payments/adapters.js";
 import { availableProviders } from "./payments/simulator.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
+import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -52,6 +53,10 @@ export default createApp({
   disputes: pgDisputeStore(pool),
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
+  messaging: {
+    store: pgMessagingStore(pool),
+    signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),
+  },
   // Push : FCM dès que le compte de service est fourni ; sinon ignorés.
   push: {
     queue: pgPushQueue(pool),

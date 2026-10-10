@@ -14,6 +14,9 @@ class DashboardViewModel extends BaseViewModel {
   VendorDashboard? summary;
   CountryConfig? config;
   Failure? failure;
+
+  /// Messages non lus (V-DASH-04) ; un échec garde la dernière valeur.
+  int unreadMessages = 0;
   int _request = 0;
   Timer? _timer;
   bool _disposed = false;
@@ -42,6 +45,9 @@ class DashboardViewModel extends BaseViewModel {
           case Ok(:final value)
               when value.currencyCode == config?.currency.code:
             summary = value;
+            if (await service.unreadMessages() case Ok(:final value)) {
+              unreadMessages = value;
+            }
           case Ok():
             failure = const ServerFailure('dashboard_currency_mismatch');
           case Err(:final failure):

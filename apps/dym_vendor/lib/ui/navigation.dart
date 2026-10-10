@@ -1,3 +1,5 @@
+import 'package:dym_chat/dym_chat.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -43,6 +45,9 @@ abstract interface class AppNavigator {
 
   /// Détail d'une commande (écran 42).
   void toOrder(String orderId);
+
+  /// Conversation avec une cliente (écran 62).
+  void toChat(String conversationId);
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -52,13 +57,16 @@ class StackedAppNavigator implements AppNavigator {
     NavigationService? navigation,
     StoreService? stores,
     CatalogService? catalog,
+    ChatService? chat,
   ]) : _navigation = navigation ?? locator<NavigationService>(),
        _stores = stores ?? locator<StoreService>(),
-       _catalog = catalog ?? locator<CatalogService>();
+       _catalog = catalog ?? locator<CatalogService>(),
+       _chat = chat ?? locator<ChatService>();
 
   final NavigationService _navigation;
   final StoreService _stores;
   final CatalogService _catalog;
+  final ChatService _chat;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -142,6 +150,42 @@ class StackedAppNavigator implements AppNavigator {
       ),
     ),
   );
+
+  @override
+  void toChat(String conversationId) => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) => ChatView(
+        service: _chat,
+        conversationId: conversationId,
+        onBack: () => _navigator.pop(),
+        pickProduct: _pickProduct,
+      ),
+    ),
+  );
+
+  /// Mes produits publiés, proposés au partage (écran 62).
+  Future<String?> _pickProduct(BuildContext context) async {
+    final products = await _catalog.products();
+    final config = await _stores.countryConfig();
+    if (!context.mounted) return null;
+    final list = products.valueOrNull ?? const <Product>[];
+    final currency = config.valueOrNull?.currency;
+    return await showProductShareSheet(context, [
+      for (final p in list)
+        if (p.isPublished)
+          ShareableProduct(
+            id: p.id,
+            name: p.name,
+            detail: switch ((p.priceMinor, currency)) {
+              (final int minor, final Currency c) => Money(minor, c).format(),
+              _ => null,
+            },
+            photo: p.photoKeys.isEmpty
+                ? null
+                : _catalog.photo(p.photoKeys.first),
+          ),
+    ]);
+  }
 
   @override
   void toOrder(String orderId) => _navigator.push<void>(

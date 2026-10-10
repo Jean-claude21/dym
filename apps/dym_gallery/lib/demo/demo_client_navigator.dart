@@ -38,4 +38,13 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toNotificationSettings() {}
+
+  @override
+  void toMessages() {}
+
+  @override
+  Future<void> toStoreChat(String storeId, {String? productId}) async {}
+
+  @override
+  void toChat(String conversationId) {}
 }

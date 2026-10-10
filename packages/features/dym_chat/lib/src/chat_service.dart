@@ -1,0 +1,139 @@
+import 'package:dym_core/dym_core.dart';
+import 'package:dym_data/dym_data.dart';
+import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
+import 'package:flutter/widgets.dart';
+
+/// Messagerie d'une app (cliente ou vendeuse). Remplaçable en test.
+abstract interface class ChatService {
+  /// Rôle de l'app dans les conversations.
+  ChatRole get role;
+
+  /// Devise du pays (prix des produits partagés).
+  Future<Result<CountryConfig>> countryConfig();
+
+  Future<Result<List<Conversation>>> conversations();
+
+  /// Cliente : ouvrir (ou retrouver) la conversation avec une boutique.
+  /// Refus : `store_unavailable`, `own_store`.
+  Future<Result<Conversation>> start(String storeId);
+
+  /// Fil d'une conversation ; l'ouvrir la marque lue.
+  Future<Result<ConversationThread>> thread(String id);
+
+  Future<Result<int>> unreadCount();
+
+  Future<Result<ChatMessage>> sendText(
+    String conversationId,
+    String body, {
+    required String idempotencyKey,
+  });
+
+  Future<Result<ChatMessage>> sendProduct(
+    String conversationId,
+    String productId, {
+    required String idempotencyKey,
+  });
+
+  Future<Result<ChatMessage>> sendImage(
+    String conversationId,
+    PickedPhoto photo, {
+    required String idempotencyKey,
+  });
+
+  /// Liens de lecture signés des images, par message.
+  Future<Result<Map<String, String>>> mediaUrls(List<String> messageIds);
+
+  Future<Result<PickedPhoto?>> pickPhoto(PhotoSource source);
+
+  /// Photo publique d'un produit partagé.
+  ImageProvider productPhoto(String objectKey);
+
+  /// Image d'un message, à partir de son lien signé.
+  ImageProvider mediaImage(String url);
+}
+
+/// Implémentation Neon.
+class NeonChatService implements ChatService {
+  new({
+    required this._repository,
+    required this.role,
+    required this._countryConfig,
+    required this._photos,
+    required this._productPhoto,
+  });
+
+  final MessagingRepository _repository;
+  final Future<Result<CountryConfig>> Function() _countryConfig;
+  final PhotoPicker _photos;
+  final ImageProvider Function(String objectKey) _productPhoto;
+
+  @override
+  final ChatRole role;
+
+  @override
+  Future<Result<CountryConfig>> countryConfig() => _countryConfig();
+
+  @override
+  Future<Result<List<Conversation>>> conversations() =>
+      _repository.conversations(role);
+
+  @override
+  Future<Result<Conversation>> start(String storeId) =>
+      _repository.start(storeId);
+
+  @override
+  Future<Result<ConversationThread>> thread(String id) =>
+      _repository.thread(id);
+
+  @override
+  Future<Result<int>> unreadCount() => _repository.unreadCount(role);
+
+  @override
+  Future<Result<ChatMessage>> sendText(
+    String conversationId,
+    String body, {
+    required String idempotencyKey,
+  }) => _repository.sendText(
+    conversationId,
+    body,
+    idempotencyKey: idempotencyKey,
+  );
+
+  @override
+  Future<Result<ChatMessage>> sendProduct(
+    String conversationId,
+    String productId, {
+    required String idempotencyKey,
+  }) => _repository.sendProduct(
+    conversationId,
+    productId,
+    idempotencyKey: idempotencyKey,
+  );
+
+  @override
+  Future<Result<ChatMessage>> sendImage(
+    String conversationId,
+    PickedPhoto photo, {
+    required String idempotencyKey,
+  }) => _repository.sendImage(
+    conversationId,
+    photo.bytes,
+    contentType: photo.contentType,
+    idempotencyKey: idempotencyKey,
+  );
+
+  @override
+  Future<Result<Map<String, String>>> mediaUrls(List<String> messageIds) =>
+      _repository.mediaUrls(messageIds);
+
+  @override
+  Future<Result<PickedPhoto?>> pickPhoto(PhotoSource source) =>
+      _photos.pick(source);
+
+  @override
+  ImageProvider productPhoto(String objectKey) => _productPhoto(objectKey);
+
+  @override
+  ImageProvider mediaImage(String url) => NetworkImage(url);
+}

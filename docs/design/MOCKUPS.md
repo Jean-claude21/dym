@@ -34,6 +34,10 @@ Les autres parcours sont produits spec par spec dans la même direction.
 Spec 014 : parcours 11, [maquette 59 — tableau de bord vendeuse](screens/59-vendeuse-tableau-de-bord.webp),
 produite en image dans la direction validée ; à valider avant fusion.
 
+Spec 015 : messagerie cliente ↔ vendeuse ([60 — conversation côté cliente](screens/60-cliente-conversation.webp),
+[61 — messages de la vendeuse](screens/61-vendeuse-messages.webp),
+[62 — conversation et partage de produit](screens/62-vendeuse-conversation.webp)), à valider avant fusion.
+
 Les trois parcours qui portent les hypothèses les plus risquées passent en premier : **4, 10, 12**.
 
 ## Parcours

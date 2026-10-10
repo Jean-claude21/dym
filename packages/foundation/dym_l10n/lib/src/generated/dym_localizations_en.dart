@@ -2687,4 +2687,114 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get dashboardStockHint => 'Restock to keep selling';
+
+  @override
+  String get chatMessagesTitle => 'Messages';
+
+  @override
+  String chatUnread(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n unread',
+      one: '1 unread',
+      zero: 'All read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatEmptyList => 'No conversations yet.';
+
+  @override
+  String get chatEmptyThread => 'Write your first message.';
+
+  @override
+  String get chatPhoto => 'Photo';
+
+  @override
+  String chatProductPreview(String name) {
+    return 'Product: $name';
+  }
+
+  @override
+  String get chatWriteHint => 'Write your message…';
+
+  @override
+  String get chatSend => 'Send';
+
+  @override
+  String get chatSendPhoto => 'Send a photo';
+
+  @override
+  String get chatCamera => 'Take a photo';
+
+  @override
+  String get chatGallery => 'Choose from gallery';
+
+  @override
+  String get chatShareProduct => 'Share a product';
+
+  @override
+  String get chatSearchProducts => 'Search my products';
+
+  @override
+  String get chatNoProducts => 'No published products.';
+
+  @override
+  String get chatShare => 'Share';
+
+  @override
+  String get chatAddToCart => 'Add to cart';
+
+  @override
+  String get chatProductUnavailable => 'This product is no longer for sale.';
+
+  @override
+  String get chatAttachProduct => 'Attach this product';
+
+  @override
+  String get chatDismiss => 'Remove';
+
+  @override
+  String get chatSendFailed => 'Message not sent. Try again.';
+
+  @override
+  String get chatOffline => 'Offline: showing the latest messages.';
+
+  @override
+  String get chatWriteToStore => 'Message the shop';
+
+  @override
+  String get chatAskProduct => 'Ask a question';
+
+  @override
+  String get chatMyMessages => 'My messages';
+
+  @override
+  String get chatStoreUnavailable =>
+      'This shop isn\'t accepting messages right now.';
+
+  @override
+  String dashboardUnreadMessages(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n unread messages',
+      one: '1 unread message',
+      zero: 'No unread messages',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dashboardUnreadMessagesHint => 'Reply to your customers';
+
+  @override
+  String get notifNewMessageTitle => 'New message';
+
+  @override
+  String notifNewMessageBody(String sender) {
+    return '$sender sent you a message.';
+  }
 }

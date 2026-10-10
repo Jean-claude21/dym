@@ -7,6 +7,7 @@ import 'package:dym_admin/features/orders/orders_views.dart' as admin;
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/features/cart/addresses/address_form_view.dart';
 import 'package:dym_client/features/cart/addresses/addresses_view.dart';
 import 'package:dym_client/features/cart/cart/cart_view.dart';
@@ -22,6 +23,7 @@ import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_views.dart' as client_orders;
 import 'package:dym_client/ui/views/home/home_view.dart' as client;
 import 'package:dym_data/dym_data.dart';
+import 'package:dym_gallery/demo/demo_assets.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
 import 'package:dym_gallery/demo/demo_checkout.dart';
 import 'package:dym_gallery/demo/demo_client_navigator.dart';
@@ -41,6 +43,7 @@ import 'package:dym_gallery/screens/s05_cart.dart';
 import 'package:dym_gallery/screens/s06_tracking.dart';
 import 'package:dym_gallery/screens/s07_seller_origin.dart';
 import 'package:dym_gallery/screens/s08_seller_new_order.dart';
+import 'package:dym_models/dym_models.dart' show ChatRole;
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
@@ -676,10 +679,63 @@ final referenceScreens = <ReferenceScreen>[
         service: DemoDashboardService(c),
         onOrders: () {},
         onProducts: () {},
+        onMessages: () {},
       ),
     ),
   ),
+  ReferenceScreen(
+    id: '60',
+    title: 'Conversation (cliente)',
+    surface: 'Cliente',
+    referenceFile: '60-cliente-conversation.webp',
+    builder: (c) => ChatView(
+      service: _chat(c, ChatRole.client),
+      conversationId: 'c1',
+      onBack: () {},
+      onAddToCart: (_) async {},
+      clock: _chatNow,
+      refreshEvery: null,
+    ),
+  ),
+  ReferenceScreen(
+    id: '61',
+    title: 'Messages (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '61-vendeuse-messages.webp',
+    builder: (c) => Scaffold(
+      body: ConversationsView(
+        service: _chat(c, ChatRole.vendor),
+        onOpen: (_) {},
+        clock: _chatNow,
+        refreshEvery: null,
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '62',
+    title: 'Conversation et partage (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '62-vendeuse-conversation.webp',
+    builder: (c) => ChatView(
+      service: _chat(c, ChatRole.vendor),
+      conversationId: 'c1',
+      onBack: () {},
+      pickProduct: (_) async => null,
+      clock: _chatNow,
+      refreshEvery: null,
+    ),
+  ),
 ];
+
+/// Messagerie de démonstration (photos de produits de la galerie).
+MemoryChatService _chat(DemoCountry c, ChatRole role) => MemoryChatService.demo(
+  role: role,
+  config: DemoStore.config(c),
+  photoImage: DemoImages.product('gombo'),
+  productImage: DemoImages.product('gombo'),
+);
+
+DateTime _chatNow() => DateTime.utc(2026, 10, 5, 11);
 
 /// Admin de démonstration (lieux génériques), dans la devise du pays.
 admin.MemoryAdminService _admin(DemoCountry c) =>

@@ -6,12 +6,16 @@ import { defineConfig } from "@neon/config/v1";
 /** Photos des produits : lecture publique, écriture par URL présignée. */
 export const PRODUCT_PHOTOS_BUCKET = "product-photos";
 
+/** Images des conversations : privées, lues par liens signés courts. */
+export const CHAT_MEDIA_BUCKET = "chat-media";
+
 export default defineConfig({
   auth: true,
   // Rôle anonyme : lectures publiques sans session (visiteuse), sous RLS.
   dataApi: { settings: { dbAnonRole: "anonymous" } },
   buckets: {
     [PRODUCT_PHOTOS_BUCKET]: { access: "public_read" },
+    [CHAT_MEDIA_BUCKET]: { access: "private" },
   },
   functions: {
     // Une Function HTTP unique, routée par Hono (src/app.ts).

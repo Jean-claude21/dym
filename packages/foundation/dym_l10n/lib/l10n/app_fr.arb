@@ -3572,5 +3572,141 @@
   "dashboardStockHint": "Remets-le en stock pour continuer à vendre",
   "@dashboardStockHint": {
     "description": "Accueil vendeuse : sous-titre des ruptures"
+  },
+  "chatMessagesTitle": "Messages",
+  "@chatMessagesTitle": {
+    "description": "Titre des conversations"
+  },
+  "chatUnread": "{n, plural, =0{Tout est lu} =1{1 non lu} other{{n} non lus}}",
+  "@chatUnread": {
+    "description": "Nombre de messages non lus",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "chatEmptyList": "Aucune conversation pour l'instant.",
+  "@chatEmptyList": {
+    "description": "Liste vide"
+  },
+  "chatEmptyThread": "Écris ton premier message.",
+  "@chatEmptyThread": {
+    "description": "Conversation vide"
+  },
+  "chatPhoto": "Photo",
+  "@chatPhoto": {
+    "description": "Aperçu : photo"
+  },
+  "chatProductPreview": "Produit : {name}",
+  "@chatProductPreview": {
+    "description": "Aperçu : produit partagé",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatWriteHint": "Écris ton message…",
+  "@chatWriteHint": {
+    "description": "Champ de saisie"
+  },
+  "chatSend": "Envoyer",
+  "@chatSend": {
+    "description": "Envoyer le message"
+  },
+  "chatSendPhoto": "Envoyer une photo",
+  "@chatSendPhoto": {
+    "description": "Bouton photo"
+  },
+  "chatCamera": "Prendre une photo",
+  "@chatCamera": {
+    "description": "Source : appareil photo"
+  },
+  "chatGallery": "Choisir dans la galerie",
+  "@chatGallery": {
+    "description": "Source : galerie"
+  },
+  "chatShareProduct": "Partager un produit",
+  "@chatShareProduct": {
+    "description": "Bouton et titre du partage"
+  },
+  "chatSearchProducts": "Chercher dans mes produits",
+  "@chatSearchProducts": {
+    "description": "Recherche du partage"
+  },
+  "chatNoProducts": "Aucun produit publié.",
+  "@chatNoProducts": {
+    "description": "Partage : aucun produit"
+  },
+  "chatShare": "Partager",
+  "@chatShare": {
+    "description": "Partager ce produit"
+  },
+  "chatAddToCart": "Ajouter au panier",
+  "@chatAddToCart": {
+    "description": "Produit partagé : ajouter"
+  },
+  "chatProductUnavailable": "Ce produit n'est plus en vente.",
+  "@chatProductUnavailable": {
+    "description": "Produit partagé retiré"
+  },
+  "chatAttachProduct": "Joindre ce produit",
+  "@chatAttachProduct": {
+    "description": "Joindre le produit consulté"
+  },
+  "chatDismiss": "Retirer",
+  "@chatDismiss": {
+    "description": "Retirer le produit joint"
+  },
+  "chatSendFailed": "Message non envoyé. Réessaie.",
+  "@chatSendFailed": {
+    "description": "Échec d'envoi"
+  },
+  "chatOffline": "Hors ligne : les derniers messages sont affichés.",
+  "@chatOffline": {
+    "description": "Hors ligne"
+  },
+  "chatWriteToStore": "Écrire à la boutique",
+  "@chatWriteToStore": {
+    "description": "Ouvrir la conversation"
+  },
+  "chatAskProduct": "Poser une question",
+  "@chatAskProduct": {
+    "description": "Question sur un produit"
+  },
+  "chatMyMessages": "Mes messages",
+  "@chatMyMessages": {
+    "description": "Entrée du compte"
+  },
+  "chatStoreUnavailable": "Cette boutique n'accepte pas de messages pour l'instant.",
+  "@chatStoreUnavailable": {
+    "description": "Boutique inactive"
+  },
+  "dashboardUnreadMessages": "{n, plural, =0{Aucun message non lu} =1{1 message non lu} other{{n} messages non lus}}",
+  "@dashboardUnreadMessages": {
+    "description": "Accueil vendeuse : messages",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardUnreadMessagesHint": "Réponds à tes clientes",
+  "@dashboardUnreadMessagesHint": {
+    "description": "Accueil vendeuse : sous-titre messages"
+  },
+  "notifNewMessageTitle": "Nouveau message",
+  "@notifNewMessageTitle": {
+    "description": "Notification : message"
+  },
+  "notifNewMessageBody": "{sender} t'a écrit.",
+  "@notifNewMessageBody": {
+    "description": "Notification : expéditrice",
+    "placeholders": {
+      "sender": {
+        "type": "String"
+      }
+    }
   }
 }

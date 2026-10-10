@@ -1,6 +1,8 @@
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
@@ -9,7 +11,7 @@ import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,11 @@ Future<void> main() async {
     reference: reference,
     auth: auth,
   );
+  final messaging = MessagingRepository(
+    data: neon.data,
+    functions: neon.functions,
+    uploads: neon.uploads,
+  );
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
@@ -45,6 +52,16 @@ Future<void> main() async {
       NeonDashboardService(
         repository: VendorDashboardRepository(neon.data),
         stores: stores,
+        messages: messaging,
+      ),
+    )
+    ..registerSingleton<ChatService>(
+      NeonChatService(
+        repository: messaging,
+        role: ChatRole.vendor,
+        countryConfig: stores.countryConfig,
+        photos: PluginPhotoPicker(),
+        productPhoto: (key) => NetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerSingleton<OrdersService>(

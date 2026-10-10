@@ -33,4 +33,7 @@ class DemoVendorNavigator implements AppNavigator {
 
   @override
   void toOrder(String orderId) {}
+
+  @override
+  void toChat(String conversationId) {}
 }

@@ -15,6 +15,9 @@ class DemoDashboardService implements DashboardService {
       Ok(DemoStore.config(country));
 
   @override
+  Future<Result<int>> unreadMessages() async => const Ok(2);
+
+  @override
   Future<Result<VendorDashboard>> summary(DashboardPeriod period) async => Ok(
     VendorDashboard(
       period: period,
