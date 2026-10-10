@@ -30,6 +30,7 @@ import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/demo/demo_discovery.dart';
 import 'package:dym_gallery/demo/demo_store.dart';
 import 'package:dym_gallery/demo/demo_vendor_catalog.dart';
+import 'package:dym_gallery/demo/demo_vendor_dashboard.dart';
 import 'package:dym_gallery/demo/demo_vendor_navigator.dart';
 import 'package:dym_gallery/demo/demo_vendor_orders.dart';
 import 'package:dym_gallery/screens/s01_splash.dart';
@@ -43,6 +44,7 @@ import 'package:dym_gallery/screens/s08_seller_new_order.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
@@ -248,6 +250,7 @@ final referenceScreens = <ReferenceScreen>[
       stores: DemoStore.service(c),
       catalog: DemoVendorCatalog.service(c),
       navigator: DemoVendorNavigator(),
+      initialTab: HomeTab.products,
     ),
   ),
   ReferenceScreen(
@@ -662,6 +665,19 @@ final referenceScreens = <ReferenceScreen>[
     surface: 'Admin',
     referenceFile: '58-admin-journal.webp',
     builder: (c) => Scaffold(body: AdminAuditView(service: _admin(c))),
+  ),
+  ReferenceScreen(
+    id: '59',
+    title: 'Ma journée (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '59-vendeuse-tableau-de-bord.webp',
+    builder: (c) => Scaffold(
+      body: DashboardView(
+        service: DemoDashboardService(c),
+        onOrders: () {},
+        onProducts: () {},
+      ),
+    ),
   ),
 ];
 

@@ -266,9 +266,11 @@ select is((select c ->> 'is_active' from jsonb_array_elements(public.admin_save_
 
 -- ------------------------------------------------------------------ journal
 
-select is((public.admin_audit(p_action => 'order_status_forced') ->> 'total')::int, 2, 'filtre par action');
-select is(public.admin_audit('injoignable') -> 'entries' -> 0 ->> 'actor_first_name' is null
-  and (public.admin_audit('injoignable') ->> 'total')::int = 1, true, 'recherche dans les raisons');
+-- Le journal est en ajout seul (base partagée) : recherches limitées à la commande du test.
+select is((public.admin_audit((select o1::text from _t), 'order_status_forced') ->> 'total')::int, 2,
+  'filtre par action');
+select ok(public.admin_audit('injoignable') -> 'entries' @> jsonb_build_array(jsonb_build_object(
+  'entity_id', (select o1::text from _t), 'reason', 'Vendeuse injoignable')), 'recherche dans les raisons');
 select ok(public.admin_audit() -> 'actions' ? 'country_activated', 'actions disponibles pour le filtre');
 
 select * from finish();

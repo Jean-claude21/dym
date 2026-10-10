@@ -31,6 +31,9 @@ Les autres parcours sont produits spec par spec dans la même direction.
 
 ## Ordre de production
 
+Spec 014 : parcours 11, [maquette 59 — tableau de bord vendeuse](screens/59-vendeuse-tableau-de-bord.webp),
+produite en image dans la direction validée ; à valider avant fusion.
+
 Les trois parcours qui portent les hypothèses les plus risquées passent en premier : **4, 10, 12**.
 
 ## Parcours

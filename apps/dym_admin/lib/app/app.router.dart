@@ -7,6 +7,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
+import 'package:dym_admin/features/ops/admin_service.dart' as _i10;
 import 'package:dym_admin/ui/navigation.dart' as _i7;
 import 'package:dym_admin/ui/views/home/admin_home_view.dart' as _i4;
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_view.dart' as _i3;
@@ -17,7 +18,7 @@ import 'package:dym_auth/dym_auth.dart' as _i9;
 import 'package:flutter/material.dart' as _i5;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i10;
+import 'package:stacked_services/stacked_services.dart' as _i11;
 
 class Routes {
   static const startupView = '/';
@@ -70,8 +71,11 @@ class StackedRouter extends _i1.RouterBase {
         builder: (context) => _i4.AdminHomeView(
           key: args.key,
           service: args.service,
+          admin: args.admin,
           navigator: args.navigator,
           inactivity: args.inactivity,
+          initialTab: args.initialTab,
+          clock: args.clock,
         ),
         settings: data,
       );
@@ -145,21 +149,30 @@ class AdminHomeViewArguments {
   const AdminHomeViewArguments({
     this.key,
     this.service,
+    this.admin,
     this.navigator,
     this.inactivity,
+    this.initialTab = _i4.AdminTab.orders,
+    this.clock = DateTime.now,
   });
 
   final _i5.Key? key;
 
   final _i9.AuthService? service;
 
+  final _i10.AdminService? admin;
+
   final _i7.AdminNavigator? navigator;
 
   final Duration? inactivity;
 
+  final _i4.AdminTab initialTab;
+
+  final DateTime Function() clock;
+
   @override
   String toString() {
-    return '{"key": "$key", "service": "$service", "navigator": "$navigator", "inactivity": "$inactivity"}';
+    return '{"key": "$key", "service": "$service", "admin": "$admin", "navigator": "$navigator", "inactivity": "$inactivity", "initialTab": "$initialTab", "clock": "$clock"}';
   }
 
   @override
@@ -167,20 +180,26 @@ class AdminHomeViewArguments {
     if (identical(this, other)) return true;
     return other.key == key &&
         other.service == service &&
+        other.admin == admin &&
         other.navigator == navigator &&
-        other.inactivity == inactivity;
+        other.inactivity == inactivity &&
+        other.initialTab == initialTab &&
+        other.clock == clock;
   }
 
   @override
   int get hashCode {
     return key.hashCode ^
         service.hashCode ^
+        admin.hashCode ^
         navigator.hashCode ^
-        inactivity.hashCode;
+        inactivity.hashCode ^
+        initialTab.hashCode ^
+        clock.hashCode;
   }
 }
 
-extension NavigatorStateExtension on _i10.NavigationService {
+extension NavigatorStateExtension on _i11.NavigationService {
   Future<dynamic> navigateToStartupView({
     _i5.Key? key,
     _i6.StartupViewModel Function()? viewModelFactory,
@@ -230,8 +249,11 @@ extension NavigatorStateExtension on _i10.NavigationService {
   Future<dynamic> navigateToAdminHomeView({
     _i5.Key? key,
     _i9.AuthService? service,
+    _i10.AdminService? admin,
     _i7.AdminNavigator? navigator,
     Duration? inactivity,
+    _i4.AdminTab initialTab = _i4.AdminTab.orders,
+    DateTime Function() clock = DateTime.now,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -243,8 +265,11 @@ extension NavigatorStateExtension on _i10.NavigationService {
       arguments: AdminHomeViewArguments(
         key: key,
         service: service,
+        admin: admin,
         navigator: navigator,
         inactivity: inactivity,
+        initialTab: initialTab,
+        clock: clock,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,
@@ -302,8 +327,11 @@ extension NavigatorStateExtension on _i10.NavigationService {
   Future<dynamic> replaceWithAdminHomeView({
     _i5.Key? key,
     _i9.AuthService? service,
+    _i10.AdminService? admin,
     _i7.AdminNavigator? navigator,
     Duration? inactivity,
+    _i4.AdminTab initialTab = _i4.AdminTab.orders,
+    DateTime Function() clock = DateTime.now,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
@@ -315,8 +343,11 @@ extension NavigatorStateExtension on _i10.NavigationService {
       arguments: AdminHomeViewArguments(
         key: key,
         service: service,
+        admin: admin,
         navigator: navigator,
         inactivity: inactivity,
+        initialTab: initialTab,
+        clock: clock,
       ),
       id: routerId,
       preventDuplicates: preventDuplicates,

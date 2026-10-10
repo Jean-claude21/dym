@@ -3497,5 +3497,80 @@
   "adminOrderPlaced": "Commande passée",
   "@adminOrderPlaced": {
     "description": "Chronologie : création"
+  },
+  "dashboardTitle": "Ma journée",
+  "dashboardDay": "Aujourd’hui",
+  "dashboardWeek": "Semaine",
+  "dashboardMonth": "Mois",
+  "dashboardRevenue": "Ventes encaissées",
+  "dashboardRevenueExplanation": "Articles livrés et payés, hors livraison, avant commission. Les remboursements sont déduits.",
+  "dashboardToDo": "À traiter",
+  "dashboardEmpty": "Aucune commande sur cette période.",
+  "dashboardOffline": "Hors ligne : les derniers chiffres sont affichés.",
+  "dashboardRefreshFailed": "Les chiffres n’ont pas pu être actualisés. Tire vers le bas pour réessayer.",
+  "dashboardRecapHint": "Ton récapitulatif du jour arrive à partir de 19 h.",
+  "dashboardOrderCount": "{count, plural, =0{commande} =1{commande} other{commandes}}",
+  "dashboardPendingPayments": "{count, plural, =0{paiement attendu} =1{paiement attendu} other{paiements attendus}}",
+  "dashboardNewOrders": "{count, plural, =0{Aucune nouvelle commande} =1{1 nouvelle commande} other{{count} nouvelles commandes}}",
+  "dashboardActiveOrders": "{count, plural, =0{Aucune commande en cours} =1{1 commande en cours} other{{count} commandes en cours}}",
+  "dashboardStock": "{count, plural, =0{Aucun produit en rupture} =1{1 produit en rupture} other{{count} produits en rupture}}",
+  "dashboardCritical": "{count, plural, =1{Une cliente attend ta réponse} other{{count} messages importants t’attendent}}",
+  "@dashboardOrderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardPendingPayments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardNewOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardActiveOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardCritical": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardCriticalAction": "Voir les notifications",
+  "@dashboardCriticalAction": {
+    "description": "Accueil vendeuse : ouvrir les notifications importantes"
+  },
+  "dashboardNewOrdersHint": "Des clientes ont commandé",
+  "@dashboardNewOrdersHint": {
+    "description": "Accueil vendeuse : sous-titre des nouvelles commandes"
+  },
+  "dashboardActiveOrdersHint": "À préparer et livrer",
+  "@dashboardActiveOrdersHint": {
+    "description": "Accueil vendeuse : sous-titre des commandes en cours"
+  },
+  "dashboardStockHint": "Remets-le en stock pour continuer à vendre",
+  "@dashboardStockHint": {
+    "description": "Accueil vendeuse : sous-titre des ruptures"
   }
 }

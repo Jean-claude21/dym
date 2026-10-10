@@ -8,6 +8,7 @@ export 'src/cart/disputes.dart';
 export 'src/cart/order_tracking.dart';
 export 'src/cart/vendor_orders.dart';
 export 'src/catalog/catalog_models.dart';
+export 'src/dashboard/vendor_dashboard.dart';
 export 'src/discovery/discovery_models.dart';
 export 'src/reference/country_config.dart';
 export 'src/reference/reference_models.dart';

@@ -732,5 +732,68 @@
   "adminExternalDelivery": "External delivery",
   "adminCourierName": "Courier name",
   "adminAssign": "Assign",
-  "adminOrderPlaced": "Order placed"
+  "adminOrderPlaced": "Order placed",
+  "dashboardTitle": "My day",
+  "dashboardDay": "Today",
+  "dashboardWeek": "Week",
+  "dashboardMonth": "Month",
+  "dashboardRevenue": "Collected sales",
+  "dashboardRevenueExplanation": "Delivered and paid items, excluding delivery, before commission. Refunds are deducted.",
+  "dashboardToDo": "To do",
+  "dashboardEmpty": "No orders in this period.",
+  "dashboardOffline": "Offline: showing the latest figures.",
+  "dashboardRefreshFailed": "Figures could not be refreshed. Pull down to retry.",
+  "dashboardRecapHint": "Your daily recap arrives from 7 pm.",
+  "dashboardOrderCount": "{count, plural, =1{order} other{orders}}",
+  "dashboardPendingPayments": "{count, plural, =1{payment awaited} other{payments awaited}}",
+  "dashboardNewOrders": "{count, plural, =0{No new orders} =1{1 new order} other{{count} new orders}}",
+  "dashboardActiveOrders": "{count, plural, =0{No orders in progress} =1{1 order in progress} other{{count} orders in progress}}",
+  "dashboardStock": "{count, plural, =0{No products out of stock} =1{1 product out of stock} other{{count} products out of stock}}",
+  "dashboardCritical": "{count, plural, =1{A customer is waiting for your reply} other{{count} important messages are waiting}}",
+  "@dashboardOrderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardPendingPayments": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardNewOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardActiveOrders": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardStock": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "@dashboardCritical": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardCriticalAction": "See notifications",
+  "dashboardNewOrdersHint": "Customers placed orders",
+  "dashboardActiveOrdersHint": "To prepare and deliver",
+  "dashboardStockHint": "Restock to keep selling"
 }

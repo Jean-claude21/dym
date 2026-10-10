@@ -2588,4 +2588,124 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminOrderPlaced => 'Commande passée';
+
+  @override
+  String get dashboardTitle => 'Ma journée';
+
+  @override
+  String get dashboardDay => 'Aujourd’hui';
+
+  @override
+  String get dashboardWeek => 'Semaine';
+
+  @override
+  String get dashboardMonth => 'Mois';
+
+  @override
+  String get dashboardRevenue => 'Ventes encaissées';
+
+  @override
+  String get dashboardRevenueExplanation =>
+      'Articles livrés et payés, hors livraison, avant commission. Les remboursements sont déduits.';
+
+  @override
+  String get dashboardToDo => 'À traiter';
+
+  @override
+  String get dashboardEmpty => 'Aucune commande sur cette période.';
+
+  @override
+  String get dashboardOffline =>
+      'Hors ligne : les derniers chiffres sont affichés.';
+
+  @override
+  String get dashboardRefreshFailed =>
+      'Les chiffres n’ont pas pu être actualisés. Tire vers le bas pour réessayer.';
+
+  @override
+  String get dashboardRecapHint =>
+      'Ton récapitulatif du jour arrive à partir de 19 h.';
+
+  @override
+  String dashboardOrderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'commandes',
+      one: 'commande',
+      zero: 'commande',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashboardPendingPayments(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'paiements attendus',
+      one: 'paiement attendu',
+      zero: 'paiement attendu',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashboardNewOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouvelles commandes',
+      one: '1 nouvelle commande',
+      zero: 'Aucune nouvelle commande',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashboardActiveOrders(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count commandes en cours',
+      one: '1 commande en cours',
+      zero: 'Aucune commande en cours',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashboardStock(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count produits en rupture',
+      one: '1 produit en rupture',
+      zero: 'Aucun produit en rupture',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String dashboardCritical(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count messages importants t’attendent',
+      one: 'Une cliente attend ta réponse',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get dashboardCriticalAction => 'Voir les notifications';
+
+  @override
+  String get dashboardNewOrdersHint => 'Des clientes ont commandé';
+
+  @override
+  String get dashboardActiveOrdersHint => 'À préparer et livrer';
+
+  @override
+  String get dashboardStockHint => 'Remets-le en stock pour continuer à vendre';
 }
