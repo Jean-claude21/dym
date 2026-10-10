@@ -96,6 +96,39 @@ class AdminStoresViewModel extends AdminViewModel {
   Future<bool> update(Map<String, Object?> patch, String reason) =>
       _act((id) => service.updateStore(id, patch, reason));
 
+  /// Vue de la vendeuse (A-VEN-06), consultation journalisée.
+  Future<Result<AdminVendorView>> vendorView() {
+    final current = _store;
+    if (current == null) {
+      return Future.value(const Err(ValidationFailure('no_store')));
+    }
+    return service.vendorView(current.id);
+  }
+
+  /// Suppression du compte vendeuse (A-VEN-07) : refusée si la boutique a
+  /// déjà des commandes.
+  Future<bool> deleteVendor(String reason) async {
+    final current = _store;
+    if (current == null || _acting) return false;
+    _acting = true;
+    _actionFailure = null;
+    notifyListeners();
+    final result = await service.deleteVendor(current.id, reason);
+    _acting = false;
+    switch (result) {
+      case Ok():
+        _selectedId = null;
+        _store = null;
+        if (await service.stores(status: _status) case Ok(:final value)) {
+          _page = value;
+        }
+      case Err(:final failure):
+        _actionFailure = failure;
+    }
+    notifyListeners();
+    return result.isOk;
+  }
+
   Future<bool> _act(
     Future<Result<AdminStore>> Function(String id) gesture,
   ) async {

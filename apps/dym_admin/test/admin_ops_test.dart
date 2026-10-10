@@ -287,6 +287,8 @@ void main() {
       AdminFinanceView(service: service, clock: _clock),
       size: const Size(1440, 900),
     );
+    await tester.tap(find.text('Remboursements').first);
+    await _settle(tester);
     await tester.tap(find.text('Exécuter'));
     await _settle(tester);
     await tester.tap(find.text('Marquer remis en main propre'));

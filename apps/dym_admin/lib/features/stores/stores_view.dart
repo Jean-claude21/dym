@@ -2,6 +2,7 @@ import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/ops/admin_texts.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
 import 'package:dym_admin/features/stores/stores_viewmodel.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -223,6 +224,21 @@ class _Profile extends StatelessWidget {
       if (reason != null) await vm.setSuspended(reason, suspended: !suspended);
     }
 
+    Future<void> remove() async {
+      final reason = await showReasonDialog(
+        context,
+        title: l10n.adminDeleteVendor,
+        confirmLabel: l10n.adminDeleteVendor,
+        destructive: true,
+      );
+      if (reason != null) await vm.deleteVendor(reason);
+    }
+
+    Future<void> asVendor() => showDialog<void>(
+      context: context,
+      builder: (_) => _VendorViewDialog(vm: vm),
+    );
+
     Future<void> edit() async {
       unawaitedZones();
       await showDialog<void>(
@@ -322,6 +338,13 @@ class _Profile extends StatelessWidget {
               runSpacing: DymTokenSpace.s2,
               children: [
                 DymButton(
+                  label: l10n.adminViewAsVendor,
+                  icon: Icons.visibility_rounded,
+                  variant: DymButtonVariant.secondary,
+                  expanded: false,
+                  onPressed: asVendor,
+                ),
+                DymButton(
                   label: l10n.adminEditStore,
                   icon: Icons.edit_rounded,
                   variant: DymButtonVariant.secondary,
@@ -344,6 +367,20 @@ class _Profile extends StatelessWidget {
                 ),
               ],
             ),
+            if (row.publishedAt == null)
+              Padding(
+                padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: DymButton(
+                    label: l10n.adminDeleteVendor,
+                    icon: Icons.delete_forever_rounded,
+                    variant: DymButtonVariant.destructive,
+                    expanded: false,
+                    onPressed: vm.acting ? null : remove,
+                  ),
+                ),
+              ),
             if (!suspended)
               Padding(
                 padding: const EdgeInsets.only(top: DymTokenSpace.s1),
@@ -362,6 +399,129 @@ class _Profile extends StatelessWidget {
     // Les quartiers arrivent pendant que le dialogue s'ouvre.
     // ignore: discarded_futures
     vm.loadZones();
+  }
+}
+
+/// Ce que voit la vendeuse (A-VEN-06) : produits, prix, stock et dernières
+/// commandes, en lecture seule.
+class _VendorViewDialog extends StatefulWidget {
+  const new({required this.vm});
+
+  final AdminStoresViewModel vm;
+
+  @override
+  State<_VendorViewDialog> createState() => _VendorViewDialogState();
+}
+
+class _VendorViewDialogState extends State<_VendorViewDialog> {
+  late Future<Result<AdminVendorView>> _view = widget.vm.vendorView();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final vm = widget.vm;
+    return Dialog(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 640, maxHeight: 720),
+        child: FutureBuilder(
+          future: _view,
+          builder: (context, snapshot) {
+            final result = snapshot.data;
+            final Widget content;
+            switch (result) {
+              case null:
+                content = AdminState(failure: null, onRetry: () {});
+              case Err(:final failure):
+                content = AdminState(
+                  failure: failure,
+                  onRetry: () => setState(() => _view = vm.vendorView()),
+                );
+              case Ok(:final value):
+                final v = value;
+                content = Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      v.store.row.name,
+                      style: t.display.copyWith(fontSize: 24),
+                    ),
+                    Text(
+                      [
+                        if (v.rating case final r?)
+                          l10n.reviewAverage(r.toStringAsFixed(1)),
+                        l10n.reviewCount(v.reviewCount),
+                      ].join(' · '),
+                      style: t.body.copyWith(color: c.textSecondary),
+                    ),
+                    const Divider(height: DymTokenSpace.s4),
+                    Text(
+                      l10n.navProducts,
+                      style: t.title.copyWith(fontSize: 18),
+                    ),
+                    if (v.products.isEmpty) AdminEmpty(l10n.adminNoData),
+                    for (final p in v.products)
+                      AdminField(
+                        p.name,
+                        [
+                          if ((p.priceMinor, v.store.currencyCode) case (
+                            final m?,
+                            final code?,
+                          ))
+                            vm.money(m, code),
+                          if (!p.isAvailable) l10n.adminOutOfStock,
+                          if (p.stock case final n?) l10n.adminStock(n),
+                        ].join(' · '),
+                      ),
+                    const SizedBox(height: DymTokenSpace.s3),
+                    Text(
+                      l10n.adminLastOrders,
+                      style: t.title.copyWith(fontSize: 18),
+                    ),
+                    if (v.recentOrders.isEmpty) AdminEmpty(l10n.adminNoOrders),
+                    for (final o in v.recentOrders)
+                      AdminField(
+                        o.reference,
+                        '${orderStatusLabel(l10n, o.status)} · '
+                        '${vm.money(o.totalMinor, o.currencyCode)}',
+                      ),
+                    const SizedBox(height: DymTokenSpace.s2),
+                    Text(
+                      l10n.adminReadOnlyAudited,
+                      style: t.label.copyWith(color: c.textSecondary),
+                    ),
+                  ],
+                );
+            }
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Flexible(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(DymTokenSpace.s4),
+                    child: content,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(DymTokenSpace.s3),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: DymButton(
+                      label: l10n.adminClose,
+                      variant: DymButtonVariant.secondary,
+                      expanded: false,
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
   }
 }
 

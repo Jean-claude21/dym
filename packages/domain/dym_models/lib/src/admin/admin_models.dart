@@ -782,3 +782,461 @@ class AdminAuditPage {
   final List<String> actions;
   final List<String> entityTypes;
 }
+
+// ---------------------------------------------------------- pilote (spec 017)
+
+/// Montant dans une devise (aucun total ne traverse les devises).
+@immutable
+class CurrencyAmount {
+  const new({required this.currencyCode, required this.minor, this.orders = 0});
+
+  factory fromJson(Map<String, dynamic> json) => CurrencyAmount(
+    currencyCode: json['currency_code'] as String,
+    minor: minorFromJson(json['sales_minor'] ?? json['minor']),
+    orders: (json['orders'] as num?)?.toInt() ?? 0,
+  );
+
+  final String currencyCode;
+  final int minor;
+  final int orders;
+}
+
+/// Réussites et échecs (paiements, livraisons).
+@immutable
+class SuccessRate {
+  const new({required this.succeeded, required this.failed});
+
+  factory fromJson(Map<String, dynamic> json, String ok, String ko) =>
+      SuccessRate(
+        succeeded: (json[ok] as num?)?.toInt() ?? 0,
+        failed: (json[ko] as num?)?.toInt() ?? 0,
+      );
+
+  final int succeeded;
+  final int failed;
+
+  /// Taux en pourcentage (nul sans données).
+  int? get percent => succeeded + failed == 0
+      ? null
+      : (succeeded * 100 / (succeeded + failed)).round();
+}
+
+/// Jour de la série sur 30 jours.
+@immutable
+class DashboardDay {
+  const new({required this.day, required this.orders, this.sales = const []});
+
+  factory fromJson(Map<String, dynamic> json) => DashboardDay(
+    day: DateTime.parse(json['day'] as String),
+    orders: (json['orders'] as num?)?.toInt() ?? 0,
+    sales: [
+      for (final s in (json['sales'] as List? ?? const []))
+        CurrencyAmount.fromJson(s as Map<String, dynamic>),
+    ],
+  );
+
+  final DateTime day;
+  final int orders;
+  final List<CurrencyAmount> sales;
+}
+
+/// Boutique du classement.
+@immutable
+class TopStore {
+  const new({
+    required this.id,
+    required this.name,
+    required this.currencyCode,
+    required this.orders,
+    required this.salesMinor,
+    this.rating,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => TopStore(
+    id: json['id'] as String,
+    name: json['name'] as String,
+    currencyCode: json['currency_code'] as String,
+    orders: (json['orders'] as num).toInt(),
+    salesMinor: minorFromJson(json['sales_minor']),
+    rating: (json['rating'] as num?)?.toDouble(),
+  );
+
+  final String id;
+  final String name;
+  final String currencyCode;
+  final int orders;
+  final int salesMinor;
+  final double? rating;
+}
+
+/// Catégorie ou produit du classement (quantités vendues).
+@immutable
+class TopItem {
+  const new({required this.label, required this.quantity, this.detail});
+
+  final LocalizedText label;
+  final String? detail;
+  final int quantity;
+}
+
+/// Tableau de bord de l'équipe (écran 67).
+@immutable
+class AdminDashboard {
+  const new({
+    required this.period,
+    this.activeOrders = 0,
+    this.stuckOrders = 0,
+    this.revenue = const [],
+    this.payments1h = const SuccessRate(succeeded: 0, failed: 0),
+    this.payments24h = const SuccessRate(succeeded: 0, failed: 0),
+    this.deliveries = const SuccessRate(succeeded: 0, failed: 0),
+    this.activeClients = 0,
+    this.activeVendors = 0,
+    this.newSignups = 0,
+    this.draftStores = 0,
+    this.openDisputes = 0,
+    this.lateDisputes = 0,
+    this.openTickets = 0,
+    this.lateTickets = 0,
+    this.pendingRefunds = 0,
+    this.series = const [],
+    this.topStores = const [],
+    this.topCategories = const [],
+    this.topProducts = const [],
+  });
+
+  factory fromJson(Map<String, dynamic> json) {
+    int n(String k) => (json[k] as num?)?.toInt() ?? 0;
+    Map<String, dynamic> m(String k) =>
+        (json[k] as Map?)?.cast<String, dynamic>() ?? const {};
+    List<dynamic> l(String k) => json[k] as List? ?? const [];
+    return AdminDashboard(
+      period: json['period'] as String? ?? 'day',
+      activeOrders: n('active_orders'),
+      stuckOrders: n('stuck_orders'),
+      revenue: [
+        for (final r in l('revenue'))
+          CurrencyAmount.fromJson(r as Map<String, dynamic>),
+      ],
+      payments1h: SuccessRate.fromJson(m('payments_1h'), 'succeeded', 'failed'),
+      payments24h: SuccessRate.fromJson(
+        m('payments_24h'),
+        'succeeded',
+        'failed',
+      ),
+      deliveries: SuccessRate.fromJson(m('deliveries'), 'delivered', 'failed'),
+      activeClients: (m('active_users')['client'] as num?)?.toInt() ?? 0,
+      activeVendors: (m('active_users')['vendor'] as num?)?.toInt() ?? 0,
+      newSignups: n('new_signups'),
+      draftStores: n('draft_stores'),
+      openDisputes: n('open_disputes'),
+      lateDisputes: n('late_disputes'),
+      openTickets: n('open_tickets'),
+      lateTickets: n('late_tickets'),
+      pendingRefunds: n('pending_refunds'),
+      series: [
+        for (final d in l('series_30d'))
+          DashboardDay.fromJson(d as Map<String, dynamic>),
+      ],
+      topStores: [
+        for (final s in l('top_stores'))
+          TopStore.fromJson(s as Map<String, dynamic>),
+      ],
+      topCategories: [
+        for (final c in l('top_categories'))
+          TopItem(
+            label: LocalizedText.fromJson((c as Map)['label']),
+            quantity: (c['quantity'] as num).toInt(),
+          ),
+      ],
+      topProducts: [
+        for (final p in l('top_products'))
+          TopItem(
+            label: LocalizedText({'fr': (p as Map)['name'] as String}),
+            detail: p['store_name'] as String?,
+            quantity: (p['quantity'] as num).toInt(),
+          ),
+      ],
+    );
+  }
+
+  final String period;
+  final int activeOrders;
+  final int stuckOrders;
+  final List<CurrencyAmount> revenue;
+  final SuccessRate payments1h;
+  final SuccessRate payments24h;
+  final SuccessRate deliveries;
+  final int activeClients;
+  final int activeVendors;
+  final int newSignups;
+  final int draftStores;
+  final int openDisputes;
+  final int lateDisputes;
+  final int openTickets;
+  final int lateTickets;
+  final int pendingRefunds;
+  final List<DashboardDay> series;
+  final List<TopStore> topStores;
+  final List<TopItem> topCategories;
+  final List<TopItem> topProducts;
+}
+
+/// Revenus d'une devise.
+@immutable
+class RevenueTotal {
+  const new({
+    required this.currencyCode,
+    required this.orders,
+    required this.salesMinor,
+    required this.commissionMinor,
+    required this.netMinor,
+    this.refundsMinor = 0,
+    this.storeId,
+    this.storeName,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => RevenueTotal(
+    currencyCode: json['currency_code'] as String,
+    orders: (json['orders'] as num).toInt(),
+    salesMinor: minorFromJson(json['sales_minor']),
+    commissionMinor: minorFromJson(json['commission_minor']),
+    netMinor: minorFromJson(json['net_minor']),
+    refundsMinor: nullableMinorFromJson(json['refunds_minor']) ?? 0,
+    storeId: json['id'] as String?,
+    storeName: json['name'] as String?,
+  );
+
+  final String currencyCode;
+  final int orders;
+  final int salesMinor;
+  final int commissionMinor;
+  final int netMinor;
+  final int refundsMinor;
+  final String? storeId;
+  final String? storeName;
+}
+
+/// Revenus de la plateforme (écran 70).
+@immutable
+class AdminRevenue {
+  const new({
+    required this.period,
+    this.totals = const [],
+    this.stores = const [],
+  });
+
+  factory fromJson(Map<String, dynamic> json) => AdminRevenue(
+    period: json['period'] as String,
+    totals: [
+      for (final t in json['totals'] as List? ?? const [])
+        RevenueTotal.fromJson(t as Map<String, dynamic>),
+    ],
+    stores: [
+      for (final s in json['stores'] as List? ?? const [])
+        RevenueTotal.fromJson(s as Map<String, dynamic>),
+    ],
+  );
+
+  final String period;
+  final List<RevenueTotal> totals;
+  final List<RevenueTotal> stores;
+}
+
+/// Feature flag (pays nul : tous les pays).
+@immutable
+@JsonSerializable()
+class AdminFeatureFlag {
+  const new({
+    required this.id,
+    required this.key,
+    required this.isEnabled,
+    required this.description,
+    this.countryCode,
+  });
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminFeatureFlagFromJson(json);
+
+  final String id;
+  final String key;
+  final String? countryCode;
+  final bool isEnabled;
+  final String description;
+}
+
+/// Ligne de la liste des clientes.
+@immutable
+@JsonSerializable()
+class AdminClientRow {
+  const new({
+    required this.id,
+    required this.firstName,
+    required this.createdAt,
+    this.orders = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => _$AdminClientRowFromJson(json);
+
+  final String id;
+  final String firstName;
+  final DateTime createdAt;
+  final int orders;
+}
+
+/// Adresse d'une cliente (vue équipe).
+@immutable
+@JsonSerializable()
+class AdminClientAddress {
+  const new({
+    required this.kind,
+    required this.zoneName,
+    required this.landmark,
+    this.label,
+  });
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminClientAddressFromJson(json);
+
+  final String kind;
+  final String? label;
+  final String zoneName;
+  final String landmark;
+}
+
+/// Profil d'une cliente (écran 68).
+@immutable
+class AdminClient {
+  const new({
+    required this.id,
+    required this.firstName,
+    required this.createdAt,
+    this.email,
+    this.countryCode,
+    this.zoneName,
+    this.cityName,
+    this.orders = const [],
+    this.spent = const [],
+    this.orderCount = 0,
+    this.disputeCount = 0,
+    this.ticketCount = 0,
+    this.addresses = const [],
+    this.reviews = const [],
+  });
+
+  factory fromJson(Map<String, dynamic> json) => AdminClient(
+    id: json['id'] as String,
+    firstName: json['first_name'] as String,
+    email: json['email'] as String?,
+    countryCode: json['country_code'] as String?,
+    zoneName: json['zone_name'] as String?,
+    cityName: json['city_name'] as String?,
+    createdAt: DateTime.parse(json['created_at'] as String),
+    orders: [
+      for (final o in json['orders'] as List? ?? const [])
+        AdminOrderRow.fromJson(o as Map<String, dynamic>),
+    ],
+    spent: [
+      for (final s in json['spent'] as List? ?? const [])
+        CurrencyAmount.fromJson(s as Map<String, dynamic>),
+    ],
+    orderCount: (json['order_count'] as num?)?.toInt() ?? 0,
+    disputeCount: (json['dispute_count'] as num?)?.toInt() ?? 0,
+    ticketCount: (json['ticket_count'] as num?)?.toInt() ?? 0,
+    addresses: [
+      for (final a in json['addresses'] as List? ?? const [])
+        AdminClientAddress.fromJson(a as Map<String, dynamic>),
+    ],
+    reviews: [
+      for (final r in json['reviews'] as List? ?? const [])
+        AdminClientReview(
+          storeName: (r as Map)['store_name'] as String? ?? '',
+          rating: (r['rating'] as num).toInt(),
+          comment: r['comment'] as String?,
+        ),
+    ],
+  );
+
+  final String id;
+  final String firstName;
+  final String? email;
+  final String? countryCode;
+  final String? zoneName;
+  final String? cityName;
+  final DateTime createdAt;
+  final List<AdminOrderRow> orders;
+  final List<CurrencyAmount> spent;
+  final int orderCount;
+  final int disputeCount;
+  final int ticketCount;
+  final List<AdminClientAddress> addresses;
+  final List<AdminClientReview> reviews;
+}
+
+/// Avis laissé par une cliente (vue équipe).
+@immutable
+class AdminClientReview {
+  const new({required this.storeName, required this.rating, this.comment});
+
+  final String storeName;
+  final int rating;
+  final String? comment;
+}
+
+/// Produit vu par l'équipe (vue de l'app d'une vendeuse).
+@immutable
+@JsonSerializable()
+class AdminVendorProduct {
+  const new({
+    required this.id,
+    required this.name,
+    required this.status,
+    this.priceMinor,
+    this.isAvailable = true,
+    this.stock,
+  });
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminVendorProductFromJson(json);
+
+  final String id;
+  final String name;
+  final String status;
+  @JsonKey(fromJson: nullableMinorFromJson)
+  final int? priceMinor;
+  final bool isAvailable;
+  final int? stock;
+}
+
+/// Vue de l'app d'une vendeuse (A-VEN-07), en lecture.
+@immutable
+class AdminVendorView {
+  const new({
+    required this.store,
+    this.products = const [],
+    this.recentOrders = const [],
+    this.rating,
+    this.reviewCount = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => AdminVendorView(
+    store: AdminStore.fromJson(json),
+    products: [
+      for (final p in json['products'] as List? ?? const [])
+        AdminVendorProduct.fromJson(p as Map<String, dynamic>),
+    ],
+    recentOrders: [
+      for (final o in json['recent_orders'] as List? ?? const [])
+        AdminOrderRow.fromJson(o as Map<String, dynamic>),
+    ],
+    rating: ((json['rating'] as Map?)?['rating'] as num?)?.toDouble(),
+    reviewCount:
+        ((json['rating'] as Map?)?['review_count'] as num?)?.toInt() ?? 0,
+  );
+
+  final AdminStore store;
+  final List<AdminVendorProduct> products;
+  final List<AdminOrderRow> recentOrders;
+  final double? rating;
+  final int reviewCount;
+}

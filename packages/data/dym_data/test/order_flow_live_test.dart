@@ -784,7 +784,7 @@ void main() {
 
   test(
     'admin : statut forcé, litige tranché, annulation remboursée, '
-    'boutique suspendue, journal',
+    'boutique suspendue, pilote (tableau de bord, support, clientes), journal',
     () async {
       // Le rôle admin s'accorde en base (premier admin) : URL hors dépôt.
       final dbUrl = env['NEON_LIVE_DATABASE_URL'];
@@ -1015,7 +1015,48 @@ void main() {
       );
       expect(reactivated.row.status, AdminStoreStatus.active);
 
-      // 5. Journal : chaque action de l'équipe est tracée.
+      // 5. Pilote (spec 017) : tableau de bord, revenus, support, clientes,
+      // vue vendeuse, suppression refusée, fonctionnalités.
+      final board = await ok(admin.dashboard('day'), 'tableau de bord');
+      expect(board.series, hasLength(30));
+      final revenue = await ok(admin.revenue('30d'), 'revenus');
+      expect(
+        revenue.stores.map((r) => r.storeId),
+        isNot(contains(storeId)),
+        reason: 'livrée de force, cash jamais encaissé',
+      );
+      final help = await ok(
+        SupportRepository(client.data).open(
+          app: 'client',
+          subject: TicketSubject.payment,
+          body: 'Question de test e2e',
+          orderId: cashOrder,
+        ),
+        'demande',
+      );
+      final open = await ok(admin.tickets(TicketStatus.open), 'tickets');
+      expect(open.map((t) => t.id), contains(help.id));
+      final answered = await ok(
+        admin.replyTicket(help.id, 'Réponse de test e2e'),
+        'réponse',
+      );
+      expect(answered.status, TicketStatus.pending);
+      expect(answered.firstResponseAt, isNotNull);
+      final shut = await ok(admin.closeTicket(help.id), 'clôture');
+      expect(shut.status, TicketStatus.closed);
+      final rows = await ok(
+        admin.clients(query: 'dym-e2e-cx-$run'),
+        'clientes',
+      );
+      final profile = await ok(admin.client(rows.single.id), 'profil');
+      expect(profile.orderCount, greaterThanOrEqualTo(1));
+      final seen = await ok(admin.vendorView(storeId), 'vue vendeuse');
+      expect(seen.products, isNotEmpty);
+      final kept = await admin.deleteVendor(storeId, 'Doublon (test e2e)');
+      expect(kept.failureOrNull?.message, 'vendor_has_orders');
+      expect(await ok(admin.featureFlags(), 'fonctionnalités'), isNotEmpty);
+
+      // 6. Journal : chaque action de l'équipe est tracée.
       final log = await ok(admin.audit(query: 'test e2e'), 'journal');
       expect(log.total, greaterThanOrEqualTo(3));
       expect(await ok(admin.countries(), 'pays'), isNotEmpty);

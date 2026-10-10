@@ -1,11 +1,14 @@
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_admin/features/audit/audit_view.dart';
+import 'package:dym_admin/features/clients/clients_view.dart';
+import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/disputes/disputes_view.dart' as admin;
 import 'package:dym_admin/features/finance/finance_view.dart';
 import 'package:dym_admin/features/ops/testing.dart' as admin;
 import 'package:dym_admin/features/orders/orders_views.dart' as admin;
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
+import 'package:dym_admin/features/support/support_view.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/features/cart/addresses/address_form_view.dart';
@@ -661,7 +664,11 @@ final referenceScreens = <ReferenceScreen>[
     surface: 'Admin',
     referenceFile: '57-admin-finances.webp',
     builder: (c) => Scaffold(
-      body: AdminFinanceView(service: _admin(c), clock: _adminNow),
+      body: AdminFinanceView(
+        service: _admin(c),
+        clock: _adminNow,
+        initialSection: FinanceSection.refunds,
+      ),
     ),
   ),
   ReferenceScreen(
@@ -810,6 +817,50 @@ final referenceScreens = <ReferenceScreen>[
       ),
       onBack: () {},
       clock: _chatNow,
+    ),
+  ),
+  ReferenceScreen(
+    id: '67',
+    title: 'Tableau de bord (admin)',
+    surface: 'Admin',
+    referenceFile: '67-admin-tableau-de-bord.webp',
+    builder: (c) => Scaffold(
+      body: AdminDashboardView(service: _admin(c), onOpen: (_) {}),
+    ),
+  ),
+  ReferenceScreen(
+    id: '68',
+    title: 'Clientes (admin)',
+    surface: 'Admin',
+    referenceFile: '68-admin-cliente.webp',
+    builder: (c) => Scaffold(
+      body: AdminClientsView(
+        service: _admin(c),
+        clock: _adminNow,
+        initialId: 'u1',
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '69',
+    title: 'Support (admin)',
+    surface: 'Admin',
+    referenceFile: '69-admin-support.webp',
+    builder: (c) => Scaffold(
+      body: AdminSupportView(
+        service: _admin(c),
+        clock: _adminNow,
+        initialId: 't1',
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '70',
+    title: 'Revenus (admin)',
+    surface: 'Admin',
+    referenceFile: '70-admin-revenus.webp',
+    builder: (c) => Scaffold(
+      body: AdminFinanceView(service: _admin(c), clock: _adminNow),
     ),
   ),
 ];

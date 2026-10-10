@@ -973,3 +973,80 @@ AdminAuditPage _$AdminAuditPageFromJson(
   );
   return val;
 }, fieldKeyMap: const {'entityTypes': 'entity_types'});
+
+AdminFeatureFlag _$AdminFeatureFlagFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'AdminFeatureFlag',
+      json,
+      ($checkedConvert) {
+        final val = AdminFeatureFlag(
+          id: $checkedConvert('id', (v) => v as String),
+          key: $checkedConvert('key', (v) => v as String),
+          isEnabled: $checkedConvert('is_enabled', (v) => v as bool),
+          description: $checkedConvert('description', (v) => v as String),
+          countryCode: $checkedConvert('country_code', (v) => v as String?),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'isEnabled': 'is_enabled',
+        'countryCode': 'country_code',
+      },
+    );
+
+AdminClientRow _$AdminClientRowFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'AdminClientRow',
+      json,
+      ($checkedConvert) {
+        final val = AdminClientRow(
+          id: $checkedConvert('id', (v) => v as String),
+          firstName: $checkedConvert('first_name', (v) => v as String),
+          createdAt: $checkedConvert(
+            'created_at',
+            (v) => DateTime.parse(v as String),
+          ),
+          orders: $checkedConvert('orders', (v) => (v as num?)?.toInt() ?? 0),
+        );
+        return val;
+      },
+      fieldKeyMap: const {'firstName': 'first_name', 'createdAt': 'created_at'},
+    );
+
+AdminClientAddress _$AdminClientAddressFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AdminClientAddress', json, ($checkedConvert) {
+      final val = AdminClientAddress(
+        kind: $checkedConvert('kind', (v) => v as String),
+        zoneName: $checkedConvert('zone_name', (v) => v as String),
+        landmark: $checkedConvert('landmark', (v) => v as String),
+        label: $checkedConvert('label', (v) => v as String?),
+      );
+      return val;
+    }, fieldKeyMap: const {'zoneName': 'zone_name'});
+
+AdminVendorProduct _$AdminVendorProductFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'AdminVendorProduct',
+      json,
+      ($checkedConvert) {
+        final val = AdminVendorProduct(
+          id: $checkedConvert('id', (v) => v as String),
+          name: $checkedConvert('name', (v) => v as String),
+          status: $checkedConvert('status', (v) => v as String),
+          priceMinor: $checkedConvert(
+            'price_minor',
+            (v) => nullableMinorFromJson(v),
+          ),
+          isAvailable: $checkedConvert(
+            'is_available',
+            (v) => v as bool? ?? true,
+          ),
+          stock: $checkedConvert('stock', (v) => (v as num?)?.toInt()),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'priceMinor': 'price_minor',
+        'isAvailable': 'is_available',
+      },
+    );

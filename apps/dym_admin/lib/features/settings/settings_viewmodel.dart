@@ -11,6 +11,7 @@ enum SettingsTab {
   commission,
   fees,
   categories,
+  flags,
 }
 
 /// Réglages : ouvrir un pays est une opération de configuration.
@@ -26,6 +27,7 @@ class AdminSettingsViewModel extends AdminViewModel {
   AdminPaymentSettings? _payments;
   AdminPricing? _pricing;
   List<AdminCategory> _categories = const [];
+  List<AdminFeatureFlag> _flags = const [];
   bool _acting = false;
   Failure? _actionFailure;
 
@@ -38,6 +40,7 @@ class AdminSettingsViewModel extends AdminViewModel {
   AdminPaymentSettings? get payments => _payments;
   AdminPricing? get pricing => _pricing;
   List<AdminCategory> get categories => _categories;
+  List<AdminFeatureFlag> get flags => _flags;
   bool get ready => !failed && _countries.isNotEmpty;
   bool get acting => _acting;
   Failure? get actionFailure => _actionFailure;
@@ -97,6 +100,10 @@ class AdminSettingsViewModel extends AdminViewModel {
       case SettingsTab.categories:
         final r = await service.categories();
         if (r case Ok(:final value)) _categories = value;
+        return r.failureOrNull;
+      case SettingsTab.flags:
+        final r = await service.featureFlags();
+        if (r case Ok(:final value)) _flags = value;
         return r.failureOrNull;
     }
   }
@@ -162,6 +169,18 @@ class AdminSettingsViewModel extends AdminViewModel {
     if (r case Ok(:final value)) _categories = value;
     return r.failureOrNull;
   });
+
+  /// Fonctionnalité activée ou coupée (pays ou partout), journalisé.
+  Future<bool> setFlag(AdminFeatureFlag flag, {required bool enabled}) =>
+      _act(() async {
+        final r = await service.setFeatureFlag(
+          flag.key,
+          enabled: enabled,
+          countryCode: flag.countryCode,
+        );
+        if (r case Ok(:final value)) _flags = value;
+        return r.failureOrNull;
+      });
 
   /// Après un changement : la liste des pays (ce qui manque) est relue.
   Future<bool> _act(Future<Failure?> Function() gesture) async {

@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:dym_ui/src/components/dym_bottom_nav.dart';
 import 'package:dym_ui/src/components/dym_nav_rail.dart';
 import 'package:dym_ui/src/layout/dym_window_class.dart';
+import 'package:dym_ui/src/theme/dym_theme.dart';
+import 'package:dym_ui/src/tokens/dym_tokens.g.dart';
 import 'package:flutter/material.dart';
 
 /// Structure d'écran à navigation principale adaptative.
@@ -21,6 +25,8 @@ class DymAdaptiveScaffold extends StatefulWidget {
     super.key,
     this.backgroundColor,
     this.railLeading,
+    this.maxBottomItems,
+    this.moreItem,
   });
 
   /// Destinations principales.
@@ -41,11 +47,44 @@ class DymAdaptiveScaffold extends StatefulWidget {
   /// Élément en tête du rail (moyenne et au-delà).
   final Widget? railLeading;
 
+  /// Fenêtre compacte : au-delà de ce nombre, les dernières destinations
+  /// passent dans une feuille ouverte par [moreItem].
+  final int? maxBottomItems;
+
+  /// Entrée « Plus » de la barre basse (avec [maxBottomItems]).
+  final DymNavItem? moreItem;
+
   @override
   State<DymAdaptiveScaffold> createState() => _DymAdaptiveScaffoldState();
 }
 
 class _DymAdaptiveScaffoldState extends State<DymAdaptiveScaffold> {
+  Future<void> _openMore(BuildContext context, int from) async {
+    final c = context.dym.colors;
+    final chosen = await showModalBottomSheet<int>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: c.card,
+      builder: (sheet) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            for (var i = from; i < widget.destinations.length; i++)
+              ListTile(
+                minTileHeight: DymTokenSize.touchMin,
+                selected: i == widget.currentIndex,
+                selectedColor: c.brandDeep,
+                leading: Icon(widget.destinations[i].icon),
+                title: Text(widget.destinations[i].label),
+                onTap: () => Navigator.pop(sheet, i),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (chosen != null) widget.onDestinationSelected(chosen);
+  }
+
   // Conserve l'état du corps quand il change de place dans l'arbre.
   final GlobalKey _bodyKey = GlobalKey(debugLabel: 'DymAdaptiveScaffold.body');
 
@@ -54,12 +93,26 @@ class _DymAdaptiveScaffoldState extends State<DymAdaptiveScaffold> {
     final windowClass = DymWindowClass.of(context);
     final body = KeyedSubtree(key: _bodyKey, child: widget.body);
     if (windowClass == DymWindowClass.compact) {
+      final max = widget.maxBottomItems;
+      final more = widget.moreItem;
+      final all = widget.destinations;
+      final folded = max != null && more != null && all.length > max;
+      final shown = folded ? [...all.take(max - 1), more] : all;
+      final current = folded && widget.currentIndex >= max - 1
+          ? max - 1
+          : widget.currentIndex;
       return Scaffold(
         backgroundColor: widget.backgroundColor,
         bottomNavigationBar: DymBottomNav(
-          items: widget.destinations,
-          currentIndex: widget.currentIndex,
-          onTap: widget.onDestinationSelected,
+          items: shown,
+          currentIndex: current,
+          onTap: (i) {
+            if (folded && i == max - 1) {
+              unawaited(_openMore(context, max - 1));
+            } else {
+              widget.onDestinationSelected(i);
+            }
+          },
         ),
         body: body,
       );

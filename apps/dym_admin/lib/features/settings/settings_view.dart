@@ -188,7 +188,9 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
     final vm = viewModel;
     final locale = Localizations.localeOf(context).languageCode;
     final scoped =
-        vm.tab != SettingsTab.countries && vm.tab != SettingsTab.categories;
+        vm.tab != SettingsTab.countries &&
+        vm.tab != SettingsTab.categories &&
+        vm.tab != SettingsTab.flags;
     final signOut = onSignOut;
     return AdminPage(
       title: l10n.navSettings,
@@ -236,6 +238,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
                     SettingsTab.commission => l10n.adminTabCommission,
                     SettingsTab.fees => l10n.adminTabFees,
                     SettingsTab.categories => l10n.adminTabCategories,
+                    SettingsTab.flags => l10n.adminTabFlags,
                   },
                   selected: vm.tab == t,
                   onTap: () => vm.selectTab(t),
@@ -255,6 +258,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
               SettingsTab.commission => _Commission(vm: vm),
               SettingsTab.fees => _Fees(vm: vm),
               SettingsTab.categories => _Categories(vm: vm),
+              SettingsTab.flags => _Flags(vm: vm),
             },
         ],
       ),
@@ -836,6 +840,54 @@ class _Categories extends StatelessWidget {
             icon: Icons.add_rounded,
             expanded: false,
             onPressed: vm.acting ? null : edit,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Fonctionnalités (A-CFG-07) : les fonctions de la phase 4 restent coupées
+/// tant que l'équipe ne les ouvre pas.
+class _Flags extends StatelessWidget {
+  const new({required this.vm});
+
+  final AdminSettingsViewModel vm;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    String scope(String? code) {
+      if (code == null) return l10n.adminFlagEverywhere;
+      final country = vm.countries.where((x) => x.code == code).firstOrNull;
+      return country?.name.resolve(locale) ?? code;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.adminFlagsHelp,
+          style: t.body.copyWith(color: c.textSecondary),
+        ),
+        const SizedBox(height: DymTokenSpace.s2),
+        AdminCard(
+          child: Column(
+            children: [
+              if (vm.flags.isEmpty) AdminEmpty(l10n.adminNoData),
+              for (final f in vm.flags)
+                DymSwitchTile(
+                  title: f.key,
+                  subtitle: [scope(f.countryCode), f.description].join(' · '),
+                  value: f.isEnabled,
+                  onChanged: vm.acting
+                      ? null
+                      : (v) => vm.setFlag(f, enabled: v),
+                ),
+            ],
           ),
         ),
       ],

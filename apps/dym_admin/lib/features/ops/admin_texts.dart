@@ -103,6 +103,8 @@ String adminFailureLabel(DymLocalizations l10n, Failure failure) =>
         'country_not_ready' => l10n.adminCountryNotReady,
         'provider_inactive' => l10n.adminProviderInactive,
         'store_status_unchanged' => l10n.adminStoreStatusUnchanged,
+        'vendor_has_orders' => l10n.adminVendorHasOrders,
+        'ticket_invalid' => l10n.adminTicketInvalid,
         _ => l10n.errorGeneric,
       },
       _ => l10n.errorGeneric,
@@ -150,3 +152,12 @@ String moneyLabel(Map<String, Currency> currencies, int minor, String? code) {
   final currency = currencies[code];
   return currency == null ? '' : Money(minor, currency).format();
 }
+
+/// Sujet d'une demande d'aide.
+String subjectLabel(DymLocalizations l10n, TicketSubject s) => switch (s) {
+  TicketSubject.order => l10n.supportSubjectOrder,
+  TicketSubject.payment => l10n.supportSubjectPayment,
+  TicketSubject.account => l10n.supportSubjectAccount,
+  TicketSubject.store => l10n.supportSubjectStore,
+  _ => l10n.supportSubjectOther,
+};
