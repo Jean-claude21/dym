@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
@@ -8,6 +10,7 @@ import 'package:dym_vendor/app/app.router.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
@@ -56,6 +59,9 @@ abstract interface class AppNavigator {
 
   /// Aide (écran 66).
   void toHelp();
+
+  /// Mes contenus et publication (écran 75, spec 020).
+  void toContents();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -68,7 +74,13 @@ class StackedAppNavigator implements AppNavigator {
     ChatService? chat,
     VendorReviewsService? reviews,
     SupportService? support,
-  ]) : _reviews = reviews ?? locator<VendorReviewsService>(),
+    VendorContentService? contents,
+  ]) : _contents =
+           contents ??
+           (locator.isRegistered<VendorContentService>()
+               ? locator<VendorContentService>()
+               : null),
+       _reviews = reviews ?? locator<VendorReviewsService>(),
        _support = support ?? locator<SupportService>(),
        _navigation = navigation ?? locator<NavigationService>(),
        _stores = stores ?? locator<StoreService>(),
@@ -81,6 +93,30 @@ class StackedAppNavigator implements AppNavigator {
   final ChatService _chat;
   final VendorReviewsService _reviews;
   final SupportService _support;
+  final VendorContentService? _contents;
+
+  @override
+  void toContents() {
+    final contents = _contents;
+    if (contents == null) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => MyContentsView(
+          service: contents,
+          onBack: () => _navigator.pop(),
+          onPublish: () => _navigator.push<void>(
+            MaterialPageRoute(
+              builder: (route) => PublishContentView(
+                service: contents,
+                onBack: () => Navigator.of(route).pop(),
+                onPublished: () => Navigator.of(route).pop(),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void toReviews() => _navigator.push<void>(

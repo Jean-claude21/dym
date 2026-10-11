@@ -344,6 +344,26 @@ class AdminRepository {
   Future<Result<void>> deleteVendor(String storeId, String reason) =>
       _post('/v1/admin/stores/$storeId/delete', {'reason': reason}, (_) {});
 
+  /// File de modération (écran 76) : signalés (`open`) ou traités.
+  Future<Result<List<ModerationItem>>> reports({bool decided = false}) => _rpc(
+    'admin_reports',
+    {'p_status': decided ? 'decided' : 'open'},
+    (json) => [for (final r in json! as List) ModerationItem.fromJson(_map(r))],
+  );
+
+  /// Garder ou retirer, raison obligatoire (`reason_required`).
+  Future<Result<void>> moderate(
+    ReportTarget target,
+    String targetId, {
+    required bool remove,
+    required String reason,
+  }) => _rpc('admin_moderate', {
+    'p_target_type': target.name,
+    'p_target_id': targetId,
+    'p_decision': remove ? 'removed' : 'kept',
+    'p_reason': reason,
+  }, (_) {});
+
   static List<AdminFeatureFlag> _flags(Object? json) => [
     for (final f in json! as List) AdminFeatureFlag.fromJson(_map(f)),
   ];

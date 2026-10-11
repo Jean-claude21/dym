@@ -16,7 +16,11 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     required this.onEdit,
     super.key,
     this.onReviews,
+    this.onContents,
   });
+
+  /// Mes contenus (spec 020) ; nul : non affiché.
+  final VoidCallback? onContents;
 
   final StoreService service;
   final Future<void> Function(StoreStep step) onEdit;
@@ -200,6 +204,14 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 StorePrivacyNote(text: l10n.myStoreSuspended)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
+              if (onContents case final contents?) ...[
+                DymMenuRow(
+                  icon: Icons.play_circle_rounded,
+                  label: l10n.contentMine,
+                  onTap: contents,
+                ),
+                const SizedBox(height: DymTokenSpace.s2),
+              ],
               if (onReviews case final reviews?) ...[
                 DymMenuRow(
                   icon: Icons.star_rounded,

@@ -3317,4 +3317,210 @@ class DymLocalizationsEn extends DymLocalizations {
   String copilotRefused(String items) {
     return 'No longer available, not added: $items';
   }
+
+  @override
+  String get actionClose => 'Close';
+
+  @override
+  String get adminNavModeration => 'Moderation';
+
+  @override
+  String get navVideos => 'Videos';
+
+  @override
+  String get feedForYou => 'For you';
+
+  @override
+  String get feedFollowing => 'Followed shops';
+
+  @override
+  String get feedEmpty => 'No videos in your area yet.';
+
+  @override
+  String get feedEmptyFollowing =>
+      'Videos from shops you\'ve ordered from will show up here.';
+
+  @override
+  String get feedAdd => 'Add';
+
+  @override
+  String feedAdded(String name) {
+    return '$name is in your basket.';
+  }
+
+  @override
+  String get feedLike => 'Like';
+
+  @override
+  String get storiesTitle => 'Shop stories';
+
+  @override
+  String storyAddProduct(String name) {
+    return 'Add $name';
+  }
+
+  @override
+  String productVideos(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Watch videos ($n)',
+      one: 'Watch video',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reportAction => 'Report';
+
+  @override
+  String get reportTitle => 'Why are you reporting this?';
+
+  @override
+  String get reportMisleading => 'Misleading';
+
+  @override
+  String get reportOffensive => 'Offensive';
+
+  @override
+  String get reportForbidden => 'Prohibited item';
+
+  @override
+  String get reportSpam => 'Spam';
+
+  @override
+  String get reportOther => 'Other';
+
+  @override
+  String get contentMine => 'My stories and videos';
+
+  @override
+  String get contentPublishTitle => 'Post';
+
+  @override
+  String get contentStory => '24 h story';
+
+  @override
+  String get contentVideo => 'Video';
+
+  @override
+  String get contentPickStory => 'Film or pick a photo or a short video.';
+
+  @override
+  String get contentPickVideo => 'Film or pick a video of up to 60 seconds.';
+
+  @override
+  String get contentVideoReady => 'Video ready';
+
+  @override
+  String get contentFilm => 'Film';
+
+  @override
+  String get contentGallery => 'Gallery';
+
+  @override
+  String get contentTagged => 'Tagged products';
+
+  @override
+  String get contentNoProducts => 'Publish a product first to tag it.';
+
+  @override
+  String get contentTagLimit => 'Up to 5 products.';
+
+  @override
+  String get contentCaption => 'Caption (optional)';
+
+  @override
+  String get contentPublishStory => 'Post story';
+
+  @override
+  String get contentPublishVideo => 'Post video';
+
+  @override
+  String get contentStoryHint => 'Visible for 24 h to customers in your area.';
+
+  @override
+  String get contentVideoHint => 'Shown in the feed of customers in your area.';
+
+  @override
+  String get contentNone => 'No stories or videos yet.';
+
+  @override
+  String get contentArchived => 'Archived';
+
+  @override
+  String contentStats(int views, int clicks, int likes) {
+    return '$views views · $clicks taps · $likes likes';
+  }
+
+  @override
+  String get contentActions => 'Actions';
+
+  @override
+  String get contentArchive => 'Archive';
+
+  @override
+  String get contentDelete => 'Delete';
+
+  @override
+  String get moderationOpen => 'Reported';
+
+  @override
+  String get moderationDecided => 'Handled';
+
+  @override
+  String get moderationEmpty => 'No reports.';
+
+  @override
+  String moderationReports(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n reports',
+      one: '1 report',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moderationKept => 'Kept';
+
+  @override
+  String get moderationRemoved => 'Removed';
+
+  @override
+  String get moderationVideo => 'Video';
+
+  @override
+  String get moderationStory => 'Story';
+
+  @override
+  String get moderationProduct => 'Product';
+
+  @override
+  String get moderationReview => 'Review';
+
+  @override
+  String get moderationPreview => 'Report preview';
+
+  @override
+  String get moderationCaption => 'Caption';
+
+  @override
+  String get moderationTagged => 'Tagged products';
+
+  @override
+  String get moderationReason => 'Reason';
+
+  @override
+  String get moderationDecision => 'Decision';
+
+  @override
+  String get moderationReasonRequired => 'Reason (required)';
+
+  @override
+  String get moderationKeep => 'Keep';
+
+  @override
+  String get moderationRemove => 'Remove';
 }

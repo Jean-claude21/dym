@@ -18,7 +18,11 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     required this.onOpenAisle,
     super.key,
     this.onCopilot,
+    this.stories,
   });
+
+  /// Rangée des stories du quartier (spec 020), si le flag est actif.
+  final Widget? stories;
 
   /// Copilote d'intention (spec 019), proposé si le flag est actif.
   final VoidCallback? onCopilot;
@@ -117,6 +121,7 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                   ],
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
+                ?stories,
                 DymSearchBar(hint: l10n.homeSearchHint, onTap: onSearch),
                 if (onCopilot case final open?
                     when vm.config?.isEnabled('intent_copilot') ?? false) ...[

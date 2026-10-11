@@ -1,8 +1,12 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
+import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/content/product_videos.dart';
+import 'package:dym_client/features/content/report_sheet.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -16,7 +20,15 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
     required this.onOpenStore,
     super.key,
     this.onAsk,
+    this.content,
+    this.onVideos,
   });
+
+  /// Vidéos et signalement (spec 020) ; absent : rien n'est proposé.
+  final ContentService? content;
+
+  /// Vidéos qui montrent ce produit (C-CAT-12).
+  final ValueChanged<String>? onVideos;
 
   final DiscoveryService service;
   final String productId;
@@ -242,6 +254,32 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                     ),
                   ),
                 ),
+                if (content case final content?)
+                  Wrap(
+                    spacing: DymTokenSpace.s2,
+                    children: [
+                      if (onVideos case final open?)
+                        ProductVideosButton(
+                          service: content,
+                          productId: item.id,
+                          onOpen: () => open(item.id),
+                        ),
+                      TextButton.icon(
+                        onPressed: () async {
+                          final reason = await showReportSheet(context);
+                          if (reason != null) {
+                            await content.report(
+                              ReportTarget.product,
+                              item.id,
+                              reason,
+                            );
+                          }
+                        },
+                        icon: const Icon(Icons.flag_outlined),
+                        label: Text(l10n.reportAction),
+                      ),
+                    ],
+                  ),
                 if (onAsk case final ask?) ...[
                   const SizedBox(height: DymTokenSpace.s2),
                   Align(

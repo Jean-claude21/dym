@@ -14,6 +14,7 @@ import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
 import { type CopilotDeps, registerCopilotRoutes } from "./copilot/routes.js";
+import { registerContentRoutes } from "./content/routes.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -101,6 +102,7 @@ export function createApp(deps: AppDeps) {
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
   registerCopilotRoutes(app, deps.verifyToken, deps.copilot);
+  registerContentRoutes(app, deps.verifyToken, deps.catalog);
 
   return app;
 }

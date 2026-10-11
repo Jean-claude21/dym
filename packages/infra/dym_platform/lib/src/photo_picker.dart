@@ -57,3 +57,42 @@ class PluginPhotoPicker implements PhotoPicker {
   static String _typeOf(String name) =>
       name.toLowerCase().endsWith('.webp') ? 'image/webp' : 'image/jpeg';
 }
+
+/// Vidéo prête à l'envoi (contenus shoppables, spec 020).
+@immutable
+class PickedVideo {
+  const new({required this.bytes, this.contentType = 'video/mp4'});
+
+  final Uint8List bytes;
+  final String contentType;
+}
+
+/// Prise ou choix d'une courte vidéo. `null` : annulé.
+abstract interface class VideoPicker {
+  Future<Result<PickedVideo?>> pick(PhotoSource source);
+}
+
+/// Implémentation `image_picker` : 60 secondes au plus.
+class PluginVideoPicker implements VideoPicker {
+  new([ImagePicker? picker]) : _picker = picker ?? ImagePicker();
+
+  final ImagePicker _picker;
+
+  static const maxDuration = Duration(seconds: 60);
+
+  @override
+  Future<Result<PickedVideo?>> pick(PhotoSource source) async {
+    try {
+      final file = await _picker.pickVideo(
+        source: source == PhotoSource.camera
+            ? ImageSource.camera
+            : ImageSource.gallery,
+        maxDuration: maxDuration,
+      );
+      if (file == null) return const Ok(null);
+      return Ok(PickedVideo(bytes: await file.readAsBytes()));
+    } on Object catch (error) {
+      return Err(UnknownFailure('vidéo indisponible : ${error.runtimeType}'));
+    }
+  }
+}

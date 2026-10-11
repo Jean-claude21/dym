@@ -1,9 +1,12 @@
+import 'dart:typed_data';
+
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_admin/features/audit/audit_view.dart';
 import 'package:dym_admin/features/clients/clients_view.dart';
 import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/disputes/disputes_view.dart' as admin;
 import 'package:dym_admin/features/finance/finance_view.dart';
+import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/testing.dart' as admin;
 import 'package:dym_admin/features/orders/orders_views.dart' as admin;
 import 'package:dym_admin/features/settings/settings_view.dart';
@@ -17,6 +20,8 @@ import 'package:dym_client/features/cart/cart/cart_view.dart';
 import 'package:dym_client/features/cart/delivery/delivery_view.dart';
 import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/cart/sent/order_sent_view.dart';
+import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_view.dart';
@@ -55,6 +60,7 @@ import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
@@ -375,6 +381,20 @@ final referenceScreens = <ReferenceScreen>[
       onBack: () {},
       onSearchMyself: (_) {},
       onAdded: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '74',
+    title: 'Fil de vidéos',
+    surface: 'Cliente',
+    referenceFile: '74-fil-videos.webp',
+    builder: (c) => FeedView(
+      service: MemoryContentService(
+        discovery: DemoDiscovery.service(c),
+        contents: [_demoContent(c)],
+      ),
+      videoBuilder: (_, _, {required active}) =>
+          Image(image: DemoImages.store('etal-akossiwa'), fit: BoxFit.cover),
     ),
   ),
   ReferenceScreen(
@@ -827,6 +847,25 @@ final referenceScreens = <ReferenceScreen>[
     ),
   ),
   ReferenceScreen(
+    id: '75',
+    title: 'Publier un contenu (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '75-vendeuse-publier-contenu.webp',
+    builder: (c) => PublishContentView(
+      service: MemoryVendorContentService(
+        catalog: DemoVendorCatalog.products(c),
+        photoResolver: (_) => DemoImages.product('gombo'),
+      ),
+      initialMedia: (
+        bytes: Uint8List(0),
+        contentType: 'image/webp',
+        isVideo: false,
+      ),
+      onBack: () {},
+      onPublished: () {},
+    ),
+  ),
+  ReferenceScreen(
     id: '66',
     title: 'Aide',
     surface: 'Cliente',
@@ -871,6 +910,19 @@ final referenceScreens = <ReferenceScreen>[
       ),
       onBack: () {},
       clock: _chatNow,
+    ),
+  ),
+  ReferenceScreen(
+    id: '76',
+    title: 'Modération (admin)',
+    surface: 'Admin',
+    referenceFile: '76-admin-moderation.webp',
+    builder: (c) => Scaffold(
+      body: AdminModerationView(
+        service: _admin(c),
+        clock: _adminNow,
+        initialId: 'r-video',
+      ),
     ),
   ),
   ReferenceScreen(
@@ -984,5 +1036,27 @@ CopilotProposal _copilotProposal(DemoCountry c) {
         .fold(0, (sum, l) => sum + l.lineMinor),
     stores: stores,
     missing: const ['Crevettes séchées'],
+  );
+}
+
+/// Vidéo de démonstration (écran 74) : tomates d'Akossiwa, aux prix du pays.
+ContentItem _demoContent(DemoCountry c) {
+  final tomatoes = DemoDiscovery.products(c)
+      .firstWhere((p) => p.item.name.startsWith('Tomates'))
+      .item;
+  return ContentItem(
+    id: 'demo-video',
+    kind: ContentKind.video,
+    mediaKey: 'stores/akossiwa/contents/demo.mp4',
+    isVideo: true,
+    caption: 'Tomates du jour, arrivées ce matin !',
+    createdAt: DateTime.utc(2026, 10, 5, 8),
+    store: ContentStore(
+      id: tomatoes.store.id,
+      name: tomatoes.store.name,
+      origin: tomatoes.store.origin,
+    ),
+    likeCount: 128,
+    products: [tomatoes],
   );
 }

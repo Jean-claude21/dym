@@ -78,6 +78,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Images | `image_picker`, `flutter_image_compress`, `cached_network_image` | `dym_platform`, `dym_ui` |
 | Localisation | `geolocator` | `dym_platform` |
 | Micro (recherche vocale, spec 018) | `record` | `dym_platform` |
+| Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |
 | Motion et illustration | `rive`, `flutter_animate`, `flutter_svg` | `dym_ui` |
