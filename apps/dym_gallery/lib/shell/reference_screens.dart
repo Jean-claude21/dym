@@ -58,6 +58,7 @@ import 'package:dym_gallery/screens/s07_seller_origin.dart';
 import 'package:dym_gallery/screens/s08_seller_new_order.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
+import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
@@ -866,6 +867,20 @@ final referenceScreens = <ReferenceScreen>[
     ),
   ),
   ReferenceScreen(
+    id: '78',
+    title: 'Relancer mes clientes (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '78-vendeuse-relance.webp',
+    builder: (c) => BroadcastView(
+      service: MemoryVendorBroadcastService(
+        catalog: DemoVendorCatalog.products(c),
+        config: DemoStore.config(c),
+        photoResolver: (_) => DemoImages.product('gombo'),
+      ),
+      onBack: () {},
+    ),
+  ),
+  ReferenceScreen(
     id: '66',
     title: 'Aide',
     surface: 'Cliente',
@@ -922,6 +937,19 @@ final referenceScreens = <ReferenceScreen>[
         service: _admin(c),
         clock: _adminNow,
         initialId: 'r-video',
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '77',
+    title: 'IA et paiements (admin)',
+    surface: 'Admin',
+    referenceFile: '77-admin-ia.webp',
+    builder: (c) => Scaffold(
+      body: AdminDashboardView(
+        service: _admin(c),
+        onOpen: (_) {},
+        initialAi: true,
       ),
     ),
   ),

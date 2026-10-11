@@ -1670,6 +1670,47 @@ class MemoryAdminService implements AdminService {
     return const Ok(null);
   }
 
+  // ---------------------------------------------------------------- IA
+
+  @override
+  Future<Result<AiHealth>> aiHealth() async =>
+      _fail<AiHealth>() ??
+      Ok(
+        AiHealth(
+          requests: 214,
+          understoodPercent: 87,
+          latencyMs: 1800,
+          fallbackPercent: 13,
+          paymentsSucceeded: 24,
+          paymentsFailed: 1,
+          series: [
+            for (final (i, p) in const [74, 82, 73, 79, 83, 88, 94].indexed)
+              AiDay(
+                day: DateTime.utc(2026, 9, 29).add(Duration(days: i)),
+                percent: p,
+              ),
+          ],
+          misses: [
+            AiMiss(
+              at: now.subtract(const Duration(minutes: 18)),
+              usage: 'search_transcription',
+              outcome: 'no_result',
+            ),
+            AiMiss(
+              at: now.subtract(const Duration(minutes: 45)),
+              usage: 'search_from_photo',
+              outcome: 'no_result',
+            ),
+            AiMiss(
+              at: now.subtract(const Duration(hours: 1, minutes: 2)),
+              usage: 'intent_copilot',
+              outcome: 'no_result',
+              query: 'ablo',
+            ),
+          ],
+        ),
+      );
+
   // ---------------------------------------------------------------- modération
 
   late final _reports = <ModerationItem>[

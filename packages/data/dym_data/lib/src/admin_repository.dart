@@ -344,6 +344,13 @@ class AdminRepository {
   Future<Result<void>> deleteVendor(String storeId, String reason) =>
       _post('/v1/admin/stores/$storeId/delete', {'reason': reason}, (_) {});
 
+  /// IA et paiements (écran 77).
+  Future<Result<AiHealth>> aiHealth() => _rpc(
+    'admin_ai_health',
+    const {},
+    (json) => AiHealth.fromJson(_map(json)),
+  );
+
   /// File de modération (écran 76) : signalés (`open`) ou traités.
   Future<Result<List<ModerationItem>>> reports({bool decided = false}) => _rpc(
     'admin_reports',

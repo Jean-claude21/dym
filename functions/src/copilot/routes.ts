@@ -21,7 +21,13 @@ export interface CopilotStore {
   /** Modèle `intent_copilot` ; erreur `feature_disabled` si coupé. */
   context(userId: string, zoneId: string | null): Promise<AiModelConfig>;
   pick(zoneId: string | null, needs: CopilotNeed[]): Promise<Record<string, unknown>>;
-  proposed(userId: string, proposal: Record<string, unknown>, latencyMs: number): Promise<void>;
+  /** `text` : gardé seulement si rien n'est proposé (suivi A-AI-03). */
+  proposed(
+    userId: string,
+    proposal: Record<string, unknown>,
+    latencyMs: number,
+    text: string,
+  ): Promise<void>;
   failed(userId: string, latencyMs: number): Promise<void>;
 }
 
@@ -70,7 +76,7 @@ export function registerCopilotRoutes(
       throw httpErrors.unavailable("copilote en échec");
     }
     const proposal = await deps.store.pick(zoneId, needs);
-    await deps.store.proposed(userId, proposal, performance.now() - started);
+    await deps.store.proposed(userId, proposal, performance.now() - started, body.text);
     return c.json(proposal);
   });
 }
@@ -108,11 +114,12 @@ export function pgCopilotStore(pool: pg.Pool): CopilotStore {
     },
     pick: (zoneId, needs) =>
       one("select app.copilot_pick($1, $2::jsonb) as value", [zoneId, JSON.stringify(needs)]),
-    async proposed(userId, proposal, latencyMs) {
-      await one("select app.copilot_proposed($1, $2::jsonb, $3) as value", [
+    async proposed(userId, proposal, latencyMs, text) {
+      await one("select app.copilot_proposed($1, $2::jsonb, $3, $4) as value", [
         userId,
         JSON.stringify(proposal),
         Math.round(latencyMs),
+        text,
       ]);
     },
     async failed(userId, latencyMs) {

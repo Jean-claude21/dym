@@ -8,6 +8,7 @@ import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
 import 'package:dym_vendor/app/vendor_app.dart';
+import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
@@ -56,6 +57,17 @@ Future<void> main() async {
         repository: VendorDashboardRepository(neon.data),
         stores: stores,
         messages: messaging,
+      ),
+    )
+    ..registerLazySingleton<VendorBroadcastService>(
+      () => NeonVendorBroadcastService(
+        repository: BroadcastRepository(
+          data: neon.data,
+          functions: neon.functions,
+        ),
+        products: () => locator<CatalogService>().products(),
+        config: stores.countryConfig,
+        photo: (key) => NetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerLazySingleton<VendorContentService>(

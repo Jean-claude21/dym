@@ -105,6 +105,9 @@ class _Navigator implements AppNavigator {
   void toContents() => routes.add('contents');
 
   @override
+  void toBroadcast() => routes.add('broadcast');
+
+  @override
   void toHelp() => routes.add('help');
 }
 

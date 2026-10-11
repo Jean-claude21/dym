@@ -1,3 +1,4 @@
+import 'package:dym_admin/features/dashboard/ai_health_view.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
 import 'package:dym_core/dym_core.dart';
@@ -9,12 +10,20 @@ import 'package:stacked/stacked.dart';
 
 /// Tableau de bord de l'équipe (écran 67).
 class AdminDashboardViewModel extends AdminViewModel {
-  new({required this.service});
+  new({required this.service, this.ai = false});
 
   final AdminService service;
 
   String period = 'day';
   AdminDashboard? data;
+
+  /// Section affichée : vue générale ou IA et paiements (77).
+  bool ai;
+
+  void selectAi({required bool value}) {
+    ai = value;
+    notifyListeners();
+  }
 
   bool get ready => data != null && !failed;
 
@@ -34,14 +43,22 @@ class AdminDashboardViewModel extends AdminViewModel {
 enum DashboardLink { stuckOrders, disputes, tickets, drafts }
 
 class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
-  const new({required this.service, required this.onOpen, super.key});
+  const new({
+    required this.service,
+    required this.onOpen,
+    super.key,
+    this.initialAi = false,
+  });
+
+  /// Ouvre sur « IA et paiements » (lien d'alerte, galerie).
+  final bool initialAi;
 
   final AdminService service;
   final ValueChanged<DashboardLink> onOpen;
 
   @override
   AdminDashboardViewModel viewModelBuilder(BuildContext context) =>
-      AdminDashboardViewModel(service: service);
+      AdminDashboardViewModel(service: service, ai: initialAi);
 
   @override
   void onViewModelReady(AdminDashboardViewModel viewModel) => viewModel.load();
@@ -74,12 +91,42 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
           ),
       ],
     );
+    final sections = Wrap(
+      spacing: DymTokenSpace.s2,
+      runSpacing: DymTokenSpace.s2,
+      children: [
+        for (final (ai, label) in [
+          (false, l10n.adminDashboardOverview),
+          (true, l10n.adminDashboardAi),
+        ])
+          DymFilterChip(
+            label: label,
+            selected: vm.ai == ai,
+            onTap: () => vm.selectAi(value: ai),
+          ),
+      ],
+    );
+    if (vm.ai) {
+      return AdminPage(
+        title: l10n.adminNavDashboard,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            sections,
+            const SizedBox(height: DymTokenSpace.s3),
+            AdminAiHealthView(service: service),
+          ],
+        ),
+      );
+    }
     if (!vm.ready || d == null) {
       return AdminPage(
         title: l10n.adminNavDashboard,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            sections,
+            const SizedBox(height: DymTokenSpace.s2),
             chips,
             const SizedBox(height: DymTokenSpace.s3),
             AdminState(
@@ -161,6 +208,8 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          sections,
+          const SizedBox(height: DymTokenSpace.s2),
           chips,
           const SizedBox(height: DymTokenSpace.s3),
           Wrap(

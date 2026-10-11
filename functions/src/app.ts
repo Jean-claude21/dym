@@ -15,6 +15,7 @@ import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
 import { type CopilotDeps, registerCopilotRoutes } from "./copilot/routes.js";
 import { registerContentRoutes } from "./content/routes.js";
+import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -43,6 +44,8 @@ export interface AppDeps {
   searchAi?: SearchAiDeps;
   /** Copilote d'intention (spec 019). */
   copilot?: CopilotDeps;
+  /** Relance des clientes (spec 021). */
+  broadcasts?: BroadcastStore;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -103,6 +106,7 @@ export function createApp(deps: AppDeps) {
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
   registerCopilotRoutes(app, deps.verifyToken, deps.copilot);
   registerContentRoutes(app, deps.verifyToken, deps.catalog);
+  registerBroadcastRoutes(app, deps.verifyToken, deps.broadcasts);
 
   return app;
 }

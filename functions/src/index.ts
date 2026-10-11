@@ -28,6 +28,7 @@ import {
   pgSearchAiStore,
 } from "./search/adapters.js";
 import { aiIntentPlanner, openAiPlannerProviders, pgCopilotStore } from "./copilot/routes.js";
+import { pgBroadcastStore } from "./broadcast/routes.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -68,6 +69,7 @@ export default createApp({
     transcriber: searchModels ? aiTranscriber(searchModels) : undefined,
     describer: searchModels ? aiPhotoDescriber(searchModels) : undefined,
   },
+  broadcasts: pgBroadcastStore(pool),
   copilot: {
     store: pgCopilotStore(pool),
     planner: openAiKey ? aiIntentPlanner(openAiPlannerProviders(openAiKey)) : undefined,

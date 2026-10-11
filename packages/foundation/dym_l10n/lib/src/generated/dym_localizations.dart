@@ -6036,6 +6036,228 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Retirer'**
   String get moderationRemove;
+
+  /// Section du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue générale'**
+  String get adminDashboardOverview;
+
+  /// Section du tableau de bord (77)
+  ///
+  /// In fr, this message translates to:
+  /// **'IA et paiements'**
+  String get adminDashboardAi;
+
+  /// Tuile IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Requêtes comprises'**
+  String get aiUnderstood;
+
+  /// Tuile IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Latence moyenne'**
+  String get aiLatency;
+
+  /// Durée en secondes
+  ///
+  /// In fr, this message translates to:
+  /// **'{value} s'**
+  String aiSeconds(double value);
+
+  /// Tuile IA (copilote sans proposition)
+  ///
+  /// In fr, this message translates to:
+  /// **'Passages à la recherche classique'**
+  String get aiFallback;
+
+  /// Tuile paiements (1 h)
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements réussis'**
+  String get adminPaymentsSucceeded1h;
+
+  /// Période
+  ///
+  /// In fr, this message translates to:
+  /// **'24 h'**
+  String get ai24h;
+
+  /// Période
+  ///
+  /// In fr, this message translates to:
+  /// **'1 h'**
+  String get ai1h;
+
+  /// Série IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Compréhension · 7 jours'**
+  String get aiSeries;
+
+  /// Tableau IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernières requêtes non comprises'**
+  String get aiMisses;
+
+  /// Résultat IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun résultat'**
+  String get aiOutcomeNoResult;
+
+  /// Résultat IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Panne'**
+  String get aiOutcomeFailure;
+
+  /// Type de requête
+  ///
+  /// In fr, this message translates to:
+  /// **'Voix'**
+  String get aiUsageVoice;
+
+  /// Type de requête
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo'**
+  String get aiUsagePhoto;
+
+  /// Type de requête
+  ///
+  /// In fr, this message translates to:
+  /// **'Texte'**
+  String get aiUsageText;
+
+  /// Mention de confidentialité
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune donnée personnelle affichée ni liée à ces requêtes.'**
+  String get aiNoPersonalData;
+
+  /// Alerte paiements < 90 %
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte : seulement {value} de paiements réussis sur la dernière heure.'**
+  String aiPaymentsAlert(String value);
+
+  /// Titre de l'écran 78
+  ///
+  /// In fr, this message translates to:
+  /// **'Relancer mes clientes'**
+  String get broadcastTitle;
+
+  /// Entrée depuis Ma boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Relancer mes clientes'**
+  String get broadcastEntry;
+
+  /// Segments
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir mes destinataires'**
+  String get broadcastAudience;
+
+  /// Segment
+  ///
+  /// In fr, this message translates to:
+  /// **'Clientes régulières'**
+  String get broadcastRegular;
+
+  /// Aide du segment
+  ///
+  /// In fr, this message translates to:
+  /// **'2 commandes ou plus'**
+  String get broadcastRegularHint;
+
+  /// Segment
+  ///
+  /// In fr, this message translates to:
+  /// **'Clientes du mois'**
+  String get broadcastMonth;
+
+  /// Segment
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes mes clientes'**
+  String get broadcastAll;
+
+  /// Message
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon message'**
+  String get broadcastMessage;
+
+  /// Champ du message
+  ///
+  /// In fr, this message translates to:
+  /// **'Gombo frais arrivé ce matin…'**
+  String get broadcastMessageHint;
+
+  /// Produit joint
+  ///
+  /// In fr, this message translates to:
+  /// **'Joindre un produit (facultatif)'**
+  String get broadcastAttach;
+
+  /// Pas de produit joint
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun produit'**
+  String get broadcastNoProduct;
+
+  /// Règles de la relance
+  ///
+  /// In fr, this message translates to:
+  /// **'Une relance par jour au plus. Les clientes peuvent couper ces messages.'**
+  String get broadcastRules;
+
+  /// Bouton d'envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucune cliente à prévenir} =1{Envoyer à 1 cliente} other{Envoyer à {n} clientes}}'**
+  String broadcastSend(int n);
+
+  /// Relance envoyée
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{Message envoyé à 1 cliente.} other{Message envoyé à {n} clientes.}}'**
+  String broadcastSent(int n);
+
+  /// Limite d'une relance par jour
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as déjà relancé tes clientes aujourd\'hui. Réessaie demain.'**
+  String get broadcastDailyLimit;
+
+  /// Réglage du stock bas
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte stock bas'**
+  String get lowStockTitle;
+
+  /// Interrupteur du stock bas
+  ///
+  /// In fr, this message translates to:
+  /// **'Me prévenir quand un produit s\'épuise'**
+  String get lowStockEnabled;
+
+  /// Seuil d'alerte
+  ///
+  /// In fr, this message translates to:
+  /// **'Seuil'**
+  String get lowStockThreshold;
+
+  /// Valeur du seuil
+  ///
+  /// In fr, this message translates to:
+  /// **'Me prévenir sous {n} unités'**
+  String lowStockUnder(int n);
 }
 
 class _DymLocalizationsDelegate

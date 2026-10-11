@@ -1581,6 +1581,156 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 2)),
   );
+
+  test(
+    'relance et suivi : audience, une relance par jour, stock bas, santé IA',
+    () async {
+      final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+      if (dbUrl == null || dbUrl.isEmpty) {
+        markTestSkipped('NEON_LIVE_DATABASE_URL absent');
+        return;
+      }
+      final vendor = await signUp('vrl');
+      final client = await signUp('crl');
+      final team = await signUp('arl');
+      final grant = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'dym-db.mjs',
+        ].join(Platform.pathSeparator),
+        'grant-admin',
+        'dym-e2e-arl-$run@example.com',
+        '--url',
+        dbUrl,
+      ]);
+      expect(grant.exitCode, 0, reason: '${grant.stderr}');
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final cash = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id')
+              .eq('country_code', country.code)
+              .eq('provider_code', 'cash'),
+        ),
+        'cash',
+      );
+      final cashId = ((cash as List).first as Map)['id'] as String;
+      final (_, variant) = await openStore(
+        vendor,
+        name: 'Relance $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [cashId],
+        price: 300,
+      );
+      final broadcasts = BroadcastRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+      );
+      await ok(broadcasts.setLowStockThreshold(9), 'seuil');
+
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Fidele',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      await ok(
+        AddressRepository(client.data).save(
+          AddressInput(
+            id: Uuid.v4(),
+            kind: AddressKind.home,
+            zoneId: zones[0],
+            landmark: 'Repère de test',
+            phone: '+000 0000 0000',
+          ),
+        ),
+        'adresse',
+      );
+      final cart = CartRepository(client.data);
+      final orders = OrderRepository(
+        functions: client.functions,
+        data: client.data,
+      );
+      for (var i = 0; i < 2; i++) {
+        await ok(cart.add(variant), 'ajout');
+        final quote = await ok(cart.cart(paymentMethodId: cashId), 'devis');
+        await ok(
+          orders.place(
+            OrderRequest(
+              addressId: quote.addressId,
+              modes: quote.modes,
+              paymentMethodId: cashId,
+              expectedTotalMinor: quote.totalMinor,
+            ),
+            idempotencyKey: Uuid.v4(),
+          ),
+          'commande',
+        );
+      }
+      final audience = await ok(broadcasts.audience(), 'audience');
+      expect(audience.regular, 1);
+      expect(audience.lowStockThreshold, 9);
+
+      final admin = AdminRepository(data: team.data, functions: team.functions);
+      final refused = await broadcasts.send(BroadcastSegment.all, 'Bonjour');
+      expect(refused.failureOrNull?.message, 'feature_disabled');
+      await ok(
+        admin.setFeatureFlag(
+          'vendor_broadcast',
+          enabled: true,
+          countryCode: country.code,
+        ),
+        'flag ouvert',
+      );
+      try {
+        expect(
+          await ok(
+            broadcasts.send(
+              BroadcastSegment.regular,
+              'Gombo frais arrivé ce matin (test e2e)',
+            ),
+            'relance',
+          ),
+          1,
+        );
+        final again = await broadcasts.send(BroadcastSegment.all, 'Encore');
+        expect(again.failureOrNull?.message, 'broadcast_daily_limit');
+      } finally {
+        await admin.setFeatureFlag(
+          'vendor_broadcast',
+          enabled: false,
+          countryCode: country.code,
+        );
+      }
+      final notes = await ok(
+        client.data.rpc<Object?>('my_notifications'),
+        'notifications',
+      );
+      expect('$notes', contains('store_broadcast'));
+
+      final health = await ok(admin.aiHealth(), 'santé IA');
+      expect(health.series, hasLength(7));
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 3)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).

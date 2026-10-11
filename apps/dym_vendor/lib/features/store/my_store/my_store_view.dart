@@ -17,7 +17,11 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     super.key,
     this.onReviews,
     this.onContents,
+    this.onBroadcast,
   });
+
+  /// Relancer mes clientes (spec 021) ; nul : non affiché.
+  final VoidCallback? onBroadcast;
 
   /// Mes contenus (spec 020) ; nul : non affiché.
   final VoidCallback? onContents;
@@ -204,6 +208,14 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 StorePrivacyNote(text: l10n.myStoreSuspended)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
+              if (onBroadcast case final broadcast?) ...[
+                DymMenuRow(
+                  icon: Icons.campaign_rounded,
+                  label: l10n.broadcastEntry,
+                  onTap: broadcast,
+                ),
+                const SizedBox(height: DymTokenSpace.s2),
+              ],
               if (onContents case final contents?) ...[
                 DymMenuRow(
                   icon: Icons.play_circle_rounded,

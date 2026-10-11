@@ -147,6 +147,9 @@ abstract interface class AdminService {
 
   Future<Result<void>> deleteVendor(String storeId, String reason);
 
+  /// IA et paiements (écran 77).
+  Future<Result<AiHealth>> aiHealth();
+
   /// File de modération (écran 76).
   Future<Result<List<ModerationItem>>> reports({bool decided = false});
 
@@ -394,6 +397,9 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<void>> deleteVendor(String storeId, String reason) =>
       _admin.deleteVendor(storeId, reason);
+
+  @override
+  Future<Result<AiHealth>> aiHealth() => _admin.aiHealth();
 
   @override
   Future<Result<List<ModerationItem>>> reports({bool decided = false}) =>

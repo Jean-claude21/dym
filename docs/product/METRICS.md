@@ -44,6 +44,7 @@ fiabilité (ops).
 | `copilot_proposed` (articles, boutiques, manquants, latence) | Serveur | H10 |
 | `copilot_cart_added` (articles ajoutés, refusés) | App | H10 |
 | `content_published` (type, produits tagués), `content_product_clicked`, `content_reported` (cible, motif) | Serveur | H10 |
+| `vendor_broadcast_sent` (segment, destinataires, produit joint) | Serveur | H12 |
 | `checkout_started`, `order_created` | App / serveur | Conversion, H2 |
 | `payment_initiated`, `payment_succeeded`, `payment_failed` | Serveur | Paiements |
 | `order_accepted`, `order_rejected`, `order_status_changed`, `order_delivered`, `order_cancelled` | Serveur | H5, H9 |
