@@ -4841,5 +4841,13 @@
         "type": "int"
       }
     }
+  },
+  "accountEditName": "Modifier mon prénom",
+  "@accountEditName": {
+    "description": "Ligne de l'écran Moi"
+  },
+  "accountSave": "Enregistrer",
+  "@accountSave": {
+    "description": "Enregistrer le profil"
   }
 }

@@ -83,7 +83,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |
 | Motion et illustration | `rive`, `flutter_animate`, `flutter_svg` | `dym_ui` |
 | Catalogue de composants | `widgetbook` | `apps/dym_widgetbook` (outil, non livré) |
-| Erreurs | `sentry_flutter` (compatible GlitchTip) | Apps |
+| Erreurs | `sentry` (client Dart pur, compatible GlitchTip) ; `sentry_flutter` écarté : ses versions compatibles imposent Android 8 (minSdk 26) | `dym_platform` |
 | Tests | `mocktail`, `patrol` | Tous |
 | Monorepo | `melos` | Racine |
 | Lints | `very_good_analysis` | Racine |

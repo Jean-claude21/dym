@@ -5,8 +5,9 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Écran « Moi » (maquette 13) : profil, réglages à venir, déconnexion et
-/// suppression du compte avec confirmation.
+/// Écran « Moi » (maquette 13) : profil (prénom, langue), réglages,
+/// déconnexion et suppression du compte avec confirmation. Une entrée sans
+/// destination (app qui ne la propose pas) n'est pas affichée.
 class AccountView extends StackedView<AccountViewModel> {
   const new({
     required this.service,
@@ -21,16 +22,16 @@ class AccountView extends StackedView<AccountViewModel> {
   final AuthService service;
   final void Function() onSignedOut;
 
-  /// Mes adresses (app cliente) ; nul : « bientôt ».
+  /// Mes adresses (app cliente) ; nul : non affiché.
   final VoidCallback? onAddresses;
 
-  /// Réglages des notifications ; nul : « bientôt ».
+  /// Réglages des notifications ; nul : non affiché.
   final VoidCallback? onNotifications;
 
   /// Mes messages (app cliente, spec 015) ; nul : non affiché.
   final VoidCallback? onMessages;
 
-  /// Aide (spec 016) ; nul : « bientôt ».
+  /// Aide (spec 016) ; nul : non affiché.
   final VoidCallback? onHelp;
 
   @override
@@ -46,9 +47,6 @@ class AccountView extends StackedView<AccountViewModel> {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    void soon() => ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(l10n.comingSoon)));
 
     return Scaffold(
       backgroundColor: c.background,
@@ -119,29 +117,35 @@ class AccountView extends StackedView<AccountViewModel> {
                   ),
                   const SizedBox(height: DymTokenSpace.s3),
                 ],
-                DymMenuRow(
-                  icon: Icons.location_on_rounded,
-                  label: l10n.accountAddresses,
-                  onTap: onAddresses ?? soon,
-                ),
-                const SizedBox(height: DymTokenSpace.s3),
-                DymMenuRow(
-                  icon: Icons.notifications_rounded,
-                  label: l10n.accountNotifications,
-                  onTap: onNotifications ?? soon,
-                ),
-                const SizedBox(height: DymTokenSpace.s3),
                 for (final (icon, label, tap) in [
+                  (
+                    Icons.edit_rounded,
+                    l10n.accountEditName,
+                    viewModel.isBusy ? null : () => _rename(context, viewModel),
+                  ),
+                  (
+                    Icons.location_on_rounded,
+                    l10n.accountAddresses,
+                    onAddresses,
+                  ),
+                  (
+                    Icons.notifications_rounded,
+                    l10n.accountNotifications,
+                    onNotifications,
+                  ),
                   (
                     Icons.language_rounded,
                     l10n.accountLanguage(l10n.languageName),
-                    soon,
+                    viewModel.isBusy
+                        ? null
+                        : () => _chooseLanguage(context, viewModel),
                   ),
-                  (Icons.help_rounded, l10n.accountHelp, onHelp ?? soon),
-                ]) ...[
-                  DymMenuRow(icon: icon, label: label, onTap: tap),
-                  const SizedBox(height: DymTokenSpace.s3),
-                ],
+                  (Icons.help_rounded, l10n.accountHelp, onHelp),
+                ])
+                  if (tap != null) ...[
+                    DymMenuRow(icon: icon, label: label, onTap: tap),
+                    const SizedBox(height: DymTokenSpace.s3),
+                  ],
                 DymMenuRow(
                   icon: Icons.logout_rounded,
                   label: l10n.accountSignOut,
@@ -163,6 +167,59 @@ class AccountView extends StackedView<AccountViewModel> {
         ),
       ),
     );
+  }
+
+  Future<void> _rename(BuildContext context, AccountViewModel viewModel) async {
+    final name = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      backgroundColor: context.dym.colors.card,
+      constraints: const BoxConstraints(maxWidth: DymTokenLayout.formMax),
+      builder: (_) => _NameSheet(initial: viewModel.firstName),
+    );
+    if (name != null && name.trim().isNotEmpty) await viewModel.rename(name);
+  }
+
+  Future<void> _chooseLanguage(
+    BuildContext context,
+    AccountViewModel viewModel,
+  ) async {
+    final current = Localizations.localeOf(context).languageCode;
+    final codes = await viewModel.languages([
+      for (final l in DymLocalizations.supportedLocales) l.languageCode,
+    ]);
+    if (!context.mounted || codes.isEmpty) return;
+    final code = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: context.dym.colors.card,
+      constraints: const BoxConstraints(maxWidth: DymTokenLayout.formMax),
+      builder: (sheet) => SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (final code in codes)
+                ListTile(
+                  minTileHeight: 56,
+                  leading: Icon(
+                    code == current
+                        ? Icons.radio_button_checked_rounded
+                        : Icons.radio_button_unchecked_rounded,
+                  ),
+                  // Chaque langue s'écrit dans sa propre langue.
+                  title: Text(
+                    lookupDymLocalizations(Locale(code)).languageName,
+                  ),
+                  onTap: () => Navigator.of(sheet).pop(code),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (code != null && code != current) await viewModel.setLanguage(code);
   }
 
   Future<void> _confirmDelete(
@@ -232,6 +289,71 @@ class _DeleteSheet extends StatelessWidget {
               label: l10n.cancel,
               variant: DymButtonVariant.secondary,
               onPressed: () => Navigator.of(context).pop(false),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Saisie du prénom (40 caractères au plus).
+class _NameSheet extends StatefulWidget {
+  const new({required this.initial});
+
+  final String initial;
+
+  @override
+  State<_NameSheet> createState() => _NameSheetState();
+}
+
+class _NameSheetState extends State<_NameSheet> {
+  late final _name = TextEditingController(text: widget.initial);
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    void save() => Navigator.of(context).pop(_name.text);
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.fromLTRB(
+          DymLayout.gutter(context),
+          0,
+          DymLayout.gutter(context),
+          MediaQuery.viewInsetsOf(context).bottom + DymTokenSpace.s4,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.accountEditName,
+              style: context.dym.text.display.copyWith(fontSize: 24),
+            ),
+            const SizedBox(height: DymTokenSpace.s3),
+            DymTextField(
+              label: l10n.authFirstNameLabel,
+              controller: _name,
+              maxLength: 40,
+              autofocus: true,
+              textCapitalization: TextCapitalization.words,
+              textInputAction: TextInputAction.done,
+              autofillHints: const [AutofillHints.givenName],
+              onSubmitted: (_) => save(),
+            ),
+            const SizedBox(height: DymTokenSpace.s3),
+            ListenableBuilder(
+              listenable: _name,
+              builder: (context, _) => DymButton(
+                label: l10n.accountSave,
+                onPressed: _name.text.trim().isEmpty ? null : save,
+              ),
             ),
           ],
         ),

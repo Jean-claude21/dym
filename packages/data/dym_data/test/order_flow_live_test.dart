@@ -1583,7 +1583,8 @@ void main() {
   );
 
   test(
-    'relance et suivi : audience, une relance par jour, stock bas, santé IA',
+    'relance et suivi : audience, une relance par jour, stock bas, santé IA, '
+    'profil',
     () async {
       final dbUrl = env['NEON_LIVE_DATABASE_URL'];
       if (dbUrl == null || dbUrl.isEmpty) {
@@ -1727,6 +1728,21 @@ void main() {
 
       final health = await ok(admin.aiHealth(), 'santé IA');
       expect(health.series, hasLength(7));
+
+      // Profil (spec 022) : prénom et langue, langues issues de la base.
+      final account = AccountRepository(client.data);
+      expect(
+        await ok(account.supportedLocales(), 'langues'),
+        containsAll(['fr', 'en']),
+      );
+      final renamed = await ok(
+        account.updateProfile(firstName: ' Fidèle ', locale: 'en'),
+        'profil',
+      );
+      expect(renamed.profile?.firstName, 'Fidèle');
+      expect(renamed.profile?.locale, 'en');
+      final refusedLocale = await account.updateProfile(locale: 'zz');
+      expect(refusedLocale.isOk, isFalse);
     },
     skip: skip,
     timeout: const Timeout(Duration(minutes: 3)),

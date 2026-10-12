@@ -67,5 +67,23 @@ void main() {
         throwsA(isA<DymConfigurationException>()),
       );
     });
+
+    test('suivi des erreurs : facultatif, https seulement', () {
+      expect(DymEnvironment.resolve(env: 'dev').errorReportingDsn, isNull);
+      expect(
+        DymEnvironment.resolve(
+          env: 'dev',
+          errorReportingDsn: 'https://cle@erreurs.example.com/3',
+        ).errorReportingDsn?.host,
+        'erreurs.example.com',
+      );
+      expect(
+        () => DymEnvironment.resolve(
+          env: 'dev',
+          errorReportingDsn: 'http://cle@erreurs.example.com/3',
+        ),
+        throwsA(isA<DymConfigurationException>()),
+      );
+    });
   });
 }

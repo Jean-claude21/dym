@@ -3,6 +3,7 @@
 import { parseEnv } from "@neon/env";
 import config, { CHAT_MEDIA_BUCKET, PRODUCT_PHOTOS_BUCKET } from "../neon.js";
 import { createApp } from "./app.js";
+import { sentryReporter } from "./lib/report.js";
 import {
   aiProductSuggester,
   openAiProviders,
@@ -46,7 +47,12 @@ const openAiKey = process.env.OPENAI_API_KEY ?? "";
 const allowedOrigins = process.env.ALLOWED_ORIGINS ?? "";
 const searchModels = openAiKey ? openAiSearchFactories(openAiKey) : undefined;
 
+const errorDsn = process.env.ERROR_REPORTING_DSN ?? "";
+
 export default createApp({
+  reportError: errorDsn
+    ? sentryReporter(errorDsn, { environment: process.env.NEON_BRANCH })
+    : undefined,
   verifyToken: neonAuthVerifier(env.auth),
   branch: process.env.NEON_BRANCH,
   allowedOrigins: allowedOrigins

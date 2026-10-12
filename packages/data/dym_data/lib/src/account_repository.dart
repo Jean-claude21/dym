@@ -39,6 +39,20 @@ class AccountRepository {
   Future<Result<Me>> recordSignIn(AccountApp app) =>
       _me(_data.rpc<Object?>('record_sign_in', params: {'p_app': app.name}));
 
+  /// Prénom et langue (`public.update_my_profile`) ; nul : inchangé.
+  /// Refus : langue sans notifications, prénom vide ou trop long.
+  Future<Result<Me>> updateProfile({String? firstName, String? locale}) => _me(
+    _data.rpc<Object?>(
+      'update_my_profile',
+      params: {'p_first_name': firstName?.trim(), 'p_locale': locale},
+    ),
+  );
+
+  /// Langues proposées : celles qui ont leurs notifications.
+  Future<Result<List<String>>> supportedLocales() async =>
+      (await _data.rpc<Object?>('supported_locales'))
+          .map((json) => [for (final l in json! as List) l as String]);
+
   /// Supprime définitivement le compte (`public.delete_my_account`).
   Future<Result<void>> deleteMyAccount() =>
       _data.rpc<void>('delete_my_account');

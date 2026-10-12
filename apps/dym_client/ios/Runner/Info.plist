@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dym Client</string>
+	<string>DYM</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -68,5 +68,11 @@
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>DYM propose ton quartier à partir de ta position. Elle n'est pas conservée.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>DYM t'écoute seulement quand tu cherches à la voix. Rien n'est conservé.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>DYM utilise l'appareil photo pour chercher un produit ou l'envoyer à une boutique.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>DYM ouvre ta galerie pour chercher un produit ou l'envoyer à une boutique.</string>
 </dict>
 </plist>

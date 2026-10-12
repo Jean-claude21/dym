@@ -6258,6 +6258,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Me prévenir sous {n} unités'**
   String lowStockUnder(int n);
+
+  /// Ligne de l'écran Moi
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier mon prénom'**
+  String get accountEditName;
+
+  /// Enregistrer le profil
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get accountSave;
 }
 
 class _DymLocalizationsDelegate

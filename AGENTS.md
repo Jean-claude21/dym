@@ -75,6 +75,14 @@ cd packages/data/dym_data && fvm dart test test/order_flow_live_test.dart
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt>
 ```
 
+Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-define=DYM_ERROR_DSN=https://<clé>@<hôte>/<projet>`
+pour les apps (Sentry ou GlitchTip), variable `ERROR_REPORTING_DSN` pour les Functions. Aucune donnée
+personnelle n'est envoyée.
+
+Builds de release Android : `apps/dym_client/android/key.properties` (et `dym_vendor`), hors dépôt,
+avec `storeFile`, `storePassword`, `keyAlias`, `keyPassword`. Sans ce fichier, la release est signée
+avec les clés de debug (essais seulement).
+
 Galerie de validation du design system : `cd apps/dym_gallery && fvm flutter run -d chrome`.
 
 Les scripts Melos sont définis dans le `pubspec.yaml` racine.

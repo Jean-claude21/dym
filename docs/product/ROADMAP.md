@@ -78,6 +78,7 @@ Les profils, la FAQ et le support (C-PROF-01/08, V-PROF-01..04) sont livrés ave
 |---|---|---|---|
 | `pilot-hardening` | Avis après livraison, réponse vendeuse, note boutique, réachat en un tap, support (tickets) depuis les apps | C-REV-01/03/04, V-REV-01/02/04, C-ORD-09, A-SUP-01..03 (côté apps) | 5 h |
 | `admin-pilot` | Tableau de bord de l'équipe, analytics minimales, feature flags pilotés depuis l'admin, SLA incidents, tickets, profil d'une cliente, revenus de la plateforme, suppression et vue d'une vendeuse | A-DASH-01..08, A-ANA-01..03, A-CFG-07, A-SUP-01..03, A-LIT-07, A-CLI-02, A-VEN-06/07, A-FIN-01/02 | 5 h |
+| `pilot-readiness` | Prêt pour le pilote : profil modifiable (prénom, langue de l'app enregistrée et appliquée), entrées « bientôt » retirées, suivi des erreurs des apps et des Functions (constitution IX), câblage de démarrage vérifié, builds de release (permissions Android/iOS, signature hors dépôt) | C-PROF-01/07, V-PROF-01 | 3 h |
 
 **Dérogation du 2026-10-10 (porteur produit) :** les phases 3 et 4 sont construites avant le
 gate de la phase 2 (commande réelle d'une vendeuse externe) et avant le test de H10. Les gates

@@ -9,6 +9,7 @@ import { type DisputeStore, registerDisputeRoutes } from "./disputes/routes.js";
 import { type AdminStore, registerAdminRoutes } from "./admin/routes.js";
 import { dispatchPushes, type PushQueue, type PushSender } from "./notifications/push.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
+import type { ErrorReporter } from "./lib/report.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
@@ -46,6 +47,8 @@ export interface AppDeps {
   copilot?: CopilotDeps;
   /** Relance des clientes (spec 021). */
   broadcasts?: BroadcastStore;
+  /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
+  reportError?: ErrorReporter;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -76,7 +79,10 @@ export function createApp(deps: AppDeps) {
 
   app.onError((error, c) => {
     const http = toHttpError(error);
-    if (http.status >= 500) console.error("[api]", error);
+    if (http.status >= 500) {
+      console.error("[api]", error);
+      void deps.reportError?.(error, { method: c.req.method, path: c.req.path });
+    }
     return c.json(http.toBody(), http.status);
   });
   app.notFound((c) => {

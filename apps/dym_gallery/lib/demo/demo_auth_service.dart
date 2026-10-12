@@ -134,6 +134,16 @@ class DemoAuthService implements AuthService {
   }) async => Ok(AuthState(AuthStatus.ready, me));
 
   @override
+  Future<Result<AuthState>> updateProfile({
+    String? firstName,
+    String? locale,
+  }) async => Ok(AuthState(AuthStatus.ready, me));
+
+  @override
+  Future<Result<List<String>>> supportedLocales() async =>
+      const Ok(['en', 'fr']);
+
+  @override
   Future<Result<void>> signOut() async => const Ok(null);
 
   @override

@@ -3667,4 +3667,10 @@ class DymLocalizationsEn extends DymLocalizations {
   String lowStockUnder(int n) {
     return 'Notify me under $n units';
   }
+
+  @override
+  String get accountEditName => 'Edit my first name';
+
+  @override
+  String get accountSave => 'Save';
 }
