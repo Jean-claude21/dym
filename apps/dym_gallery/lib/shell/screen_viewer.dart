@@ -1,12 +1,16 @@
 import 'package:dym_gallery/demo/demo_assets.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/shell/demo_banner.dart';
+import 'package:dym_gallery/shell/device_frame.dart';
 import 'package:dym_gallery/shell/reference_screens.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
 /// Affiche un écran reproduit dans un cadre de téléphone, avec le mode
 /// « Comparer » : l'image validée se superpose, curseur d'opacité.
+///
+/// Le sélecteur de format rend l'écran en téléphone, paysage, tablette ou
+/// bureau (spec 002) ; « Comparer » n'existe qu'en téléphone.
 class ScreenViewer extends StatefulWidget {
   const new({required this.screen, super.key});
 
@@ -18,6 +22,7 @@ class ScreenViewer extends StatefulWidget {
 
 class _ScreenViewerState extends State<ScreenViewer> {
   bool _compare = false;
+  DeviceFormat _format = DeviceFormat.phone;
   double _opacity = 0.5;
   int _restart = 0;
 
@@ -40,8 +45,13 @@ class _ScreenViewerState extends State<ScreenViewer> {
             padding: const EdgeInsets.only(right: 8),
             child: FilterChip(
               label: const Text('Comparer'),
-              selected: _compare,
-              onSelected: (v) => setState(() => _compare = v),
+              tooltip: _format == DeviceFormat.phone
+                  ? null
+                  : 'Références disponibles en téléphone uniquement',
+              selected: _compare && _format == DeviceFormat.phone,
+              onSelected: _format == DeviceFormat.phone
+                  ? (v) => setState(() => _compare = v)
+                  : null,
             ),
           ),
         ],
@@ -52,7 +62,27 @@ class _ScreenViewerState extends State<ScreenViewer> {
       ),
       body: Column(
         children: [
-          if (_compare)
+          ColoredBox(
+            color: c.card,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              child: Row(
+                children: [
+                  for (final f in DeviceFormat.values) ...[
+                    ChoiceChip(
+                      avatar: Icon(f.icon, size: 18),
+                      label: Text(f.label),
+                      selected: f == _format,
+                      onSelected: (_) => setState(() => _format = f),
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                ],
+              ),
+            ),
+          ),
+          if (_compare && _format == DeviceFormat.phone)
             ColoredBox(
               color: c.card,
               child: Row(
@@ -89,7 +119,7 @@ class _ScreenViewerState extends State<ScreenViewer> {
                           key: ValueKey('${country.code}-$_restart'),
                           child: s.builder(country),
                         ),
-                        if (_compare)
+                        if (_compare && _format == DeviceFormat.phone)
                           IgnorePointer(
                             child: Opacity(
                               opacity: _opacity,
@@ -102,6 +132,9 @@ class _ScreenViewerState extends State<ScreenViewer> {
                       ],
                     ),
                   );
+                  if (_format != DeviceFormat.phone) {
+                    return DeviceFrame(format: _format, child: phone);
+                  }
                   if (!framed) return phone;
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -111,11 +144,18 @@ class _ScreenViewerState extends State<ScreenViewer> {
                         width: width,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(28),
-                          child: MediaQuery.removePadding(
-                            context: context,
-                            removeTop: true,
-                            removeBottom: true,
-                            child: phone,
+                          // L'écran voit la taille du cadre, pas celle de
+                          // la fenêtre (classe de fenêtre compacte).
+                          child: LayoutBuilder(
+                            builder: (context, frame) => MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .removePadding(
+                                    removeTop: true,
+                                    removeBottom: true,
+                                  )
+                                  .copyWith(size: frame.biggest),
+                              child: phone,
+                            ),
                           ),
                         ),
                       ),

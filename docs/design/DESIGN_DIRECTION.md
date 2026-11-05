@@ -67,6 +67,25 @@ partagée qu'avec le livreur, au moment du ramassage.
 Typographies proposées (Nunito, Nunito Sans) : **à valider sur un Android d'entrée de gamme** avant
 de figer `dym_ui`.
 
+## Grands écrans (décision 0012)
+
+Le téléphone portrait est la référence ; les autres tailles en dérivent sans nouvelle maquette.
+
+| Classe | Largeur | Navigation | Marge | Règles |
+|---|---|---|---|---|
+| Compacte | < 600 | barre basse | 16 | rendu validé, inchangé |
+| Moyenne | 600 – 839 | rail (libellé sous l'icône) | 24 | grilles plus denses ; formulaires et panier ≤ 600, centrés |
+| Étendue | 840 – 1 199 | rail | 32 | panier en deux colonnes (articles / récapitulatif) |
+| Large | ≥ 1 200 | rail étendu (libellé à côté) | 32 | contenu ≤ 1 200, centré ; le fond crème remplit le reste |
+
+- Les grilles gardent la taille des tuiles du téléphone et ajoutent des colonnes (rayon : 2 → 6).
+  Elles équilibrent les lignes pour ne pas laisser une tuile seule.
+- Le mini-panier ne dépasse jamais 560 et reste centré.
+- La couverture d'une boutique reste pleine largeur ; son contenu est borné.
+- En paysage, le splash place la bassine à gauche et le logo à droite.
+
+Captures de contrôle : `specs/002-responsive-layout/validation/`.
+
 ## Écrans validés
 
 | # | Écran | Fichier | Parcours (`MOCKUPS.md`) |

@@ -11,7 +11,7 @@
 | Phase | Objectif | Gate de sortie | Heures |
 |---|---|---|---|
 | 0 · Cadrage et validation | Valider les interfaces et les hypothèses avant de coder | 4/5 testeurs réussissent chaque parcours clé sans aide | ~10 h + sessions terrain |
-| 1 · Socle | Monorepo, référentiel générique, authentification | Une cliente et une vendeuse se connectent sur un vrai téléphone, données en base avec RLS testé | ~9 h |
+| 1 · Socle | Monorepo, design system adaptatif, référentiel générique, authentification | Une cliente et une vendeuse se connectent sur un vrai téléphone, données en base avec RLS testé | ~11 h |
 | 2 · Noyau commerce | Boucle complète publier → commander → payer → livrer → résoudre | Une vendeuse externe traite une commande réelle de bout en bout | ~49 h |
 | 3 · Pilote | 10 puis 30 vendeuses, 300 clientes, une ville | Les 3 preuves V1 + KPIs de `METRICS.md` atteints ou écarts expliqués | ~10 h + terrain |
 | 4 · Différenciation | IA d'intention, recherche image/voix, contenu shoppable | Ouverte si H10 validée ; > 70 % d'intentions comprises | ~24 h |
@@ -47,6 +47,7 @@ l'exclut de V1.
 | Spec | Contenu | IDs couverts | Heures |
 |---|---|---|---|
 | `foundation` | Validations techniques (Better Auth REST depuis Dart, Data API via `postgrest` + RLS + RPC, upload présigné, déploiement de Function + push, génération Stacked/freezed sur la version Flutter retenue) ; monorepo FVM + Melos ; squelettes des apps et packages ; lints ; CI | T-001, T-007 | 4 h |
+| `responsive-layout` | **Volet interface du socle** (spec 002) : classes de fenêtre, tokens de mise en page, navigation adaptative (barre basse / rail), contenu borné, grilles adaptatives ; écrans validés vérifiés du téléphone au bureau | — | 2 h |
 | `reference-data` | Pays, devises, villes/zones, catégories, moyens de paiement par pays, règles de commission, frais de livraison par défaut, feature flags, `events`, `audit_log` ; RLS + pgTAP | A-CFG-01..06 | 2 h |
 | `auth` | Google + OTP email, profils, rôles (cliente, vendeuse, admin, livreur), suppression de compte, partagé via `dym_auth` | C-AUTH-01..04, V-AUTH-01/02, C-PROF-09 | 3 h |
 
@@ -109,4 +110,6 @@ C-PAY-03 (capture MoMo vérifiée par IA, remplacée par la file de vérificatio
 2. pgTAP passe (RLS + règles métier) sur une branche Neon dédiée.
 3. `melos run analyze` et `melos run test` passent ; au moins un test d'intégration du parcours nominal.
 4. Les événements de `METRICS.md` concernés sont émis.
-5. Démo sur un vrai téléphone Android d'entrée de gamme.
+5. Écrans sans débordement aux tailles de référence de `dym_ui` (téléphone portrait et paysage,
+   tablette, bureau), le téléphone portrait restant la référence de design.
+6. Démo sur un vrai téléphone Android d'entrée de gamme.

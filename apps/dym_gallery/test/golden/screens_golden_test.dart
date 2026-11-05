@@ -8,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Captures 412 × 915 (×2) des 8 écrans reproduits, à comparer aux écrans
-/// validés de docs/design/screens. Animations désactivées : état final.
+/// validés de docs/design/screens, puis tablette 800 × 1 280 et bureau
+/// 1 440 × 900 (spec 002). Animations désactivées : état final.
 void main() {
   for (final screen in referenceScreens) {
     testWidgets('écran ${screen.id} · ${screen.title}', (tester) async {
@@ -40,6 +41,39 @@ void main() {
         matchesGoldenFile('goldens/${screen.id}.png'),
       );
     });
+  }
+
+  // Spec 002 : captures de contrôle tablette et bureau (FR-015).
+  const formats = {'tablette': Size(800, 1280), 'bureau': Size(1440, 900)};
+  for (final MapEntry(key: format, value: size) in formats.entries) {
+    for (final screen in referenceScreens) {
+      testWidgets('$format · écran ${screen.id} · ${screen.title}', (
+        tester,
+      ) async {
+        tester.view
+          ..physicalSize = size
+          ..devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            debugShowCheckedModeBanner: false,
+            theme: DymTheme.light(),
+            home: MediaQuery(
+              data: MediaQueryData(size: size, disableAnimations: true),
+              child: screen.builder(DemoCountry.togo),
+            ),
+          ),
+        );
+        await _precacheImages(tester);
+        await tester.pump(const Duration(milliseconds: 600));
+
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/$format/${screen.id}.png'),
+        );
+      });
+    }
   }
 }
 

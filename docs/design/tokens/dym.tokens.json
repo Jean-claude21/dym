@@ -83,6 +83,25 @@
     "add-button": { "$value": "40px" },
     "avatar-boutique": { "$value": "56px" }
   },
+  "breakpoint": {
+    "$type": "dimension",
+    "$description": "Seuils des classes de fenêtre (Material 3). Un seuil appartient à la classe supérieure.",
+    "medium": { "$value": "600px", "$description": "Compacte → moyenne (tablette portrait)." },
+    "expanded": { "$value": "840px", "$description": "Moyenne → étendue (tablette paysage, téléphone paysage)." },
+    "large": { "$value": "1200px", "$description": "Étendue → large (bureau)." }
+  },
+  "layout": {
+    "$type": "dimension",
+    "gutter-compact": { "$value": "{space.4}", "$description": "Marge latérale en classe compacte." },
+    "gutter-medium": { "$value": "{space.5}", "$description": "Marge latérale en classe moyenne." },
+    "gutter-expanded": { "$value": "{space.6}", "$description": "Marge latérale en classe étendue." },
+    "gutter-large": { "$value": "{space.6}", "$description": "Marge latérale en classe large." },
+    "content-max": { "$value": "1200px", "$description": "Largeur maximale d'un contenu (grilles, accueil)." },
+    "form-max": { "$value": "600px", "$description": "Largeur maximale d'un formulaire ou d'une page de lecture." },
+    "floating-max": { "$value": "560px", "$description": "Largeur maximale d'un élément flottant (mini-panier)." },
+    "rail-width": { "$value": "88px", "$description": "Largeur du rail de navigation." },
+    "rail-extended-width": { "$value": "220px", "$description": "Largeur du rail de navigation étendu." }
+  },
   "shadow": {
     "$type": "shadow",
     "card": { "$value": { "color": "#1F1A1414", "offsetX": "0px", "offsetY": "4px", "blur": "16px", "spread": "0px" }, "$description": "Ombre très douce." }

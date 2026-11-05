@@ -68,6 +68,26 @@ void main() {
     test('tailles : cible tactile minimale 48', () {
       expect(DymTokenSize.touchMin, 48);
     });
+
+    test('mise en page : seuils croissants et largeurs cohérentes', () {
+      expect(DymTokenBreakpoints.medium, 600);
+      expect(DymTokenBreakpoints.expanded, 840);
+      expect(DymTokenBreakpoints.large, 1200);
+      expect(
+        DymTokenBreakpoints.medium < DymTokenBreakpoints.expanded &&
+            DymTokenBreakpoints.expanded < DymTokenBreakpoints.large,
+        isTrue,
+      );
+      expect(
+        DymTokenLayout.formMax,
+        lessThanOrEqualTo(DymTokenLayout.contentMax),
+      );
+      expect(
+        DymTokenLayout.floatingMax,
+        lessThanOrEqualTo(DymTokenLayout.formMax),
+      );
+      expect(DymTokenLayout.gutterCompact, DymTokenSpace.s4);
+    });
   });
 
   group('contrastes texte/fond ≥ 4,5:1 (FR-009, SC-003)', () {

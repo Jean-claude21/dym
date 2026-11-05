@@ -53,7 +53,7 @@ class _TrackingScreenState extends State<TrackingScreen>
     return Scaffold(
       backgroundColor: c.background,
       body: SafeArea(
-        child: ListView(
+        child: BoundedListView(
           padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
           children: [
             ClipRRect(

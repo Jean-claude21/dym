@@ -4,7 +4,7 @@ import 'package:dym_ui/src/theme/dym_theme.dart';
 import 'package:dym_ui/src/tokens/dym_tokens.g.dart';
 import 'package:flutter/material.dart';
 
-/// Mini-panier flottant vert profond.
+/// Mini-panier flottant vert profond, borné à `layout.floating-max`.
 ///
 /// Caché à 0 article (glisse vers le bas), visible sinon (glisse vers le
 /// haut). Le compteur rebondit à chaque changement du nombre d'articles.
@@ -68,9 +68,20 @@ class _DymMiniCartBarState extends State<DymMiniCartBar>
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
     final visible = widget.itemCount > 0;
     final duration = DymMotion.of(context, DymMotion.medium);
+    // Ne s'étire pas sur grand écran : borné et centré (spec 002, FR-006).
+    return Center(
+      heightFactor: 1,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: DymTokenLayout.floatingMax),
+        child: _bar(context, visible, duration),
+      ),
+    );
+  }
+
+  Widget _bar(BuildContext context, bool visible, Duration duration) {
+    final c = context.dym.colors;
     return AnimatedSlide(
       offset: visible ? Offset.zero : const Offset(0, 1.4),
       duration: duration,

@@ -1,7 +1,7 @@
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Typographie, espacements, rayons et ombre des tokens.
+/// Typographie, espacements, rayons, ombre et mise en page des tokens.
 class FoundationsPage extends StatelessWidget {
   const new({super.key});
 
@@ -73,7 +73,67 @@ class FoundationsPage extends StatelessWidget {
               ),
           ],
         ),
+        const SizedBox(height: 20),
+        const DymSectionHeader(title: 'Mise en page'),
+        const SizedBox(height: 8),
+        const _WindowClassCard(),
       ],
+    );
+  }
+}
+
+/// Classe de fenêtre courante et règles associées (spec 002).
+class _WindowClassCard extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final current = DymWindowClass.of(context);
+    final width = MediaQuery.sizeOf(context).width.round();
+    const rows = <(DymWindowClass, String, String)>[
+      (DymWindowClass.compact, '< 600', 'barre basse'),
+      (DymWindowClass.medium, '600 – 839', 'rail'),
+      (DymWindowClass.expanded, '840 – 1 199', 'rail'),
+      (DymWindowClass.large, '≥ 1 200', 'rail étendu'),
+    ];
+    return Container(
+      padding: const EdgeInsets.all(DymTokenSpace.s3),
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Cette fenêtre : $width de large · ${current.name}',
+            style: t.title.copyWith(fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          for (final (wc, range, nav) in rows)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 3),
+              child: Text(
+                '${wc.name} · $range · $nav · marge '
+                '${DymLayout.gutterFor(wc).toInt()}',
+                style: t.label.copyWith(
+                  fontSize: 14,
+                  fontWeight: wc == current ? FontWeight.w800 : FontWeight.w600,
+                  color: wc == current ? c.brandDeep : c.textSecondary,
+                ),
+              ),
+            ),
+          const SizedBox(height: 8),
+          Text(
+            'Contenu ≤ ${DymTokenLayout.contentMax.toInt()} · formulaire ≤ '
+            '${DymTokenLayout.formMax.toInt()} · mini-panier ≤ '
+            '${DymTokenLayout.floatingMax.toInt()}',
+            style: t.label.copyWith(color: c.textSecondary),
+          ),
+        ],
+      ),
     );
   }
 }

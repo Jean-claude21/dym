@@ -62,6 +62,53 @@ class SplashScreen extends StatelessWidget {
           .slideY(begin: 1, duration: 450.ms, curve: DymMotion.standard);
     }
 
+    // Paysage : bassine à gauche, logo et accroche à droite (spec 002).
+    final size = MediaQuery.sizeOf(context);
+    if (size.width > size.height) {
+      return Scaffold(
+        backgroundColor: c.background,
+        body: Column(
+          children: [
+            Expanded(
+              child: SafeArea(
+                bottom: false,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(DymTokenSpace.s5),
+                        child: Center(child: basin),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(DymTokenSpace.s4),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 420),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                logo,
+                                const SizedBox(height: DymTokenSpace.s2),
+                                tagline,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            kente,
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: c.background,
       body: Column(
@@ -69,7 +116,11 @@ class SplashScreen extends StatelessWidget {
           const Spacer(flex: 3),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: DymTokenSpace.s4),
-            child: AspectRatio(aspectRatio: 1, child: basin),
+            // Bornée sur tablette ; identique sur téléphone.
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 480),
+              child: AspectRatio(aspectRatio: 1, child: basin),
+            ),
           ),
           const Spacer(),
           logo,

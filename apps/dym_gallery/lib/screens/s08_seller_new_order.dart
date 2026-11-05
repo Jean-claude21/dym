@@ -2,6 +2,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_gallery/demo/demo_assets.dart';
 import 'package:dym_gallery/demo/demo_catalog.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
+import 'package:dym_gallery/screens/common.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +55,7 @@ class _SellerNewOrderScreenState extends State<SellerNewOrderScreen>
     return Scaffold(
       backgroundColor: c.brandDeep,
       body: SafeArea(
-        child: ListView(
+        child: BoundedListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
           children: [
             Text(

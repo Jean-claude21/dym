@@ -84,6 +84,9 @@ Justification : ouvrir un nouveau pays doit être une opération de configuratio
 - Contraste AA minimum, cibles tactiles ≥ 48 dp, icône + libellé sur chaque action principale.
 - Toute création (commande, paiement) porte une clé d'idempotence.
 - Les animations sont légères, interruptibles et désactivables.
+- Chaque écran DOIT rester utilisable de la classe de fenêtre compacte à la classe large, aux
+  tailles de référence de `dym_ui` (téléphone portrait et paysage, tablette, bureau), sans
+  débordement. Le téléphone portrait reste la référence de design (décision 0012).
 
 ### IX. Mesurer et tracer
 
@@ -137,4 +140,4 @@ Changer un élément de ce tableau exige une décision dans `docs/architecture/d
   toute dérogation est justifiée dans la section « Complexity Tracking ».
 - Guide opérationnel pour les agents : `AGENTS.md`.
 
-**Version**: 1.1.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
+**Version**: 1.2.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
