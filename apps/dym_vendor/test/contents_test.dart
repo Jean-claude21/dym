@@ -96,7 +96,7 @@ void main() {
       expect(await vm.publish(), isTrue);
       expect(service.gestures, ['publish:text:#c0392b:p1']);
       vm.selectKind(ContentKind.video);
-      expect(vm.textMode, isFalse, reason: 'une vidéo n\'est pas un texte');
+      expect(vm.textMode, isFalse, reason: "une vidéo n'est pas un texte");
     });
 
     test('vidéo : une photo ne suffit pas', () async {

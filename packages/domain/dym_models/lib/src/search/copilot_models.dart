@@ -1,3 +1,4 @@
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/src/json.dart';
 import 'package:meta/meta.dart';
 
@@ -22,7 +23,12 @@ class CopilotLine {
     productId: json['product_id'] as String,
     name: json['name'] as String,
     variantLabel: json['variant_label'] as String?,
-    unitLabel: json['unit_label'] as String?,
+    unitLabel: switch (json['unit_label']) {
+      // Libellé traduit (référentiel) ou texte simple.
+      final Map<String, dynamic> m => LocalizedText.fromJson(m),
+      final String text => LocalizedText({'fr': text}),
+      _ => null,
+    },
     quantity: (json['quantity'] as num).toInt(),
     unitPriceMinor: minorFromJson(json['unit_price_minor']),
     lineMinor: minorFromJson(json['line_minor']),
@@ -34,7 +40,7 @@ class CopilotLine {
   final String productId;
   final String name;
   final String? variantLabel;
-  final String? unitLabel;
+  final LocalizedText? unitLabel;
   final int quantity;
   final int unitPriceMinor;
   final int lineMinor;

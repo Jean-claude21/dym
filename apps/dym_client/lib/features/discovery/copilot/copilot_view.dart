@@ -419,7 +419,8 @@ class _Line extends StatelessWidget {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final price = moneyOf(vm.config, line.lineMinor);
-    final unit = line.variantLabel ?? line.unitLabel;
+    final locale = Localizations.localeOf(context).languageCode;
+    final unit = line.variantLabel ?? line.unitLabel?.resolve(locale);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s1),
       child: Row(
