@@ -45,7 +45,6 @@ revenus, avis). Ces adresses ne reçoivent pas d'email : elles ne servent pas à
 
 ## Limites connues
 
-- Les photos produits pointent vers des fichiers non téléversés : l'app affiche l'illustration par
-  défaut.
+- Photos produits : images de la galerie (`db/scripts/demo-photos.mjs`), une par produit ou par rayon.
 - Paiement en ligne = fournisseur **simulé** (carte simulée en France, T-Money / MTN simulés).
 - Pas de contenus (stories, vidéos) : il faut de vrais médias.
