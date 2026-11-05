@@ -42,11 +42,15 @@ l'exclut de V1.
 | Tests terrain | 5 vendeuses + 5 clientes, tâches chronométrées, verbatims | ~5 h de sessions |
 | Itération et gel | Corrections, puis gel de l'UI : les maquettes deviennent des critères d'acceptation | 2 h |
 
+**Gate de la Phase 0 :** tests terrain confirmés par le porteur produit le 2026-10-02. Les écrans
+non encore maquettés sont produits spec par spec dans la direction validée, puis validés par le
+porteur produit avant fusion (une dérogation à la constitution II est consignée dans chaque plan).
+
 ## Phase 1 — Socle
 
 | Spec | Contenu | IDs couverts | Heures |
 |---|---|---|---|
-| `foundation` | Validations techniques (Better Auth REST depuis Dart, Data API via `postgrest` + RLS + RPC, upload présigné, déploiement de Function + push, génération Stacked/freezed sur la version Flutter retenue) ; monorepo FVM + Melos ; squelettes des apps et packages ; lints ; CI | T-001, T-007 | 4 h |
+| `foundation` | **Spec 003.** Validations techniques (Better Auth REST depuis Dart, Data API via `postgrest` + RLS + RPC, upload présigné, déploiement de Function + push, génération Stacked/freezed sur la version Flutter retenue) ; monorepo FVM + Melos ; squelettes des apps et packages ; lints ; CI | T-001, T-007 | 4 h |
 | `responsive-layout` | **Volet interface du socle** (spec 002) : classes de fenêtre, tokens de mise en page, navigation adaptative (barre basse / rail), contenu borné, grilles adaptatives ; écrans validés vérifiés du téléphone au bureau | — | 2 h |
 | `reference-data` | Pays, devises, villes/zones, catégories, moyens de paiement par pays, règles de commission, frais de livraison par défaut, feature flags, `events`, `audit_log` ; RLS + pgTAP | A-CFG-01..06 | 2 h |
 | `auth` | Google + OTP email, profils, rôles (cliente, vendeuse, admin, livreur), suppression de compte, partagé via `dym_auth` | C-AUTH-01..04, V-AUTH-01/02, C-PROF-09 | 3 h |

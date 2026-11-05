@@ -1,0 +1,19 @@
+name: neon_kit
+description: Client Dart générique pour Neon (Auth Better Auth, Data API, Functions), sans notion métier.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  dio: ^5.11.0
+  dym_core: ^0.1.0
+  http: ^1.5.0
+  meta: ^1.17.0
+  postgrest: ^2.9.1
+
+dev_dependencies:
+  test: ^1.26.0
+  very_good_analysis: ^11.0.0

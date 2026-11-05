@@ -55,3 +55,6 @@ docs/design/concepts/
 *.log
 tmp/
 **/test/golden/failures/
+
+# Base Postgres locale de développement (db/scripts)
+.local/

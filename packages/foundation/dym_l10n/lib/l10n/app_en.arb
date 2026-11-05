@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "appNameClient": "DYM",
+  "appNameVendor": "DYM Seller",
+  "appNameAdmin": "DYM Admin",
+  "tagline": "The market near you, delivered to your door",
+  "vendorTagline": "Your shop, your orders, your cash",
+  "adminTagline": "Resolve every incident in under an hour",
+  "startupPreparing": "Getting ready…",
+  "environmentLabel": "Environment: {name}",
+  "configErrorTitle": "Missing configuration",
+  "configErrorMessage": "This version of the app is not configured. Install the official version.",
+  "navHome": "Home",
+  "navOrders": "Orders",
+  "navStores": "Shops",
+  "navSettings": "Settings"
+}
