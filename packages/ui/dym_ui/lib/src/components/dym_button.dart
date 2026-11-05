@@ -16,6 +16,12 @@ enum DymButtonVariant {
 
   /// Contour blanc : action secondaire sur fond vert.
   onBrand,
+
+  /// Blanc avec bordure fine : connexion par un tiers (Google).
+  surface,
+
+  /// Rouge piment foncé : action destructrice confirmée (suppression).
+  destructive,
 }
 
 /// Bouton DYM. Hauteur 56, coins 16, libellé en Nunito extra-gras.
@@ -28,6 +34,7 @@ class DymButton extends StatefulWidget {
     this.variant = DymButtonVariant.primary,
     this.trailing,
     this.icon,
+    this.leading,
     this.loading = false,
     this.expanded = true,
     this.compact = false,
@@ -47,6 +54,10 @@ class DymButton extends StatefulWidget {
 
   /// Icône à gauche du libellé.
   final IconData? icon;
+
+  /// Élément graphique à gauche du libellé (ex. logo Google) ; prime sur
+  /// [icon].
+  final Widget? leading;
 
   /// Affiche un indicateur de chargement et bloque l'action.
   final bool loading;
@@ -74,6 +85,12 @@ class _DymButtonState extends State<DymButton> {
       DymButtonVariant.secondary => (c.card, c.brandDeep, c.brand),
       DymButtonVariant.plantain => (c.plantain, c.textPrimary, null),
       DymButtonVariant.onBrand => (Colors.transparent, c.onBrand, c.onBrand),
+      DymButtonVariant.surface => (
+        c.card,
+        c.textPrimary,
+        c.textSecondary.withValues(alpha: 0.25),
+      ),
+      DymButtonVariant.destructive => (c.pimentStrong, c.onBrand, null),
     };
     final label = Text(
       widget.label,
@@ -93,7 +110,10 @@ class _DymButtonState extends State<DymButton> {
             mainAxisSize: widget.expanded ? MainAxisSize.max : MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (widget.icon != null) ...[
+              if (widget.leading != null) ...[
+                widget.leading!,
+                const SizedBox(width: DymTokenSpace.s3),
+              ] else if (widget.icon != null) ...[
                 Icon(widget.icon, color: fg, size: 22),
                 const SizedBox(width: DymTokenSpace.s2),
               ],

@@ -13,6 +13,8 @@ workspace:
   - packages/domain/dym_models
   - packages/data/dym_data
   - packages/ui/dym_ui
+  - packages/features/dym_auth
+  - packages/features/dym_account
   - apps/dym_gallery
   - apps/dym_client
   - apps/dym_vendor
@@ -70,9 +72,9 @@ melos:
         noDependsOn: flutter
 
     golden:
-      description: Régénère les captures 360×800 des écrans de la galerie (machine de dev).
+      description: Régénère les captures de contrôle des écrans (machine de dev).
       exec:
         command: flutter test --tags golden --update-goldens
         concurrency: 1
       packageFilters:
-        scope: dym_gallery
+        dirExists: test/golden

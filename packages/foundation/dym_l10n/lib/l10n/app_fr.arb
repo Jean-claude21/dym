@@ -1,30 +1,348 @@
 {
   "@@locale": "fr",
   "appNameClient": "DYM",
-  "@appNameClient": { "description": "Nom de l'app cliente." },
+  "@appNameClient": {
+    "description": "Nom de l'app cliente."
+  },
   "appNameVendor": "DYM Vendeuse",
-  "@appNameVendor": { "description": "Nom de l'app vendeuse." },
+  "@appNameVendor": {
+    "description": "Nom de l'app vendeuse."
+  },
   "appNameAdmin": "DYM Admin",
-  "@appNameAdmin": { "description": "Nom de l'app d'administration." },
+  "@appNameAdmin": {
+    "description": "Nom de l'app d'administration."
+  },
   "tagline": "Le marché près de chez toi, livré chez toi",
-  "@tagline": { "description": "Accroche générique (sans ville : la ville vient de la configuration)." },
+  "@tagline": {
+    "description": "Accroche générique (sans ville : la ville vient de la configuration)."
+  },
   "vendorTagline": "Ta boutique, tes commandes, ta caisse",
-  "@vendorTagline": { "description": "Accroche de l'app vendeuse." },
+  "@vendorTagline": {
+    "description": "Accroche de l'app vendeuse."
+  },
   "adminTagline": "Résoudre chaque incident en moins d'une heure",
-  "@adminTagline": { "description": "Accroche de l'admin." },
+  "@adminTagline": {
+    "description": "Accroche de l'admin."
+  },
   "startupPreparing": "Préparation…",
-  "@startupPreparing": { "description": "Démarrage de l'app." },
-  "environmentLabel": "Environnement : {name}",
+  "@startupPreparing": {
+    "description": "Démarrage de l'app."
+  },
+  "environmentLabel": "Environnement : {name}",
   "@environmentLabel": {
     "description": "Environnement technique affiché hors production.",
-    "placeholders": { "name": { "type": "String" } }
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
   "configErrorTitle": "Configuration manquante",
-  "@configErrorTitle": { "description": "L'app est compilée sans configuration valide." },
+  "@configErrorTitle": {
+    "description": "L'app est compilée sans configuration valide."
+  },
   "configErrorMessage": "Cette version de l'app n'est pas configurée. Installe la version officielle.",
-  "@configErrorMessage": { "description": "Explication de l'erreur de configuration." },
+  "@configErrorMessage": {
+    "description": "Explication de l'erreur de configuration."
+  },
   "navHome": "Accueil",
   "navOrders": "Commandes",
   "navStores": "Boutiques",
-  "navSettings": "Réglages"
+  "navSettings": "Réglages",
+  "welcomeSkip": "Passer",
+  "@welcomeSkip": {
+    "description": "Passer l'introduction"
+  },
+  "welcomeSlide1Title": "Le marché de ton quartier, livré chez toi",
+  "@welcomeSlide1Title": {
+    "description": "Bienvenue, écran 1"
+  },
+  "welcomeSlide1Body": "Les boutiques de ton quartier, un seul panier, livré en zem.",
+  "@welcomeSlide1Body": {
+    "description": "Bienvenue, écran 1"
+  },
+  "welcomeSlide2Title": "Plusieurs boutiques, un seul panier",
+  "@welcomeSlide2Title": {
+    "description": "Bienvenue, écran 2"
+  },
+  "welcomeSlide2Body": "Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.",
+  "@welcomeSlide2Body": {
+    "description": "Bienvenue, écran 2"
+  },
+  "welcomeSlide3Title": "Cash ou Mobile Money",
+  "@welcomeSlide3Title": {
+    "description": "Bienvenue, écran 3"
+  },
+  "welcomeSlide3Body": "Tu paies à la livraison ou par Mobile Money, et tu suis ton zem.",
+  "@welcomeSlide3Body": {
+    "description": "Bienvenue, écran 3"
+  },
+  "welcomePage": "Écran {current} sur {total}",
+  "@welcomePage": {
+    "description": "Indicateur de page (lecteur d'écran)",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "authContinueGoogle": "Continuer avec Google",
+  "@authContinueGoogle": {
+    "description": "Bouton Google"
+  },
+  "authContinueEmail": "Continuer avec mon email",
+  "@authContinueEmail": {
+    "description": "Bouton email"
+  },
+  "authLegal": "En continuant, tu acceptes les conditions d'utilisation et la politique de confidentialité.",
+  "@authLegal": {
+    "description": "Mention légale"
+  },
+  "authBack": "Retour",
+  "@authBack": {
+    "description": "Bouton retour"
+  },
+  "authEmailTitle": "Ton email",
+  "@authEmailTitle": {
+    "description": "Titre écran email"
+  },
+  "authEmailSubtitle": "On t'envoie un code à 6 chiffres. Pas de mot de passe à retenir.",
+  "@authEmailSubtitle": {
+    "description": "Sous-titre écran email"
+  },
+  "authEmailLabel": "Adresse email",
+  "@authEmailLabel": {
+    "description": "Champ email"
+  },
+  "authEmailValid": "Adresse valide",
+  "@authEmailValid": {
+    "description": "Email valide"
+  },
+  "authEmailInvalid": "Vérifie ton adresse email",
+  "@authEmailInvalid": {
+    "description": "Email invalide"
+  },
+  "authEmailPrivacy": "Ton email reste privé : les vendeuses ne le voient pas.",
+  "@authEmailPrivacy": {
+    "description": "Confidentialité de l'email"
+  },
+  "authSendCode": "Recevoir mon code",
+  "@authSendCode": {
+    "description": "Bouton envoyer le code"
+  },
+  "authCodeTitle": "Entre le code",
+  "@authCodeTitle": {
+    "description": "Titre écran code"
+  },
+  "authCodeSentTo": "Envoyé à {email}",
+  "@authCodeSentTo": {
+    "description": "Code envoyé à",
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "authChangeEmail": "Modifier",
+  "@authChangeEmail": {
+    "description": "Modifier l'email"
+  },
+  "authCodeLabel": "Code à 6 chiffres",
+  "@authCodeLabel": {
+    "description": "Champ du code (lecteur d'écran)"
+  },
+  "authResendIn": "Renvoyer le code dans {seconds} s",
+  "@authResendIn": {
+    "description": "Compte à rebours",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "authResend": "Renvoyer le code",
+  "@authResend": {
+    "description": "Bouton renvoyer"
+  },
+  "authCodeTip": "Astuce : le code arrive en moins d'une minute. Regarde aussi dans les spams.",
+  "@authCodeTip": {
+    "description": "Astuce code"
+  },
+  "authCodeWrong": "Ce code ne marche pas. Vérifie-le ou demande-en un nouveau.",
+  "@authCodeWrong": {
+    "description": "Code faux"
+  },
+  "authProfileTitle": "Bienvenue sur DYM !",
+  "@authProfileTitle": {
+    "description": "Titre profil"
+  },
+  "authProfileSubtitle": "Deux questions et c'est parti.",
+  "@authProfileSubtitle": {
+    "description": "Sous-titre profil"
+  },
+  "authFirstNameLabel": "Ton prénom",
+  "@authFirstNameLabel": {
+    "description": "Champ prénom"
+  },
+  "authFirstNameInvalid": "Entre ton prénom (40 caractères au plus)",
+  "@authFirstNameInvalid": {
+    "description": "Prénom invalide"
+  },
+  "authPhotoOptional": "Photo (facultatif)",
+  "@authPhotoOptional": {
+    "description": "Photo facultative"
+  },
+  "authZoneLabel": "Ton quartier",
+  "@authZoneLabel": {
+    "description": "Choix du quartier"
+  },
+  "authZoneHint": "Ton quartier sert à te montrer les boutiques proches et le délai de livraison.",
+  "@authZoneHint": {
+    "description": "Explication du quartier"
+  },
+  "authZoneRequired": "Choisis ton quartier",
+  "@authZoneRequired": {
+    "description": "Quartier manquant"
+  },
+  "authStart": "C'est parti",
+  "@authStart": {
+    "description": "Bouton terminer le profil"
+  },
+  "errorOffline": "Pas de connexion. Vérifie ton réseau et réessaie.",
+  "@errorOffline": {
+    "description": "Hors ligne"
+  },
+  "errorGeneric": "Un problème est survenu. Réessaie dans un instant.",
+  "@errorGeneric": {
+    "description": "Erreur générique"
+  },
+  "errorSessionExpired": "Ta session a expiré. Reconnecte-toi.",
+  "@errorSessionExpired": {
+    "description": "Session expirée"
+  },
+  "retry": "Réessayer",
+  "@retry": {
+    "description": "Bouton réessayer"
+  },
+  "accountTitle": "Moi",
+  "@accountTitle": {
+    "description": "Titre du compte"
+  },
+  "accountAddresses": "Mes adresses",
+  "@accountAddresses": {
+    "description": "Ligne adresses"
+  },
+  "accountNotifications": "Notifications",
+  "@accountNotifications": {
+    "description": "Ligne notifications"
+  },
+  "accountLanguage": "Langue · {language}",
+  "@accountLanguage": {
+    "description": "Ligne langue",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "languageName": "Français",
+  "@languageName": {
+    "description": "Nom de la langue courante"
+  },
+  "accountHelp": "Aide et contact",
+  "@accountHelp": {
+    "description": "Ligne aide"
+  },
+  "accountSignOut": "Se déconnecter",
+  "@accountSignOut": {
+    "description": "Déconnexion"
+  },
+  "accountDelete": "Supprimer mon compte",
+  "@accountDelete": {
+    "description": "Suppression"
+  },
+  "accountDeleteTitle": "Supprimer ton compte ?",
+  "@accountDeleteTitle": {
+    "description": "Titre confirmation"
+  },
+  "accountDeleteBody": "Ton profil, tes adresses et ton historique seront effacés. Tes commandes en cours doivent d'abord être livrées ou annulées. Cette action est définitive.",
+  "@accountDeleteBody": {
+    "description": "Texte confirmation"
+  },
+  "accountDeleteConfirm": "Supprimer définitivement",
+  "@accountDeleteConfirm": {
+    "description": "Bouton confirmer"
+  },
+  "cancel": "Annuler",
+  "@cancel": {
+    "description": "Annuler"
+  },
+  "comingSoon": "Bientôt disponible",
+  "@comingSoon": {
+    "description": "Fonction à venir"
+  },
+  "vendorWelcomeBody": "Ta boutique, tes commandes, ta caisse. Au marché, chez toi ou dans ta boutique.",
+  "@vendorWelcomeBody": {
+    "description": "Bienvenue vendeuse"
+  },
+  "vendorPoint1": "Publie un produit en moins d'une minute",
+  "@vendorPoint1": {
+    "description": "Avantage 1"
+  },
+  "vendorPoint2": "Reçois des commandes claires, sans DM",
+  "@vendorPoint2": {
+    "description": "Avantage 2"
+  },
+  "vendorPoint3": "Encaisse en cash ou Mobile Money",
+  "@vendorPoint3": {
+    "description": "Avantage 3"
+  },
+  "vendorNextStep": "Ton compte est prêt. Prochaine étape : ta boutique.",
+  "@vendorNextStep": {
+    "description": "Après connexion vendeuse"
+  },
+  "homeHello": "Bonjour {name} !",
+  "@homeHello": {
+    "description": "Accueil provisoire",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSignInTitle": "Connexion de l'équipe",
+  "@adminSignInTitle": {
+    "description": "Titre connexion admin"
+  },
+  "adminSignInBody": "Accès réservé aux comptes Google Workspace de DYM.",
+  "@adminSignInBody": {
+    "description": "Texte connexion admin"
+  },
+  "adminContinueGoogle": "Continuer avec Google Workspace",
+  "@adminContinueGoogle": {
+    "description": "Bouton admin"
+  },
+  "adminSecurityNote": "Double authentification obligatoire · Déconnexion après 30 min d'inactivité",
+  "@adminSecurityNote": {
+    "description": "Note sécurité admin"
+  },
+  "adminAuditNote": "Chaque action est enregistrée dans le journal d'audit.",
+  "@adminAuditNote": {
+    "description": "Note audit"
+  },
+  "adminAccessDenied": "Accès réservé à l'équipe DYM. Ce compte n'a pas les droits d'administration.",
+  "@adminAccessDenied": {
+    "description": "Accès refusé"
+  },
+  "adminGoogleUnavailable": "La connexion Google n'est pas configurée pour cet environnement.",
+  "@adminGoogleUnavailable": {
+    "description": "Google non configuré"
+  },
+  "adminSignedOutInactive": "Tu as été déconnecté après 30 minutes d'inactivité.",
+  "@adminSignedOutInactive": {
+    "description": "Déconnexion pour inactivité"
+  }
 }

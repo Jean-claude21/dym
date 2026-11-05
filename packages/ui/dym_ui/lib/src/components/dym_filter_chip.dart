@@ -30,14 +30,16 @@ class DymFilterChip extends StatelessWidget {
       selected: selected,
       label: label,
       excludeSemantics: true,
-      child: SizedBox(
-        height: DymTokenSize.touchMin,
-        child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onTap,
-              borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+      // Zone tactile de 48 dp ; la pastille dessinée fait 40 dp.
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+          child: SizedBox(
+            height: DymTokenSize.touchMin,
+            child: Center(
+              widthFactor: 1,
               child: AnimatedContainer(
                 duration: DymMotion.of(context, DymMotion.fast),
                 curve: DymMotion.standard,
@@ -54,13 +56,15 @@ class DymFilterChip extends StatelessWidget {
                         : c.textSecondary.withValues(alpha: 0.25),
                   ),
                 ),
-                alignment: Alignment.center,
-                child: Text(
-                  label,
-                  style: context.dym.text.label.copyWith(
-                    fontSize: 15,
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-                    color: selected ? c.onBrand : c.textPrimary,
+                child: Center(
+                  widthFactor: 1,
+                  child: Text(
+                    label,
+                    style: context.dym.text.label.copyWith(
+                      fontSize: 15,
+                      fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
+                      color: selected ? c.onBrand : c.textPrimary,
+                    ),
                   ),
                 ),
               ),

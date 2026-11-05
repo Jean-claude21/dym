@@ -1,4 +1,6 @@
+import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_data/dym_data.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
@@ -16,8 +18,18 @@ Future<void> main() async {
     return;
   }
   await setupLocator();
+  final neon = createNeonClient(environment);
   locator
     ..registerSingleton(environment)
-    ..registerSingleton(createNeonClient(environment));
+    ..registerSingleton(neon)
+    ..registerSingleton<AuthService>(
+      NeonAuthService(
+        neon: neon,
+        account: AccountRepository(neon.data),
+        reference: ReferenceRepository(neon.data),
+        google: PluginGoogleIdTokenProvider.fromDefines(),
+        app: AccountApp.vendor,
+      ),
+    );
   runApp(const VendorApp());
 }

@@ -1,0 +1,82 @@
+import 'package:dym_auth/src/auth_flow_viewmodel.dart';
+import 'package:dym_auth/src/widgets/step_scaffold.dart';
+import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_ui/dym_ui.dart';
+import 'package:flutter/material.dart';
+
+/// Saisie du code à 6 chiffres (maquette 11). Vérification automatique dès la
+/// dernière case ; renvoi possible après 60 s.
+class CodeStep extends StatelessWidget {
+  const new({required this.viewModel, super.key});
+
+  final AuthFlowViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final vm = viewModel;
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return StepScaffold(
+      title: l10n.authCodeTitle,
+      subtitle: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: DymTokenSpace.s2,
+        children: [
+          Text(l10n.authCodeSentTo(vm.email)),
+          TextButton(
+            onPressed: vm.changeEmail,
+            child: Text(
+              l10n.authChangeEmail,
+              style: t.title.copyWith(
+                fontSize: 16,
+                color: c.brandDeep,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+        ],
+      ),
+      onBack: vm.back,
+      action: vm.canResend
+          ? DymButton(
+              label: l10n.authResend,
+              variant: DymButtonVariant.secondary,
+              onPressed: vm.resendCode,
+            )
+          : Semantics(
+              liveRegion: false,
+              child: Text(
+                l10n.authResendIn(vm.resendSeconds),
+                textAlign: TextAlign.center,
+                style: t.label.copyWith(fontSize: 16, color: c.textSecondary),
+              ),
+            ),
+      children: [
+        DymCodeInput(
+          label: l10n.authCodeLabel,
+          error: vm.codeRejected,
+          enabled: !vm.isBusy,
+          onChanged: vm.setCode,
+        ),
+        if (vm.isBusy) ...[
+          const SizedBox(height: DymTokenSpace.s4),
+          Center(child: CircularProgressIndicator(color: c.brand)),
+        ],
+        AuthErrorBanner(error: vm.authError),
+        const SizedBox(height: DymTokenSpace.s5),
+        Container(
+          padding: const EdgeInsets.all(DymTokenSpace.s4),
+          decoration: BoxDecoration(
+            color: c.plantain,
+            borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          ),
+          child: Text(
+            l10n.authCodeTip,
+            style: t.body.copyWith(fontSize: 16, color: c.textPrimary),
+          ),
+        ),
+      ],
+    );
+  }
+}

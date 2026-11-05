@@ -211,9 +211,9 @@ function migrate(args) {
 
   const applied = new Map(
     scalar(url, 'select version, checksum from dym_meta.schema_migrations')
-      .split('\n')
+      .split(/\r?\n/) // psql sous Windows : fins de ligne CRLF
       .filter(Boolean)
-      .map((line) => line.split('|')),
+      .map((line) => line.trim().split('|')),
   );
 
   let count = 0;

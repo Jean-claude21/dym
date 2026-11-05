@@ -25,7 +25,7 @@ void main() {
     expect(DymLocalizations.supportedLocales.first, const Locale('fr'));
     final l10n = await _load(tester, const Locale('fr'));
     expect(l10n.appNameVendor, 'DYM Vendeuse');
-    expect(l10n.environmentLabel('dev'), 'Environnement : dev');
+    expect(l10n.environmentLabel('dev'), 'Environnement : dev');
   });
 
   testWidgets('anglais', (tester) async {

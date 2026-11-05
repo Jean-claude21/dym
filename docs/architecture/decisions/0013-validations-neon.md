@@ -20,6 +20,20 @@ classé selon ce qui a été prouvé.
 | 5 | Stacked, freezed et json_serializable sur Flutter 3.47.5 | **Stacked : validé** (3.5 + `stacked_generator` 2.0.4, 3 apps générées). **json_serializable : validé** (`dym_models`, spec 004). **freezed : no-go** : sur 3.47.5, `flutter_test` fige `test_api` (analyzer < 14), alors que freezed 4 exige analyzer 14 et que freezed 3 exige analyzer ≤ 12, incompatible avec `stacked_generator` 2.0.4 et `build_runner` 2.16 | Réessayer à chaque montée de Flutter (0006) | Classes immuables écrites à la main + `fromJson` par `json_serializable` (en place) |
 | 6 | Inscription par téléphone via le webhook `send.otp` | — | Tout (spec `phone-otp`) | OTP email maintenu (décision 0007) |
 
+## Points ajoutés par la spec 005
+
+- **Suppression de compte** : `delete_my_account()` supprime la ligne `neon_auth."user"`, avec
+  suppression en cascade des sessions. Il faut vérifier sur Neon que le propriétaire de la base a
+  ce droit et que les tables de Better Auth sont liées en cascade. Plan B : une Function qui
+  appelle l'API d'administration de Neon Auth.
+- **Google** : identifiants OAuth à créer par plateforme et passés à la compilation :
+  - `DYM_GOOGLE_SERVER_CLIENT_ID` pour Android ;
+  - `DYM_GOOGLE_CLIENT_ID` pour iOS et le web.
+
+  Côté Neon Auth, le fournisseur Google est à activer avec les mêmes identifiants.
+- **Premier admin** : à donner par le propriétaire de la base :
+  `select app.grant_role('<uuid>', 'admin', 'équipe fondatrice')`.
+
 ## Procédure dès l'accès Neon
 
 1. `neon link` sur le projet, puis branche `staging` créée depuis `main`.

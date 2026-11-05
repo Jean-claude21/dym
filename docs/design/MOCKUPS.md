@@ -9,8 +9,9 @@
 ## Avancement
 
 Direction validée le 2026-10-01 ([DESIGN_DIRECTION.md](DESIGN_DIRECTION.md)). Écrans déjà rendus
-dans [`screens/`](screens/) : parcours 2, 3, 4, 5, 7, 9 (étape « Où vends-tu ? ») et 12. Les autres
-parcours sont à produire dans la même direction, puis tous sont testés sur le terrain.
+dans [`screens/`](screens/) : parcours 2, 3, 4, 5, 7, 9 (étape « Où vends-tu ? ») et 12. Spec 005 :
+parcours 1 complet, « Moi » (parcours 8, suppression du compte), connexion vendeuse et admin
+(écrans 09 à 15, à valider). Les autres parcours sont produits spec par spec dans la même direction.
 
 ## Ordre de production
 
