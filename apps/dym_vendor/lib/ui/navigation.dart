@@ -1,7 +1,10 @@
-import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/app.router.dart';
+import 'package:dym_vendor/features/catalog/catalog_service.dart';
+import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
+import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
@@ -26,19 +29,31 @@ abstract interface class AppNavigator {
   /// Réglage d'une étape ; se termine au retour.
   Future<void> toStoreSetting(StoreStep step);
 
-  /// « Ajouter un produit » (spec `catalog`).
-  void toAddProduct(BuildContext context);
+  /// Premier produit, depuis l'écran de réussite : l'éditeur, puis
+  /// l'accueil.
+  void toAddProduct();
+
+  /// Éditeur d'un produit (`null` : nouveau) ; se termine au retour.
+  Future<void> toProductEditor({Product? product});
+
+  /// « Mes catégories » ; se termine au retour.
+  Future<void> toStoreCategories();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
 /// connexion, la déconnexion ou l'ouverture de la boutique).
 class StackedAppNavigator implements AppNavigator {
-  new([NavigationService? navigation, StoreService? stores])
-    : _navigation = navigation ?? locator<NavigationService>(),
-      _stores = stores ?? locator<StoreService>();
+  new([
+    NavigationService? navigation,
+    StoreService? stores,
+    CatalogService? catalog,
+  ]) : _navigation = navigation ?? locator<NavigationService>(),
+       _stores = stores ?? locator<StoreService>(),
+       _catalog = catalog ?? locator<CatalogService>();
 
   final NavigationService _navigation;
   final StoreService _stores;
+  final CatalogService _catalog;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -67,13 +82,11 @@ class StackedAppNavigator implements AppNavigator {
 
   @override
   void toStoreOpened(MyStore store, CountryConfig config) => _replaceAll(
-    Builder(
-      builder: (context) => StoreOpenedView(
-        store: store,
-        config: config,
-        onSeeStore: toHome,
-        onAddProduct: () => toAddProduct(context),
-      ),
+    StoreOpenedView(
+      store: store,
+      config: config,
+      onSeeStore: toHome,
+      onAddProduct: toAddProduct,
     ),
   );
 
@@ -91,10 +104,37 @@ class StackedAppNavigator implements AppNavigator {
   );
 
   @override
-  void toAddProduct(BuildContext context) {
-    // Le catalogue arrive avec la spec `catalog` : on l'annonce.
-    ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-      SnackBar(content: Text(DymLocalizations.of(context).comingSoon)),
-    );
-  }
+  void toAddProduct() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) => ProductEditorView(
+        service: _catalog,
+        initialSource: PhotoSource.camera,
+        onDone: (_) => toHome(),
+        onCancel: toHome,
+      ),
+    ),
+  );
+
+  @override
+  Future<void> toProductEditor({Product? product}) => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) => ProductEditorView(
+        service: _catalog,
+        product: product,
+        initialSource: product == null ? PhotoSource.camera : null,
+        onDone: (_) => _navigator.pop(),
+        onCancel: () => _navigator.pop(),
+      ),
+    ),
+  );
+
+  @override
+  Future<void> toStoreCategories() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) => StoreCategoriesView(
+        service: _catalog,
+        onBack: () => _navigator.pop(),
+      ),
+    ),
+  );
 }

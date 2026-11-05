@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { type AuthVariables, requireUser, type TokenVerifier } from "./lib/auth.js";
+import { type CatalogDeps, registerCatalogRoutes } from "./catalog/routes.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
 
 export interface AppDeps {
@@ -9,6 +10,8 @@ export interface AppDeps {
   branch?: string;
   /** Origines web autorisées (admin). Les apps mobiles n'en ont pas besoin. */
   allowedOrigins?: string[];
+  /** Catalogue (spec 007) ; absent : routes en 503. */
+  catalog?: CatalogDeps;
 }
 
 /** App HTTP des Functions DYM. Les dépendances sont injectées (tests). */
@@ -43,6 +46,8 @@ export function createApp(deps: AppDeps) {
   app.get("/me", requireUser(deps.verifyToken), (c) =>
     c.json({ userId: c.get("user").id }),
   );
+
+  registerCatalogRoutes(app, deps.verifyToken, deps.catalog);
 
   return app;
 }

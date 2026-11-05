@@ -35,9 +35,26 @@ void main() {
         authUrl: 'https://a.example.com/neondb/auth',
         dataApiUrl: 'https://b.example.com/rest/v1',
         functionsUrl: 'https://c.example.com',
+        mediaUrl: 'https://d.example.com/product-photos/',
       );
       expect(env.isProduction, isTrue);
       expect(env.authUrl.path, '/neondb/auth');
+      expect(
+        env.media('stores/s/products/p.jpg').toString(),
+        'https://d.example.com/product-photos/stores/s/products/p.jpg',
+      );
+    });
+
+    test('production sans base des photos : refus', () {
+      expect(
+        () => DymEnvironment.resolve(
+          env: 'production',
+          authUrl: 'https://a.example.com',
+          dataApiUrl: 'https://b.example.com',
+          functionsUrl: 'https://c.example.com',
+        ),
+        throwsA(isA<DymConfigurationException>()),
+      );
     });
 
     test('environnement inconnu ou URL invalide : refus', () {

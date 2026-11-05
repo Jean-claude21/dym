@@ -77,6 +77,8 @@ class StoreOnboardingView extends StackedView<StoreOnboardingViewModel> {
     final (title, subtitle) = storeStepTexts(l10n, step);
     final last = step == StoreStep.hours && !viewModel.isEditing;
     return DymFormScaffold(
+      // Une étape = un écran : le défilement repart du haut.
+      key: ValueKey(step),
       title: title,
       subtitle: Text(subtitle),
       centerTitle: true,

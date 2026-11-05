@@ -6,6 +6,7 @@ import 'package:neon_kit/src/data/neon_data_client.dart';
 import 'package:neon_kit/src/functions/neon_functions_client.dart';
 import 'package:neon_kit/src/retry.dart';
 import 'package:neon_kit/src/session.dart';
+import 'package:neon_kit/src/storage/object_uploader.dart';
 
 /// Point d'entrée unique vers Neon : [auth], [data] (Data API), [functions].
 class NeonClient {
@@ -54,14 +55,32 @@ class NeonClient {
       RetryInterceptor(dio: functionsDio, policy: policy, sleep: sleep),
     ]);
 
+    // Stockage d'objets : URL absolues présignées, sans jeton.
+    final uploadDio = Dio(
+      BaseOptions(
+        connectTimeout: config.connectTimeout,
+        receiveTimeout: config.receiveTimeout,
+      ),
+    );
+    if (adapter != null) uploadDio.httpClientAdapter = adapter;
+    uploadDio.interceptors.add(
+      RetryInterceptor(dio: uploadDio, policy: policy, sleep: sleep),
+    );
+
     return NeonClient._(
       auth: auth,
       data: NeonDataClient(config: config, auth: auth, httpClient: httpClient),
       functions: NeonFunctionsClient(dio: functionsDio),
+      uploads: NeonObjectUploader(dio: uploadDio),
     );
   }
 
-  new _({required this.auth, required this.data, required this.functions});
+  new _({
+    required this.auth,
+    required this.data,
+    required this.functions,
+    required this.uploads,
+  });
 
   /// Authentification et session.
   final NeonAuthClient auth;
@@ -71,4 +90,7 @@ class NeonClient {
 
   /// Functions (effets externes).
   final NeonFunctionsClient functions;
+
+  /// Envoi d'objets vers des URL présignées.
+  final NeonObjectUploader uploads;
 }

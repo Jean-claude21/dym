@@ -10,9 +10,10 @@ export type ErrorCode =
   | "conflict"
   | "validation"
   | "rate_limited"
+  | "unavailable"
   | "internal";
 
-export type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 422 | 429 | 500;
+export type ErrorStatus = 400 | 401 | 403 | 404 | 409 | 422 | 429 | 500 | 503;
 
 export class HttpError extends Error {
   constructor(
@@ -49,6 +50,9 @@ export const httpErrors = {
     new HttpError(422, "validation", message, fields),
   rateLimited: (message = "trop de requêtes") =>
     new HttpError(429, "rate_limited", message),
+  /** Service externe non configuré ou en échec : l'app passe au repli prévu. */
+  unavailable: (message = "service indisponible") =>
+    new HttpError(503, "unavailable", message),
   internal: (message = "erreur interne") =>
     new HttpError(500, "internal", message),
 };

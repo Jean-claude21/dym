@@ -14,3 +14,4 @@ export 'src/jwt.dart';
 export 'src/neon_client.dart';
 export 'src/retry.dart' show RetryPolicy;
 export 'src/session.dart';
+export 'src/storage/object_uploader.dart';

@@ -53,6 +53,21 @@ abstract final class DemoStore {
     ),
   ];
 
+  static const _units = {
+    'TG': [
+      ('piece', 'la pièce', 'each'),
+      ('litre', 'le litre', 'per litre'),
+      ('bol', 'le bol', 'the bowl'),
+      ('sachet', 'le sachet', 'the bag'),
+    ],
+    'GH': [
+      ('piece', 'la pièce', 'each'),
+      ('litre', 'le litre', 'per litre'),
+      ('olonka', "l'olonka", 'the olonka'),
+      ('margarine_tin', 'la boîte', 'the margarine tin'),
+    ],
+  };
+
   static const _mobileMoney = {
     'TG': [('tmoney', 'T-Money'), ('flooz', 'Flooz')],
     'GH': [('mtn', 'MTN MoMo'), ('telecel', 'Telecel Cash')],
@@ -105,7 +120,18 @@ abstract final class DemoStore {
           'description': {'fr': frText, 'en': enText},
         }),
     ],
-    units: const [],
+    units: [
+      for (final (i, (code, fr, en))
+          in (_units[country.code] ?? const []).indexed)
+        MarketUnit.fromJson({
+          'id': 'unit-$code',
+          'country_code': country.code,
+          'code': code,
+          'label': {'fr': fr, 'en': en},
+          'kind': 'piece',
+          'sort': i,
+        }),
+    ],
     paymentMethods: [
       PaymentMethod.fromJson({
         'id': 'cash',

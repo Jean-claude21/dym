@@ -31,6 +31,7 @@ class DymTextField extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.minLines,
     this.maxLines = 1,
+    this.suffixText,
   });
 
   final String label;
@@ -55,6 +56,9 @@ class DymTextField extends StatelessWidget {
   /// Lignes affichées (champ multiligne : `maxLines` > 1).
   final int? minLines;
   final int? maxLines;
+
+  /// Texte après la saisie (« F CFA »).
+  final String? suffixText;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +93,8 @@ class DymTextField extends StatelessWidget {
             labelText: label,
             floatingLabelBehavior: FloatingLabelBehavior.never,
             hintText: hint,
+            suffixText: suffixText,
+            suffixStyle: t.title.copyWith(fontSize: 17, color: c.textPrimary),
             counterText: '',
             filled: true,
             fillColor: c.card,

@@ -150,6 +150,8 @@ class StoreTextField extends StatefulWidget {
     this.autofocus = false,
     this.status = DymFieldStatus.none,
     this.message,
+    this.keyboardType,
+    this.suffixText,
   });
 
   final String label;
@@ -162,6 +164,8 @@ class StoreTextField extends StatefulWidget {
   final bool autofocus;
   final DymFieldStatus status;
   final String? message;
+  final TextInputType? keyboardType;
+  final String? suffixText;
 
   @override
   State<StoreTextField> createState() => _StoreTextFieldState();
@@ -188,6 +192,8 @@ class _StoreTextFieldState extends State<StoreTextField> {
     autofocus: widget.autofocus,
     status: widget.status,
     message: widget.message,
+    keyboardType: widget.keyboardType,
+    suffixText: widget.suffixText,
     textCapitalization: TextCapitalization.sentences,
     textInputAction: widget.maxLines == 1
         ? TextInputAction.next

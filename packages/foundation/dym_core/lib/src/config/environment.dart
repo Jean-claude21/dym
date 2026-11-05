@@ -12,9 +12,11 @@ class DymEnvironment {
     required this.authUrl,
     required this.dataApiUrl,
     required this.functionsUrl,
+    required this.mediaUrl,
   });
 
-  /// Lit `DYM_ENV`, `DYM_AUTH_URL`, `DYM_DATA_API_URL`, `DYM_FUNCTIONS_URL`.
+  /// Lit `DYM_ENV`, `DYM_AUTH_URL`, `DYM_DATA_API_URL`, `DYM_FUNCTIONS_URL`,
+  /// `DYM_MEDIA_URL`.
   ///
   /// En `staging` et `production`, chaque URL est obligatoire : une valeur
   /// manquante lève [DymConfigurationException] (l'app refuse de démarrer).
@@ -24,6 +26,7 @@ class DymEnvironment {
     authUrl: const String.fromEnvironment('DYM_AUTH_URL'),
     dataApiUrl: const String.fromEnvironment('DYM_DATA_API_URL'),
     functionsUrl: const String.fromEnvironment('DYM_FUNCTIONS_URL'),
+    mediaUrl: const String.fromEnvironment('DYM_MEDIA_URL'),
   );
 
   /// Résolution testable de [DymEnvironment.fromDefines].
@@ -32,6 +35,7 @@ class DymEnvironment {
     String? authUrl,
     String? dataApiUrl,
     String? functionsUrl,
+    String? mediaUrl,
   }) {
     final name = DymEnvironmentName.values.asNameMap()[env];
     if (name == null) {
@@ -65,6 +69,11 @@ class DymEnvironment {
         functionsUrl,
         'http://localhost:8787',
       ),
+      mediaUrl: url(
+        'DYM_MEDIA_URL',
+        mediaUrl,
+        'http://localhost:9000/product-photos',
+      ),
     );
   }
 
@@ -79,6 +88,14 @@ class DymEnvironment {
 
   /// URL de base des Functions.
   final Uri functionsUrl;
+
+  /// Base publique des photos (bucket `product-photos` en lecture publique).
+  final Uri mediaUrl;
+
+  /// URL publique d'un objet du stockage (clé `stores/…`).
+  Uri media(String objectKey) => Uri.parse(
+    '${mediaUrl.toString().replaceAll(RegExp(r'/+$'), '')}/$objectKey',
+  );
 
   /// Vrai en production.
   bool get isProduction => name == DymEnvironmentName.production;
