@@ -82,6 +82,23 @@ void main() {
       expect(service.gestures, ['publish:story:p1']);
     });
 
+    test('statut écrit : texte et fond, story seulement', () async {
+      final service = MemoryVendorContentService(catalog: _catalog);
+      final vm = PublishContentViewModel(service: service);
+      await vm.init();
+      vm.setTextMode(value: true);
+      expect(vm.canPublish, isFalse, reason: 'sans texte');
+      vm
+        ..setText('Arrivage de gombo ce matin !')
+        ..setBackground('#c0392b')
+        ..toggleTag('p1');
+      expect(vm.canPublish, isTrue);
+      expect(await vm.publish(), isTrue);
+      expect(service.gestures, ['publish:text:#c0392b:p1']);
+      vm.selectKind(ContentKind.video);
+      expect(vm.textMode, isFalse, reason: 'une vidéo n\'est pas un texte');
+    });
+
     test('vidéo : une photo ne suffit pas', () async {
       final vm = PublishContentViewModel(
         service: MemoryVendorContentService(catalog: _catalog),

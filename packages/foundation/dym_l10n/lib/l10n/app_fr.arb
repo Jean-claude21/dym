@@ -4861,5 +4861,9 @@
   "authSignInPassword": "Se connecter",
   "authUsePassword": "J’ai un mot de passe",
   "authUseCode": "Recevoir un code à la place",
-  "authPasswordWrong": "Email ou mot de passe incorrect."
+  "authPasswordWrong": "Email ou mot de passe incorrect.",
+  "contentMediaMode": "Photo ou vidéo",
+  "contentTextMode": "Écrire un statut",
+  "contentTextLabel": "Ton message",
+  "contentTextHint": "Écris ton statut…"
 }

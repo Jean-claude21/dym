@@ -3711,4 +3711,16 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get authPasswordWrong => 'Wrong email or password.';
+
+  @override
+  String get contentMediaMode => 'Photo or video';
+
+  @override
+  String get contentTextMode => 'Write a status';
+
+  @override
+  String get contentTextLabel => 'Your message';
+
+  @override
+  String get contentTextHint => 'Write your status…';
 }

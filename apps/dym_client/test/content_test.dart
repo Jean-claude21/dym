@@ -79,6 +79,73 @@ Future<void> _pump(
 }
 
 void main() {
+  group('stories façon statuts', () {
+    const store = ContentStore(id: 's1', name: "Étal d'Akossiwa");
+    final text = ContentItem(
+      id: 't1',
+      kind: ContentKind.story,
+      mediaKey: null,
+      isVideo: false,
+      isText: true,
+      background: '#c0392b',
+      caption: 'Arrivage de tomates ce matin !',
+      createdAt: DateTime.utc(2026, 11, 5, 8),
+      store: store,
+    );
+
+    test('durées : photo 6 s, texte selon la longueur, vidéo réelle', () {
+      expect(storyDuration(text), const Duration(milliseconds: 5800));
+      expect(
+        storyDuration(_content('v'), video: const Duration(seconds: 8)),
+        const Duration(seconds: 8),
+      );
+      expect(
+        storyDuration(_content('v'), video: const Duration(minutes: 2)),
+        const Duration(seconds: 60),
+      );
+    });
+
+    testWidgets(
+      'texte affiché, puis story suivante et fermeture au temps imparti',
+      (tester) async {
+        var closed = false;
+        // Sans pumpAndSettle : les stories défilent d'elles-mêmes.
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: DymTheme.light(),
+            locale: const Locale('fr'),
+            localizationsDelegates: DymLocalizations.localizationsDelegates,
+            supportedLocales: DymLocalizations.supportedLocales,
+            home: StoryViewer(
+              service: MemoryContentService(discovery: memoryDiscovery()),
+              groups: [
+                StoryGroup(
+                  store: store,
+                  stories: [
+                    text,
+                    _content('st1', kind: ContentKind.story),
+                  ],
+                ),
+              ],
+              onClose: () => closed = true,
+              videoBuilder: _video,
+            ),
+          ),
+        );
+        await tester.pump();
+        expect(find.text('Arrivage de tomates ce matin !'), findsOneWidget);
+        expect(find.byType(LinearProgressIndicator), findsNWidgets(2));
+        await tester.pump(const Duration(milliseconds: 5900));
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump(const Duration(milliseconds: 400));
+        expect(find.text('Arrivage de tomates ce matin !'), findsNothing);
+        expect(closed, isFalse);
+        await tester.pump(const Duration(seconds: 16));
+        expect(closed, isTrue);
+      },
+    );
+  });
+
   group('viewmodel', () {
     test("fil : vue comptée, j'aime, ajout au panier, signalement", () async {
       final service = MemoryContentService(

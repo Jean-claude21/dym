@@ -37,6 +37,8 @@ class ContentItem {
     required this.isVideo,
     required this.store,
     required this.createdAt,
+    this.isText = false,
+    this.background,
     this.caption,
     this.status = 'published',
     this.expiresAt,
@@ -51,8 +53,10 @@ class ContentItem {
   factory fromJson(Map<String, dynamic> json) => ContentItem(
     id: json['id'] as String,
     kind: ContentKind.fromCode(json['kind'] as String?),
-    mediaKey: json['media_key'] as String,
+    mediaKey: json['media_key'] as String?,
     isVideo: json['media_type'] == 'video',
+    isText: json['media_type'] == 'text',
+    background: json['background'] as String?,
     caption: json['caption'] as String?,
     status: json['status'] as String? ?? 'published',
     createdAt: DateTime.parse(json['created_at'] as String),
@@ -73,8 +77,14 @@ class ContentItem {
 
   final String id;
   final ContentKind kind;
-  final String mediaKey;
+
+  /// Nul pour un statut texte.
+  final String? mediaKey;
   final bool isVideo;
+
+  /// Statut texte : [caption] sur un fond [background] (#rrggbb).
+  final bool isText;
+  final String? background;
   final String? caption;
   final String status;
   final DateTime createdAt;
@@ -93,6 +103,8 @@ class ContentItem {
         kind: kind,
         mediaKey: mediaKey,
         isVideo: isVideo,
+        isText: isText,
+        background: background,
         caption: caption,
         status: status ?? this.status,
         createdAt: createdAt,

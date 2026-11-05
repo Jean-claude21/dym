@@ -3739,4 +3739,16 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get authPasswordWrong => 'Email ou mot de passe incorrect.';
+
+  @override
+  String get contentMediaMode => 'Photo ou vidéo';
+
+  @override
+  String get contentTextMode => 'Écrire un statut';
+
+  @override
+  String get contentTextLabel => 'Ton message';
+
+  @override
+  String get contentTextHint => 'Écris ton statut…';
 }

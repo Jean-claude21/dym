@@ -6342,6 +6342,30 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Email ou mot de passe incorrect.'**
   String get authPasswordWrong;
+
+  /// No description provided for @contentMediaMode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo ou vidéo'**
+  String get contentMediaMode;
+
+  /// No description provided for @contentTextMode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire un statut'**
+  String get contentTextMode;
+
+  /// No description provided for @contentTextLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton message'**
+  String get contentTextLabel;
+
+  /// No description provided for @contentTextHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris ton statut…'**
+  String get contentTextHint;
 }
 
 class _DymLocalizationsDelegate

@@ -1081,5 +1081,9 @@
   "authSignInPassword": "Sign in",
   "authUsePassword": "I have a password",
   "authUseCode": "Get a code instead",
-  "authPasswordWrong": "Wrong email or password."
+  "authPasswordWrong": "Wrong email or password.",
+  "contentMediaMode": "Photo or video",
+  "contentTextMode": "Write a status",
+  "contentTextLabel": "Your message",
+  "contentTextHint": "Write your status…"
 }

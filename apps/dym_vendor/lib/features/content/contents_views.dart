@@ -34,6 +34,13 @@ abstract interface class VendorContentService {
     List<String> productIds = const [],
   });
 
+  /// Statut texte (story écrite, sans média).
+  Future<Result<ContentItem>> publishText({
+    required String text,
+    required String background,
+    List<String> productIds = const [],
+  });
+
   Future<Result<List<ContentItem>>> mine();
 
   Future<Result<void>> archive(String contentId);
@@ -120,6 +127,18 @@ class NeonVendorContentService implements VendorContentService {
   }
 
   @override
+  Future<Result<ContentItem>> publishText({
+    required String text,
+    required String background,
+    List<String> productIds = const [],
+  }) => _repository.publishText(
+    id: Uuid.v4(),
+    text: text,
+    background: background,
+    productIds: productIds,
+  );
+
+  @override
   Future<Result<List<ContentItem>>> mine() => _repository.mine();
 
   @override
@@ -152,10 +171,32 @@ class PublishContentViewModel extends BaseViewModel {
   bool publishing = false;
   Failure? failure;
 
+  /// Statut écrit (story seulement) : texte sur un fond de couleur.
+  bool textMode = false;
+  String text = '';
+  String background = storyColors.first;
+
   bool get canPublish =>
-      media != null &&
       !publishing &&
-      (kind == ContentKind.story || (media?.isVideo ?? false));
+      (textMode
+          ? kind == ContentKind.story && text.trim().isNotEmpty
+          : media != null &&
+                (kind == ContentKind.story || (media?.isVideo ?? false)));
+
+  void setTextMode({required bool value}) {
+    textMode = value && kind == ContentKind.story;
+    notifyListeners();
+  }
+
+  void setText(String value) {
+    text = value;
+    notifyListeners();
+  }
+
+  void setBackground(String value) {
+    background = value;
+    notifyListeners();
+  }
 
   Future<void> init() async {
     products = (await service.products()).valueOrNull ?? const [];
@@ -164,6 +205,7 @@ class PublishContentViewModel extends BaseViewModel {
 
   void selectKind(ContentKind value) {
     kind = value;
+    if (value == ContentKind.video) textMode = false;
     if (value == ContentKind.video && !(media?.isVideo ?? true)) media = null;
     notifyListeners();
   }
@@ -188,22 +230,41 @@ class PublishContentViewModel extends BaseViewModel {
 
   Future<bool> publish() async {
     final m = media;
-    if (m == null || !canPublish) return false;
+    if (!canPublish || (!textMode && m == null)) return false;
     publishing = true;
     failure = null;
     notifyListeners();
-    final result = await service.publish(
-      kind: kind,
-      media: m,
-      caption: caption.trim().isEmpty ? null : caption.trim(),
-      productIds: tagged.toList(),
-    );
+    final result = textMode
+        ? await service.publishText(
+            text: text.trim(),
+            background: background,
+            productIds: tagged.toList(),
+          )
+        : await service.publish(
+            kind: kind,
+            media: m!,
+            caption: caption.trim().isEmpty ? null : caption.trim(),
+            productIds: tagged.toList(),
+          );
     publishing = false;
     failure = result.failureOrNull;
     notifyListeners();
     return result.isOk;
   }
 }
+
+/// Fonds proposés pour un statut écrit.
+const storyColors = [
+  '#0b5d3b',
+  '#c0392b',
+  '#d35400',
+  '#8e44ad',
+  '#2c3e50',
+  '#16a085',
+];
+
+Color _hex(String hex) =>
+    Color(0xFF000000 | int.parse(hex.substring(1), radix: 16));
 
 /// Écran 75.
 class PublishContentView extends StackedView<PublishContentViewModel> {
@@ -276,80 +337,161 @@ class PublishContentView extends StackedView<PublishContentViewModel> {
                 selected: {vm.kind},
                 onSelectionChanged: (s) => vm.selectKind(s.first),
               ),
+              if (story) ...[
+                const SizedBox(height: DymTokenSpace.s3),
+                SegmentedButton<bool>(
+                  segments: [
+                    ButtonSegment(
+                      value: false,
+                      icon: const Icon(Icons.photo_rounded),
+                      label: Text(l10n.contentMediaMode),
+                    ),
+                    ButtonSegment(
+                      value: true,
+                      icon: const Icon(Icons.text_fields_rounded),
+                      label: Text(l10n.contentTextMode),
+                    ),
+                  ],
+                  selected: {vm.textMode},
+                  onSelectionChanged: (s) => vm.setTextMode(value: s.first),
+                ),
+              ],
               const SizedBox(height: DymTokenSpace.s3),
-              AspectRatio(
-                aspectRatio: 4 / 3,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(DymTokenRadius.card),
-                  child: ColoredBox(
-                    color: c.tintVertTendre,
-                    child: media == null
-                        ? Center(
-                            child: Text(
-                              story
-                                  ? l10n.contentPickStory
-                                  : l10n.contentPickVideo,
-                              textAlign: TextAlign.center,
-                              style: t.body.copyWith(color: c.brandDeep),
+              if (vm.textMode) ...[
+                AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                    child: ColoredBox(
+                      color: _hex(vm.background),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(DymTokenSpace.s4),
+                          child: Text(
+                            vm.text.trim().isEmpty
+                                ? l10n.contentTextHint
+                                : vm.text,
+                            textAlign: TextAlign.center,
+                            style: t.title.copyWith(
+                              color: Colors.white,
+                              fontSize: 22,
                             ),
-                          )
-                        : media.isVideo
-                        ? Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.movie_rounded,
-                                  size: 56,
-                                  color: c.brandDeep,
-                                ),
-                                Text(
-                                  l10n.contentVideoReady,
-                                  style: t.body.copyWith(color: c.brandDeep),
-                                ),
-                              ],
-                            ),
-                          )
-                        : Image(
-                            image: service.mediaPreview(media),
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) => const SizedBox(),
                           ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: DymTokenSpace.s3),
-              Wrap(
-                spacing: DymTokenSpace.s2,
-                runSpacing: DymTokenSpace.s2,
-                children: [
-                  DymButton(
-                    label: l10n.contentFilm,
-                    icon: Icons.videocam_rounded,
-                    variant: DymButtonVariant.secondary,
-                    expanded: false,
-                    onPressed: () =>
-                        vm.pick(video: true, source: PhotoSource.camera),
+                const SizedBox(height: DymTokenSpace.s3),
+                Wrap(
+                  spacing: DymTokenSpace.s2,
+                  children: [
+                    for (final color in storyColors)
+                      Semantics(
+                        button: true,
+                        selected: vm.background == color,
+                        label: color,
+                        child: InkWell(
+                          customBorder: const CircleBorder(),
+                          onTap: () => vm.setBackground(color),
+                          child: CircleAvatar(
+                            radius: 18,
+                            backgroundColor: _hex(color),
+                            child: vm.background == color
+                                ? const Icon(
+                                    Icons.check_rounded,
+                                    color: Colors.white,
+                                  )
+                                : null,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: DymTokenSpace.s3),
+                DymTextField(
+                  label: l10n.contentTextLabel,
+                  maxLength: 500,
+                  minLines: 2,
+                  maxLines: 6,
+                  textCapitalization: TextCapitalization.sentences,
+                  onChanged: vm.setText,
+                ),
+              ] else
+                AspectRatio(
+                  aspectRatio: 4 / 3,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                    child: ColoredBox(
+                      color: c.tintVertTendre,
+                      child: media == null
+                          ? Center(
+                              child: Text(
+                                story
+                                    ? l10n.contentPickStory
+                                    : l10n.contentPickVideo,
+                                textAlign: TextAlign.center,
+                                style: t.body.copyWith(color: c.brandDeep),
+                              ),
+                            )
+                          : media.isVideo
+                          ? Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.movie_rounded,
+                                    size: 56,
+                                    color: c.brandDeep,
+                                  ),
+                                  Text(
+                                    l10n.contentVideoReady,
+                                    style: t.body.copyWith(color: c.brandDeep),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Image(
+                              image: service.mediaPreview(media),
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => const SizedBox(),
+                            ),
+                    ),
                   ),
-                  if (story)
+                ),
+              const SizedBox(height: DymTokenSpace.s3),
+              if (!vm.textMode)
+                Wrap(
+                  spacing: DymTokenSpace.s2,
+                  runSpacing: DymTokenSpace.s2,
+                  children: [
                     DymButton(
-                      label: l10n.photoTake,
-                      icon: Icons.photo_camera_rounded,
+                      label: l10n.contentFilm,
+                      icon: Icons.videocam_rounded,
                       variant: DymButtonVariant.secondary,
                       expanded: false,
                       onPressed: () =>
-                          vm.pick(video: false, source: PhotoSource.camera),
+                          vm.pick(video: true, source: PhotoSource.camera),
                     ),
-                  DymButton(
-                    label: l10n.contentGallery,
-                    icon: Icons.photo_library_rounded,
-                    variant: DymButtonVariant.secondary,
-                    expanded: false,
-                    onPressed: () =>
-                        vm.pick(video: !story, source: PhotoSource.gallery),
-                  ),
-                ],
-              ),
+                    if (story)
+                      DymButton(
+                        label: l10n.photoTake,
+                        icon: Icons.photo_camera_rounded,
+                        variant: DymButtonVariant.secondary,
+                        expanded: false,
+                        onPressed: () =>
+                            vm.pick(video: false, source: PhotoSource.camera),
+                      ),
+                    DymButton(
+                      label: l10n.contentGallery,
+                      icon: Icons.photo_library_rounded,
+                      variant: DymButtonVariant.secondary,
+                      expanded: false,
+                      onPressed: () =>
+                          vm.pick(video: !story, source: PhotoSource.gallery),
+                    ),
+                  ],
+                ),
               const SizedBox(height: DymTokenSpace.s3),
               Text(l10n.contentTagged, style: t.title),
               const SizedBox(height: DymTokenSpace.s2),
@@ -376,13 +518,14 @@ class PublishContentView extends StackedView<PublishContentViewModel> {
                   style: t.label.copyWith(color: c.textSecondary),
                 ),
               const SizedBox(height: DymTokenSpace.s3),
-              DymTextField(
-                label: l10n.contentCaption,
-                maxLength: 200,
-                maxLines: 3,
-                textCapitalization: TextCapitalization.sentences,
-                onChanged: (v) => vm.caption = v,
-              ),
+              if (!vm.textMode)
+                DymTextField(
+                  label: l10n.contentCaption,
+                  maxLength: 200,
+                  maxLines: 3,
+                  textCapitalization: TextCapitalization.sentences,
+                  onChanged: (v) => vm.caption = v,
+                ),
               if (vm.failure != null)
                 Padding(
                   padding: const EdgeInsets.only(top: DymTokenSpace.s2),
@@ -535,10 +678,13 @@ class MyContentsView extends StackedView<MyContentsViewModel> {
                           minTileHeight: 72,
                           leading: CircleAvatar(
                             backgroundColor: c.tintVertTendre,
-                            backgroundImage: item.isVideo
+                            backgroundImage:
+                                item.mediaKey == null || item.isVideo
                                 ? null
-                                : service.photo(item.mediaKey),
-                            child: item.isVideo
+                                : service.photo(item.mediaKey!),
+                            child: item.isText
+                                ? const Text('Aa')
+                                : item.isVideo
                                 ? Icon(
                                     Icons.play_arrow_rounded,
                                     color: c.brandDeep,
@@ -639,6 +785,28 @@ class MemoryVendorContentService implements VendorContentService {
       mediaKey: 'stores/s/contents/c.jpg',
       isVideo: media.isVideo,
       caption: caption,
+      createdAt: DateTime.utc(2026, 10, 5, 9),
+      store: const ContentStore(id: 's', name: "Étal d'Akossiwa"),
+    );
+    _contents.insert(0, item);
+    return Ok(item);
+  }
+
+  @override
+  Future<Result<ContentItem>> publishText({
+    required String text,
+    required String background,
+    List<String> productIds = const [],
+  }) async {
+    gestures.add('publish:text:$background:${productIds.join(',')}');
+    final item = ContentItem(
+      id: 'c${_contents.length + 1}',
+      kind: ContentKind.story,
+      mediaKey: null,
+      isVideo: false,
+      isText: true,
+      background: background,
+      caption: text,
       createdAt: DateTime.utc(2026, 10, 5, 9),
       store: const ContentStore(id: 's', name: "Étal d'Akossiwa"),
     );

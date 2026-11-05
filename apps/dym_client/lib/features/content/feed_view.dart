@@ -326,12 +326,12 @@ class _ContentPage extends StatelessWidget {
         if (content.isVideo)
           videoBuilder(
             context,
-            service.mediaUrl(content.mediaKey),
+            service.mediaUrl(content.mediaKey!),
             active: active,
           )
         else
           Image(
-            image: service.photo(content.mediaKey),
+            image: service.photo(content.mediaKey!),
             fit: BoxFit.cover,
             errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
           ),
