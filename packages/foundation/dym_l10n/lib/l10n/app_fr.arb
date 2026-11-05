@@ -4664,5 +4664,182 @@
   "moderationRemove": "Retirer",
   "@moderationRemove": {
     "description": "Retirer le contenu"
+  },
+  "adminDashboardOverview": "Vue générale",
+  "@adminDashboardOverview": {
+    "description": "Section du tableau de bord"
+  },
+  "adminDashboardAi": "IA et paiements",
+  "@adminDashboardAi": {
+    "description": "Section du tableau de bord (77)"
+  },
+  "aiUnderstood": "Requêtes comprises",
+  "@aiUnderstood": {
+    "description": "Tuile IA"
+  },
+  "aiLatency": "Latence moyenne",
+  "@aiLatency": {
+    "description": "Tuile IA"
+  },
+  "aiSeconds": "{value} s",
+  "@aiSeconds": {
+    "description": "Durée en secondes",
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "decimalPatternDigits",
+        "optionalParameters": {
+          "decimalDigits": 1
+        }
+      }
+    }
+  },
+  "aiFallback": "Passages à la recherche classique",
+  "@aiFallback": {
+    "description": "Tuile IA (copilote sans proposition)"
+  },
+  "adminPaymentsSucceeded1h": "Paiements réussis",
+  "@adminPaymentsSucceeded1h": {
+    "description": "Tuile paiements (1 h)"
+  },
+  "ai24h": "24 h",
+  "@ai24h": {
+    "description": "Période"
+  },
+  "ai1h": "1 h",
+  "@ai1h": {
+    "description": "Période"
+  },
+  "aiSeries": "Compréhension · 7 jours",
+  "@aiSeries": {
+    "description": "Série IA"
+  },
+  "aiMisses": "Dernières requêtes non comprises",
+  "@aiMisses": {
+    "description": "Tableau IA"
+  },
+  "aiOutcomeNoResult": "Aucun résultat",
+  "@aiOutcomeNoResult": {
+    "description": "Résultat IA"
+  },
+  "aiOutcomeFailure": "Panne",
+  "@aiOutcomeFailure": {
+    "description": "Résultat IA"
+  },
+  "aiUsageVoice": "Voix",
+  "@aiUsageVoice": {
+    "description": "Type de requête"
+  },
+  "aiUsagePhoto": "Photo",
+  "@aiUsagePhoto": {
+    "description": "Type de requête"
+  },
+  "aiUsageText": "Texte",
+  "@aiUsageText": {
+    "description": "Type de requête"
+  },
+  "aiNoPersonalData": "Aucune donnée personnelle affichée ni liée à ces requêtes.",
+  "@aiNoPersonalData": {
+    "description": "Mention de confidentialité"
+  },
+  "aiPaymentsAlert": "Alerte : seulement {value} de paiements réussis sur la dernière heure.",
+  "@aiPaymentsAlert": {
+    "description": "Alerte paiements < 90 %",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "broadcastTitle": "Relancer mes clientes",
+  "@broadcastTitle": {
+    "description": "Titre de l'écran 78"
+  },
+  "broadcastEntry": "Relancer mes clientes",
+  "@broadcastEntry": {
+    "description": "Entrée depuis Ma boutique"
+  },
+  "broadcastAudience": "Choisir mes destinataires",
+  "@broadcastAudience": {
+    "description": "Segments"
+  },
+  "broadcastRegular": "Clientes régulières",
+  "@broadcastRegular": {
+    "description": "Segment"
+  },
+  "broadcastRegularHint": "2 commandes ou plus",
+  "@broadcastRegularHint": {
+    "description": "Aide du segment"
+  },
+  "broadcastMonth": "Clientes du mois",
+  "@broadcastMonth": {
+    "description": "Segment"
+  },
+  "broadcastAll": "Toutes mes clientes",
+  "@broadcastAll": {
+    "description": "Segment"
+  },
+  "broadcastMessage": "Mon message",
+  "@broadcastMessage": {
+    "description": "Message"
+  },
+  "broadcastMessageHint": "Gombo frais arrivé ce matin…",
+  "@broadcastMessageHint": {
+    "description": "Champ du message"
+  },
+  "broadcastAttach": "Joindre un produit (facultatif)",
+  "@broadcastAttach": {
+    "description": "Produit joint"
+  },
+  "broadcastNoProduct": "Aucun produit",
+  "@broadcastNoProduct": {
+    "description": "Pas de produit joint"
+  },
+  "broadcastRules": "Une relance par jour au plus. Les clientes peuvent couper ces messages.",
+  "@broadcastRules": {
+    "description": "Règles de la relance"
+  },
+  "broadcastSend": "{n, plural, =0{Aucune cliente à prévenir} =1{Envoyer à 1 cliente} other{Envoyer à {n} clientes}}",
+  "@broadcastSend": {
+    "description": "Bouton d'envoi",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "broadcastSent": "{n, plural, =1{Message envoyé à 1 cliente.} other{Message envoyé à {n} clientes.}}",
+  "@broadcastSent": {
+    "description": "Relance envoyée",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "broadcastDailyLimit": "Tu as déjà relancé tes clientes aujourd'hui. Réessaie demain.",
+  "@broadcastDailyLimit": {
+    "description": "Limite d'une relance par jour"
+  },
+  "lowStockTitle": "Alerte stock bas",
+  "@lowStockTitle": {
+    "description": "Réglage du stock bas"
+  },
+  "lowStockEnabled": "Me prévenir quand un produit s'épuise",
+  "@lowStockEnabled": {
+    "description": "Interrupteur du stock bas"
+  },
+  "lowStockThreshold": "Seuil",
+  "@lowStockThreshold": {
+    "description": "Seuil d'alerte"
+  },
+  "lowStockUnder": "Me prévenir sous {n} unités",
+  "@lowStockUnder": {
+    "description": "Valeur du seuil",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   }
 }

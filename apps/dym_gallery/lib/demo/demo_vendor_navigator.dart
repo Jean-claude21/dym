@@ -44,5 +44,8 @@ class DemoVendorNavigator implements AppNavigator {
   void toContents() {}
 
   @override
+  void toBroadcast() {}
+
+  @override
   void toHelp() {}
 }

@@ -1,3 +1,5 @@
+import 'package:dym_admin/features/dashboard/ai_health_view.dart';
+import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/testing.dart';
 import 'package:dym_core/dym_core.dart';
@@ -106,5 +108,35 @@ void main() {
     await tester.tap(find.text(l10n.moderationRemove));
     await _settle(tester);
     expect(service.gestures, ['r-story:removed']);
+  });
+
+  test('IA et paiements : chargement', () async {
+    final vm = AdminAiHealthViewModel(service: MemoryAdminService());
+    await vm.load();
+    expect(vm.data!.understoodPercent, 87);
+    expect(vm.data!.paymentsPercent, 96);
+    expect(vm.data!.misses.last.query, 'ablo');
+  });
+
+  group('écran 77 aux 7 tailles, texte 130 %', () {
+    for (final size in _sizes) {
+      for (final locale in const [Locale('fr'), Locale('en')]) {
+        testWidgets('77 · ${size.width.toInt()}×${size.height.toInt()} · '
+            '${locale.languageCode}', (tester) async {
+          await _pump(
+            tester,
+            AdminDashboardView(service: MemoryAdminService(), onOpen: (_) {}),
+            size: size,
+            locale: locale,
+            textScale: 1.3,
+          );
+          final l10n = await DymLocalizations.delegate.load(locale);
+          await tester.tap(find.text(l10n.adminDashboardAi));
+          await _settle(tester);
+          expect(tester.takeException(), isNull);
+          expect(find.text(l10n.aiMisses), findsOneWidget);
+        });
+      }
+    }
   });
 }

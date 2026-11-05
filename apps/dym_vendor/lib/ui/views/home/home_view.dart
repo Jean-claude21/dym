@@ -6,6 +6,7 @@ import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
+import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/products/products_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
@@ -25,6 +26,7 @@ enum HomeTab { dashboard, orders, messages, products, store, me }
 /// (écran 23) et « Moi ».
 class HomeView extends StatefulWidget {
   const new({
+    this.broadcasts,
     this.contents,
     super.key,
     this.service,
@@ -59,6 +61,9 @@ class HomeView extends StatefulWidget {
 
   final HomeTab initialTab;
 
+  /// Relance (tests) ; « Relancer mes clientes » si le flag est actif.
+  final VendorBroadcastService? broadcasts;
+
   /// Contenus (tests) ; « Mes contenus » si le flag est actif.
   final VendorContentService? contents;
 
@@ -80,6 +85,7 @@ class _HomeViewState extends State<HomeView> {
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
   bool _contents = false;
+  bool _broadcast = false;
 
   @override
   void initState() {
@@ -93,6 +99,18 @@ class _HomeViewState extends State<HomeView> {
       unawaited(
         contents.enabled().then((on) {
           if (mounted && on) setState(() => _contents = true);
+        }),
+      );
+    }
+    final broadcasts =
+        widget.broadcasts ??
+        (locator.isRegistered<VendorBroadcastService>()
+            ? locator<VendorBroadcastService>()
+            : null);
+    if (broadcasts != null) {
+      unawaited(
+        broadcasts.enabled().then((on) {
+          if (mounted && on) setState(() => _broadcast = true);
         }),
       );
     }
@@ -145,6 +163,7 @@ class _HomeViewState extends State<HomeView> {
           onEdit: _navigator.toStoreSetting,
           onReviews: _navigator.toReviews,
           onContents: _contents ? _navigator.toContents : null,
+          onBroadcast: _broadcast ? _navigator.toBroadcast : null,
         ),
         HomeTab.me => AccountView(
           service: _service,

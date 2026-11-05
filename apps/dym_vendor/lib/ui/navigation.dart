@@ -7,6 +7,7 @@ import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/app.router.dart';
+import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
@@ -62,6 +63,9 @@ abstract interface class AppNavigator {
 
   /// Mes contenus et publication (écran 75, spec 020).
   void toContents();
+
+  /// Relance des clientes et stock bas (écran 78, spec 021).
+  void toBroadcast();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -75,7 +79,13 @@ class StackedAppNavigator implements AppNavigator {
     VendorReviewsService? reviews,
     SupportService? support,
     VendorContentService? contents,
-  ]) : _contents =
+    VendorBroadcastService? broadcasts,
+  ]) : _broadcasts =
+           broadcasts ??
+           (locator.isRegistered<VendorBroadcastService>()
+               ? locator<VendorBroadcastService>()
+               : null),
+       _contents =
            contents ??
            (locator.isRegistered<VendorContentService>()
                ? locator<VendorContentService>()
@@ -94,6 +104,19 @@ class StackedAppNavigator implements AppNavigator {
   final VendorReviewsService _reviews;
   final SupportService _support;
   final VendorContentService? _contents;
+  final VendorBroadcastService? _broadcasts;
+
+  @override
+  void toBroadcast() {
+    final broadcasts = _broadcasts;
+    if (broadcasts == null) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) =>
+            BroadcastView(service: broadcasts, onBack: () => _navigator.pop()),
+      ),
+    );
+  }
 
   @override
   void toContents() {

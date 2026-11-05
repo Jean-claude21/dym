@@ -3552,4 +3552,148 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get moderationRemove => 'Retirer';
+
+  @override
+  String get adminDashboardOverview => 'Vue générale';
+
+  @override
+  String get adminDashboardAi => 'IA et paiements';
+
+  @override
+  String get aiUnderstood => 'Requêtes comprises';
+
+  @override
+  String get aiLatency => 'Latence moyenne';
+
+  @override
+  String aiSeconds(double value) {
+    final intl.NumberFormat valueNumberFormat =
+        intl.NumberFormat.decimalPatternDigits(
+          locale: localeName,
+          decimalDigits: 1,
+        );
+    final String valueString = valueNumberFormat.format(value);
+
+    return '$valueString s';
+  }
+
+  @override
+  String get aiFallback => 'Passages à la recherche classique';
+
+  @override
+  String get adminPaymentsSucceeded1h => 'Paiements réussis';
+
+  @override
+  String get ai24h => '24 h';
+
+  @override
+  String get ai1h => '1 h';
+
+  @override
+  String get aiSeries => 'Compréhension · 7 jours';
+
+  @override
+  String get aiMisses => 'Dernières requêtes non comprises';
+
+  @override
+  String get aiOutcomeNoResult => 'Aucun résultat';
+
+  @override
+  String get aiOutcomeFailure => 'Panne';
+
+  @override
+  String get aiUsageVoice => 'Voix';
+
+  @override
+  String get aiUsagePhoto => 'Photo';
+
+  @override
+  String get aiUsageText => 'Texte';
+
+  @override
+  String get aiNoPersonalData =>
+      'Aucune donnée personnelle affichée ni liée à ces requêtes.';
+
+  @override
+  String aiPaymentsAlert(String value) {
+    return 'Alerte : seulement $value de paiements réussis sur la dernière heure.';
+  }
+
+  @override
+  String get broadcastTitle => 'Relancer mes clientes';
+
+  @override
+  String get broadcastEntry => 'Relancer mes clientes';
+
+  @override
+  String get broadcastAudience => 'Choisir mes destinataires';
+
+  @override
+  String get broadcastRegular => 'Clientes régulières';
+
+  @override
+  String get broadcastRegularHint => '2 commandes ou plus';
+
+  @override
+  String get broadcastMonth => 'Clientes du mois';
+
+  @override
+  String get broadcastAll => 'Toutes mes clientes';
+
+  @override
+  String get broadcastMessage => 'Mon message';
+
+  @override
+  String get broadcastMessageHint => 'Gombo frais arrivé ce matin…';
+
+  @override
+  String get broadcastAttach => 'Joindre un produit (facultatif)';
+
+  @override
+  String get broadcastNoProduct => 'Aucun produit';
+
+  @override
+  String get broadcastRules =>
+      'Une relance par jour au plus. Les clientes peuvent couper ces messages.';
+
+  @override
+  String broadcastSend(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Envoyer à $n clientes',
+      one: 'Envoyer à 1 cliente',
+      zero: 'Aucune cliente à prévenir',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String broadcastSent(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Message envoyé à $n clientes.',
+      one: 'Message envoyé à 1 cliente.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get broadcastDailyLimit =>
+      'Tu as déjà relancé tes clientes aujourd\'hui. Réessaie demain.';
+
+  @override
+  String get lowStockTitle => 'Alerte stock bas';
+
+  @override
+  String get lowStockEnabled => 'Me prévenir quand un produit s\'épuise';
+
+  @override
+  String get lowStockThreshold => 'Seuil';
+
+  @override
+  String lowStockUnder(int n) {
+    return 'Me prévenir sous $n unités';
+  }
 }
