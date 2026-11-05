@@ -712,6 +712,248 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 4)),
   );
+
+  test(
+    'admin : statut forcé, litige tranché, annulation remboursée, '
+    'boutique suspendue, journal',
+    () async {
+      // Le rôle admin s'accorde en base (premier admin) : URL hors dépôt.
+      final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+      if (dbUrl == null || dbUrl.isEmpty) {
+        markTestSkipped('NEON_LIVE_DATABASE_URL absent');
+        return;
+      }
+      final vendor = await signUp('vx');
+      final client = await signUp('cx');
+      final team = await signUp('ax');
+      final grant = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'dym-db.mjs',
+        ].join(Platform.pathSeparator),
+        'grant-admin',
+        'dym-e2e-ax-$run@example.com',
+        '--url',
+        dbUrl,
+      ]);
+      expect(grant.exitCode, 0, reason: '${grant.stderr}');
+
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final methods = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id, provider_code')
+              .eq('country_code', country.code),
+        ),
+        'moyens',
+      );
+      String? methodOf(String provider) => (methods as List)
+          .map((m) => m as Map)
+          .where((m) => m['provider_code'] == provider)
+          .map((m) => m['id'] as String)
+          .firstOrNull;
+      final cashId = methodOf('cash')!;
+      final simId = methodOf('simulator');
+      final (storeId, variant) = await openStore(
+        vendor,
+        name: 'E2E X $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [cashId, ?simId],
+        price: 1200,
+      );
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Signale',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      await ok(
+        AddressRepository(client.data).save(
+          AddressInput(
+            id: Uuid.v4(),
+            kind: AddressKind.home,
+            zoneId: zones[0],
+            landmark: 'Repère de test',
+            phone: '+000 0000 0000',
+          ),
+        ),
+        'adresse',
+      );
+      final cart = CartRepository(client.data);
+      final orders = OrderRepository(
+        functions: client.functions,
+        data: client.data,
+      );
+      final vendorOrders = VendorOrderRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+      );
+      final admin = AdminRepository(data: team.data, functions: team.functions);
+
+      Future<Purchase> order(String methodId) async {
+        await ok(cart.add(variant), 'ajout');
+        final quote = await ok(cart.cart(paymentMethodId: methodId), 'devis');
+        return await ok(
+          orders.place(
+            OrderRequest(
+              addressId: quote.addressId,
+              modes: quote.modes,
+              paymentMethodId: methodId,
+              expectedTotalMinor: quote.totalMinor,
+            ),
+            idempotencyKey: Uuid.v4(),
+          ),
+          'commande',
+        );
+      }
+
+      // Lectures réservées à l'équipe.
+      final denied = await AdminRepository(
+        data: client.data,
+        functions: client.functions,
+      ).orders();
+      expect(denied.isOk, isFalse, reason: 'la cliente ne liste pas');
+
+      // 1. Commande cash acceptée : l'équipe force « Livrée ».
+      final cashOrder = (await order(cashId)).orders.single.id;
+      await ok(
+        vendorOrders.transition(
+          cashOrder,
+          to: OrderStatus.accepted,
+          expected: OrderStatus.pending,
+        ),
+        'acceptée',
+      );
+      var detail = await ok(admin.order(cashOrder), 'détail admin');
+      expect(detail.forceableStatuses, contains(OrderStatus.delivered));
+      final found = await ok(
+        admin.orders(query: detail.reference),
+        'recherche',
+      );
+      expect(found.orders.map((o) => o.id), contains(cashOrder));
+      detail = await ok(
+        admin.forceStatus(detail, OrderStatus.delivered, 'Livrée (test e2e)'),
+        'statut forcé',
+      );
+      expect(detail.status, OrderStatus.delivered);
+      expect(detail.timeline.last.actorRole, 'admin');
+      final closed = await admin.forceStatus(
+        detail,
+        OrderStatus.ready,
+        'Retour (test e2e)',
+      );
+      expect(closed.failureOrNull?.message, 'order_closed');
+
+      // 2. Litige sur cette commande : l'équipe tranche, cash remis.
+      final disputes = DisputeRepository(
+        data: client.data,
+        functions: client.functions,
+      );
+      final opened = await ok(
+        disputes.open(
+          cashOrder,
+          reason: DisputeReason.missingItem,
+          description: 'Article manquant (test e2e)',
+        ),
+        'signalement',
+      );
+      final listed = await ok(admin.disputes(), 'litiges ouverts');
+      expect(listed.map((d) => d.id), contains(opened.id));
+      final resolved = await ok(
+        admin.resolveDispute(
+          opened.id,
+          resolution: DisputeResolution.partialRefund,
+          refundMinor: 100,
+          internalNote: 'Décision de test e2e',
+        ),
+        'décision',
+      );
+      expect(resolved.isOpen, isFalse);
+      final cashRefund = (await ok(
+        admin.refunds(),
+        'à exécuter',
+      )).firstWhere((r) => r.orderId == cashOrder);
+      expect(cashRefund.isCash, isTrue);
+      expect(
+        (await ok(admin.markCashRefund(cashRefund.id), 'cash remis')).status,
+        RefundStatus.succeeded,
+      );
+
+      // 3. Commande payée en ligne : annulation, remboursement simulé.
+      if (simId != null) {
+        final paid = await order(simId);
+        expect(await _postForm('${paid.payment!.checkoutUrl}/succeeded'), 200);
+        final paidOrder = paid.orders.single.id;
+        for (var i = 0; i < 20; i++) {
+          final p = await ok(orders.purchase(paid.id), 'relecture');
+          if (p.paymentStatus == PaymentStatus.paid) break;
+          await Future<void>.delayed(const Duration(milliseconds: 500));
+        }
+        final cancelled = await ok(
+          admin.cancel(
+            await ok(admin.order(paidOrder), 'détail'),
+            'Boutique fermée (test e2e)',
+          ),
+          'annulation',
+        );
+        expect(cancelled.order.cancelledBy, 'admin');
+        expect(cancelled.refunds.single.status, RefundStatus.pending);
+        final executed = await ok(
+          admin.executeRefund(cancelled.refunds.single.id),
+          'remboursement',
+        );
+        expect(executed.status, RefundStatus.succeeded);
+        final reread = await ok(admin.order(paidOrder), 'relu');
+        expect(reread.order.refundDue, isFalse);
+      }
+
+      // 4. Boutique suspendue puis réactivée.
+      final suspended = await ok(
+        admin.setStoreStatus(
+          storeId,
+          suspended: true,
+          reason: 'Contrôle (test e2e)',
+        ),
+        'suspension',
+      );
+      expect(suspended.row.status, AdminStoreStatus.suspended);
+      final reopen = await vendor.data.rpc<Object?>('publish_store');
+      expect(reopen.isOk, isFalse, reason: 'la vendeuse ne rouvre pas');
+      final reactivated = await ok(
+        admin.setStoreStatus(
+          storeId,
+          suspended: false,
+          reason: 'Contrôle terminé (test e2e)',
+        ),
+        'réactivation',
+      );
+      expect(reactivated.row.status, AdminStoreStatus.active);
+
+      // 5. Journal : chaque action de l'équipe est tracée.
+      final log = await ok(admin.audit(query: 'test e2e'), 'journal');
+      expect(log.total, greaterThanOrEqualTo(3));
+      expect(await ok(admin.countries(), 'pays'), isNotEmpty);
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 4)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).

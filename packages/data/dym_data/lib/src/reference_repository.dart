@@ -17,6 +17,14 @@ class ReferenceRepository {
     order: 'sort',
   );
 
+  /// Devises du référentiel (affichage des montants de tous les pays).
+  Future<Result<List<CurrencyInfo>>> currencies() => _list(
+    'currencies',
+    'code, minor_units, symbol, format_locale',
+    CurrencyInfo.fromJson,
+    order: 'code',
+  );
+
   /// Configuration complète d'un pays, en lectures parallèles.
   Future<Result<CountryConfig>> countryConfig(String countryCode) async {
     final country = await _data.run(

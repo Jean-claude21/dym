@@ -14,6 +14,7 @@ import { createPool } from "./lib/db.js";
 import { pgOrderStore } from "./orders/adapters.js";
 import { pgLifecycleStore } from "./orders/lifecycle.js";
 import { pgDisputeStore } from "./disputes/routes.js";
+import { pgAdminStore } from "./admin/routes.js";
 import { fcmPushSender, noPushSender, pgPushQueue } from "./notifications/push.js";
 import { pgPaymentStore } from "./payments/adapters.js";
 import { availableProviders } from "./payments/simulator.js";
@@ -48,6 +49,7 @@ export default createApp({
   orders: { store: pgOrderStore(pool) },
   lifecycle: pgLifecycleStore(pool),
   disputes: pgDisputeStore(pool),
+  admin: pgAdminStore(pool),
   // Push : FCM dès que le compte de service est fourni ; sinon ignorés.
   push: {
     queue: pgPushQueue(pool),

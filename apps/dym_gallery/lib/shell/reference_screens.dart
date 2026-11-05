@@ -1,4 +1,11 @@
 import 'package:dym_account/dym_account.dart';
+import 'package:dym_admin/features/audit/audit_view.dart';
+import 'package:dym_admin/features/disputes/disputes_view.dart' as admin;
+import 'package:dym_admin/features/finance/finance_view.dart';
+import 'package:dym_admin/features/ops/testing.dart' as admin;
+import 'package:dym_admin/features/orders/orders_views.dart' as admin;
+import 'package:dym_admin/features/settings/settings_view.dart';
+import 'package:dym_admin/features/stores/stores_view.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_client/features/cart/addresses/address_form_view.dart';
 import 'package:dym_client/features/cart/addresses/addresses_view.dart';
@@ -586,4 +593,80 @@ final referenceScreens = <ReferenceScreen>[
       onBack: () {},
     ),
   ),
+  ReferenceScreen(
+    id: '52',
+    title: 'Commandes (admin)',
+    surface: 'Admin',
+    referenceFile: '52-admin-commandes.webp',
+    builder: (c) => Scaffold(
+      body: admin.AdminOrdersView(
+        service: _admin(c),
+        onOpen: (_) {},
+        clock: _adminNow,
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '53',
+    title: 'Détail d’une commande (admin)',
+    surface: 'Admin',
+    referenceFile: '53-admin-commande.webp',
+    builder: (c) => Scaffold(
+      body: admin.AdminOrderView(
+        service: _admin(c),
+        orderId: 'o1',
+        onBack: () {},
+        clock: _adminNow,
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '54',
+    title: 'Litiges (admin)',
+    surface: 'Admin',
+    referenceFile: '54-admin-litige.webp',
+    builder: (c) => Scaffold(
+      body: admin.AdminDisputesView(
+        service: _admin(c),
+        initialId: 'd1',
+        clock: _adminNow,
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '55',
+    title: 'Boutiques (admin)',
+    surface: 'Admin',
+    referenceFile: '55-admin-boutiques.webp',
+    builder: (c) => Scaffold(body: AdminStoresView(service: _admin(c))),
+  ),
+  ReferenceScreen(
+    id: '56',
+    title: 'Réglages (admin)',
+    surface: 'Admin',
+    referenceFile: '56-admin-reglages.webp',
+    builder: (c) => Scaffold(body: AdminSettingsView(service: _admin(c))),
+  ),
+  ReferenceScreen(
+    id: '57',
+    title: 'Finances (admin)',
+    surface: 'Admin',
+    referenceFile: '57-admin-finances.webp',
+    builder: (c) => Scaffold(
+      body: AdminFinanceView(service: _admin(c), clock: _adminNow),
+    ),
+  ),
+  ReferenceScreen(
+    id: '58',
+    title: 'Journal d’audit (admin)',
+    surface: 'Admin',
+    referenceFile: '58-admin-journal.webp',
+    builder: (c) => Scaffold(body: AdminAuditView(service: _admin(c))),
+  ),
 ];
+
+/// Admin de démonstration (lieux génériques), dans la devise du pays.
+admin.MemoryAdminService _admin(DemoCountry c) =>
+    admin.MemoryAdminService(currency: c.currency);
+
+DateTime _adminNow() => DateTime.utc(2026, 10, 5, 11);

@@ -1898,4 +1898,694 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get notifDisputeResolvedBody =>
       'L\'équipe DYM a traité ton signalement.';
+
+  @override
+  String get adminActive => 'Active';
+
+  @override
+  String get adminAddCategory => 'Ajouter une catégorie';
+
+  @override
+  String get adminAddCity => 'Ajouter une ville';
+
+  @override
+  String get adminAddPaymentMethod => 'Ajouter un moyen de paiement';
+
+  @override
+  String get adminAddZone => 'Ajouter un quartier';
+
+  @override
+  String get adminAfter => 'Après';
+
+  @override
+  String get adminAll => 'Toutes';
+
+  @override
+  String get adminAuditAction => 'Action';
+
+  @override
+  String get adminAuditEntity => 'Entité';
+
+  @override
+  String get adminAuditSearch => 'Rechercher (action, entité, raison)';
+
+  @override
+  String get adminAuditSubtitle =>
+      'Toutes les actions de l\'équipe, en ajout seul.';
+
+  @override
+  String get adminAuditTitle => 'Journal d\'audit';
+
+  @override
+  String adminAuthorClient(String name) {
+    return '$name (cliente)';
+  }
+
+  @override
+  String adminAuthorVendor(String name) {
+    return '$name (vendeuse)';
+  }
+
+  @override
+  String adminBaseFee(String symbol) {
+    return 'Frais de base $symbol';
+  }
+
+  @override
+  String get adminBefore => 'Avant';
+
+  @override
+  String get adminBeforeAfter => 'Avant / après';
+
+  @override
+  String get adminCancellation => 'Annulation';
+
+  @override
+  String get adminCash => 'Cash';
+
+  @override
+  String get adminCityName => 'Nom de la ville';
+
+  @override
+  String get adminClose => 'Fermer';
+
+  @override
+  String get adminCloseNoAction => 'Clore sans suite';
+
+  @override
+  String get adminCountryChecklist =>
+      'Avant d\'activer un pays : au moins une ville avec des quartiers, un moyen de paiement et des frais de livraison.';
+
+  @override
+  String get adminDecision => 'Décision';
+
+  @override
+  String get adminDeliveryMinutes => 'Délai de livraison (minutes)';
+
+  @override
+  String adminDeliveryMinutesValue(int n) {
+    return 'Livraison en $n min environ';
+  }
+
+  @override
+  String get adminEditCategory => 'Modifier la catégorie';
+
+  @override
+  String get adminEditCity => 'Modifier la ville';
+
+  @override
+  String get adminEditCommission => 'Modifier la commission';
+
+  @override
+  String get adminEditFees => 'Modifier les frais de livraison';
+
+  @override
+  String get adminEditStore => 'Corriger les données';
+
+  @override
+  String get adminEditZone => 'Modifier le quartier';
+
+  @override
+  String get adminExecute => 'Exécuter';
+
+  @override
+  String adminExtraPickupFee(String symbol) {
+    return 'Ramassage en plus $symbol';
+  }
+
+  @override
+  String adminFreeThreshold(String symbol) {
+    return 'Gratuit dès $symbol';
+  }
+
+  @override
+  String get adminGeographyHelp =>
+      'Saisis les villes et quartiers du pays : les clientes et les vendeuses les retrouvent par recherche ou par position.';
+
+  @override
+  String get adminInternalNote =>
+      'Note interne (visible par l\'équipe seulement)';
+
+  @override
+  String get adminLabelEn => 'Libellé en anglais';
+
+  @override
+  String get adminLabelFr => 'Libellé en français';
+
+  @override
+  String get adminLatitude => 'Latitude (facultatif)';
+
+  @override
+  String get adminLongitude => 'Longitude (facultatif)';
+
+  @override
+  String get adminMarkCashRefunded => 'Marquer remis en main propre';
+
+  @override
+  String get adminNavAudit => 'Journal';
+
+  @override
+  String get adminNavDisputes => 'Litiges';
+
+  @override
+  String get adminNavFinance => 'Finances';
+
+  @override
+  String get adminNoAudit => 'Aucune action.';
+
+  @override
+  String get adminNoCities => 'Aucune ville : ajoute la première.';
+
+  @override
+  String get adminNoCommission => 'Aucune commission : 0 %.';
+
+  @override
+  String get adminNoDisputes => 'Aucun litige ouvert.';
+
+  @override
+  String get adminNoFees => 'Aucun frais de livraison.';
+
+  @override
+  String get adminNoHistory => 'Aucune action de l\'équipe.';
+
+  @override
+  String get adminNoParent => 'Aucune (catégorie principale)';
+
+  @override
+  String get adminNoPaymentMethods => 'Aucun moyen de paiement.';
+
+  @override
+  String get adminNoPendingPayments => 'Aucun paiement en attente.';
+
+  @override
+  String get adminNoRefunds => 'Aucun remboursement.';
+
+  @override
+  String get adminNoStores => 'Aucune boutique.';
+
+  @override
+  String get adminOffersPickup => 'Retrait sur place';
+
+  @override
+  String get adminOnlinePayment => 'Paiement en ligne';
+
+  @override
+  String get adminOpenDisputes => 'Litiges ouverts';
+
+  @override
+  String get adminOpenDisputesCount => 'Litiges ouverts';
+
+  @override
+  String get adminOpenedOn => 'Ouverte depuis le';
+
+  @override
+  String get adminOperator => 'Opérateur (facultatif)';
+
+  @override
+  String get adminOrders7d => 'Commandes · 7 j';
+
+  @override
+  String get adminOver24h => '> 24 h';
+
+  @override
+  String adminPaidWith(String amount, String method) {
+    return '$amount en $method';
+  }
+
+  @override
+  String get adminParentCategory => 'Catégorie parente';
+
+  @override
+  String get adminPendingPayments => 'Paiements en attente';
+
+  @override
+  String get adminPrepMinutes => 'Préparation (minutes)';
+
+  @override
+  String get adminProvider => 'Fournisseur';
+
+  @override
+  String get adminPublishedProducts => 'Produits publiés';
+
+  @override
+  String get adminRatePercent => 'Taux (%)';
+
+  @override
+  String adminRateValue(String rate) {
+    return '$rate %';
+  }
+
+  @override
+  String get adminReactivateStore => 'Réactiver la boutique';
+
+  @override
+  String adminRefundAll(String amount) {
+    return 'Rembourser tout ($amount)';
+  }
+
+  @override
+  String get adminRefundAmount => 'Montant';
+
+  @override
+  String adminRefundMax(String amount) {
+    return '$amount au plus';
+  }
+
+  @override
+  String get adminRefundMethod => 'Moyen';
+
+  @override
+  String get adminRefundPart => 'Rembourser une partie';
+
+  @override
+  String get adminRefundReason => 'Motif';
+
+  @override
+  String get adminRefunds => 'Remboursements';
+
+  @override
+  String get adminRefundsDone => 'Effectués';
+
+  @override
+  String get adminRefundsFailed => 'Échoués';
+
+  @override
+  String get adminReplyHint => 'Écrire à la cliente et à la vendeuse';
+
+  @override
+  String get adminRequested => 'Demandé';
+
+  @override
+  String get adminResolve => 'Trancher le litige';
+
+  @override
+  String get adminRetry => 'Relancer';
+
+  @override
+  String get adminSales7d => 'Ventes · 7 j';
+
+  @override
+  String get adminSave => 'Enregistrer';
+
+  @override
+  String get adminSettingsSubtitle =>
+      'Ouvrir un pays est une opération de configuration.';
+
+  @override
+  String get adminStoreActive => 'Active';
+
+  @override
+  String get adminStoreDescription => 'Description';
+
+  @override
+  String get adminStoreDraft => 'Brouillon';
+
+  @override
+  String get adminStoreName => 'Nom de la boutique';
+
+  @override
+  String get adminStoreSearch => 'Nom de la boutique ou de la vendeuse';
+
+  @override
+  String get adminStoreSuspended => 'Suspendue';
+
+  @override
+  String adminStoresActive(int n) {
+    return 'Actives · $n';
+  }
+
+  @override
+  String adminStoresDraft(int n) {
+    return 'Brouillons · $n';
+  }
+
+  @override
+  String adminStoresSuspended(int n) {
+    return 'Suspendues · $n';
+  }
+
+  @override
+  String get adminSuspendHelp =>
+      'La suspension ferme la boutique et demande une raison.';
+
+  @override
+  String get adminSuspendStore => 'Suspendre la boutique';
+
+  @override
+  String get adminTabCategories => 'Catégories';
+
+  @override
+  String get adminTabCommission => 'Commission';
+
+  @override
+  String get adminTabCountries => 'Pays';
+
+  @override
+  String get adminTabFees => 'Frais de livraison';
+
+  @override
+  String get adminTabGeography => 'Villes et quartiers';
+
+  @override
+  String get adminTeamHistory => 'Historique des actions de l\'équipe';
+
+  @override
+  String get adminWarnVendor => 'Avertir la vendeuse';
+
+  @override
+  String get adminWholeCountry => 'Tout le pays';
+
+  @override
+  String get adminZoneName => 'Nom du quartier';
+
+  @override
+  String adminZoneStores(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n boutiques',
+      one: '1 boutique',
+      zero: 'Aucune boutique',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminPaid => 'Payée';
+
+  @override
+  String get adminAwaitingPayment => 'En attente de paiement';
+
+  @override
+  String get adminActorClient => 'Cliente';
+
+  @override
+  String get adminActorVendor => 'Vendeuse';
+
+  @override
+  String get adminActorTeam => 'Équipe';
+
+  @override
+  String get adminActorSystem => 'Système';
+
+  @override
+  String get adminAuditSignedIn => 'Connexion';
+
+  @override
+  String get adminAuditStatusForced => 'Statut forcé';
+
+  @override
+  String get adminAuditOrderCancelled => 'Commande annulée';
+
+  @override
+  String get adminAuditCourierAssigned => 'Livreur assigné';
+
+  @override
+  String get adminAuditDisputeResolved => 'Litige tranché';
+
+  @override
+  String get adminAuditRefundSucceeded => 'Remboursement effectué';
+
+  @override
+  String get adminAuditRefundFailed => 'Remboursement échoué';
+
+  @override
+  String get adminAuditStoreSuspended => 'Boutique suspendue';
+
+  @override
+  String get adminAuditStoreReactivated => 'Boutique réactivée';
+
+  @override
+  String get adminAuditStoreUpdated => 'Données corrigées';
+
+  @override
+  String get adminAuditCountryActivated => 'Pays activé';
+
+  @override
+  String get adminAuditCountryDeactivated => 'Pays désactivé';
+
+  @override
+  String get adminAuditCity => 'Ville modifiée';
+
+  @override
+  String get adminAuditZone => 'Quartier modifié';
+
+  @override
+  String get adminAuditPaymentMethod => 'Moyen de paiement modifié';
+
+  @override
+  String get adminAuditCommission => 'Commission modifiée';
+
+  @override
+  String get adminAuditDeliveryFee => 'Frais de livraison modifiés';
+
+  @override
+  String get adminAuditCategory => 'Catégorie modifiée';
+
+  @override
+  String get adminAuditRole => 'Rôle modifié';
+
+  @override
+  String get adminEntityOrder => 'Commande';
+
+  @override
+  String get adminEntityDispute => 'Litige';
+
+  @override
+  String get adminEntityRefund => 'Remboursement';
+
+  @override
+  String get adminEntityStore => 'Boutique';
+
+  @override
+  String get adminEntityCountry => 'Pays';
+
+  @override
+  String get adminEntityCity => 'Ville';
+
+  @override
+  String get adminEntityZone => 'Quartier';
+
+  @override
+  String get adminEntityPaymentMethod => 'Moyen de paiement';
+
+  @override
+  String get adminEntityCategory => 'Catégorie';
+
+  @override
+  String get adminEntityUser => 'Équipe';
+
+  @override
+  String get adminOrderClosed =>
+      'Cette commande est terminée : passe par un litige.';
+
+  @override
+  String get adminPaymentPendingRefusal =>
+      'Le paiement de cette commande n\'est pas encore confirmé.';
+
+  @override
+  String get adminReasonRequired =>
+      'Indique une raison (3 caractères au moins).';
+
+  @override
+  String get adminCourierNotAllowed =>
+      'Un livreur ne s\'assigne qu\'à une commande en cours de livraison.';
+
+  @override
+  String get adminDisputeClosed => 'Ce litige est déjà tranché.';
+
+  @override
+  String get adminRefundAmountInvalid =>
+      'Montant invalide : entre 1 et le total de la commande.';
+
+  @override
+  String get adminRefundNotPending =>
+      'Ce remboursement est déjà en cours ou effectué.';
+
+  @override
+  String get adminCountryNotReady =>
+      'Ce pays n\'est pas prêt : complète ce qui manque.';
+
+  @override
+  String get adminProviderInactive => 'Ce fournisseur de paiement est inactif.';
+
+  @override
+  String get adminStoreStatusUnchanged => 'La boutique a déjà ce statut.';
+
+  @override
+  String adminMinutes(int n) {
+    return '$n min';
+  }
+
+  @override
+  String adminHoursMinutes(int h, String m) {
+    return '$h h $m';
+  }
+
+  @override
+  String get adminSelectItem => 'Choisis un élément dans la liste.';
+
+  @override
+  String get adminReasonLabel => 'Raison (obligatoire)';
+
+  @override
+  String get adminOrderSearch => 'N° de commande, cliente ou boutique';
+
+  @override
+  String get adminFilterAll => 'Toutes';
+
+  @override
+  String get adminFilterActive => 'En cours';
+
+  @override
+  String adminFilterStuck(int n) {
+    return 'Bloquées · $n';
+  }
+
+  @override
+  String get adminFilterDelivered => 'Livrées';
+
+  @override
+  String get adminFilterClosed => 'Annulées ou refusées';
+
+  @override
+  String get adminNoOrders => 'Aucune commande.';
+
+  @override
+  String get adminColNumber => 'N°';
+
+  @override
+  String get adminColStore => 'Boutique';
+
+  @override
+  String get adminColCustomer => 'Cliente';
+
+  @override
+  String get adminColStatus => 'Statut';
+
+  @override
+  String get adminColPayment => 'Paiement';
+
+  @override
+  String get adminColAmount => 'Montant';
+
+  @override
+  String get adminColSince => 'Depuis';
+
+  @override
+  String get adminStuck => 'Bloquée';
+
+  @override
+  String adminPageRange(int from, int to, int total) {
+    return '$from à $to sur $total';
+  }
+
+  @override
+  String get adminPrevious => 'Page précédente';
+
+  @override
+  String get adminNext => 'Page suivante';
+
+  @override
+  String get adminFirstName => 'Prénom';
+
+  @override
+  String get adminPhone => 'Téléphone';
+
+  @override
+  String get adminAddress => 'Adresse';
+
+  @override
+  String adminOrderTitle(String reference) {
+    return 'Commande $reference';
+  }
+
+  @override
+  String adminStuckSince(String duration) {
+    return 'Bloquée depuis $duration';
+  }
+
+  @override
+  String get adminOpenDispute => 'Litige ouvert';
+
+  @override
+  String get adminActorPayment => 'Paiement';
+
+  @override
+  String adminPaymentLine(String status, String method, String reference) {
+    return '$status ($method, $reference)';
+  }
+
+  @override
+  String adminCourierLine(String name, String phone) {
+    return 'Livreur : $name · $phone';
+  }
+
+  @override
+  String adminRefundLine(String amount, String status) {
+    return 'Remboursement de $amount · $status';
+  }
+
+  @override
+  String get adminTimeline => 'Chronologie';
+
+  @override
+  String adminNoStepSince(String duration) {
+    return 'Aucune étape depuis $duration';
+  }
+
+  @override
+  String adminCancelledNote(String reason) {
+    return 'Annulée par l\'équipe : $reason';
+  }
+
+  @override
+  String get adminRefundPending => 'À exécuter';
+
+  @override
+  String get adminRefundProcessing => 'En cours';
+
+  @override
+  String get adminRefundSucceeded => 'Effectué';
+
+  @override
+  String get adminRefundFailed => 'Échoué';
+
+  @override
+  String get adminTotal => 'Total';
+
+  @override
+  String adminCancelTitle(String reference) {
+    return 'Annuler la commande $reference ?';
+  }
+
+  @override
+  String get adminCancelRefund => 'Annuler et rembourser';
+
+  @override
+  String get adminCancelOrder => 'Annuler la commande';
+
+  @override
+  String get adminActions => 'Actions';
+
+  @override
+  String get adminForceStatus => 'Forcer un statut';
+
+  @override
+  String get adminChooseStatus => 'Choisis un statut';
+
+  @override
+  String get adminApply => 'Appliquer';
+
+  @override
+  String get adminExternalDelivery => 'Livraison externe';
+
+  @override
+  String get adminCourierName => 'Nom du livreur';
+
+  @override
+  String get adminAssign => 'Assigner';
+
+  @override
+  String get adminOrderPlaced => 'Commande passée';
 }

@@ -34,6 +34,10 @@ export function simulatorProvider(secret: string): PaymentProvider & {
         checkoutUrl: `${input.selfOrigin}/v1/payments/simulator/${input.paymentId}`,
       };
     },
+    // Remboursement simulé : toujours accepté, sans délai.
+    async refund(input) {
+      return { ok: true, providerReference: `sim_refund_${input.refundId}` };
+    },
     verifyWebhook(rawBody, headers) {
       const given = headers[SIMULATOR_SIGNATURE_HEADER] ?? "";
       const expected = sign(rawBody);

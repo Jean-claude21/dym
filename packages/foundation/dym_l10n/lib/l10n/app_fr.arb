@@ -2519,5 +2519,983 @@
   "notifDisputeResolvedBody": "L'équipe DYM a traité ton signalement.",
   "@notifDisputeResolvedBody": {
     "description": "Notification : litige tranché (texte)"
+  },
+  "adminActive": "Active",
+  "@adminActive": {
+    "description": "Interrupteur : actif"
+  },
+  "adminAddCategory": "Ajouter une catégorie",
+  "@adminAddCategory": {
+    "description": "Bouton : catégorie"
+  },
+  "adminAddCity": "Ajouter une ville",
+  "@adminAddCity": {
+    "description": "Bouton : ville"
+  },
+  "adminAddPaymentMethod": "Ajouter un moyen de paiement",
+  "@adminAddPaymentMethod": {
+    "description": "Bouton : moyen de paiement"
+  },
+  "adminAddZone": "Ajouter un quartier",
+  "@adminAddZone": {
+    "description": "Bouton : quartier"
+  },
+  "adminAfter": "Après",
+  "@adminAfter": {
+    "description": "Journal : après"
+  },
+  "adminAll": "Toutes",
+  "@adminAll": {
+    "description": "Filtre : toutes les valeurs"
+  },
+  "adminAuditAction": "Action",
+  "@adminAuditAction": {
+    "description": "Filtre du journal : action"
+  },
+  "adminAuditEntity": "Entité",
+  "@adminAuditEntity": {
+    "description": "Filtre du journal : entité"
+  },
+  "adminAuditSearch": "Rechercher (action, entité, raison)",
+  "@adminAuditSearch": {
+    "description": "Recherche du journal"
+  },
+  "adminAuditSubtitle": "Toutes les actions de l'équipe, en ajout seul.",
+  "@adminAuditSubtitle": {
+    "description": "Sous-titre du journal"
+  },
+  "adminAuditTitle": "Journal d'audit",
+  "@adminAuditTitle": {
+    "description": "Titre du journal"
+  },
+  "adminAuthorClient": "{name} (cliente)",
+  "@adminAuthorClient": {
+    "description": "Auteur d'un message : la cliente",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminAuthorVendor": "{name} (vendeuse)",
+  "@adminAuthorVendor": {
+    "description": "Auteur d'un message : la vendeuse",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBaseFee": "Frais de base {symbol}",
+  "@adminBaseFee": {
+    "description": "Champ : frais de base (symbole de la devise)",
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "adminBefore": "Avant",
+  "@adminBefore": {
+    "description": "Journal : avant"
+  },
+  "adminBeforeAfter": "Avant / après",
+  "@adminBeforeAfter": {
+    "description": "Journal : détail"
+  },
+  "adminCancellation": "Annulation",
+  "@adminCancellation": {
+    "description": "Motif de remboursement : annulation"
+  },
+  "adminCash": "Cash",
+  "@adminCash": {
+    "description": "Moyen : cash"
+  },
+  "adminCityName": "Nom de la ville",
+  "@adminCityName": {
+    "description": "Champ : ville"
+  },
+  "adminClose": "Fermer",
+  "@adminClose": {
+    "description": "Fermer le détail"
+  },
+  "adminCloseNoAction": "Clore sans suite",
+  "@adminCloseNoAction": {
+    "description": "Décision : sans suite"
+  },
+  "adminCountryChecklist": "Avant d'activer un pays : au moins une ville avec des quartiers, un moyen de paiement et des frais de livraison.",
+  "@adminCountryChecklist": {
+    "description": "Liste de contrôle d'un pays"
+  },
+  "adminDecision": "Décision",
+  "@adminDecision": {
+    "description": "Carte : décision"
+  },
+  "adminDeliveryMinutes": "Délai de livraison (minutes)",
+  "@adminDeliveryMinutes": {
+    "description": "Champ : délai"
+  },
+  "adminDeliveryMinutesValue": "Livraison en {n} min environ",
+  "@adminDeliveryMinutesValue": {
+    "description": "Délai d'une ville",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminEditCategory": "Modifier la catégorie",
+  "@adminEditCategory": {
+    "description": "Titre : catégorie"
+  },
+  "adminEditCity": "Modifier la ville",
+  "@adminEditCity": {
+    "description": "Titre : ville"
+  },
+  "adminEditCommission": "Modifier la commission",
+  "@adminEditCommission": {
+    "description": "Titre : commission"
+  },
+  "adminEditFees": "Modifier les frais de livraison",
+  "@adminEditFees": {
+    "description": "Titre : frais"
+  },
+  "adminEditStore": "Corriger les données",
+  "@adminEditStore": {
+    "description": "Bouton : correction de boutique"
+  },
+  "adminEditZone": "Modifier le quartier",
+  "@adminEditZone": {
+    "description": "Titre : quartier"
+  },
+  "adminExecute": "Exécuter",
+  "@adminExecute": {
+    "description": "Exécuter un remboursement"
+  },
+  "adminExtraPickupFee": "Ramassage en plus {symbol}",
+  "@adminExtraPickupFee": {
+    "description": "Champ : supplément par boutique",
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "adminFreeThreshold": "Gratuit dès {symbol}",
+  "@adminFreeThreshold": {
+    "description": "Champ : seuil de gratuité",
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "adminGeographyHelp": "Saisis les villes et quartiers du pays : les clientes et les vendeuses les retrouvent par recherche ou par position.",
+  "@adminGeographyHelp": {
+    "description": "Aide : villes et quartiers"
+  },
+  "adminInternalNote": "Note interne (visible par l'équipe seulement)",
+  "@adminInternalNote": {
+    "description": "Champ : note interne"
+  },
+  "adminLabelEn": "Libellé en anglais",
+  "@adminLabelEn": {
+    "description": "Champ : libellé anglais"
+  },
+  "adminLabelFr": "Libellé en français",
+  "@adminLabelFr": {
+    "description": "Champ : libellé français"
+  },
+  "adminLatitude": "Latitude (facultatif)",
+  "@adminLatitude": {
+    "description": "Champ : latitude"
+  },
+  "adminLongitude": "Longitude (facultatif)",
+  "@adminLongitude": {
+    "description": "Champ : longitude"
+  },
+  "adminMarkCashRefunded": "Marquer remis en main propre",
+  "@adminMarkCashRefunded": {
+    "description": "Remboursement cash"
+  },
+  "adminNavAudit": "Journal",
+  "@adminNavAudit": {
+    "description": "Onglet : journal"
+  },
+  "adminNavDisputes": "Litiges",
+  "@adminNavDisputes": {
+    "description": "Onglet : litiges"
+  },
+  "adminNavFinance": "Finances",
+  "@adminNavFinance": {
+    "description": "Onglet : finances"
+  },
+  "adminNoAudit": "Aucune action.",
+  "@adminNoAudit": {
+    "description": "Journal vide"
+  },
+  "adminNoCities": "Aucune ville : ajoute la première.",
+  "@adminNoCities": {
+    "description": "Aucune ville"
+  },
+  "adminNoCommission": "Aucune commission : 0 %.",
+  "@adminNoCommission": {
+    "description": "Aucune commission"
+  },
+  "adminNoDisputes": "Aucun litige ouvert.",
+  "@adminNoDisputes": {
+    "description": "Aucun litige"
+  },
+  "adminNoFees": "Aucun frais de livraison.",
+  "@adminNoFees": {
+    "description": "Aucun frais"
+  },
+  "adminNoHistory": "Aucune action de l'équipe.",
+  "@adminNoHistory": {
+    "description": "Historique vide"
+  },
+  "adminNoParent": "Aucune (catégorie principale)",
+  "@adminNoParent": {
+    "description": "Catégorie parente : aucune"
+  },
+  "adminNoPaymentMethods": "Aucun moyen de paiement.",
+  "@adminNoPaymentMethods": {
+    "description": "Aucun moyen"
+  },
+  "adminNoPendingPayments": "Aucun paiement en attente.",
+  "@adminNoPendingPayments": {
+    "description": "Aucun paiement"
+  },
+  "adminNoRefunds": "Aucun remboursement.",
+  "@adminNoRefunds": {
+    "description": "Aucun remboursement"
+  },
+  "adminNoStores": "Aucune boutique.",
+  "@adminNoStores": {
+    "description": "Aucune boutique"
+  },
+  "adminOffersPickup": "Retrait sur place",
+  "@adminOffersPickup": {
+    "description": "Champ : retrait"
+  },
+  "adminOnlinePayment": "Paiement en ligne",
+  "@adminOnlinePayment": {
+    "description": "Moyen : en ligne"
+  },
+  "adminOpenDisputes": "Litiges ouverts",
+  "@adminOpenDisputes": {
+    "description": "Titre : litiges"
+  },
+  "adminOpenDisputesCount": "Litiges ouverts",
+  "@adminOpenDisputesCount": {
+    "description": "Indicateur : litiges"
+  },
+  "adminOpenedOn": "Ouverte depuis le",
+  "@adminOpenedOn": {
+    "description": "Champ : date d'ouverture"
+  },
+  "adminOperator": "Opérateur (facultatif)",
+  "@adminOperator": {
+    "description": "Champ : opérateur"
+  },
+  "adminOrders7d": "Commandes · 7 j",
+  "@adminOrders7d": {
+    "description": "Indicateur : commandes"
+  },
+  "adminOver24h": "> 24 h",
+  "@adminOver24h": {
+    "description": "Litige de plus de 24 h"
+  },
+  "adminPaidWith": "{amount} en {method}",
+  "@adminPaidWith": {
+    "description": "Total et moyen de paiement",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "adminParentCategory": "Catégorie parente",
+  "@adminParentCategory": {
+    "description": "Champ : parente"
+  },
+  "adminPendingPayments": "Paiements en attente",
+  "@adminPendingPayments": {
+    "description": "Carte : paiements en attente"
+  },
+  "adminPrepMinutes": "Préparation (minutes)",
+  "@adminPrepMinutes": {
+    "description": "Champ : préparation"
+  },
+  "adminProvider": "Fournisseur",
+  "@adminProvider": {
+    "description": "Champ : fournisseur"
+  },
+  "adminPublishedProducts": "Produits publiés",
+  "@adminPublishedProducts": {
+    "description": "Indicateur : produits"
+  },
+  "adminRatePercent": "Taux (%)",
+  "@adminRatePercent": {
+    "description": "Champ : taux"
+  },
+  "adminRateValue": "{rate} %",
+  "@adminRateValue": {
+    "description": "Taux affiché",
+    "placeholders": {
+      "rate": {
+        "type": "String"
+      }
+    }
+  },
+  "adminReactivateStore": "Réactiver la boutique",
+  "@adminReactivateStore": {
+    "description": "Bouton : réactiver"
+  },
+  "adminRefundAll": "Rembourser tout ({amount})",
+  "@adminRefundAll": {
+    "description": "Décision : tout",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adminRefundAmount": "Montant",
+  "@adminRefundAmount": {
+    "description": "Champ : montant"
+  },
+  "adminRefundMax": "{amount} au plus",
+  "@adminRefundMax": {
+    "description": "Plafond du remboursement",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adminRefundMethod": "Moyen",
+  "@adminRefundMethod": {
+    "description": "Colonne : moyen"
+  },
+  "adminRefundPart": "Rembourser une partie",
+  "@adminRefundPart": {
+    "description": "Décision : partiel"
+  },
+  "adminRefundReason": "Motif",
+  "@adminRefundReason": {
+    "description": "Colonne : motif"
+  },
+  "adminRefunds": "Remboursements",
+  "@adminRefunds": {
+    "description": "Carte : remboursements"
+  },
+  "adminRefundsDone": "Effectués",
+  "@adminRefundsDone": {
+    "description": "Filtre : effectués"
+  },
+  "adminRefundsFailed": "Échoués",
+  "@adminRefundsFailed": {
+    "description": "Filtre : échoués"
+  },
+  "adminReplyHint": "Écrire à la cliente et à la vendeuse",
+  "@adminReplyHint": {
+    "description": "Champ : message de l'équipe"
+  },
+  "adminRequested": "Demandé",
+  "@adminRequested": {
+    "description": "Colonne : demandé"
+  },
+  "adminResolve": "Trancher le litige",
+  "@adminResolve": {
+    "description": "Bouton : trancher"
+  },
+  "adminRetry": "Relancer",
+  "@adminRetry": {
+    "description": "Relancer un remboursement échoué"
+  },
+  "adminSales7d": "Ventes · 7 j",
+  "@adminSales7d": {
+    "description": "Indicateur : ventes"
+  },
+  "adminSave": "Enregistrer",
+  "@adminSave": {
+    "description": "Bouton : enregistrer"
+  },
+  "adminSettingsSubtitle": "Ouvrir un pays est une opération de configuration.",
+  "@adminSettingsSubtitle": {
+    "description": "Sous-titre des réglages"
+  },
+  "adminStoreActive": "Active",
+  "@adminStoreActive": {
+    "description": "Boutique : active"
+  },
+  "adminStoreDescription": "Description",
+  "@adminStoreDescription": {
+    "description": "Champ : description"
+  },
+  "adminStoreDraft": "Brouillon",
+  "@adminStoreDraft": {
+    "description": "Boutique : brouillon"
+  },
+  "adminStoreName": "Nom de la boutique",
+  "@adminStoreName": {
+    "description": "Champ : nom"
+  },
+  "adminStoreSearch": "Nom de la boutique ou de la vendeuse",
+  "@adminStoreSearch": {
+    "description": "Recherche des boutiques"
+  },
+  "adminStoreSuspended": "Suspendue",
+  "@adminStoreSuspended": {
+    "description": "Boutique : suspendue"
+  },
+  "adminStoresActive": "Actives · {n}",
+  "@adminStoresActive": {
+    "description": "Filtre : actives",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminStoresDraft": "Brouillons · {n}",
+  "@adminStoresDraft": {
+    "description": "Filtre : brouillons",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminStoresSuspended": "Suspendues · {n}",
+  "@adminStoresSuspended": {
+    "description": "Filtre : suspendues",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminSuspendHelp": "La suspension ferme la boutique et demande une raison.",
+  "@adminSuspendHelp": {
+    "description": "Aide : suspension"
+  },
+  "adminSuspendStore": "Suspendre la boutique",
+  "@adminSuspendStore": {
+    "description": "Bouton : suspendre"
+  },
+  "adminTabCategories": "Catégories",
+  "@adminTabCategories": {
+    "description": "Onglet : catégories"
+  },
+  "adminTabCommission": "Commission",
+  "@adminTabCommission": {
+    "description": "Onglet : commission"
+  },
+  "adminTabCountries": "Pays",
+  "@adminTabCountries": {
+    "description": "Onglet : pays"
+  },
+  "adminTabFees": "Frais de livraison",
+  "@adminTabFees": {
+    "description": "Onglet : frais"
+  },
+  "adminTabGeography": "Villes et quartiers",
+  "@adminTabGeography": {
+    "description": "Onglet : villes et quartiers"
+  },
+  "adminTeamHistory": "Historique des actions de l'équipe",
+  "@adminTeamHistory": {
+    "description": "Titre : historique"
+  },
+  "adminWarnVendor": "Avertir la vendeuse",
+  "@adminWarnVendor": {
+    "description": "Case : avertir"
+  },
+  "adminWholeCountry": "Tout le pays",
+  "@adminWholeCountry": {
+    "description": "Portée : pays entier"
+  },
+  "adminZoneName": "Nom du quartier",
+  "@adminZoneName": {
+    "description": "Champ : quartier"
+  },
+  "adminZoneStores": "{n, plural, =0{Aucune boutique} =1{1 boutique} other{{n} boutiques}}",
+  "@adminZoneStores": {
+    "description": "Boutiques d'un quartier",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminPaid": "Payée",
+  "@adminPaid": {
+    "description": "Paiement d'un achat : payé en ligne"
+  },
+  "adminAwaitingPayment": "En attente de paiement",
+  "@adminAwaitingPayment": {
+    "description": "Paiement d'un achat : en attente"
+  },
+  "adminActorClient": "Cliente",
+  "@adminActorClient": {
+    "description": "Auteur d'une étape : la cliente"
+  },
+  "adminActorVendor": "Vendeuse",
+  "@adminActorVendor": {
+    "description": "Auteur d'une étape : la vendeuse"
+  },
+  "adminActorTeam": "Équipe",
+  "@adminActorTeam": {
+    "description": "Auteur d'une étape : l'équipe DYM"
+  },
+  "adminActorSystem": "Système",
+  "@adminActorSystem": {
+    "description": "Auteur d'une étape : automatique"
+  },
+  "adminAuditSignedIn": "Connexion",
+  "@adminAuditSignedIn": {
+    "description": "Journal : connexion d'un membre"
+  },
+  "adminAuditStatusForced": "Statut forcé",
+  "@adminAuditStatusForced": {
+    "description": "Journal : statut forcé"
+  },
+  "adminAuditOrderCancelled": "Commande annulée",
+  "@adminAuditOrderCancelled": {
+    "description": "Journal : annulation"
+  },
+  "adminAuditCourierAssigned": "Livreur assigné",
+  "@adminAuditCourierAssigned": {
+    "description": "Journal : livreur"
+  },
+  "adminAuditDisputeResolved": "Litige tranché",
+  "@adminAuditDisputeResolved": {
+    "description": "Journal : litige"
+  },
+  "adminAuditRefundSucceeded": "Remboursement effectué",
+  "@adminAuditRefundSucceeded": {
+    "description": "Journal : remboursement réussi"
+  },
+  "adminAuditRefundFailed": "Remboursement échoué",
+  "@adminAuditRefundFailed": {
+    "description": "Journal : remboursement échoué"
+  },
+  "adminAuditStoreSuspended": "Boutique suspendue",
+  "@adminAuditStoreSuspended": {
+    "description": "Journal : suspension"
+  },
+  "adminAuditStoreReactivated": "Boutique réactivée",
+  "@adminAuditStoreReactivated": {
+    "description": "Journal : réactivation"
+  },
+  "adminAuditStoreUpdated": "Données corrigées",
+  "@adminAuditStoreUpdated": {
+    "description": "Journal : correction de boutique"
+  },
+  "adminAuditCountryActivated": "Pays activé",
+  "@adminAuditCountryActivated": {
+    "description": "Journal : pays activé"
+  },
+  "adminAuditCountryDeactivated": "Pays désactivé",
+  "@adminAuditCountryDeactivated": {
+    "description": "Journal : pays désactivé"
+  },
+  "adminAuditCity": "Ville modifiée",
+  "@adminAuditCity": {
+    "description": "Journal : ville"
+  },
+  "adminAuditZone": "Quartier modifié",
+  "@adminAuditZone": {
+    "description": "Journal : quartier"
+  },
+  "adminAuditPaymentMethod": "Moyen de paiement modifié",
+  "@adminAuditPaymentMethod": {
+    "description": "Journal : moyen de paiement"
+  },
+  "adminAuditCommission": "Commission modifiée",
+  "@adminAuditCommission": {
+    "description": "Journal : commission"
+  },
+  "adminAuditDeliveryFee": "Frais de livraison modifiés",
+  "@adminAuditDeliveryFee": {
+    "description": "Journal : frais"
+  },
+  "adminAuditCategory": "Catégorie modifiée",
+  "@adminAuditCategory": {
+    "description": "Journal : catégorie"
+  },
+  "adminAuditRole": "Rôle modifié",
+  "@adminAuditRole": {
+    "description": "Journal : rôle"
+  },
+  "adminEntityOrder": "Commande",
+  "@adminEntityOrder": {
+    "description": "Entité : commande"
+  },
+  "adminEntityDispute": "Litige",
+  "@adminEntityDispute": {
+    "description": "Entité : litige"
+  },
+  "adminEntityRefund": "Remboursement",
+  "@adminEntityRefund": {
+    "description": "Entité : remboursement"
+  },
+  "adminEntityStore": "Boutique",
+  "@adminEntityStore": {
+    "description": "Entité : boutique"
+  },
+  "adminEntityCountry": "Pays",
+  "@adminEntityCountry": {
+    "description": "Entité : pays"
+  },
+  "adminEntityCity": "Ville",
+  "@adminEntityCity": {
+    "description": "Entité : ville"
+  },
+  "adminEntityZone": "Quartier",
+  "@adminEntityZone": {
+    "description": "Entité : quartier"
+  },
+  "adminEntityPaymentMethod": "Moyen de paiement",
+  "@adminEntityPaymentMethod": {
+    "description": "Entité : moyen de paiement"
+  },
+  "adminEntityCategory": "Catégorie",
+  "@adminEntityCategory": {
+    "description": "Entité : catégorie"
+  },
+  "adminEntityUser": "Équipe",
+  "@adminEntityUser": {
+    "description": "Entité : membre"
+  },
+  "adminOrderClosed": "Cette commande est terminée : passe par un litige.",
+  "@adminOrderClosed": {
+    "description": "Refus : commande terminée"
+  },
+  "adminPaymentPendingRefusal": "Le paiement de cette commande n'est pas encore confirmé.",
+  "@adminPaymentPendingRefusal": {
+    "description": "Refus : paiement en attente"
+  },
+  "adminReasonRequired": "Indique une raison (3 caractères au moins).",
+  "@adminReasonRequired": {
+    "description": "Refus : raison"
+  },
+  "adminCourierNotAllowed": "Un livreur ne s'assigne qu'à une commande en cours de livraison.",
+  "@adminCourierNotAllowed": {
+    "description": "Refus : livreur"
+  },
+  "adminDisputeClosed": "Ce litige est déjà tranché.",
+  "@adminDisputeClosed": {
+    "description": "Refus : litige clos"
+  },
+  "adminRefundAmountInvalid": "Montant invalide : entre 1 et le total de la commande.",
+  "@adminRefundAmountInvalid": {
+    "description": "Refus : montant"
+  },
+  "adminRefundNotPending": "Ce remboursement est déjà en cours ou effectué.",
+  "@adminRefundNotPending": {
+    "description": "Refus : remboursement"
+  },
+  "adminCountryNotReady": "Ce pays n'est pas prêt : complète ce qui manque.",
+  "@adminCountryNotReady": {
+    "description": "Refus : pays incomplet"
+  },
+  "adminProviderInactive": "Ce fournisseur de paiement est inactif.",
+  "@adminProviderInactive": {
+    "description": "Refus : fournisseur"
+  },
+  "adminStoreStatusUnchanged": "La boutique a déjà ce statut.",
+  "@adminStoreStatusUnchanged": {
+    "description": "Refus : statut inchangé"
+  },
+  "adminMinutes": "{n} min",
+  "@adminMinutes": {
+    "description": "Durée en minutes",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminHoursMinutes": "{h} h {m}",
+  "@adminHoursMinutes": {
+    "description": "Durée en heures et minutes",
+    "placeholders": {
+      "h": {
+        "type": "int"
+      },
+      "m": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSelectItem": "Choisis un élément dans la liste.",
+  "@adminSelectItem": {
+    "description": "Vue scindée : rien de sélectionné"
+  },
+  "adminReasonLabel": "Raison (obligatoire)",
+  "@adminReasonLabel": {
+    "description": "Champ de raison"
+  },
+  "adminOrderSearch": "N° de commande, cliente ou boutique",
+  "@adminOrderSearch": {
+    "description": "Recherche des commandes"
+  },
+  "adminFilterAll": "Toutes",
+  "@adminFilterAll": {
+    "description": "Filtre : toutes"
+  },
+  "adminFilterActive": "En cours",
+  "@adminFilterActive": {
+    "description": "Filtre : en cours"
+  },
+  "adminFilterStuck": "Bloquées · {n}",
+  "@adminFilterStuck": {
+    "description": "Filtre : bloquées, avec leur nombre",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminFilterDelivered": "Livrées",
+  "@adminFilterDelivered": {
+    "description": "Filtre : livrées"
+  },
+  "adminFilterClosed": "Annulées ou refusées",
+  "@adminFilterClosed": {
+    "description": "Filtre : annulées ou refusées"
+  },
+  "adminNoOrders": "Aucune commande.",
+  "@adminNoOrders": {
+    "description": "Liste vide"
+  },
+  "adminColNumber": "N°",
+  "@adminColNumber": {
+    "description": "Colonne : numéro"
+  },
+  "adminColStore": "Boutique",
+  "@adminColStore": {
+    "description": "Colonne : boutique"
+  },
+  "adminColCustomer": "Cliente",
+  "@adminColCustomer": {
+    "description": "Colonne : cliente"
+  },
+  "adminColStatus": "Statut",
+  "@adminColStatus": {
+    "description": "Colonne : statut"
+  },
+  "adminColPayment": "Paiement",
+  "@adminColPayment": {
+    "description": "Colonne : paiement"
+  },
+  "adminColAmount": "Montant",
+  "@adminColAmount": {
+    "description": "Colonne : montant"
+  },
+  "adminColSince": "Depuis",
+  "@adminColSince": {
+    "description": "Colonne : ancienneté de la dernière étape"
+  },
+  "adminStuck": "Bloquée",
+  "@adminStuck": {
+    "description": "Commande sans étape depuis trop longtemps"
+  },
+  "adminPageRange": "{from} à {to} sur {total}",
+  "@adminPageRange": {
+    "description": "Pagination",
+    "placeholders": {
+      "from": {
+        "type": "int"
+      },
+      "to": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "adminPrevious": "Page précédente",
+  "@adminPrevious": {
+    "description": "Pagination : précédente"
+  },
+  "adminNext": "Page suivante",
+  "@adminNext": {
+    "description": "Pagination : suivante"
+  },
+  "adminFirstName": "Prénom",
+  "@adminFirstName": {
+    "description": "Champ : prénom"
+  },
+  "adminPhone": "Téléphone",
+  "@adminPhone": {
+    "description": "Champ : téléphone"
+  },
+  "adminAddress": "Adresse",
+  "@adminAddress": {
+    "description": "Champ : adresse"
+  },
+  "adminOrderTitle": "Commande {reference}",
+  "@adminOrderTitle": {
+    "description": "Titre du détail d'une commande",
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adminStuckSince": "Bloquée depuis {duration}",
+  "@adminStuckSince": {
+    "description": "Pastille : bloquée",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "adminOpenDispute": "Litige ouvert",
+  "@adminOpenDispute": {
+    "description": "Pastille : litige"
+  },
+  "adminActorPayment": "Paiement",
+  "@adminActorPayment": {
+    "description": "Chronologie : paiement"
+  },
+  "adminPaymentLine": "{status} ({method}, {reference})",
+  "@adminPaymentLine": {
+    "description": "Chronologie : ligne de paiement",
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "method": {
+        "type": "String"
+      },
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adminCourierLine": "Livreur : {name} · {phone}",
+  "@adminCourierLine": {
+    "description": "Livreur assigné",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "adminRefundLine": "Remboursement de {amount} · {status}",
+  "@adminRefundLine": {
+    "description": "Chronologie : remboursement",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "adminTimeline": "Chronologie",
+  "@adminTimeline": {
+    "description": "Carte : chronologie"
+  },
+  "adminNoStepSince": "Aucune étape depuis {duration}",
+  "@adminNoStepSince": {
+    "description": "Chronologie : commande bloquée",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "adminCancelledNote": "Annulée par l'équipe : {reason}",
+  "@adminCancelledNote": {
+    "description": "Annulation par l'équipe",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "adminRefundPending": "À exécuter",
+  "@adminRefundPending": {
+    "description": "Remboursement : à exécuter"
+  },
+  "adminRefundProcessing": "En cours",
+  "@adminRefundProcessing": {
+    "description": "Remboursement : en cours"
+  },
+  "adminRefundSucceeded": "Effectué",
+  "@adminRefundSucceeded": {
+    "description": "Remboursement : effectué"
+  },
+  "adminRefundFailed": "Échoué",
+  "@adminRefundFailed": {
+    "description": "Remboursement : échoué"
+  },
+  "adminTotal": "Total",
+  "@adminTotal": {
+    "description": "Total d'une commande"
+  },
+  "adminCancelTitle": "Annuler la commande {reference} ?",
+  "@adminCancelTitle": {
+    "description": "Confirmation d'annulation",
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "adminCancelRefund": "Annuler et rembourser",
+  "@adminCancelRefund": {
+    "description": "Annuler une commande payée"
+  },
+  "adminCancelOrder": "Annuler la commande",
+  "@adminCancelOrder": {
+    "description": "Annuler une commande en cash"
+  },
+  "adminActions": "Actions",
+  "@adminActions": {
+    "description": "Carte : actions"
+  },
+  "adminForceStatus": "Forcer un statut",
+  "@adminForceStatus": {
+    "description": "Forcer un statut"
+  },
+  "adminChooseStatus": "Choisis un statut",
+  "@adminChooseStatus": {
+    "description": "Liste des statuts"
+  },
+  "adminApply": "Appliquer",
+  "@adminApply": {
+    "description": "Appliquer le statut"
+  },
+  "adminExternalDelivery": "Livraison externe",
+  "@adminExternalDelivery": {
+    "description": "Assigner un livreur"
+  },
+  "adminCourierName": "Nom du livreur",
+  "@adminCourierName": {
+    "description": "Champ : livreur"
+  },
+  "adminAssign": "Assigner",
+  "@adminAssign": {
+    "description": "Assigner le livreur"
+  },
+  "adminOrderPlaced": "Commande passée",
+  "@adminOrderPlaced": {
+    "description": "Chronologie : création"
   }
 }

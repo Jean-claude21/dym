@@ -1,0 +1,181 @@
+import 'package:dym_admin/features/ops/admin_service.dart';
+import 'package:dym_admin/features/ops/admin_widgets.dart';
+import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/dym_models.dart';
+
+/// Onglet des réglages (écran 56).
+enum SettingsTab {
+  countries,
+  geography,
+  payments,
+  commission,
+  fees,
+  categories,
+}
+
+/// Réglages : ouvrir un pays est une opération de configuration.
+class AdminSettingsViewModel extends AdminViewModel {
+  new({required this.service});
+
+  final AdminService service;
+
+  SettingsTab _tab = SettingsTab.countries;
+  List<AdminCountry> _countries = const [];
+  String? _country;
+  List<AdminCity> _cities = const [];
+  AdminPaymentSettings? _payments;
+  AdminPricing? _pricing;
+  List<AdminCategory> _categories = const [];
+  bool _acting = false;
+  Failure? _actionFailure;
+
+  SettingsTab get tab => _tab;
+  List<AdminCountry> get countries => _countries;
+  String? get country => _country;
+  AdminCountry? get selectedCountry =>
+      _countries.where((c) => c.code == _country).firstOrNull;
+  List<AdminCity> get cities => _cities;
+  AdminPaymentSettings? get payments => _payments;
+  AdminPricing? get pricing => _pricing;
+  List<AdminCategory> get categories => _categories;
+  bool get ready => !failed && _countries.isNotEmpty;
+  bool get acting => _acting;
+  Failure? get actionFailure => _actionFailure;
+
+  /// Unité mineure par unité majeure de la devise du pays choisi.
+  Currency? get currency => currencies[selectedCountry?.currencyCode];
+
+  Future<void> load() => run(service.currencies, () async {
+    final result = await service.countries();
+    if (result case Ok(:final value)) {
+      _countries = value;
+      _country ??=
+          value.where((c) => c.isActive).firstOrNull?.code ??
+          value.firstOrNull?.code;
+    }
+    return result.failureOrNull ?? await _loadTab();
+  });
+
+  Future<void> selectTab(SettingsTab value) async {
+    _tab = value;
+    _actionFailure = null;
+    notifyListeners();
+    await load();
+  }
+
+  Future<void> selectCountry(String? code) async {
+    if (code == null) return;
+    _country = code;
+    await load();
+  }
+
+  Future<Failure?> _loadTab() async {
+    final code = _country;
+    switch (_tab) {
+      case SettingsTab.countries:
+        return null;
+      case SettingsTab.geography:
+        if (code == null) return null;
+        final r = await service.geography(code);
+        if (r case Ok(:final value)) _cities = value;
+        return r.failureOrNull;
+      case SettingsTab.payments:
+        if (code == null) return null;
+        final r = await service.paymentMethods(code);
+        if (r case Ok(:final value)) _payments = value;
+        return r.failureOrNull;
+      case SettingsTab.commission:
+      case SettingsTab.fees:
+        if (code == null) return null;
+        final r = await service.pricing(code);
+        if (r case Ok(:final value)) _pricing = value;
+        final cities = await service.geography(code);
+        if (cities case Ok(:final value)) _cities = value;
+        final categories = await service.categories();
+        if (categories case Ok(:final value)) _categories = value;
+        return r.failureOrNull;
+      case SettingsTab.categories:
+        final r = await service.categories();
+        if (r case Ok(:final value)) _categories = value;
+        return r.failureOrNull;
+    }
+  }
+
+  Future<bool> setCountryActive(String code, {required bool active}) =>
+      _act(() async {
+        final r = await service.setCountryActive(code, active: active);
+        if (r case Ok(:final value)) _countries = value;
+        return r.failureOrNull;
+      });
+
+  Future<bool> saveCity(Map<String, Object?> city) => _act(() async {
+    final r = await service.saveCity({'country_code': _country, ...city});
+    if (r case Ok(:final value)) _cities = value;
+    return r.failureOrNull;
+  });
+
+  Future<bool> saveZone(Map<String, Object?> zone) => _act(() async {
+    final r = await service.saveZone(zone);
+    if (r case Ok(:final value)) _cities = value;
+    return r.failureOrNull;
+  });
+
+  Future<bool> savePaymentMethod(Map<String, Object?> method) => _act(() async {
+    final r = await service.savePaymentMethod({
+      'country_code': _country,
+      ...method,
+    });
+    if (r case Ok(:final value)) _payments = value;
+    return r.failureOrNull;
+  });
+
+  Future<bool> setCommission(int rateBps, {String? categoryId}) =>
+      _act(() async {
+        final r = await service.setCommission(
+          _country!,
+          rateBps: rateBps,
+          categoryId: categoryId,
+        );
+        if (r case Ok(:final value)) _pricing = value;
+        return r.failureOrNull;
+      });
+
+  Future<bool> setDeliveryFee({
+    required int baseFeeMinor,
+    required int extraPickupFeeMinor,
+    int? freeThresholdMinor,
+    String? cityId,
+  }) => _act(() async {
+    final r = await service.setDeliveryFee(
+      _country!,
+      baseFeeMinor: baseFeeMinor,
+      extraPickupFeeMinor: extraPickupFeeMinor,
+      freeThresholdMinor: freeThresholdMinor,
+      cityId: cityId,
+    );
+    if (r case Ok(:final value)) _pricing = value;
+    return r.failureOrNull;
+  });
+
+  Future<bool> saveCategory(Map<String, Object?> category) => _act(() async {
+    final r = await service.saveCategory(category);
+    if (r case Ok(:final value)) _categories = value;
+    return r.failureOrNull;
+  });
+
+  /// Après un changement : la liste des pays (ce qui manque) est relue.
+  Future<bool> _act(Future<Failure?> Function() gesture) async {
+    if (_acting) return false;
+    _acting = true;
+    _actionFailure = null;
+    notifyListeners();
+    final failure = await gesture();
+    _actionFailure = failure;
+    if (failure == null && _tab != SettingsTab.countries) {
+      if (await service.countries() case Ok(:final value)) _countries = value;
+    }
+    _acting = false;
+    notifyListeners();
+    return failure == null;
+  }
+}
