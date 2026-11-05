@@ -44,7 +44,11 @@ void main() {
 
     vm.setCode('482913');
     await pumpEventQueue();
-    expect(service.calls.last, 'verify:awa.mensah@gmail.com:482913');
+    // Position demandée d'emblée à l'ouverture du profil (aucun pays figé).
+    expect(service.calls.sublist(service.calls.length - 2), [
+      'verify:awa.mensah@gmail.com:482913',
+      'locate',
+    ]);
     expect(vm.step, AuthStep.profile);
     expect(vm.zones, hasLength(7));
 

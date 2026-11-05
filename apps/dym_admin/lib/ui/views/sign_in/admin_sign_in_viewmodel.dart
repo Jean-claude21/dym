@@ -30,6 +30,8 @@ class AdminSignInViewModel extends BaseViewModel {
   /// Code envoyé : l'écran affiche la saisie du code.
   bool codeSent = false;
 
+  bool _verified = false;
+
   bool get emailValid =>
       RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email.trim());
 
@@ -65,13 +67,15 @@ class AdminSignInViewModel extends BaseViewModel {
 
   Future<void> verifyCode([String? value]) async {
     if (value != null) code = value;
-    if (code.length != 6) return;
+    // Saisie complète puis bouton : une seule vérification.
+    if (code.length != 6 || isBusy || _verified) return;
     notice = null;
     final result = await runBusyFuture(
       _auth.verifyEmailCode(email.trim().toLowerCase(), code),
     );
     switch (result) {
       case Ok(:final value):
+        _verified = value.status != AuthStatus.signedOut;
         _handle(value);
       case Err(:final failure):
         if (failure is ForbiddenFailure) {
