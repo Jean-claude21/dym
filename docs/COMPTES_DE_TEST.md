@@ -47,4 +47,5 @@ revenus, avis). Ces adresses ne reçoivent pas d'email : elles ne servent pas à
 
 - Photos produits : images de la galerie (`db/scripts/demo-photos.mjs`), une par produit ou par rayon.
 - Paiement en ligne = fournisseur **simulé** (carte simulée en France, T-Money / MTN simulés).
-- Pas de contenus (stories, vidéos) : il faut de vrais médias.
+- Stories (statuts 24 h) : 28, en haut de l'Accueil cliente (`db/scripts/demo-stories.mjs`) ; à republier après 24 h.
+- Vidéos : 22 clips verticaux dans l'onglet Vidéos (`db/scripts/make-demo-videos.ps1` puis `demo-videos.mjs`).
