@@ -1297,6 +1297,123 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 2)),
   );
+
+  test(
+    'copilote : intention → panier chiffré par la base, retrait, ajout',
+    () async {
+      final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+      if (dbUrl == null || dbUrl.isEmpty) {
+        markTestSkipped('NEON_LIVE_DATABASE_URL absent');
+        return;
+      }
+      final vendor = await signUp('vc');
+      final client = await signUp('cc');
+      final team = await signUp('ac');
+      final grant = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'dym-db.mjs',
+        ].join(Platform.pathSeparator),
+        'grant-admin',
+        'dym-e2e-ac-$run@example.com',
+        '--url',
+        dbUrl,
+      ]);
+      expect(grant.exitCode, 0, reason: '${grant.stderr}');
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final cash = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id')
+              .eq('country_code', country.code)
+              .eq('provider_code', 'cash'),
+        ),
+        'cash',
+      );
+      await openStore(
+        vendor,
+        name: 'Gombo $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [((cash as List).first as Map)['id'] as String],
+        price: 300,
+      );
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Copilote',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      final copilot = CopilotRepository(
+        data: client.data,
+        functions: client.functions,
+      );
+      final admin = AdminRepository(data: team.data, functions: team.functions);
+
+      final refused = await copilot.propose('gombo', zoneId: zones[0]);
+      expect(refused.failureOrNull?.message, 'feature_disabled');
+
+      await ok(
+        admin.setFeatureFlag(
+          'intent_copilot',
+          enabled: true,
+          countryCode: country.code,
+        ),
+        'flag ouvert',
+      );
+      try {
+        final proposal = await ok(
+          copilot.propose(
+            'Une sauce gombo pour 4 personnes ce soir',
+            zoneId: zones[0],
+          ),
+          'proposition',
+        );
+        expect(proposal.lines, isNotEmpty);
+        expect(
+          proposal.totalMinor,
+          proposal.lines.fold(0, (sum, l) => sum + l.lineMinor),
+          reason: 'total chiffré en base',
+        );
+        expect(proposal.lines.every((l) => l.unitPriceMinor > 0), isTrue);
+        final first = proposal.lines.first;
+        final requoted = await ok(
+          copilot.quote(proposal, removedVariantId: first.variantId),
+          'rechiffrage',
+        );
+        expect(
+          requoted.lines.map((l) => l.variantId),
+          isNot(contains(first.variantId)),
+        );
+        final cart = CartRepository(client.data);
+        await ok(cart.add(first.variantId), 'ajout au panier');
+      } finally {
+        await admin.setFeatureFlag(
+          'intent_copilot',
+          enabled: false,
+          countryCode: country.code,
+        );
+      }
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).

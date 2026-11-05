@@ -17,7 +17,11 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     required this.onOpenStore,
     required this.onOpenAisle,
     super.key,
+    this.onCopilot,
   });
+
+  /// Copilote d'intention (spec 019), proposé si le flag est actif.
+  final VoidCallback? onCopilot;
 
   final DiscoveryService service;
   final VoidCallback onSearch;
@@ -114,6 +118,31 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
                 DymSearchBar(hint: l10n.homeSearchHint, onTap: onSearch),
+                if (onCopilot case final open?
+                    when vm.config?.isEnabled('intent_copilot') ?? false) ...[
+                  const SizedBox(height: DymTokenSpace.s2),
+                  Material(
+                    color: c.tintVertTendre,
+                    borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                    clipBehavior: Clip.antiAlias,
+                    child: ListTile(
+                      minTileHeight: 64,
+                      onTap: open,
+                      leading: Icon(
+                        Icons.auto_awesome_rounded,
+                        color: c.brandDeep,
+                      ),
+                      title: Text(
+                        l10n.copilotEntry,
+                        style: t.body.copyWith(color: c.brandDeep),
+                      ),
+                      trailing: Icon(
+                        Icons.arrow_forward_rounded,
+                        color: c.brandDeep,
+                      ),
+                    ),
+                  ),
+                ],
                 section(l10n.homeOpenStores),
                 if (open.isEmpty)
                   Text(

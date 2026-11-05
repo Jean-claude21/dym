@@ -19,7 +19,10 @@ class DemoClientNavigator implements AppNavigator {
   void toProduct(String productId) {}
 
   @override
-  void toSearch() {}
+  void toSearch({String text = ''}) {}
+
+  @override
+  void toCopilot() {}
 
   @override
   void toCart() {}

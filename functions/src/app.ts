@@ -13,6 +13,7 @@ import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
+import { type CopilotDeps, registerCopilotRoutes } from "./copilot/routes.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -39,6 +40,8 @@ export interface AppDeps {
   reviews?: ReviewStore;
   /** Recherche vocale et par photo (spec 018). */
   searchAi?: SearchAiDeps;
+  /** Copilote d'intention (spec 019). */
+  copilot?: CopilotDeps;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -97,6 +100,7 @@ export function createApp(deps: AppDeps) {
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
+  registerCopilotRoutes(app, deps.verifyToken, deps.copilot);
 
   return app;
 }

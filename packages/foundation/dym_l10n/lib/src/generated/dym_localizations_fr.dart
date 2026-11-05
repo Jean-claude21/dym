@@ -3289,4 +3289,58 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get photoSearchAction => 'Chercher en photo';
+
+  @override
+  String get copilotTitle => 'Dis-moi ce que tu veux cuisiner';
+
+  @override
+  String get copilotEntry =>
+      'Dis-moi ce que tu veux cuisiner, je compose ton panier.';
+
+  @override
+  String get copilotExample =>
+      'Par exemple : « Une sauce gombo pour 4 personnes ce soir »';
+
+  @override
+  String get copilotHint => 'Écris ou parle…';
+
+  @override
+  String get copilotSend => 'Envoyer';
+
+  @override
+  String get copilotThinking => 'Je compose ton panier…';
+
+  @override
+  String get copilotProposal => 'Je te propose ce panier';
+
+  @override
+  String copilotMissing(String items) {
+    return 'Je n\'ai pas trouvé : $items';
+  }
+
+  @override
+  String get copilotNothing => 'Je n\'ai rien trouvé pour ça.';
+
+  @override
+  String get copilotUnavailable =>
+      'Le copilote ne répond pas pour l\'instant. Cherche toi-même, c\'est rapide.';
+
+  @override
+  String get copilotPlusDelivery => '+ livraison';
+
+  @override
+  String get copilotAddAll => 'Tout ajouter au panier';
+
+  @override
+  String get copilotSearchMyself => 'Chercher moi-même';
+
+  @override
+  String copilotRemove(String name) {
+    return 'Retirer $name';
+  }
+
+  @override
+  String copilotRefused(String items) {
+    return 'Plus disponible, pas ajouté : $items';
+  }
 }

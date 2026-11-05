@@ -13,6 +13,8 @@ import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
+import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
+import 'package:dym_client/features/discovery/copilot/copilot_view.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
@@ -44,8 +46,11 @@ abstract interface class AppNavigator {
   /// Fiche produit (écran 28).
   void toProduct(String productId);
 
-  /// Recherche (écran 29).
-  void toSearch();
+  /// Recherche (écran 29), texte facultatif lancé à l'ouverture.
+  void toSearch({String text = ''});
+
+  /// Copilote d'intention (écran 73).
+  void toCopilot();
 
   /// Panier (écran 05).
   void toCart();
@@ -89,7 +94,13 @@ class StackedAppNavigator implements AppNavigator {
     ChatService? chat,
     SupportService? support,
     SearchAiService? searchAi,
+    CopilotService? copilot,
   ]) : _support = support ?? locator<SupportService>(),
+       _copilot =
+           copilot ??
+           (locator.isRegistered<CopilotService>()
+               ? locator<CopilotService>()
+               : null),
        _searchAi =
            searchAi ??
            (locator.isRegistered<SearchAiService>()
@@ -110,6 +121,9 @@ class StackedAppNavigator implements AppNavigator {
 
   /// Recherche augmentée (spec 018) ; absente : recherche texte seule.
   final SearchAiService? _searchAi;
+
+  /// Copilote d'intention (spec 019) ; absent : pas de point d'entrée.
+  final CopilotService? _copilot;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -172,10 +186,11 @@ class StackedAppNavigator implements AppNavigator {
   );
 
   @override
-  void toSearch() => _push(
+  void toSearch({String text = ''}) => _push(
     WithMiniCart(
       child: SearchView(
         service: _discovery,
+        initialText: text,
         ai: _searchAi,
         onBack: _back,
         onOpenProduct: toProduct,
@@ -183,6 +198,27 @@ class StackedAppNavigator implements AppNavigator {
       ),
     ),
   );
+
+  @override
+  void toCopilot() {
+    final copilot = _copilot;
+    if (copilot == null) return;
+    _push(
+      CopilotView(
+        service: copilot,
+        ai: _searchAi,
+        onBack: _back,
+        onSearchMyself: (text) {
+          _back();
+          toSearch(text: text);
+        },
+        onAdded: () {
+          _back();
+          toCart();
+        },
+      ),
+    );
+  }
 
   @override
   void toCart() => _push(

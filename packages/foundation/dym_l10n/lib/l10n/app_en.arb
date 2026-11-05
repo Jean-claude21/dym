@@ -954,5 +954,20 @@
   "photoSearchEdit": "Edit",
   "photoSearchNew": "New photo",
   "voiceSearchAction": "Search by voice",
-  "photoSearchAction": "Search by photo"
+  "photoSearchAction": "Search by photo",
+  "copilotTitle": "Tell me what you want to cook",
+  "copilotEntry": "Tell me what you want to cook, I'll build your basket.",
+  "copilotExample": "For example: “Okra stew for 4 people tonight”",
+  "copilotHint": "Type or speak…",
+  "copilotSend": "Send",
+  "copilotThinking": "Building your basket…",
+  "copilotProposal": "Here's the basket I suggest",
+  "copilotMissing": "I couldn't find: {items}",
+  "copilotNothing": "I didn't find anything for that.",
+  "copilotUnavailable": "The assistant isn't answering right now. Search yourself, it's quick.",
+  "copilotPlusDelivery": "+ delivery",
+  "copilotAddAll": "Add all to basket",
+  "copilotSearchMyself": "Search myself",
+  "copilotRemove": "Remove {name}",
+  "copilotRefused": "No longer available, not added: {items}"
 }

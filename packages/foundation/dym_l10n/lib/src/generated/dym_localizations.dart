@@ -5580,6 +5580,96 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Chercher en photo'**
   String get photoSearchAction;
+
+  /// Titre du copilote (73)
+  ///
+  /// In fr, this message translates to:
+  /// **'Dis-moi ce que tu veux cuisiner'**
+  String get copilotTitle;
+
+  /// Point d'entrée du copilote (accueil)
+  ///
+  /// In fr, this message translates to:
+  /// **'Dis-moi ce que tu veux cuisiner, je compose ton panier.'**
+  String get copilotEntry;
+
+  /// Exemple d'intention
+  ///
+  /// In fr, this message translates to:
+  /// **'Par exemple : « Une sauce gombo pour 4 personnes ce soir »'**
+  String get copilotExample;
+
+  /// Champ de l'intention
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris ou parle…'**
+  String get copilotHint;
+
+  /// Envoyer l'intention
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get copilotSend;
+
+  /// Proposition en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'Je compose ton panier…'**
+  String get copilotThinking;
+
+  /// Titre de la proposition
+  ///
+  /// In fr, this message translates to:
+  /// **'Je te propose ce panier'**
+  String get copilotProposal;
+
+  /// Besoins sans produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai pas trouvé : {items}'**
+  String copilotMissing(String items);
+
+  /// Aucun produit trouvé
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai rien trouvé pour ça.'**
+  String get copilotNothing;
+
+  /// IA indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'Le copilote ne répond pas pour l\'instant. Cherche toi-même, c\'est rapide.'**
+  String get copilotUnavailable;
+
+  /// Total hors livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'+ livraison'**
+  String get copilotPlusDelivery;
+
+  /// Ajouter la proposition
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout ajouter au panier'**
+  String get copilotAddAll;
+
+  /// Retour à la recherche classique
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher moi-même'**
+  String get copilotSearchMyself;
+
+  /// Retirer une ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {name}'**
+  String copilotRemove(String name);
+
+  /// Lignes refusées par le panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus disponible, pas ajouté : {items}'**
+  String copilotRefused(String items);
 }
 
 class _DymLocalizationsDelegate

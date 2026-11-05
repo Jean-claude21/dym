@@ -75,7 +75,10 @@ class _Navigator implements AppNavigator {
   void toProduct(String productId) => routes.add('product:$productId');
 
   @override
-  void toSearch() => routes.add('search');
+  void toSearch({String text = ''}) => routes.add('search');
+
+  @override
+  void toCopilot() => routes.add('copilot');
 
   @override
   void toCart() => routes.add('cart');
