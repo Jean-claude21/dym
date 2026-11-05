@@ -1,0 +1,70 @@
+import 'dart:async';
+
+import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/dym_models.dart';
+import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
+import 'package:stacked/stacked.dart';
+
+/// Dernière sélection prioritaire ; chiffres conservés si le réseau tombe.
+class DashboardViewModel extends BaseViewModel {
+  new({required this.service});
+
+  final DashboardService service;
+  DashboardPeriod period = DashboardPeriod.day;
+  VendorDashboard? summary;
+  CountryConfig? config;
+  Failure? failure;
+  int _request = 0;
+  Timer? _timer;
+  bool _disposed = false;
+
+  bool get offline => failure is NetworkFailure;
+  bool get ready => summary != null && config != null;
+  Money? get revenue => switch ((summary, config)) {
+    (final VendorDashboard s, final CountryConfig c) => c.money(s.revenueMinor),
+    _ => null,
+  };
+
+  Future<void> load() async {
+    final request = ++_request;
+    failure = null;
+    setBusy(true);
+    final country = await service.countryConfig();
+    if (_disposed || request != _request) return;
+    switch (country) {
+      case Err(:final failure):
+        this.failure = failure;
+      case Ok(:final value):
+        config = value;
+        final result = await service.summary(period);
+        if (_disposed || request != _request) return;
+        switch (result) {
+          case Ok(:final value)
+              when value.currencyCode == config?.currency.code:
+            summary = value;
+          case Ok():
+            failure = const ServerFailure('dashboard_currency_mismatch');
+          case Err(:final failure):
+            this.failure = failure;
+        }
+    }
+    setBusy(false);
+    _timer ??= Timer.periodic(const Duration(seconds: 30), (_) {
+      if (!isBusy) unawaited(load());
+    });
+  }
+
+  Future<void> selectPeriod(DashboardPeriod value) async {
+    if (value == period) return;
+    period = value;
+    summary = null;
+    await load();
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _timer?.cancel();
+    super.dispose();
+  }
+}

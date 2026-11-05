@@ -38,7 +38,9 @@ select lives_ok($$select public.record_sign_in('client')$$, 'connexion cliente e
 select tests.logout();
 select is(
   (select array_agg(action order by id) from public.audit_log
-   where action in ('role_granted', 'role_revoked', 'admin_signed_in')),
+   where action in ('role_granted', 'role_revoked', 'admin_signed_in')
+     -- Journal partagé (staging) : seulement les comptes du test.
+     and entity_id in (select ops::text from _t union select kofi::text from _t)),
   array['role_granted', 'role_granted', 'admin_signed_in', 'role_revoked'],
   'audit : attributions, connexion admin et retrait'
 );

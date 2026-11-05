@@ -4500,6 +4500,132 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Commande passée'**
   String get adminOrderPlaced;
+
+  /// No description provided for @dashboardTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma journée'**
+  String get dashboardTitle;
+
+  /// No description provided for @dashboardDay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd’hui'**
+  String get dashboardDay;
+
+  /// No description provided for @dashboardWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'Semaine'**
+  String get dashboardWeek;
+
+  /// No description provided for @dashboardMonth.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois'**
+  String get dashboardMonth;
+
+  /// No description provided for @dashboardRevenue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes encaissées'**
+  String get dashboardRevenue;
+
+  /// No description provided for @dashboardRevenueExplanation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Articles livrés et payés, hors livraison, avant commission. Les remboursements sont déduits.'**
+  String get dashboardRevenueExplanation;
+
+  /// No description provided for @dashboardToDo.
+  ///
+  /// In fr, this message translates to:
+  /// **'À traiter'**
+  String get dashboardToDo;
+
+  /// No description provided for @dashboardEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande sur cette période.'**
+  String get dashboardEmpty;
+
+  /// No description provided for @dashboardOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : les derniers chiffres sont affichés.'**
+  String get dashboardOffline;
+
+  /// No description provided for @dashboardRefreshFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les chiffres n’ont pas pu être actualisés. Tire vers le bas pour réessayer.'**
+  String get dashboardRefreshFailed;
+
+  /// No description provided for @dashboardRecapHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton récapitulatif du jour arrive à partir de 19 h.'**
+  String get dashboardRecapHint;
+
+  /// No description provided for @dashboardOrderCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{commande} =1{commande} other{commandes}}'**
+  String dashboardOrderCount(int count);
+
+  /// No description provided for @dashboardPendingPayments.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{paiement attendu} =1{paiement attendu} other{paiements attendus}}'**
+  String dashboardPendingPayments(int count);
+
+  /// No description provided for @dashboardNewOrders.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune nouvelle commande} =1{1 nouvelle commande} other{{count} nouvelles commandes}}'**
+  String dashboardNewOrders(int count);
+
+  /// No description provided for @dashboardActiveOrders.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune commande en cours} =1{1 commande en cours} other{{count} commandes en cours}}'**
+  String dashboardActiveOrders(int count);
+
+  /// No description provided for @dashboardStock.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun produit en rupture} =1{1 produit en rupture} other{{count} produits en rupture}}'**
+  String dashboardStock(int count);
+
+  /// No description provided for @dashboardCritical.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Une cliente attend ta réponse} other{{count} messages importants t’attendent}}'**
+  String dashboardCritical(int count);
+
+  /// Accueil vendeuse : ouvrir les notifications importantes
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les notifications'**
+  String get dashboardCriticalAction;
+
+  /// Accueil vendeuse : sous-titre des nouvelles commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Des clientes ont commandé'**
+  String get dashboardNewOrdersHint;
+
+  /// Accueil vendeuse : sous-titre des commandes en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'À préparer et livrer'**
+  String get dashboardActiveOrdersHint;
+
+  /// Accueil vendeuse : sous-titre des ruptures
+  ///
+  /// In fr, this message translates to:
+  /// **'Remets-le en stock pour continuer à vendre'**
+  String get dashboardStockHint;
 }
 
 class _DymLocalizationsDelegate

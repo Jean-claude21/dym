@@ -18,6 +18,7 @@ import { pgAdminStore } from "./admin/routes.js";
 import { fcmPushSender, noPushSender, pgPushQueue } from "./notifications/push.js";
 import { pgPaymentStore } from "./payments/adapters.js";
 import { availableProviders } from "./payments/simulator.js";
+import { pgVendorRecaps } from "./dashboard/recaps.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -50,6 +51,7 @@ export default createApp({
   lifecycle: pgLifecycleStore(pool),
   disputes: pgDisputeStore(pool),
   admin: pgAdminStore(pool),
+  recaps: pgVendorRecaps(pool),
   // Push : FCM dès que le compte de service est fourni ; sinon ignorés.
   push: {
     queue: pgPushQueue(pool),

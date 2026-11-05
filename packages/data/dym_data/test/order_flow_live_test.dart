@@ -566,6 +566,20 @@ void main() {
       expect(unreadVendor, 1, reason: 'nouvelle commande cash');
       var seen = await ok(vendorOrders.order(first), 'détail');
       expect(seen.status, OrderStatus.pending);
+      final dashboard = VendorDashboardRepository(vendor.data);
+      final before = await ok(
+        dashboard.summary(DashboardPeriod.day),
+        'résumé avant encaissement',
+      );
+      expect(before.pendingOrders, 1);
+      expect(before.revenueMinor, 0);
+      expect(
+        (await VendorDashboardRepository(client.data)
+                .summary(DashboardPeriod.day))
+            .isOk,
+        isFalse,
+        reason: 'une cliente sans boutique ne lit pas les chiffres vendeuse',
+      );
       expect(seen.nextStatuses, [OrderStatus.accepted, OrderStatus.refused]);
       final skipped = await vendorOrders.transition(
         first,
@@ -598,6 +612,12 @@ void main() {
       );
       seen = await ok(vendorOrders.confirmCash(first), 'encaissement');
       expect(seen.cashCollectedAt, isNotNull);
+      final after = await ok(
+        dashboard.summary(DashboardPeriod.day),
+        'résumé après encaissement',
+      );
+      expect(after.revenueMinor, seen.subtotalMinor);
+      expect(after.pendingPayments, 0);
       expect(seen.history, hasLength(5));
       final tracked = await ok(tracking.order(first), 'suivi');
       expect(tracked.status, OrderStatus.delivered);

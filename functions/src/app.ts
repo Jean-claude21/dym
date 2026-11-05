@@ -9,6 +9,7 @@ import { type DisputeStore, registerDisputeRoutes } from "./disputes/routes.js";
 import { type AdminStore, registerAdminRoutes } from "./admin/routes.js";
 import { dispatchPushes, type PushQueue, type PushSender } from "./notifications/push.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
+import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -28,6 +29,7 @@ export interface AppDeps {
   disputes?: DisputeStore;
   /** Admin des opérations (spec 013). */
   admin?: AdminStore;
+  recaps?: VendorRecaps;
   /** Push : file en base et fournisseur (spec 011). */
   push?: { queue: PushQueue; sender: PushSender };
 }
@@ -82,6 +84,7 @@ export function createApp(deps: AppDeps) {
   registerLifecycleRoutes(app, deps.verifyToken, deps.lifecycle);
   registerDisputeRoutes(app, deps.verifyToken, deps.disputes);
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
+  registerVendorRecaps(app, deps.recaps);
 
   return app;
 }

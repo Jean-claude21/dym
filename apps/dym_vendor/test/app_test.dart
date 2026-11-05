@@ -262,6 +262,7 @@ void main() {
               await _pump(
                 tester,
                 HomeView(
+                  initialTab: HomeTab.products,
                   service: _Auth(const Ok(AuthState.signedOut())),
                   stores: memoryStores(initial: openStore()),
                   catalog: memoryCatalog(),
@@ -296,6 +297,7 @@ void main() {
       await _pump(
         tester,
         HomeView(
+          initialTab: HomeTab.products,
           service: auth,
           stores: memoryStores(initial: openStore()),
           catalog: memoryCatalog(),

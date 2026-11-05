@@ -56,6 +56,43 @@ Future<void> _pump(WidgetTester tester, Size size) async {
 }
 
 void main() {
+  testWidgets('cinq destinations à 360 dp et texte 130 % sans débordement', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(360, 640)
+      ..devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: DymTheme.light(),
+        home: MediaQuery(
+          data: const MediaQueryData(
+            size: Size(360, 640),
+            textScaler: TextScaler.linear(1.3),
+          ),
+          child: Scaffold(
+            bottomNavigationBar: DymBottomNav(
+              items: const [
+                ..._items,
+                DymNavItem(icon: Icons.storefront, label: 'Boutique'),
+              ],
+              currentIndex: 0,
+              onTap: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    for (final label in ['Accueil', 'Rayons', 'Commandes', 'Moi', 'Boutique']) {
+      final target = find.ancestor(
+        of: find.text(label),
+        matching: find.byType(InkWell),
+      );
+      expect(tester.getSize(target).height, greaterThanOrEqualTo(48));
+    }
+  });
   testWidgets('compacte (400) : barre basse', (tester) async {
     await _pump(tester, const Size(400, 800));
     expect(find.byType(DymBottomNav), findsOneWidget);
