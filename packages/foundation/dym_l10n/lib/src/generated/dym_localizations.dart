@@ -6312,6 +6312,36 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Retirer l’accès admin'**
   String get adminAdminsRemove;
+
+  /// No description provided for @authPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get authPasswordLabel;
+
+  /// No description provided for @authSignInPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get authSignInPassword;
+
+  /// No description provided for @authUsePassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'J’ai un mot de passe'**
+  String get authUsePassword;
+
+  /// No description provided for @authUseCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevoir un code à la place'**
+  String get authUseCode;
+
+  /// No description provided for @authPasswordWrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email ou mot de passe incorrect.'**
+  String get authPasswordWrong;
 }
 
 class _DymLocalizationsDelegate

@@ -32,6 +32,7 @@ class DymTextField extends StatelessWidget {
     this.minLines,
     this.maxLines = 1,
     this.suffixText,
+    this.obscureText = false,
   });
 
   final String label;
@@ -60,6 +61,9 @@ class DymTextField extends StatelessWidget {
   /// Texte après la saisie (« F CFA »).
   final String? suffixText;
 
+  /// Saisie masquée (mot de passe).
+  final bool obscureText;
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
@@ -78,6 +82,7 @@ class DymTextField extends StatelessWidget {
           onChanged: onChanged,
           onSubmitted: onSubmitted,
           keyboardType: keyboardType,
+          obscureText: obscureText,
           textInputAction: textInputAction,
           autofillHints: autofillHints,
           autofocus: autofocus,

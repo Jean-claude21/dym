@@ -50,6 +50,9 @@ abstract interface class AuthService {
 
   Future<Result<AuthState>> verifyEmailCode(String email, String code);
 
+  /// Email + mot de passe (comptes de test ; aucune vérification d'email).
+  Future<Result<AuthState>> signInWithPassword(String email, String password);
+
   /// `Ok(null)` : la personne a annulé le choix du compte Google.
   Future<Result<AuthState?>> signInWithGoogle();
 
@@ -144,6 +147,16 @@ class NeonAuthService implements AuthService {
   @override
   Future<Result<AuthState>> verifyEmailCode(String email, String code) async {
     final session = await _neon.auth.verifyEmailOtp(email, code);
+    if (session case Err(:final failure)) return Err(failure);
+    return await _afterSession(recordSignIn: true);
+  }
+
+  @override
+  Future<Result<AuthState>> signInWithPassword(
+    String email,
+    String password,
+  ) async {
+    final session = await _neon.auth.signInWithPassword(email, password);
     if (session case Err(:final failure)) return Err(failure);
     return await _afterSession(recordSignIn: true);
   }

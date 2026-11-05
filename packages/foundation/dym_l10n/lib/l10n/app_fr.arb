@@ -4856,5 +4856,10 @@
   "adminAdminsDefault": "Par défaut",
   "adminAdminsActive": "Actif",
   "adminAdminsPending": "Invitation en attente",
-  "adminAdminsRemove": "Retirer l’accès admin"
+  "adminAdminsRemove": "Retirer l’accès admin",
+  "authPasswordLabel": "Mot de passe",
+  "authSignInPassword": "Se connecter",
+  "authUsePassword": "J’ai un mot de passe",
+  "authUseCode": "Recevoir un code à la place",
+  "authPasswordWrong": "Email ou mot de passe incorrect."
 }

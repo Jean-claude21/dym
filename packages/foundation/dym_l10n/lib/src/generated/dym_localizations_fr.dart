@@ -3724,4 +3724,19 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminAdminsRemove => 'Retirer l’accès admin';
+
+  @override
+  String get authPasswordLabel => 'Mot de passe';
+
+  @override
+  String get authSignInPassword => 'Se connecter';
+
+  @override
+  String get authUsePassword => 'J’ai un mot de passe';
+
+  @override
+  String get authUseCode => 'Recevoir un code à la place';
+
+  @override
+  String get authPasswordWrong => 'Email ou mot de passe incorrect.';
 }

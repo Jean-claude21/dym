@@ -86,16 +86,40 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
               DymTextField(
                 label: l10n.authEmailLabel,
                 onChanged: viewModel.setEmail,
-                onSubmitted: (_) => viewModel.sendCode(),
+                onSubmitted: (_) => viewModel.usePassword
+                    ? viewModel.signInWithPassword()
+                    : viewModel.sendCode(),
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.send,
                 autofillHints: const [AutofillHints.email],
               ),
+              if (viewModel.usePassword) ...[
+                const SizedBox(height: DymTokenSpace.s3),
+                DymTextField(
+                  label: l10n.authPasswordLabel,
+                  obscureText: true,
+                  onChanged: viewModel.setPassword,
+                  onSubmitted: (_) => viewModel.signInWithPassword(),
+                  autofillHints: const [AutofillHints.password],
+                ),
+              ],
               const SizedBox(height: DymTokenSpace.s3),
               DymButton(
-                label: l10n.authSendCode,
+                label: viewModel.usePassword
+                    ? l10n.authSignInPassword
+                    : l10n.authSendCode,
                 loading: viewModel.isBusy,
-                onPressed: viewModel.sendCode,
+                onPressed: viewModel.usePassword
+                    ? viewModel.signInWithPassword
+                    : viewModel.sendCode,
+              ),
+              TextButton(
+                onPressed: viewModel.toggleUsePassword,
+                child: Text(
+                  viewModel.usePassword
+                      ? l10n.authUseCode
+                      : l10n.authUsePassword,
+                ),
               ),
             ],
           );
@@ -152,6 +176,7 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
                     AdminNotice.generic => l10n.errorGeneric,
                     AdminNotice.codeWrong => l10n.authCodeWrong,
                     AdminNotice.emailInvalid => l10n.authEmailInvalid,
+                    AdminNotice.passwordWrong => l10n.authPasswordWrong,
                   },
                   textAlign: TextAlign.center,
                   style: t.label.copyWith(fontSize: 15, color: c.textPrimary),

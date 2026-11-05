@@ -10,6 +10,7 @@ enum AdminNotice {
   generic,
   codeWrong,
   emailInvalid,
+  passwordWrong,
 }
 
 /// Navigation de l'admin, remplaçable en test.

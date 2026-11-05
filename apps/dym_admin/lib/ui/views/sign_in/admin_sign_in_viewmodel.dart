@@ -90,6 +90,48 @@ class AdminSignInViewModel extends BaseViewModel {
     }
   }
 
+  // --- mot de passe (comptes de test)
+
+  bool usePassword = false;
+  String password = '';
+
+  void toggleUsePassword() {
+    usePassword = !usePassword;
+    notice = null;
+    notifyListeners();
+  }
+
+  // Lu à la validation : pas de reconstruction à chaque caractère.
+  // ignore: use_setters_to_change_properties
+  void setPassword(String value) {
+    password = value;
+  }
+
+  Future<void> signInWithPassword() async {
+    if (isBusy || _verified) return;
+    notice = null;
+    if (!emailValid || password.isEmpty) {
+      notice = AdminNotice.emailInvalid;
+      notifyListeners();
+      return;
+    }
+    final result = await runBusyFuture(
+      _auth.signInWithPassword(email.trim().toLowerCase(), password),
+    );
+    switch (result) {
+      case Ok(:final value):
+        _verified = value.status != AuthStatus.signedOut;
+        _handle(value);
+      case Err(:final failure):
+        if (failure is ForbiddenFailure || failure is NetworkFailure) {
+          _fail(failure);
+        } else {
+          notice = AdminNotice.passwordWrong;
+          notifyListeners();
+        }
+    }
+  }
+
   void changeEmail() {
     codeSent = false;
     code = '';

@@ -1,8 +1,12 @@
 # Comptes de test (Neon staging)
 
 Données créées par `db/scripts/seed-demo.mjs` avec `DEMO_EMAIL=jeanclaude.messan@proton.me`.
-Connexion **sans mot de passe** : saisir l'email, le code à 6 chiffres arrive dans la boîte
-**jeanclaude.messan@proton.me** (les alias `+xxx` y sont livrés).
+Deux façons de se connecter, sur les trois apps :
+
+- **Email + mot de passe** (le plus rapide) : lien « J'ai un mot de passe » sous le champ email.
+  Mot de passe commun des comptes de test : fichier hors dépôt
+  `C:\Users\Jean-Claude\dev-setup\demo-password.env` (posé par `db/scripts/demo-passwords.mjs`).
+- **Code par email** : le code arrive dans la boîte **jeanclaude.messan@proton.me** (alias `+xxx` compris).
 
 Apps web locales : cliente http://localhost:5555 · vendeuse http://localhost:5556 ·
 admin http://localhost:5557 (`flutter run -d web-server --web-port <port>

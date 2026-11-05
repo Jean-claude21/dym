@@ -18,6 +18,7 @@ enum AuthError {
   firstNameInvalid,
   zoneRequired,
   googleUnavailable,
+  passwordWrong,
 }
 
 /// Résultat d'une demande de position.
@@ -168,6 +169,44 @@ class AuthFlowViewModel extends BaseViewModel {
         _goTo(AuthStep.code);
       case Err(:final failure):
         _setError(_errorFor(failure));
+    }
+  }
+
+  // --- mot de passe (comptes de test)
+
+  bool _usePassword = false;
+  String _password = '';
+
+  bool get usePassword => _usePassword;
+  bool get canSubmitPassword => emailValid && _password.isNotEmpty;
+
+  void toggleUsePassword() {
+    _usePassword = !_usePassword;
+    _clearError(notify: false);
+    notifyListeners();
+  }
+
+  void setPassword(String value) {
+    _password = value;
+    _clearError(notify: false);
+    notifyListeners();
+  }
+
+  Future<void> submitPassword() async {
+    if (!canSubmitPassword || isBusy) return;
+    _clearError();
+    final result = await runBusyFuture(
+      _service.signInWithPassword(_email.trim().toLowerCase(), _password),
+    );
+    switch (result) {
+      case Ok(:final value):
+        await _handleState(value);
+      case Err(:final failure):
+        if (failure is ValidationFailure || failure is UnauthenticatedFailure) {
+          _setError(AuthError.passwordWrong);
+        } else {
+          _setError(_errorFor(failure));
+        }
     }
   }
 

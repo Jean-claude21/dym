@@ -104,6 +104,15 @@ class FakeAuthService implements AuthService {
   }
 
   @override
+  Future<Result<AuthState>> signInWithPassword(
+    String email,
+    String password,
+  ) async {
+    calls.add('password:$email');
+    return verifyResult;
+  }
+
+  @override
   Future<Result<AuthState?>> signInWithGoogle() async {
     calls.add('google');
     return googleResult;

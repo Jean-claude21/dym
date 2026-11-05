@@ -3696,4 +3696,19 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminAdminsRemove => 'Remove admin access';
+
+  @override
+  String get authPasswordLabel => 'Password';
+
+  @override
+  String get authSignInPassword => 'Sign in';
+
+  @override
+  String get authUsePassword => 'I have a password';
+
+  @override
+  String get authUseCode => 'Get a code instead';
+
+  @override
+  String get authPasswordWrong => 'Wrong email or password.';
 }

@@ -1076,5 +1076,10 @@
   "adminAdminsDefault": "Default",
   "adminAdminsActive": "Active",
   "adminAdminsPending": "Invitation pending",
-  "adminAdminsRemove": "Remove admin access"
+  "adminAdminsRemove": "Remove admin access",
+  "authPasswordLabel": "Password",
+  "authSignInPassword": "Sign in",
+  "authUsePassword": "I have a password",
+  "authUseCode": "Get a code instead",
+  "authPasswordWrong": "Wrong email or password."
 }

@@ -40,12 +40,19 @@ class _EmailStepState extends State<EmailStep> {
       title: l10n.authEmailTitle,
       subtitle: Text(l10n.authEmailSubtitle),
       onBack: vm.back,
-      action: DymButton(
-        label: l10n.authSendCode,
-        trailing: const Icon(Icons.chevron_right_rounded),
-        loading: vm.isBusy,
-        onPressed: vm.emailValid ? vm.submitEmail : null,
-      ),
+      action: vm.usePassword
+          ? DymButton(
+              label: l10n.authSignInPassword,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              loading: vm.isBusy,
+              onPressed: vm.canSubmitPassword ? vm.submitPassword : null,
+            )
+          : DymButton(
+              label: l10n.authSendCode,
+              trailing: const Icon(Icons.chevron_right_rounded),
+              loading: vm.isBusy,
+              onPressed: vm.emailValid ? vm.submitEmail : null,
+            ),
       children: [
         DymTextField(
           label: l10n.authEmailLabel,
@@ -57,13 +64,35 @@ class _EmailStepState extends State<EmailStep> {
           autofillHints: const [AutofillHints.email],
           autofocus: true,
           onChanged: vm.setEmail,
-          onSubmitted: (_) => vm.submitEmail(),
+          onSubmitted: (_) =>
+              vm.usePassword ? vm.submitPassword() : vm.submitEmail(),
           status: status,
           message: switch (status) {
             DymFieldStatus.valid => l10n.authEmailValid,
             DymFieldStatus.error => l10n.authEmailInvalid,
             DymFieldStatus.none => null,
           },
+        ),
+        if (vm.usePassword) ...[
+          const SizedBox(height: DymTokenSpace.s3),
+          DymTextField(
+            label: l10n.authPasswordLabel,
+            icon: Icons.key_rounded,
+            obscureText: true,
+            autofillHints: const [AutofillHints.password],
+            textInputAction: TextInputAction.go,
+            onChanged: vm.setPassword,
+            onSubmitted: (_) => vm.submitPassword(),
+          ),
+        ],
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: vm.toggleUsePassword,
+            child: Text(
+              vm.usePassword ? l10n.authUseCode : l10n.authUsePassword,
+            ),
+          ),
         ),
         if (vm.authError != AuthError.emailInvalid)
           AuthErrorBanner(error: vm.authError),
