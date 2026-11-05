@@ -483,6 +483,8 @@ void main() {
             return true;
           },
           onDispute: (_) {},
+          // Livrée le 5 : la fenêtre de 7 jours ne dépend pas du jour du test.
+          clock: () => DateTime.utc(2026, 10, 6),
         ),
       );
       await tester.scrollUntilVisible(

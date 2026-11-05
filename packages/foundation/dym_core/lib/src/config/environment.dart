@@ -13,10 +13,11 @@ class DymEnvironment {
     required this.dataApiUrl,
     required this.functionsUrl,
     required this.mediaUrl,
+    this.errorReportingDsn,
   });
 
   /// Lit `DYM_ENV`, `DYM_AUTH_URL`, `DYM_DATA_API_URL`, `DYM_FUNCTIONS_URL`,
-  /// `DYM_MEDIA_URL`.
+  /// `DYM_MEDIA_URL` et, facultatif, `DYM_ERROR_DSN` (suivi des erreurs).
   ///
   /// En `staging` et `production`, chaque URL est obligatoire : une valeur
   /// manquante lève [DymConfigurationException] (l'app refuse de démarrer).
@@ -27,6 +28,7 @@ class DymEnvironment {
     dataApiUrl: const String.fromEnvironment('DYM_DATA_API_URL'),
     functionsUrl: const String.fromEnvironment('DYM_FUNCTIONS_URL'),
     mediaUrl: const String.fromEnvironment('DYM_MEDIA_URL'),
+    errorReportingDsn: const String.fromEnvironment('DYM_ERROR_DSN'),
   );
 
   /// Résolution testable de [DymEnvironment.fromDefines].
@@ -36,6 +38,7 @@ class DymEnvironment {
     String? dataApiUrl,
     String? functionsUrl,
     String? mediaUrl,
+    String? errorReportingDsn,
   }) {
     final name = DymEnvironmentName.values.asNameMap()[env];
     if (name == null) {
@@ -74,6 +77,13 @@ class DymEnvironment {
         mediaUrl,
         'http://localhost:9000/product-photos',
       ),
+      errorReportingDsn: switch (errorReportingDsn) {
+        null || '' => null,
+        final dsn => switch (Uri.tryParse(dsn)) {
+          final uri? when uri.scheme == 'https' && uri.host.isNotEmpty => uri,
+          _ => throw DymConfigurationException('DYM_ERROR_DSN invalide'),
+        },
+      },
     );
   }
 
@@ -91,6 +101,9 @@ class DymEnvironment {
 
   /// Base publique des photos (bucket `product-photos` en lecture publique).
   final Uri mediaUrl;
+
+  /// Projet de suivi des erreurs (Sentry ou GlitchTip) ; nul : désactivé.
+  final Uri? errorReportingDsn;
 
   /// URL publique d'un objet du stockage (clé `stores/…`).
   Uri media(String objectKey) => Uri.parse(

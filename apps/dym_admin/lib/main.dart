@@ -18,6 +18,22 @@ Future<void> main() async {
     runApp(const ConfigErrorApp());
     return;
   }
+  await runWithErrorReporting(
+    environment: environment,
+    app: 'admin',
+    body: () => _start(environment),
+  );
+}
+
+/// Services de l'app, puis premier écran.
+Future<void> _start(DymEnvironment environment) async {
+  await configureServices(environment);
+  runApp(const AdminApp());
+}
+
+/// Enregistre les services de l'app (Neon, dépôts, plugins). Séparé du
+/// lancement pour être vérifié en test (câblage complet, sans réseau).
+Future<void> configureServices(DymEnvironment environment) async {
   await setupLocator();
   final neon = createNeonClient(environment);
   locator
@@ -38,5 +54,4 @@ Future<void> main() async {
         reference: ReferenceRepository(neon.data),
       ),
     );
-  runApp(const AdminApp());
 }

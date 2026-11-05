@@ -2,7 +2,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/widgets.dart';
 import 'package:neon_kit/neon_kit.dart';
 
 /// Où en est la personne.
@@ -70,9 +70,25 @@ abstract interface class AuthService {
     required String locale,
   });
 
+  /// Prénom et langue (C-PROF-01/07) ; nul : inchangé.
+  Future<Result<AuthState>> updateProfile({String? firstName, String? locale});
+
+  /// Langues proposées par la configuration (codes ISO 639-1).
+  Future<Result<List<String>>> supportedLocales();
+
   Future<Result<void>> signOut();
 
   Future<Result<void>> deleteAccount();
+}
+
+/// Langue choisie par la personne (profil) ; nulle : celle de l'appareil.
+/// La racine de l'app l'écoute pour se traduire tout de suite.
+class LocalePreference extends ValueNotifier<Locale?> {
+  new() : super(null);
+
+  /// Code ISO 639-1 du profil ; nul ou vide : langue de l'appareil.
+  void setCode(String? code) =>
+      value = code == null || code.isEmpty ? null : Locale(code);
 }
 
 /// Implémentation sur Neon (`neon_kit`) et les dépôts `dym_data`.
@@ -84,7 +100,11 @@ class NeonAuthService implements AuthService {
     required this._google,
     required this.app,
     this._location = const PluginLocationProvider(),
+    this._locale,
   }) : _discovery = DiscoveryRepository(_neon.data);
+
+  /// Langue de l'app, alignée sur le profil.
+  final LocalePreference? _locale;
 
   final NeonClient _neon;
   final LocationProvider _location;
@@ -183,9 +203,23 @@ class NeonAuthService implements AuthService {
   }
 
   @override
+  Future<Result<AuthState>> updateProfile({
+    String? firstName,
+    String? locale,
+  }) async => (await _account.updateProfile(
+    firstName: firstName,
+    locale: locale,
+  )).map(_stateFor);
+
+  @override
+  Future<Result<List<String>>> supportedLocales() =>
+      _account.supportedLocales();
+
+  @override
   Future<Result<void>> signOut() async {
     await _google.signOut();
     me = null;
+    _locale?.setCode(null);
     return await _neon.auth.signOut();
   }
 
@@ -233,6 +267,7 @@ class NeonAuthService implements AuthService {
 
   AuthState _stateFor(Me value) {
     me = value;
+    _locale?.setCode(value.profile?.locale);
     return AuthState(
       value.needsProfile ? AuthStatus.needsProfile : AuthStatus.ready,
       value,

@@ -2,7 +2,8 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:stacked/stacked.dart';
 
-/// Écran « Moi » : profil, déconnexion, suppression du compte.
+/// Écran « Moi » : profil (prénom, langue), déconnexion, suppression du
+/// compte.
 class AccountViewModel extends BaseViewModel {
   new({required this._service, required this.onSignedOut});
 
@@ -14,6 +15,45 @@ class AccountViewModel extends BaseViewModel {
   AuthError? _authError;
 
   String get firstName => _service.me?.profile?.firstName ?? '';
+
+  /// Langue du profil (nulle : celle de l'appareil).
+  String? get localeCode => _service.me?.profile?.locale;
+
+  /// Langues proposées : celles du serveur que l'app sait afficher.
+  Future<List<String>> languages(List<String> appLanguages) async {
+    final server = (await _service.supportedLocales()).valueOrNull;
+    return [
+      for (final code in server ?? appLanguages)
+        if (appLanguages.contains(code)) code,
+    ];
+  }
+
+  /// Nouveau prénom ; `false` : refusé (vide, trop long) ou hors ligne.
+  Future<bool> rename(String value) => _update(firstName: value.trim());
+
+  Future<bool> setLanguage(String code) => _update(locale: code);
+
+  Future<bool> _update({String? firstName, String? locale}) async {
+    _authError = null;
+    final result = await runBusyFuture(
+      _service.updateProfile(firstName: firstName, locale: locale),
+    );
+    switch (result) {
+      case Ok():
+        notifyListeners();
+        return true;
+      case Err(:final failure):
+        _authError = switch (failure) {
+          NetworkFailure() => AuthError.offline,
+          ValidationFailure() when firstName != null =>
+            AuthError.firstNameInvalid,
+          _ => AuthError.generic,
+        };
+        notifyListeners();
+        return false;
+    }
+  }
+
   String? get email => _service.email;
   AuthError? get authError => _authError;
 

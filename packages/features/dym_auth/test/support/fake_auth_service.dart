@@ -140,6 +140,19 @@ class FakeAuthService implements AuthService {
   }
 
   @override
+  Future<Result<AuthState>> updateProfile({
+    String? firstName,
+    String? locale,
+  }) async {
+    calls.add('updateProfile:${firstName ?? '-'}:${locale ?? '-'}');
+    return Ok(AuthState(AuthStatus.ready, me));
+  }
+
+  @override
+  Future<Result<List<String>>> supportedLocales() async =>
+      const Ok(['en', 'fr']);
+
+  @override
   Future<Result<void>> signOut() async {
     calls.add('signOut');
     return const Ok(null);

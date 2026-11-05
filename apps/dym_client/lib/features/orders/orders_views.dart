@@ -276,11 +276,15 @@ class TrackingView extends StackedView<TrackingViewModel> {
     this.onDispute,
     this.onReview,
     this.onReordered,
+    this.clock = DateTime.now,
   });
 
   final OrdersService service;
   final String orderId;
   final VoidCallback onBack;
+
+  /// Heure courante (fenêtre de signalement de 7 jours) ; fixée en test.
+  final DateTime Function() clock;
 
   /// Écran 63 (commande, boutique) ; `true` si un avis est publié.
   final Future<bool> Function(String orderId, String storeName)? onReview;
@@ -296,7 +300,7 @@ class TrackingView extends StackedView<TrackingViewModel> {
 
   @override
   TrackingViewModel viewModelBuilder(BuildContext context) =>
-      TrackingViewModel(service: service, orderId: orderId);
+      TrackingViewModel(service: service, orderId: orderId)..clock = clock;
 
   @override
   void onViewModelReady(TrackingViewModel viewModel) => viewModel.load();

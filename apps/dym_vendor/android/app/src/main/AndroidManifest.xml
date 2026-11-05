@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Neon (Auth, Data API, Functions, photos) : absente du gabarit en release. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="dym_vendor"
+        android:label="DYM Vendeuse"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

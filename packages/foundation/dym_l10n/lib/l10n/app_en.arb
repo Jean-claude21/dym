@@ -1067,5 +1067,7 @@
   "lowStockTitle": "Low stock alert",
   "lowStockEnabled": "Notify me when a product runs low",
   "lowStockThreshold": "Threshold",
-  "lowStockUnder": "Notify me under {n} units"
+  "lowStockUnder": "Notify me under {n} units",
+  "accountEditName": "Edit my first name",
+  "accountSave": "Save"
 }

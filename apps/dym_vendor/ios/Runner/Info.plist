@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dym Vendor</string>
+	<string>DYM Vendeuse</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -70,5 +70,7 @@
 	<string>DYM utilise l'appareil photo pour photographier tes produits.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>DYM ouvre ta galerie pour choisir la photo d'un produit.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>DYM enregistre le son de tes vidéos de produits.</string>
 </dict>
 </plist>

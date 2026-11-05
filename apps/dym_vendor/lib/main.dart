@@ -27,15 +27,33 @@ Future<void> main() async {
     runApp(const ConfigErrorApp());
     return;
   }
+  await runWithErrorReporting(
+    environment: environment,
+    app: 'vendor',
+    body: () => _start(environment),
+  );
+}
+
+/// Services de l'app, puis premier écran.
+Future<void> _start(DymEnvironment environment) async {
+  await configureServices(environment);
+  runApp(const VendorApp());
+}
+
+/// Enregistre les services de l'app (Neon, dépôts, plugins). Séparé du
+/// lancement pour être vérifié en test (câblage complet, sans réseau).
+Future<void> configureServices(DymEnvironment environment) async {
   await setupLocator();
   final neon = createNeonClient(environment);
   final reference = ReferenceRepository(neon.data);
+  final locale = LocalePreference();
   final auth = NeonAuthService(
     neon: neon,
     account: AccountRepository(neon.data),
     reference: reference,
     google: PluginGoogleIdTokenProvider.fromDefines(),
     app: AccountApp.vendor,
+    locale: locale,
   );
   final stores = NeonStoreService(
     stores: StoreRepository(neon.data),
@@ -50,6 +68,7 @@ Future<void> main() async {
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
     ..registerSingleton<StoreService>(stores)
     ..registerSingleton<DashboardService>(
@@ -138,5 +157,4 @@ Future<void> main() async {
         environment: environment,
       ),
     );
-  runApp(const VendorApp());
 }

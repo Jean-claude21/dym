@@ -197,9 +197,13 @@ final referenceScreens = <ReferenceScreen>[
     title: 'Moi et suppression du compte',
     surface: 'Cliente',
     referenceFile: '13-compte-suppression.webp',
+    // Comme dans l'app cliente : adresses, notifications et aide.
     builder: (c) => AccountView(
       service: DemoAuthService(country: c),
       onSignedOut: () {},
+      onAddresses: () {},
+      onNotifications: () {},
+      onHelp: () {},
     ),
   ),
   ReferenceScreen(

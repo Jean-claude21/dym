@@ -41,12 +41,16 @@ abstract interface class VoiceRecorder {
 /// en WAV (le seul format de flux pris en charge partout). 15 secondes font
 /// environ 480 Ko.
 class PluginVoiceRecorder implements VoiceRecorder {
-  new([rec.AudioRecorder? recorder])
-    : _recorder = recorder ?? rec.AudioRecorder();
+  new([this._injected]);
 
   static const sampleRate = 16000;
 
-  final rec.AudioRecorder _recorder;
+  final rec.AudioRecorder? _injected;
+
+  // Créé à la première écoute : rien ne touche au micro au démarrage.
+  rec.AudioRecorder? _created;
+  rec.AudioRecorder get _recorder =>
+      _created ??= _injected ?? rec.AudioRecorder();
   final _level = StreamController<double>.broadcast();
   final _pcm = BytesBuilder(copy: false);
   StreamSubscription<rec.Amplitude>? _amplitude;
@@ -110,7 +114,7 @@ class PluginVoiceRecorder implements VoiceRecorder {
     _startedAt = null;
     _pcm.clear();
     try {
-      await _recorder.cancel();
+      await _created?.cancel();
     } on Object {
       // Déjà arrêté.
     }
@@ -120,7 +124,7 @@ class PluginVoiceRecorder implements VoiceRecorder {
   Future<void> dispose() async {
     await cancel();
     await _level.close();
-    await _recorder.dispose();
+    await _created?.dispose();
   }
 }
 

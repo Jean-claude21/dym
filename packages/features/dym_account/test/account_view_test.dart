@@ -47,6 +47,21 @@ class _Service implements AuthService {
     return deleteResult;
   }
 
+  Result<AuthState> updateResult = const Ok(AuthState(AuthStatus.ready));
+
+  @override
+  Future<Result<AuthState>> updateProfile({
+    String? firstName,
+    String? locale,
+  }) async {
+    calls.add('update:${firstName ?? '-'}:${locale ?? '-'}');
+    return updateResult;
+  }
+
+  @override
+  Future<Result<List<String>>> supportedLocales() async =>
+      const Ok(['en', 'fr', 'zz']);
+
   @override
   Object? noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
@@ -168,5 +183,56 @@ void main() {
     await tester.pumpAndSettle();
     expect(signedOut, 0);
     expect(find.textContaining('Pas de connexion'), findsOneWidget);
+  });
+
+  testWidgets('prénom : modifier et enregistrer', (tester) async {
+    final service = _Service();
+    await _pump(tester, AccountView(service: service, onSignedOut: () {}));
+    await tester.tap(find.text('Modifier mon prénom'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), '  Awa Marie ');
+    await tester.tap(find.text('Enregistrer'));
+    await tester.pumpAndSettle();
+    expect(service.calls, ['update:Awa Marie:-']);
+  });
+
+  testWidgets('prénom refusé : message', (tester) async {
+    final service = _Service()
+      ..updateResult = const Err(ValidationFailure('prénom'));
+    await _pump(tester, AccountView(service: service, onSignedOut: () {}));
+    await tester.tap(find.text('Modifier mon prénom'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), 'x');
+    await tester.tap(find.text('Enregistrer'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Entre ton prénom (40 caractères au plus)'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets("langue : seules les langues de l'app, chacune dans sa langue", (
+    tester,
+  ) async {
+    final service = _Service();
+    await _pump(tester, AccountView(service: service, onSignedOut: () {}));
+    await tester.ensureVisible(find.text('Langue · Français'));
+    await tester.tap(find.text('Langue · Français'));
+    await tester.pumpAndSettle();
+    expect(find.text('English'), findsOneWidget);
+    expect(find.text('zz'), findsNothing, reason: 'langue sans traduction');
+    await tester.tap(find.text('English'));
+    await tester.pumpAndSettle();
+    expect(service.calls, ['update:-:en']);
+  });
+
+  testWidgets('entrées sans destination : non affichées', (tester) async {
+    await _pump(tester, AccountView(service: _Service(), onSignedOut: () {}));
+    expect(find.text('Mes adresses'), findsNothing);
+    await _pump(
+      tester,
+      AccountView(service: _Service(), onSignedOut: () {}, onAddresses: () {}),
+    );
+    expect(find.text('Mes adresses'), findsOneWidget);
   });
 }

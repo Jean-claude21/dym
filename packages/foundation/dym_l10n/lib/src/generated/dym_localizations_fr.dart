@@ -3696,4 +3696,10 @@ class DymLocalizationsFr extends DymLocalizations {
   String lowStockUnder(int n) {
     return 'Me prévenir sous $n unités';
   }
+
+  @override
+  String get accountEditName => 'Modifier mon prénom';
+
+  @override
+  String get accountSave => 'Enregistrer';
 }
