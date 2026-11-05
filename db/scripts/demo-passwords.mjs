@@ -5,7 +5,7 @@
 //
 //   DATABASE_URL=… DEMO_EMAIL=moi@exemple.com DEMO_PASSWORD=… node db/scripts/demo-passwords.mjs
 //
-// Comptes concernés : DEMO_EMAIL et ses alias +xxx.
+// Comptes concernés : DEMO_EMAIL, ses alias +xxx et les comptes de figuration @example.test.
 import { randomBytes, randomUUID, scryptSync } from 'node:crypto';
 import { createRequire } from 'node:module';
 import path from 'node:path';
@@ -30,7 +30,8 @@ const db = new pg.Client({ connectionString: url.replace('sslmode=require', 'ssl
 await db.connect();
 const users = (await db.query(
   `select id, email from neon_auth."user"
-   where lower(email) = $1 or lower(email) like $2 order by email`,
+   where lower(email) = $1 or lower(email) like $2 or lower(email) like '%@example.test'
+   order by email`,
   [`${local}@${domain}`, `${local}+%@${domain}`])).rows;
 for (const u of users) {
   const secret = hash(password);
