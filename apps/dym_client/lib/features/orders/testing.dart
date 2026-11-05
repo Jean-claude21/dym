@@ -20,6 +20,11 @@ class MemoryOrdersService implements OrdersService {
   final List<AppNotification> _notifications;
   final ValueNotifier<int> _unread = ValueNotifier(0);
   final _disputes = <String, Dispute>{};
+  final _reviews = <String, Review>{};
+
+  /// Articles écartés au prochain réachat (tests).
+  List<String> reorderSkipped = const [];
+  final reorders = <String>[];
   final _prefs = <NotificationCategory, bool>{
     NotificationCategory.orders: true,
     NotificationCategory.payments: true,
@@ -121,6 +126,43 @@ class MemoryOrdersService implements OrdersService {
   }) async {
     _prefs[category] = enabled;
     return Ok(_list());
+  }
+
+  @override
+  Future<Result<Review?>> orderReview(String orderId) async =>
+      _fail<Review?>() ?? Ok(_reviews[orderId]);
+
+  @override
+  Future<Result<Review>> leaveReview(
+    String orderId, {
+    required int rating,
+    List<ReviewTag> tags = const [],
+    String? comment,
+  }) async {
+    final failed = _fail<Review>();
+    if (failed != null) return failed;
+    if (_reviews.containsKey(orderId)) {
+      return const Err(ValidationFailure('review_exists'));
+    }
+    return Ok(
+      _reviews[orderId] = Review(
+        id: 'r-$orderId',
+        orderId: orderId,
+        storeId: 's',
+        rating: rating,
+        tags: tags,
+        comment: comment,
+        createdAt: DateTime.utc(2026, 10, 5, 11),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<ReorderResult>> reorder(String orderId) async {
+    final failed = _fail<ReorderResult>();
+    if (failed != null) return failed;
+    reorders.add(orderId);
+    return Ok(ReorderResult(added: 1, skipped: reorderSkipped));
   }
 
   /// Litige déjà ouvert (tests, galerie).

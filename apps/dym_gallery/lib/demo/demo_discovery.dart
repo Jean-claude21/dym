@@ -216,6 +216,7 @@ abstract final class DemoDiscovery {
         stores: stores(c),
         products: products(c),
         initialZone: DemoStore.zoneIdOf(c.zone),
+        reviews: {'esi': reviews()},
         photoResolver: (key) {
           final name = key.split('/').last.replaceAll('.jpg', '');
           return key.contains('/cover/')
@@ -223,4 +224,33 @@ abstract final class DemoDiscovery {
               : DemoImages.product(name);
         },
       );
+
+  /// Avis de démonstration (écrans 64 et 65).
+  static StoreReviews reviews() => StoreReviews(
+    rating: 4.8,
+    reviewCount: 46,
+    distribution: const {'5': 38, '4': 6, '3': 1, '2': 1, '1': 0},
+    reviews: [
+      Review(
+        id: 'r1',
+        orderId: 'o1',
+        storeId: 'esi',
+        rating: 5,
+        tags: const [ReviewTag.fresh, ReviewTag.wellPacked],
+        comment: 'Les tomates étaient très fraîches, merci !',
+        reply: 'Merci Awa, à bientôt !',
+        authorFirstName: 'Awa',
+        createdAt: DateTime.utc(2026, 10, 3, 10),
+      ),
+      Review(
+        id: 'r2',
+        orderId: 'o2',
+        storeId: 'esi',
+        rating: 4,
+        comment: 'Bon gombo, livraison un peu longue.',
+        authorFirstName: 'Kossi',
+        createdAt: DateTime.utc(2026, 9, 30, 10),
+      ),
+    ],
+  );
 }

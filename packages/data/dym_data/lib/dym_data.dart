@@ -10,6 +10,7 @@ export 'src/dispute_repository.dart';
 export 'src/events_repository.dart';
 export 'src/messaging_repository.dart';
 export 'src/order_tracking_repository.dart';
+export 'src/pilot_repository.dart';
 export 'src/reference_repository.dart';
 export 'src/store_repository.dart';
 export 'src/vendor_dashboard_repository.dart';

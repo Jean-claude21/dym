@@ -20,6 +20,7 @@ import { pgPaymentStore } from "./payments/adapters.js";
 import { availableProviders } from "./payments/simulator.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
+import { pgReviewStore } from "./reviews/routes.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -53,6 +54,7 @@ export default createApp({
   disputes: pgDisputeStore(pool),
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
+  reviews: pgReviewStore(pool),
   messaging: {
     store: pgMessagingStore(pool),
     signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),

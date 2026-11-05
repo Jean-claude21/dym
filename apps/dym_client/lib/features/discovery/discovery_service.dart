@@ -31,6 +31,9 @@ abstract interface class DiscoveryService {
 
   Future<Result<StorePageData>> storePage(String storeId);
 
+  /// Avis publics d'une boutique (écran 64).
+  Future<Result<StoreReviews>> storeReviews(String storeId);
+
   Future<Result<ProductPageData>> productPage(String productId);
 
   /// Image d'une photo du catalogue.
@@ -52,7 +55,14 @@ class NeonDiscoveryService implements DiscoveryService {
     required this._auth,
     required this._location,
     required this._environment,
+    required this._reviews,
   }) : _zone = ValueNotifier(_auth.me?.profile?.zoneId);
+
+  final ReviewRepository _reviews;
+
+  @override
+  Future<Result<StoreReviews>> storeReviews(String storeId) =>
+      _reviews.storeReviews(storeId);
 
   final DiscoveryRepository _discovery;
   final ReferenceRepository _reference;

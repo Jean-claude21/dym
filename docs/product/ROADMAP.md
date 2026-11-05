@@ -76,7 +76,15 @@ Les profils, la FAQ et le support (C-PROF-01/08, V-PROF-01..04) sont livrés ave
 
 | Spec | Contenu | IDs couverts | Heures |
 |---|---|---|---|
-| `pilot-hardening` | Avis après livraison, réponse vendeuse, note boutique, réachat en un tap, analytics minimales, feature flags pilotés depuis l'admin, SLA incidents, support (tickets) | C-REV-01/03/04, V-REV-01/02/04, C-ORD-09, A-ANA-01..03, A-CFG-07, A-SUP-01..03, A-DASH-01..08 | 10 h |
+| `pilot-hardening` | Avis après livraison, réponse vendeuse, note boutique, réachat en un tap, support (tickets) depuis les apps | C-REV-01/03/04, V-REV-01/02/04, C-ORD-09, A-SUP-01..03 (côté apps) | 5 h |
+| `admin-pilot` | Tableau de bord de l'équipe, analytics minimales, feature flags pilotés depuis l'admin, SLA incidents, tickets, profil d'une cliente, revenus de la plateforme, suppression et vue d'une vendeuse | A-DASH-01..08, A-ANA-01..03, A-CFG-07, A-SUP-01..03, A-LIT-07, A-CLI-02, A-VEN-06/07, A-FIN-01/02 | 5 h |
+
+**Dérogation du 2026-10-10 (porteur produit) :** les phases 3 et 4 sont construites avant le
+gate de la phase 2 (commande réelle d'une vendeuse externe) et avant le test de H10. Les gates
+restent à prouver sur le terrain avant le pilote ; le code de la phase 4 reste désactivable par
+feature flag tant que H10 n'est pas validée. Ajouts au pilote (besoin du support et des finances
+pendant le pilote) : A-CLI-02, A-VEN-06/07, A-FIN-01/02, A-LIT-07. V-PAY-03 sort du périmètre
+avec C-PAY-03, dont elle dépend.
 
 Pilote : 10 vendeuses, puis 30 après une semaine sans incident non résolu en plus d'une heure.
 Uniquement des correctifs de friction réelle pendant le pilote.
@@ -106,7 +114,7 @@ Uniquement des correctifs de friction réelle pendant le pilote.
 ## Hors périmètre définitif
 
 C-CART-11 (panier collaboratif), C-PAY-04 (paiement fractionné), C-WAL-05 (transfert P2P),
-C-PAY-03 (capture MoMo vérifiée par IA, remplacée par la file de vérification manuelle).
+C-PAY-03 (capture MoMo vérifiée par IA, remplacée par la file de vérification manuelle), V-PAY-03 (alerte de capture suspecte, qui en dépend).
 
 ## Définition de terminé (pour chaque spec)
 

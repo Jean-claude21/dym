@@ -46,6 +46,11 @@ PublicStore _$PublicStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
         'product_count',
         (v) => (v as num?)?.toInt() ?? 0,
       ),
+      rating: $checkedConvert('rating', (v) => (v as num?)?.toDouble()),
+      reviewCount: $checkedConvert(
+        'review_count',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
     );
     return val;
   },
@@ -63,6 +68,7 @@ PublicStore _$PublicStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
     'closesAt': 'closes_at',
     'coverKey': 'cover_key',
     'productCount': 'product_count',
+    'reviewCount': 'review_count',
   },
 );
 

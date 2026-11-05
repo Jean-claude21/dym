@@ -1,3 +1,4 @@
+import 'package:dym_account/dym_account.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
@@ -9,6 +10,7 @@ import 'package:dym_vendor/features/catalog/categories/store_categories_view.dar
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
+import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
@@ -48,6 +50,12 @@ abstract interface class AppNavigator {
 
   /// Conversation avec une cliente (écran 62).
   void toChat(String conversationId);
+
+  /// Mes avis (écran 65).
+  void toReviews();
+
+  /// Aide (écran 66).
+  void toHelp();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -58,7 +66,11 @@ class StackedAppNavigator implements AppNavigator {
     StoreService? stores,
     CatalogService? catalog,
     ChatService? chat,
-  ]) : _navigation = navigation ?? locator<NavigationService>(),
+    VendorReviewsService? reviews,
+    SupportService? support,
+  ]) : _reviews = reviews ?? locator<VendorReviewsService>(),
+       _support = support ?? locator<SupportService>(),
+       _navigation = navigation ?? locator<NavigationService>(),
        _stores = stores ?? locator<StoreService>(),
        _catalog = catalog ?? locator<CatalogService>(),
        _chat = chat ?? locator<ChatService>();
@@ -67,6 +79,24 @@ class StackedAppNavigator implements AppNavigator {
   final StoreService _stores;
   final CatalogService _catalog;
   final ChatService _chat;
+  final VendorReviewsService _reviews;
+  final SupportService _support;
+
+  @override
+  void toReviews() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) =>
+          VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
+    ),
+  );
+
+  @override
+  void toHelp() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) =>
+          SupportView(service: _support, onBack: () => _navigator.pop()),
+    ),
+  );
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 

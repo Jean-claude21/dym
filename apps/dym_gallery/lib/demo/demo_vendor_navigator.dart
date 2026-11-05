@@ -36,4 +36,10 @@ class DemoVendorNavigator implements AppNavigator {
 
   @override
   void toChat(String conversationId) {}
+
+  @override
+  void toReviews() {}
+
+  @override
+  void toHelp() {}
 }

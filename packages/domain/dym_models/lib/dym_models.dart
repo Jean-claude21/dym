@@ -11,6 +11,7 @@ export 'src/catalog/catalog_models.dart';
 export 'src/dashboard/vendor_dashboard.dart';
 export 'src/discovery/discovery_models.dart';
 export 'src/messaging/messaging_models.dart';
+export 'src/pilot/pilot_models.dart';
 export 'src/reference/country_config.dart';
 export 'src/reference/reference_models.dart';
 export 'src/store/store_models.dart';

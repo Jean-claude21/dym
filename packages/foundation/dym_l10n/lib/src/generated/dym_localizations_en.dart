@@ -2797,4 +2797,182 @@ class DymLocalizationsEn extends DymLocalizations {
   String notifNewMessageBody(String sender) {
     return '$sender sent you a message.';
   }
+
+  @override
+  String get reorder => 'Order again';
+
+  @override
+  String get reorderNothing => 'None of these items are for sale anymore.';
+
+  @override
+  String reorderSkipped(String items) {
+    return 'No longer for sale: $items';
+  }
+
+  @override
+  String reviewAverage(String rating) {
+    return '$rating/5';
+  }
+
+  @override
+  String get reviewCommentLabel => 'Tell us in a few words (optional)';
+
+  @override
+  String reviewCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n reviews',
+      one: '1 review',
+      zero: 'No reviews',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get reviewEditReply => 'Edit my reply';
+
+  @override
+  String get reviewExists => 'You already reviewed this order.';
+
+  @override
+  String get reviewGive => 'Leave a review';
+
+  @override
+  String get reviewLater => 'Later';
+
+  @override
+  String get reviewMine => 'My reviews';
+
+  @override
+  String reviewMyReply(String reply) {
+    return 'Your reply: $reply';
+  }
+
+  @override
+  String get reviewNone => 'No reviews yet.';
+
+  @override
+  String get reviewNoneYet => 'New shop';
+
+  @override
+  String get reviewNotAllowed => 'You can leave a review after delivery.';
+
+  @override
+  String get reviewPublish => 'Post my review';
+
+  @override
+  String get reviewPublishReply => 'Post the reply';
+
+  @override
+  String get reviewQuestion => 'How was your order?';
+
+  @override
+  String get reviewReplyHint => 'Your reply';
+
+  @override
+  String reviewReplyTo(String name) {
+    return 'Your reply to $name';
+  }
+
+  @override
+  String reviewStarsLabel(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n stars',
+      one: '1 star',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String reviewStoreReply(String store, String reply) {
+    return 'Reply from $store: $reply';
+  }
+
+  @override
+  String get reviewStoreTitle => 'Reviews';
+
+  @override
+  String get reviewTagFast => 'Fast delivery';
+
+  @override
+  String get reviewTagFresh => 'Fresh produce';
+
+  @override
+  String get reviewTagFriendly => 'Friendly';
+
+  @override
+  String get reviewTagWellPacked => 'Well packed';
+
+  @override
+  String reviewThanks(int rating) {
+    return 'Thanks for your review ($rating/5)!';
+  }
+
+  @override
+  String get reviewTitle => 'Your review';
+
+  @override
+  String get supportClosed => 'Closed';
+
+  @override
+  String get supportInProgress => 'In progress';
+
+  @override
+  String get supportMine => 'My requests';
+
+  @override
+  String get supportNew => 'New request';
+
+  @override
+  String get supportNoOrder => 'None';
+
+  @override
+  String get supportNone => 'No requests yet.';
+
+  @override
+  String get supportOrder => 'Related order';
+
+  @override
+  String get supportPromise => 'The DYM team replies within an hour.';
+
+  @override
+  String get supportSend => 'Send';
+
+  @override
+  String get supportSent => 'Request sent: we\'ll reply soon.';
+
+  @override
+  String get supportSubject => 'Subject';
+
+  @override
+  String get supportSubjectAccount => 'My account';
+
+  @override
+  String get supportSubjectOrder => 'My order';
+
+  @override
+  String get supportSubjectOther => 'Other';
+
+  @override
+  String get supportSubjectPayment => 'A payment';
+
+  @override
+  String get supportSubjectStore => 'My shop';
+
+  @override
+  String get supportDescribe => 'Describe your problem';
+
+  @override
+  String reviewSummary(String rating, int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n reviews',
+      one: '1 review',
+    );
+    return '$rating/5 · $_temp0';
+  }
 }

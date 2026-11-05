@@ -108,6 +108,7 @@ class _HomeViewState extends State<HomeView> {
               : _navigator.toAddresses,
           onNotifications: _navigator.toNotificationSettings,
           onMessages: _navigator.toMessages,
+          onHelp: _navigator.toHelp,
         ),
       },
     );

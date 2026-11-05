@@ -47,4 +47,7 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toChat(String conversationId) {}
+
+  @override
+  void toHelp() {}
 }

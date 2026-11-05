@@ -11,6 +11,7 @@ environment:
 dependencies:
   dym_auth: ^0.1.0
   dym_core: ^0.1.0
+  dym_data: ^0.1.0
   dym_l10n: ^0.1.0
   dym_models: ^0.1.0
   dym_ui: ^0.1.0
@@ -19,7 +20,6 @@ dependencies:
   stacked: ^3.5.0
 
 dev_dependencies:
-  dym_data: ^0.1.0
   flutter_test:
     sdk: flutter
   very_good_analysis: ^11.0.0

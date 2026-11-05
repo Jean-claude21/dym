@@ -38,6 +38,12 @@ Spec 015 : messagerie cliente ↔ vendeuse ([60 — conversation côté cliente]
 [61 — messages de la vendeuse](screens/61-vendeuse-messages.webp),
 [62 — conversation et partage de produit](screens/62-vendeuse-conversation.webp)), à valider avant fusion.
 
+Phase 3 (dérogation du 2026-10-10) : spec 016 (63 laisser un avis, 64 avis d'une boutique,
+65 avis côté vendeuse, 66 aide) et spec 017 (67 tableau de bord de l'équipe, 68 profil d'une
+cliente, 69 support, 70 revenus). Phase 4 : 71 recherche vocale, 72 recherche par photo,
+73 copilote d'intention, 74 fil de vidéos, 75 publier un contenu, 76 modération, 77 suivi de
+l'IA, 78 relance des clientes. Toutes à valider avant fusion.
+
 Les trois parcours qui portent les hypothèses les plus risquées passent en premier : **4, 10, 12**.
 
 ## Parcours

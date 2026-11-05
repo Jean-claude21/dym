@@ -1,3 +1,4 @@
+import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
@@ -10,6 +11,7 @@ import 'package:dym_vendor/app/vendor_app.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
+import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:flutter/material.dart';
 
@@ -53,6 +55,28 @@ Future<void> main() async {
         repository: VendorDashboardRepository(neon.data),
         stores: stores,
         messages: messaging,
+      ),
+    )
+    ..registerSingleton<VendorReviewsService>(
+      NeonVendorReviewsService(
+        ReviewRepository(data: neon.data, functions: neon.functions),
+      ),
+    )
+    ..registerLazySingleton<SupportService>(
+      () => NeonSupportService(
+        repository: SupportRepository(neon.data),
+        app: 'vendor',
+        recentOrders: () async => [
+          for (final o
+              in (await locator<OrdersService>().orders()).valueOrNull ??
+                  const <VendorOrder>[])
+            (
+              id: o.id,
+              label:
+                  '${o.id.substring(0, 8).toUpperCase()} · '
+                  '${o.customerFirstName ?? ''}',
+            ),
+        ].take(10).toList(),
       ),
     )
     ..registerSingleton<ChatService>(
