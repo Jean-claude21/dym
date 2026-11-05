@@ -14,6 +14,7 @@ class AccountView extends StackedView<AccountViewModel> {
     super.key,
     this.onAddresses,
     this.onNotifications,
+    this.onMessages,
   });
 
   final AuthService service;
@@ -24,6 +25,9 @@ class AccountView extends StackedView<AccountViewModel> {
 
   /// Réglages des notifications ; nul : « bientôt ».
   final VoidCallback? onNotifications;
+
+  /// Mes messages (app cliente, spec 015) ; nul : non affiché.
+  final VoidCallback? onMessages;
 
   @override
   AccountViewModel viewModelBuilder(BuildContext context) =>
@@ -103,6 +107,14 @@ class AccountView extends StackedView<AccountViewModel> {
                   ),
                 ),
                 const SizedBox(height: DymTokenSpace.s4),
+                if (onMessages case final messages?) ...[
+                  DymMenuRow(
+                    icon: Icons.chat_bubble_rounded,
+                    label: l10n.chatMyMessages,
+                    onTap: messages,
+                  ),
+                  const SizedBox(height: DymTokenSpace.s3),
+                ],
                 DymMenuRow(
                   icon: Icons.location_on_rounded,
                   label: l10n.accountAddresses,

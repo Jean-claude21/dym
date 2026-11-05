@@ -662,6 +662,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     required this.service,
     required this.onBack,
     required this.onOpenOrder,
+    this.onOpenConversation,
     super.key,
     this.clock = DateTime.now,
   });
@@ -669,6 +670,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
   final OrdersService service;
   final VoidCallback onBack;
   final ValueChanged<String> onOpenOrder;
+
+  /// Notification de message : ouvrir la conversation (spec 015).
+  final ValueChanged<String>? onOpenConversation;
   final DateTime Function() clock;
 
   @override
@@ -748,7 +752,12 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                                 ago: timeAgo(l10n, n.createdAt, now),
                                 onTap: () async {
                                   await vm.open(n);
-                                  if (n.orderId case final id?) onOpenOrder(id);
+                                  if (n.orderId case final id?) {
+                                    onOpenOrder(id);
+                                  } else if (n.param('conversation_id')
+                                      case final conv?) {
+                                    onOpenConversation?.call(conv);
+                                  }
                                 },
                               ),
                             ),

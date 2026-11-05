@@ -13,11 +13,15 @@ class DashboardView extends StackedView<DashboardViewModel> {
     required this.onOrders,
     required this.onProducts,
     super.key,
+    this.onMessages,
   });
 
   final DashboardService service;
   final VoidCallback onOrders;
   final VoidCallback onProducts;
+
+  /// Messages (V-DASH-04) ; nul : non affiché.
+  final VoidCallback? onMessages;
 
   @override
   DashboardViewModel viewModelBuilder(BuildContext context) =>
@@ -112,6 +116,17 @@ class DashboardView extends StackedView<DashboardViewModel> {
                     subtitle: l.dashboardStockHint,
                     onTap: onProducts,
                   ),
+                  if (onMessages case final messages?)
+                    _Action(
+                      icon: Icons.chat_bubble_rounded,
+                      tint: vm.unreadMessages > 0
+                          ? c.tintPlantainClair
+                          : c.tintVertTendre,
+                      color: c.brandDeep,
+                      title: l.dashboardUnreadMessages(vm.unreadMessages),
+                      subtitle: l.dashboardUnreadMessagesHint,
+                      onTap: messages,
+                    ),
                   const SizedBox(height: DymTokenSpace.s3),
                   Text(
                     l.dashboardRecapHint,

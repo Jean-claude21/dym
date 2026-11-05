@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/app/app.router.dart';
 import 'package:dym_client/features/cart/addresses/address_form_view.dart';
@@ -17,6 +20,8 @@ import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
+import 'package:dym_core/dym_core.dart';
+import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -56,6 +61,15 @@ abstract interface class AppNavigator {
 
   /// Réglages des notifications (écran 46).
   void toNotificationSettings();
+
+  /// Mes messages (spec 015).
+  void toMessages();
+
+  /// Conversation avec une boutique (écran 60), produit à joindre facultatif.
+  Future<void> toStoreChat(String storeId, {String? productId});
+
+  /// Conversation existante (notification, liste).
+  void toChat(String conversationId);
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -66,15 +80,18 @@ class StackedAppNavigator implements AppNavigator {
     DiscoveryService? discovery,
     CartService? cart,
     OrdersService? orders,
+    ChatService? chat,
   ]) : _navigation = navigation ?? locator<NavigationService>(),
        _discovery = discovery ?? locator<DiscoveryService>(),
        _cart = cart ?? locator<CartService>(),
-       _orders = orders ?? locator<OrdersService>();
+       _orders = orders ?? locator<OrdersService>(),
+       _chat = chat ?? locator<ChatService>();
 
   final NavigationService _navigation;
   final DiscoveryService _discovery;
   final CartService _cart;
   final OrdersService _orders;
+  final ChatService _chat;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -114,6 +131,7 @@ class StackedAppNavigator implements AppNavigator {
         storeId: storeId,
         onBack: _back,
         onOpenProduct: toProduct,
+        onMessage: () => unawaited(toStoreChat(storeId)),
       ),
     ),
   );
@@ -125,6 +143,8 @@ class StackedAppNavigator implements AppNavigator {
       productId: productId,
       onBack: _back,
       onOpenStore: toStore,
+      onAsk: (store, product) =>
+          unawaited(toStoreChat(store, productId: product)),
     ),
   );
 
@@ -235,7 +255,61 @@ class StackedAppNavigator implements AppNavigator {
 
   @override
   void toNotifications() => _push(
-    NotificationsView(service: _orders, onBack: _back, onOpenOrder: toOrder),
+    NotificationsView(
+      service: _orders,
+      onBack: _back,
+      onOpenOrder: toOrder,
+      onOpenConversation: toChat,
+    ),
+  );
+
+  @override
+  void toMessages() => _push(
+    Scaffold(
+      body: ConversationsView(service: _chat, onOpen: toChat, onBack: _back),
+    ),
+  );
+
+  @override
+  Future<void> toStoreChat(String storeId, {String? productId}) async {
+    final context = _navigator.context;
+    final l10n = DymLocalizations.of(context);
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    switch (await _chat.start(storeId)) {
+      case Ok(:final value):
+        _push(_chatView(value.id, productId: productId));
+      case Err(:final failure):
+        messenger?.showSnackBar(
+          SnackBar(
+            content: Text(
+              failure is NetworkFailure
+                  ? l10n.errorOffline
+                  : l10n.chatStoreUnavailable,
+            ),
+          ),
+        );
+    }
+  }
+
+  @override
+  void toChat(String conversationId) => _push(_chatView(conversationId));
+
+  Widget _chatView(String id, {String? productId}) => Builder(
+    builder: (context) => ChatView(
+      service: _chat,
+      conversationId: id,
+      onBack: _back,
+      initialProductId: productId,
+      onOpenProduct: toProduct,
+      onAddToCart: (item) async {
+        final variant = item.defaultVariantId;
+        if (item.variantCount > 1 || variant == null) {
+          toProduct(item.id);
+        } else {
+          await addToCart(context, variant, confirm: true);
+        }
+      },
+    ),
   );
 
   @override

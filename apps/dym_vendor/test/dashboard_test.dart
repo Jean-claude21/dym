@@ -35,6 +35,9 @@ class _Service implements DashboardService {
   @override
   Future<Result<VendorDashboard>> summary(DashboardPeriod period) =>
       handler?.call(period) ?? Future.value(result ?? Ok(_summary(period)));
+
+  @override
+  Future<Result<int>> unreadMessages() async => const Ok(1);
 }
 
 void main() {

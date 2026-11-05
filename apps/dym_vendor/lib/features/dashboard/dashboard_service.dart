@@ -7,13 +7,20 @@ import 'package:dym_vendor/features/store/store_service.dart';
 abstract interface class DashboardService {
   Future<Result<CountryConfig>> countryConfig();
   Future<Result<VendorDashboard>> summary(DashboardPeriod period);
+
+  /// Messages non lus (V-DASH-04).
+  Future<Result<int>> unreadMessages();
 }
 
 class NeonDashboardService implements DashboardService {
-  new({required this.repository, required this.stores});
+  new({required this.repository, required this.stores, required this.messages});
 
   final VendorDashboardRepository repository;
   final StoreService stores;
+  final MessagingRepository messages;
+
+  @override
+  Future<Result<int>> unreadMessages() => messages.unreadCount(ChatRole.vendor);
 
   @override
   Future<Result<CountryConfig>> countryConfig() => stores.countryConfig();

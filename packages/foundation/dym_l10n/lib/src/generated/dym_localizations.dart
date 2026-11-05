@@ -4626,6 +4626,180 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Remets-le en stock pour continuer à vendre'**
   String get dashboardStockHint;
+
+  /// Titre des conversations
+  ///
+  /// In fr, this message translates to:
+  /// **'Messages'**
+  String get chatMessagesTitle;
+
+  /// Nombre de messages non lus
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Tout est lu} =1{1 non lu} other{{n} non lus}}'**
+  String chatUnread(int n);
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune conversation pour l\'instant.'**
+  String get chatEmptyList;
+
+  /// Conversation vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris ton premier message.'**
+  String get chatEmptyThread;
+
+  /// Aperçu : photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo'**
+  String get chatPhoto;
+
+  /// Aperçu : produit partagé
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit : {name}'**
+  String chatProductPreview(String name);
+
+  /// Champ de saisie
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris ton message…'**
+  String get chatWriteHint;
+
+  /// Envoyer le message
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get chatSend;
+
+  /// Bouton photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer une photo'**
+  String get chatSendPhoto;
+
+  /// Source : appareil photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre une photo'**
+  String get chatCamera;
+
+  /// Source : galerie
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir dans la galerie'**
+  String get chatGallery;
+
+  /// Bouton et titre du partage
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager un produit'**
+  String get chatShareProduct;
+
+  /// Recherche du partage
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher dans mes produits'**
+  String get chatSearchProducts;
+
+  /// Partage : aucun produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun produit publié.'**
+  String get chatNoProducts;
+
+  /// Partager ce produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager'**
+  String get chatShare;
+
+  /// Produit partagé : ajouter
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter au panier'**
+  String get chatAddToCart;
+
+  /// Produit partagé retiré
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce produit n\'est plus en vente.'**
+  String get chatProductUnavailable;
+
+  /// Joindre le produit consulté
+  ///
+  /// In fr, this message translates to:
+  /// **'Joindre ce produit'**
+  String get chatAttachProduct;
+
+  /// Retirer le produit joint
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get chatDismiss;
+
+  /// Échec d'envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'Message non envoyé. Réessaie.'**
+  String get chatSendFailed;
+
+  /// Hors ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : les derniers messages sont affichés.'**
+  String get chatOffline;
+
+  /// Ouvrir la conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire à la boutique'**
+  String get chatWriteToStore;
+
+  /// Question sur un produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Poser une question'**
+  String get chatAskProduct;
+
+  /// Entrée du compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes messages'**
+  String get chatMyMessages;
+
+  /// Boutique inactive
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette boutique n\'accepte pas de messages pour l\'instant.'**
+  String get chatStoreUnavailable;
+
+  /// Accueil vendeuse : messages
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucun message non lu} =1{1 message non lu} other{{n} messages non lus}}'**
+  String dashboardUnreadMessages(int n);
+
+  /// Accueil vendeuse : sous-titre messages
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponds à tes clientes'**
+  String get dashboardUnreadMessagesHint;
+
+  /// Notification : message
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau message'**
+  String get notifNewMessageTitle;
+
+  /// Notification : expéditrice
+  ///
+  /// In fr, this message translates to:
+  /// **'{sender} t\'a écrit.'**
+  String notifNewMessageBody(String sender);
 }
 
 class _DymLocalizationsDelegate

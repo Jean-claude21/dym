@@ -1,4 +1,5 @@
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/app/client_app.dart';
 import 'package:dym_client/app/config_error_app.dart';
@@ -7,8 +8,9 @@ import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +56,19 @@ Future<void> main() async {
         disputes: DisputeRepository(data: neon.data, functions: neon.functions),
         reference: reference,
         auth: auth,
+      ),
+    )
+    ..registerLazySingleton<ChatService>(
+      () => NeonChatService(
+        repository: MessagingRepository(
+          data: neon.data,
+          functions: neon.functions,
+          uploads: neon.uploads,
+        ),
+        role: ChatRole.client,
+        countryConfig: () => locator<OrdersService>().countryConfig(),
+        photos: PluginPhotoPicker(),
+        productPhoto: (key) => NetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerLazySingleton<CartService>(

@@ -14,12 +14,16 @@ class StorePageView extends StackedView<StorePageViewModel> {
     required this.onBack,
     required this.onOpenProduct,
     super.key,
+    this.onMessage,
   });
 
   final DiscoveryService service;
   final String storeId;
   final VoidCallback onBack;
   final ValueChanged<String> onOpenProduct;
+
+  /// Écrire à la boutique (spec 015) ; nul : non proposé.
+  final VoidCallback? onMessage;
 
   @override
   StorePageViewModel viewModelBuilder(BuildContext context) =>
@@ -147,6 +151,15 @@ class StorePageView extends StackedView<StorePageViewModel> {
                     if (store.description != null) ...[
                       const SizedBox(height: DymTokenSpace.s3),
                       Text(store.description!, style: t.body),
+                    ],
+                    if (onMessage case final message?) ...[
+                      const SizedBox(height: DymTokenSpace.s3),
+                      DymButton(
+                        label: l10n.chatWriteToStore,
+                        icon: Icons.chat_bubble_rounded,
+                        variant: DymButtonVariant.secondary,
+                        onPressed: message,
+                      ),
                     ],
                     if (store.offersPickup) ...[
                       const SizedBox(height: DymTokenSpace.s3),

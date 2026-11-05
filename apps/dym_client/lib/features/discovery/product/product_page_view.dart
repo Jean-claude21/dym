@@ -15,12 +15,16 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
     required this.onBack,
     required this.onOpenStore,
     super.key,
+    this.onAsk,
   });
 
   final DiscoveryService service;
   final String productId;
   final VoidCallback onBack;
   final ValueChanged<String> onOpenStore;
+
+  /// Poser une question à la boutique sur ce produit (spec 015).
+  final void Function(String storeId, String productId)? onAsk;
 
   @override
   ProductPageViewModel viewModelBuilder(BuildContext context) =>
@@ -238,6 +242,17 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                     ),
                   ),
                 ),
+                if (onAsk case final ask?) ...[
+                  const SizedBox(height: DymTokenSpace.s2),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => ask(store.id, item.id),
+                      icon: const Icon(Icons.chat_bubble_outline_rounded),
+                      label: Text(l10n.chatAskProduct),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: DymTokenSpace.s3),
                 if (price != null)
                   Text.rich(

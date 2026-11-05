@@ -974,6 +974,133 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 4)),
   );
+
+  test(
+    'messagerie : question, photo privée, produit partagé, non-lus',
+    () async {
+      final vendor = await signUp('vm');
+      final client = await signUp('cm');
+      final other = await signUp('om');
+
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final cash = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id')
+              .eq('country_code', country.code)
+              .eq('provider_code', 'cash'),
+        ),
+        'cash',
+      );
+      final (storeId, _) = await openStore(
+        vendor,
+        name: 'E2E M $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [((cash as List).first as Map)['id'] as String],
+        price: 300,
+      );
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Questionne',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      final mine = MessagingRepository(
+        data: client.data,
+        functions: client.functions,
+        uploads: client.uploads,
+      );
+      final shop = MessagingRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+        uploads: vendor.uploads,
+      );
+
+      // 1. La cliente ouvre la conversation et écrit (rejeu sans doublon).
+      final conv = await ok(mine.start(storeId), 'conversation');
+      expect((await ok(mine.start(storeId), 'retrouvée')).id, conv.id);
+      final key = Uuid.v4();
+      final first = await ok(
+        mine.sendText(conv.id, 'Vous avez du gombo ?', idempotencyKey: key),
+        'message',
+      );
+      final replay = await ok(
+        mine.sendText(conv.id, 'Vous avez du gombo ?', idempotencyKey: key),
+        'rejeu',
+      );
+      expect(replay.id, first.id);
+
+      // 2. Photo privée : lien signé pour les participantes seulement.
+      final photo = await ok(
+        mine.sendImage(
+          conv.id,
+          List<int>.filled(64, 0xFF),
+          contentType: 'image/jpeg',
+          idempotencyKey: Uuid.v4(),
+        ),
+        'photo',
+      );
+      expect(photo.hasMedia, isTrue);
+      final urls = await ok(mine.mediaUrls([photo.id]), 'lien signé');
+      expect(urls[photo.id], isNotNull);
+      final outsider = MessagingRepository(
+        data: other.data,
+        functions: other.functions,
+        uploads: other.uploads,
+      );
+      expect(
+        await ok(outsider.mediaUrls([photo.id]), 'autre cliente'),
+        isEmpty,
+      );
+      expect(
+        (await outsider.thread(conv.id)).isOk,
+        isFalse,
+        reason: 'une autre cliente ne lit pas',
+      );
+
+      // 3. La vendeuse lit, répond par un produit ; non-lus et notifications.
+      expect(await ok(shop.unreadCount(ChatRole.vendor), 'non lus'), 2);
+      final list = await ok(shop.conversations(ChatRole.vendor), 'liste');
+      expect(list.single.clientFirstName, 'Questionne');
+      final thread = await ok(shop.thread(conv.id), 'fil vendeuse');
+      expect(thread.messages, hasLength(2));
+      expect(await ok(shop.unreadCount(ChatRole.vendor), 'lus'), 0);
+      final products = await ok(
+        CatalogRepository(vendor.data).myProducts(),
+        'produits',
+      );
+      final shared = await ok(
+        shop.sendProduct(conv.id, products.first.id, idempotencyKey: Uuid.v4()),
+        'produit partagé',
+      );
+      expect(shared.product?.name, products.first.name);
+      expect(await ok(mine.unreadCount(ChatRole.client), 'non lu cliente'), 1);
+      final clientNotes = await ok(
+        NotificationRepository(client.data).notifications(),
+        'notifications cliente',
+      );
+      expect(clientNotes.map((n) => n.kind), contains('new_message'));
+      final vendorNotes = await ok(
+        NotificationRepository(vendor.data).notifications(),
+        'notifications vendeuse',
+      );
+      expect(vendorNotes.map((n) => n.kind), contains('new_message_vendor'));
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 3)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).
