@@ -20,4 +20,10 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toSearch() {}
+
+  @override
+  void toCart() {}
+
+  @override
+  void toAddresses() {}
 }

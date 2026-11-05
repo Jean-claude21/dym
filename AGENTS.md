@@ -66,6 +66,9 @@ Neon `staging` (projet `dym`, décision 0013) :
 cd apps/dym_client && fvm flutter run -d chrome --web-port 5555 --dart-define-from-file=../../config/staging.json
 # Migrations et pgTAP sur la branche (URL hors dépôt : functions/.env.local, écrit par neon deploy).
 node db/scripts/dym-db.mjs migrate --url "$DATABASE_URL_UNPOOLED" && node db/scripts/dym-db.mjs test --url "$DATABASE_URL_UNPOOLED"
+# Commande de bout en bout (comptes de test créés puis supprimés) :
+# NEON_LIVE_AUTH_URL, NEON_LIVE_DATA_API_URL, NEON_LIVE_FUNCTIONS_URL = URL de config/staging.json.
+cd packages/data/dym_data && fvm dart test test/order_flow_live_test.dart
 # Déploiement : clés lues dans un fichier hors dépôt.
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt>
 ```

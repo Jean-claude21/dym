@@ -92,6 +92,7 @@ class CatalogItem {
     this.unitLabel,
     this.photoKey,
     this.variantCount = 1,
+    this.defaultVariantId,
     this.available = true,
     this.storeCategoryIds = const [],
   });
@@ -112,6 +113,9 @@ class CatalogItem {
   final LocalizedText? unitLabel;
   final String? photoKey;
   final int variantCount;
+
+  /// Première variante : ajout direct au panier s'il n'y en a qu'une.
+  final String? defaultVariantId;
   final bool available;
   final CatalogItemStore store;
   final List<String> storeCategoryIds;

@@ -2,6 +2,7 @@
 library;
 
 export 'src/account_repository.dart';
+export 'src/cart_repository.dart';
 export 'src/catalog_repository.dart';
 export 'src/discovery_repository.dart';
 export 'src/events_repository.dart';

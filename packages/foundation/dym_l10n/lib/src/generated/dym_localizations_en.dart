@@ -1054,4 +1054,288 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get shareLabel => 'Share';
+
+  @override
+  String get cartTitle => 'Your basket';
+
+  @override
+  String cartSummary(int stores, int items) {
+    String _temp0 = intl.Intl.pluralLogic(
+      stores,
+      locale: localeName,
+      other: '$stores shops',
+      one: '1 shop',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      items,
+      locale: localeName,
+      other: '$items items',
+      one: '1 item',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String cartMiniSummary(int stores, int items) {
+    String _temp0 = intl.Intl.pluralLogic(
+      items,
+      locale: localeName,
+      other: '$items items',
+      one: '1 item',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      stores,
+      locale: localeName,
+      other: '$stores shops',
+      one: '1 shop',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get cartView => 'View basket';
+
+  @override
+  String get cartAdd => 'Add to basket';
+
+  @override
+  String get cartAdded => 'Added to basket';
+
+  @override
+  String get cartFreeLead => 'Only';
+
+  @override
+  String get cartFreeTrail => 'more for free delivery';
+
+  @override
+  String get cartFreeReached => 'Free delivery!';
+
+  @override
+  String get cartSubstitutionTitle => 'If a product is missing';
+
+  @override
+  String get cartSubstitutionSubtitle =>
+      'The shop offers an equivalent at the same price';
+
+  @override
+  String get cartDelivery => 'Delivery';
+
+  @override
+  String cartDeliveryMeta(int pickups, int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      pickups,
+      locale: localeName,
+      other: '$pickups pickups',
+      one: '1 pickup',
+      zero: 'Pickup in store',
+    );
+    return '$_temp0 · $minutes min';
+  }
+
+  @override
+  String get cartChange => 'Change';
+
+  @override
+  String get cartPayment => 'Payment';
+
+  @override
+  String get cartSubtotal => 'Subtotal';
+
+  @override
+  String get cartTotal => 'Total';
+
+  @override
+  String cartOrder(String total) {
+    return 'Order · $total';
+  }
+
+  @override
+  String get cartEmptyTitle => 'Your basket is empty';
+
+  @override
+  String get cartEmptyMessage => 'Add products from the shops open near you.';
+
+  @override
+  String get cartBrowse => 'See the shops';
+
+  @override
+  String get cartRemove => 'Remove';
+
+  @override
+  String get cartIssueUnavailable => 'Out of stock';
+
+  @override
+  String cartIssueStock(int count) {
+    return 'Only $count left';
+  }
+
+  @override
+  String get cartIssuePriceChanged => 'Price changed';
+
+  @override
+  String get cartIssueClosed => 'Closed now';
+
+  @override
+  String get cartIssueSuspended => 'Shop unavailable';
+
+  @override
+  String get cartIssueNotDelivered =>
+      'Doesn\'t deliver to your address: choose pickup or another address';
+
+  @override
+  String get cartIssuePickupUnavailable => 'This shop doesn\'t offer pickup';
+
+  @override
+  String get cartIssuePaymentNotAccepted => 'Payment not accepted by this shop';
+
+  @override
+  String get cartBlocked => 'Fix the flagged items to order.';
+
+  @override
+  String get cartUnavailable => 'This product is no longer available.';
+
+  @override
+  String get cartOtherCountry =>
+      'This product is from another country than your basket.';
+
+  @override
+  String get orderErrorAddressRequired => 'Choose a delivery address.';
+
+  @override
+  String get orderErrorTotalChanged =>
+      'Your basket changed: check the new total.';
+
+  @override
+  String get orderErrorPaymentUnavailable =>
+      'This payment method isn\'t available yet.';
+
+  @override
+  String get orderErrorEmpty => 'Your basket is empty.';
+
+  @override
+  String get deliveryTitle => 'Delivery';
+
+  @override
+  String get deliveryWhere => 'Where should we deliver?';
+
+  @override
+  String get deliveryAddAddress => 'Add an address';
+
+  @override
+  String get deliveryModes => 'Mode per shop';
+
+  @override
+  String get deliveryModeDelivery => 'Delivery';
+
+  @override
+  String get deliveryModePickup => 'I\'ll pick up';
+
+  @override
+  String get deliveryConfirm => 'Confirm delivery';
+
+  @override
+  String get deliveryNoAddress => 'Add an address to get delivered.';
+
+  @override
+  String get addressesTitle => 'My addresses';
+
+  @override
+  String get addressDefault => 'Default';
+
+  @override
+  String get addressPositionSaved => 'Location saved';
+
+  @override
+  String get addressSetDefault => 'Make default';
+
+  @override
+  String get addressEdit => 'Edit';
+
+  @override
+  String get addressDelete => 'Delete';
+
+  @override
+  String get addressMenu => 'Address options';
+
+  @override
+  String get addressesEmptyTitle => 'No address yet';
+
+  @override
+  String get addressesEmptyMessage =>
+      'Add your address to get delivered faster.';
+
+  @override
+  String get addressKindHome => 'Home';
+
+  @override
+  String get addressKindWork => 'Work';
+
+  @override
+  String get addressKindOther => 'Other';
+
+  @override
+  String get addressNewTitle => 'New address';
+
+  @override
+  String get addressEditTitle => 'Edit address';
+
+  @override
+  String get addressWhere => 'Where?';
+
+  @override
+  String get addressLabel => 'Address name (optional)';
+
+  @override
+  String get addressLandmark => 'Landmark';
+
+  @override
+  String get addressLandmarkHint => 'E.g. blue gate after the pharmacy';
+
+  @override
+  String get addressLandmarkInvalid =>
+      'Describe a landmark (3 to 200 characters)';
+
+  @override
+  String get addressPhone => 'Phone for delivery';
+
+  @override
+  String get addressPhoneInvalid => 'Invalid phone number';
+
+  @override
+  String get addressMakeDefault => 'Default address';
+
+  @override
+  String get addressSave => 'Save address';
+
+  @override
+  String get orderSentTitle => 'Order sent!';
+
+  @override
+  String get orderSentSubtitle =>
+      'The sellers will accept it. We\'ll let you know.';
+
+  @override
+  String get orderPending => 'Waiting for acceptance';
+
+  @override
+  String orderItems(int items) {
+    String _temp0 = intl.Intl.pluralLogic(
+      items,
+      locale: localeName,
+      other: '$items items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String orderDeliveryTo(String place) {
+    return 'Delivery: $place';
+  }
+
+  @override
+  String get orderBackHome => 'Back to home';
+
+  @override
+  String get cartAddShort => 'Add';
 }

@@ -107,6 +107,10 @@ CatalogItem _$CatalogItemFromJson(Map<String, dynamic> json) => $checkedCreate(
         'variant_count',
         (v) => (v as num?)?.toInt() ?? 1,
       ),
+      defaultVariantId: $checkedConvert(
+        'default_variant_id',
+        (v) => v as String?,
+      ),
       available: $checkedConvert('available', (v) => v as bool? ?? true),
       storeCategoryIds: $checkedConvert(
         'store_category_ids',
@@ -124,6 +128,7 @@ CatalogItem _$CatalogItemFromJson(Map<String, dynamic> json) => $checkedCreate(
     'unitLabel': 'unit_label',
     'photoKey': 'photo_key',
     'variantCount': 'variant_count',
+    'defaultVariantId': 'default_variant_id',
     'storeCategoryIds': 'store_category_ids',
   },
 );

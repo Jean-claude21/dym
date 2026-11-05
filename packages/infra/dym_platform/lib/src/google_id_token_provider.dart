@@ -71,8 +71,9 @@ class PluginGoogleIdTokenProvider implements GoogleIdTokenProvider {
         GoogleSignInExceptionCode.canceled ||
         GoogleSignInExceptionCode.interrupted => const Ok(null),
         GoogleSignInExceptionCode.clientConfigurationError ||
-        GoogleSignInExceptionCode.providerConfigurationError =>
-          const Err(ValidationFailure('connexion Google mal configurée')),
+        GoogleSignInExceptionCode.providerConfigurationError => const Err(
+          ValidationFailure('connexion Google mal configurée'),
+        ),
         _ => Err(UnknownFailure('Google : ${error.code.name}')),
       };
     } on Object {

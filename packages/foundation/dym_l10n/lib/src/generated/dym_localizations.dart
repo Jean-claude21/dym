@@ -1588,7 +1588,7 @@ abstract class DymLocalizations {
   /// Position refusée
   ///
   /// In fr, this message translates to:
-  /// **'Position indisponible : cherche ton quartier.'**
+  /// **'Position indisponible : cherche ton quartier.'**
   String get zoneLocationUnavailable;
 
   /// Quartier proposé
@@ -1624,7 +1624,7 @@ abstract class DymLocalizations {
   /// Position hors zone
   ///
   /// In fr, this message translates to:
-  /// **'Ta position est hors des zones desservies : cherche ton quartier.'**
+  /// **'Ta position est hors des zones desservies : cherche ton quartier.'**
   String get zoneOutsideArea;
 
   /// Filtre de rayon
@@ -1860,6 +1860,456 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Partager'**
   String get shareLabel;
+
+  /// Titre du panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier'**
+  String get cartTitle;
+
+  /// Boutiques et articles du panier
+  ///
+  /// In fr, this message translates to:
+  /// **'{stores, plural, =1{1 boutique} other{{stores} boutiques}} · {items, plural, =1{1 article} other{{items} articles}}'**
+  String cartSummary(int stores, int items);
+
+  /// Résumé du mini-panier
+  ///
+  /// In fr, this message translates to:
+  /// **'{items, plural, =1{1 article} other{{items} articles}} · {stores, plural, =1{1 boutique} other{{stores} boutiques}}'**
+  String cartMiniSummary(int stores, int items);
+
+  /// Ouvrir le panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le panier'**
+  String get cartView;
+
+  /// Bouton d'ajout
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter au panier'**
+  String get cartAdd;
+
+  /// Confirmation d'ajout
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouté au panier'**
+  String get cartAdded;
+
+  /// Jauge de livraison offerte (avant le montant)
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus que'**
+  String get cartFreeLead;
+
+  /// Jauge de livraison offerte (après le montant)
+  ///
+  /// In fr, this message translates to:
+  /// **'pour la livraison offerte'**
+  String get cartFreeTrail;
+
+  /// Seuil de gratuité atteint
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison offerte !'**
+  String get cartFreeReached;
+
+  /// Préférence de remplacement
+  ///
+  /// In fr, this message translates to:
+  /// **'Si un produit manque'**
+  String get cartSubstitutionTitle;
+
+  /// Explication du remplacement
+  ///
+  /// In fr, this message translates to:
+  /// **'La boutique propose un équivalent au même prix'**
+  String get cartSubstitutionSubtitle;
+
+  /// Ligne livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get cartDelivery;
+
+  /// Ramassages et délai
+  ///
+  /// In fr, this message translates to:
+  /// **'{pickups, plural, =0{Retrait sur place} =1{1 ramassage} other{{pickups} ramassages}} · {minutes} min'**
+  String cartDeliveryMeta(int pickups, int minutes);
+
+  /// Modifier la livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer'**
+  String get cartChange;
+
+  /// Choix du paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get cartPayment;
+
+  /// Sous-total
+  ///
+  /// In fr, this message translates to:
+  /// **'Sous-total'**
+  String get cartSubtotal;
+
+  /// Total
+  ///
+  /// In fr, this message translates to:
+  /// **'Total'**
+  String get cartTotal;
+
+  /// Bouton commander
+  ///
+  /// In fr, this message translates to:
+  /// **'Commander · {total}'**
+  String cartOrder(String total);
+
+  /// Panier vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier est vide'**
+  String get cartEmptyTitle;
+
+  /// Panier vide : piste
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute des produits des boutiques ouvertes près de toi.'**
+  String get cartEmptyMessage;
+
+  /// Retour à l'accueil depuis le panier vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les boutiques'**
+  String get cartBrowse;
+
+  /// Retirer une ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get cartRemove;
+
+  /// Ligne en rupture
+  ///
+  /// In fr, this message translates to:
+  /// **'Rupture'**
+  String get cartIssueUnavailable;
+
+  /// Stock insuffisant
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus que {count} en stock'**
+  String cartIssueStock(int count);
+
+  /// Prix changé depuis l'ajout
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix modifié'**
+  String get cartIssuePriceChanged;
+
+  /// Boutique fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermée maintenant'**
+  String get cartIssueClosed;
+
+  /// Boutique suspendue
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique indisponible'**
+  String get cartIssueSuspended;
+
+  /// Quartier non livré
+  ///
+  /// In fr, this message translates to:
+  /// **'Ne livre pas ton adresse : choisis le retrait ou une autre adresse'**
+  String get cartIssueNotDelivered;
+
+  /// Retrait impossible
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait non proposé par cette boutique'**
+  String get cartIssuePickupUnavailable;
+
+  /// Paiement refusé par la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement non accepté par cette boutique'**
+  String get cartIssuePaymentNotAccepted;
+
+  /// Commande bloquée
+  ///
+  /// In fr, this message translates to:
+  /// **'Corrige les points signalés pour commander.'**
+  String get cartBlocked;
+
+  /// Ajout refusé : rupture
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce produit n\'est plus disponible.'**
+  String get cartUnavailable;
+
+  /// Ajout refusé : autre pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce produit vient d\'un autre pays que ton panier.'**
+  String get cartOtherCountry;
+
+  /// Refus : adresse manquante
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis une adresse de livraison.'**
+  String get orderErrorAddressRequired;
+
+  /// Refus : total modifié
+  ///
+  /// In fr, this message translates to:
+  /// **'Le panier a changé : vérifie le nouveau total.'**
+  String get orderErrorTotalChanged;
+
+  /// Refus : paiement indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce moyen de paiement n\'est pas encore disponible.'**
+  String get orderErrorPaymentUnavailable;
+
+  /// Refus : panier vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier est vide.'**
+  String get orderErrorEmpty;
+
+  /// Titre de l'écran livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get deliveryTitle;
+
+  /// Choix de l'adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Où te livrer ?'**
+  String get deliveryWhere;
+
+  /// Nouvelle adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une adresse'**
+  String get deliveryAddAddress;
+
+  /// Livraison ou retrait par boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Mode par boutique'**
+  String get deliveryModes;
+
+  /// Mode livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get deliveryModeDelivery;
+
+  /// Mode retrait
+  ///
+  /// In fr, this message translates to:
+  /// **'Je récupère'**
+  String get deliveryModePickup;
+
+  /// Valider l'écran livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider la livraison'**
+  String get deliveryConfirm;
+
+  /// Aucune adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute une adresse pour être livrée.'**
+  String get deliveryNoAddress;
+
+  /// Titre des adresses
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes adresses'**
+  String get addressesTitle;
+
+  /// Adresse par défaut
+  ///
+  /// In fr, this message translates to:
+  /// **'Par défaut'**
+  String get addressDefault;
+
+  /// Position conservée
+  ///
+  /// In fr, this message translates to:
+  /// **'Position enregistrée'**
+  String get addressPositionSaved;
+
+  /// Action : adresse par défaut
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir par défaut'**
+  String get addressSetDefault;
+
+  /// Action : modifier
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get addressEdit;
+
+  /// Action : supprimer
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get addressDelete;
+
+  /// Menu d'une adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Options de l\'adresse'**
+  String get addressMenu;
+
+  /// Aucune adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune adresse'**
+  String get addressesEmptyTitle;
+
+  /// Aucune adresse : piste
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute ton adresse pour être livrée plus vite.'**
+  String get addressesEmptyMessage;
+
+  /// Adresse maison
+  ///
+  /// In fr, this message translates to:
+  /// **'Maison'**
+  String get addressKindHome;
+
+  /// Adresse bureau
+  ///
+  /// In fr, this message translates to:
+  /// **'Bureau'**
+  String get addressKindWork;
+
+  /// Autre adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get addressKindOther;
+
+  /// Titre : nouvelle adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle adresse'**
+  String get addressNewTitle;
+
+  /// Titre : modifier l'adresse
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier l\'adresse'**
+  String get addressEditTitle;
+
+  /// Choix du quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Où ?'**
+  String get addressWhere;
+
+  /// Libellé libre
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de l\'adresse (facultatif)'**
+  String get addressLabel;
+
+  /// Repère
+  ///
+  /// In fr, this message translates to:
+  /// **'Repère'**
+  String get addressLandmark;
+
+  /// Exemple de repère
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. portail bleu après la pharmacie'**
+  String get addressLandmarkHint;
+
+  /// Repère invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'Décris un repère (3 à 200 caractères)'**
+  String get addressLandmarkInvalid;
+
+  /// Téléphone de contact
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone pour la livraison'**
+  String get addressPhone;
+
+  /// Téléphone invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone invalide'**
+  String get addressPhoneInvalid;
+
+  /// Interrupteur adresse par défaut
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse par défaut'**
+  String get addressMakeDefault;
+
+  /// Enregistrer
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer l\'adresse'**
+  String get addressSave;
+
+  /// Confirmation
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande envoyée !'**
+  String get orderSentTitle;
+
+  /// Suite de la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Les vendeuses vont l\'accepter. Tu seras prévenue.'**
+  String get orderSentSubtitle;
+
+  /// Statut en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente d\'acceptation'**
+  String get orderPending;
+
+  /// Nombre d'articles d'une commande
+  ///
+  /// In fr, this message translates to:
+  /// **'{items, plural, =1{1 article} other{{items} articles}}'**
+  String orderItems(int items);
+
+  /// Adresse de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison : {place}'**
+  String orderDeliveryTo(String place);
+
+  /// Retour
+  ///
+  /// In fr, this message translates to:
+  /// **'Retour à l\'accueil'**
+  String get orderBackHome;
+
+  /// Bouton d'ajout d'une carte produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get cartAddShort;
 }
 
 class _DymLocalizationsDelegate

@@ -8,10 +8,18 @@ import 'package:stacked/stacked.dart';
 /// Écran « Moi » (maquette 13) : profil, réglages à venir, déconnexion et
 /// suppression du compte avec confirmation.
 class AccountView extends StackedView<AccountViewModel> {
-  const new({required this.service, required this.onSignedOut, super.key});
+  const new({
+    required this.service,
+    required this.onSignedOut,
+    super.key,
+    this.onAddresses,
+  });
 
   final AuthService service;
   final void Function() onSignedOut;
+
+  /// Mes adresses (app cliente) ; nul : « bientôt ».
+  final VoidCallback? onAddresses;
 
   @override
   AccountViewModel viewModelBuilder(BuildContext context) =>
@@ -91,8 +99,13 @@ class AccountView extends StackedView<AccountViewModel> {
                   ),
                 ),
                 const SizedBox(height: DymTokenSpace.s4),
+                DymMenuRow(
+                  icon: Icons.location_on_rounded,
+                  label: l10n.accountAddresses,
+                  onTap: onAddresses ?? soon,
+                ),
+                const SizedBox(height: DymTokenSpace.s3),
                 for (final (icon, label) in [
-                  (Icons.location_on_rounded, l10n.accountAddresses),
                   (Icons.notifications_rounded, l10n.accountNotifications),
                   (
                     Icons.language_rounded,

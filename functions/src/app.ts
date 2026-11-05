@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { type AuthVariables, requireUser, type TokenVerifier } from "./lib/auth.js";
 import { type CatalogDeps, registerCatalogRoutes } from "./catalog/routes.js";
+import { type OrderDeps, registerOrderRoutes } from "./orders/routes.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
 
 export interface AppDeps {
@@ -12,6 +13,8 @@ export interface AppDeps {
   allowedOrigins?: string[];
   /** Catalogue (spec 007) ; absent : routes en 503. */
   catalog?: CatalogDeps;
+  /** Commandes (spec 009) ; absent : routes en 503. */
+  orders?: OrderDeps;
 }
 
 /** App HTTP des Functions DYM. Les dépendances sont injectées (tests). */
@@ -48,6 +51,7 @@ export function createApp(deps: AppDeps) {
   );
 
   registerCatalogRoutes(app, deps.verifyToken, deps.catalog);
+  registerOrderRoutes(app, deps.verifyToken, deps.orders);
 
   return app;
 }
