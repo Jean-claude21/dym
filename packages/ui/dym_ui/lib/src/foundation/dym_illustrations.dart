@@ -14,6 +14,10 @@ abstract final class DymIllustrations {
     'epices',
     'boissons',
     'hygiene',
+    'cereales',
+    'huiles',
+    'textile',
+    'beaute',
   };
 
   static const _origins = {'marche', 'maison', 'magasin'};

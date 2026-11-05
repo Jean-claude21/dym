@@ -56,8 +56,19 @@ node db/scripts/dym-db.mjs local reset    # base vierge
 Functions (`functions/`, Node ≥ 22 en local, Node 24 sur Neon) : `npm ci && npm test`.
 
 Apps : `cd apps/dym_client && fvm flutter run -d chrome --dart-define=DYM_ENV=dev`. En
-`staging` ou `production`, `DYM_AUTH_URL`, `DYM_DATA_API_URL` et `DYM_FUNCTIONS_URL` sont
-obligatoires.
+`staging` ou `production`, `DYM_AUTH_URL`, `DYM_DATA_API_URL`, `DYM_FUNCTIONS_URL` et
+`DYM_MEDIA_URL` sont obligatoires.
+
+Neon `staging` (projet `dym`, décision 0013) :
+
+```bash
+# App sur la branche staging (URL publiques seulement) ; web : port fixe autorisé par la Function.
+cd apps/dym_client && fvm flutter run -d chrome --web-port 5555 --dart-define-from-file=../../config/staging.json
+# Migrations et pgTAP sur la branche (URL hors dépôt : functions/.env.local, écrit par neon deploy).
+node db/scripts/dym-db.mjs migrate --url "$DATABASE_URL_UNPOOLED" && node db/scripts/dym-db.mjs test --url "$DATABASE_URL_UNPOOLED"
+# Déploiement : clés lues dans un fichier hors dépôt.
+cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt>
+```
 
 Galerie de validation du design system : `cd apps/dym_gallery && fvm flutter run -d chrome`.
 

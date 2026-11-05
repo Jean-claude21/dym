@@ -28,6 +28,7 @@ class FakeAuthService implements AuthService {
   Result<AuthState?> googleResult = const Ok(null);
   Result<AuthState>? profileResult;
   Result<List<Country>> countriesResult = Ok([togo]);
+  Result<ZoneMatch?> locateResult = const Ok(null);
 
   static final togo = Country.fromJson(const {
     'code': 'TG',
@@ -120,6 +121,12 @@ class FakeAuthService implements AuthService {
   @override
   Future<Result<CountryConfig>> countryConfig(String countryCode) async =>
       Ok(config);
+
+  @override
+  Future<Result<ZoneMatch?>> locateZone() async {
+    calls.add('locate');
+    return locateResult;
+  }
 
   @override
   Future<Result<AuthState>> completeProfile({

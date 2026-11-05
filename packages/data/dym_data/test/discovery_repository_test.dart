@@ -50,7 +50,18 @@ void main() {
   late DiscoveryRepository discovery;
 
   setUp(() {
-    server = FakeServer();
+    // Visiteuse sans session : JWT anonyme de Neon Auth.
+    server = FakeServer()
+      ..on(
+        'GET',
+        '/auth/token/anonymous',
+        (_) => FakeResponse(200, {
+          'token': fakeJwt(
+            sub: 'anonymous',
+            expiresAt: DateTime.now().toUtc().add(const Duration(hours: 1)),
+          ),
+        }),
+      );
     final neon = NeonClient(
       config: NeonConfig(
         authUrl: Uri.parse('https://auth.test/auth'),

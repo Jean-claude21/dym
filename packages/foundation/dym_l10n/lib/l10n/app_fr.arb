@@ -195,7 +195,7 @@
   "@authPhotoOptional": {
     "description": "Photo facultative"
   },
-  "authZoneLabel": "Ton quartier",
+  "authZoneLabel": "Ton adresse",
   "@authZoneLabel": {
     "description": "Choix du quartier"
   },
@@ -1167,7 +1167,7 @@
   "@zoneLocating": {
     "description": "Position en cours"
   },
-  "zoneLocationUnavailable": "Position indisponible : choisis ton quartier dans la liste.",
+  "zoneLocationUnavailable": "Position indisponible : cherche ton quartier.",
   "@zoneLocationUnavailable": {
     "description": "Position refusée"
   },
@@ -1183,6 +1183,22 @@
   "zoneConfirm": "Oui, c'est ça",
   "@zoneConfirm": {
     "description": "Confirmer le quartier"
+  },
+  "zoneSearchLabel": "Cherche ton quartier",
+  "@zoneSearchLabel": {
+    "description": "Recherche de quartier"
+  },
+  "zoneSearchHint": "Quartier ou ville",
+  "@zoneSearchHint": {
+    "description": "Aide de la recherche de quartier"
+  },
+  "zoneNoResult": "Aucun quartier trouvé. Essaie un autre nom ou utilise ta position.",
+  "@zoneNoResult": {
+    "description": "Recherche de quartier vide"
+  },
+  "zoneOutsideArea": "Ta position est hors des zones desservies : cherche ton quartier.",
+  "@zoneOutsideArea": {
+    "description": "Position hors zone"
   },
   "aisleAll": "Tous",
   "@aisleAll": {

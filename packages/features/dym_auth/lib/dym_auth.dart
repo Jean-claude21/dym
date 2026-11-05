@@ -4,6 +4,6 @@ library;
 
 export 'src/auth_flow_view.dart';
 export 'src/auth_flow_viewmodel.dart'
-    show AuthError, AuthFlowViewModel, AuthStep;
+    show AuthError, AuthFlowViewModel, AuthStep, ZoneLocation;
 export 'src/auth_service.dart';
 export 'src/widgets/step_scaffold.dart' show AuthErrorBanner;

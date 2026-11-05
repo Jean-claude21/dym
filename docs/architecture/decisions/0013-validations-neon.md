@@ -1,6 +1,6 @@
 # 0013 — Validations techniques sur Neon
 
-**Statut :** En cours · 2026-10-02 · Spec 003 (US5)
+**Statut :** Acceptée (points 1 à 4 ; 5 validé ; 6 avec `phone-otp`) · 2026-10-02 · Spec 003 (US5)
 
 ## Contexte
 
@@ -19,6 +19,26 @@ classé selon ce qui a été prouvé.
 | 4 | Déploiement d'une Function, secret, appel depuis l'app, push FCM | Projet `functions/` : `neon.ts`, vérification JWT par JWKS, contrat d'erreurs (11 tests) | `neon deploy`, `/health` et `/me` avec un vrai jeton ; FCM avec `order-lifecycle` | Function sur Coolify (même code Hono) |
 | 5 | Stacked, freezed et json_serializable sur Flutter 3.47.5 | **Stacked : validé** (3.5 + `stacked_generator` 2.0.4, 3 apps générées). **json_serializable : validé** (`dym_models`, spec 004). **freezed : no-go** : sur 3.47.5, `flutter_test` fige `test_api` (analyzer < 14), alors que freezed 4 exige analyzer 14 et que freezed 3 exige analyzer ≤ 12, incompatible avec `stacked_generator` 2.0.4 et `build_runner` 2.16 | Réessayer à chaque montée de Flutter (0006) | Classes immuables écrites à la main + `fromJson` par `json_serializable` (en place) |
 | 6 | Inscription par téléphone via le webhook `send.otp` | — | Tout (spec `phone-otp`) | OTP email maintenu (décision 0007) |
+
+## Résultats sur Neon (2026-10-02, branche `staging`)
+
+Projet `dym` (Francfort, `aws-eu-central-1`) ; branche durable `staging` créée depuis `main`.
+Configuration déployée par `neon deploy` : Neon Auth, Data API, bucket `product-photos` et Function
+`api`.
+
+| # | Résultat | Écart corrigé |
+|---|---|---|
+| 1 | **Validé.** OTP email accepté (avec ou sans en-tête `Origin`) ; JWT obtenu par `GET /token` (1 h pour l'anonyme, 15 min pour l'utilisateur) ; renouvellement par cookie prouvé par un test réel de `neon_kit` | **Plugin bearer inactif.** Le jeton est dans le corps, et la session tient dans le cookie signé `__Secure-neon-auth.session_token`. `neon_kit` conserve ce cookie et le rejoue en en-tête `Cookie` ; sur le web, c'est le navigateur qui l'envoie (`withCredentials`) |
+| 2 | **Validé.** Les 10 migrations s'appliquent sur Neon, rejouables ; **pgTAP 264/264 sur la branche** ; `me()` renvoie l'utilisateur du JWT par la Data API | **Identité.** `auth.uid()` (`pg_session_jwt`) refuse de s'exécuter dans une fonction `SECURITY DEFINER`, et `authenticated` n'a pas l'usage du schéma `auth`. La Data API pose les claims vérifiés dans `request.jwt.claims` : `app.current_user_id()` les lit (migration 0009). **Anonyme.** La Data API exige toujours un JWT : `neon_kit` demande un JWT anonyme (`GET /token/anonymous`), mis en cache. **RPC sans paramètre.** Le corps doit être `{}`, jamais `null` |
+| 3 | **Validé.** URL présignée délivrée par la Function ; `PUT` accepté ; relecture publique identique ; `PUT` non signé refusé (403) | Aucun |
+| 4 | **Validé.** `GET /health` répond `staging` ; `/me` vérifie le JWT par JWKS ; proposition IA réelle (OpenAI) quand le modèle est actif, `503 unavailable` sinon | `parseEnv` en mode filtré : les variables propres à la Function sont facultatives. La Data API refuse les branches qui expirent : `staging` est durable |
+
+Compte de test de la branche : `dym-diag-1@example.com` (adresse non routable). Il sert à l'essai
+réel de `neon_kit` (`test/neon_live_test.dart`, variables `NEON_LIVE_*`). Le modèle
+`product_from_photo` reste inactif jusqu'au test H8.
+
+Configuration des apps pour `staging` : `--dart-define-from-file=config/staging.json` (URL publiques
+seulement). La clé OpenAI et les clés Neon restent hors du dépôt.
 
 ## Points ajoutés par la spec 005
 

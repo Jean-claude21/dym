@@ -20,6 +20,18 @@ enum AuthError {
   googleUnavailable,
 }
 
+/// Résultat d'une demande de position.
+enum ZoneLocation {
+  /// Quartier trouvé et choisi.
+  found,
+
+  /// Quartier trouvé dans un pays non proposé.
+  outside,
+
+  /// Position refusée ou impossible à obtenir.
+  unavailable,
+}
+
 /// Parcours bienvenue → email → code → profil, ou Google. Toute la logique est
 /// ici ; les vues ne font qu'afficher et transmettre les gestes.
 class AuthFlowViewModel extends BaseViewModel {
@@ -59,6 +71,8 @@ class AuthFlowViewModel extends BaseViewModel {
   String? _countryCode;
   CountryConfig? _config;
   String? _zoneId;
+  bool _locating = false;
+  ZoneLocation? _location;
   AuthError? _error;
   bool _codeRejected = false;
 
@@ -86,6 +100,12 @@ class AuthFlowViewModel extends BaseViewModel {
   List<Zone> get zones => _config?.zones ?? const [];
   String? get zoneId => _zoneId;
   Zone? get selectedZone => zones.where((z) => z.id == _zoneId).firstOrNull;
+
+  /// Recherche de la position en cours.
+  bool get locating => _locating;
+
+  /// Résultat de la dernière demande de position (rien avant la demande).
+  ZoneLocation? get location => _location;
 
   /// Nom de la ville d'un quartier.
   String? cityNameOf(Zone zone) =>
@@ -249,6 +269,34 @@ class AuthFlowViewModel extends BaseViewModel {
   void setFirstName(String value) {
     _firstName = value;
     _clearError(notify: false);
+    notifyListeners();
+  }
+
+  /// Quartier le plus proche de la position ; le pays suit le quartier
+  /// trouvé.
+  Future<void> locate() async {
+    if (_locating) return;
+    _locating = true;
+    _location = null;
+    _clearError(notify: false);
+    notifyListeners();
+    final result = await _service.locateZone();
+    _locating = false;
+    switch (result) {
+      case Ok(value: final match?):
+        if (match.countryCode != _countryCode &&
+            _countries.any((c) => c.code == match.countryCode)) {
+          await selectCountry(match.countryCode);
+        }
+        if (zones.any((z) => z.id == match.zoneId)) {
+          _location = ZoneLocation.found;
+          _zoneId = match.zoneId;
+        } else {
+          _location = ZoneLocation.outside;
+        }
+      case Ok() || Err():
+        _location = ZoneLocation.unavailable;
+    }
     notifyListeners();
   }
 

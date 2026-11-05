@@ -39,7 +39,8 @@ select ok(
   'audit : aucune donnée personnelle (ni email ni prénom)'
 );
 select is(
-  (select count(*)::int from public.events where name = 'account_deleted'),
+  (select count(*)::int from public.events where name = 'account_deleted'
+     and occurred_at = now()),
   1, 'événement de suppression'
 );
 

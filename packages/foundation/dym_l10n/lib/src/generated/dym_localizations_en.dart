@@ -167,7 +167,7 @@ class DymLocalizationsEn extends DymLocalizations {
   String get authPhotoOptional => 'Photo (optional)';
 
   @override
-  String get authZoneLabel => 'Your neighbourhood';
+  String get authZoneLabel => 'Your address';
 
   @override
   String get authZoneHint =>
@@ -891,7 +891,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get zoneLocationUnavailable =>
-      'Location unavailable: choose your neighbourhood from the list.';
+      'Location unavailable: search for your neighbourhood.';
 
   @override
   String zoneSuggestion(String zone) {
@@ -900,6 +900,20 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get zoneConfirm => 'Yes, that\'s right';
+
+  @override
+  String get zoneSearchLabel => 'Search your neighbourhood';
+
+  @override
+  String get zoneSearchHint => 'Neighbourhood or city';
+
+  @override
+  String get zoneNoResult =>
+      'No neighbourhood found. Try another name or use your location.';
+
+  @override
+  String get zoneOutsideArea =>
+      'Your location is outside the areas we serve: search for your neighbourhood.';
 
   @override
   String get aisleAll => 'All';

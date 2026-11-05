@@ -19,6 +19,7 @@ export 'src/components/dym_menu_row.dart';
 export 'src/components/dym_mini_cart_bar.dart';
 export 'src/components/dym_nav_rail.dart';
 export 'src/components/dym_payment_option.dart';
+export 'src/components/dym_place_picker.dart';
 export 'src/components/dym_product_card.dart';
 export 'src/components/dym_quantity_stepper.dart';
 export 'src/components/dym_search_bar.dart';

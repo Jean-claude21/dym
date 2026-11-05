@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
+import 'package:neon_kit/src/auth/credentials_adapter.dart'
+    if (dart.library.js_interop) 'package:neon_kit/src/auth/credentials_adapter_web.dart';
 import 'package:neon_kit/src/auth/neon_auth_client.dart';
 import 'package:neon_kit/src/config.dart';
 import 'package:neon_kit/src/data/neon_data_client.dart';
@@ -39,6 +41,11 @@ class NeonClient {
     }
 
     final authDio = dioFor(config.authUrl);
+    // Navigateur : cookies de session envoyés par le navigateur.
+    if (adapter == null) {
+      final browser = credentialsAdapter();
+      if (browser != null) authDio.httpClientAdapter = browser;
+    }
     authDio.interceptors.add(
       RetryInterceptor(dio: authDio, policy: policy, sleep: sleep),
     );

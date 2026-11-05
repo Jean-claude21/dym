@@ -87,7 +87,8 @@ select is(
   'la mise à jour de Fatou n''a pas touché Awa'
 );
 select is(
-  (select count(*)::int from public.events where name = 'user_signed_up'),
+  (select count(*)::int from public.events where name = 'user_signed_up'
+     and actor_id in ((select awa from _t), (select fatou from _t))),
   2,
   'un seul événement d''inscription par personne (rejeu sans doublon)'
 );

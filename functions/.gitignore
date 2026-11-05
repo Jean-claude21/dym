@@ -1,6 +1,7 @@
 node_modules/
 dist/
 .neon/
+.neon
 # Secrets de déploiement : jamais versionnés.
 .env
 .env.*

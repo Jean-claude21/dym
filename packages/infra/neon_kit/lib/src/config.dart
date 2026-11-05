@@ -12,6 +12,7 @@ class NeonAuthPaths {
     this.signInSocial = '/sign-in/social',
     this.session = '/get-session',
     this.token = '/token',
+    this.anonymousToken = '/token/anonymous',
     this.signOut = '/sign-out',
   });
 
@@ -20,6 +21,9 @@ class NeonAuthPaths {
   final String signInSocial;
   final String session;
   final String token;
+
+  /// JWT anonyme (rôle `anonymous` de la Data API, sans session).
+  final String anonymousToken;
   final String signOut;
 }
 

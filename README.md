@@ -26,6 +26,7 @@ fvm flutter pub get
 fvm dart run melos bootstrap
 node db/scripts/dym-db.mjs local start && node db/scripts/dym-db.mjs migrate && node db/scripts/dym-db.mjs test
 cd apps/dym_client && fvm flutter run -d chrome --dart-define=DYM_ENV=dev
+cd apps/dym_client && fvm flutter run --dart-define-from-file=../../config/staging.json  # branche Neon staging
 cd apps/dym_gallery && fvm flutter run -d chrome   # galerie du design system
 ```
 

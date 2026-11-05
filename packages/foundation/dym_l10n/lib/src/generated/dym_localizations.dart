@@ -377,7 +377,7 @@ abstract class DymLocalizations {
   /// Choix du quartier
   ///
   /// In fr, this message translates to:
-  /// **'Ton quartier'**
+  /// **'Ton adresse'**
   String get authZoneLabel;
 
   /// Explication du quartier
@@ -1588,7 +1588,7 @@ abstract class DymLocalizations {
   /// Position refusée
   ///
   /// In fr, this message translates to:
-  /// **'Position indisponible : choisis ton quartier dans la liste.'**
+  /// **'Position indisponible : cherche ton quartier.'**
   String get zoneLocationUnavailable;
 
   /// Quartier proposé
@@ -1602,6 +1602,30 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Oui, c\'est ça'**
   String get zoneConfirm;
+
+  /// Recherche de quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Cherche ton quartier'**
+  String get zoneSearchLabel;
+
+  /// Aide de la recherche de quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartier ou ville'**
+  String get zoneSearchHint;
+
+  /// Recherche de quartier vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun quartier trouvé. Essaie un autre nom ou utilise ta position.'**
+  String get zoneNoResult;
+
+  /// Position hors zone
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta position est hors des zones desservies : cherche ton quartier.'**
+  String get zoneOutsideArea;
 
   /// Filtre de rayon
   ///

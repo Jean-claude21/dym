@@ -10,8 +10,10 @@ import 'package:neon_kit/src/session.dart';
 /// Authentification Neon Auth (Better Auth managé), en REST.
 ///
 /// - OTP email et connexion Google par `idToken` ;
-/// - jeton de session mobile lu dans l'en-tête `set-auth-token` (plugin
-///   bearer), envoyé en `Authorization: Bearer` ;
+/// - session : jeton `set-auth-token` (plugin bearer) envoyé en
+///   `Authorization: Bearer`, et cookie de session rejoué en en-tête `Cookie`
+///   (Neon Auth n'active pas le plugin bearer) ; sur le web, le navigateur
+///   envoie lui-même le cookie ;
 /// - JWT d'accès obtenu par la route `token`, renouvelé avant expiration, un
 ///   seul renouvellement à la fois.
 class NeonAuthClient {
@@ -30,6 +32,8 @@ class NeonAuthClient {
 
   NeonSession? _session;
   Future<Result<NeonSession>>? _refreshing;
+  (String, DateTime)? _anonymous;
+  Future<Result<String>>? _anonymousFetch;
 
   NeonAuthPaths get _paths => _config.authPaths;
 
@@ -93,6 +97,27 @@ class NeonAuthClient {
     return (await refresh()).map((s) => s.accessToken);
   }
 
+  /// JWT anonyme (visiteuse sans session) : la Data API exige toujours un
+  /// jeton, le rôle `anonymous` n'a que les droits de lecture publics. Mis en
+  /// cache jusqu'à [NeonConfig.refreshMargin] avant son expiration.
+  Future<Result<String>> anonymousAccessToken() {
+    final cached = _anonymous;
+    if (cached != null &&
+        cached.$2.isAfter(_clock().toUtc().add(_config.refreshMargin))) {
+      return Future.value(Ok(cached.$1));
+    }
+    return _anonymousFetch ??= _guard(() async {
+      final response = await _dio.get<Object?>(_paths.anonymousToken);
+      final data = response.data;
+      final jwt = data is Map ? data['token'] : null;
+      if (jwt is! String) throw const FormatException('JWT anonyme absent');
+      final expiresAt = JwtClaims.expiresAt(jwt);
+      if (expiresAt == null) throw const FormatException('JWT illisible');
+      _anonymous = (jwt, expiresAt);
+      return jwt;
+    }).whenComplete(() => _anonymousFetch = null);
+  }
+
   /// Renouvelle le JWT d'accès. Les appels simultanés partagent le même
   /// renouvellement.
   Future<Result<NeonSession>> refresh() =>
@@ -105,7 +130,7 @@ class NeonAuthClient {
       try {
         await _dio.post<Object?>(
           _paths.signOut,
-          options: _bearer(session.sessionToken),
+          options: _credentials(session.sessionToken, session.sessionCookie),
         );
       } on DioException {
         // La session locale est effacée même hors ligne.
@@ -124,8 +149,20 @@ class NeonAuthClient {
     _clock().toUtc().add(_config.refreshMargin),
   );
 
-  Options _bearer(String token) =>
-      Options(headers: {'Authorization': 'Bearer $token'});
+  Options _credentials(String token, String? cookie) =>
+      Options(headers: {'Authorization': 'Bearer $token', 'Cookie': ?cookie});
+
+  /// Cookie de session (`nom=valeur`) d'une réponse de connexion.
+  String? _sessionCookie(Response<Object?> response) {
+    for (final header in response.headers['set-cookie'] ?? const <String>[]) {
+      final pair = header.split(';').first.trim();
+      final name = pair.split('=').first;
+      if (name.endsWith('session_token') && pair.length > name.length + 1) {
+        return pair;
+      }
+    }
+    return null;
+  }
 
   Future<Result<NeonSession>> _signIn(String path, Object body) =>
       _guard(() async {
@@ -137,6 +174,7 @@ class NeonAuthClient {
         final user = _user(response.data);
         final session = await _fetchAccessToken(
           sessionToken: sessionToken,
+          sessionCookie: _sessionCookie(response),
           userId: user.$1,
           email: user.$2,
         );
@@ -152,6 +190,7 @@ class NeonAuthClient {
     final result = await _guard(
       () => _fetchAccessToken(
         sessionToken: session.sessionToken,
+        sessionCookie: session.sessionCookie,
         userId: session.userId,
         email: session.email,
       ),
@@ -169,12 +208,13 @@ class NeonAuthClient {
 
   Future<NeonSession> _fetchAccessToken({
     required String sessionToken,
+    required String? sessionCookie,
     required String? userId,
     required String? email,
   }) async {
     final response = await _dio.get<Object?>(
       _paths.token,
-      options: _bearer(sessionToken),
+      options: _credentials(sessionToken, sessionCookie),
     );
     final data = response.data;
     final jwt = data is Map ? data['token'] : null;
@@ -190,6 +230,7 @@ class NeonAuthClient {
       accessTokenExpiresAt: expiresAt,
       userId: subject,
       email: email,
+      sessionCookie: sessionCookie,
     );
   }
 
