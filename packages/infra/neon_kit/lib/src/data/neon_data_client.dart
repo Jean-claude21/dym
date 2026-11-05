@@ -5,7 +5,8 @@ import 'package:neon_kit/src/config.dart';
 import 'package:neon_kit/src/errors.dart';
 import 'package:postgrest/postgrest.dart';
 
-/// Data API (PostgREST) sous l'identité de l'utilisateur connecté (RLS).
+/// Data API (PostgREST) sous l'identité de l'utilisateur connecté (RLS), ou
+/// sous le rôle anonyme quand aucune session n'est ouverte (visiteur).
 ///
 /// Les nouvelles tentatives des lectures (GET, HEAD) sur erreur réseau ou 5xx
 /// sont faites par `postgrest` ; ce client ajoute le jeton et rejoue une fois
@@ -42,6 +43,8 @@ class NeonDataClient {
 }
 
 /// Client HTTP qui porte le JWT courant et rejoue une fois après un 401.
+/// Sans session : requête sans jeton (rôle anonyme). Une session dont le
+/// renouvellement échoue n'est jamais rétrogradée en anonyme.
 class _AuthenticatedClient extends http.BaseClient {
   new(this._auth, this._inner);
 
@@ -51,6 +54,7 @@ class _AuthenticatedClient extends http.BaseClient {
   @override
   Future<http.StreamedResponse> send(http.BaseRequest request) async {
     final body = request is http.Request ? request.bodyBytes : null;
+    if (_auth.currentSession == null) return await _inner.send(request);
     final first = await _sendWithToken(request, body, refreshed: false);
     if (first.statusCode != 401 || body == null) return first;
     await first.stream.drain<void>();

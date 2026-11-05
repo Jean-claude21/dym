@@ -50,8 +50,8 @@ class DymProductCard extends StatelessWidget {
     required this.name,
     required this.unit,
     required this.price,
-    required this.onQuantityChanged,
     super.key,
+    this.onQuantityChanged,
     this.tint,
     this.store,
     this.badge,
@@ -76,8 +76,9 @@ class DymProductCard extends StatelessWidget {
   /// Quantité dans le panier (0 : bouton « + »).
   final int quantity;
 
-  /// Nouvelle quantité demandée (0 retire le produit).
-  final ValueChanged<int> onQuantityChanged;
+  /// Nouvelle quantité demandée (0 retire le produit). Nul : pas d'ajout
+  /// au panier sur la carte (consultation seule).
+  final ValueChanged<int>? onQuantityChanged;
 
   /// Teinte de la tuile image (par défaut : pêche).
   final Color? tint;
@@ -105,6 +106,8 @@ class DymProductCard extends StatelessWidget {
 
   Widget _addOrStepper(BuildContext context, {required bool compact}) {
     final c = context.dym.colors;
+    final change = onQuantityChanged;
+    if (change == null) return const SizedBox(height: DymTokenSize.touchMin);
     final add = Semantics(
       key: const ValueKey('add'),
       container: true,
@@ -119,7 +122,7 @@ class DymProductCard extends StatelessWidget {
             shape: const CircleBorder(),
             child: InkWell(
               customBorder: const CircleBorder(),
-              onTap: () => onQuantityChanged(1),
+              onTap: () => change(1),
               child: SizedBox.square(
                 dimension: compact ? 34 : DymTokenSize.addButton,
                 child: Icon(Icons.add_rounded, color: c.onBrand, size: 24),
@@ -231,14 +234,14 @@ class DymProductCard extends StatelessWidget {
                 AnimatedSize(
                   duration: DymMotion.of(context, DymMotion.medium),
                   curve: DymMotion.standard,
-                  child: quantity == 0
+                  child: quantity == 0 || onQuantityChanged == null
                       ? const SizedBox(width: double.infinity)
                       : Padding(
                           padding: const EdgeInsets.only(top: 2),
                           child: Center(
                             child: DymQuantityStepper(
                               quantity: quantity,
-                              onChanged: onQuantityChanged,
+                              onChanged: onQuantityChanged!,
                               dense: true,
                             ),
                           ),
@@ -302,10 +305,12 @@ class DymProductCard extends StatelessWidget {
             Positioned(
               right: -8,
               bottom: -8,
-              child: quantity == 0
+              child: onQuantityChanged == null
+                  ? const SizedBox.shrink()
+                  : quantity == 0
                   ? _CompactAdd(
                       label: '$addLabel $name',
-                      onTap: () => onQuantityChanged(1),
+                      onTap: () => onQuantityChanged!(1),
                     )
                   : SizedBox.square(
                       dimension: 44,

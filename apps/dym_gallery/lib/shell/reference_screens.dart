@@ -1,8 +1,16 @@
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
+import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
+import 'package:dym_client/features/discovery/product/product_page_view.dart';
+import 'package:dym_client/features/discovery/search/search_view.dart';
+import 'package:dym_client/features/discovery/store/store_page_view.dart';
+import 'package:dym_client/ui/views/home/home_view.dart' as client;
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
+import 'package:dym_gallery/demo/demo_client_navigator.dart';
 import 'package:dym_gallery/demo/demo_country.dart';
+import 'package:dym_gallery/demo/demo_discovery.dart';
 import 'package:dym_gallery/demo/demo_store.dart';
 import 'package:dym_gallery/demo/demo_vendor_catalog.dart';
 import 'package:dym_gallery/demo/demo_vendor_navigator.dart';
@@ -20,7 +28,7 @@ import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/ui/views/home/home_view.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 /// Écran validé et sa reproduction avec dym_ui.
 @immutable
@@ -256,6 +264,96 @@ final referenceScreens = <ReferenceScreen>[
     builder: (c) => StoreCategoriesView(
       service: DemoVendorCatalog.service(c),
       onBack: () {},
+    ),
+  ),
+  // Spec 008 : découverte côté cliente. 28 à 30 sont à valider ; 31 à 33
+  // sont les vrais écrans, comparés aux maquettes validées 02 à 04.
+  ReferenceScreen(
+    id: '28',
+    title: 'Fiche produit',
+    surface: 'Cliente',
+    referenceFile: '28-fiche-produit.webp',
+    builder: (c) => ProductPageView(
+      service: DemoDiscovery.service(c),
+      productId: 'bissap',
+      onBack: () {},
+      onOpenStore: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '29',
+    title: 'Recherche',
+    surface: 'Cliente',
+    referenceFile: '29-recherche.webp',
+    builder: (c) => SearchView(
+      service: DemoDiscovery.service(c),
+      initialText: 'jus',
+      onBack: () {},
+      onOpenProduct: (_) {},
+      onOpenStore: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '30',
+    title: 'Filtres',
+    surface: 'Cliente',
+    referenceFile: '30-filtres.webp',
+    builder: (c) => Builder(
+      builder: (context) => ColoredBox(
+        color: const Color(0x66000000),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: FractionallySizedBox(
+            heightFactor: 0.85,
+            child: Material(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(28),
+              ),
+              child: SearchFiltersSheet(
+                config: DemoStore.config(c),
+                initial: const SearchFilters(origin: 'maison'),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ),
+  ReferenceScreen(
+    id: '31',
+    title: 'Accueil (app)',
+    surface: 'Cliente',
+    referenceFile: '02-accueil.webp',
+    builder: (c) => client.HomeView(
+      service: DemoAuthService(country: c),
+      discovery: DemoDiscovery.service(c),
+      navigator: DemoClientNavigator(),
+    ),
+  ),
+  ReferenceScreen(
+    id: '32',
+    title: 'Rayon Légumes (app)',
+    surface: 'Cliente',
+    referenceFile: '03-rayon-legumes.webp',
+    builder: (c) => AisleView(
+      service: DemoDiscovery.service(c),
+      categoryId: 'legumes',
+      onBack: () {},
+      onSearch: () {},
+      onOpenProduct: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '33',
+    title: "Page boutique (app) · Les jus d'Esi",
+    surface: 'Cliente',
+    referenceFile: '04-page-boutique.webp',
+    builder: (c) => StorePageView(
+      service: DemoDiscovery.service(c),
+      storeId: 'esi',
+      onBack: () {},
+      onOpenProduct: (_) {},
     ),
   ),
 ];
