@@ -271,6 +271,83 @@ class AdminRepository {
     'p_offset': offset,
   }, (json) => AdminAuditPage.fromJson(_map(json)));
 
+  // ---------------------------------------------------------------- pilote
+
+  /// Tableau de bord (écran 67). [period] : `day`, `week`, `month`, `30d`.
+  Future<Result<AdminDashboard>> dashboard(String period) => _rpc(
+    'admin_dashboard',
+    {'p_period': period},
+    (json) => AdminDashboard.fromJson(_map(json)),
+  );
+
+  /// Revenus (écran 70). [period] : `month`, `last_month`, `30d`.
+  Future<Result<AdminRevenue>> revenue(String period) => _rpc('admin_revenue', {
+    'p_period': period,
+  }, (json) => AdminRevenue.fromJson(_map(json)));
+
+  Future<Result<List<AdminFeatureFlag>>> featureFlags() =>
+      _rpc('admin_feature_flags', const {}, _flags);
+
+  Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
+    String key, {
+    required bool enabled,
+    String? countryCode,
+  }) => _rpc('admin_set_feature_flag', {
+    'p_key': key,
+    'p_country': countryCode,
+    'p_enabled': enabled,
+  }, _flags);
+
+  Future<Result<List<SupportTicket>>> tickets(TicketStatus status) => _rpc(
+    'admin_tickets',
+    {
+      'p_status': switch (status) {
+        TicketStatus.pending => 'pending',
+        TicketStatus.closed => 'closed',
+        _ => 'open',
+      },
+    },
+    (json) => [for (final t in json! as List) SupportTicket.fromJson(_map(t))],
+  );
+
+  Future<Result<SupportTicket>> replyTicket(String id, String body) => _post(
+    '/v1/admin/tickets/$id/reply',
+    {'body': body},
+    (json) => SupportTicket.fromJson(_map(json)),
+  );
+
+  Future<Result<SupportTicket>> closeTicket(String id) => _rpc(
+    'admin_close_ticket',
+    {'p_ticket': id},
+    (json) => SupportTicket.fromJson(_map(json)),
+  );
+
+  Future<Result<List<AdminClientRow>>> clients({String? query}) => _rpc(
+    'admin_clients',
+    {'p_query': query},
+    (json) => [for (final c in json! as List) AdminClientRow.fromJson(_map(c))],
+  );
+
+  /// Profil d'une cliente ; la consultation est auditée.
+  Future<Result<AdminClient>> client(String id) => _rpc('admin_client', {
+    'p_user': id,
+  }, (json) => AdminClient.fromJson(_map(json)));
+
+  /// Vue de l'app d'une vendeuse, en lecture ; la consultation est auditée.
+  Future<Result<AdminVendorView>> vendorView(String storeId) => _rpc(
+    'admin_vendor_view',
+    {'p_store': storeId},
+    (json) => AdminVendorView.fromJson(_map(json)),
+  );
+
+  /// Refus : `vendor_has_orders`, `reason_required`.
+  Future<Result<void>> deleteVendor(String storeId, String reason) =>
+      _post('/v1/admin/stores/$storeId/delete', {'reason': reason}, (_) {});
+
+  static List<AdminFeatureFlag> _flags(Object? json) => [
+    for (final f in json! as List) AdminFeatureFlag.fromJson(_map(f)),
+  ];
+
   // ---------------------------------------------------------------- outils
 
   static Map<String, dynamic> _map(Object? json) =>

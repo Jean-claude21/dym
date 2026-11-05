@@ -34,6 +34,8 @@ export interface AdminStore {
     error: string | null;
   }): Promise<AdminJson>;
   markCashRefund(adminId: string, refundId: string): Promise<AdminJson>;
+  replyTicket(adminId: string, ticketId: string, body: string): Promise<AdminJson>;
+  deleteVendor(adminId: string, storeId: string, reason: string): Promise<void>;
 }
 
 export function pgAdminStore(pool: pg.Pool): AdminStore {
@@ -74,6 +76,11 @@ export function pgAdminStore(pool: pg.Pool): AdminStore {
         i.error,
       ]),
     markCashRefund: (a, r) => one("select app.refund_mark_cash($1, $2) as value", [a, r]),
+    replyTicket: (a, t, body) =>
+      one("select app.admin_reply_ticket($1, $2, $3) as value", [a, t, body]),
+    async deleteVendor(a, s, reason) {
+      await one("select app.admin_delete_vendor($1, $2, $3) as value", [a, s, reason]);
+    },
   };
 }
 
@@ -87,7 +94,9 @@ const reason = z.string().trim().min(3).max(200);
  * - `POST /v1/admin/orders/:id/courier` `{name, phone}` ;
  * - `POST /v1/admin/stores/:id/status` `{status, reason}` ;
  * - `POST /v1/admin/refunds/:id/execute` : appel au fournisseur du paiement ;
- * - `POST /v1/admin/refunds/:id/cash` : remis en main propre.
+ * - `POST /v1/admin/refunds/:id/cash` : remis en main propre ;
+ * - `POST /v1/admin/tickets/:id/reply` `{body}` : réponse de l'équipe (spec 017) ;
+ * - `POST /v1/admin/stores/:id/delete` `{reason}` : compte vendeuse sans commande.
  */
 export function registerAdminRoutes(
   app: Hono<{ Variables: AuthVariables }>,
@@ -174,6 +183,19 @@ export function registerAdminRoutes(
         error: outcome.ok ? null : (outcome.error ?? "provider_refused"),
       }),
     );
+  });
+
+  app.post("/v1/admin/tickets/:id/reply", auth, async (c) => {
+    const ticketId = id(c.req.param("id"));
+    const body = await parseBody(c, z.object({ body: z.string().trim().min(1).max(2000) }));
+    return c.json(await need().replyTicket(c.get("user").id, ticketId, body.body));
+  });
+
+  app.post("/v1/admin/stores/:id/delete", auth, async (c) => {
+    const storeId = id(c.req.param("id"));
+    const body = await parseBody(c, z.object({ reason }));
+    await need().deleteVendor(c.get("user").id, storeId, body.reason);
+    return c.body(null, 204);
   });
 
   app.post("/v1/admin/refunds/:id/cash", auth, async (c) => {

@@ -5082,6 +5082,360 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{rating}/5 · {n, plural, =1{1 avis} other{{n} avis}}'**
   String reviewSummary(String rating, int n);
+
+  /// Onglet admin : tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau de bord'**
+  String get adminNavDashboard;
+
+  /// Onglet admin : clientes
+  ///
+  /// In fr, this message translates to:
+  /// **'Clientes'**
+  String get adminNavClients;
+
+  /// Onglet admin : support
+  ///
+  /// In fr, this message translates to:
+  /// **'Support'**
+  String get adminNavSupport;
+
+  /// Entrée « Plus » de la barre basse
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus'**
+  String get navMore;
+
+  /// Pourcentage
+  ///
+  /// In fr, this message translates to:
+  /// **'{value} %'**
+  String adminPercent(int value);
+
+  /// Tuile du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes actives'**
+  String get adminActiveOrders;
+
+  /// Tuile du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Chiffre d\'affaires'**
+  String get adminRevenueLabel;
+
+  /// Tuile du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements réussis · 24 h'**
+  String get adminPaymentsSucceeded;
+
+  /// Taux de la dernière heure
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière heure : {value}'**
+  String adminPaymentsLastHour(String value);
+
+  /// Tuile du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons réussies'**
+  String get adminDeliveriesSucceeded;
+
+  /// Alerte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes bloquées'**
+  String get adminStuckOrders;
+
+  /// Alerte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Litiges en attente'**
+  String get adminPendingDisputes;
+
+  /// Litiges en retard
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 hors délai > 48 h} other{{n} hors délai > 48 h}}'**
+  String adminLateDisputes(int n);
+
+  /// Alerte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Tickets ouverts'**
+  String get adminOpenTickets;
+
+  /// Tickets en retard
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 sans réponse > 1 h} other{{n} sans réponse > 1 h}}'**
+  String adminLateTickets(int n);
+
+  /// Alerte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques en brouillon'**
+  String get adminDraftStores;
+
+  /// Graphique du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes · 30 jours'**
+  String get adminOrders30d;
+
+  /// Carte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisatrices actives · 7 jours'**
+  String get adminActiveUsers7d;
+
+  /// Inscriptions de la période
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelles inscriptions'**
+  String get adminNewSignups;
+
+  /// Classement des boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'Top boutiques'**
+  String get adminTopStores;
+
+  /// Classement des catégories
+  ///
+  /// In fr, this message translates to:
+  /// **'Top catégories'**
+  String get adminTopCategories;
+
+  /// Aucune donnée
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien pour cette période.'**
+  String get adminNoData;
+
+  /// Nombre de commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucune commande} =1{1 commande} other{{n} commandes}}'**
+  String adminOrdersCount(int n);
+
+  /// Recherche de clientes
+  ///
+  /// In fr, this message translates to:
+  /// **'Prénom ou e-mail'**
+  String get adminClientSearch;
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune cliente trouvée.'**
+  String get adminNoClients;
+
+  /// Date d'inscription
+  ///
+  /// In fr, this message translates to:
+  /// **'depuis le {date}'**
+  String adminSince(String date);
+
+  /// Montant dépensé
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépensé'**
+  String get adminSpent;
+
+  /// Nombre de demandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandes d\'aide'**
+  String get adminTickets;
+
+  /// Titre de section
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernières commandes'**
+  String get adminLastOrders;
+
+  /// Titre de section
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresses'**
+  String get adminAddresses;
+
+  /// Titre de section
+  ///
+  /// In fr, this message translates to:
+  /// **'Avis laissés'**
+  String get adminReviewsLeft;
+
+  /// Mention d'audit
+  ///
+  /// In fr, this message translates to:
+  /// **'Consultation en lecture seule, inscrite au journal.'**
+  String get adminReadOnlyAudited;
+
+  /// Filtre des tickets
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouverts'**
+  String get adminTicketsOpen;
+
+  /// Filtre des tickets
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get adminTicketsPending;
+
+  /// Filtre des tickets
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermés'**
+  String get adminTicketsClosed;
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune demande ici.'**
+  String get adminNoTickets;
+
+  /// Ticket sans réponse depuis plus d'une heure
+  ///
+  /// In fr, this message translates to:
+  /// **'> 1 h'**
+  String get adminOver1h;
+
+  /// Champ de réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire une réponse…'**
+  String get adminWriteReply;
+
+  /// Bouton de clôture
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer le ticket'**
+  String get adminCloseTicket;
+
+  /// Refus de réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'La réponse est vide ou trop longue.'**
+  String get adminTicketInvalid;
+
+  /// Onglet des drapeaux
+  ///
+  /// In fr, this message translates to:
+  /// **'Fonctionnalités'**
+  String get adminTabFlags;
+
+  /// Aide des drapeaux
+  ///
+  /// In fr, this message translates to:
+  /// **'Les fonctions coupées restent invisibles dans les apps. Chaque changement est inscrit au journal.'**
+  String get adminFlagsHelp;
+
+  /// Portée d'un drapeau
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les pays'**
+  String get adminFlagEverywhere;
+
+  /// Vue de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir comme elle'**
+  String get adminViewAsVendor;
+
+  /// Suppression du compte vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer le compte'**
+  String get adminDeleteVendor;
+
+  /// Refus de suppression
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette boutique a des commandes : suspends-la plutôt.'**
+  String get adminVendorHasOrders;
+
+  /// Produit indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'Épuisé'**
+  String get adminOutOfStock;
+
+  /// Stock d'un produit
+  ///
+  /// In fr, this message translates to:
+  /// **'Stock : {n}'**
+  String adminStock(int n);
+
+  /// Section des finances
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenus'**
+  String get adminRevenue;
+
+  /// Période
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce mois'**
+  String get adminThisMonth;
+
+  /// Période
+  ///
+  /// In fr, this message translates to:
+  /// **'Mois dernier'**
+  String get adminLastMonth;
+
+  /// Période
+  ///
+  /// In fr, this message translates to:
+  /// **'30 jours'**
+  String get admin30Days;
+
+  /// Tuile des revenus
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes encaissées'**
+  String get adminSalesCollected;
+
+  /// Tuile des revenus
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission DYM'**
+  String get adminCommission;
+
+  /// Tuile des revenus
+  ///
+  /// In fr, this message translates to:
+  /// **'Net vendeuses'**
+  String get adminVendorNet;
+
+  /// Tableau des revenus
+  ///
+  /// In fr, this message translates to:
+  /// **'Par boutique'**
+  String get adminByStore;
+
+  /// Note des revenus
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission calculée par la base au moment de la commande.'**
+  String get adminCommissionNote;
+
+  /// Colonne
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes'**
+  String get adminColSales;
+
+  /// Nombre de vendeuses actives
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendeuses'**
+  String get adminVendors;
 }
 
 class _DymLocalizationsDelegate

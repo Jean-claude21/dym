@@ -2998,4 +2998,218 @@ class DymLocalizationsFr extends DymLocalizations {
     );
     return '$rating/5 · $_temp0';
   }
+
+  @override
+  String get adminNavDashboard => 'Tableau de bord';
+
+  @override
+  String get adminNavClients => 'Clientes';
+
+  @override
+  String get adminNavSupport => 'Support';
+
+  @override
+  String get navMore => 'Plus';
+
+  @override
+  String adminPercent(int value) {
+    return '$value %';
+  }
+
+  @override
+  String get adminActiveOrders => 'Commandes actives';
+
+  @override
+  String get adminRevenueLabel => 'Chiffre d\'affaires';
+
+  @override
+  String get adminPaymentsSucceeded => 'Paiements réussis · 24 h';
+
+  @override
+  String adminPaymentsLastHour(String value) {
+    return 'Dernière heure : $value';
+  }
+
+  @override
+  String get adminDeliveriesSucceeded => 'Livraisons réussies';
+
+  @override
+  String get adminStuckOrders => 'Commandes bloquées';
+
+  @override
+  String get adminPendingDisputes => 'Litiges en attente';
+
+  @override
+  String adminLateDisputes(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n hors délai > 48 h',
+      one: '1 hors délai > 48 h',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminOpenTickets => 'Tickets ouverts';
+
+  @override
+  String adminLateTickets(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n sans réponse > 1 h',
+      one: '1 sans réponse > 1 h',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminDraftStores => 'Boutiques en brouillon';
+
+  @override
+  String get adminOrders30d => 'Commandes · 30 jours';
+
+  @override
+  String get adminActiveUsers7d => 'Utilisatrices actives · 7 jours';
+
+  @override
+  String get adminNewSignups => 'Nouvelles inscriptions';
+
+  @override
+  String get adminTopStores => 'Top boutiques';
+
+  @override
+  String get adminTopCategories => 'Top catégories';
+
+  @override
+  String get adminNoData => 'Rien pour cette période.';
+
+  @override
+  String adminOrdersCount(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n commandes',
+      one: '1 commande',
+      zero: 'Aucune commande',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get adminClientSearch => 'Prénom ou e-mail';
+
+  @override
+  String get adminNoClients => 'Aucune cliente trouvée.';
+
+  @override
+  String adminSince(String date) {
+    return 'depuis le $date';
+  }
+
+  @override
+  String get adminSpent => 'Dépensé';
+
+  @override
+  String get adminTickets => 'Demandes d\'aide';
+
+  @override
+  String get adminLastOrders => 'Dernières commandes';
+
+  @override
+  String get adminAddresses => 'Adresses';
+
+  @override
+  String get adminReviewsLeft => 'Avis laissés';
+
+  @override
+  String get adminReadOnlyAudited =>
+      'Consultation en lecture seule, inscrite au journal.';
+
+  @override
+  String get adminTicketsOpen => 'Ouverts';
+
+  @override
+  String get adminTicketsPending => 'En attente';
+
+  @override
+  String get adminTicketsClosed => 'Fermés';
+
+  @override
+  String get adminNoTickets => 'Aucune demande ici.';
+
+  @override
+  String get adminOver1h => '> 1 h';
+
+  @override
+  String get adminWriteReply => 'Écrire une réponse…';
+
+  @override
+  String get adminCloseTicket => 'Fermer le ticket';
+
+  @override
+  String get adminTicketInvalid => 'La réponse est vide ou trop longue.';
+
+  @override
+  String get adminTabFlags => 'Fonctionnalités';
+
+  @override
+  String get adminFlagsHelp =>
+      'Les fonctions coupées restent invisibles dans les apps. Chaque changement est inscrit au journal.';
+
+  @override
+  String get adminFlagEverywhere => 'Tous les pays';
+
+  @override
+  String get adminViewAsVendor => 'Voir comme elle';
+
+  @override
+  String get adminDeleteVendor => 'Supprimer le compte';
+
+  @override
+  String get adminVendorHasOrders =>
+      'Cette boutique a des commandes : suspends-la plutôt.';
+
+  @override
+  String get adminOutOfStock => 'Épuisé';
+
+  @override
+  String adminStock(int n) {
+    return 'Stock : $n';
+  }
+
+  @override
+  String get adminRevenue => 'Revenus';
+
+  @override
+  String get adminThisMonth => 'Ce mois';
+
+  @override
+  String get adminLastMonth => 'Mois dernier';
+
+  @override
+  String get admin30Days => '30 jours';
+
+  @override
+  String get adminSalesCollected => 'Ventes encaissées';
+
+  @override
+  String get adminCommission => 'Commission DYM';
+
+  @override
+  String get adminVendorNet => 'Net vendeuses';
+
+  @override
+  String get adminByStore => 'Par boutique';
+
+  @override
+  String get adminCommissionNote =>
+      'Commission calculée par la base au moment de la commande.';
+
+  @override
+  String get adminColSales => 'Ventes';
+
+  @override
+  String get adminVendors => 'Vendeuses';
 }

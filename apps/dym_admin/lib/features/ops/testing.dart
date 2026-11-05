@@ -1298,4 +1298,375 @@ class MemoryAdminService implements AdminService {
       ),
     );
   }
+
+  // ---------------------------------------------------------------- pilote
+
+  final _flags = <AdminFeatureFlag>[
+    const AdminFeatureFlag(
+      id: 'f1',
+      key: 'ai_search',
+      isEnabled: false,
+      description: 'Recherche vocale et par photo (phase 4)',
+    ),
+    const AdminFeatureFlag(
+      id: 'f2',
+      key: 'momo_payments',
+      isEnabled: true,
+      description: 'Paiement Mobile Money (Moneroo)',
+    ),
+  ];
+  late final _tickets = <SupportTicket>[
+    SupportTicket(
+      id: 't1',
+      app: 'client',
+      subject: TicketSubject.order,
+      status: TicketStatus.open,
+      orderReference: '7K2Q4F1A',
+      createdAt: now.subtract(const Duration(minutes: 20)),
+      lastActivityAt: now.subtract(const Duration(minutes: 20)),
+      userFirstName: 'Awa',
+      messages: [
+        TicketMessage(
+          id: 'm0',
+          authorRole: 'user',
+          body: 'Je n’ai pas reçu ma monnaie',
+          createdAt: now.subtract(const Duration(minutes: 20)),
+        ),
+      ],
+    ),
+    SupportTicket(
+      id: 't2',
+      app: 'vendor',
+      subject: TicketSubject.store,
+      status: TicketStatus.open,
+      createdAt: now.subtract(const Duration(hours: 3)),
+      lastActivityAt: now.subtract(const Duration(hours: 3)),
+      userFirstName: 'Akossiwa',
+      storeName: "Étal d'Akossiwa",
+      messages: [
+        TicketMessage(
+          id: 'm0',
+          authorRole: 'user',
+          body: 'Comment changer mes horaires ?',
+          createdAt: now.subtract(const Duration(hours: 3)),
+        ),
+      ],
+    ),
+  ];
+
+  @override
+  Future<Result<AdminDashboard>> dashboard(String period) async =>
+      _fail<AdminDashboard>() ??
+      Ok(
+        AdminDashboard(
+          period: period,
+          activeOrders: 14,
+          stuckOrders: 1,
+          revenue: [
+            CurrencyAmount(
+              currencyCode: currency.code,
+              minor: _minor(186500),
+              orders: 52,
+            ),
+          ],
+          payments1h: const SuccessRate(succeeded: 24, failed: 1),
+          payments24h: const SuccessRate(succeeded: 240, failed: 10),
+          deliveries: const SuccessRate(succeeded: 46, failed: 4),
+          activeClients: 312,
+          activeVendors: 28,
+          newSignups: 9,
+          draftStores: 6,
+          openDisputes: 2,
+          lateDisputes: 1,
+          openTickets: _tickets.length,
+          lateTickets: 1,
+          pendingRefunds: 2,
+          series: [
+            for (var i = 29; i >= 0; i--)
+              DashboardDay(
+                day: DateTime.utc(2026, 10, 5).subtract(Duration(days: i)),
+                orders: 20 + (i * 7) % 23,
+              ),
+          ],
+          topStores: [
+            TopStore(
+              id: 's1',
+              name: "Étal d'Akossiwa",
+              currencyCode: currency.code,
+              orders: 46,
+              salesMinor: _minor(128500),
+              rating: 4.8,
+            ),
+            TopStore(
+              id: 's2',
+              name: 'Les jus d’Esi',
+              currencyCode: currency.code,
+              orders: 31,
+              salesMinor: _minor(64200),
+              rating: 4.6,
+            ),
+          ],
+          topCategories: const [
+            TopItem(
+              label: LocalizedText({'fr': 'Légumes', 'en': 'Vegetables'}),
+              quantity: 380,
+            ),
+            TopItem(
+              label: LocalizedText({'fr': 'Boissons', 'en': 'Drinks'}),
+              quantity: 210,
+            ),
+          ],
+          topProducts: const [
+            TopItem(
+              label: LocalizedText({'fr': 'Tomates fraîches'}),
+              detail: "Étal d'Akossiwa",
+              quantity: 120,
+            ),
+          ],
+        ),
+      );
+
+  @override
+  Future<Result<AdminRevenue>> revenue(String period) async =>
+      _fail<AdminRevenue>() ??
+      Ok(
+        AdminRevenue(
+          period: period,
+          totals: [
+            RevenueTotal(
+              currencyCode: currency.code,
+              orders: 99,
+              salesMinor: _minor(2486000),
+              commissionMinor: _minor(248600),
+              netMinor: _minor(2237400),
+              refundsMinor: _minor(12300),
+            ),
+          ],
+          stores: [
+            RevenueTotal(
+              currencyCode: currency.code,
+              orders: 46,
+              salesMinor: _minor(128500),
+              commissionMinor: _minor(12850),
+              netMinor: _minor(115650),
+              storeId: 's1',
+              storeName: "Étal d'Akossiwa",
+            ),
+            RevenueTotal(
+              currencyCode: currency.code,
+              orders: 31,
+              salesMinor: _minor(64200),
+              commissionMinor: _minor(6420),
+              netMinor: _minor(57780),
+              storeId: 's2',
+              storeName: 'Les jus d’Esi',
+            ),
+          ],
+        ),
+      );
+
+  @override
+  Future<Result<List<AdminFeatureFlag>>> featureFlags() async =>
+      _fail<List<AdminFeatureFlag>>() ?? Ok(List.of(_flags));
+
+  @override
+  Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
+    String key, {
+    required bool enabled,
+    String? countryCode,
+  }) async {
+    final failed = _fail<List<AdminFeatureFlag>>();
+    if (failed != null) return failed;
+    final i = _flags.indexWhere((f) => f.key == key);
+    final f = _flags[i];
+    _flags[i] = AdminFeatureFlag(
+      id: f.id,
+      key: f.key,
+      isEnabled: enabled,
+      description: f.description,
+      countryCode: countryCode,
+    );
+    gestures.add('flag:$key:$enabled');
+    return Ok(List.of(_flags));
+  }
+
+  @override
+  Future<Result<List<SupportTicket>>> tickets(TicketStatus status) async =>
+      _fail<List<SupportTicket>>() ??
+      Ok([
+        for (final t in _tickets)
+          if (t.status == status) t,
+      ]);
+
+  SupportTicket _withTicket(
+    SupportTicket t, {
+    required TicketStatus status,
+    TicketMessage? message,
+  }) => SupportTicket(
+    id: t.id,
+    app: t.app,
+    subject: t.subject,
+    status: status,
+    orderId: t.orderId,
+    orderReference: t.orderReference,
+    createdAt: t.createdAt,
+    lastActivityAt: now,
+    firstResponseAt: t.firstResponseAt ?? (message == null ? null : now),
+    userFirstName: t.userFirstName,
+    storeName: t.storeName,
+    messages: [...t.messages, ?message],
+  );
+
+  @override
+  Future<Result<SupportTicket>> replyTicket(String id, String body) async {
+    final failed = _fail<SupportTicket>();
+    if (failed != null) return failed;
+    final i = _tickets.indexWhere((t) => t.id == id);
+    gestures.add('$id:reply');
+    return Ok(
+      _tickets[i] = _withTicket(
+        _tickets[i],
+        status: TicketStatus.pending,
+        message: TicketMessage(
+          id: 'm${_tickets[i].messages.length}',
+          authorRole: 'team',
+          body: body,
+          createdAt: now,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<Result<SupportTicket>> closeTicket(String id) async {
+    final failed = _fail<SupportTicket>();
+    if (failed != null) return failed;
+    final i = _tickets.indexWhere((t) => t.id == id);
+    gestures.add('$id:close');
+    return Ok(
+      _tickets[i] = _withTicket(_tickets[i], status: TicketStatus.closed),
+    );
+  }
+
+  @override
+  Future<Result<List<AdminClientRow>>> clients({String? query}) async {
+    final failed = _fail<List<AdminClientRow>>();
+    if (failed != null) return failed;
+    final q = query?.toLowerCase() ?? '';
+    return Ok([
+      for (final (id, name, n) in const [
+        ('u1', 'Awa', 12),
+        ('u2', 'Mariam', 4),
+        ('u3', 'Kokou', 1),
+      ])
+        if (q.isEmpty || name.toLowerCase().contains(q))
+          AdminClientRow(
+            id: id,
+            firstName: name,
+            orders: n,
+            createdAt: DateTime.utc(2026, 9, 2),
+          ),
+    ]);
+  }
+
+  @override
+  Future<Result<AdminClient>> client(String id) async {
+    final failed = _fail<AdminClient>();
+    if (failed != null) return failed;
+    gestures.add('$id:viewed');
+    return Ok(
+      AdminClient(
+        id: id,
+        firstName: 'Awa',
+        email: 'awa@exemple.com',
+        zoneName: 'Quartier 2',
+        cityName: 'Ville A',
+        createdAt: DateTime.utc(2026, 9, 2),
+        orderCount: 12,
+        disputeCount: 1,
+        ticketCount: 1,
+        spent: [
+          CurrencyAmount(currencyCode: currency.code, minor: _minor(28400)),
+        ],
+        orders: [
+          for (final o in _orders.values.take(3))
+            AdminOrderRow(
+              id: o.id,
+              reference: o.reference,
+              status: o.status,
+              fulfillment: o.order.fulfillment,
+              paymentStatus: o.order.paymentStatus,
+              storeId: o.order.store.id,
+              storeName: o.storeName,
+              customerFirstName: o.customer.firstName,
+              totalMinor: o.order.totalMinor,
+              currencyCode: o.order.currencyCode,
+              createdAt: o.order.createdAt,
+              lastChangeAt: o.lastChangeAt,
+            ),
+        ],
+        addresses: const [
+          AdminClientAddress(
+            kind: 'home',
+            zoneName: 'Quartier 2',
+            landmark: 'Portail bleu après la pharmacie',
+          ),
+        ],
+        reviews: const [
+          AdminClientReview(
+            storeName: "Étal d'Akossiwa",
+            rating: 5,
+            comment: 'Très frais, merci !',
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Future<Result<AdminVendorView>> vendorView(String storeId) async {
+    final failed = _fail<AdminVendorView>();
+    if (failed != null) return failed;
+    gestures.add('$storeId:vendor_viewed');
+    return Ok(
+      AdminVendorView(
+        store: _stores[storeId]!,
+        rating: 4.8,
+        reviewCount: 46,
+        products: [
+          AdminVendorProduct(
+            id: 'p1',
+            name: 'Tomates fraîches',
+            status: 'published',
+            priceMinor: _minor(500),
+            stock: 12,
+          ),
+          AdminVendorProduct(
+            id: 'p2',
+            name: 'Gombo frais',
+            status: 'published',
+            priceMinor: _minor(300),
+            stock: 0,
+          ),
+          const AdminVendorProduct(
+            id: 'p3',
+            name: 'Piment séché',
+            status: 'draft',
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void>> deleteVendor(String storeId, String reason) async {
+    final failed = _fail<void>();
+    if (failed != null) return failed;
+    if (_stores[storeId]?.row.publishedAt != null) {
+      return const Err(ValidationFailure('vendor_has_orders'));
+    }
+    gestures.add('$storeId:deleted');
+    _stores.remove(storeId);
+    return const Ok(null);
+  }
 }

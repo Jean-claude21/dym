@@ -118,6 +118,34 @@ abstract interface class AdminService {
     String? entityType,
     int offset = 0,
   });
+
+  // ---------------------------------------------------------------- pilote
+
+  Future<Result<AdminDashboard>> dashboard(String period);
+
+  Future<Result<AdminRevenue>> revenue(String period);
+
+  Future<Result<List<AdminFeatureFlag>>> featureFlags();
+
+  Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
+    String key, {
+    required bool enabled,
+    String? countryCode,
+  });
+
+  Future<Result<List<SupportTicket>>> tickets(TicketStatus status);
+
+  Future<Result<SupportTicket>> replyTicket(String id, String body);
+
+  Future<Result<SupportTicket>> closeTicket(String id);
+
+  Future<Result<List<AdminClientRow>>> clients({String? query});
+
+  Future<Result<AdminClient>> client(String id);
+
+  Future<Result<AdminVendorView>> vendorView(String storeId);
+
+  Future<Result<void>> deleteVendor(String storeId, String reason);
 }
 
 /// Implémentation Neon.
@@ -310,4 +338,49 @@ class NeonAdminService implements AdminService {
     entityType: entityType,
     offset: offset,
   );
+
+  @override
+  Future<Result<AdminDashboard>> dashboard(String period) =>
+      _admin.dashboard(period);
+
+  @override
+  Future<Result<AdminRevenue>> revenue(String period) => _admin.revenue(period);
+
+  @override
+  Future<Result<List<AdminFeatureFlag>>> featureFlags() =>
+      _admin.featureFlags();
+
+  @override
+  Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
+    String key, {
+    required bool enabled,
+    String? countryCode,
+  }) => _admin.setFeatureFlag(key, enabled: enabled, countryCode: countryCode);
+
+  @override
+  Future<Result<List<SupportTicket>>> tickets(TicketStatus status) =>
+      _admin.tickets(status);
+
+  @override
+  Future<Result<SupportTicket>> replyTicket(String id, String body) =>
+      _admin.replyTicket(id, body);
+
+  @override
+  Future<Result<SupportTicket>> closeTicket(String id) =>
+      _admin.closeTicket(id);
+
+  @override
+  Future<Result<List<AdminClientRow>>> clients({String? query}) =>
+      _admin.clients(query: query);
+
+  @override
+  Future<Result<AdminClient>> client(String id) => _admin.client(id);
+
+  @override
+  Future<Result<AdminVendorView>> vendorView(String storeId) =>
+      _admin.vendorView(storeId);
+
+  @override
+  Future<Result<void>> deleteVendor(String storeId, String reason) =>
+      _admin.deleteVendor(storeId, reason);
 }

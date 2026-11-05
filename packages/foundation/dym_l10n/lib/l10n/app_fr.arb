@@ -3947,5 +3947,276 @@
         "type": "int"
       }
     }
+  },
+  "adminNavDashboard": "Tableau de bord",
+  "@adminNavDashboard": {
+    "description": "Onglet admin : tableau de bord"
+  },
+  "adminNavClients": "Clientes",
+  "@adminNavClients": {
+    "description": "Onglet admin : clientes"
+  },
+  "adminNavSupport": "Support",
+  "@adminNavSupport": {
+    "description": "Onglet admin : support"
+  },
+  "navMore": "Plus",
+  "@navMore": {
+    "description": "Entrée « Plus » de la barre basse"
+  },
+  "adminPercent": "{value} %",
+  "@adminPercent": {
+    "description": "Pourcentage",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "adminActiveOrders": "Commandes actives",
+  "@adminActiveOrders": {
+    "description": "Tuile du tableau de bord"
+  },
+  "adminRevenueLabel": "Chiffre d'affaires",
+  "@adminRevenueLabel": {
+    "description": "Tuile du tableau de bord"
+  },
+  "adminPaymentsSucceeded": "Paiements réussis · 24 h",
+  "@adminPaymentsSucceeded": {
+    "description": "Tuile du tableau de bord"
+  },
+  "adminPaymentsLastHour": "Dernière heure : {value}",
+  "@adminPaymentsLastHour": {
+    "description": "Taux de la dernière heure",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "adminDeliveriesSucceeded": "Livraisons réussies",
+  "@adminDeliveriesSucceeded": {
+    "description": "Tuile du tableau de bord"
+  },
+  "adminStuckOrders": "Commandes bloquées",
+  "@adminStuckOrders": {
+    "description": "Alerte du tableau de bord"
+  },
+  "adminPendingDisputes": "Litiges en attente",
+  "@adminPendingDisputes": {
+    "description": "Alerte du tableau de bord"
+  },
+  "adminLateDisputes": "{n, plural, =1{1 hors délai > 48 h} other{{n} hors délai > 48 h}}",
+  "@adminLateDisputes": {
+    "description": "Litiges en retard",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminOpenTickets": "Tickets ouverts",
+  "@adminOpenTickets": {
+    "description": "Alerte du tableau de bord"
+  },
+  "adminLateTickets": "{n, plural, =1{1 sans réponse > 1 h} other{{n} sans réponse > 1 h}}",
+  "@adminLateTickets": {
+    "description": "Tickets en retard",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminDraftStores": "Boutiques en brouillon",
+  "@adminDraftStores": {
+    "description": "Alerte du tableau de bord"
+  },
+  "adminOrders30d": "Commandes · 30 jours",
+  "@adminOrders30d": {
+    "description": "Graphique du tableau de bord"
+  },
+  "adminActiveUsers7d": "Utilisatrices actives · 7 jours",
+  "@adminActiveUsers7d": {
+    "description": "Carte du tableau de bord"
+  },
+  "adminNewSignups": "Nouvelles inscriptions",
+  "@adminNewSignups": {
+    "description": "Inscriptions de la période"
+  },
+  "adminTopStores": "Top boutiques",
+  "@adminTopStores": {
+    "description": "Classement des boutiques"
+  },
+  "adminTopCategories": "Top catégories",
+  "@adminTopCategories": {
+    "description": "Classement des catégories"
+  },
+  "adminNoData": "Rien pour cette période.",
+  "@adminNoData": {
+    "description": "Aucune donnée"
+  },
+  "adminOrdersCount": "{n, plural, =0{Aucune commande} =1{1 commande} other{{n} commandes}}",
+  "@adminOrdersCount": {
+    "description": "Nombre de commandes",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminClientSearch": "Prénom ou e-mail",
+  "@adminClientSearch": {
+    "description": "Recherche de clientes"
+  },
+  "adminNoClients": "Aucune cliente trouvée.",
+  "@adminNoClients": {
+    "description": "Liste vide"
+  },
+  "adminSince": "depuis le {date}",
+  "@adminSince": {
+    "description": "Date d'inscription",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSpent": "Dépensé",
+  "@adminSpent": {
+    "description": "Montant dépensé"
+  },
+  "adminTickets": "Demandes d'aide",
+  "@adminTickets": {
+    "description": "Nombre de demandes"
+  },
+  "adminLastOrders": "Dernières commandes",
+  "@adminLastOrders": {
+    "description": "Titre de section"
+  },
+  "adminAddresses": "Adresses",
+  "@adminAddresses": {
+    "description": "Titre de section"
+  },
+  "adminReviewsLeft": "Avis laissés",
+  "@adminReviewsLeft": {
+    "description": "Titre de section"
+  },
+  "adminReadOnlyAudited": "Consultation en lecture seule, inscrite au journal.",
+  "@adminReadOnlyAudited": {
+    "description": "Mention d'audit"
+  },
+  "adminTicketsOpen": "Ouverts",
+  "@adminTicketsOpen": {
+    "description": "Filtre des tickets"
+  },
+  "adminTicketsPending": "En attente",
+  "@adminTicketsPending": {
+    "description": "Filtre des tickets"
+  },
+  "adminTicketsClosed": "Fermés",
+  "@adminTicketsClosed": {
+    "description": "Filtre des tickets"
+  },
+  "adminNoTickets": "Aucune demande ici.",
+  "@adminNoTickets": {
+    "description": "Liste vide"
+  },
+  "adminOver1h": "> 1 h",
+  "@adminOver1h": {
+    "description": "Ticket sans réponse depuis plus d'une heure"
+  },
+  "adminWriteReply": "Écrire une réponse…",
+  "@adminWriteReply": {
+    "description": "Champ de réponse"
+  },
+  "adminCloseTicket": "Fermer le ticket",
+  "@adminCloseTicket": {
+    "description": "Bouton de clôture"
+  },
+  "adminTicketInvalid": "La réponse est vide ou trop longue.",
+  "@adminTicketInvalid": {
+    "description": "Refus de réponse"
+  },
+  "adminTabFlags": "Fonctionnalités",
+  "@adminTabFlags": {
+    "description": "Onglet des drapeaux"
+  },
+  "adminFlagsHelp": "Les fonctions coupées restent invisibles dans les apps. Chaque changement est inscrit au journal.",
+  "@adminFlagsHelp": {
+    "description": "Aide des drapeaux"
+  },
+  "adminFlagEverywhere": "Tous les pays",
+  "@adminFlagEverywhere": {
+    "description": "Portée d'un drapeau"
+  },
+  "adminViewAsVendor": "Voir comme elle",
+  "@adminViewAsVendor": {
+    "description": "Vue de la vendeuse"
+  },
+  "adminDeleteVendor": "Supprimer le compte",
+  "@adminDeleteVendor": {
+    "description": "Suppression du compte vendeuse"
+  },
+  "adminVendorHasOrders": "Cette boutique a des commandes : suspends-la plutôt.",
+  "@adminVendorHasOrders": {
+    "description": "Refus de suppression"
+  },
+  "adminOutOfStock": "Épuisé",
+  "@adminOutOfStock": {
+    "description": "Produit indisponible"
+  },
+  "adminStock": "Stock : {n}",
+  "@adminStock": {
+    "description": "Stock d'un produit",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "adminRevenue": "Revenus",
+  "@adminRevenue": {
+    "description": "Section des finances"
+  },
+  "adminThisMonth": "Ce mois",
+  "@adminThisMonth": {
+    "description": "Période"
+  },
+  "adminLastMonth": "Mois dernier",
+  "@adminLastMonth": {
+    "description": "Période"
+  },
+  "admin30Days": "30 jours",
+  "@admin30Days": {
+    "description": "Période"
+  },
+  "adminSalesCollected": "Ventes encaissées",
+  "@adminSalesCollected": {
+    "description": "Tuile des revenus"
+  },
+  "adminCommission": "Commission DYM",
+  "@adminCommission": {
+    "description": "Tuile des revenus"
+  },
+  "adminVendorNet": "Net vendeuses",
+  "@adminVendorNet": {
+    "description": "Tuile des revenus"
+  },
+  "adminByStore": "Par boutique",
+  "@adminByStore": {
+    "description": "Tableau des revenus"
+  },
+  "adminCommissionNote": "Commission calculée par la base au moment de la commande.",
+  "@adminCommissionNote": {
+    "description": "Note des revenus"
+  },
+  "adminColSales": "Ventes",
+  "@adminColSales": {
+    "description": "Colonne"
+  },
+  "adminVendors": "Vendeuses",
+  "@adminVendors": {
+    "description": "Nombre de vendeuses actives"
   }
 }

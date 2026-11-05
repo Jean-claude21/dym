@@ -68,6 +68,13 @@ class FakeAdmin implements AdminStore {
   async markCashRefund(_a: string, r: string) {
     return { id: r, status: "succeeded" };
   }
+  async replyTicket(a: string, t: string, body: string) {
+    this.calls.push({ a, t, body });
+    return { id: t, status: "pending" };
+  }
+  async deleteVendor(a: string, s: string, reason: string) {
+    this.calls.push({ a, s, reason });
+  }
 }
 
 const post = (fake: AdminStore, path: string, body: unknown, providers: PaymentProvider[] = []) =>
@@ -143,5 +150,19 @@ describe("admin des opérations", () => {
   it("remboursement cash", async () => {
     const res = await post(new FakeAdmin(), `/v1/admin/refunds/${refund}/cash`, {});
     expect(res.status).toBe(200);
+  });
+
+  it("réponse à une demande : texte exigé", async () => {
+    const fake = new FakeAdmin();
+    expect((await post(fake, `/v1/admin/tickets/${refund}/reply`, { body: " " })).status).toBe(422);
+    const ok = await post(fake, `/v1/admin/tickets/${refund}/reply`, { body: "On regarde" });
+    expect(ok.status).toBe(200);
+    expect(fake.calls[0]).toEqual({ a: admin, t: refund, body: "On regarde" });
+  });
+
+  it("suppression d'une vendeuse : raison exigée, 204", async () => {
+    const fake = new FakeAdmin();
+    expect((await post(fake, `/v1/admin/stores/${refund}/delete`, { reason: "x" })).status).toBe(422);
+    expect((await post(fake, `/v1/admin/stores/${refund}/delete`, { reason: "Demande écrite" })).status).toBe(204);
   });
 });

@@ -255,7 +255,7 @@ void main() {
         ),
       );
       await tester.pump(const Duration(milliseconds: 50));
-      expect(find.text('7K2Q4F1A'), findsOneWidget);
+      expect(find.text('Commandes bloquées'), findsOneWidget);
       await tester.tap(find.text('Réglages'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
