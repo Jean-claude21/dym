@@ -317,11 +317,11 @@
   "@adminSignInTitle": {
     "description": "Titre connexion admin"
   },
-  "adminSignInBody": "Accès réservé aux comptes Google Workspace de DYM.",
+  "adminSignInBody": "Accès réservé à l'équipe DYM : reçois un code sur ton email d'admin.",
   "@adminSignInBody": {
     "description": "Texte connexion admin"
   },
-  "adminContinueGoogle": "Continuer avec Google Workspace",
+  "adminContinueGoogle": "Continuer avec Google",
   "@adminContinueGoogle": {
     "description": "Bouton admin"
   },
@@ -4849,5 +4849,12 @@
   "accountSave": "Enregistrer",
   "@accountSave": {
     "description": "Enregistrer le profil"
-  }
+  },
+  "adminTabAdmins": "Admins",
+  "adminAdminsHelp": "Les admins par défaut viennent de la variable ADMIN_EMAILS. Un email invité devient admin à sa première connexion à DYM Admin.",
+  "adminAdminsInvite": "Inviter",
+  "adminAdminsDefault": "Par défaut",
+  "adminAdminsActive": "Actif",
+  "adminAdminsPending": "Invitation en attente",
+  "adminAdminsRemove": "Retirer l’accès admin"
 }

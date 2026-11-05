@@ -12,6 +12,7 @@ enum SettingsTab {
   fees,
   categories,
   flags,
+  admins,
 }
 
 /// Réglages : ouvrir un pays est une opération de configuration.
@@ -28,6 +29,7 @@ class AdminSettingsViewModel extends AdminViewModel {
   AdminPricing? _pricing;
   List<AdminCategory> _categories = const [];
   List<AdminFeatureFlag> _flags = const [];
+  List<AdminMember> _admins = const [];
   bool _acting = false;
   Failure? _actionFailure;
 
@@ -41,6 +43,7 @@ class AdminSettingsViewModel extends AdminViewModel {
   AdminPricing? get pricing => _pricing;
   List<AdminCategory> get categories => _categories;
   List<AdminFeatureFlag> get flags => _flags;
+  List<AdminMember> get admins => _admins;
   bool get ready => !failed && _countries.isNotEmpty;
   bool get acting => _acting;
   Failure? get actionFailure => _actionFailure;
@@ -104,6 +107,10 @@ class AdminSettingsViewModel extends AdminViewModel {
       case SettingsTab.flags:
         final r = await service.featureFlags();
         if (r case Ok(:final value)) _flags = value;
+        return r.failureOrNull;
+      case SettingsTab.admins:
+        final r = await service.admins();
+        if (r case Ok(:final value)) _admins = value;
         return r.failureOrNull;
     }
   }
@@ -181,6 +188,18 @@ class AdminSettingsViewModel extends AdminViewModel {
         if (r case Ok(:final value)) _flags = value;
         return r.failureOrNull;
       });
+
+  Future<bool> inviteAdmin(String email) => _act(() async {
+    final r = await service.inviteAdmin(email.trim().toLowerCase());
+    if (r case Ok(:final value)) _admins = value;
+    return r.failureOrNull;
+  });
+
+  Future<bool> removeAdmin(AdminMember member) => _act(() async {
+    final r = await service.removeAdmin(member.email);
+    if (r case Ok(:final value)) _admins = value;
+    return r.failureOrNull;
+  });
 
   /// Après un changement : la liste des pays (ce qui manque) est relue.
   Future<bool> _act(Future<Failure?> Function() gesture) async {

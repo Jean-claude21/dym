@@ -288,6 +288,23 @@ class AdminRepository {
   Future<Result<List<AdminFeatureFlag>>> featureFlags() =>
       _rpc('admin_feature_flags', const {}, _flags);
 
+  // ---------------------------------------------------------------- admins
+
+  Future<Result<List<AdminMember>>> admins() =>
+      _rpc('admin_admins', const {}, _members);
+
+  /// L'email devient admin à sa première connexion (tout de suite s'il a un
+  /// compte vérifié).
+  Future<Result<List<AdminMember>>> inviteAdmin(String email) =>
+      _rpc('admin_invite_admin', {'p_email': email}, _members);
+
+  Future<Result<List<AdminMember>>> removeAdmin(String email) =>
+      _rpc('admin_remove_admin', {'p_email': email}, _members);
+
+  static List<AdminMember> _members(Object? json) => [
+    for (final m in json! as List) AdminMember.fromJson(_map(m)),
+  ];
+
   Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
     String key, {
     required bool enabled,

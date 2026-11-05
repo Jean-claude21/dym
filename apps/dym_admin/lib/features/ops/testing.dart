@@ -1469,6 +1469,35 @@ class MemoryAdminService implements AdminService {
   Future<Result<List<AdminFeatureFlag>>> featureFlags() async =>
       _fail<List<AdminFeatureFlag>>() ?? Ok(List.of(_flags));
 
+  final List<AdminMember> _admins = [
+    const AdminMember(
+      email: 'admin@dym.test',
+      isDefault: true,
+      isActive: true,
+      firstName: 'Admin',
+    ),
+  ];
+
+  @override
+  Future<Result<List<AdminMember>>> admins() async =>
+      _fail<List<AdminMember>>() ?? Ok(List.of(_admins));
+
+  @override
+  Future<Result<List<AdminMember>>> inviteAdmin(String email) async {
+    final failed = _fail<List<AdminMember>>();
+    if (failed != null) return failed;
+    _admins.add(AdminMember(email: email, isDefault: false, isActive: false));
+    return Ok(List.of(_admins));
+  }
+
+  @override
+  Future<Result<List<AdminMember>>> removeAdmin(String email) async {
+    final failed = _fail<List<AdminMember>>();
+    if (failed != null) return failed;
+    _admins.removeWhere((a) => a.email == email && !a.isDefault);
+    return Ok(List.of(_admins));
+  }
+
   @override
   Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
     String key, {

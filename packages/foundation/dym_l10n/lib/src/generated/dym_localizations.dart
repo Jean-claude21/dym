@@ -545,13 +545,13 @@ abstract class DymLocalizations {
   /// Texte connexion admin
   ///
   /// In fr, this message translates to:
-  /// **'Accès réservé aux comptes Google Workspace de DYM.'**
+  /// **'Accès réservé à l\'équipe DYM : reçois un code sur ton email d\'admin.'**
   String get adminSignInBody;
 
   /// Bouton admin
   ///
   /// In fr, this message translates to:
-  /// **'Continuer avec Google Workspace'**
+  /// **'Continuer avec Google'**
   String get adminContinueGoogle;
 
   /// Note sécurité admin
@@ -6270,6 +6270,48 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Enregistrer'**
   String get accountSave;
+
+  /// No description provided for @adminTabAdmins.
+  ///
+  /// In fr, this message translates to:
+  /// **'Admins'**
+  String get adminTabAdmins;
+
+  /// No description provided for @adminAdminsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les admins par défaut viennent de la variable ADMIN_EMAILS. Un email invité devient admin à sa première connexion à DYM Admin.'**
+  String get adminAdminsHelp;
+
+  /// No description provided for @adminAdminsInvite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inviter'**
+  String get adminAdminsInvite;
+
+  /// No description provided for @adminAdminsDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par défaut'**
+  String get adminAdminsDefault;
+
+  /// No description provided for @adminAdminsActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actif'**
+  String get adminAdminsActive;
+
+  /// No description provided for @adminAdminsPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Invitation en attente'**
+  String get adminAdminsPending;
+
+  /// No description provided for @adminAdminsRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer l’accès admin'**
+  String get adminAdminsRemove;
 }
 
 class _DymLocalizationsDelegate

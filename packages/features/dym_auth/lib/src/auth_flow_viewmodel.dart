@@ -233,6 +233,9 @@ class AuthFlowViewModel extends BaseViewModel {
   Future<void> startProfile() async {
     _goTo(AuthStep.profile);
     await loadZones();
+    // Pays et quartier détectés d'emblée depuis la position (aucun pays figé) ;
+    // sans position, la personne choisit dans la liste.
+    if (_countries.isNotEmpty) await locate();
   }
 
   Future<void> loadZones() async {
