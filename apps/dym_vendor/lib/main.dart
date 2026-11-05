@@ -46,6 +46,7 @@ Future<void> main() async {
           data: neon.data,
           functions: neon.functions,
         ),
+        disputes: DisputeRepository(data: neon.data, functions: neon.functions),
         stores: stores,
       ),
     )

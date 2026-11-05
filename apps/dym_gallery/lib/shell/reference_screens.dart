@@ -11,6 +11,7 @@ import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
+import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_views.dart' as client_orders;
 import 'package:dym_client/ui/views/home/home_view.dart' as client;
 import 'package:dym_data/dym_data.dart';
@@ -546,6 +547,42 @@ final referenceScreens = <ReferenceScreen>[
     builder: (c) => OrderDetailView(
       service: DemoVendorOrders.service(c),
       orderId: 'o1',
+      onBack: () {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '49',
+    title: 'Signaler un problème',
+    surface: 'Cliente',
+    referenceFile: '49-signaler-probleme.webp',
+    builder: (c) => ReportProblemView(
+      service: DemoClientOrders.service(c),
+      orderId: 'o3',
+      storeName: "Étal d'Akossiwa",
+      onBack: () {},
+      onSent: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '50',
+    title: 'Mon signalement',
+    surface: 'Cliente',
+    referenceFile: '50-litige-cliente.webp',
+    builder: (c) => DisputeView(
+      service: DemoClientOrders.disputed(c),
+      orderId: 'o3',
+      onBack: () {},
+      clock: () => DemoClientOrders.now,
+    ),
+  ),
+  ReferenceScreen(
+    id: '51',
+    title: 'Problème signalé (vendeuse)',
+    surface: 'Vendeuse',
+    referenceFile: '51-vendeuse-litige.webp',
+    builder: (c) => OrderDetailView(
+      service: DemoVendorOrders.disputed(c),
+      orderId: 'o5',
       onBack: () {},
     ),
   ),

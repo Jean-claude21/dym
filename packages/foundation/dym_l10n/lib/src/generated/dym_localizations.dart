@@ -3066,6 +3066,204 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Refusée : {reason}'**
   String vendorOrderRefusedReason(String reason);
+
+  /// Bouton et titre du signalement
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaler un problème'**
+  String get disputeReport;
+
+  /// Choix de la raison
+  ///
+  /// In fr, this message translates to:
+  /// **'Que s\'est-il passé ?'**
+  String get disputeWhatHappened;
+
+  /// Récit du problème
+  ///
+  /// In fr, this message translates to:
+  /// **'Raconte-nous'**
+  String get disputeTellUs;
+
+  /// Récit invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'Décris le problème (3 à 500 caractères)'**
+  String get disputeDescriptionInvalid;
+
+  /// Qui répond
+  ///
+  /// In fr, this message translates to:
+  /// **'La boutique et l\'équipe DYM vont te répondre.'**
+  String get disputeWhoAnswers;
+
+  /// Envoyer
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le signalement'**
+  String get disputeSend;
+
+  /// Raison : article manquant
+  ///
+  /// In fr, this message translates to:
+  /// **'Il manque un article'**
+  String get disputeReasonMissingItem;
+
+  /// Raison : mauvais article
+  ///
+  /// In fr, this message translates to:
+  /// **'Mauvais article'**
+  String get disputeReasonWrongItem;
+
+  /// Raison : abîmé
+  ///
+  /// In fr, this message translates to:
+  /// **'Article abîmé'**
+  String get disputeReasonDamaged;
+
+  /// Raison : qualité
+  ///
+  /// In fr, this message translates to:
+  /// **'Qualité décevante'**
+  String get disputeReasonQuality;
+
+  /// Raison : jamais reçue
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande jamais reçue'**
+  String get disputeReasonNotDelivered;
+
+  /// Raison : autre
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get disputeReasonOther;
+
+  /// Titre du suivi du litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon signalement'**
+  String get disputeMine;
+
+  /// Litige ouvert
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours de traitement'**
+  String get disputeOpenStatus;
+
+  /// Litige résolu
+  ///
+  /// In fr, this message translates to:
+  /// **'Traité'**
+  String get disputeResolvedStatus;
+
+  /// Auteur : la cliente elle-même
+  ///
+  /// In fr, this message translates to:
+  /// **'Toi'**
+  String get disputeYou;
+
+  /// Auteur : l'équipe
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe DYM'**
+  String get disputeTeam;
+
+  /// Auteur : la cliente (vue vendeuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente'**
+  String get disputeCustomer;
+
+  /// Champ de message
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris un message…'**
+  String get disputeWriteMessage;
+
+  /// Envoyer un message
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get disputeSendMessage;
+
+  /// Décision : remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement de {amount} décidé.'**
+  String disputeRefunded(String amount);
+
+  /// Décision : sans suite
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalement clos sans remboursement.'**
+  String get disputeNoAction;
+
+  /// Refus : déjà ouvert
+  ///
+  /// In fr, this message translates to:
+  /// **'Un signalement est déjà en cours pour cette commande.'**
+  String get disputeAlreadyOpen;
+
+  /// Refus : hors délai
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette commande ne peut plus être signalée.'**
+  String get disputeNotAllowed;
+
+  /// Bandeau vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Problème signalé : {reason}'**
+  String disputeVendorBanner(String reason);
+
+  /// Répondre au litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Répondre'**
+  String get disputeReply;
+
+  /// Champ de réponse vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta réponse à la cliente'**
+  String get disputeReplyHint;
+
+  /// Ouvrir le fil
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le signalement'**
+  String get disputeSeeThread;
+
+  /// Ligne du fil de litige (auteur, message)
+  ///
+  /// In fr, this message translates to:
+  /// **'{author} : {body}'**
+  String disputeMessageLine(String author, String body);
+
+  /// Notification : réponse au litige
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse à ton signalement'**
+  String get notifDisputeRepliedTitle;
+
+  /// Notification : qui a répondu au litige
+  ///
+  /// In fr, this message translates to:
+  /// **'{author} t\'a répondu.'**
+  String notifDisputeRepliedBody(String author);
+
+  /// Notification : litige tranché
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalement traité'**
+  String get notifDisputeResolvedTitle;
+
+  /// Notification : litige tranché (texte)
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM a traité ton signalement.'**
+  String get notifDisputeResolvedBody;
 }
 
 class _DymLocalizationsDelegate

@@ -4,7 +4,7 @@ import 'package:dym_gallery/demo/demo_store.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_vendor/features/orders/testing.dart';
 
-/// Commandes de démonstration de la vendeuse (écrans 41 et 42).
+/// Commandes de démonstration de la vendeuse (écrans 41, 42 et 51).
 abstract final class DemoVendorOrders {
   static PaymentMethod _method(DemoCountry c, {required bool cash}) =>
       PaymentMethod.fromJson({
@@ -122,4 +122,43 @@ abstract final class DemoVendorOrders {
       ),
     ],
   );
+
+  /// Commande livrée hier avec un problème signalé (écran 51).
+  static MemoryOrdersService disputed(DemoCountry c) =>
+      MemoryOrdersService(
+        config: DemoStore.config(c),
+        orders: [
+          _order(
+            c,
+            id: 'o5',
+            name: 'Awa',
+            status: OrderStatus.delivered,
+            zone: 1,
+            minutesAgo: 60 * 24,
+            lines: const [
+              ('Tomates fraîches', 'le tas', 500, 2),
+              ('Gombo frais', 'le tas', 300, 1),
+            ],
+          ),
+        ],
+      )..seedDispute(
+        Dispute(
+          id: 'd1',
+          orderId: 'o5',
+          reason: DisputeReason.missingItem,
+          description: 'Il manquait le gombo dans le sac.',
+          status: 'open',
+          createdAt: DateTime.utc(2026, 10, 5, 9),
+          currencyCode: c.currency.code,
+          customerFirstName: 'Awa',
+          messages: [
+            DisputeMessage(
+              id: 'm0',
+              authorRole: 'client',
+              body: 'Il manquait le gombo dans le sac.',
+              createdAt: DateTime.utc(2026, 10, 5, 9),
+            ),
+          ],
+        ),
+      );
 }

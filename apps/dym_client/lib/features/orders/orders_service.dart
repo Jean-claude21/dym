@@ -27,6 +27,17 @@ abstract interface class OrdersService {
 
   Future<Result<List<NotificationPreference>>> preferences();
 
+  /// Dernier litige d'une commande (`Ok(null)` : aucun).
+  Future<Result<Dispute?>> dispute(String orderId);
+
+  Future<Result<Dispute>> openDispute(
+    String orderId, {
+    required DisputeReason reason,
+    required String description,
+  });
+
+  Future<Result<Dispute>> replyDispute(String disputeId, String body);
+
   Future<Result<List<NotificationPreference>>> setPreference(
     NotificationCategory category, {
     required bool enabled,
@@ -38,12 +49,14 @@ class NeonOrdersService implements OrdersService {
   new({
     required this._orders,
     required this._notifications,
+    required this._disputes,
     required this._reference,
     required this._auth,
   });
 
   final OrderTrackingRepository _orders;
   final NotificationRepository _notifications;
+  final DisputeRepository _disputes;
   final ReferenceRepository _reference;
   final AuthService _auth;
   final ValueNotifier<int> _unread = ValueNotifier(0);
@@ -101,6 +114,21 @@ class NeonOrdersService implements OrdersService {
   @override
   Future<Result<List<NotificationPreference>>> preferences() =>
       _notifications.preferences();
+
+  @override
+  Future<Result<Dispute?>> dispute(String orderId) =>
+      _disputes.forOrder(orderId);
+
+  @override
+  Future<Result<Dispute>> openDispute(
+    String orderId, {
+    required DisputeReason reason,
+    required String description,
+  }) => _disputes.open(orderId, reason: reason, description: description);
+
+  @override
+  Future<Result<Dispute>> replyDispute(String disputeId, String body) =>
+      _disputes.reply(disputeId, body);
 
   @override
   Future<Result<List<NotificationPreference>>> setPreference(

@@ -1,6 +1,8 @@
+import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_viewmodels.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/features/orders/testing.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -308,5 +310,254 @@ void main() {
     expect(service.unread.value, 0);
     expect(find.text('Tout lire'), findsNothing);
     await tester.pumpWidget(const SizedBox());
+  });
+
+  group('litiges (spec 012)', () {
+    Dispute seeded(String orderId, {String status = 'open'}) => Dispute(
+      id: 'd-$orderId',
+      orderId: orderId,
+      reason: DisputeReason.missingItem,
+      description: 'Il manquait le gombo.',
+      status: status,
+      createdAt: DateTime.utc(2026, 10, 5, 10, 40),
+      currencyCode: 'XOF',
+      storeName: "Étal d'Akossiwa",
+      resolution: status == 'open' ? null : DisputeResolution.partialRefund,
+      refundMinor: status == 'open' ? null : 300,
+      messages: [
+        DisputeMessage(
+          id: 'm0',
+          authorRole: 'client',
+          body: 'Il manquait le gombo.',
+          createdAt: DateTime.utc(2026, 10, 5, 10, 40),
+        ),
+        DisputeMessage(
+          id: 'm1',
+          authorRole: 'vendor',
+          body: 'Pardon, je vous rembourse.',
+          createdAt: DateTime.utc(2026, 10, 5, 10, 50),
+        ),
+        if (status != 'open')
+          DisputeMessage(
+            id: 'm2',
+            authorRole: 'admin',
+            body: 'Remboursement décidé.',
+            createdAt: DateTime.utc(2026, 10, 5, 10, 55),
+          ),
+      ],
+    );
+
+    test('signalement : récit exigé, envoi, puis déjà ouvert', () async {
+      final service = _service();
+      final sent = <Dispute>[];
+      final vm = ReportProblemViewModel(
+        service: service,
+        orderId: 'o3',
+        onSent: sent.add,
+      );
+      await vm.send();
+      expect(vm.showErrors, isTrue);
+      expect(sent, isEmpty);
+      vm
+        ..selectReason(DisputeReason.damaged)
+        ..setDescription('  Tomates écrasées  ');
+      await vm.send();
+      expect(sent.single.reason, DisputeReason.damaged);
+      expect(sent.single.description, 'Tomates écrasées');
+      final again = ReportProblemViewModel(
+        service: service,
+        orderId: 'o3',
+        onSent: sent.add,
+      )..setDescription('Encore');
+      await again.send();
+      expect(again.failure, const ValidationFailure('dispute_already_open'));
+    });
+
+    test('suivi : signaler permis 7 jours après la livraison', () async {
+      final service = _service();
+      final vm = TrackingViewModel(service: service, orderId: 'o3')
+        ..clock = () => DateTime.utc(2026, 10, 11);
+      await vm.load();
+      expect(vm.canReport, isTrue);
+      vm.clock = () => DateTime.utc(2026, 10, 13);
+      expect(vm.canReport, isFalse, reason: 'plus de 7 jours');
+      vm.dispose();
+      final open = TrackingViewModel(service: service, orderId: 'o2');
+      await open.load();
+      expect(open.canReport, isTrue, reason: 'acceptée');
+      service.seedDispute(seeded('o2'));
+      await open.refresh();
+      expect(open.dispute, isNotNull);
+      expect(open.canReport, isFalse, reason: 'déjà ouvert');
+      open.dispose();
+      final cancelled = TrackingViewModel(service: service, orderId: 'o4');
+      await cancelled.load();
+      expect(cancelled.canReport, isFalse);
+      cancelled.dispose();
+    });
+
+    test('fil : aucun litige, puis réponse de la cliente', () async {
+      final service = _service();
+      final none = DisputeViewModel(
+        service: service,
+        orderId: 'o3',
+        refreshEvery: null,
+      );
+      await none.load();
+      expect(none.failure, isA<NotFoundFailure>());
+      none.dispose();
+      service.seedDispute(seeded('o3'));
+      final vm = DisputeViewModel(
+        service: service,
+        orderId: 'o3',
+        refreshEvery: null,
+      );
+      await vm.load();
+      expect(await vm.send('   '), isFalse);
+      expect(await vm.send('Merci'), isTrue);
+      expect(vm.dispute!.messages.last.body, 'Merci');
+      vm.dispose();
+    });
+
+    group('écrans 49 et 50 aux 7 tailles, texte 130 %', () {
+      for (final size in _sizes) {
+        for (final locale in const [Locale('fr'), Locale('en')]) {
+          final name =
+              '${size.width.toInt()}×${size.height.toInt()} · '
+              '${locale.languageCode}';
+          Future<void> show(WidgetTester tester, Widget view) async {
+            await _pump(
+              tester,
+              view,
+              size: size,
+              locale: locale,
+              textScale: 1.3,
+            );
+            expect(tester.takeException(), isNull);
+            await tester.pumpWidget(const SizedBox());
+          }
+
+          testWidgets('49 · $name', (tester) async {
+            await show(
+              tester,
+              ReportProblemView(
+                service: _service(),
+                orderId: 'o3',
+                storeName: "Étal d'Akossiwa",
+                onBack: () {},
+                onSent: (_) {},
+              ),
+            );
+          });
+          for (final status in const ['open', 'resolved']) {
+            testWidgets('50 $status · $name', (tester) async {
+              final service = _service()
+                ..seedDispute(seeded('o3', status: status));
+              await show(
+                tester,
+                DisputeView(
+                  service: service,
+                  orderId: 'o3',
+                  onBack: () {},
+                  clock: () => DateTime.utc(2026, 10, 5, 11),
+                ),
+              );
+            });
+          }
+        }
+      }
+    });
+
+    testWidgets('06 → 49 : signaler puis voir le signalement', (tester) async {
+      final service = _service();
+      final reported = <String>[];
+      await _pump(
+        tester,
+        TrackingView(
+          service: service,
+          orderId: 'o3',
+          onBack: () {},
+          onReport: (id, store) async {
+            reported.add('$id:$store');
+            service.seedDispute(seeded(id));
+            return true;
+          },
+          onDispute: (_) {},
+        ),
+      );
+      await tester.scrollUntilVisible(
+        find.text('Signaler un problème'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Signaler un problème'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(reported, ["o3:Étal d'Akossiwa"]);
+      expect(find.text('Voir le signalement'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('49 : raison, récit, envoi', (tester) async {
+      final sent = <Dispute>[];
+      await _pump(
+        tester,
+        ReportProblemView(
+          service: _service(),
+          orderId: 'o3',
+          storeName: "Étal d'Akossiwa",
+          onBack: () {},
+          onSent: sent.add,
+        ),
+      );
+      await tester.tap(find.text('Envoyer le signalement'));
+      await tester.pump();
+      expect(
+        find.text('Décris le problème (3 à 500 caractères)'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Article abîmé'));
+      await tester.enterText(find.byType(TextField), 'Sac déchiré');
+      await tester.tap(find.text('Envoyer le signalement'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(sent.single.reason, DisputeReason.damaged);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('50 : décision et réponse', (tester) async {
+      final service = _service()..seedDispute(seeded('o3'));
+      await _pump(
+        tester,
+        DisputeView(
+          service: service,
+          orderId: 'o3',
+          onBack: () {},
+          clock: () => DateTime.utc(2026, 10, 5, 11),
+        ),
+      );
+      expect(find.text('En cours de traitement'), findsOneWidget);
+      expect(find.text('Pardon, je vous rembourse.'), findsOneWidget);
+      await tester.enterText(find.byType(TextField), 'Merci');
+      await tester.tap(find.byTooltip('Envoyer'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(find.text('Merci'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      final resolved = _service()
+        ..seedDispute(seeded('o3', status: 'resolved'));
+      await _pump(
+        tester,
+        DisputeView(
+          service: resolved,
+          orderId: 'o3',
+          onBack: () {},
+          clock: () => DateTime.utc(2026, 10, 5, 11),
+        ),
+      );
+      expect(find.textContaining('Remboursement de'), findsOneWidget);
+      expect(find.byType(TextField), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
   });
 }

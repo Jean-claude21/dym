@@ -3,7 +3,8 @@ import 'package:dym_gallery/demo/demo_country.dart';
 import 'package:dym_gallery/demo/demo_store.dart';
 import 'package:dym_models/dym_models.dart';
 
-/// Commandes et notifications de démonstration de la cliente (43, 44, 46, 47).
+/// Commandes et notifications de démonstration de la cliente (43, 44, 46,
+/// 47, 49, 50).
 abstract final class DemoClientOrders {
   static final now = DateTime.utc(2026, 10, 5, 11);
 
@@ -132,4 +133,40 @@ abstract final class DemoClientOrders {
     orders: orders(c),
     notifications: notifications(),
   );
+
+  /// Signalement sur la commande livrée `o3`, avec la réponse de la
+  /// vendeuse (écran 50).
+  static MemoryOrdersService disputed(DemoCountry c) => service(c)
+    ..seedDispute(
+      Dispute(
+        id: 'd1',
+        orderId: 'o3',
+        reason: DisputeReason.missingItem,
+        description: 'Il manquait le gombo dans le sac.',
+        status: 'open',
+        createdAt: now.subtract(const Duration(hours: 2)),
+        currencyCode: c.currency.code,
+        storeName: "Étal d'Akossiwa",
+        messages: [
+          DisputeMessage(
+            id: 'm0',
+            authorRole: 'client',
+            body: 'Il manquait le gombo dans le sac.',
+            createdAt: now.subtract(const Duration(hours: 2)),
+          ),
+          DisputeMessage(
+            id: 'm1',
+            authorRole: 'vendor',
+            body: 'Pardon Awa, je te rembourse le gombo.',
+            createdAt: now.subtract(const Duration(minutes: 50)),
+          ),
+          DisputeMessage(
+            id: 'm2',
+            authorRole: 'admin',
+            body: 'Nous regardons et revenons vers toi aujourd’hui.',
+            createdAt: now.subtract(const Duration(minutes: 20)),
+          ),
+        ],
+      ),
+    );
 }

@@ -1777,4 +1777,112 @@ class DymLocalizationsEn extends DymLocalizations {
   String vendorOrderRefusedReason(String reason) {
     return 'Declined: $reason';
   }
+
+  @override
+  String get disputeReport => 'Report a problem';
+
+  @override
+  String get disputeWhatHappened => 'What happened?';
+
+  @override
+  String get disputeTellUs => 'Tell us more';
+
+  @override
+  String get disputeDescriptionInvalid =>
+      'Describe the problem (3 to 500 characters)';
+
+  @override
+  String get disputeWhoAnswers => 'The shop and the DYM team will reply.';
+
+  @override
+  String get disputeSend => 'Send the report';
+
+  @override
+  String get disputeReasonMissingItem => 'An item is missing';
+
+  @override
+  String get disputeReasonWrongItem => 'Wrong item';
+
+  @override
+  String get disputeReasonDamaged => 'Damaged item';
+
+  @override
+  String get disputeReasonQuality => 'Disappointing quality';
+
+  @override
+  String get disputeReasonNotDelivered => 'Order never received';
+
+  @override
+  String get disputeReasonOther => 'Other';
+
+  @override
+  String get disputeMine => 'My report';
+
+  @override
+  String get disputeOpenStatus => 'Being handled';
+
+  @override
+  String get disputeResolvedStatus => 'Handled';
+
+  @override
+  String get disputeYou => 'You';
+
+  @override
+  String get disputeTeam => 'DYM team';
+
+  @override
+  String get disputeCustomer => 'Customer';
+
+  @override
+  String get disputeWriteMessage => 'Write a message…';
+
+  @override
+  String get disputeSendMessage => 'Send';
+
+  @override
+  String disputeRefunded(String amount) {
+    return 'Refund of $amount decided.';
+  }
+
+  @override
+  String get disputeNoAction => 'Report closed without a refund.';
+
+  @override
+  String get disputeAlreadyOpen => 'A report is already open for this order.';
+
+  @override
+  String get disputeNotAllowed => 'This order can no longer be reported.';
+
+  @override
+  String disputeVendorBanner(String reason) {
+    return 'Problem reported: $reason';
+  }
+
+  @override
+  String get disputeReply => 'Reply';
+
+  @override
+  String get disputeReplyHint => 'Your reply to the customer';
+
+  @override
+  String get disputeSeeThread => 'See the report';
+
+  @override
+  String disputeMessageLine(String author, String body) {
+    return '$author: $body';
+  }
+
+  @override
+  String get notifDisputeRepliedTitle => 'Reply to your report';
+
+  @override
+  String notifDisputeRepliedBody(String author) {
+    return '$author replied to you.';
+  }
+
+  @override
+  String get notifDisputeResolvedTitle => 'Report handled';
+
+  @override
+  String get notifDisputeResolvedBody => 'The DYM team handled your report.';
 }

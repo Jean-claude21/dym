@@ -3,6 +3,7 @@ library;
 
 export 'src/account/account_models.dart';
 export 'src/cart/cart_models.dart';
+export 'src/cart/disputes.dart';
 export 'src/cart/order_tracking.dart';
 export 'src/cart/vendor_orders.dart';
 export 'src/catalog/catalog_models.dart';

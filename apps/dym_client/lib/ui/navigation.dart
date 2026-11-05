@@ -13,6 +13,7 @@ import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
+import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
@@ -205,8 +206,32 @@ class StackedAppNavigator implements AppNavigator {
   );
 
   @override
-  void toOrder(String orderId) =>
-      _push(TrackingView(service: _orders, orderId: orderId, onBack: _back));
+  void toOrder(String orderId) => _push(
+    TrackingView(
+      service: _orders,
+      orderId: orderId,
+      onBack: _back,
+      onReport: _toReport,
+      onDispute: _toDispute,
+    ),
+  );
+
+  Future<bool> _toReport(String orderId, String storeName) async =>
+      await _navigator.push<bool>(
+        MaterialPageRoute(
+          builder: (context) => ReportProblemView(
+            service: _orders,
+            orderId: orderId,
+            storeName: storeName,
+            onBack: () => Navigator.of(context).pop(false),
+            onSent: (_) => Navigator.of(context).pop(true),
+          ),
+        ),
+      ) ??
+      false;
+
+  void _toDispute(String orderId) =>
+      _push(DisputeView(service: _orders, orderId: orderId, onBack: _back));
 
   @override
   void toNotifications() => _push(

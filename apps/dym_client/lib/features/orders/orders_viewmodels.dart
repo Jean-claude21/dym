@@ -98,12 +98,29 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
 
   final String orderId;
   CustomerOrder? _order;
+  Dispute? _dispute;
   bool _cancelling = false;
   Failure? _cancelFailure;
 
   CustomerOrder? get order => _order;
+  Dispute? get dispute => _dispute;
   bool get ready => _order != null && _config != null && !failed;
   bool get cancelling => _cancelling;
+
+  /// Signalement possible : acceptée, en cours, ou livrée depuis 7 jours au
+  /// plus, sans litige ouvert (la base décide en dernier).
+  bool get canReport {
+    final o = _order;
+    if (o == null || (_dispute?.isOpen ?? false)) return false;
+    if (o.status == OrderStatus.delivered) {
+      final at = o.deliveredAt ?? o.reachedAt(OrderStatus.delivered);
+      return at == null || clock().difference(at) <= const Duration(days: 7);
+    }
+    return o.status.isActive && o.status != OrderStatus.pending;
+  }
+
+  /// Horloge (tests).
+  DateTime Function() clock = DateTime.now;
   Failure? get cancelFailure => _cancelFailure;
 
   /// La commande a changé entre la lecture et le geste.
@@ -116,6 +133,7 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   Future<Failure?> read() async {
     final result = await service.order(orderId);
     if (result case Ok(:final value)) _order = value;
+    if (await service.dispute(orderId) case Ok(:final value)) _dispute = value;
     return result.failureOrNull;
   }
 
@@ -198,5 +216,113 @@ class NotificationSettingsViewModel extends _OrdersLoadingViewModel {
         _saveFailure = failure;
     }
     notifyListeners();
+  }
+}
+
+/// Signaler un problème (écran 49).
+class ReportProblemViewModel extends BaseViewModel {
+  new({required this.service, required this.orderId, required this.onSent});
+
+  final OrdersService service;
+  final String orderId;
+  final void Function(Dispute dispute) onSent;
+
+  DisputeReason _reason = DisputeReason.missingItem;
+  String description = '';
+  bool _submitted = false;
+  Failure? _failure;
+
+  DisputeReason get reason => _reason;
+  bool get descriptionValid {
+    final n = description.trim().length;
+    return n >= 3 && n <= 500;
+  }
+
+  bool get showErrors => _submitted;
+  Failure? get failure => _failure;
+
+  void selectReason(DisputeReason value) {
+    _reason = value;
+    notifyListeners();
+  }
+
+  void setDescription(String value) {
+    description = value;
+    notifyListeners();
+  }
+
+  Future<void> send() async {
+    _submitted = true;
+    _failure = null;
+    notifyListeners();
+    if (!descriptionValid) return;
+    final result = await runBusyFuture(
+      service.openDispute(
+        orderId,
+        reason: _reason,
+        description: description.trim(),
+      ),
+    );
+    switch (result) {
+      case Ok(:final value):
+        onSent(value);
+      case Err(:final failure):
+        _failure = failure;
+        notifyListeners();
+    }
+  }
+}
+
+/// Mon signalement (écran 50) : fil et réponse ; relu toutes les 20 s.
+class DisputeViewModel extends _OrdersLoadingViewModel {
+  new({
+    required OrdersService service,
+    required this.orderId,
+    super.refreshEvery = const Duration(seconds: 20),
+  }) : super(service);
+
+  final String orderId;
+  Dispute? _dispute;
+  bool _sending = false;
+  Failure? _sendFailure;
+
+  Dispute? get dispute => _dispute;
+  bool get ready => _dispute != null && _config != null && !failed;
+  bool get sending => _sending;
+  Failure? get sendFailure => _sendFailure;
+
+  @override
+  Future<Failure?> read() async {
+    final result = await service.dispute(orderId);
+    switch (result) {
+      case Ok(value: final d?):
+        _dispute = d;
+        return null;
+      case Ok():
+        return const NotFoundFailure('litige');
+      case Err(:final failure):
+        return failure;
+    }
+  }
+
+  /// Envoie [body] ; `true` si envoyé (le champ peut être vidé).
+  Future<bool> send(String body) async {
+    final d = _dispute;
+    if (d == null || body.trim().isEmpty || _sending) return false;
+    _sending = true;
+    _sendFailure = null;
+    notifyListeners();
+    final result = await service.replyDispute(d.id, body.trim());
+    _sending = false;
+    switch (result) {
+      case Ok(:final value):
+        _dispute = value;
+        notifyListeners();
+        return true;
+      case Err(:final failure):
+        _sendFailure = failure;
+        notifyListeners();
+        return false;
+    }
   }
 }

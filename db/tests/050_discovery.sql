@@ -49,6 +49,11 @@ select public.save_product(pg_temp._product((select esi_store from _t), (select 
   'Sirop de bissap', (select boissons from _t), 2500));
 select public.publish_product((select sirop from _t));
 select public.set_product_available((select sirop from _t), false);
+-- Même transaction, même now() : on départage les dates de publication.
+select tests.logout();
+update public.products set published_at = published_at + interval '1 second'
+ where id = (select sirop from _t);
+select tests.login_as((select esi from _t));
 select public.save_product(pg_temp._product((select esi_store from _t), (select brouillon from _t),
   'Bissap en poudre', (select boissons from _t), 900));
 

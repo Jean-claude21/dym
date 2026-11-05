@@ -271,11 +271,19 @@ class TrackingView extends StackedView<TrackingViewModel> {
     required this.orderId,
     required this.onBack,
     super.key,
+    this.onReport,
+    this.onDispute,
   });
 
   final OrdersService service;
   final String orderId;
   final VoidCallback onBack;
+
+  /// Écran 49 (commande, boutique) ; `true` si un signalement est envoyé.
+  final Future<bool> Function(String orderId, String storeName)? onReport;
+
+  /// Écran 50.
+  final ValueChanged<String>? onDispute;
 
   @override
   TrackingViewModel viewModelBuilder(BuildContext context) =>
@@ -316,7 +324,12 @@ class TrackingView extends StackedView<TrackingViewModel> {
                       failure: vm.isBusy ? null : vm.failure,
                       onRetry: vm.load,
                     )
-                  : _Tracking(vm: vm, order: order),
+                  : _Tracking(
+                      vm: vm,
+                      order: order,
+                      onReport: onReport,
+                      onDispute: onDispute,
+                    ),
             ),
           ],
         ),
@@ -326,10 +339,17 @@ class TrackingView extends StackedView<TrackingViewModel> {
 }
 
 class _Tracking extends StatelessWidget {
-  const new({required this.vm, required this.order});
+  const new({
+    required this.vm,
+    required this.order,
+    this.onReport,
+    this.onDispute,
+  });
 
   final TrackingViewModel vm;
   final CustomerOrder order;
+  final Future<bool> Function(String orderId, String storeName)? onReport;
+  final ValueChanged<String>? onDispute;
 
   Future<void> _confirmCancel(BuildContext context) async {
     final l10n = DymLocalizations.of(context);
@@ -508,6 +528,25 @@ class _Tracking extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ],
+      if (vm.dispute != null && onDispute != null) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        DymButton(
+          label: l10n.disputeSeeThread,
+          icon: Icons.forum_rounded,
+          variant: DymButtonVariant.secondary,
+          onPressed: () => onDispute!(order.id),
+        ),
+      ] else if (vm.canReport && onReport != null) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        DymButton(
+          label: l10n.disputeReport,
+          icon: Icons.report_problem_rounded,
+          variant: DymButtonVariant.secondary,
+          onPressed: () async {
+            if (await onReport!(order.id, order.store.name)) await vm.refresh();
+          },
         ),
       ],
       if (vm.statusChanged)
