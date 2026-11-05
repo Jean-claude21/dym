@@ -1902,5 +1902,467 @@
         "type": "int"
       }
     }
+  },
+  "orderStatusPending": "En attente",
+  "@orderStatusPending": {
+    "description": "Statut : en attente"
+  },
+  "orderStatusAccepted": "Acceptée",
+  "@orderStatusAccepted": {
+    "description": "Statut : acceptée"
+  },
+  "orderStatusPreparing": "En préparation",
+  "@orderStatusPreparing": {
+    "description": "Statut : en préparation"
+  },
+  "orderStatusReady": "Prête",
+  "@orderStatusReady": {
+    "description": "Statut : prête"
+  },
+  "orderStatusOutForDelivery": "En route",
+  "@orderStatusOutForDelivery": {
+    "description": "Statut : en route"
+  },
+  "orderStatusDelivered": "Livrée",
+  "@orderStatusDelivered": {
+    "description": "Statut : livrée"
+  },
+  "orderStatusCollected": "Récupérée",
+  "@orderStatusCollected": {
+    "description": "Statut : retrait récupéré"
+  },
+  "orderStatusRefused": "Refusée",
+  "@orderStatusRefused": {
+    "description": "Statut : refusée"
+  },
+  "orderStatusCancelled": "Annulée",
+  "@orderStatusCancelled": {
+    "description": "Statut : annulée"
+  },
+  "ordersMineTitle": "Mes commandes",
+  "@ordersMineTitle": {
+    "description": "Titre de l'onglet commandes (cliente)"
+  },
+  "ordersActive": "En cours",
+  "@ordersActive": {
+    "description": "Section en cours"
+  },
+  "ordersDone": "Terminées",
+  "@ordersDone": {
+    "description": "Section terminées"
+  },
+  "ordersMineEmptyMessage": "Tes commandes apparaissent ici.",
+  "@ordersMineEmptyMessage": {
+    "description": "Liste cliente vide"
+  },
+  "orderEtaAt": "Livrée vers {time}",
+  "@orderEtaAt": {
+    "description": "Heure de livraison estimée",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "orderPickupAt": "Prête vers {time}",
+  "@orderPickupAt": {
+    "description": "Heure de retrait estimée",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "orderOn": "Le {date}",
+  "@orderOn": {
+    "description": "Date d'une commande terminée",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "trackTitle": "Suivi de commande",
+  "@trackTitle": {
+    "description": "Titre du suivi"
+  },
+  "trackConfirmed": "Confirmée",
+  "@trackConfirmed": {
+    "description": "Frise : confirmée"
+  },
+  "trackPrepared": "Préparée",
+  "@trackPrepared": {
+    "description": "Frise : préparée"
+  },
+  "trackArrives": "Arrive vers {time}",
+  "@trackArrives": {
+    "description": "Heure d'arrivée estimée",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "trackReadyAt": "Prête vers {time}",
+  "@trackReadyAt": {
+    "description": "Heure de retrait estimée (suivi)",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "trackPayOnDelivery": "À payer à la livraison",
+  "@trackPayOnDelivery": {
+    "description": "Cash à payer"
+  },
+  "trackCashAmount": "{amount} en cash",
+  "@trackCashAmount": {
+    "description": "Montant cash",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "trackCancel": "Annuler la commande",
+  "@trackCancel": {
+    "description": "Bouton annuler"
+  },
+  "trackCancelTitle": "Annuler la commande ?",
+  "@trackCancelTitle": {
+    "description": "Confirmation d'annulation"
+  },
+  "trackCancelBody": "La boutique sera prévenue. La commande ne pourra pas être reprise.",
+  "@trackCancelBody": {
+    "description": "Explication de l'annulation"
+  },
+  "trackCancelKeep": "Garder la commande",
+  "@trackCancelKeep": {
+    "description": "Ne pas annuler"
+  },
+  "trackRefused": "Refusée par la boutique : {reason}",
+  "@trackRefused": {
+    "description": "Commande refusée",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "trackCancelledByYou": "Tu as annulé cette commande.",
+  "@trackCancelledByYou": {
+    "description": "Annulée par la cliente"
+  },
+  "trackRefundDue": "Un remboursement est en cours.",
+  "@trackRefundDue": {
+    "description": "Remboursement à venir"
+  },
+  "orderStatusChanged": "La commande a changé : elle vient d'être mise à jour.",
+  "@orderStatusChanged": {
+    "description": "Conflit d'état"
+  },
+  "reasonOutOfStock": "Produit en rupture",
+  "@reasonOutOfStock": {
+    "description": "Raison : rupture"
+  },
+  "reasonTooBusy": "Boutique trop chargée",
+  "@reasonTooBusy": {
+    "description": "Raison : trop chargée"
+  },
+  "reasonAreaNotServed": "Livraison impossible dans ce quartier",
+  "@reasonAreaNotServed": {
+    "description": "Raison : quartier"
+  },
+  "reasonOther": "Autre raison",
+  "@reasonOther": {
+    "description": "Raison : autre"
+  },
+  "notificationsTitle": "Notifications",
+  "@notificationsTitle": {
+    "description": "Titre du centre"
+  },
+  "notificationsReadAll": "Tout lire",
+  "@notificationsReadAll": {
+    "description": "Tout marquer lu"
+  },
+  "notificationsEmptyTitle": "Aucune notification",
+  "@notificationsEmptyTitle": {
+    "description": "Centre vide"
+  },
+  "notificationsEmptyMessage": "Tu seras prévenue à chaque étape de tes commandes.",
+  "@notificationsEmptyMessage": {
+    "description": "Centre vide : explication"
+  },
+  "notificationsUnread": "{count, plural, =1{1 non lue} other{{count} non lues}}",
+  "@notificationsUnread": {
+    "description": "Compteur de non-lues",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifNewOrderTitle": "Nouvelle commande !",
+  "@notifNewOrderTitle": {
+    "description": "Notification vendeuse"
+  },
+  "notifNewOrderBody": "{name} a commandé.",
+  "@notifNewOrderBody": {
+    "description": "Notification vendeuse : texte",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "notifCancelledByClientTitle": "Commande annulée",
+  "@notifCancelledByClientTitle": {
+    "description": "Annulée par la cliente"
+  },
+  "notifCancelledByClientBody": "La cliente a annulé sa commande.",
+  "@notifCancelledByClientBody": {
+    "description": "Annulée par la cliente : texte"
+  },
+  "notifAcceptedTitle": "Commande acceptée",
+  "@notifAcceptedTitle": {
+    "description": "Notification acceptée"
+  },
+  "notifAcceptedBody": "{store} a accepté ta commande.",
+  "@notifAcceptedBody": {
+    "description": "Acceptée : texte",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "notifRefusedTitle": "Commande refusée",
+  "@notifRefusedTitle": {
+    "description": "Notification refusée"
+  },
+  "notifRefusedBody": "{store} ne peut pas honorer ta commande.",
+  "@notifRefusedBody": {
+    "description": "Refusée : texte",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "notifPreparingBody": "{store} prépare ta commande.",
+  "@notifPreparingBody": {
+    "description": "En préparation : texte",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "notifReadyTitle": "Commande prête",
+  "@notifReadyTitle": {
+    "description": "Notification prête"
+  },
+  "notifReadyBody": "Ta commande chez {store} est prête.",
+  "@notifReadyBody": {
+    "description": "Prête : texte",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "notifOnTheWayBody": "Ta commande arrive bientôt.",
+  "@notifOnTheWayBody": {
+    "description": "En route : texte"
+  },
+  "notifDeliveredBody": "Bon appétit ! Dis-nous si tout va bien.",
+  "@notifDeliveredBody": {
+    "description": "Livrée : texte"
+  },
+  "notifPaidBody": "Ta commande est payée.",
+  "@notifPaidBody": {
+    "description": "Paiement confirmé : texte"
+  },
+  "notifPaymentFailedTitle": "Paiement échoué",
+  "@notifPaymentFailedTitle": {
+    "description": "Notification paiement échoué"
+  },
+  "notifPaymentFailedBody": "Ton paiement n'a pas abouti : réessaie ou paie à la livraison.",
+  "@notifPaymentFailedBody": {
+    "description": "Paiement échoué : texte"
+  },
+  "timeJustNow": "à l'instant",
+  "@timeJustNow": {
+    "description": "Il y a moins d'une minute"
+  },
+  "timeMinutesAgo": "il y a {count} min",
+  "@timeMinutesAgo": {
+    "description": "Il y a n minutes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timeHoursAgo": "il y a {count} h",
+  "@timeHoursAgo": {
+    "description": "Il y a n heures",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "timeYesterday": "hier",
+  "@timeYesterday": {
+    "description": "Hier"
+  },
+  "timeDaysAgo": "il y a {count} j",
+  "@timeDaysAgo": {
+    "description": "Il y a n jours",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "notifSettingsTitle": "Réglages des notifications",
+  "@notifSettingsTitle": {
+    "description": "Titre des réglages"
+  },
+  "notifSettingsIntro": "Choisis ce que DYM peut t'envoyer sur ce téléphone.",
+  "@notifSettingsIntro": {
+    "description": "Explication des réglages"
+  },
+  "prefOrdersTitle": "Suivi de mes commandes",
+  "@prefOrdersTitle": {
+    "description": "Catégorie commandes"
+  },
+  "prefOrdersBody": "Acceptée, en préparation, en route, livrée",
+  "@prefOrdersBody": {
+    "description": "Catégorie commandes : détail"
+  },
+  "prefPaymentsTitle": "Paiements",
+  "@prefPaymentsTitle": {
+    "description": "Catégorie paiements"
+  },
+  "prefPaymentsBody": "Paiement confirmé ou échoué",
+  "@prefPaymentsBody": {
+    "description": "Catégorie paiements : détail"
+  },
+  "prefMessagesTitle": "Messages des boutiques",
+  "@prefMessagesTitle": {
+    "description": "Catégorie messages"
+  },
+  "prefMessagesBody": "Réponses des vendeuses",
+  "@prefMessagesBody": {
+    "description": "Catégorie messages : détail"
+  },
+  "prefPromotionsTitle": "Bons plans",
+  "@prefPromotionsTitle": {
+    "description": "Catégorie bons plans"
+  },
+  "prefPromotionsBody": "Promotions de mes boutiques",
+  "@prefPromotionsBody": {
+    "description": "Catégorie bons plans : détail"
+  },
+  "notifSettingsNote": "Les notifications importantes restent visibles dans l'app.",
+  "@notifSettingsNote": {
+    "description": "Note des réglages"
+  },
+  "vendorScopeNew": "Nouvelles",
+  "@vendorScopeNew": {
+    "description": "Onglet nouvelles"
+  },
+  "vendorScopeActive": "En cours",
+  "@vendorScopeActive": {
+    "description": "Onglet en cours"
+  },
+  "vendorScopeDone": "Terminées",
+  "@vendorScopeDone": {
+    "description": "Onglet terminées"
+  },
+  "vendorReplyQuickly": "Réponds vite : la cliente attend.",
+  "@vendorReplyQuickly": {
+    "description": "Rappel de réponse"
+  },
+  "vendorYouCollect": "Tu encaisses",
+  "@vendorYouCollect": {
+    "description": "Montant encaissé"
+  },
+  "vendorAccept": "Accepter",
+  "@vendorAccept": {
+    "description": "Accepter la commande"
+  },
+  "vendorRefuse": "Refuser",
+  "@vendorRefuse": {
+    "description": "Refuser la commande"
+  },
+  "vendorRefuseTitle": "Refuser la commande ?",
+  "@vendorRefuseTitle": {
+    "description": "Titre du refus"
+  },
+  "vendorRefuseBody": "La cliente sera prévenue. Choisis une raison.",
+  "@vendorRefuseBody": {
+    "description": "Explication du refus"
+  },
+  "vendorRefuseNote": "Précise (facultatif)",
+  "@vendorRefuseNote": {
+    "description": "Précision du refus"
+  },
+  "vendorRefuseConfirm": "Refuser la commande",
+  "@vendorRefuseConfirm": {
+    "description": "Confirmer le refus"
+  },
+  "vendorStartPreparing": "Commencer la préparation",
+  "@vendorStartPreparing": {
+    "description": "Geste préparation"
+  },
+  "vendorMarkReady": "Marquer prête",
+  "@vendorMarkReady": {
+    "description": "Geste prête"
+  },
+  "vendorOutForDelivery": "Partir livrer",
+  "@vendorOutForDelivery": {
+    "description": "Geste en route"
+  },
+  "vendorMarkDelivered": "Marquer livrée",
+  "@vendorMarkDelivered": {
+    "description": "Geste livrée"
+  },
+  "vendorMarkCollected": "Marquer récupérée",
+  "@vendorMarkCollected": {
+    "description": "Geste récupérée"
+  },
+  "vendorConfirmCash": "J'ai encaissé {amount}",
+  "@vendorConfirmCash": {
+    "description": "Confirmer l'encaissement",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorCashCollected": "Encaissement confirmé",
+  "@vendorCashCollected": {
+    "description": "Encaissement fait"
+  },
+  "vendorNewOrderAlert": "Nouvelle commande reçue",
+  "@vendorNewOrderAlert": {
+    "description": "Alerte d'arrivée"
+  },
+  "vendorRefundDue": "Remboursement à faire par l'équipe DYM.",
+  "@vendorRefundDue": {
+    "description": "Remboursement à faire"
+  },
+  "vendorOrderRefusedReason": "Refusée : {reason}",
+  "@vendorOrderRefusedReason": {
+    "description": "Raison du refus (vendeuse)",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
   }
 }

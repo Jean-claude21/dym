@@ -25,6 +25,7 @@ abstract final class DemoVendorOrders {
     required List<(String, String, int, int)> lines,
     bool cash = false,
     bool pickup = false,
+    OrderStatus status = OrderStatus.pending,
   }) {
     final zones = DemoStore.zoneNames(c);
     final subtotal = lines.fold(0, (sum, l) => sum + l.$3 * l.$4);
@@ -40,7 +41,7 @@ abstract final class DemoVendorOrders {
     return VendorOrder(
       id: id,
       createdAt: created,
-      status: 'pending',
+      status: status,
       fulfillment: pickup ? Fulfillment.pickup : Fulfillment.delivery,
       currencyCode: c.currency.code,
       subtotalMinor: minor(subtotal),
@@ -111,6 +112,7 @@ abstract final class DemoVendorOrders {
         c,
         id: 'o3',
         name: 'Mawuli',
+        status: OrderStatus.accepted,
         zone: 2,
         minutesAgo: 40,
         lines: const [

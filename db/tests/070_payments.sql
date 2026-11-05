@@ -31,7 +31,9 @@ grant select on _t to authenticated, anonymous;
 
 -- Moyen simulé activé pour le pays de test et accepté par les deux boutiques.
 insert into public.payment_methods (country_code, provider_code, label, sort, is_active)
-values ('TG', 'simulator', '{"fr": "Mobile Money (simulé)"}', 9, true);
+values ('TG', 'simulator', '{"fr": "Mobile Money (simulé)"}', 9, true)
+on conflict do nothing;
+update public.payment_methods set is_active = true where provider_code = 'simulator' and country_code = 'TG';
 update _t set sim = (select id from public.payment_methods where provider_code = 'simulator' and country_code = 'TG'),
               cash = (select id from public.payment_methods where provider_code = 'cash' and country_code = 'TG');
 insert into public.store_payment_methods (store_id, payment_method_id)
@@ -117,7 +119,8 @@ select is(pg_temp._event('e3', pg_temp._payment((select p1 from _t)), 'failed', 
   'échec après réussite : sans effet');
 select is((select payment_status from public.purchases where id = (select (p1 -> 'purchase' ->> 'id')::uuid from _t)),
   'paid', 'achat payé');
-select is((select count(*)::int from public.payment_events), 5, 'chaque confirmation est journalisée');
+select is((select count(*)::int from public.payment_events where payment_id = pg_temp._payment((select p1 from _t))), 5,
+  'chaque confirmation est journalisée');
 select is((select count(*)::int from public.events where name = 'payment_succeeded'
            and actor_id = (select awa from _t)), 1, 'payment_succeeded une fois');
 select throws_ok(format($$select app.retry_payment('%s', '%s', '%s', null, '{simulator}')$$,

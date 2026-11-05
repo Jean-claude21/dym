@@ -18,7 +18,9 @@ Spec 008 : parcours 2 et 3 construits (écrans validés 02, 03, 04 ; nouveaux é
 Spec 009 : parcours 4 et 5 (panier validé 05 ; livraison 34, mes adresses 35, nouvelle adresse 36,
 commande envoyée 37, à valider).
 Spec 010 : parcours 6 et 12 (paiement en cours 39, paiement échoué 40, commandes de la vendeuse 41,
-détail du paiement 42, à valider). Correction terrain du 2026-10-02 : aucune liste de quartiers
+détail du paiement 42, à valider).
+Spec 011 : parcours 7, 8 et 12 (suivi validé 06, commande reçue validée 08 ; mes commandes 43,
+notifications 44, refus 45, réglages des notifications 46, à valider). Correction terrain du 2026-10-02 : aucune liste de quartiers
 affichée d'avance (position ou recherche), écran 12 compris.
 Les autres parcours sont produits spec par spec dans la même direction.
 

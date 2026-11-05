@@ -25,6 +25,8 @@ export default defineConfig({
         OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
         // Fournisseur de paiement simulé (spec 010) : jamais en production.
         PAYMENTS_SIMULATOR_SECRET: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
+        // Compte de service Firebase (JSON) pour les push FCM (spec 011).
+        FCM_SERVICE_ACCOUNT: process.env.FCM_SERVICE_ACCOUNT ?? "",
       },
     },
   },

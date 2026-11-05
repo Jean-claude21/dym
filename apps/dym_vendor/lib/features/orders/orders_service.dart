@@ -3,14 +3,26 @@ import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 
-/// Commandes de la boutique (payées ou en cash). Remplaçable en test.
+/// Commandes de la boutique (payées ou en cash) et leurs gestes. Remplaçable
+/// en test.
 abstract interface class OrdersService {
   /// Référentiel du pays de la boutique (devise).
   Future<Result<CountryConfig>> countryConfig();
 
-  Future<Result<List<VendorOrder>>> orders();
+  Future<Result<List<VendorOrder>>> orders({VendorOrderScope? scope});
 
   Future<Result<VendorOrder>> order(String id);
+
+  /// Étape suivante (la base décide). Refus : `status_changed`,
+  /// `transition_not_allowed`, `reason_required`.
+  Future<Result<VendorOrder>> advance(
+    VendorOrder order,
+    OrderStatus to, {
+    RefusalReason? reason,
+    String? note,
+  });
+
+  Future<Result<VendorOrder>> confirmCash(VendorOrder order);
 }
 
 /// Implémentation Neon.
@@ -24,8 +36,27 @@ class NeonOrdersService implements OrdersService {
   Future<Result<CountryConfig>> countryConfig() => _stores.countryConfig();
 
   @override
-  Future<Result<List<VendorOrder>>> orders() => _orders.orders();
+  Future<Result<List<VendorOrder>>> orders({VendorOrderScope? scope}) =>
+      _orders.orders(scope: scope);
 
   @override
   Future<Result<VendorOrder>> order(String id) => _orders.order(id);
+
+  @override
+  Future<Result<VendorOrder>> advance(
+    VendorOrder order,
+    OrderStatus to, {
+    RefusalReason? reason,
+    String? note,
+  }) => _orders.transition(
+    order.id,
+    to: to,
+    expected: order.status,
+    reason: reason,
+    note: note,
+  );
+
+  @override
+  Future<Result<VendorOrder>> confirmCash(VendorOrder order) =>
+      _orders.confirmCash(order.id);
 }

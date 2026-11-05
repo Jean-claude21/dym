@@ -393,7 +393,10 @@ void main() {
         functions: client.functions,
         data: client.data,
       );
-      final vendorOrders = VendorOrderRepository(vendor.data);
+      final vendorOrders = VendorOrderRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+      );
 
       Future<Purchase> order() async {
         await ok(cart.add(variant), 'ajout');
@@ -463,6 +466,203 @@ void main() {
     },
     skip: skip,
     timeout: const Timeout(Duration(minutes: 3)),
+  );
+
+  test(
+    'cycle de vie : livrée et encaissée, refusée, annulée, notifications',
+    () async {
+      final vendor = await signUp('vl');
+      final client = await signUp('cl3');
+
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final cash = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id')
+              .eq('country_code', country.code)
+              .eq('provider_code', 'cash'),
+        ),
+        'cash',
+      );
+      final cashId = ((cash as List).first as Map)['id'] as String;
+      final (_, variant) = await openStore(
+        vendor,
+        name: 'E2E L $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [cashId],
+        price: 800,
+      );
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Suivie',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      await ok(
+        AddressRepository(client.data).save(
+          AddressInput(
+            id: Uuid.v4(),
+            kind: AddressKind.home,
+            zoneId: zones[0],
+            landmark: 'Repère de test',
+            phone: '+000 0000 0000',
+          ),
+        ),
+        'adresse',
+      );
+      final cart = CartRepository(client.data);
+      final orders = OrderRepository(
+        functions: client.functions,
+        data: client.data,
+      );
+      final tracking = OrderTrackingRepository(
+        data: client.data,
+        functions: client.functions,
+      );
+      final vendorOrders = VendorOrderRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+      );
+      final vendorNotifications = NotificationRepository(vendor.data);
+      final clientNotifications = NotificationRepository(client.data);
+
+      Future<String> order() async {
+        await ok(cart.add(variant), 'ajout');
+        final quote = await ok(cart.cart(), 'devis');
+        final purchase = await ok(
+          orders.place(
+            OrderRequest(
+              addressId: quote.addressId,
+              modes: quote.modes,
+              paymentMethodId: cashId,
+              expectedTotalMinor: quote.totalMinor,
+            ),
+            idempotencyKey: Uuid.v4(),
+          ),
+          'commande',
+        );
+        return purchase.orders.single.id;
+      }
+
+      // 1. Livraison complète et encaissement.
+      final first = await order();
+      final unreadVendor = await ok(
+        vendorNotifications.unreadCount(),
+        'non lues',
+      );
+      expect(unreadVendor, 1, reason: 'nouvelle commande cash');
+      var seen = await ok(vendorOrders.order(first), 'détail');
+      expect(seen.status, OrderStatus.pending);
+      expect(seen.nextStatuses, [OrderStatus.accepted, OrderStatus.refused]);
+      final skipped = await vendorOrders.transition(
+        first,
+        to: OrderStatus.delivered,
+        expected: OrderStatus.pending,
+      );
+      expect(skipped.failureOrNull?.message, 'transition_not_allowed');
+      for (final (from, to) in [
+        (OrderStatus.pending, OrderStatus.accepted),
+        (OrderStatus.accepted, OrderStatus.preparing),
+        (OrderStatus.preparing, OrderStatus.ready),
+        (OrderStatus.ready, OrderStatus.outForDelivery),
+        (OrderStatus.outForDelivery, OrderStatus.delivered),
+      ]) {
+        seen = await ok(
+          vendorOrders.transition(first, to: to, expected: from),
+          '$from → $to',
+        );
+        expect(seen.status, to);
+      }
+      final replay = await vendorOrders.transition(
+        first,
+        to: OrderStatus.delivered,
+        expected: OrderStatus.outForDelivery,
+      );
+      expect(
+        replay.failureOrNull?.message,
+        'status_changed',
+        reason: 'double tap',
+      );
+      seen = await ok(vendorOrders.confirmCash(first), 'encaissement');
+      expect(seen.cashCollectedAt, isNotNull);
+      expect(seen.history, hasLength(5));
+      final tracked = await ok(tracking.order(first), 'suivi');
+      expect(tracked.status, OrderStatus.delivered);
+      expect(tracked.canCancel, isFalse);
+
+      // 2. Refus avec raison.
+      final second = await order();
+      seen = await ok(
+        vendorOrders.transition(
+          second,
+          to: OrderStatus.refused,
+          expected: OrderStatus.pending,
+          reason: RefusalReason.tooBusy,
+        ),
+        'refus',
+      );
+      expect(seen.statusReason, RefusalReason.tooBusy);
+
+      // 3. Annulation par la cliente avant la préparation.
+      final third = await order();
+      await ok(
+        vendorOrders.transition(
+          third,
+          to: OrderStatus.accepted,
+          expected: OrderStatus.pending,
+        ),
+        'acceptée',
+      );
+      final cancelled = await ok(
+        tracking.cancel(third, expected: OrderStatus.accepted),
+        'annulation',
+      );
+      expect(cancelled.status, OrderStatus.cancelled);
+      expect(cancelled.cancelledBy, 'client');
+
+      // Notifications de la cliente : chaque étape, lisibles, marquables.
+      final list = await ok(clientNotifications.notifications(), 'centre');
+      expect(
+        list.map((n) => n.kind).toSet(),
+        containsAll(<String>[
+          'order_accepted',
+          'order_preparing',
+          'order_ready',
+          'order_out_for_delivery',
+          'order_delivered',
+          'order_refused',
+        ]),
+      );
+      expect(await ok(clientNotifications.markRead(), 'tout lire'), 0);
+      final vendorList = await ok(
+        vendorNotifications.notifications(),
+        'vendeuse',
+      );
+      expect(
+        vendorList.map((n) => n.kind),
+        contains('order_cancelled_by_client'),
+      );
+      final mine = await ok(tracking.orders(), 'mes commandes');
+      expect(mine.map((o) => o.status).toSet(), {
+        OrderStatus.delivered,
+        OrderStatus.refused,
+        OrderStatus.cancelled,
+      });
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 4)),
   );
 }
 

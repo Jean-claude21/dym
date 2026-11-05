@@ -1,0 +1,97 @@
+import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
+import 'package:flutter/material.dart';
+
+/// Libellé d'un statut (retrait : « Récupérée » au lieu de « Livrée »).
+String orderStatusLabel(
+  DymLocalizations l10n,
+  OrderStatus status, {
+  Fulfillment fulfillment = Fulfillment.delivery,
+}) => switch (status) {
+  OrderStatus.pending => l10n.orderStatusPending,
+  OrderStatus.accepted => l10n.orderStatusAccepted,
+  OrderStatus.preparing => l10n.orderStatusPreparing,
+  OrderStatus.ready => l10n.orderStatusReady,
+  OrderStatus.outForDelivery => l10n.orderStatusOutForDelivery,
+  OrderStatus.delivered =>
+    fulfillment == Fulfillment.pickup
+        ? l10n.orderStatusCollected
+        : l10n.orderStatusDelivered,
+  OrderStatus.refused => l10n.orderStatusRefused,
+  OrderStatus.cancelled => l10n.orderStatusCancelled,
+  OrderStatus.unknown => l10n.errorGeneric,
+};
+
+String refusalReasonLabel(DymLocalizations l10n, RefusalReason? reason) =>
+    switch (reason) {
+      RefusalReason.outOfStock => l10n.reasonOutOfStock,
+      RefusalReason.tooBusy => l10n.reasonTooBusy,
+      RefusalReason.areaNotServed => l10n.reasonAreaNotServed,
+      _ => l10n.reasonOther,
+    };
+
+/// Heure locale courte (« 11:30 »).
+String shortTime(BuildContext context, DateTime at) =>
+    TimeOfDay.fromDateTime(at.toLocal()).format(context);
+
+/// Date courte (« 01/10/2026 »).
+String shortDate(BuildContext context, DateTime at) =>
+    MaterialLocalizations.of(context).formatShortDate(at.toLocal());
+
+/// « il y a 5 min », « hier »… par rapport à [now].
+String timeAgo(DymLocalizations l10n, DateTime at, DateTime now) {
+  final d = now.difference(at);
+  if (d.inMinutes < 1) return l10n.timeJustNow;
+  if (d.inMinutes < 60) return l10n.timeMinutesAgo(d.inMinutes);
+  if (d.inHours < 24) return l10n.timeHoursAgo(d.inHours);
+  if (d.inDays < 2) return l10n.timeYesterday;
+  return l10n.timeDaysAgo(d.inDays);
+}
+
+/// Titre et texte d'une notification (type + paramètres).
+(String, String) notificationText(DymLocalizations l10n, AppNotification n) {
+  final store = n.param('store_name') ?? '';
+  return switch (n.kind) {
+    'order_accepted' => (
+      l10n.notifAcceptedTitle,
+      l10n.notifAcceptedBody(store),
+    ),
+    'order_refused' => (l10n.notifRefusedTitle, l10n.notifRefusedBody(store)),
+    'order_preparing' => (
+      l10n.orderStatusPreparing,
+      l10n.notifPreparingBody(store),
+    ),
+    'order_ready' => (l10n.notifReadyTitle, l10n.notifReadyBody(store)),
+    'order_out_for_delivery' => (
+      l10n.orderStatusOutForDelivery,
+      l10n.notifOnTheWayBody,
+    ),
+    'order_delivered' => (l10n.orderStatusDelivered, l10n.notifDeliveredBody),
+    'payment_succeeded' => (l10n.paymentConfirmed, l10n.notifPaidBody),
+    'payment_failed' => (
+      l10n.notifPaymentFailedTitle,
+      l10n.notifPaymentFailedBody,
+    ),
+    'new_order' => (
+      l10n.notifNewOrderTitle,
+      l10n.notifNewOrderBody(n.param('customer_first_name') ?? ''),
+    ),
+    'order_cancelled_by_client' => (
+      l10n.notifCancelledByClientTitle,
+      l10n.notifCancelledByClientBody,
+    ),
+    _ => (l10n.notificationsTitle, ''),
+  };
+}
+
+/// Icône d'une notification.
+IconData notificationIcon(String kind) => switch (kind) {
+  'order_accepted' || 'payment_succeeded' => Icons.check_circle_rounded,
+  'order_preparing' => Icons.soup_kitchen_rounded,
+  'order_ready' => Icons.shopping_bag_rounded,
+  'order_out_for_delivery' => Icons.two_wheeler_rounded,
+  'order_delivered' => Icons.home_rounded,
+  'order_refused' || 'order_cancelled_by_client' => Icons.cancel_rounded,
+  'payment_failed' => Icons.error_rounded,
+  _ => Icons.notifications_rounded,
+};

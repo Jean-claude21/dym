@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:stacked/stacked.dart';
@@ -36,8 +37,9 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
   }
 }
 
-/// Commandes (écran 41), rafraîchies toutes les [refreshEvery] : une commande
-/// payée apparaît sans geste.
+/// Commandes (écran 41) : onglets nouvelles, en cours, terminées ; relues
+/// toutes les [refreshEvery] ; une nouvelle commande déclenche [onArrival]
+/// (son et vibration dans la vue).
 class OrdersViewModel extends _OrdersLoadingViewModel {
   new({
     required OrdersService service,
@@ -45,24 +47,54 @@ class OrdersViewModel extends _OrdersLoadingViewModel {
   }) : super(service);
 
   final Duration refreshEvery;
-  List<VendorOrder> _orders = const [];
+  VendorOrderScope _scope = VendorOrderScope.newOrders;
+  List<VendorOrder> _all = const [];
+  Set<String>? _seenNew;
   Timer? _timer;
   bool _offline = false;
 
-  List<VendorOrder> get orders => _orders;
-  bool get ready => _config != null && !failed;
+  /// Appelé à l'arrivée d'une nouvelle commande en attente.
+  void Function()? onArrival;
 
-  /// Dernière relecture automatique hors ligne (la liste reste affichée).
+  VendorOrderScope get scope => _scope;
+  bool get ready => _config != null && !failed;
   bool get offline => _offline;
+
+  int get newCount => _all.where((o) => o.status == OrderStatus.pending).length;
+
+  List<VendorOrder> get orders => _all.where(_inScope).toList();
+
+  bool _inScope(VendorOrder o) => switch (_scope) {
+    VendorOrderScope.newOrders => o.status == OrderStatus.pending,
+    VendorOrderScope.active =>
+      o.status.isActive && o.status != OrderStatus.pending,
+    VendorOrderScope.done => !o.status.isActive,
+  };
 
   @override
   Future<void> load() async {
     await run(() async {
       final result = await service.orders();
-      _orders = result.valueOrNull ?? const [];
+      if (result case Ok(:final value)) _apply(value);
       return result.failureOrNull;
     });
     _timer ??= Timer.periodic(refreshEvery, (_) => unawaited(refresh()));
+  }
+
+  void _apply(List<VendorOrder> value) {
+    _all = value;
+    final pending = {
+      for (final o in value)
+        if (o.status == OrderStatus.pending) o.id,
+    };
+    final seen = _seenNew;
+    if (seen != null && pending.difference(seen).isNotEmpty) onArrival?.call();
+    _seenNew = {...?seen, ...pending};
+  }
+
+  void selectScope(VendorOrderScope scope) {
+    _scope = scope;
+    notifyListeners();
   }
 
   /// Relecture silencieuse (sans état de chargement).
@@ -70,7 +102,7 @@ class OrdersViewModel extends _OrdersLoadingViewModel {
     final result = await service.orders();
     switch (result) {
       case Ok(:final value):
-        _orders = value;
+        _apply(value);
         _offline = false;
       case Err(:final failure):
         _offline = failure is NetworkFailure;
@@ -85,15 +117,32 @@ class OrdersViewModel extends _OrdersLoadingViewModel {
   }
 }
 
-/// Détail d'une commande et de son paiement (écran 42).
+/// Détail d'une commande (écrans 08 et 42) : accepter, refuser (45), étapes,
+/// encaissement.
 class OrderDetailViewModel extends _OrdersLoadingViewModel {
   new({required OrdersService service, required this.orderId}) : super(service);
 
   final String orderId;
   VendorOrder? _order;
+  bool _acting = false;
+  Failure? _actionFailure;
 
   VendorOrder? get order => _order;
   bool get ready => _order != null && _config != null && !failed;
+  bool get acting => _acting;
+  Failure? get actionFailure => _actionFailure;
+
+  bool get statusChanged => switch (_actionFailure) {
+    ValidationFailure(message: 'status_changed') => true,
+    _ => false,
+  };
+
+  /// Prochaine étape « en avant » (hors refus).
+  OrderStatus? get nextStep =>
+      _order?.nextStatuses.where((s) => s != OrderStatus.refused).firstOrNull;
+
+  bool get canRefuse =>
+      _order?.nextStatuses.contains(OrderStatus.refused) ?? false;
 
   @override
   Future<void> load() => run(() async {
@@ -101,4 +150,33 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
     _order = result.valueOrNull;
     return result.failureOrNull;
   });
+
+  Future<void> advance(OrderStatus to) => _act((o) => service.advance(o, to));
+
+  Future<void> refuse(RefusalReason reason, String? note) => _act(
+    (o) => service.advance(o, OrderStatus.refused, reason: reason, note: note),
+  );
+
+  Future<void> confirmCash() => _act(service.confirmCash);
+
+  Future<void> _act(
+    Future<Result<VendorOrder>> Function(VendorOrder order) gesture,
+  ) async {
+    final current = _order;
+    if (current == null || _acting) return;
+    _acting = true;
+    _actionFailure = null;
+    notifyListeners();
+    final result = await gesture(current);
+    switch (result) {
+      case Ok(:final value):
+        _order = value;
+      case Err(:final failure):
+        _actionFailure = failure;
+        final fresh = await service.order(orderId);
+        if (fresh case Ok(:final value)) _order = value;
+    }
+    _acting = false;
+    notifyListeners();
+  }
 }

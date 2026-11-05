@@ -42,7 +42,10 @@ Future<void> main() async {
     ..registerSingleton<StoreService>(stores)
     ..registerSingleton<OrdersService>(
       NeonOrdersService(
-        orders: VendorOrderRepository(neon.data),
+        orders: VendorOrderRepository(
+          data: neon.data,
+          functions: neon.functions,
+        ),
         stores: stores,
       ),
     )

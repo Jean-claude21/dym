@@ -290,13 +290,14 @@ class PurchaseAddress {
 @immutable
 @JsonSerializable()
 class OrderStoreRef {
-  const new({required this.id, required this.name, this.origin});
+  const new({required this.id, required this.name, this.origin, this.zoneName});
 
   factory fromJson(Map<String, dynamic> json) => _$OrderStoreRefFromJson(json);
 
   final String id;
   final String name;
   final String? origin;
+  final String? zoneName;
 }
 
 /// Ligne figée d'une commande.

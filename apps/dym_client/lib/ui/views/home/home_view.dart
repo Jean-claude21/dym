@@ -5,13 +5,15 @@ import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/aisle/aisles_view.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/home/discovery_home_view.dart';
+import 'package:dym_client/features/orders/orders_service.dart';
+import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Onglets de la cliente. Les commandes arrivent avec leur spec.
-enum ClientTab { home, aisles, me }
+/// Onglets de la cliente.
+enum ClientTab { home, aisles, orders, me }
 
 /// Accueil de la cliente : découverte (écran 02), rayons et « Moi ».
 class HomeView extends StatefulWidget {
@@ -20,6 +22,7 @@ class HomeView extends StatefulWidget {
     this.service,
     this.discovery,
     this.navigator,
+    this.orders,
     this.initialTab = ClientTab.home,
   });
 
@@ -31,6 +34,9 @@ class HomeView extends StatefulWidget {
 
   /// Navigation (tests).
   final AppNavigator? navigator;
+
+  /// Commandes et notifications (tests).
+  final OrdersService? orders;
 
   final ClientTab initialTab;
 
@@ -46,6 +52,7 @@ class _HomeViewState extends State<HomeView> {
       widget.discovery ?? locator<DiscoveryService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
+  late final OrdersService _orders = widget.orders ?? locator<OrdersService>();
   bool _cartLoaded = false;
 
   @override
@@ -70,6 +77,7 @@ class _HomeViewState extends State<HomeView> {
       destinations: [
         DymNavItem(icon: Icons.home_rounded, label: l10n.navHome),
         DymNavItem(icon: Icons.grid_view_rounded, label: l10n.navAisles),
+        DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
         DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
       ],
       body: switch (_tab) {
@@ -87,12 +95,18 @@ class _HomeViewState extends State<HomeView> {
             onOpenAisle: _navigator.toAisle,
           ),
         ),
+        ClientTab.orders => MyOrdersView(
+          service: _orders,
+          onOpen: _navigator.toOrder,
+          onNotifications: _navigator.toNotifications,
+        ),
         ClientTab.me => AccountView(
           service: _service,
           onSignedOut: _navigator.toSignIn,
           onAddresses: CartScope.maybeOf(context) == null
               ? null
               : _navigator.toAddresses,
+          onNotifications: _navigator.toNotificationSettings,
         ),
       },
     );

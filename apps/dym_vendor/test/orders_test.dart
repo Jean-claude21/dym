@@ -37,7 +37,7 @@ VendorOrder order(String id, {bool paid = true, String name = 'Awa'}) =>
     VendorOrder(
       id: id,
       createdAt: DateTime.utc(2026, 10, 5, 10, 42),
-      status: 'pending',
+      status: OrderStatus.pending,
       fulfillment: paid ? Fulfillment.delivery : Fulfillment.pickup,
       currencyCode: 'XOF',
       subtotalMinor: 1300,
