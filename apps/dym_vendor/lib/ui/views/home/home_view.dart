@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
@@ -6,6 +8,7 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/products/products_view.dart';
+import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
@@ -22,6 +25,7 @@ enum HomeTab { dashboard, orders, messages, products, store, me }
 /// (écran 23) et « Moi ».
 class HomeView extends StatefulWidget {
   const new({
+    this.contents,
     super.key,
     this.service,
     this.stores,
@@ -55,6 +59,9 @@ class HomeView extends StatefulWidget {
 
   final HomeTab initialTab;
 
+  /// Contenus (tests) ; « Mes contenus » si le flag est actif.
+  final VendorContentService? contents;
+
   @override
   State<HomeView> createState() => _HomeViewState();
 }
@@ -72,6 +79,24 @@ class _HomeViewState extends State<HomeView> {
   late final ChatService _chat = widget.chat ?? locator<ChatService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
+  bool _contents = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final contents =
+        widget.contents ??
+        (locator.isRegistered<VendorContentService>()
+            ? locator<VendorContentService>()
+            : null);
+    if (contents != null) {
+      unawaited(
+        contents.enabled().then((on) {
+          if (mounted && on) setState(() => _contents = true);
+        }),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -119,6 +144,7 @@ class _HomeViewState extends State<HomeView> {
           service: _stores,
           onEdit: _navigator.toStoreSetting,
           onReviews: _navigator.toReviews,
+          onContents: _contents ? _navigator.toContents : null,
         ),
         HomeTab.me => AccountView(
           service: _service,

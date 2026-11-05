@@ -1669,4 +1669,92 @@ class MemoryAdminService implements AdminService {
     _stores.remove(storeId);
     return const Ok(null);
   }
+
+  // ---------------------------------------------------------------- modération
+
+  late final _reports = <ModerationItem>[
+    ModerationItem(
+      target: ReportTarget.content,
+      targetId: 'r-video',
+      count: 3,
+      firstAt: now.subtract(const Duration(hours: 2)),
+      reasons: const [ReportReason.misleading],
+      title: 'Récolte fraîche du matin, prix direct marché.',
+      storeName: "Étal d'Akossiwa",
+      isVideo: true,
+      contentKind: ContentKind.video,
+      tags: const ['Tomates', 'Gombo', 'Piments'],
+    ),
+    ModerationItem(
+      target: ReportTarget.review,
+      targetId: 'r-review',
+      count: 2,
+      firstAt: now.subtract(const Duration(hours: 5)),
+      reasons: const [ReportReason.offensive],
+      title: 'Avis de démonstration',
+      storeName: 'Chez Afi',
+      rating: 1,
+    ),
+    ModerationItem(
+      target: ReportTarget.product,
+      targetId: 'r-product',
+      count: 1,
+      firstAt: now.subtract(const Duration(days: 1)),
+      reasons: const [ReportReason.forbidden],
+      title: 'Poudre sans étiquette',
+      storeName: 'Épices du coin',
+    ),
+    ModerationItem(
+      target: ReportTarget.content,
+      targetId: 'r-story',
+      count: 1,
+      firstAt: now.subtract(const Duration(minutes: 30)),
+      reasons: const [ReportReason.spam],
+      title: 'Promo !!!',
+      storeName: 'Les jus d’Esi',
+      isVideo: true,
+      contentKind: ContentKind.story,
+    ),
+  ];
+  final _decided = <ModerationItem>[];
+
+  @override
+  Future<Result<List<ModerationItem>>> reports({bool decided = false}) async =>
+      _fail<List<ModerationItem>>() ??
+      Ok(List.of(decided ? _decided : _reports));
+
+  @override
+  Future<Result<void>> moderate(
+    ReportTarget target,
+    String targetId, {
+    required bool remove,
+    required String reason,
+  }) async {
+    final failed = _fail<void>();
+    if (failed != null) return failed;
+    if (reason.trim().isEmpty) {
+      return const Err(ValidationFailure('reason_required'));
+    }
+    final i = _reports.indexWhere((r) => r.targetId == targetId);
+    if (i < 0) return const Err(NotFoundFailure('signalement'));
+    final r = _reports.removeAt(i);
+    _decided.insert(
+      0,
+      ModerationItem(
+        target: r.target,
+        targetId: r.targetId,
+        count: r.count,
+        firstAt: r.firstAt,
+        reasons: r.reasons,
+        status: remove ? 'removed' : 'kept',
+        decisionReason: reason,
+        title: r.title,
+        storeName: r.storeName,
+        isVideo: r.isVideo,
+        contentKind: r.contentKind,
+      ),
+    );
+    gestures.add('$targetId:${remove ? 'removed' : 'kept'}');
+    return const Ok(null);
+  }
 }

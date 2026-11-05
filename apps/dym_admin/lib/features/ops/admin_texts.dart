@@ -161,3 +161,13 @@ String subjectLabel(DymLocalizations l10n, TicketSubject s) => switch (s) {
   TicketSubject.store => l10n.supportSubjectStore,
   _ => l10n.supportSubjectOther,
 };
+
+/// Motif d'un signalement.
+String moderationReasonLabel(DymLocalizations l10n, ReportReason r) =>
+    switch (r) {
+      ReportReason.misleading => l10n.reportMisleading,
+      ReportReason.offensive => l10n.reportOffensive,
+      ReportReason.forbidden => l10n.reportForbidden,
+      ReportReason.spam => l10n.reportSpam,
+      ReportReason.other => l10n.reportOther,
+    };

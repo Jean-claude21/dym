@@ -1414,6 +1414,173 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 2)),
   );
+
+  test(
+    "contenus : envoi, story et vidéo, fil, j'aime, signalement, modération",
+    () async {
+      final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+      if (dbUrl == null || dbUrl.isEmpty) {
+        markTestSkipped('NEON_LIVE_DATABASE_URL absent');
+        return;
+      }
+      final vendor = await signUp('vs');
+      final client = await signUp('cs2');
+      final team = await signUp('as2');
+      final grant = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'dym-db.mjs',
+        ].join(Platform.pathSeparator),
+        'grant-admin',
+        'dym-e2e-as2-$run@example.com',
+        '--url',
+        dbUrl,
+      ]);
+      expect(grant.exitCode, 0, reason: '${grant.stderr}');
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(2).map((z) => z.id).toList();
+      final cash = await ok(
+        client.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id')
+              .eq('country_code', country.code)
+              .eq('provider_code', 'cash'),
+        ),
+        'cash',
+      );
+      await openStore(
+        vendor,
+        name: 'Contenus $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [((cash as List).first as Map)['id'] as String],
+        price: 300,
+      );
+      final products = await ok(
+        vendor.data.rpc<Object?>('my_products'),
+        'produits',
+      );
+      final productId = ((products! as List).first as Map)['id'] as String;
+      final vendorContents = ContentRepository(
+        data: vendor.data,
+        functions: vendor.functions,
+        uploads: vendor.uploads,
+      );
+      final photo = await File(
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'apps',
+          'dym_gallery',
+          'assets',
+          'demo',
+          'products',
+          'gombo.webp',
+        ].join(Platform.pathSeparator),
+      ).readAsBytes();
+      final storyUpload = await ok(
+        vendorContents.upload(photo, contentType: 'image/webp'),
+        'envoi photo',
+      );
+      final story = await ok(
+        vendorContents.publish(
+          upload: storyUpload,
+          kind: ContentKind.story,
+          caption: 'Gombo du jour (test e2e)',
+          productIds: [productId],
+        ),
+        'story',
+      );
+      expect(story.expiresAt, isNotNull);
+      final videoUpload = await ok(
+        vendorContents.upload(
+          List<int>.filled(1024, 0),
+          contentType: 'video/mp4',
+        ),
+        'envoi vidéo',
+      );
+      final video = await ok(
+        vendorContents.publish(
+          upload: videoUpload,
+          kind: ContentKind.video,
+          productIds: [productId],
+        ),
+        'vidéo',
+      );
+
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Regarde',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      final contents = ContentRepository(
+        data: client.data,
+        functions: client.functions,
+        uploads: client.uploads,
+      );
+      final feed = await ok(contents.feed(zoneId: zones[0]), 'fil');
+      expect(feed.map((c) => c.id), contains(video.id));
+      expect(
+        (await ok(
+          contents.stories(zoneId: zones[0]),
+          'stories',
+        )).expand((g) => g.stories).map((s) => s.id),
+        contains(story.id),
+      );
+      await ok(contents.viewed(video.id), 'vue');
+      await ok(contents.clicked(video.id, productId), 'clic');
+      expect(await ok(contents.like(video.id, like: true), "j'aime"), 1);
+      await ok(
+        contents.report(
+          ReportTarget.content,
+          video.id,
+          ReportReason.misleading,
+        ),
+        'signalement',
+      );
+      final mine = await ok(vendorContents.mine(), 'mes contenus');
+      final stats = mine.firstWhere((c) => c.id == video.id);
+      expect(stats.viewCount, 1);
+      expect(stats.clickCount, 1);
+      expect(stats.reportCount, 1);
+
+      final admin = AdminRepository(data: team.data, functions: team.functions);
+      final queue = await ok(admin.reports(), 'file');
+      expect(queue.map((r) => r.targetId), contains(video.id));
+      await ok(
+        admin.moderate(
+          ReportTarget.content,
+          video.id,
+          remove: true,
+          reason: 'Contenu trompeur (test e2e)',
+        ),
+        'retrait',
+      );
+      final after = await ok(contents.feed(zoneId: zones[0]), 'fil relu');
+      expect(after.map((c) => c.id), isNot(contains(video.id)));
+      await ok(vendorContents.delete(story.id), 'story supprimée');
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).
@@ -1430,7 +1597,32 @@ Future<int> _postForm(String url) async {
 }
 
 /// POST JSON (Neon Auth) : corps et cookie de session.
+/// Neon Auth limite les inscriptions : sur un 429, on attend et on
+/// réessaie (la suite crée une vingtaine de comptes de test).
 Future<({Map<String, dynamic> body, String? cookie})> _post(
+  String url,
+  Map<String, Object?> body,
+) async {
+  for (var attempt = 1; ; attempt++) {
+    try {
+      return await _postOnce(url, body);
+    } on _TooManyRequests {
+      if (attempt == 6) rethrow;
+      await Future<void>.delayed(Duration(seconds: 15 * attempt));
+    }
+  }
+}
+
+final class _TooManyRequests implements Exception {
+  const new(this.url);
+
+  final String url;
+
+  @override
+  String toString() => '$url : 429';
+}
+
+Future<({Map<String, dynamic> body, String? cookie})> _postOnce(
   String url,
   Map<String, Object?> body,
 ) async {
@@ -1443,6 +1635,7 @@ Future<({Map<String, dynamic> body, String? cookie})> _post(
     request.write(jsonEncode(body));
     final response = await request.close();
     final text = await response.transform(utf8.decoder).join();
+    if (response.statusCode == 429) throw _TooManyRequests(url);
     if (response.statusCode >= 300) {
       throw StateError('$url : ${response.statusCode} $text');
     }

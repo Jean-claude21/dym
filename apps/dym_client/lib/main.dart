@@ -5,6 +5,7 @@ import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/app/client_app.dart';
 import 'package:dym_client/app/config_error_app.dart';
 import 'package:dym_client/features/cart/cart_service.dart';
+import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
@@ -71,6 +72,18 @@ Future<void> main() async {
         discovery: locator<DiscoveryService>(),
         cart: locator<CartService>(),
         events: EventsRepository(neon.data, app: EventApp.client),
+      ),
+    )
+    ..registerLazySingleton<ContentService>(
+      () => NeonContentService(
+        repository: ContentRepository(
+          data: neon.data,
+          functions: neon.functions,
+          uploads: neon.uploads,
+        ),
+        discovery: locator<DiscoveryService>(),
+        cart: locator<CartService>(),
+        media: environment.media,
       ),
     )
     ..registerLazySingleton<SupportService>(

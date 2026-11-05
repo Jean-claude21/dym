@@ -4,6 +4,7 @@ import 'package:dym_admin/features/clients/clients_view.dart';
 import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/disputes/disputes_view.dart';
 import 'package:dym_admin/features/finance/finance_view.dart';
+import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/orders/orders_views.dart';
 import 'package:dym_admin/features/settings/settings_view.dart';
@@ -25,13 +26,15 @@ enum AdminTab {
   clients,
   finance,
   support,
+  moderation,
   settings,
   audit,
 }
 
 /// Admin de l'équipe : tableau de bord (67), commandes (52, 53), litiges
 /// (54), boutiques (55), clientes (68), finances (57, 70), support (69),
-/// réglages (56) et journal (58). Déconnexion après 30 min d'inactivité.
+/// modération (76), réglages (56) et journal (58). Déconnexion après 30 min
+/// d'inactivité.
 class AdminHomeView extends StatefulWidget {
   const new({
     super.key,
@@ -112,6 +115,10 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         service: _admin,
         clock: widget.clock,
       ),
+      AdminTab.moderation => AdminModerationView(
+        service: _admin,
+        clock: widget.clock,
+      ),
       AdminTab.finance => AdminFinanceView(
         service: _admin,
         clock: widget.clock,
@@ -161,6 +168,10 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           DymNavItem(
             icon: Icons.support_agent_rounded,
             label: l10n.adminNavSupport,
+          ),
+          DymNavItem(
+            icon: Icons.shield_rounded,
+            label: l10n.adminNavModeration,
           ),
           DymNavItem(icon: Icons.tune_rounded, label: l10n.navSettings),
           DymNavItem(icon: Icons.history_rounded, label: l10n.adminNavAudit),

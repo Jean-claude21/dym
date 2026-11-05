@@ -146,6 +146,17 @@ abstract interface class AdminService {
   Future<Result<AdminVendorView>> vendorView(String storeId);
 
   Future<Result<void>> deleteVendor(String storeId, String reason);
+
+  /// File de modération (écran 76).
+  Future<Result<List<ModerationItem>>> reports({bool decided = false});
+
+  /// Garder ou retirer une cible signalée ; raison obligatoire.
+  Future<Result<void>> moderate(
+    ReportTarget target,
+    String targetId, {
+    required bool remove,
+    required String reason,
+  });
 }
 
 /// Implémentation Neon.
@@ -383,4 +394,16 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<void>> deleteVendor(String storeId, String reason) =>
       _admin.deleteVendor(storeId, reason);
+
+  @override
+  Future<Result<List<ModerationItem>>> reports({bool decided = false}) =>
+      _admin.reports(decided: decided);
+
+  @override
+  Future<Result<void>> moderate(
+    ReportTarget target,
+    String targetId, {
+    required bool remove,
+    required String reason,
+  }) => _admin.moderate(target, targetId, remove: remove, reason: reason);
 }

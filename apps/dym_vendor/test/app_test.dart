@@ -102,6 +102,9 @@ class _Navigator implements AppNavigator {
   void toReviews() => routes.add('reviews');
 
   @override
+  void toContents() => routes.add('contents');
+
+  @override
   void toHelp() => routes.add('help');
 }
 

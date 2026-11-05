@@ -5670,6 +5670,372 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Plus disponible, pas ajouté : {items}'**
   String copilotRefused(String items);
+
+  /// Fermer (générique)
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer'**
+  String get actionClose;
+
+  /// Onglet admin : modération
+  ///
+  /// In fr, this message translates to:
+  /// **'Modération'**
+  String get adminNavModeration;
+
+  /// Onglet du fil de vidéos
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéos'**
+  String get navVideos;
+
+  /// Onglet du fil (74)
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour toi'**
+  String get feedForYou;
+
+  /// Onglet du fil : boutiques où la cliente a commandé
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques suivies'**
+  String get feedFollowing;
+
+  /// Fil vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de vidéo dans ton quartier.'**
+  String get feedEmpty;
+
+  /// Fil des boutiques suivies vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Les vidéos des boutiques où tu as commandé apparaîtront ici.'**
+  String get feedEmptyFollowing;
+
+  /// Ajouter le produit tagué
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get feedAdd;
+
+  /// Produit ajouté depuis un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} est dans ton panier.'**
+  String feedAdded(String name);
+
+  /// Aimer un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'aime'**
+  String get feedLike;
+
+  /// Rangée de stories (accueil)
+  ///
+  /// In fr, this message translates to:
+  /// **'Stories des boutiques'**
+  String get storiesTitle;
+
+  /// Ajouter le produit d'une story
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter {name}'**
+  String storyAddProduct(String name);
+
+  /// Vidéos d'un produit (fiche)
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{Voir en vidéo} other{Voir en vidéo ({n})}}'**
+  String productVideos(int n);
+
+  /// Signaler un contenu, un produit ou un avis
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaler'**
+  String get reportAction;
+
+  /// Titre de la feuille de signalement
+  ///
+  /// In fr, this message translates to:
+  /// **'Pourquoi signaler ?'**
+  String get reportTitle;
+
+  /// Motif
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu trompeur'**
+  String get reportMisleading;
+
+  /// Motif
+  ///
+  /// In fr, this message translates to:
+  /// **'Propos insultants'**
+  String get reportOffensive;
+
+  /// Motif
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit interdit'**
+  String get reportForbidden;
+
+  /// Motif
+  ///
+  /// In fr, this message translates to:
+  /// **'Spam'**
+  String get reportSpam;
+
+  /// Motif
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get reportOther;
+
+  /// Contenus de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes stories et vidéos'**
+  String get contentMine;
+
+  /// Titre de la publication (75)
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier'**
+  String get contentPublishTitle;
+
+  /// Type de contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Story 24 h'**
+  String get contentStory;
+
+  /// Type de contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo'**
+  String get contentVideo;
+
+  /// Média d'une story
+  ///
+  /// In fr, this message translates to:
+  /// **'Filme ou choisis une photo ou une courte vidéo.'**
+  String get contentPickStory;
+
+  /// Média d'une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Filme ou choisis une vidéo de 60 secondes au plus.'**
+  String get contentPickVideo;
+
+  /// Vidéo choisie
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo prête'**
+  String get contentVideoReady;
+
+  /// Filmer une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Filmer'**
+  String get contentFilm;
+
+  /// Choisir dans la galerie
+  ///
+  /// In fr, this message translates to:
+  /// **'Galerie'**
+  String get contentGallery;
+
+  /// Produits du contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits tagués'**
+  String get contentTagged;
+
+  /// Aucun produit à taguer
+  ///
+  /// In fr, this message translates to:
+  /// **'Publie d\'abord un produit pour pouvoir le taguer.'**
+  String get contentNoProducts;
+
+  /// Limite des produits tagués
+  ///
+  /// In fr, this message translates to:
+  /// **'5 produits au plus.'**
+  String get contentTagLimit;
+
+  /// Légende d'un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Légende (facultatif)'**
+  String get contentCaption;
+
+  /// Publier une story
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier la story'**
+  String get contentPublishStory;
+
+  /// Publier une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier la vidéo'**
+  String get contentPublishVideo;
+
+  /// Aide d'une story
+  ///
+  /// In fr, this message translates to:
+  /// **'Visible 24 h par les clientes de ta zone.'**
+  String get contentStoryHint;
+
+  /// Aide d'une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Visible dans le fil des clientes de ta zone.'**
+  String get contentVideoHint;
+
+  /// Aucun contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de story ni de vidéo.'**
+  String get contentNone;
+
+  /// Contenu archivé
+  ///
+  /// In fr, this message translates to:
+  /// **'Archivé'**
+  String get contentArchived;
+
+  /// Statistiques d'un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'{views} vues · {clicks} clics · {likes} j\'aime'**
+  String contentStats(int views, int clicks, int likes);
+
+  /// Menu d'un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Actions'**
+  String get contentActions;
+
+  /// Archiver un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver'**
+  String get contentArchive;
+
+  /// Supprimer un contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get contentDelete;
+
+  /// Filtre de modération
+  ///
+  /// In fr, this message translates to:
+  /// **'Signalés'**
+  String get moderationOpen;
+
+  /// Filtre de modération
+  ///
+  /// In fr, this message translates to:
+  /// **'Traités'**
+  String get moderationDecided;
+
+  /// File vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun signalement.'**
+  String get moderationEmpty;
+
+  /// Nombre de signalements
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 signalement} other{{n} signalements}}'**
+  String moderationReports(int n);
+
+  /// Décision
+  ///
+  /// In fr, this message translates to:
+  /// **'Gardé'**
+  String get moderationKept;
+
+  /// Décision
+  ///
+  /// In fr, this message translates to:
+  /// **'Retiré'**
+  String get moderationRemoved;
+
+  /// Type de cible
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo'**
+  String get moderationVideo;
+
+  /// Type de cible
+  ///
+  /// In fr, this message translates to:
+  /// **'Story'**
+  String get moderationStory;
+
+  /// Type de cible
+  ///
+  /// In fr, this message translates to:
+  /// **'Produit'**
+  String get moderationProduct;
+
+  /// Type de cible
+  ///
+  /// In fr, this message translates to:
+  /// **'Avis'**
+  String get moderationReview;
+
+  /// Titre de l'aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Aperçu du signalement'**
+  String get moderationPreview;
+
+  /// Champ de l'aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Légende'**
+  String get moderationCaption;
+
+  /// Champ de l'aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits tagués'**
+  String get moderationTagged;
+
+  /// Champ de l'aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif'**
+  String get moderationReason;
+
+  /// Champ de l'aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Décision'**
+  String get moderationDecision;
+
+  /// Raison de la décision
+  ///
+  /// In fr, this message translates to:
+  /// **'Raison (obligatoire)'**
+  String get moderationReasonRequired;
+
+  /// Garder le contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Garder'**
+  String get moderationKeep;
+
+  /// Retirer le contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get moderationRemove;
 }
 
 class _DymLocalizationsDelegate

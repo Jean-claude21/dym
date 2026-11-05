@@ -5,6 +5,7 @@ export 'src/account_repository.dart';
 export 'src/admin_repository.dart';
 export 'src/cart_repository.dart';
 export 'src/catalog_repository.dart';
+export 'src/content_repository.dart';
 export 'src/copilot_repository.dart';
 export 'src/discovery_repository.dart';
 export 'src/dispute_repository.dart';

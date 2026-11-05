@@ -12,6 +12,9 @@ import 'package:dym_client/features/cart/delivery/delivery_view.dart';
 import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
+import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/content/feed_view.dart';
+import 'package:dym_client/features/content/stories.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_view.dart';
@@ -51,6 +54,12 @@ abstract interface class AppNavigator {
 
   /// Copilote d'intention (écran 73).
   void toCopilot();
+
+  /// Fil de vidéos d'un produit (C-CAT-12).
+  void toProductVideos(String productId);
+
+  /// Stories du quartier, à partir d'une boutique.
+  void toStories(List<StoryGroup> groups, int index);
 
   /// Panier (écran 05).
   void toCart();
@@ -95,7 +104,13 @@ class StackedAppNavigator implements AppNavigator {
     SupportService? support,
     SearchAiService? searchAi,
     CopilotService? copilot,
+    ContentService? content,
   ]) : _support = support ?? locator<SupportService>(),
+       _content =
+           content ??
+           (locator.isRegistered<ContentService>()
+               ? locator<ContentService>()
+               : null),
        _copilot =
            copilot ??
            (locator.isRegistered<CopilotService>()
@@ -124,6 +139,9 @@ class StackedAppNavigator implements AppNavigator {
 
   /// Copilote d'intention (spec 019) ; absent : pas de point d'entrée.
   final CopilotService? _copilot;
+
+  /// Contenus shoppables (spec 020).
+  final ContentService? _content;
 
   NavigatorState get _navigator => StackedService.navigatorKey!.currentState!;
 
@@ -182,8 +200,38 @@ class StackedAppNavigator implements AppNavigator {
       onOpenStore: toStore,
       onAsk: (store, product) =>
           unawaited(toStoreChat(store, productId: product)),
+      content: _content,
+      onVideos: toProductVideos,
     ),
   );
+
+  @override
+  void toProductVideos(String productId) {
+    final content = _content;
+    if (content == null) return;
+    _push(
+      FeedView(
+        service: content,
+        productId: productId,
+        onBack: _back,
+        onOpenStore: toStore,
+      ),
+    );
+  }
+
+  @override
+  void toStories(List<StoryGroup> groups, int index) {
+    final content = _content;
+    if (content == null) return;
+    _push(
+      StoryViewer(
+        service: content,
+        groups: groups,
+        initial: index,
+        onClose: _back,
+      ),
+    );
+  }
 
   @override
   void toSearch({String text = ''}) => _push(
@@ -319,6 +367,14 @@ class StackedAppNavigator implements AppNavigator {
       storeName: storeName,
       onBack: _back,
       onMessage: () => unawaited(toStoreChat(storeId)),
+      onReport: switch (_content) {
+        final content? => (review, reason) => content.report(
+          ReportTarget.review,
+          review.id,
+          reason,
+        ),
+        null => null,
+      },
     ),
   );
 

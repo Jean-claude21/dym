@@ -1,4 +1,5 @@
 import 'package:dym_client/ui/navigation.dart';
+import 'package:dym_models/dym_models.dart';
 
 /// Navigation inerte de la galerie (app cliente) : les écrans restent
 /// affichés.
@@ -23,6 +24,12 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toCopilot() {}
+
+  @override
+  void toProductVideos(String productId) {}
+
+  @override
+  void toStories(List<StoryGroup> groups, int index) {}
 
   @override
   void toCart() {}

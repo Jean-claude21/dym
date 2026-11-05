@@ -81,6 +81,13 @@ class _Navigator implements AppNavigator {
   void toCopilot() => routes.add('copilot');
 
   @override
+  void toProductVideos(String productId) => routes.add('videos:$productId');
+
+  @override
+  void toStories(List<StoryGroup> groups, int index) =>
+      routes.add('stories:$index');
+
+  @override
   void toCart() => routes.add('cart');
 
   @override

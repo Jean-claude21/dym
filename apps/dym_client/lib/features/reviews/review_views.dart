@@ -1,4 +1,5 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
+import 'package:dym_client/features/content/report_sheet.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_client/features/orders/order_texts.dart';
@@ -265,6 +266,7 @@ class StoreReviewsView extends StackedView<StoreReviewsViewModel> {
     super.key,
     this.onMessage,
     this.clock = DateTime.now,
+    this.onReport,
   });
 
   final DiscoveryService service;
@@ -272,6 +274,9 @@ class StoreReviewsView extends StackedView<StoreReviewsViewModel> {
   final String storeName;
   final VoidCallback onBack;
   final VoidCallback? onMessage;
+
+  /// Signaler un avis abusif (spec 020) ; nul : non proposé.
+  final Future<void> Function(Review review, ReportReason reason)? onReport;
   final DateTime Function() clock;
 
   @override
@@ -371,7 +376,25 @@ class StoreReviewsView extends StackedView<StoreReviewsViewModel> {
             for (final r in data.reviews)
               Padding(
                 padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
-                child: ReviewCard(review: r, now: now, storeName: storeName),
+                child: ReviewCard(
+                  review: r,
+                  now: now,
+                  storeName: storeName,
+                  footer: switch (onReport) {
+                    final report? => Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton.icon(
+                        onPressed: () async {
+                          final reason = await showReportSheet(context);
+                          if (reason != null) await report(r, reason);
+                        },
+                        icon: const Icon(Icons.flag_outlined),
+                        label: Text(l10n.reportAction),
+                      ),
+                    ),
+                    null => null,
+                  },
+                ),
               ),
           ])
             DymContentWidth.form(child: w),

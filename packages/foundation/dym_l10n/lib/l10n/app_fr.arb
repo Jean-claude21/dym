@@ -4389,5 +4389,280 @@
         "type": "String"
       }
     }
+  },
+  "actionClose": "Fermer",
+  "@actionClose": {
+    "description": "Fermer (générique)"
+  },
+  "adminNavModeration": "Modération",
+  "@adminNavModeration": {
+    "description": "Onglet admin : modération"
+  },
+  "navVideos": "Vidéos",
+  "@navVideos": {
+    "description": "Onglet du fil de vidéos"
+  },
+  "feedForYou": "Pour toi",
+  "@feedForYou": {
+    "description": "Onglet du fil (74)"
+  },
+  "feedFollowing": "Boutiques suivies",
+  "@feedFollowing": {
+    "description": "Onglet du fil : boutiques où la cliente a commandé"
+  },
+  "feedEmpty": "Pas encore de vidéo dans ton quartier.",
+  "@feedEmpty": {
+    "description": "Fil vide"
+  },
+  "feedEmptyFollowing": "Les vidéos des boutiques où tu as commandé apparaîtront ici.",
+  "@feedEmptyFollowing": {
+    "description": "Fil des boutiques suivies vide"
+  },
+  "feedAdd": "Ajouter",
+  "@feedAdd": {
+    "description": "Ajouter le produit tagué"
+  },
+  "feedAdded": "{name} est dans ton panier.",
+  "@feedAdded": {
+    "description": "Produit ajouté depuis un contenu",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "feedLike": "J'aime",
+  "@feedLike": {
+    "description": "Aimer un contenu"
+  },
+  "storiesTitle": "Stories des boutiques",
+  "@storiesTitle": {
+    "description": "Rangée de stories (accueil)"
+  },
+  "storyAddProduct": "Ajouter {name}",
+  "@storyAddProduct": {
+    "description": "Ajouter le produit d'une story",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "productVideos": "{n, plural, =1{Voir en vidéo} other{Voir en vidéo ({n})}}",
+  "@productVideos": {
+    "description": "Vidéos d'un produit (fiche)",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "reportAction": "Signaler",
+  "@reportAction": {
+    "description": "Signaler un contenu, un produit ou un avis"
+  },
+  "reportTitle": "Pourquoi signaler ?",
+  "@reportTitle": {
+    "description": "Titre de la feuille de signalement"
+  },
+  "reportMisleading": "Contenu trompeur",
+  "@reportMisleading": {
+    "description": "Motif"
+  },
+  "reportOffensive": "Propos insultants",
+  "@reportOffensive": {
+    "description": "Motif"
+  },
+  "reportForbidden": "Produit interdit",
+  "@reportForbidden": {
+    "description": "Motif"
+  },
+  "reportSpam": "Spam",
+  "@reportSpam": {
+    "description": "Motif"
+  },
+  "reportOther": "Autre",
+  "@reportOther": {
+    "description": "Motif"
+  },
+  "contentMine": "Mes stories et vidéos",
+  "@contentMine": {
+    "description": "Contenus de la vendeuse"
+  },
+  "contentPublishTitle": "Publier",
+  "@contentPublishTitle": {
+    "description": "Titre de la publication (75)"
+  },
+  "contentStory": "Story 24 h",
+  "@contentStory": {
+    "description": "Type de contenu"
+  },
+  "contentVideo": "Vidéo",
+  "@contentVideo": {
+    "description": "Type de contenu"
+  },
+  "contentPickStory": "Filme ou choisis une photo ou une courte vidéo.",
+  "@contentPickStory": {
+    "description": "Média d'une story"
+  },
+  "contentPickVideo": "Filme ou choisis une vidéo de 60 secondes au plus.",
+  "@contentPickVideo": {
+    "description": "Média d'une vidéo"
+  },
+  "contentVideoReady": "Vidéo prête",
+  "@contentVideoReady": {
+    "description": "Vidéo choisie"
+  },
+  "contentFilm": "Filmer",
+  "@contentFilm": {
+    "description": "Filmer une vidéo"
+  },
+  "contentGallery": "Galerie",
+  "@contentGallery": {
+    "description": "Choisir dans la galerie"
+  },
+  "contentTagged": "Produits tagués",
+  "@contentTagged": {
+    "description": "Produits du contenu"
+  },
+  "contentNoProducts": "Publie d'abord un produit pour pouvoir le taguer.",
+  "@contentNoProducts": {
+    "description": "Aucun produit à taguer"
+  },
+  "contentTagLimit": "5 produits au plus.",
+  "@contentTagLimit": {
+    "description": "Limite des produits tagués"
+  },
+  "contentCaption": "Légende (facultatif)",
+  "@contentCaption": {
+    "description": "Légende d'un contenu"
+  },
+  "contentPublishStory": "Publier la story",
+  "@contentPublishStory": {
+    "description": "Publier une story"
+  },
+  "contentPublishVideo": "Publier la vidéo",
+  "@contentPublishVideo": {
+    "description": "Publier une vidéo"
+  },
+  "contentStoryHint": "Visible 24 h par les clientes de ta zone.",
+  "@contentStoryHint": {
+    "description": "Aide d'une story"
+  },
+  "contentVideoHint": "Visible dans le fil des clientes de ta zone.",
+  "@contentVideoHint": {
+    "description": "Aide d'une vidéo"
+  },
+  "contentNone": "Pas encore de story ni de vidéo.",
+  "@contentNone": {
+    "description": "Aucun contenu"
+  },
+  "contentArchived": "Archivé",
+  "@contentArchived": {
+    "description": "Contenu archivé"
+  },
+  "contentStats": "{views} vues · {clicks} clics · {likes} j'aime",
+  "@contentStats": {
+    "description": "Statistiques d'un contenu",
+    "placeholders": {
+      "views": {
+        "type": "int"
+      },
+      "clicks": {
+        "type": "int"
+      },
+      "likes": {
+        "type": "int"
+      }
+    }
+  },
+  "contentActions": "Actions",
+  "@contentActions": {
+    "description": "Menu d'un contenu"
+  },
+  "contentArchive": "Archiver",
+  "@contentArchive": {
+    "description": "Archiver un contenu"
+  },
+  "contentDelete": "Supprimer",
+  "@contentDelete": {
+    "description": "Supprimer un contenu"
+  },
+  "moderationOpen": "Signalés",
+  "@moderationOpen": {
+    "description": "Filtre de modération"
+  },
+  "moderationDecided": "Traités",
+  "@moderationDecided": {
+    "description": "Filtre de modération"
+  },
+  "moderationEmpty": "Aucun signalement.",
+  "@moderationEmpty": {
+    "description": "File vide"
+  },
+  "moderationReports": "{n, plural, =1{1 signalement} other{{n} signalements}}",
+  "@moderationReports": {
+    "description": "Nombre de signalements",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "moderationKept": "Gardé",
+  "@moderationKept": {
+    "description": "Décision"
+  },
+  "moderationRemoved": "Retiré",
+  "@moderationRemoved": {
+    "description": "Décision"
+  },
+  "moderationVideo": "Vidéo",
+  "@moderationVideo": {
+    "description": "Type de cible"
+  },
+  "moderationStory": "Story",
+  "@moderationStory": {
+    "description": "Type de cible"
+  },
+  "moderationProduct": "Produit",
+  "@moderationProduct": {
+    "description": "Type de cible"
+  },
+  "moderationReview": "Avis",
+  "@moderationReview": {
+    "description": "Type de cible"
+  },
+  "moderationPreview": "Aperçu du signalement",
+  "@moderationPreview": {
+    "description": "Titre de l'aperçu"
+  },
+  "moderationCaption": "Légende",
+  "@moderationCaption": {
+    "description": "Champ de l'aperçu"
+  },
+  "moderationTagged": "Produits tagués",
+  "@moderationTagged": {
+    "description": "Champ de l'aperçu"
+  },
+  "moderationReason": "Motif",
+  "@moderationReason": {
+    "description": "Champ de l'aperçu"
+  },
+  "moderationDecision": "Décision",
+  "@moderationDecision": {
+    "description": "Champ de l'aperçu"
+  },
+  "moderationReasonRequired": "Raison (obligatoire)",
+  "@moderationReasonRequired": {
+    "description": "Raison de la décision"
+  },
+  "moderationKeep": "Garder",
+  "@moderationKeep": {
+    "description": "Garder le contenu"
+  },
+  "moderationRemove": "Retirer",
+  "@moderationRemove": {
+    "description": "Retirer le contenu"
   }
 }
