@@ -1,0 +1,16 @@
+name: dym_core
+description: Fondation DYM en Dart pur (argent, devises).
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+
+dependencies:
+  intl: ^0.20.3
+  meta: ^1.17.0
+
+dev_dependencies:
+  test: ^1.26.0
+  very_good_analysis: ^11.0.0

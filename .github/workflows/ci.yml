@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  flutter:
+    name: Analyse et tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      # Version de Flutter lue dans .fvmrc (source de vérité, décision 0006).
+      - name: Lire la version Flutter
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      # Melos utilise sdkPath: .fvm/flutter_sdk ; en CI on y lie le SDK installé.
+      - name: Lier le SDK pour Melos
+        run: |
+          mkdir -p .fvm
+          ln -sfn "$(dirname "$(dirname "$(which flutter)")")" .fvm/flutter_sdk
+
+      - name: Dépendances
+        run: |
+          flutter pub get
+          dart run melos bootstrap
+
+      - name: Thème à jour avec les tokens
+        run: dart run melos run tokens:check
+
+      - name: Analyse
+        run: dart run melos run analyze
+
+      - name: Tests Dart (dym_core)
+        run: dart run melos run test:dart
+
+      - name: Tests Flutter (hors golden)
+        run: dart run melos run test

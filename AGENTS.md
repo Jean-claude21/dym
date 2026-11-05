@@ -25,18 +25,23 @@ Les règles non négociables sont dans `.specify/memory/constitution.md` : elles
 
 ## Commandes
 
-Toujours via FVM. Ne jamais appeler `flutter` ou `dart` directement.
+Toujours via FVM. Ne jamais appeler `flutter` ou `dart` directement. Melos est une dépendance du
+workspace et utilise le SDK FVM (`sdkPath: .fvm/flutter_sdk`).
 
 ```bash
-fvm install                       # installe la version de .fvmrc (3.47.5)
-fvm dart pub global activate melos
-melos bootstrap                   # résout le workspace
-melos run generate                # build_runner (Stacked, freezed, json)
-melos run analyze
-melos run test
+fvm install                          # installe la version de .fvmrc (3.47.5)
+fvm flutter pub get                  # résout le workspace
+fvm dart run melos bootstrap
+fvm dart run melos run tokens        # régénère le thème dym_ui depuis les tokens
+fvm dart run melos run analyze       # analyse stricte (very_good_analysis)
+fvm dart run melos run test          # tests Flutter (hors golden)
+fvm dart run melos run test:dart     # tests Dart purs (dym_core)
+fvm dart run melos run golden        # captures 412×915 de la galerie (machine de dev)
 ```
 
-Les scripts Melos sont définis dans le `pubspec.yaml` racine (créé par la spec `foundation`).
+Galerie de validation du design system : `cd apps/dym_gallery && fvm flutter run -d chrome`.
+
+Les scripts Melos sont définis dans le `pubspec.yaml` racine.
 
 ## Branches
 

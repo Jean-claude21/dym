@@ -11,6 +11,7 @@ Marketplace mobile multi-boutiques pour le commerce informel ouest-africain :
 | `apps/dym_vendor` | Vendeuses | Android, iOS | 1 |
 | `apps/dym_admin` | Équipe ops | Flutter Web | 1 |
 | `apps/dym_delivery` | Livreurs | Android | Sur déclencheur de volume |
+| `apps/dym_gallery` | Équipe (outil interne) | Android, Web | Galerie de validation du design system |
 
 ## Stack
 
@@ -21,8 +22,9 @@ Object Storage, Functions) · Moneroo + cash · AI SDK + OpenAI · FCM · Coolif
 
 ```bash
 fvm install
-fvm dart pub global activate melos
-melos bootstrap
+fvm flutter pub get
+fvm dart run melos bootstrap
+cd apps/dym_gallery && fvm flutter run -d chrome   # galerie du design system
 ```
 
 ## Documentation

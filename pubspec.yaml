@@ -1,0 +1,62 @@
+name: dym_workspace
+description: Monorepo DYM — « Le marché de Lomé, livré chez toi ».
+publish_to: none
+
+environment:
+  sdk: ^3.13.0
+
+workspace:
+  - packages/foundation/dym_core
+  - packages/ui/dym_ui
+  - apps/dym_gallery
+
+dev_dependencies:
+  melos: ^8.9.0
+  very_good_analysis: ^11.0.0
+
+melos:
+  # SDK épinglé par FVM (.fvmrc → 3.47.5), jamais le Flutter global de la machine.
+  sdkPath: .fvm/flutter_sdk
+
+  scripts:
+    tokens:
+      description: Régénère le thème dym_ui depuis docs/design/tokens/dym.tokens.json.
+      exec:
+        command: dart run tool/generate_tokens.dart && dart format lib/src/tokens
+        concurrency: 1
+      packageFilters:
+        scope: dym_ui
+
+    tokens:check:
+      description: Échoue si le thème généré n'est pas à jour avec les tokens.
+      run: dart run melos run tokens && git diff --exit-code -- packages/ui/dym_ui/lib/src/tokens
+
+    analyze:
+      description: Analyse statique de tous les packages et apps.
+      run: dart analyze --fatal-infos packages apps
+
+    test:
+      description: Tests unitaires et widget (hors golden).
+      exec:
+        command: flutter test --exclude-tags golden
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        dependsOn: flutter
+
+    test:dart:
+      description: Tests des packages Dart purs.
+      exec:
+        command: dart test
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        noDependsOn: flutter
+
+    golden:
+      description: Régénère les captures 360×800 des écrans de la galerie (machine de dev).
+      exec:
+        command: flutter test --tags golden --update-goldens
+        concurrency: 1
+      packageFilters:
+        scope: dym_gallery
