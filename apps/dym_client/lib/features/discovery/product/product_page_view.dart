@@ -99,36 +99,43 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
       backgroundColor: c.background,
       bottomNavigationBar: canAdd
           ? SafeArea(
-              child: DymContentWidth.form(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-                  child: Row(
-                    children: [
-                      DymQuantityStepper(
-                        quantity: vm.quantity,
-                        min: 1,
-                        decreaseLabel: l10n.productStockDecrease,
-                        increaseLabel: l10n.productStockIncrease,
-                        onChanged: vm.setQuantity,
+              // Barre à sa hauteur naturelle (le conteneur de largeur, aligné,
+              // prendrait sinon toute la hauteur de l'écran).
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DymContentWidth.form(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                      child: Row(
+                        children: [
+                          DymQuantityStepper(
+                            quantity: vm.quantity,
+                            min: 1,
+                            decreaseLabel: l10n.productStockDecrease,
+                            increaseLabel: l10n.productStockIncrease,
+                            onChanged: vm.setQuantity,
+                          ),
+                          const SizedBox(width: DymTokenSpace.s3),
+                          Expanded(
+                            child: DymButton(
+                              label: l10n.cartAdd,
+                              icon: Icons.add_shopping_cart_rounded,
+                              onPressed: vm.available
+                                  ? () => addToCart(
+                                      context,
+                                      variantId,
+                                      quantity: vm.quantity,
+                                      confirm: true,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: DymTokenSpace.s3),
-                      Expanded(
-                        child: DymButton(
-                          label: l10n.cartAdd,
-                          icon: Icons.add_shopping_cart_rounded,
-                          onPressed: vm.available
-                              ? () => addToCart(
-                                  context,
-                                  variantId,
-                                  quantity: vm.quantity,
-                                  confirm: true,
-                                )
-                              : null,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             )
           : null,

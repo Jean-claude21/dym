@@ -113,7 +113,9 @@ class ProductTile extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: cart.service.cart,
       builder: (context, view, _) {
-        final variant = item.variantCount == 1 ? item.defaultVariantId : null;
+        // « + » ajoute toujours directement (première variante) ; toucher la
+        // carte ouvre la fiche pour choisir une autre variante.
+        final variant = item.defaultVariantId;
         return _card(
           context,
           price,
@@ -121,7 +123,7 @@ class ProductTile extends StatelessWidget {
           cartQuantityOf(view, variant),
           onQuantity: (q) {
             if (variant == null) {
-              onTap(); // plusieurs variantes : choix sur la fiche
+              onTap(); // variante inconnue : choix sur la fiche
             } else if (cartQuantityOf(view, variant) == 0) {
               unawaited(addToCart(context, variant, quantity: q));
             } else {
