@@ -21,6 +21,8 @@ import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
+import 'package:dym_client/features/discovery/search/voice_search_view.dart';
+import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_views.dart' as client_orders;
@@ -318,6 +320,39 @@ final referenceScreens = <ReferenceScreen>[
     builder: (c) => SearchView(
       service: DemoDiscovery.service(c),
       initialText: 'jus',
+      onBack: () {},
+      onOpenProduct: (_) {},
+      onOpenStore: (_) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '71',
+    title: 'Recherche vocale',
+    surface: 'Cliente',
+    referenceFile: '71-recherche-vocale.webp',
+    builder: (c) => VoiceSearchView(
+      service: MemorySearchAiService(
+        recorder: MemoryVoiceRecorder(
+          script: const [
+            0.2, 0.3, 0.5, 0.4, 0.6, 0.7, 0.5, 0.8, 0.9, 1, 0.8, 1, //
+            0.9, 1, 0.8, 0.9, 0.7, 0.6, 0.8, 0.5, 0.6, 0.4, 0.3, 0.2,
+          ],
+        ),
+      ),
+      listenFor: const Duration(milliseconds: 100),
+      onBack: () {},
+      onSearch: (_, _) {},
+    ),
+  ),
+  ReferenceScreen(
+    id: '72',
+    title: 'Recherche par photo',
+    surface: 'Cliente',
+    referenceFile: '72-recherche-photo.webp',
+    builder: (c) => SearchView(
+      service: DemoDiscovery.service(c),
+      ai: MemorySearchAiService(seen: 'gombo'),
+      initialPhoto: PhotoSource.gallery,
       onBack: () {},
       onOpenProduct: (_) {},
       onOpenStore: (_) {},

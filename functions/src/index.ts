@@ -21,6 +21,12 @@ import { availableProviders } from "./payments/simulator.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
+import {
+  aiPhotoDescriber,
+  aiTranscriber,
+  openAiSearchFactories,
+  pgSearchAiStore,
+} from "./search/adapters.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -36,6 +42,7 @@ const env = parseEnv(config, [
 const pool = createPool(env.postgres.databaseUrl);
 const openAiKey = process.env.OPENAI_API_KEY ?? "";
 const allowedOrigins = process.env.ALLOWED_ORIGINS ?? "";
+const searchModels = openAiKey ? openAiSearchFactories(openAiKey) : undefined;
 
 export default createApp({
   verifyToken: neonAuthVerifier(env.auth),
@@ -55,6 +62,11 @@ export default createApp({
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
   reviews: pgReviewStore(pool),
+  searchAi: {
+    store: pgSearchAiStore(pool),
+    transcriber: searchModels ? aiTranscriber(searchModels) : undefined,
+    describer: searchModels ? aiPhotoDescriber(searchModels) : undefined,
+  },
   messaging: {
     store: pgMessagingStore(pool),
     signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),

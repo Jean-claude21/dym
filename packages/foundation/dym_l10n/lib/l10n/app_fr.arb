@@ -4218,5 +4218,101 @@
   "adminVendors": "Vendeuses",
   "@adminVendors": {
     "description": "Nombre de vendeuses actives"
+  },
+  "voiceListening": "Je t'écoute…",
+  "@voiceListening": {
+    "description": "Écoute en cours (71)"
+  },
+  "voiceTranscribing": "Je réfléchis…",
+  "@voiceTranscribing": {
+    "description": "Transcription en cours"
+  },
+  "voiceDone": "C'est noté.",
+  "@voiceDone": {
+    "description": "Transcription terminée"
+  },
+  "voiceNothing": "Je n'ai rien entendu. Réessaie ou tape ta recherche.",
+  "@voiceNothing": {
+    "description": "Rien compris"
+  },
+  "voiceStop": "J'ai fini",
+  "@voiceStop": {
+    "description": "Arrêter l'écoute"
+  },
+  "voiceRestart": "Recommencer",
+  "@voiceRestart": {
+    "description": "Relancer l'écoute"
+  },
+  "voiceHint": "Parle naturellement, par exemple : « des tomates et du gombo pour ce soir »",
+  "@voiceHint": {
+    "description": "Exemple de recherche vocale"
+  },
+  "voiceYouSaid": "Tu as dit : ",
+  "@voiceYouSaid": {
+    "description": "Texte entendu (suivi du texte)"
+  },
+  "voiceSearch": "Chercher",
+  "@voiceSearch": {
+    "description": "Lancer la recherche entendue"
+  },
+  "voiceMicDenied": "Le micro est refusé. Autorise-le dans les réglages ou tape ta recherche.",
+  "@voiceMicDenied": {
+    "description": "Micro refusé"
+  },
+  "aiSearchFailed": "Ça n'a pas marché cette fois. Tape ta recherche.",
+  "@aiSearchFailed": {
+    "description": "Échec de la voix ou de la photo"
+  },
+  "searchHistory": "Historique",
+  "@searchHistory": {
+    "description": "Recherches récentes"
+  },
+  "searchHistoryClear": "Effacer",
+  "@searchHistoryClear": {
+    "description": "Effacer l'historique"
+  },
+  "searchSuggestions": "Suggestions",
+  "@searchSuggestions": {
+    "description": "Complétions pendant la saisie"
+  },
+  "photoSearchAnalyzing": "Je regarde ta photo…",
+  "@photoSearchAnalyzing": {
+    "description": "Photo en cours d'analyse"
+  },
+  "photoSearchNothing": "Je n'ai pas reconnu de produit. Essaie une autre photo ou tape ta recherche.",
+  "@photoSearchNothing": {
+    "description": "Photo non reconnue"
+  },
+  "photoTake": "Prendre une photo",
+  "@photoTake": {
+    "description": "Source : appareil photo"
+  },
+  "photoFromGallery": "Choisir dans la galerie",
+  "@photoFromGallery": {
+    "description": "Source : galerie"
+  },
+  "photoSearchYourPhoto": "Ta photo",
+  "@photoSearchYourPhoto": {
+    "description": "Vignette de la photo cherchée"
+  },
+  "photoSearchFrom": "D'après ta photo :",
+  "@photoSearchFrom": {
+    "description": "En-tête des résultats photo (72)"
+  },
+  "photoSearchEdit": "Modifier",
+  "@photoSearchEdit": {
+    "description": "Modifier le texte reconnu"
+  },
+  "photoSearchNew": "Nouvelle photo",
+  "@photoSearchNew": {
+    "description": "Chercher avec une autre photo"
+  },
+  "voiceSearchAction": "Chercher à la voix",
+  "@voiceSearchAction": {
+    "description": "Bouton micro"
+  },
+  "photoSearchAction": "Chercher en photo",
+  "@photoSearchAction": {
+    "description": "Bouton appareil photo"
   }
 }

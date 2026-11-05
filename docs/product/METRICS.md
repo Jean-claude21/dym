@@ -40,6 +40,7 @@ fiabilité (ops).
 | `product_published`, `product_stock_changed` | Serveur | H1 |
 | `ai_product_suggestion_shown`, `ai_product_suggestion_accepted` | App + serveur | H8 |
 | `search_performed`, `product_viewed`, `cart_item_added` | App | Conversion |
+| `voice_search_used`, `photo_search_used` (résultat, latence ; jamais le contenu) | Serveur | H10 |
 | `checkout_started`, `order_created` | App / serveur | Conversion, H2 |
 | `payment_initiated`, `payment_succeeded`, `payment_failed` | Serveur | Paiements |
 | `order_accepted`, `order_rejected`, `order_status_changed`, `order_delivered`, `order_cancelled` | Serveur | H5, H9 |

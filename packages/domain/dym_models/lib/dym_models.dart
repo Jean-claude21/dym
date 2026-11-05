@@ -14,4 +14,5 @@ export 'src/messaging/messaging_models.dart';
 export 'src/pilot/pilot_models.dart';
 export 'src/reference/country_config.dart';
 export 'src/reference/reference_models.dart';
+export 'src/search/search_ai_models.dart';
 export 'src/store/store_models.dart';

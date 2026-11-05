@@ -4,6 +4,7 @@ library;
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -1191,6 +1192,111 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 3)),
   );
+
+  test(
+    'recherche IA : historique, suggestions, photo et voix derrière le flag',
+    () async {
+      final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+      if (dbUrl == null || dbUrl.isEmpty) {
+        markTestSkipped('NEON_LIVE_DATABASE_URL absent');
+        return;
+      }
+      final client = await signUp('cs');
+      final team = await signUp('as');
+      final grant = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'dym-db.mjs',
+        ].join(Platform.pathSeparator),
+        'grant-admin',
+        'dym-e2e-as-$run@example.com',
+        '--url',
+        dbUrl,
+      ]);
+      expect(grant.exitCode, 0, reason: '${grant.stderr}');
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Cherche',
+            'p_zone_id': config.zones.first.id,
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      final search = SearchAiRepository(
+        data: client.data,
+        functions: client.functions,
+      );
+      final admin = AdminRepository(data: team.data, functions: team.functions);
+
+      // Historique et suggestions : sans flag.
+      await ok(search.remember('tomates', SearchSource.text), 'retenue');
+      await ok(search.remember('Tomates', SearchSource.voice), 'doublon');
+      final history = await ok(search.history(), 'historique');
+      expect(history.map((h) => h.query), ['Tomates']);
+      expect(
+        await ok(search.suggestions('t', zoneId: config.zones.first.id), 'sug'),
+        isA<List<SearchSuggestion>>(),
+      );
+      await ok(search.forget(), 'effacé');
+      expect(await ok(search.history(), 'vide'), isEmpty);
+
+      // Flag coupé : refus.
+      final photo = await File(
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'apps',
+          'dym_gallery',
+          'assets',
+          'demo',
+          'products',
+          'gombo.webp',
+        ].join(Platform.pathSeparator),
+      ).readAsBytes();
+      final refused = await search.describePhoto(photo, 'image/webp');
+      expect(refused.failureOrNull?.message, 'feature_disabled');
+
+      // Flag ouvert pour le pays, le temps de l'essai.
+      await ok(
+        admin.setFeatureFlag(
+          'ai_search',
+          enabled: true,
+          countryCode: country.code,
+        ),
+        'flag ouvert',
+      );
+      try {
+        final seen = await ok(search.describePhoto(photo, 'image/webp'), 'vu');
+        expect(seen, isNotNull);
+        expect(seen!.toLowerCase(), contains('gombo'));
+        // Une seconde de silence : rien compris, sans erreur.
+        final silence = Uint8List(32000);
+        final heard = await search.transcribe(_wav(silence), 'audio/wav');
+        expect(heard.isOk, isTrue, reason: '${heard.failureOrNull}');
+      } finally {
+        await admin.setFeatureFlag(
+          'ai_search',
+          enabled: false,
+          countryCode: country.code,
+        );
+      }
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 2)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).
@@ -1231,4 +1337,23 @@ Future<({Map<String, dynamic> body, String? cookie})> _post(
   } finally {
     client.close();
   }
+}
+
+/// En-tête WAV (PCM 16 bits mono, 16 kHz) devant des échantillons bruts.
+Uint8List _wav(Uint8List pcm) {
+  final header = ByteData(44)
+    ..setUint32(0, 0x52494646)
+    ..setUint32(4, 36 + pcm.length, Endian.little)
+    ..setUint32(8, 0x57415645)
+    ..setUint32(12, 0x666d7420)
+    ..setUint32(16, 16, Endian.little)
+    ..setUint16(20, 1, Endian.little)
+    ..setUint16(22, 1, Endian.little)
+    ..setUint32(24, 16000, Endian.little)
+    ..setUint32(28, 32000, Endian.little)
+    ..setUint16(32, 2, Endian.little)
+    ..setUint16(34, 16, Endian.little)
+    ..setUint32(36, 0x64617461)
+    ..setUint32(40, pcm.length, Endian.little);
+  return Uint8List.fromList([...header.buffer.asUint8List(), ...pcm]);
 }

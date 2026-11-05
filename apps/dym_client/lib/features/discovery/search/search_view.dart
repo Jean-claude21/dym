@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
+import 'package:dym_client/features/discovery/search/voice_search_view.dart';
+import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,9 +24,17 @@ class SearchView extends StackedView<SearchViewModel> {
     super.key,
     this.debounce = const Duration(milliseconds: 350),
     this.initialText = '',
+    this.ai,
+    this.initialPhoto,
   });
 
+  /// Recherche par photo lancée à l'ouverture (raccourci, galerie).
+  final PhotoSource? initialPhoto;
+
   final DiscoveryService service;
+
+  /// Historique, suggestions, voix et photo (spec 018).
+  final SearchAiService? ai;
   final VoidCallback onBack;
   final ValueChanged<String> onOpenProduct;
   final ValueChanged<String> onOpenStore;
@@ -32,11 +45,11 @@ class SearchView extends StackedView<SearchViewModel> {
 
   @override
   SearchViewModel viewModelBuilder(BuildContext context) =>
-      SearchViewModel(service: service, debounce: debounce);
+      SearchViewModel(service: service, debounce: debounce, ai: ai);
 
   @override
   void onViewModelReady(SearchViewModel viewModel) =>
-      viewModel.init(initialText: initialText);
+      viewModel.init(initialText: initialText, photo: initialPhoto);
 
   @override
   Widget builder(
@@ -53,8 +66,19 @@ class SearchView extends StackedView<SearchViewModel> {
         ? l10n.searchFilters
         : l10n.searchFiltersActive(vm.activeFilters);
     final Widget body;
-    if (vm.tooShort) {
-      body = _Message(text: l10n.searchPrompt);
+    if (vm.analyzingPhoto) {
+      body = _Message(text: l10n.photoSearchAnalyzing, busy: true);
+    } else if (vm.photoOutcome case final outcome?) {
+      body = _Message(
+        text: switch (outcome) {
+          Err(:final failure) => voiceFailureLabel(l10n, failure),
+          Ok() => l10n.photoSearchNothing,
+        },
+      );
+    } else if (vm.tooShort) {
+      body = vm.history.isEmpty
+          ? _Message(text: l10n.searchPrompt)
+          : _History(viewModel: vm);
     } else if (vm.isBusy && results == null) {
       body = const DiscoveryState(failure: null, onRetry: _noop);
     } else if (vm.failure != null) {
@@ -66,8 +90,20 @@ class SearchView extends StackedView<SearchViewModel> {
     } else {
       body = _Results(
         viewModel: vm,
-        onOpenProduct: onOpenProduct,
+        onOpenProduct: (id) {
+          unawaited(vm.openedResult());
+          onOpenProduct(id);
+        },
         onOpenStore: onOpenStore,
+        header: switch (vm.photo) {
+          final photo? => _PhotoHeader(
+            bytes: photo.bytes,
+            query: photo.query,
+            onEdit: vm.editPhotoQuery,
+            onNewPhoto: () => _choosePhoto(context, vm),
+          ),
+          null => null,
+        },
       );
     }
     return Scaffold(
@@ -90,6 +126,9 @@ class SearchView extends StackedView<SearchViewModel> {
                 ],
               ),
             ),
+            if (vm.suggestions.isNotEmpty && !vm.tooShort)
+              _Suggestions(viewModel: vm),
+
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: DymLayout.gutter(context),
@@ -168,23 +207,257 @@ String _sortLabel(DymLocalizations l10n, SearchSort sort) => switch (sort) {
 };
 
 class _Message extends StatelessWidget {
-  const new({required this.text});
+  const new({required this.text, this.busy = false});
 
   final String text;
+  final bool busy;
 
   @override
   Widget build(BuildContext context) => Center(
     child: Padding(
       padding: const EdgeInsets.all(DymTokenSpace.s5),
-      child: Text(
-        text,
-        textAlign: TextAlign.center,
-        style: context.dym.text.body.copyWith(
-          color: context.dym.colors.textSecondary,
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (busy) ...[
+            const CircularProgressIndicator(),
+            const SizedBox(height: DymTokenSpace.s3),
+          ],
+          Text(
+            text,
+            textAlign: TextAlign.center,
+            style: context.dym.text.body.copyWith(
+              color: context.dym.colors.textSecondary,
+            ),
+          ),
+        ],
       ),
     ),
   );
+}
+
+/// Choix de la source d'une photo, puis recherche (72).
+Future<void> _choosePhoto(BuildContext context, SearchViewModel vm) async {
+  final l10n = DymLocalizations.of(context);
+  final source = await showModalBottomSheet<PhotoSource>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheet) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            minTileHeight: 56,
+            leading: const Icon(Icons.photo_camera_rounded),
+            title: Text(l10n.photoTake),
+            onTap: () => Navigator.of(sheet).pop(PhotoSource.camera),
+          ),
+          ListTile(
+            minTileHeight: 56,
+            leading: const Icon(Icons.photo_library_rounded),
+            title: Text(l10n.photoFromGallery),
+            onTap: () => Navigator.of(sheet).pop(PhotoSource.gallery),
+          ),
+        ],
+      ),
+    ),
+  );
+  if (source != null) await vm.searchPhoto(source);
+}
+
+/// Écoute (71), puis recherche du texte entendu.
+Future<void> _openVoice(BuildContext context, SearchViewModel vm) async {
+  final ai = vm.ai;
+  if (ai == null) return;
+  final chosen = await Navigator.of(context).push<(String, SearchSource)>(
+    MaterialPageRoute(
+      builder: (route) => VoiceSearchView(
+        service: ai,
+        onBack: () => Navigator.of(route).pop(),
+        onSearch: (text, source) => Navigator.of(route).pop((text, source)),
+      ),
+    ),
+  );
+  if (chosen case (final text, final source)) {
+    await vm.searchFor(text, source);
+  }
+}
+
+/// Dernières recherches (champ vide).
+class _History extends StatelessWidget {
+  const new({required this.viewModel});
+
+  final SearchViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final vm = viewModel;
+    return ListView(
+      padding: EdgeInsets.symmetric(
+        horizontal: DymLayout.gutter(context),
+        vertical: DymTokenSpace.s3,
+      ),
+      children: [
+        Row(
+          children: [
+            Expanded(child: Text(l10n.searchHistory, style: t.title)),
+            TextButton(
+              onPressed: vm.forgetHistory,
+              child: Text(l10n.searchHistoryClear),
+            ),
+          ],
+        ),
+        Wrap(
+          spacing: DymTokenSpace.s2,
+          runSpacing: DymTokenSpace.s2,
+          children: [
+            for (final h in vm.history)
+              ActionChip(
+                avatar: Icon(switch (h.source) {
+                  SearchSource.voice => Icons.mic_rounded,
+                  SearchSource.photo => Icons.photo_camera_rounded,
+                  SearchSource.text => Icons.history_rounded,
+                }, color: c.brandDeep),
+                label: Text(h.query),
+                onPressed: () => vm.searchFor(h.query, SearchSource.text),
+              ),
+          ],
+        ),
+        const SizedBox(height: DymTokenSpace.s4),
+        Text(
+          l10n.searchPrompt,
+          textAlign: TextAlign.center,
+          style: t.body.copyWith(color: c.textSecondary),
+        ),
+      ],
+    );
+  }
+}
+
+/// Complétions pendant la saisie.
+class _Suggestions extends StatelessWidget {
+  const new({required this.viewModel});
+
+  final SearchViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final l10n = DymLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final vm = viewModel;
+    return Semantics(
+      label: l10n.searchSuggestions,
+      container: true,
+      child: SizedBox(
+        height: 56,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(
+            horizontal: DymLayout.gutter(context),
+            vertical: DymTokenSpace.s1,
+          ),
+          children: [
+            for (final s in vm.suggestions)
+              Padding(
+                padding: const EdgeInsets.only(right: DymTokenSpace.s2),
+                child: ActionChip(
+                  avatar: Icon(
+                    s.isCategory
+                        ? Icons.category_rounded
+                        : Icons.north_west_rounded,
+                    color: c.brandDeep,
+                  ),
+                  label: Text(s.label.resolve(locale)),
+                  onPressed: () =>
+                      vm.searchFor(s.label.resolve(locale), SearchSource.text),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// En-tête « D'après ta photo : … » (72).
+class _PhotoHeader extends StatelessWidget {
+  const new({
+    required this.bytes,
+    required this.query,
+    required this.onEdit,
+    required this.onNewPhoto,
+  });
+
+  final Uint8List bytes;
+  final String query;
+  final VoidCallback onEdit;
+  final VoidCallback onNewPhoto;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: DymTokenSpace.s1),
+      child: Wrap(
+        spacing: DymTokenSpace.s3,
+        runSpacing: DymTokenSpace.s2,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+            child: SizedBox.square(
+              dimension: 72,
+              child: bytes.isEmpty
+                  ? ColoredBox(
+                      color: c.tintVertTendre,
+                      child: Icon(
+                        Icons.photo_camera_rounded,
+                        color: c.brandDeep,
+                      ),
+                    )
+                  : Image.memory(
+                      bytes,
+                      fit: BoxFit.cover,
+                      semanticLabel: l10n.photoSearchYourPhoto,
+                    ),
+            ),
+          ),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 240),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.photoSearchFrom, style: t.label),
+                Text(
+                  query,
+                  style: t.display.copyWith(fontSize: 24, color: c.brandDeep),
+                ),
+                TextButton(
+                  onPressed: onEdit,
+                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                  child: Text(l10n.photoSearchEdit),
+                ),
+              ],
+            ),
+          ),
+          DymButton(
+            label: l10n.photoSearchNew,
+            icon: Icons.photo_camera_rounded,
+            variant: DymButtonVariant.secondary,
+            compact: true,
+            expanded: false,
+            onPressed: onNewPhoto,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _SearchField extends StatefulWidget {
@@ -210,28 +483,54 @@ class _SearchFieldState extends State<_SearchField> {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
+    final vm = widget.viewModel;
+    // Texte posé par la voix, la photo, l'historique ou une suggestion.
+    if (_controller.text != vm.text) {
+      _controller.value = TextEditingValue(
+        text: vm.text,
+        selection: TextSelection.collapsed(offset: vm.text.length),
+      );
+    }
+    final clear = _controller.text.isEmpty
+        ? null
+        : IconButton(
+            tooltip: l10n.searchClear,
+            onPressed: () {
+              _controller.clear();
+              vm.setText('');
+              setState(() {});
+            },
+            icon: const Icon(Icons.cancel_rounded),
+          );
     return TextField(
       controller: _controller,
       autofocus: widget.initial.isEmpty,
       textInputAction: TextInputAction.search,
-      onChanged: widget.viewModel.setText,
-      onSubmitted: (_) => widget.viewModel.submit(),
+      onChanged: vm.setText,
+      onSubmitted: (_) => vm.submitTyped(),
       style: context.dym.text.body.copyWith(fontSize: 18),
       decoration: InputDecoration(
         hintText: l10n.searchHint,
         filled: true,
         fillColor: c.card,
         prefixIcon: Icon(Icons.search_rounded, color: c.textSecondary),
-        suffixIcon: _controller.text.isEmpty
-            ? null
-            : IconButton(
-                tooltip: l10n.searchClear,
-                onPressed: () {
-                  _controller.clear();
-                  widget.viewModel.setText('');
-                  setState(() {});
-                },
-                icon: const Icon(Icons.cancel_rounded),
+        suffixIcon: !vm.aiEnabled
+            ? clear
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ?clear,
+                  IconButton(
+                    tooltip: l10n.voiceSearchAction,
+                    onPressed: () => _openVoice(context, vm),
+                    icon: Icon(Icons.mic_rounded, color: c.brandDeep),
+                  ),
+                  IconButton(
+                    tooltip: l10n.photoSearchAction,
+                    onPressed: () => _choosePhoto(context, vm),
+                    icon: Icon(Icons.photo_camera_rounded, color: c.brandDeep),
+                  ),
+                ],
               ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(DymTokenRadius.chip),
@@ -248,11 +547,15 @@ class _Results extends StatelessWidget {
     required this.viewModel,
     required this.onOpenProduct,
     required this.onOpenStore,
+    this.header,
   });
 
   final SearchViewModel viewModel;
   final ValueChanged<String> onOpenProduct;
   final ValueChanged<String> onOpenStore;
+
+  /// En-tête d'une recherche par photo (72), qui défile avec les résultats.
+  final Widget? header;
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +578,10 @@ class _Results extends StatelessWidget {
         return ListView(
           padding: EdgeInsets.fromLTRB(inset, 8, inset, 24),
           children: [
+            if (header case final h?) ...[
+              h,
+              const SizedBox(height: DymTokenSpace.s3),
+            ],
             for (final (i, item) in products.indexed) ...[
               // Les boutiques s'insèrent après le premier produit (écran 29).
               if (i == 1)

@@ -7,3 +7,4 @@ export 'src/location_provider.dart';
 export 'src/neon_bootstrap.dart';
 export 'src/photo_picker.dart';
 export 'src/secure_session_store.dart';
+export 'src/voice_recorder.dart';

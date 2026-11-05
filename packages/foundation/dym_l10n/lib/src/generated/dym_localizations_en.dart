@@ -3188,4 +3188,80 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminVendors => 'Sellers';
+
+  @override
+  String get voiceListening => 'I\'m listening…';
+
+  @override
+  String get voiceTranscribing => 'Working on it…';
+
+  @override
+  String get voiceDone => 'Got it.';
+
+  @override
+  String get voiceNothing =>
+      'I didn\'t hear anything. Try again or type your search.';
+
+  @override
+  String get voiceStop => 'I\'m done';
+
+  @override
+  String get voiceRestart => 'Try again';
+
+  @override
+  String get voiceHint =>
+      'Speak naturally, for example: “tomatoes and okra for tonight”';
+
+  @override
+  String get voiceYouSaid => 'You said: ';
+
+  @override
+  String get voiceSearch => 'Search';
+
+  @override
+  String get voiceMicDenied =>
+      'Microphone access is denied. Allow it in settings or type your search.';
+
+  @override
+  String get aiSearchFailed => 'That didn\'t work this time. Type your search.';
+
+  @override
+  String get searchHistory => 'History';
+
+  @override
+  String get searchHistoryClear => 'Clear';
+
+  @override
+  String get searchSuggestions => 'Suggestions';
+
+  @override
+  String get photoSearchAnalyzing => 'Looking at your photo…';
+
+  @override
+  String get photoSearchNothing =>
+      'I couldn\'t recognise a product. Try another photo or type your search.';
+
+  @override
+  String get photoTake => 'Take a photo';
+
+  @override
+  String get photoFromGallery => 'Choose from gallery';
+
+  @override
+  String get photoSearchYourPhoto => 'Your photo';
+
+  @override
+  String get photoSearchFrom => 'From your photo:';
+
+  @override
+  String get photoSearchEdit => 'Edit';
+
+  @override
+  String get photoSearchNew => 'New photo';
+
+  @override
+  String get voiceSearchAction => 'Search by voice';
+
+  @override
+  String get photoSearchAction => 'Search by photo';
 }

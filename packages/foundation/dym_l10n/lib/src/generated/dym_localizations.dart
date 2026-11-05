@@ -5436,6 +5436,150 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Vendeuses'**
   String get adminVendors;
+
+  /// Écoute en cours (71)
+  ///
+  /// In fr, this message translates to:
+  /// **'Je t\'écoute…'**
+  String get voiceListening;
+
+  /// Transcription en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'Je réfléchis…'**
+  String get voiceTranscribing;
+
+  /// Transcription terminée
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est noté.'**
+  String get voiceDone;
+
+  /// Rien compris
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai rien entendu. Réessaie ou tape ta recherche.'**
+  String get voiceNothing;
+
+  /// Arrêter l'écoute
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai fini'**
+  String get voiceStop;
+
+  /// Relancer l'écoute
+  ///
+  /// In fr, this message translates to:
+  /// **'Recommencer'**
+  String get voiceRestart;
+
+  /// Exemple de recherche vocale
+  ///
+  /// In fr, this message translates to:
+  /// **'Parle naturellement, par exemple : « des tomates et du gombo pour ce soir »'**
+  String get voiceHint;
+
+  /// Texte entendu (suivi du texte)
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as dit : '**
+  String get voiceYouSaid;
+
+  /// Lancer la recherche entendue
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher'**
+  String get voiceSearch;
+
+  /// Micro refusé
+  ///
+  /// In fr, this message translates to:
+  /// **'Le micro est refusé. Autorise-le dans les réglages ou tape ta recherche.'**
+  String get voiceMicDenied;
+
+  /// Échec de la voix ou de la photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Ça n\'a pas marché cette fois. Tape ta recherche.'**
+  String get aiSearchFailed;
+
+  /// Recherches récentes
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get searchHistory;
+
+  /// Effacer l'historique
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer'**
+  String get searchHistoryClear;
+
+  /// Complétions pendant la saisie
+  ///
+  /// In fr, this message translates to:
+  /// **'Suggestions'**
+  String get searchSuggestions;
+
+  /// Photo en cours d'analyse
+  ///
+  /// In fr, this message translates to:
+  /// **'Je regarde ta photo…'**
+  String get photoSearchAnalyzing;
+
+  /// Photo non reconnue
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai pas reconnu de produit. Essaie une autre photo ou tape ta recherche.'**
+  String get photoSearchNothing;
+
+  /// Source : appareil photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre une photo'**
+  String get photoTake;
+
+  /// Source : galerie
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir dans la galerie'**
+  String get photoFromGallery;
+
+  /// Vignette de la photo cherchée
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta photo'**
+  String get photoSearchYourPhoto;
+
+  /// En-tête des résultats photo (72)
+  ///
+  /// In fr, this message translates to:
+  /// **'D\'après ta photo :'**
+  String get photoSearchFrom;
+
+  /// Modifier le texte reconnu
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get photoSearchEdit;
+
+  /// Chercher avec une autre photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle photo'**
+  String get photoSearchNew;
+
+  /// Bouton micro
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher à la voix'**
+  String get voiceSearchAction;
+
+  /// Bouton appareil photo
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher en photo'**
+  String get photoSearchAction;
 }
 
 class _DymLocalizationsDelegate
