@@ -54,9 +54,17 @@ abstract final class DemoCheckout {
     ];
   }
 
+  static PaymentMethod _simulated(DemoCountry c) => PaymentMethod.fromJson({
+    'id': 'sim',
+    'country_code': c.code,
+    'provider_code': 'simulator',
+    'label': const {'fr': 'Mobile Money', 'en': 'Mobile Money'},
+  });
+
   static MemoryCartService service(
     DemoCountry c, {
     List<CustomerAddress>? addresses,
+    bool online = false,
   }) {
     final config = DemoStore.config(c);
     final zones = DemoStore.zoneNames(c);
@@ -92,7 +100,7 @@ abstract final class DemoCheckout {
       baseFeeMinor: _minor(c, 500),
       extraPickupFeeMinor: _minor(c, 200),
       freeThresholdMinor: _minor(c, 4000),
-      paymentMethods: [cash],
+      paymentMethods: [cash, if (online) _simulated(c)],
       addresses: addresses ?? DemoCheckout.addresses(c),
       initialLines: const {
         'tomates': 2,
@@ -118,4 +126,16 @@ abstract final class DemoCheckout {
   /// Achat de l'écran 37 (le panier de la maquette 05, commandé).
   static Future<Purchase> purchase(DemoCountry c) async =>
       (await service(c).placeOrder()).valueOrNull!;
+
+  /// Achat payé en Mobile Money (écrans 39 et 40) et son service.
+  static Future<(MemoryCartService, Purchase)> online(
+    DemoCountry c, {
+    bool failed = false,
+  }) async {
+    final s = service(c, online: true);
+    await s.select(paymentMethodId: 'sim');
+    final placed = (await s.placeOrder()).valueOrNull!;
+    if (failed) s.simulatePayment(placed.id, PaymentAttemptStatus.failed);
+    return (s, (await s.purchase(placed.id)).valueOrNull!);
+  }
 }

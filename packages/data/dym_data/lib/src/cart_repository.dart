@@ -90,6 +90,30 @@ class OrderRepository {
     decode: (json) => Purchase.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// Nouvelle tentative de paiement (même montant). Refus
+  /// (`ValidationFailure.message`) : `already_paid`, `not_online`,
+  /// `payment_not_accepted`, `payment_unavailable`.
+  Future<Result<Purchase>> retryPayment(
+    String purchaseId, {
+    required String idempotencyKey,
+    String? paymentMethodId,
+  }) => _functions.post<Purchase>(
+    '/v1/purchases/$purchaseId/payments',
+    body: {'payment_method_id': paymentMethodId},
+    idempotencyKey: idempotencyKey,
+    decode: (json) => Purchase.fromJson(json! as Map<String, dynamic>),
+  );
+
+  /// Passage au paiement à la livraison (refus : `already_paid`,
+  /// `cash_not_accepted`). Rejouable sans effet.
+  Future<Result<Purchase>> payOnDelivery(String purchaseId) =>
+      _functions.post<Purchase>(
+        '/v1/purchases/$purchaseId/cash',
+        body: const <String, Object?>{},
+        idempotencyKey: purchaseId,
+        decode: (json) => Purchase.fromJson(json! as Map<String, dynamic>),
+      );
+
   Future<Result<Purchase>> purchase(String id) =>
       _decode(_data, 'my_purchase', {'p_id': id}, (json) {
         if (json is! Map<String, dynamic>) throw const FormatException();

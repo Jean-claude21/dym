@@ -91,6 +91,9 @@ class _Navigator implements AppNavigator {
 
   @override
   Future<void> toStoreCategories() async => routes.add('categories');
+
+  @override
+  void toOrder(String orderId) => routes.add('order:$orderId');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

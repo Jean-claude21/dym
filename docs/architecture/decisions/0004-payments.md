@@ -33,3 +33,13 @@ Interface `PaymentProvider` côté Functions (`initiate`, `verifyWebhook`, `norm
 
 Chariow pour les commandes (incompatible, voir contexte) ; capture photo MoMo vérifiée par IA
 (fraude, remplacée par une file de vérification manuelle).
+
+## Complément (2026-10-02, spec 010) : fournisseur simulé
+
+En attendant le compte Moneroo, un fournisseur `simulator` implémente la même interface : sa page
+de paiement est servie par la Function et propose réussite, échec ou abandon ; chaque choix produit
+une confirmation signée (HMAC) envoyée au même webhook que les vrais fournisseurs. Il n'existe que
+si la Function a `PAYMENTS_SIMULATOR_SECRET` et que la branche n'est pas la production ; son moyen
+de paiement n'est créé que par configuration sur la branche de test. Moneroo le remplacera sans
+modifier les apps.
+

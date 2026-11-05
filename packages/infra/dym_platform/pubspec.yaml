@@ -18,6 +18,7 @@ dependencies:
   image_picker: ^1.2.0
   meta: ^1.17.0
   neon_kit: ^0.1.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

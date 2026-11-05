@@ -12,6 +12,13 @@ final cash = PaymentMethod.fromJson(const {
   'label': {'fr': 'Cash à la livraison', 'en': 'Cash on delivery'},
 });
 
+final simulated = PaymentMethod.fromJson(const {
+  'id': 'sim',
+  'country_code': 'TG',
+  'provider_code': 'simulator',
+  'label': {'fr': 'Mobile Money (simulé)', 'en': 'Mobile Money (simulated)'},
+});
+
 const _tas = LocalizedText({'fr': 'le tas', 'en': 'per heap'});
 const _litre = LocalizedText({'fr': '1 L', 'en': '1 L'});
 
@@ -35,6 +42,7 @@ MemoryCartService memoryCart({
   Map<String, int>? lines,
   bool kodjoOpen = true,
   LocatedPlace? located,
+  bool online = false,
 }) => MemoryCartService(
   config: togoConfig(),
   stores: {
@@ -90,7 +98,7 @@ MemoryCartService memoryCart({
       unitLabel: _litre,
     ),
   },
-  paymentMethods: [cash],
+  paymentMethods: [cash, if (online) simulated],
   addresses: addresses,
   initialLines:
       lines ?? const {'tomates': 2, 'gombo': 1, 'bissap': 2, 'gingembre': 1},

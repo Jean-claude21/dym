@@ -23,6 +23,8 @@ export default defineConfig({
         ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS ?? "",
         // Proposition « photo → fiche » (spec 007). Vide : saisie manuelle.
         OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
+        // Fournisseur de paiement simulé (spec 010) : jamais en production.
+        PAYMENTS_SIMULATOR_SECRET: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
       },
     },
   },

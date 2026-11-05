@@ -2310,6 +2310,204 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Ajouter'**
   String get cartAddShort;
+
+  /// Titre de l'écran de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get paymentTitle;
+
+  /// Paiement en cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente du paiement'**
+  String get paymentWaitingTitle;
+
+  /// Explication de l'attente
+  ///
+  /// In fr, this message translates to:
+  /// **'Valide le paiement sur la page qui vient de s\'ouvrir, puis reviens ici.'**
+  String get paymentWaitingBody;
+
+  /// Montant du paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get paymentAmount;
+
+  /// Référence du paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Référence'**
+  String get paymentReference;
+
+  /// Relecture du statut
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérification automatique…'**
+  String get paymentChecking;
+
+  /// Rouvrir la page du fournisseur
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la page de paiement'**
+  String get paymentOpenPage;
+
+  /// Passer au cash pendant l'attente
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer à la livraison à la place'**
+  String get paymentPayOnDeliveryInstead;
+
+  /// Paiement échoué
+  ///
+  /// In fr, this message translates to:
+  /// **'Le paiement n\'a pas abouti'**
+  String get paymentFailedTitle;
+
+  /// Explication de l'échec
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun montant n\'a été débité. Ta commande est gardée : réessaie ou paie à la livraison.'**
+  String get paymentFailedBody;
+
+  /// Nouvelle tentative
+  ///
+  /// In fr, this message translates to:
+  /// **'Réessayer le paiement'**
+  String get paymentRetry;
+
+  /// Passer au cash après un échec
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer à la livraison'**
+  String get paymentPayOnDelivery;
+
+  /// Badge paiement confirmé
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement confirmé'**
+  String get paymentConfirmed;
+
+  /// Badge cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash à la livraison'**
+  String get paymentCashOnDelivery;
+
+  /// Refus du cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Une boutique n\'accepte pas le paiement à la livraison.'**
+  String get paymentCashNotAccepted;
+
+  /// Page de paiement non ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Impossible d\'ouvrir la page de paiement.'**
+  String get paymentOpenFailed;
+
+  /// Liste vendeuse vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande pour l\'instant'**
+  String get ordersEmptyTitle;
+
+  /// Liste vendeuse vide : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Les commandes payées ou en cash apparaissent ici.'**
+  String get ordersEmptyMessage;
+
+  /// Titre d'une commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande de {name}'**
+  String vendorOrderOf(String name);
+
+  /// Heure de réception
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçue à {time}'**
+  String vendorOrderReceivedAt(String time);
+
+  /// Bandeau payé
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement confirmé'**
+  String get vendorPaidTitle;
+
+  /// Bandeau payé : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu peux préparer la commande.'**
+  String get vendorPaidBody;
+
+  /// Bandeau cash
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash à la livraison'**
+  String get vendorCashTitle;
+
+  /// Bandeau cash : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaisse {amount} à la remise de la commande.'**
+  String vendorCashBody(String amount);
+
+  /// Section articles
+  ///
+  /// In fr, this message translates to:
+  /// **'Articles'**
+  String get vendorItems;
+
+  /// Section paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement'**
+  String get vendorPayment;
+
+  /// Moyen de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen'**
+  String get vendorPaymentMethod;
+
+  /// Date du paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Date'**
+  String get vendorPaymentDate;
+
+  /// Section livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get vendorDelivery;
+
+  /// Commande en retrait
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait sur place'**
+  String get vendorPickup;
+
+  /// Repère de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Repère : {landmark}'**
+  String vendorLandmark(String landmark);
+
+  /// Appeler la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get vendorCall;
+
+  /// Quantité d'une ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'× {count}'**
+  String vendorQuantity(int count);
 }
 
 class _DymLocalizationsDelegate

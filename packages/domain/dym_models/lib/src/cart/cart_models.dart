@@ -329,6 +329,46 @@ class OrderLine {
   final int amountMinor;
 }
 
+/// État de paiement d'un achat, décidé par la base.
+@JsonEnum(fieldRename: FieldRename.snake)
+enum PaymentStatus { cashOnDelivery, awaitingPayment, paid, failed, unknown }
+
+/// État d'une tentative de paiement.
+@JsonEnum(fieldRename: FieldRename.snake)
+enum PaymentAttemptStatus { pending, succeeded, failed, cancelled, unknown }
+
+/// Tentative de paiement courante d'un achat (moyen en ligne).
+@immutable
+@JsonSerializable()
+class PurchasePayment {
+  const new({
+    required this.id,
+    required this.status,
+    required this.providerCode,
+    required this.amountMinor,
+    required this.reference,
+    this.checkoutUrl,
+    this.completedAt,
+  });
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$PurchasePaymentFromJson(json);
+
+  final String id;
+  @JsonKey(unknownEnumValue: PaymentAttemptStatus.unknown)
+  final PaymentAttemptStatus status;
+  final String providerCode;
+
+  /// Page de paiement du fournisseur (nulle tant qu'elle n'est pas créée).
+  final String? checkoutUrl;
+  @JsonKey(fromJson: minorFromJson)
+  final int amountMinor;
+
+  /// Référence courte (PA-XXXXXX).
+  final String reference;
+  final DateTime? completedAt;
+}
+
 /// Commande d'une boutique dans un achat.
 @immutable
 @JsonSerializable()
@@ -379,6 +419,8 @@ class Purchase {
     this.countryCode,
     this.address,
     this.substitutionAllowed = true,
+    this.paymentStatus = PaymentStatus.cashOnDelivery,
+    this.payment,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$PurchaseFromJson(json);
@@ -397,6 +439,15 @@ class Purchase {
   @JsonKey(fromJson: minorFromJson)
   final int totalMinor;
   final List<PurchaseOrder> orders;
+  @JsonKey(unknownEnumValue: PaymentStatus.unknown)
+  final PaymentStatus paymentStatus;
+
+  /// Tentative courante (moyen en ligne seulement).
+  final PurchasePayment? payment;
+
+  bool get isPaid => paymentStatus == PaymentStatus.paid;
+  bool get awaitingPayment => paymentStatus == PaymentStatus.awaitingPayment;
+  bool get paymentFailed => paymentStatus == PaymentStatus.failed;
 }
 
 /// Demande de commande (`POST /v1/orders`). Aucun montant n'est pris en

@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { type AuthVariables, requireUser, type TokenVerifier } from "./lib/auth.js";
 import { type CatalogDeps, registerCatalogRoutes } from "./catalog/routes.js";
 import { type OrderDeps, registerOrderRoutes } from "./orders/routes.js";
+import { type PaymentDeps, registerPaymentRoutes } from "./payments/routes.js";
 import { httpErrors, toHttpError } from "./lib/errors.js";
 
 export interface AppDeps {
@@ -15,6 +16,8 @@ export interface AppDeps {
   catalog?: CatalogDeps;
   /** Commandes (spec 009) ; absent : routes en 503. */
   orders?: OrderDeps;
+  /** Paiements en ligne (spec 010) ; absent : cash seulement. */
+  payments?: PaymentDeps;
 }
 
 /** App HTTP des Functions DYM. Les dépendances sont injectées (tests). */
@@ -51,7 +54,8 @@ export function createApp(deps: AppDeps) {
   );
 
   registerCatalogRoutes(app, deps.verifyToken, deps.catalog);
-  registerOrderRoutes(app, deps.verifyToken, deps.orders);
+  registerOrderRoutes(app, deps.verifyToken, deps.orders, deps.payments);
+  registerPaymentRoutes(app, deps.verifyToken, deps.payments);
 
   return app;
 }

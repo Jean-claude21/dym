@@ -89,6 +89,19 @@ abstract interface class CartService {
   /// après une erreur réseau réutilise la même clé d'idempotence.
   Future<Result<Purchase>> placeOrder();
 
+  /// Achat relu (état de paiement à jour).
+  Future<Result<Purchase>> purchase(String id);
+
+  /// Nouvelle tentative de paiement ; la même clé sert aux nouvelles
+  /// tentatives réseau de ce geste.
+  Future<Result<Purchase>> retryPayment(String purchaseId);
+
+  /// Passage au paiement à la livraison.
+  Future<Result<Purchase>> payOnDelivery(String purchaseId);
+
+  /// Ouvre la page de paiement du fournisseur ; `Ok(false)` : impossible.
+  Future<Result<bool>> openPaymentPage(String url);
+
   /// `checkout_started` (ouverture de l'étape livraison).
   void checkoutStarted();
 
@@ -110,6 +123,7 @@ class NeonCartService implements CartService {
     required this._auth,
     required this._location,
     required this._environment,
+    this._pages = const PluginExternalPageOpener(),
   });
 
   final CartRepository _cart;
@@ -121,6 +135,8 @@ class NeonCartService implements CartService {
   final AuthService _auth;
   final LocationProvider _location;
   final DymEnvironment _environment;
+  final ExternalPageOpener _pages;
+  final _retryKeys = <String, String>{};
   final ValueNotifier<CartView> _view = ValueNotifier(CartView.empty);
   CheckoutSelection _selection = const CheckoutSelection();
   CountryConfig? _config;
@@ -275,6 +291,35 @@ class NeonCartService implements CartService {
         break; // réseau ou 5xx : même clé à la prochaine tentative
     }
     return result;
+  }
+
+  @override
+  Future<Result<Purchase>> purchase(String id) => _orders.purchase(id);
+
+  @override
+  Future<Result<Purchase>> retryPayment(String purchaseId) async {
+    final key = _retryKeys[purchaseId] ??= Uuid.v4();
+    final result = await _orders.retryPayment(purchaseId, idempotencyKey: key);
+    switch (result) {
+      case Ok():
+        _retryKeys.remove(purchaseId);
+      case Err(:final failure) when !failure.isTransient:
+        _retryKeys.remove(purchaseId);
+      case Err():
+        break; // réseau : même clé à la prochaine tentative
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<Purchase>> payOnDelivery(String purchaseId) =>
+      _orders.payOnDelivery(purchaseId);
+
+  @override
+  Future<Result<bool>> openPaymentPage(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null) return Future.value(const Ok(false));
+    return _pages.open(uri);
   }
 
   @override

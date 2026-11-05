@@ -331,6 +331,48 @@ OrderLine _$OrderLineFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
 );
 
+PurchasePayment _$PurchasePaymentFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'PurchasePayment',
+      json,
+      ($checkedConvert) {
+        final val = PurchasePayment(
+          id: $checkedConvert('id', (v) => v as String),
+          status: $checkedConvert(
+            'status',
+            (v) => $enumDecode(
+              _$PaymentAttemptStatusEnumMap,
+              v,
+              unknownValue: PaymentAttemptStatus.unknown,
+            ),
+          ),
+          providerCode: $checkedConvert('provider_code', (v) => v as String),
+          amountMinor: $checkedConvert('amount_minor', (v) => minorFromJson(v)),
+          reference: $checkedConvert('reference', (v) => v as String),
+          checkoutUrl: $checkedConvert('checkout_url', (v) => v as String?),
+          completedAt: $checkedConvert(
+            'completed_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'providerCode': 'provider_code',
+        'amountMinor': 'amount_minor',
+        'checkoutUrl': 'checkout_url',
+        'completedAt': 'completed_at',
+      },
+    );
+
+const _$PaymentAttemptStatusEnumMap = {
+  PaymentAttemptStatus.pending: 'pending',
+  PaymentAttemptStatus.succeeded: 'succeeded',
+  PaymentAttemptStatus.failed: 'failed',
+  PaymentAttemptStatus.cancelled: 'cancelled',
+  PaymentAttemptStatus.unknown: 'unknown',
+};
+
 PurchaseOrder _$PurchaseOrderFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
       'PurchaseOrder',
@@ -417,6 +459,22 @@ Purchase _$PurchaseFromJson(Map<String, dynamic> json) => $checkedCreate(
         'substitution_allowed',
         (v) => v as bool? ?? true,
       ),
+      paymentStatus: $checkedConvert(
+        'payment_status',
+        (v) =>
+            $enumDecodeNullable(
+              _$PaymentStatusEnumMap,
+              v,
+              unknownValue: PaymentStatus.unknown,
+            ) ??
+            PaymentStatus.cashOnDelivery,
+      ),
+      payment: $checkedConvert(
+        'payment',
+        (v) => v == null
+            ? null
+            : PurchasePayment.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },
@@ -429,5 +487,14 @@ Purchase _$PurchaseFromJson(Map<String, dynamic> json) => $checkedCreate(
     'totalMinor': 'total_minor',
     'countryCode': 'country_code',
     'substitutionAllowed': 'substitution_allowed',
+    'paymentStatus': 'payment_status',
   },
 );
+
+const _$PaymentStatusEnumMap = {
+  PaymentStatus.cashOnDelivery: 'cash_on_delivery',
+  PaymentStatus.awaitingPayment: 'awaiting_payment',
+  PaymentStatus.paid: 'paid',
+  PaymentStatus.failed: 'failed',
+  PaymentStatus.unknown: 'unknown',
+};

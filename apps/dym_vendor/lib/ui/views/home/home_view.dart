@@ -5,14 +5,15 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/products/products_view.dart';
+import 'package:dym_vendor/features/orders/orders_service.dart';
+import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/store/my_store/my_store_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:dym_vendor/ui/navigation.dart';
 import 'package:flutter/material.dart';
 
-/// Onglets de l'accueil de la vendeuse. Les commandes arrivent avec leur
-/// spec.
-enum HomeTab { products, store, me }
+/// Onglets de l'accueil de la vendeuse.
+enum HomeTab { orders, products, store, me }
 
 /// Accueil de la vendeuse : « Mes produits » (écran 24), « Ma boutique »
 /// (écran 23) et « Moi ».
@@ -22,6 +23,7 @@ class HomeView extends StatefulWidget {
     this.service,
     this.stores,
     this.catalog,
+    this.orders,
     this.navigator,
     this.initialTab = HomeTab.products,
   });
@@ -34,6 +36,9 @@ class HomeView extends StatefulWidget {
 
   /// Catalogue (tests).
   final CatalogService? catalog;
+
+  /// Commandes (tests).
+  final OrdersService? orders;
 
   /// Navigation (tests).
   final AppNavigator? navigator;
@@ -51,6 +56,7 @@ class _HomeViewState extends State<HomeView> {
   late final StoreService _stores = widget.stores ?? locator<StoreService>();
   late final CatalogService _catalog =
       widget.catalog ?? locator<CatalogService>();
+  late final OrdersService _orders = widget.orders ?? locator<OrdersService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
 
@@ -63,6 +69,7 @@ class _HomeViewState extends State<HomeView> {
       currentIndex: _tab.index,
       onDestinationSelected: (i) => setState(() => _tab = HomeTab.values[i]),
       destinations: [
+        DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
         DymNavItem(
           icon: Icons.shopping_basket_rounded,
           label: l10n.navProducts,
@@ -71,6 +78,10 @@ class _HomeViewState extends State<HomeView> {
         DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
       ],
       body: switch (_tab) {
+        HomeTab.orders => OrdersView(
+          service: _orders,
+          onOpen: _navigator.toOrder,
+        ),
         HomeTab.products => ProductsView(
           service: _catalog,
           onEdit: (product) => _navigator.toProductEditor(product: product),

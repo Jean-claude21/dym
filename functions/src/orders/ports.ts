@@ -22,5 +22,11 @@ export interface PlacedOrder {
 
 /** Refus de `app.place_order` : erreur HTTP 422 dont le message est le code. */
 export interface OrderStore {
-  placeOrder(userId: string, idempotencyKey: string, request: OrderRequest): Promise<PlacedOrder>;
+  /** [providers] : fournisseurs en ligne disponibles dans ce déploiement. */
+  placeOrder(
+    userId: string,
+    idempotencyKey: string,
+    request: OrderRequest,
+    providers: string[],
+  ): Promise<PlacedOrder>;
 }

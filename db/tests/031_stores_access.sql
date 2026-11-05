@@ -77,7 +77,8 @@ select throws_ok('select public.publish_store()', '42501', null, 'suspendue : ou
 
 select tests.logout();
 select is(
-  (select array_agg(name order by id) from public.events where name like 'store_%'),
+  (select array_agg(name order by id) from public.events
+   where name like 'store_%' and occurred_at = now()),
   array['store_created', 'store_opened', 'store_closed', 'store_opened'],
   'événements : création, ouverture, fermeture, réouverture'
 );

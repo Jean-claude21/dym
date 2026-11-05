@@ -30,4 +30,7 @@ class DemoVendorNavigator implements AppNavigator {
 
   @override
   Future<void> toStoreCategories() async {}
+
+  @override
+  void toOrder(String orderId) {}
 }

@@ -5,6 +5,7 @@ import 'package:dym_client/features/cart/addresses/addresses_view.dart';
 import 'package:dym_client/features/cart/cart/cart_view.dart';
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/cart/delivery/delivery_view.dart';
+import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
@@ -156,11 +157,18 @@ class StackedAppNavigator implements AppNavigator {
       ) ??
       false;
 
-  /// Commande envoyée : le panier et la livraison quittent la pile.
+  /// Après « Commander » : paiement en ligne à confirmer (39, 40), sinon
+  /// commande envoyée (37). Le panier et la livraison quittent la pile.
   void _toOrderSent(Purchase purchase) => _navigator.pushAndRemoveUntil<void>(
     MaterialPageRoute(
-      builder: (_) =>
-          OrderSentView(service: _cart, purchase: purchase, onHome: toHome),
+      builder: (_) => purchase.awaitingPayment || purchase.paymentFailed
+          ? PaymentView(
+              service: _cart,
+              purchase: purchase,
+              onBack: toHome,
+              onSettled: _toOrderSent,
+            )
+          : OrderSentView(service: _cart, purchase: purchase, onHome: toHome),
     ),
     (route) => route.isFirst,
   );
