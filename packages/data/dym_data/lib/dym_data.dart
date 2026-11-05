@@ -4,3 +4,4 @@ library;
 export 'src/account_repository.dart';
 export 'src/events_repository.dart';
 export 'src/reference_repository.dart';
+export 'src/store_repository.dart';

@@ -4,3 +4,4 @@ library;
 export 'src/account/account_models.dart';
 export 'src/reference/country_config.dart';
 export 'src/reference/reference_models.dart';
+export 'src/store/store_models.dart';

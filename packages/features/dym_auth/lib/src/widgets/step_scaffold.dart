@@ -3,8 +3,8 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Gabarit des étapes : retour, titre, sous-titre, contenu défilant borné à la
-/// largeur d'un formulaire, action principale en bas.
+/// Gabarit des étapes de connexion : `DymFormScaffold` avec le libellé de
+/// retour localisé.
 class StepScaffold extends StatelessWidget {
   const new({
     required this.title,
@@ -24,92 +24,15 @@ class StepScaffold extends StatelessWidget {
   final Color? backgroundColor;
 
   @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    final l10n = DymLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: backgroundColor ?? c.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, box) {
-                  final inset = DymLayout.sideInset(
-                    box.maxWidth,
-                    gutter: DymLayout.gutter(context),
-                    maxWidth: DymTokenLayout.formMax,
-                  );
-                  return ListView(
-                    padding: EdgeInsets.fromLTRB(inset, 8, inset, 24),
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: onBack == null
-                            ? const SizedBox(height: DymTokenSize.touchMin)
-                            : _BackButton(label: l10n.authBack, onTap: onBack!),
-                      ),
-                      const SizedBox(height: DymTokenSpace.s5),
-                      Text(
-                        title,
-                        style: t.display.copyWith(fontSize: 40, height: 1.1),
-                      ),
-                      if (subtitle != null) ...[
-                        const SizedBox(height: DymTokenSpace.s2),
-                        DefaultTextStyle.merge(
-                          style: t.body.copyWith(
-                            fontSize: 17,
-                            color: c.textSecondary,
-                          ),
-                          child: subtitle!,
-                        ),
-                      ],
-                      const SizedBox(height: DymTokenSpace.s5),
-                      ...children,
-                    ],
-                  );
-                },
-              ),
-            ),
-            DymContentWidth.form(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  DymLayout.gutter(context),
-                  4,
-                  DymLayout.gutter(context),
-                  12,
-                ),
-                child: action,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BackButton extends StatelessWidget {
-  const new({required this.label, required this.onTap});
-
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    return Material(
-      color: c.card,
-      shape: const CircleBorder(),
-      elevation: 0.5,
-      child: IconButton(
-        tooltip: label,
-        onPressed: onTap,
-        icon: Icon(Icons.arrow_back_rounded, color: c.brandDeep),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => DymFormScaffold(
+    title: title,
+    subtitle: subtitle,
+    action: action,
+    onBack: onBack,
+    backLabel: DymLocalizations.of(context).authBack,
+    backgroundColor: backgroundColor,
+    children: children,
+  );
 }
 
 /// Message d'erreur du parcours (icône + texte, annoncé aux lecteurs d'écran).

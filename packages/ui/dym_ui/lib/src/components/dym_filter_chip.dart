@@ -11,6 +11,7 @@ class DymFilterChip extends StatelessWidget {
     required this.selected,
     required this.onTap,
     super.key,
+    this.multiple = false,
   });
 
   /// Libellé.
@@ -22,9 +23,15 @@ class DymFilterChip extends StatelessWidget {
   /// Action au toucher.
   final VoidCallback onTap;
 
+  /// Choix multiple : puce active teintée avec une coche (icône + couleur).
+  final bool multiple;
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
+    final tinted = multiple && selected;
+    final fill = tinted ? c.tintVertTendre : (selected ? c.brand : c.card);
+    final ink = tinted ? c.brandDeep : (selected ? c.onBrand : c.textPrimary);
     return Semantics(
       button: true,
       selected: selected,
@@ -48,23 +55,35 @@ class DymFilterChip extends StatelessWidget {
                   horizontal: DymTokenSpace.s4,
                 ),
                 decoration: BoxDecoration(
-                  color: selected ? c.brand : c.card,
+                  color: fill,
                   borderRadius: BorderRadius.circular(DymTokenRadius.chip),
                   border: Border.all(
                     color: selected
                         ? c.brand
                         : c.textSecondary.withValues(alpha: 0.25),
+                    width: tinted ? 1.5 : 1,
                   ),
                 ),
                 child: Center(
                   widthFactor: 1,
-                  child: Text(
-                    label,
-                    style: context.dym.text.label.copyWith(
-                      fontSize: 15,
-                      fontWeight: selected ? FontWeight.w700 : FontWeight.w600,
-                      color: selected ? c.onBrand : c.textPrimary,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (tinted) ...[
+                        Icon(Icons.check_rounded, size: 20, color: ink),
+                        const SizedBox(width: DymTokenSpace.s1),
+                      ],
+                      Text(
+                        label,
+                        style: context.dym.text.label.copyWith(
+                          fontSize: 15,
+                          fontWeight: selected
+                              ? FontWeight.w700
+                              : FontWeight.w600,
+                          color: ink,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),

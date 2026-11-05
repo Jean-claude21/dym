@@ -18,6 +18,9 @@ dependencies:
   dym_models: ^0.1.0
   dym_ui:
     path: ../../packages/ui/dym_ui
+  # Écrans de la boutique (spec 006) : la galerie, outil interne non publié,
+  # affiche les vrais écrans de l'app vendeuse.
+  dym_vendor: ^0.1.0
   flutter:
     sdk: flutter
   flutter_animate: ^4.5.2

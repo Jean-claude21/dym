@@ -1,18 +1,27 @@
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_vendor/app/app.locator.dart';
+import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:dym_vendor/ui/navigation.dart';
 import 'package:stacked/stacked.dart';
 
 /// Démarrage : restaure la session puis oriente vers la connexion, le profil
-/// à compléter ou l'accueil. Hors ligne sans profil connu : écran de reprise.
+/// à compléter, l'onboarding de la boutique (absente ou en brouillon) ou
+/// « Ma boutique ». Hors ligne : écran de reprise.
 class StartupViewModel extends BaseViewModel {
-  new({AuthService? auth, DymEnvironment? environment, AppNavigator? navigator})
-    : _auth = auth ?? locator<AuthService>(),
-      _environment = environment ?? locator<DymEnvironment>(),
-      _navigator = navigator ?? StackedAppNavigator();
+  new({
+    AuthService? auth,
+    StoreService? stores,
+    DymEnvironment? environment,
+    AppNavigator? navigator,
+  }) : _auth = auth ?? locator<AuthService>(),
+       _stores = stores ?? locator<StoreService>(),
+       _environment = environment ?? locator<DymEnvironment>(),
+       _navigator = navigator ?? StackedAppNavigator();
 
   final AuthService _auth;
+  final StoreService _stores;
   final DymEnvironment _environment;
   final AppNavigator _navigator;
   Failure? _failure;
@@ -30,7 +39,7 @@ class StartupViewModel extends BaseViewModel {
     final result = await runBusyFuture(_auth.bootstrap());
     switch (result) {
       case Ok(value: AuthState(status: AuthStatus.ready)):
-        _navigator.toHome();
+        await _routeByStore();
       case Ok(value: AuthState(status: AuthStatus.needsProfile)):
         _navigator.toSignIn(startWithProfile: true);
       case Ok():
@@ -39,9 +48,29 @@ class StartupViewModel extends BaseViewModel {
         if (failure is UnauthenticatedFailure || failure is ForbiddenFailure) {
           _navigator.toSignIn();
         } else {
-          _failure = failure;
-          notifyListeners();
+          _fail(failure);
         }
     }
+  }
+
+  Future<void> _routeByStore() async {
+    final result = await runBusyFuture(_stores.myStore());
+    switch (result) {
+      case Ok(
+        value: MyStore(status: StoreStatus.active || StoreStatus.suspended),
+      ):
+        _navigator.toHome();
+      case Ok():
+        _navigator.toStoreOnboarding();
+      case Err(:final failure) when failure is UnauthenticatedFailure:
+        _navigator.toSignIn();
+      case Err(:final failure):
+        _fail(failure);
+    }
+  }
+
+  void _fail(Failure failure) {
+    _failure = failure;
+    notifyListeners();
   }
 }

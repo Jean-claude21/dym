@@ -5,6 +5,7 @@ import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
 import 'package:dym_vendor/app/vendor_app.dart';
+import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:flutter/widgets.dart';
 
 Future<void> main() async {
@@ -19,16 +20,23 @@ Future<void> main() async {
   }
   await setupLocator();
   final neon = createNeonClient(environment);
+  final reference = ReferenceRepository(neon.data);
+  final auth = NeonAuthService(
+    neon: neon,
+    account: AccountRepository(neon.data),
+    reference: reference,
+    google: PluginGoogleIdTokenProvider.fromDefines(),
+    app: AccountApp.vendor,
+  );
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
-    ..registerSingleton<AuthService>(
-      NeonAuthService(
-        neon: neon,
-        account: AccountRepository(neon.data),
-        reference: ReferenceRepository(neon.data),
-        google: PluginGoogleIdTokenProvider.fromDefines(),
-        app: AccountApp.vendor,
+    ..registerSingleton<AuthService>(auth)
+    ..registerSingleton<StoreService>(
+      NeonStoreService(
+        stores: StoreRepository(neon.data),
+        reference: reference,
+        auth: auth,
       ),
     );
   runApp(const VendorApp());

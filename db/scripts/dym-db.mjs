@@ -47,9 +47,12 @@ function bin(name) {
   return candidates.find((p) => existsSync(p)) ?? exe;
 }
 
-function run(command, args, { input, quiet = false } = {}) {
+function run(command, args, { input, quiet = false, detached = false } = {}) {
   const result = spawnSync(command, args, {
     input,
+    // Serveur lancé en arrière-plan : il ne doit pas hériter des tubes, sinon
+    // l'appel attend sa fin (Windows).
+    ...(detached ? { stdio: 'ignore' } : {}),
     encoding: 'utf8',
     env: { ...process.env, PGCLIENTENCODING: 'UTF8' },
     maxBuffer: 64 * 1024 * 1024,
@@ -144,7 +147,10 @@ function localStart() {
   }
   if (!isRunning()) {
     const log = path.join(LOCAL, 'pg.log');
-    const r = run(bin('pg_ctl'), ['-D', PGDATA, '-l', log, '-w', 'start'], { quiet: true });
+    const r = run(bin('pg_ctl'), ['-D', PGDATA, '-l', log, '-w', 'start'], {
+      quiet: true,
+      detached: true,
+    });
     if (r.status !== 0) {
       const tail = existsSync(log) ? readFileSync(log, 'utf8').split('\n').slice(-8).join('\n') : '';
       fail(`démarrage impossible (port ${PORT} déjà pris ?)\n${tail}`);

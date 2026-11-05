@@ -84,8 +84,11 @@ void main() {
   }
 }
 
-/// Décode toutes les images de l'arbre avant la capture.
+/// Décode toutes les images de l'arbre avant la capture (après les
+/// chargements asynchrones des écrans branchés sur un service de démo).
 Future<void> _precacheImages(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump();
   final providers = <ImageProvider>{
     for (final e in find.byType(Image).evaluate()) (e.widget as Image).image,
     for (final e in find.byType(Container).evaluate())
