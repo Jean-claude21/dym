@@ -2,7 +2,7 @@
 
 ## Métrique principale (North Star)
 
-> **Commandes livrées et payées par semaine**, dans la ville pilote.
+> **Commandes livrées et payées par semaine.**
 
 Elle n'augmente que si les trois preuves V1 avancent ensemble : offre (Fatou), demande (Awa),
 fiabilité (ops).

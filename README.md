@@ -36,7 +36,7 @@ Base locale sans conteneur (PostgreSQL 17 installé) ; détails dans [AGENTS.md]
 
 - [Guide des agents et commandes](AGENTS.md)
 - [Constitution](.specify/memory/constitution.md)
-- [Vision et contrat V1](docs/product/VISION.md) · [Roadmap](docs/product/ROADMAP.md) ·
+- [Vision](docs/product/VISION.md) · [Roadmap](docs/product/ROADMAP.md) ·
   [Hypothèses](docs/product/HYPOTHESES.md) · [Métriques](docs/product/METRICS.md)
 - [Architecture](docs/architecture/ARCHITECTURE.md) · [Packages](docs/architecture/PACKAGES.md) ·
   [Décisions](docs/architecture/decisions/README.md)

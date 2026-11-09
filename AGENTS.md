@@ -13,7 +13,7 @@ Les règles non négociables sont dans `.specify/memory/constitution.md` : elles
 
 | Besoin | Fichier |
 |---|---|
-| Pourquoi DYM, contrat V1, apps | `docs/product/VISION.md` |
+| Pourquoi DYM, fonctionnalités validées, apps | `docs/product/VISION.md` |
 | Phases, specs, heures, gates | `docs/product/ROADMAP.md` |
 | Hypothèses à valider | `docs/product/HYPOTHESES.md` |
 | Événements à émettre, KPIs | `docs/product/METRICS.md` |

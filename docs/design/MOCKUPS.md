@@ -72,7 +72,7 @@ Les trois parcours qui portent les hypothèses les plus risquées passent en pre
 
 ## Protocole de test
 
-- 5 vendeuses et 5 clientes de la ville pilote, sur leur propre téléphone.
+- 5 vendeuses et 5 clientes sur leur propre téléphone.
 - Tâches lues à voix haute, chronométrées, **sans aide**. On note les mots exacts et les hésitations.
 - Gate : 4 testeurs sur 5 réussissent chaque tâche selon le critère. Sinon : on corrige et on reteste.
 - Résultats consignés dans `docs/design/research/AAAA-MM-JJ-<parcours>.md` et reportés dans

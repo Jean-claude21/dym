@@ -19,3 +19,4 @@ Format : **Statut** · **Contexte** · **Décision** · **Conséquences** · **A
 | 0010 | [Courses au marché et boutique comme unité centrale](0010-market-groceries-boutiques.md) | Acceptée |
 | 0011 | [Couleur de marque : vert profond](0011-brand-green.md) | Acceptée |
 | 0012 | [Mise en page adaptative](0012-mise-en-page-adaptative.md) | Acceptée |
+| 0015 | [Écosystème grocery multi-pays, simulation des services indisponibles](0015-ecosysteme-grocery.md) | Acceptée |
