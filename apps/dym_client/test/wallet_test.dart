@@ -45,16 +45,19 @@ void main() {
     test('poche avec objectif, puis transfert et solde insuffisant', () async {
       final vm = WalletViewModel(service: service(balance: 3000));
       await vm.load();
-      expect(
-        await vm.createPocket(name: 'Tabaski', goalText: '10000'),
-        isTrue,
-      );
+      expect(await vm.createPocket(name: 'Tabaski', goalText: '10000'), isTrue);
       final pocket = vm.wallet!.pockets.single;
       expect(pocket.goalMinor, 10000);
-      expect(await vm.transfer(amountText: '2000', toPocket: pocket.id), isTrue);
+      expect(
+        await vm.transfer(amountText: '2000', toPocket: pocket.id),
+        isTrue,
+      );
       expect(vm.wallet!.balanceMinor, 1000);
       expect(vm.wallet!.pockets.single.progress, closeTo(0.2, 0.001));
-      expect(await vm.transfer(amountText: '5000', toPocket: pocket.id), isFalse);
+      expect(
+        await vm.transfer(amountText: '5000', toPocket: pocket.id),
+        isFalse,
+      );
       expect(vm.walletError, WalletError.insufficient);
     });
 
