@@ -64,18 +64,18 @@ select lives_ok(
 select tests.logout();
 
 select is(
-  (select count(*)::int from public.events where name = 'search_performed'
+  (select count(*)::int from public.events where occurred_at = now() and name = 'search_performed'
      and occurred_at = now()),
   1,
   'un seul événement pour deux envois du même identifiant'
 );
 select is(
-  (select actor_id from public.events where name = 'search_performed'),
+  (select actor_id from public.events where occurred_at = now() and name = 'search_performed'),
   (select awa from _ids),
   'auteur imposé par le jeton'
 );
 select is(
-  (select actor_role from public.events where name = 'product_viewed'),
+  (select actor_role from public.events where occurred_at = now() and name = 'product_viewed'),
   'anonymous',
   'rôle anonyme enregistré'
 );

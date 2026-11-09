@@ -35,7 +35,7 @@ select app.place_order((select awa from _t), gen_random_uuid(), jsonb_build_obje
   'address_id', (select home from _t),
   'payment_method_id', (select id from public.payment_methods where country_code = 'TG' and provider_code = 'cash')),
   (select morning from _t));
-update _t set o1 = (select id from public.orders limit 1);
+update _t set o1 = (select id from public.orders where store_id = (select kodjo_store from _t));
 select is((select kind from public.notifications where user_id = (select kodjo from _t)), 'new_order',
   'nouvelle commande pour la vendeuse');
 select is((select params ->> 'customer_first_name' from public.notifications where user_id = (select kodjo from _t)),
@@ -47,9 +47,9 @@ select app.transition_order((select kodjo from _t), (select o1 from _t), 'accept
 select app.transition_order((select kodjo from _t), (select o1 from _t), 'preparing', 'accepted');
 select is(array(select kind from public.notifications where user_id = (select awa from _t) order by created_at),
   array['order_accepted', 'order_preparing'], 'acceptée, en préparation');
-select ok((select params ->> 'eta_at' from public.notifications where kind = 'order_accepted') is not null,
+select ok((select params ->> 'eta_at' from public.notifications where user_id = (select awa from _t) and kind = 'order_accepted') is not null,
   'acceptée : avec l''heure estimée');
-select is((select params ->> 'store_name' from public.notifications where kind = 'order_preparing'), 'Étal de Kodjo',
+select is((select params ->> 'store_name' from public.notifications where user_id = (select awa from _t) and kind = 'order_preparing'), 'Étal de Kodjo',
   'avec le nom de la boutique');
 
 -- Paiement en ligne : la vendeuse ne voit la commande qu'une fois payée.
@@ -80,7 +80,7 @@ select is((select category from public.notifications where user_id = (select awa
 select tests.login_as((select awa from _t));
 select is(public.unread_notifications_count(), 3, '3 non lues');
 select is(public.my_notifications() -> 0 ->> 'kind', 'payment_succeeded', 'la plus récente en tête');
-select is(public.mark_notifications_read(array[(select id from public.notifications where kind = 'order_accepted')]), 2,
+select is(public.mark_notifications_read(array[(select id from public.notifications where user_id = (select awa from _t) and kind = 'order_accepted')]), 2,
   'une lue : 2 restantes');
 select is(public.mark_notifications_read(), 0, 'tout lire');
 select tests.login_as((select ama from _t));
