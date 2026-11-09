@@ -1,7 +1,7 @@
 -- Wallet et poches (spec 025) : recharge simulée, poches, transferts, paiement d'une commande,
 -- arrondi, cashback, isolement, équilibre du grand livre.
 
-select plan(20);
+select plan(22);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -51,6 +51,9 @@ select is(jsonb_array_length(public.my_wallet() -> 'pockets'), 1, 'poche créée
 select is((public.wallet_transfer(null, (select pocket from _t), 1000, gen_random_uuid()) -> 'pockets' -> 0
            ->> 'balance_minor')::bigint, 1000::bigint, 'transfert vers la poche');
 select is((public.my_wallet() ->> 'balance_minor')::bigint, 4000::bigint, 'wallet après transfert');
+select is(jsonb_array_length(public.my_wallet() -> 'movements'), 2, 'un mouvement par transaction');
+select is((public.my_wallet() -> 'movements' -> 0 ->> 'amount_minor')::bigint, -1000::bigint,
+  'transfert vu du wallet : −1 000 vers la poche');
 select throws_ok(format($$select public.wallet_transfer('%s', null, 2000, gen_random_uuid())$$, (select pocket from _t)),
   'P0001', 'wallet_insufficient', 'poche insuffisante : refusé');
 

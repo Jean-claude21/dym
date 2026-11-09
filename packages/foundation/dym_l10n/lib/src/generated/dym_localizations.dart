@@ -6594,6 +6594,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Solde du wallet insuffisant : recharge-le ou choisis un autre moyen.'**
   String get orderErrorWalletInsufficient;
+
+  /// Mouvement vers une poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers {name}'**
+  String walletToPocket(String name);
+
+  /// Mouvement depuis une poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis {name}'**
+  String walletFromPocket(String name);
 }
 
 class _DymLocalizationsDelegate
