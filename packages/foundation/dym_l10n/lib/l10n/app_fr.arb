@@ -5032,5 +5032,23 @@
   "orderErrorWalletInsufficient": "Solde du wallet insuffisant : recharge-le ou choisis un autre moyen.",
   "@orderErrorWalletInsufficient": {
     "description": "Refus : wallet insuffisant"
+  },
+  "walletToPocket": "Vers {name}",
+  "walletFromPocket": "Depuis {name}",
+  "@walletToPocket": {
+    "description": "Mouvement vers une poche",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@walletFromPocket": {
+    "description": "Mouvement depuis une poche",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

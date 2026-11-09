@@ -3880,4 +3880,14 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get orderErrorWalletInsufficient =>
       'Solde du wallet insuffisant : recharge-le ou choisis un autre moyen.';
+
+  @override
+  String walletToPocket(String name) {
+    return 'Vers $name';
+  }
+
+  @override
+  String walletFromPocket(String name) {
+    return 'Depuis $name';
+  }
 }

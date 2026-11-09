@@ -1123,5 +1123,7 @@
   "walletErrorAmount": "Invalid amount.",
   "walletErrorTopupDisabled": "Top-up isn't available here.",
   "walletErrorPocketLimit": "You've reached the maximum number of pockets.",
-  "orderErrorWalletInsufficient": "Not enough in your wallet: top it up or choose another method."
+  "orderErrorWalletInsufficient": "Not enough in your wallet: top it up or choose another method.",
+  "walletToPocket": "To {name}",
+  "walletFromPocket": "From {name}"
 }

@@ -3849,4 +3849,14 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get orderErrorWalletInsufficient =>
       'Not enough in your wallet: top it up or choose another method.';
+
+  @override
+  String walletToPocket(String name) {
+    return 'To $name';
+  }
+
+  @override
+  String walletFromPocket(String name) {
+    return 'From $name';
+  }
 }

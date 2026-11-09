@@ -262,7 +262,15 @@ class _PocketCard extends StatelessWidget {
           ),
           if (progress != null) ...[
             const SizedBox(height: DymTokenSpace.s2),
-            LinearProgressIndicator(value: progress, minHeight: 6),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+              child: LinearProgressIndicator(
+                value: progress,
+                minHeight: 6,
+                color: c.brand,
+                backgroundColor: c.tintVertTendre,
+              ),
+            ),
             const SizedBox(height: DymTokenSpace.s1),
             Text(
               l10n.walletPocketGoal(vm.money(pocket.goalMinor)?.format() ?? ''),
@@ -293,6 +301,10 @@ class _MovementRow extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
+    final pocketName = vm.wallet?.pockets
+        .where((p) => p.id == movement.pocketId)
+        .firstOrNull
+        ?.name;
     final (icon, label) = switch (movement.kind) {
       WalletMovementKind.walletTopup => (
         Icons.add_card_rounded,
@@ -300,7 +312,13 @@ class _MovementRow extends StatelessWidget {
       ),
       WalletMovementKind.walletTransfer => (
         Icons.swap_horiz_rounded,
-        l10n.walletKindTransfer,
+        switch (pocketName) {
+          final name? when movement.amountMinor < 0 => l10n.walletToPocket(
+            name,
+          ),
+          final name? => l10n.walletFromPocket(name),
+          null => l10n.walletKindTransfer,
+        },
       ),
       WalletMovementKind.paymentReceived => (
         Icons.shopping_basket_rounded,
