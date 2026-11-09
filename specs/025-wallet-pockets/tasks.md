@@ -8,6 +8,6 @@
 - [x] T006 Modèles, dépôt, service, écran « Mon wallet », entrée dans « Moi », refus au panier
 - [x] T007 Tests Flutter `apps/dym_client/test/wallet_test.dart`
 - [x] T008 Validation Neon (branche propre, copie de staging) ; staging migré
-- [ ] T009 Redéployer la Function `api` sur staging (fichier d'environnement hors dépôt)
+- [x] T009 Function `api` redéployée sur staging ; scénario de bout en bout « wallet » ajouté et vert
 - [x] T011 Démonstration web sur staging : recharge, poche (objectif, arrondi), déplacement ; mouvements en une ligne par transaction (migration 0032)
 - [ ] T010 Validation de l'écran par le porteur produit ; relecture humaine de la migration 0031
