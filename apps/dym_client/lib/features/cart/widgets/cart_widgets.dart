@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/cart/cart_viewmodels.dart';
 import 'package:dym_core/dym_core.dart';
@@ -5,6 +7,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 /// Rend le panier accessible aux écrans de découverte (ajout, mini-panier).
 /// Absent (galerie, tests de découverte) : pas d'ajout ni de mini-panier.
@@ -29,6 +32,44 @@ class CartScope extends InheritedWidget {
       service != oldWidget.service || onOpenCart != oldWidget.onOpenCart;
 }
 
+/// Bouton panier de l'en-tête (spec 026) : nombre d'articles, ouverture en
+/// un geste. Absent hors de la portée du panier.
+class CartButton extends StatelessWidget {
+  const new({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final scope = CartScope.maybeOf(context);
+    if (scope == null) return const SizedBox.shrink();
+    final c = context.dym.colors;
+    final l10n = DymLocalizations.of(context);
+    return ValueListenableBuilder<CartView>(
+      valueListenable: scope.service.cart,
+      builder: (context, cart, _) {
+        final count = cart.itemCount;
+        return IconButton(
+          tooltip: l10n.cartTitle,
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          onPressed: scope.onOpenCart,
+          icon: Badge(
+            isLabelVisible: count > 0,
+            backgroundColor: c.piment,
+            label: AnimatedSwitcher(
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 220),
+              transitionBuilder: (child, animation) =>
+                  ScaleTransition(scale: animation, child: child),
+              child: Text('$count', key: ValueKey(count)),
+            ),
+            child: Icon(Icons.shopping_basket_rounded, color: c.brandDeep),
+          ),
+        );
+      },
+    );
+  }
+}
+
 /// Ajoute une variante depuis un écran de découverte ; message en cas de
 /// refus (rupture, autre pays, hors ligne).
 Future<void> addToCart(
@@ -42,6 +83,7 @@ Future<void> addToCart(
   final l10n = DymLocalizations.of(context);
   final messenger = ScaffoldMessenger.maybeOf(context);
   final result = await scope.service.add(variantId, quantity: quantity);
+  if (result.isOk) unawaited(HapticFeedback.lightImpact());
   final message = switch (result) {
     Ok() => confirm ? l10n.cartAdded : null,
     Err(failure: NetworkFailure()) => l10n.errorOffline,

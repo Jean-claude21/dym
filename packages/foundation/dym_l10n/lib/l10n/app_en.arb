@@ -1125,5 +1125,7 @@
   "walletErrorPocketLimit": "You've reached the maximum number of pockets.",
   "orderErrorWalletInsufficient": "Not enough in your wallet: top it up or choose another method.",
   "walletToPocket": "To {name}",
-  "walletFromPocket": "From {name}"
+  "walletFromPocket": "From {name}",
+  "cartDeliveryTo": "{zone} · {landmark}",
+  "cartAddAddress": "Add a delivery address"
 }

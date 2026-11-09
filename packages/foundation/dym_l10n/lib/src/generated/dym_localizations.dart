@@ -6606,6 +6606,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Depuis {name}'**
   String walletFromPocket(String name);
+
+  /// Adresse choisie dans le panier
+  ///
+  /// In fr, this message translates to:
+  /// **'{zone} · {landmark}'**
+  String cartDeliveryTo(String zone, String landmark);
+
+  /// Invitation à ajouter une adresse dans le panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute une adresse de livraison'**
+  String get cartAddAddress;
 }
 
 class _DymLocalizationsDelegate

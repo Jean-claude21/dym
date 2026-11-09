@@ -246,16 +246,10 @@ class DiscoveryState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
     final current = failure;
     if (current == null) {
-      return Center(
-        child: Semantics(
-          label: l10n.startupPreparing,
-          child: CircularProgressIndicator(color: c.brand),
-        ),
-      );
+      return DymSkeleton(label: l10n.startupPreparing);
     }
     if (current is NotFoundFailure && goneMessage != null) {
       return DymStateView(

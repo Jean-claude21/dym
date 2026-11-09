@@ -177,7 +177,7 @@ class NeonCatalogService implements CatalogService {
 
   @override
   ImageProvider photo(String objectKey) =>
-      NetworkImage(_environment.media(objectKey).toString());
+      dymNetworkImage(_environment.media(objectKey).toString());
 
   @override
   void suggestionShown() =>

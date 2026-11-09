@@ -145,7 +145,8 @@ Future<void> configureServices(DymEnvironment environment) async {
         role: ChatRole.client,
         countryConfig: () => locator<OrdersService>().countryConfig(),
         photos: PluginPhotoPicker(),
-        productPhoto: (key) => NetworkImage(environment.media(key).toString()),
+        productPhoto: (key) =>
+            dymNetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerLazySingleton<WalletService>(

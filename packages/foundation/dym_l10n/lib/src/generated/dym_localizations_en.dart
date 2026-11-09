@@ -3859,4 +3859,12 @@ class DymLocalizationsEn extends DymLocalizations {
   String walletFromPocket(String name) {
     return 'From $name';
   }
+
+  @override
+  String cartDeliveryTo(String zone, String landmark) {
+    return '$zone · $landmark';
+  }
+
+  @override
+  String get cartAddAddress => 'Add a delivery address';
 }
