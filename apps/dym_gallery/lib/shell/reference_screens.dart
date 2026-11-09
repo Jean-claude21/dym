@@ -35,6 +35,7 @@ import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_views.dart' as client_orders;
 import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_client/ui/views/home/home_view.dart' as client;
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_gallery/demo/demo_assets.dart';
 import 'package:dym_gallery/demo/demo_auth_service.dart';
@@ -1035,7 +1036,7 @@ CopilotProposal _copilotProposal(DemoCountry c) {
       productId: id,
       name: name,
       quantity: qty,
-      unitLabel: unitLabel,
+      unitLabel: LocalizedText({'fr': unitLabel}),
       unitPriceMinor: unit,
       lineMinor: qty * unit,
       photoKey: 'stores/$store/products/$id.jpg',

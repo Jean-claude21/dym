@@ -69,6 +69,10 @@ class DemoAuthService implements AuthService {
       );
 
   @override
+  Future<Result<AuthState>> signInWithPassword(String email, String password) =>
+      verifyEmailCode(email, password);
+
+  @override
   Future<Result<AuthState?>> signInWithGoogle() async => const Ok(null);
 
   @override

@@ -127,6 +127,12 @@ abstract interface class AdminService {
 
   Future<Result<List<AdminFeatureFlag>>> featureFlags();
 
+  Future<Result<List<AdminMember>>> admins();
+
+  Future<Result<List<AdminMember>>> inviteAdmin(String email);
+
+  Future<Result<List<AdminMember>>> removeAdmin(String email);
+
   Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
     String key, {
     required bool enabled,
@@ -363,6 +369,17 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<List<AdminFeatureFlag>>> featureFlags() =>
       _admin.featureFlags();
+
+  @override
+  Future<Result<List<AdminMember>>> admins() => _admin.admins();
+
+  @override
+  Future<Result<List<AdminMember>>> inviteAdmin(String email) =>
+      _admin.inviteAdmin(email);
+
+  @override
+  Future<Result<List<AdminMember>>> removeAdmin(String email) =>
+      _admin.removeAdmin(email);
 
   @override
   Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(

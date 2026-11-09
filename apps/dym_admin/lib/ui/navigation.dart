@@ -3,7 +3,15 @@ import 'package:dym_admin/app/app.router.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 /// Message affiché à l'écran de connexion de l'admin.
-enum AdminNotice { accessDenied, inactive, offline, generic }
+enum AdminNotice {
+  accessDenied,
+  inactive,
+  offline,
+  generic,
+  codeWrong,
+  emailInvalid,
+  passwordWrong,
+}
 
 /// Navigation de l'admin, remplaçable en test.
 abstract interface class AdminNavigator {

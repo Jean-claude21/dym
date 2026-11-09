@@ -47,6 +47,7 @@ class AuthErrorBanner extends StatelessWidget {
         AuthError.offline => l10n.errorOffline,
         AuthError.generic => l10n.errorGeneric,
         AuthError.codeWrong => l10n.authCodeWrong,
+        AuthError.passwordWrong => l10n.authPasswordWrong,
         AuthError.sessionExpired => l10n.errorSessionExpired,
         AuthError.emailInvalid => l10n.authEmailInvalid,
         AuthError.firstNameInvalid => l10n.authFirstNameInvalid,

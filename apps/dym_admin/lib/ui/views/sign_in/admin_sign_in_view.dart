@@ -38,7 +38,7 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
       clientId: _clientId,
       onIdToken: viewModel.signInWithIdToken,
     );
-    final Widget googleAction;
+    Widget? googleAction;
     if (webButton != null) {
       googleAction = Center(child: webButton);
     } else if (viewModel.nativeGoogleAvailable) {
@@ -49,13 +49,80 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
         loading: viewModel.isBusy,
         onPressed: viewModel.signInWithGoogle,
       );
-    } else {
-      googleAction = Text(
-        l10n.adminGoogleUnavailable,
-        textAlign: TextAlign.center,
-        style: t.body.copyWith(color: c.textSecondary),
-      );
     }
+
+    final Widget emailAction = viewModel.codeSent
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                l10n.authCodeSentTo(viewModel.email.trim()),
+                textAlign: TextAlign.center,
+                style: t.body.copyWith(color: c.textSecondary),
+              ),
+              const SizedBox(height: DymTokenSpace.s3),
+              DymCodeInput(
+                label: l10n.authCodeLabel,
+                onChanged: viewModel.setCode,
+                onCompleted: viewModel.verifyCode,
+                error: viewModel.notice == AdminNotice.codeWrong,
+                enabled: !viewModel.isBusy,
+              ),
+              const SizedBox(height: DymTokenSpace.s3),
+              DymButton(
+                label: l10n.storeContinue,
+                loading: viewModel.isBusy,
+                onPressed: viewModel.verifyCode,
+              ),
+              TextButton(
+                onPressed: viewModel.changeEmail,
+                child: Text(l10n.authEmailLabel),
+              ),
+            ],
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DymTextField(
+                label: l10n.authEmailLabel,
+                onChanged: viewModel.setEmail,
+                onSubmitted: (_) => viewModel.usePassword
+                    ? viewModel.signInWithPassword()
+                    : viewModel.sendCode(),
+                keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.send,
+                autofillHints: const [AutofillHints.email],
+              ),
+              if (viewModel.usePassword) ...[
+                const SizedBox(height: DymTokenSpace.s3),
+                DymTextField(
+                  label: l10n.authPasswordLabel,
+                  obscureText: true,
+                  onChanged: viewModel.setPassword,
+                  onSubmitted: (_) => viewModel.signInWithPassword(),
+                  autofillHints: const [AutofillHints.password],
+                ),
+              ],
+              const SizedBox(height: DymTokenSpace.s3),
+              DymButton(
+                label: viewModel.usePassword
+                    ? l10n.authSignInPassword
+                    : l10n.authSendCode,
+                loading: viewModel.isBusy,
+                onPressed: viewModel.usePassword
+                    ? viewModel.signInWithPassword
+                    : viewModel.sendCode,
+              ),
+              TextButton(
+                onPressed: viewModel.toggleUsePassword,
+                child: Text(
+                  viewModel.usePassword
+                      ? l10n.authUseCode
+                      : l10n.authUsePassword,
+                ),
+              ),
+            ],
+          );
 
     final notice = viewModel.notice;
     final card = Container(
@@ -86,7 +153,11 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
             style: t.body.copyWith(color: c.textSecondary),
           ),
           const SizedBox(height: DymTokenSpace.s5),
-          googleAction,
+          emailAction,
+          if (googleAction != null) ...[
+            const SizedBox(height: DymTokenSpace.s4),
+            googleAction,
+          ],
           if (notice != null) ...[
             const SizedBox(height: DymTokenSpace.s4),
             Semantics(
@@ -103,6 +174,9 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
                     AdminNotice.inactive => l10n.adminSignedOutInactive,
                     AdminNotice.offline => l10n.errorOffline,
                     AdminNotice.generic => l10n.errorGeneric,
+                    AdminNotice.codeWrong => l10n.authCodeWrong,
+                    AdminNotice.emailInvalid => l10n.authEmailInvalid,
+                    AdminNotice.passwordWrong => l10n.authPasswordWrong,
                   },
                   textAlign: TextAlign.center,
                   style: t.label.copyWith(fontSize: 15, color: c.textPrimary),

@@ -260,10 +260,10 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminSignInBody =>
-      'Accès réservé aux comptes Google Workspace de DYM.';
+      'Accès réservé à l\'équipe DYM : reçois un code sur ton email d\'admin.';
 
   @override
-  String get adminContinueGoogle => 'Continuer avec Google Workspace';
+  String get adminContinueGoogle => 'Continuer avec Google';
 
   @override
   String get adminSecurityNote =>
@@ -3702,4 +3702,53 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get accountSave => 'Enregistrer';
+
+  @override
+  String get adminTabAdmins => 'Admins';
+
+  @override
+  String get adminAdminsHelp =>
+      'Les admins par défaut viennent de la variable ADMIN_EMAILS. Un email invité devient admin à sa première connexion à DYM Admin.';
+
+  @override
+  String get adminAdminsInvite => 'Inviter';
+
+  @override
+  String get adminAdminsDefault => 'Par défaut';
+
+  @override
+  String get adminAdminsActive => 'Actif';
+
+  @override
+  String get adminAdminsPending => 'Invitation en attente';
+
+  @override
+  String get adminAdminsRemove => 'Retirer l’accès admin';
+
+  @override
+  String get authPasswordLabel => 'Mot de passe';
+
+  @override
+  String get authSignInPassword => 'Se connecter';
+
+  @override
+  String get authUsePassword => 'J’ai un mot de passe';
+
+  @override
+  String get authUseCode => 'Recevoir un code à la place';
+
+  @override
+  String get authPasswordWrong => 'Email ou mot de passe incorrect.';
+
+  @override
+  String get contentMediaMode => 'Photo ou vidéo';
+
+  @override
+  String get contentTextMode => 'Écrire un statut';
+
+  @override
+  String get contentTextLabel => 'Ton message';
+
+  @override
+  String get contentTextHint => 'Écris ton statut…';
 }

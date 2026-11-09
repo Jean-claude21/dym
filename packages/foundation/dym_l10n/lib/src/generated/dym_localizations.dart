@@ -545,13 +545,13 @@ abstract class DymLocalizations {
   /// Texte connexion admin
   ///
   /// In fr, this message translates to:
-  /// **'Accès réservé aux comptes Google Workspace de DYM.'**
+  /// **'Accès réservé à l\'équipe DYM : reçois un code sur ton email d\'admin.'**
   String get adminSignInBody;
 
   /// Bouton admin
   ///
   /// In fr, this message translates to:
-  /// **'Continuer avec Google Workspace'**
+  /// **'Continuer avec Google'**
   String get adminContinueGoogle;
 
   /// Note sécurité admin
@@ -6270,6 +6270,102 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Enregistrer'**
   String get accountSave;
+
+  /// No description provided for @adminTabAdmins.
+  ///
+  /// In fr, this message translates to:
+  /// **'Admins'**
+  String get adminTabAdmins;
+
+  /// No description provided for @adminAdminsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les admins par défaut viennent de la variable ADMIN_EMAILS. Un email invité devient admin à sa première connexion à DYM Admin.'**
+  String get adminAdminsHelp;
+
+  /// No description provided for @adminAdminsInvite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inviter'**
+  String get adminAdminsInvite;
+
+  /// No description provided for @adminAdminsDefault.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par défaut'**
+  String get adminAdminsDefault;
+
+  /// No description provided for @adminAdminsActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Actif'**
+  String get adminAdminsActive;
+
+  /// No description provided for @adminAdminsPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'Invitation en attente'**
+  String get adminAdminsPending;
+
+  /// No description provided for @adminAdminsRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer l’accès admin'**
+  String get adminAdminsRemove;
+
+  /// No description provided for @authPasswordLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mot de passe'**
+  String get authPasswordLabel;
+
+  /// No description provided for @authSignInPassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter'**
+  String get authSignInPassword;
+
+  /// No description provided for @authUsePassword.
+  ///
+  /// In fr, this message translates to:
+  /// **'J’ai un mot de passe'**
+  String get authUsePassword;
+
+  /// No description provided for @authUseCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recevoir un code à la place'**
+  String get authUseCode;
+
+  /// No description provided for @authPasswordWrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Email ou mot de passe incorrect.'**
+  String get authPasswordWrong;
+
+  /// No description provided for @contentMediaMode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Photo ou vidéo'**
+  String get contentMediaMode;
+
+  /// No description provided for @contentTextMode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écrire un statut'**
+  String get contentTextMode;
+
+  /// No description provided for @contentTextLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton message'**
+  String get contentTextLabel;
+
+  /// No description provided for @contentTextHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris ton statut…'**
+  String get contentTextHint;
 }
 
 class _DymLocalizationsDelegate

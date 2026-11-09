@@ -6,6 +6,7 @@
 //   node db/scripts/dym-db.mjs migrate [--url <url>] [--neon-shims]
 //   node db/scripts/dym-db.mjs test [--url <url>] [fichier…]
 //   node db/scripts/dym-db.mjs grant-admin <email> [--url <url>]
+//   ADMIN_EMAILS=a@x,b@y node db/scripts/dym-db.mjs admins [--url <url>]
 //
 // Aucune dépendance npm : Node ≥ 22 et les binaires psql, initdb, pg_ctl.
 
@@ -366,6 +367,19 @@ function grantAdmin(args) {
   console.log(`✓ rôle admin accordé (${describe(url)})`);
 }
 
+// Admins par défaut : ADMIN_EMAILS (liste séparée par des virgules) devient la
+// liste des invitations « env » ; les comptes existants reçoivent le rôle tout
+// de suite, les autres à leur première connexion à l'app admin (migration 0025).
+function syncAdmins(args) {
+  const url = targetUrl(args);
+  const emails = (process.env.ADMIN_EMAILS ?? '').split(',').map((e) => e.trim()).filter(Boolean);
+  if (emails.length === 0) fail('ADMIN_EMAILS est vide');
+  const list = emails.map((e) => `'` + e.replaceAll("'", "''") + `'`).join(', ');
+  const r = psql(url, `select app.sync_admin_emails(array[` + list + `]::text[]);`);
+  if (r.status !== 0) fail(r.stderr.trim());
+  console.log(`✓ admins par défaut : ` + emails.join(', ') + ` (` + describe(url) + `)`);
+}
+
 // ---------------------------------------------------------------- entrée
 
 const [command, ...rest] = process.argv.slice(2);
@@ -386,7 +400,10 @@ switch (command) {
   case 'grant-admin':
     grantAdmin(rest);
     break;
+  case 'admins':
+    syncAdmins(rest);
+    break;
   default:
-    console.log('usage : dym-db local start|stop|reset|status · migrate [--url] [--neon-shims] · test [--url] [fichier…] · grant-admin <email> [--url]');
+    console.log('usage : dym-db local start|stop|reset|status · migrate [--url] [--neon-shims] · test [--url] [fichier…] · grant-admin <email> [--url] · admins [--url] (ADMIN_EMAILS)');
     process.exitCode = command ? 1 : 0;
 }

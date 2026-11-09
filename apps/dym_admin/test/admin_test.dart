@@ -58,6 +58,18 @@ class _Auth implements AuthService {
   }
 
   @override
+  Future<Result<void>> sendEmailCode(String email) async {
+    calls.add('code:$email');
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<AuthState>> verifyEmailCode(String email, String code) async {
+    calls.add('verify:$code');
+    return _ready;
+  }
+
+  @override
   Future<Result<void>> signOut() async {
     calls.add('signOut');
     return const Ok(null);
@@ -157,7 +169,7 @@ void main() {
               AdminSignInViewModel(auth: auth, navigator: nav),
         ),
       );
-      await tester.tap(find.text('Continuer avec Google Workspace'));
+      await tester.tap(find.text('Continuer avec Google'));
       await tester.pump();
       expect(nav.routes, ['home']);
     });
@@ -172,7 +184,7 @@ void main() {
               AdminSignInViewModel(auth: auth, navigator: nav),
         ),
       );
-      await tester.tap(find.text('Continuer avec Google Workspace'));
+      await tester.tap(find.text('Continuer avec Google'));
       await tester.pump();
       expect(nav.routes, isEmpty);
       expect(find.textContaining("l'équipe DYM. Ce compte"), findsOneWidget);
@@ -188,8 +200,33 @@ void main() {
           ),
         ),
       );
-      expect(find.text('Continuer avec Google Workspace'), findsNothing);
-      expect(find.textContaining("n'est pas configurée"), findsOneWidget);
+      expect(find.text('Continuer avec Google'), findsNothing);
+      expect(find.text('Recevoir mon code'), findsOneWidget);
+    });
+
+    testWidgets('code email : admin par défaut → tableau de bord', (
+      tester,
+    ) async {
+      final nav = _Navigator();
+      final auth = _Auth(googleAvailable: false);
+      await _pump(
+        tester,
+        AdminSignInView(
+          viewModelFactory: () =>
+              AdminSignInViewModel(auth: auth, navigator: nav),
+        ),
+      );
+      await tester.enterText(find.byType(TextField).first, 'ops@dym.example');
+      await tester.tap(find.text('Recevoir mon code'));
+      await tester.pump();
+      expect(auth.calls, ['code:ops@dym.example']);
+      expect(find.textContaining('Envoyé à'), findsOneWidget);
+      await tester.enterText(find.byType(TextField).first, '123456');
+      await tester.pump();
+      await tester.tap(find.text('Continuer'));
+      await tester.pump();
+      expect(auth.calls.last, 'verify:123456');
+      expect(nav.routes, ['home']);
     });
 
     for (final size in const [

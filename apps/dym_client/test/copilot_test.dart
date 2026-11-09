@@ -27,7 +27,7 @@ CopilotLine _line(String id, String name, int qty, int price, String need) =>
       productId: 'p-$id',
       name: name,
       quantity: qty,
-      unitLabel: 'tas',
+      unitLabel: const LocalizedText({'fr': 'tas'}),
       unitPriceMinor: price,
       lineMinor: qty * price,
       need: need,

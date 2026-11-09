@@ -239,6 +239,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
                     SettingsTab.fees => l10n.adminTabFees,
                     SettingsTab.categories => l10n.adminTabCategories,
                     SettingsTab.flags => l10n.adminTabFlags,
+                    SettingsTab.admins => l10n.adminTabAdmins,
                   },
                   selected: vm.tab == t,
                   onTap: () => vm.selectTab(t),
@@ -259,6 +260,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
               SettingsTab.fees => _Fees(vm: vm),
               SettingsTab.categories => _Categories(vm: vm),
               SettingsTab.flags => _Flags(vm: vm),
+              SettingsTab.admins => _Admins(vm: vm),
             },
         ],
       ),
@@ -886,6 +888,108 @@ class _Flags extends StatelessWidget {
                   onChanged: vm.acting
                       ? null
                       : (v) => vm.setFlag(f, enabled: v),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Admins : par défaut (ADMIN_EMAILS), actifs et invitations en attente.
+class _Admins extends StatefulWidget {
+  const new({required this.vm});
+
+  final AdminSettingsViewModel vm;
+
+  @override
+  State<_Admins> createState() => _AdminsState();
+}
+
+class _AdminsState extends State<_Admins> {
+  final _email = TextEditingController();
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+
+  Future<void> _invite() async {
+    final email = _email.text.trim();
+    if (!email.contains('@')) return;
+    if (await widget.vm.inviteAdmin(email)) _email.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final vm = widget.vm;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.adminAdminsHelp,
+          style: t.body.copyWith(color: c.textSecondary),
+        ),
+        const SizedBox(height: DymTokenSpace.s2),
+        AdminCard(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: DymTextField(
+                  label: l10n.authEmailLabel,
+                  controller: _email,
+                  keyboardType: TextInputType.emailAddress,
+                  onSubmitted: (_) => _invite(),
+                ),
+              ),
+              const SizedBox(width: DymTokenSpace.s3),
+              DymButton(
+                label: l10n.adminAdminsInvite,
+                icon: Icons.person_add_alt_1_rounded,
+                expanded: false,
+                loading: vm.acting,
+                onPressed: _invite,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
+        AdminCard(
+          child: Column(
+            children: [
+              if (vm.admins.isEmpty) AdminEmpty(l10n.adminNoData),
+              for (final a in vm.admins)
+                ListTile(
+                  leading: Icon(
+                    a.isActive
+                        ? Icons.verified_user_rounded
+                        : Icons.schedule_send_rounded,
+                    color: a.isActive ? c.brandDeep : c.textSecondary,
+                  ),
+                  title: Text(a.email),
+                  subtitle: Text(
+                    [
+                      if (a.firstName != null) a.firstName!,
+                      if (a.isDefault) l10n.adminAdminsDefault,
+                      if (a.isActive)
+                        l10n.adminAdminsActive
+                      else
+                        l10n.adminAdminsPending,
+                    ].join(' · '),
+                  ),
+                  trailing: a.isDefault
+                      ? null
+                      : IconButton(
+                          tooltip: l10n.adminAdminsRemove,
+                          icon: const Icon(Icons.person_remove_rounded),
+                          onPressed: vm.acting ? null : () => vm.removeAdmin(a),
+                        ),
                 ),
             ],
           ),

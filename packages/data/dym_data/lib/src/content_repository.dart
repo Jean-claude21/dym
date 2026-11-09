@@ -128,6 +128,25 @@ class ContentRepository {
     },
   )).map((json) => ContentItem.fromJson(json! as Map<String, dynamic>));
 
+  /// Statut texte (story sans média) : un texte sur un fond #rrggbb.
+  Future<Result<ContentItem>> publishText({
+    required String id,
+    required String text,
+    required String background,
+    List<String> productIds = const [],
+  }) async => (await _data.rpc<Object?>(
+    'save_content',
+    params: {
+      'p_content': {
+        'id': id,
+        'kind': 'story',
+        'text': text,
+        'background': background,
+        'product_ids': productIds,
+      },
+    },
+  )).map((json) => ContentItem.fromJson(json! as Map<String, dynamic>));
+
   Future<Result<List<ContentItem>>> mine() async =>
       (await _data.rpc<Object?>('my_contents')).map(_items);
 

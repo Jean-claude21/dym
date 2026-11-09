@@ -9,6 +9,7 @@ class NeonAuthPaths {
   const new({
     this.sendEmailOtp = '/email-otp/send-verification-otp',
     this.signInEmailOtp = '/sign-in/email-otp',
+    this.signInEmail = '/sign-in/email',
     this.signInSocial = '/sign-in/social',
     this.session = '/get-session',
     this.token = '/token',
@@ -18,6 +19,9 @@ class NeonAuthPaths {
 
   final String sendEmailOtp;
   final String signInEmailOtp;
+
+  /// Email + mot de passe (comptes de test, sans vérification d'email).
+  final String signInEmail;
   final String signInSocial;
   final String session;
   final String token;

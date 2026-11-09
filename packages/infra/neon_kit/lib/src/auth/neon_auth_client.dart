@@ -58,6 +58,15 @@ class NeonAuthClient {
         'otp': otp.trim(),
       });
 
+  /// Ouvre une session avec un email et un mot de passe.
+  Future<Result<NeonSession>> signInWithPassword(
+    String email,
+    String password,
+  ) => _signIn(_paths.signInEmail, {
+    'email': email.trim().toLowerCase(),
+    'password': password,
+  });
+
   /// Ouvre une session avec un `idToken` Google obtenu sur l'appareil.
   Future<Result<NeonSession>> signInWithGoogleIdToken(String idToken) =>
       _signIn(_paths.signInSocial, {
