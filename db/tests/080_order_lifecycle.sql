@@ -1,7 +1,7 @@
 -- Cycle de vie des commandes (spec 011) : règles par rôle et par mode,
 -- conflit d'état, stock rendu, remboursement marqué, encaissement, accès.
 
-select plan(45);
+select plan(60);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -195,5 +195,99 @@ select is(array(select name from public.events
                   and occurred_at = now() order by name),
   array['order_accepted', 'order_accepted', 'order_cancelled', 'order_delivered', 'order_delivered',
         'order_rejected', 'order_rejected'], 'événements métier');
+
+-- ------------------------------------------------------------------ grand livre (spec 024)
+create function pg_temp._bal(p_kind text, p_store uuid default null) returns bigint language sql as $$
+  select coalesce(-sum(e.amount_minor), 0)::bigint from public.ledger_entries e
+  join public.ledger_accounts a on a.id = e.account_id
+  where a.kind = p_kind and a.store_id is not distinct from p_store and a.currency_code = 'XOF'
+$$;
+create function pg_temp._escrow(p_purchase uuid) returns bigint language sql as $$
+  select coalesce(-sum(e.amount_minor), 0)::bigint from public.ledger_entries e
+  join public.ledger_accounts a on a.id = e.account_id and a.kind = 'customer_escrow'
+  join public.ledger_transactions t on t.id = e.transaction_id
+  where t.purchase_id = p_purchase
+$$;
+grant execute on function pg_temp._bal(text, uuid), pg_temp._escrow(uuid) to authenticated;
+
+-- Commission de 10 % pour l'essai (0 % dans le référentiel en attendant la décision).
+update public.commission_rules set rate_bps = 1000 where country_code = 'TG' and category_id is null;
+
+-- Cash livré puis encaissé : la boutique doit la commission.
+select tests.login_as((select awa from _t));
+select public.cart_add((select tomate_tas from _t), 2);
+select tests.logout();
+create temporary table _p6 as
+select app.place_order((select awa from _t), gen_random_uuid(), jsonb_build_object(
+  'address_id', (select home from _t),
+  'payment_method_id', (select id from public.payment_methods where country_code = 'TG' and provider_code = 'cash')),
+  (select morning from _t)) as r;
+create temporary table _k6 as
+select id, commission_minor from public.orders where purchase_id = (select (r -> 'purchase' ->> 'id')::uuid from _p6);
+create temporary table _cash_before as select pg_temp._bal('store_balance', (select kodjo_store from _t)) as store;
+select pg_temp._go((select kodjo from _t), (select id from _k6), s)
+from unnest(array['accepted', 'preparing', 'ready', 'out_for_delivery', 'delivered']) s;
+select app.confirm_cash((select kodjo from _t), (select id from _k6));
+select is(pg_temp._bal('store_balance', (select kodjo_store from _t)) - (select store from _cash_before),
+  -(select commission_minor from _k6), 'cash : commission due par la boutique');
+select ok((select commission_minor > 0 from _k6), 'cash : commission non nulle');
+
+-- En ligne payé : argent détenu pour la cliente ; rejeu sans doublon.
+select is(pg_temp._escrow((select (r -> 'purchase' ->> 'id')::uuid from _p4)),
+  (select (r -> 'purchase' -> 'payment' ->> 'amount_minor')::bigint from _p4), 'paiement : argent détenu');
+select app.ledger_payment_received((select (r -> 'purchase' -> 'payment' ->> 'id')::uuid from _p4));
+select is((select count(*)::int from public.ledger_transactions
+           where payment_id = (select (r -> 'purchase' -> 'payment' ->> 'id')::uuid from _p4)), 1, 'rejeu : aucun doublon');
+
+-- Remboursement en ligne avant livraison : sorti de l'argent détenu.
+insert into public.refunds (order_id, amount_minor, currency_code, method, status)
+select (select k4 from _t), (r -> 'purchase' -> 'payment' ->> 'amount_minor')::bigint, 'XOF', 'provider', 'succeeded' from _p4;
+select is(pg_temp._escrow((select (r -> 'purchase' ->> 'id')::uuid from _p4)), 0::bigint, 'remboursement : argent détenu rendu');
+
+-- En ligne livrée : part boutique + commission = total.
+select tests.login_as((select awa from _t));
+select public.cart_add((select tomate_tas from _t), 1);
+select tests.logout();
+create temporary table _p5 as
+select app.place_order((select awa from _t), gen_random_uuid(), jsonb_build_object(
+  'address_id', (select home from _t),
+  'payment_method_id', (select id from public.payment_methods where provider_code = 'simulator' and country_code = 'TG' and operator_code is null)),
+  (select morning from _t), '{simulator}') as r;
+select app.apply_payment_event('simulator', 'evt-k5', '{}', true,
+  (select (r -> 'purchase' -> 'payment' ->> 'id')::uuid from _p5), 'succeeded',
+  (select (r -> 'purchase' -> 'payment' ->> 'amount_minor')::bigint from _p5), 'XOF');
+create temporary table _k5 as
+select id, total_minor, commission_minor from public.orders
+where purchase_id = (select (r -> 'purchase' ->> 'id')::uuid from _p5);
+create temporary table _before as select pg_temp._bal('store_balance', (select kodjo_store from _t)) as store,
+  pg_temp._bal('platform_commission') as platform;
+select pg_temp._go((select kodjo from _t), (select id from _k5), s)
+from unnest(array['accepted', 'preparing', 'ready', 'out_for_delivery', 'delivered']) s;
+select is(pg_temp._escrow((select (r -> 'purchase' ->> 'id')::uuid from _p5)), 0::bigint, 'livrée : argent détenu versé');
+select is(pg_temp._bal('store_balance', (select kodjo_store from _t)) - (select store from _before),
+  (select total_minor - commission_minor from _k5), 'livrée : part de la boutique');
+select is(pg_temp._bal('platform_commission') - (select platform from _before),
+  (select commission_minor from _k5), 'livrée : commission de DYM');
+select is((select count(*)::int from (select transaction_id from public.ledger_entries group by 1
+           having sum(amount_minor) <> 0) x), 0, 'toutes les transactions sont équilibrées');
+
+-- Garde-fous.
+select throws_ok($$update public.ledger_entries set amount_minor = 1$$, 'P0001', 'ledger_immutable', 'écritures immuables');
+set constraints all immediate;
+select throws_ok($$select app.ledger_post('cash_commission', 'déséquilibre', 'XOF', jsonb_build_array(
+  jsonb_build_object('account', app.ledger_account('platform_commission', 'XOF'), 'amount', 10)))$$,
+  'P0001', 'ledger_unbalanced', 'transaction déséquilibrée refusée');
+
+-- Lectures.
+create temporary table _expected as select pg_temp._bal('store_balance', (select kodjo_store from _t)) as store;
+grant select on _expected to authenticated;
+select tests.login_as((select kodjo from _t));
+select is((public.my_store_balance() ->> 'balance_minor')::bigint, (select store from _expected),
+  'solde lu par la vendeuse');
+select throws_ok($$select count(*) from public.ledger_entries$$, '42501', null, 'aucune lecture directe des écritures');
+select throws_ok($$select public.admin_ledger_check()$$, '42501', null, 'contrôle réservé aux admins');
+select tests.login_as((select ama from _t));
+select throws_ok($$select public.my_store_balance()$$, 'P0002', null, 'sans boutique : aucun solde');
+select tests.logout();
 
 select * from finish();
