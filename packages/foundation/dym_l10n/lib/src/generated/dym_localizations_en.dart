@@ -3737,4 +3737,116 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get contentTextHint => 'Write your status…';
+
+  @override
+  String get accountWallet => 'My wallet';
+
+  @override
+  String get walletTitle => 'My wallet';
+
+  @override
+  String get walletAvailable => 'Available';
+
+  @override
+  String walletTotal(String amount) {
+    return 'Total with pockets: $amount';
+  }
+
+  @override
+  String get walletTopup => 'Top up';
+
+  @override
+  String get walletTopupSimulated =>
+      'Simulated top-up: no real money is charged.';
+
+  @override
+  String get walletMove => 'Move';
+
+  @override
+  String get walletPockets => 'My pockets';
+
+  @override
+  String get walletNewPocket => 'New pocket';
+
+  @override
+  String get walletPocketsEmpty =>
+      'Create a pocket to set money aside: monthly shopping, celebrations, pre-orders.';
+
+  @override
+  String walletPocketGoal(String amount) {
+    return 'Goal $amount';
+  }
+
+  @override
+  String walletPocketRoundUp(String amount) {
+    return 'Round up to $amount';
+  }
+
+  @override
+  String get walletPocketArchive => 'Close pocket';
+
+  @override
+  String get walletMovements => 'Activity';
+
+  @override
+  String get walletMovementsEmpty => 'No activity yet.';
+
+  @override
+  String get walletKindTopup => 'Top-up';
+
+  @override
+  String get walletKindTransfer => 'Pocket transfer';
+
+  @override
+  String get walletKindPayment => 'Order payment';
+
+  @override
+  String get walletKindRefund => 'Refund';
+
+  @override
+  String get walletKindCashback => 'Cashback';
+
+  @override
+  String get walletKindOther => 'Movement';
+
+  @override
+  String get walletAmount => 'Amount';
+
+  @override
+  String get walletPocketName => 'Pocket name';
+
+  @override
+  String get walletPocketGoalField => 'Goal (optional)';
+
+  @override
+  String get walletPocketRoundUpField => 'Round up each payment to (optional)';
+
+  @override
+  String get walletFrom => 'From';
+
+  @override
+  String get walletTo => 'To';
+
+  @override
+  String get walletMain => 'Wallet';
+
+  @override
+  String get walletConfirm => 'Confirm';
+
+  @override
+  String get walletErrorInsufficient => 'Insufficient balance.';
+
+  @override
+  String get walletErrorAmount => 'Invalid amount.';
+
+  @override
+  String get walletErrorTopupDisabled => 'Top-up isn\'t available here.';
+
+  @override
+  String get walletErrorPocketLimit =>
+      'You\'ve reached the maximum number of pockets.';
+
+  @override
+  String get orderErrorWalletInsufficient =>
+      'Not enough in your wallet: top it up or choose another method.';
 }

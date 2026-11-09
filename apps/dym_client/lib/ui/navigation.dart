@@ -27,6 +27,8 @@ import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/features/reviews/review_views.dart';
+import 'package:dym_client/features/wallet/wallet_service.dart';
+import 'package:dym_client/features/wallet/wallet_view.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -90,6 +92,9 @@ abstract interface class AppNavigator {
 
   /// Aide (écran 66).
   void toHelp();
+
+  /// Mon wallet (spec 025).
+  void toWallet();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -105,7 +110,9 @@ class StackedAppNavigator implements AppNavigator {
     SearchAiService? searchAi,
     CopilotService? copilot,
     ContentService? content,
-  ]) : _support = support ?? locator<SupportService>(),
+    WalletService? wallet,
+  ]) : _walletOverride = wallet,
+       _support = support ?? locator<SupportService>(),
        _content =
            content ??
            (locator.isRegistered<ContentService>()
@@ -133,6 +140,10 @@ class StackedAppNavigator implements AppNavigator {
   final OrdersService _orders;
   final ChatService _chat;
   final SupportService _support;
+  final WalletService? _walletOverride;
+
+  /// Wallet (spec 025), résolu au premier usage.
+  WalletService get _wallet => _walletOverride ?? locator<WalletService>();
 
   /// Recherche augmentée (spec 018) ; absente : recherche texte seule.
   final SearchAiService? _searchAi;
@@ -380,6 +391,9 @@ class StackedAppNavigator implements AppNavigator {
 
   @override
   void toHelp() => _push(SupportView(service: _support, onBack: _back));
+
+  @override
+  void toWallet() => _push(WalletView(service: _wallet, onBack: _back));
 
   Future<bool> _toReport(String orderId, String storeName) async =>
       await _navigator.push<bool>(

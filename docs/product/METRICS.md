@@ -50,3 +50,4 @@ fiabilité (ops).
 | `order_accepted`, `order_rejected`, `order_status_changed`, `order_delivered`, `order_cancelled` | Serveur | H5, H9 |
 | `dispute_opened`, `dispute_resolved` | Serveur | Preuve 3 |
 | `admin_action_performed` | Serveur | Audit |
+| `wallet_topped_up` (montant, fournisseur), `wallet_payment_succeeded` (montant), `pocket_created` (objectif, arrondi : oui/non) | Serveur | Wallet (spec 025) |

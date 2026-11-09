@@ -159,6 +159,7 @@ class _HomeViewState extends State<HomeView> {
           onNotifications: _navigator.toNotificationSettings,
           onMessages: _navigator.toMessages,
           onHelp: _navigator.toHelp,
+          onWallet: _navigator.toWallet,
         ),
       },
     );

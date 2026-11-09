@@ -63,7 +63,7 @@ select throws_ok(format($$select public.set_store_payment_methods(array['%s'::uu
   (select cash_gh from _t)), '22023', null, 'moyen de paiement d''un autre pays refusé');
 
 select is((select count(*)::int from jsonb_array_elements(public.store_payment_options()) o
-           where o ->> 'provider_code' <> 'simulator'), 3,
+           where o ->> 'provider_code' not in ('simulator', 'wallet')), 3,
   'étape 6 : les 3 moyens du Togo, inactifs compris');
 select is((select o->>'is_available' from jsonb_array_elements(public.store_payment_options()) o
             where o->>'operator_code' = 'tmoney' and o->>'provider_code' = 'moneroo'), 'false', 'T-Money proposé « Bientôt »');

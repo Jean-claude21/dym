@@ -713,11 +713,17 @@
     "description": "Boutique fermée"
   },
   "myStoreClosedByHours": "Fermée pour l'instant",
-  "@myStoreClosedByHours": { "description": "Boutique active mais hors de ses horaires" },
+  "@myStoreClosedByHours": {
+    "description": "Boutique active mais hors de ses horaires"
+  },
   "myStoreClosedByHoursHint": "Hors de tes horaires : les clientes commanderont à la réouverture",
-  "@myStoreClosedByHoursHint": { "description": "Détail de la fermeture selon les horaires" },
+  "@myStoreClosedByHoursHint": {
+    "description": "Détail de la fermeture selon les horaires"
+  },
   "productStoreClosed": "Cette boutique est fermée pour le moment. Tu pourras commander à sa réouverture.",
-  "@productStoreClosed": { "description": "Fiche produit d'une boutique fermée" },
+  "@productStoreClosed": {
+    "description": "Fiche produit d'une boutique fermée"
+  },
   "myStoreClosedHint": "Les clientes ne peuvent pas commander",
   "@myStoreClosedHint": {
     "description": "Boutique fermée"
@@ -4875,5 +4881,156 @@
   "contentMediaMode": "Photo ou vidéo",
   "contentTextMode": "Écrire un statut",
   "contentTextLabel": "Ton message",
-  "contentTextHint": "Écris ton statut…"
+  "contentTextHint": "Écris ton statut…",
+  "accountWallet": "Mon wallet",
+  "@accountWallet": {
+    "description": "Ligne wallet du compte"
+  },
+  "walletTitle": "Mon wallet",
+  "@walletTitle": {
+    "description": "Titre de l'écran wallet"
+  },
+  "walletAvailable": "Disponible",
+  "@walletAvailable": {
+    "description": "Solde disponible"
+  },
+  "walletTotal": "Total avec les poches : {amount}",
+  "@walletTotal": {
+    "description": "Total wallet + poches",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletTopup": "Recharger",
+  "@walletTopup": {
+    "description": "Action recharger"
+  },
+  "walletTopupSimulated": "Recharge simulée : aucun argent réel n'est débité.",
+  "@walletTopupSimulated": {
+    "description": "Mention de simulation"
+  },
+  "walletMove": "Déplacer",
+  "@walletMove": {
+    "description": "Action déplacer de l'argent"
+  },
+  "walletPockets": "Mes poches",
+  "@walletPockets": {
+    "description": "Titre des poches"
+  },
+  "walletNewPocket": "Nouvelle poche",
+  "@walletNewPocket": {
+    "description": "Action nouvelle poche"
+  },
+  "walletPocketsEmpty": "Crée une poche pour mettre de côté : courses du mois, fêtes, précommandes.",
+  "@walletPocketsEmpty": {
+    "description": "Aucune poche"
+  },
+  "walletPocketGoal": "Objectif {amount}",
+  "@walletPocketGoal": {
+    "description": "Objectif d'une poche",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletPocketRoundUp": "Arrondi à {amount}",
+  "@walletPocketRoundUp": {
+    "description": "Arrondi d'une poche",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "walletPocketArchive": "Fermer la poche",
+  "@walletPocketArchive": {
+    "description": "Archiver une poche"
+  },
+  "walletMovements": "Mouvements",
+  "@walletMovements": {
+    "description": "Titre des mouvements"
+  },
+  "walletMovementsEmpty": "Aucun mouvement pour l'instant.",
+  "@walletMovementsEmpty": {
+    "description": "Aucun mouvement"
+  },
+  "walletKindTopup": "Recharge",
+  "@walletKindTopup": {
+    "description": "Mouvement : recharge"
+  },
+  "walletKindTransfer": "Transfert entre poches",
+  "@walletKindTransfer": {
+    "description": "Mouvement : transfert"
+  },
+  "walletKindPayment": "Paiement d'une commande",
+  "@walletKindPayment": {
+    "description": "Mouvement : paiement"
+  },
+  "walletKindRefund": "Remboursement",
+  "@walletKindRefund": {
+    "description": "Mouvement : remboursement"
+  },
+  "walletKindCashback": "Cashback",
+  "@walletKindCashback": {
+    "description": "Mouvement : cashback"
+  },
+  "walletKindOther": "Mouvement",
+  "@walletKindOther": {
+    "description": "Mouvement inconnu"
+  },
+  "walletAmount": "Montant",
+  "@walletAmount": {
+    "description": "Champ montant"
+  },
+  "walletPocketName": "Nom de la poche",
+  "@walletPocketName": {
+    "description": "Champ nom de poche"
+  },
+  "walletPocketGoalField": "Objectif (facultatif)",
+  "@walletPocketGoalField": {
+    "description": "Champ objectif"
+  },
+  "walletPocketRoundUpField": "Arrondir chaque paiement à (facultatif)",
+  "@walletPocketRoundUpField": {
+    "description": "Champ arrondi"
+  },
+  "walletFrom": "Depuis",
+  "@walletFrom": {
+    "description": "Origine d'un transfert"
+  },
+  "walletTo": "Vers",
+  "@walletTo": {
+    "description": "Destination d'un transfert"
+  },
+  "walletMain": "Wallet",
+  "@walletMain": {
+    "description": "Le wallet principal"
+  },
+  "walletConfirm": "Valider",
+  "@walletConfirm": {
+    "description": "Bouton valider"
+  },
+  "walletErrorInsufficient": "Solde insuffisant.",
+  "@walletErrorInsufficient": {
+    "description": "Erreur solde"
+  },
+  "walletErrorAmount": "Montant invalide.",
+  "@walletErrorAmount": {
+    "description": "Erreur montant"
+  },
+  "walletErrorTopupDisabled": "La recharge n'est pas disponible ici.",
+  "@walletErrorTopupDisabled": {
+    "description": "Erreur recharge coupée"
+  },
+  "walletErrorPocketLimit": "Tu as atteint le nombre maximum de poches.",
+  "@walletErrorPocketLimit": {
+    "description": "Erreur limite de poches"
+  },
+  "orderErrorWalletInsufficient": "Solde du wallet insuffisant : recharge-le ou choisis un autre moyen.",
+  "@orderErrorWalletInsufficient": {
+    "description": "Refus : wallet insuffisant"
+  }
 }

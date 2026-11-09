@@ -24,7 +24,7 @@ select ok(
 select ok((select count(*) from public.units where country_code = 'GH') = 0, 'anonyme : unités du Ghana invisibles');
 select results_eq(
   $$select provider_code from public.payment_methods
-    where country_code = 'TG' and provider_code <> 'simulator' order by sort$$,
+    where country_code = 'TG' and provider_code not in ('simulator', 'wallet') order by sort$$,
   array['cash'],
   'anonyme : seul le cash est proposé (Mobile Money inactif)'
 );

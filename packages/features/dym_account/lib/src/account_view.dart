@@ -17,6 +17,7 @@ class AccountView extends StackedView<AccountViewModel> {
     this.onNotifications,
     this.onMessages,
     this.onHelp,
+    this.onWallet,
   });
 
   final AuthService service;
@@ -33,6 +34,9 @@ class AccountView extends StackedView<AccountViewModel> {
 
   /// Aide (spec 016) ; nul : non affiché.
   final VoidCallback? onHelp;
+
+  /// Wallet et poches (spec 025) ; absent : ligne masquée.
+  final VoidCallback? onWallet;
 
   @override
   AccountViewModel viewModelBuilder(BuildContext context) =>
@@ -122,6 +126,11 @@ class AccountView extends StackedView<AccountViewModel> {
                     Icons.edit_rounded,
                     l10n.accountEditName,
                     viewModel.isBusy ? null : () => _rename(context, viewModel),
+                  ),
+                  (
+                    Icons.account_balance_wallet_rounded,
+                    l10n.accountWallet,
+                    onWallet,
                   ),
                   (
                     Icons.location_on_rounded,

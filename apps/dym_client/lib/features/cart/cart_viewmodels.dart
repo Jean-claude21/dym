@@ -49,6 +49,7 @@ enum OrderError {
   totalChanged,
   paymentUnavailable,
   ownStore,
+  walletInsufficient,
   offline,
   generic,
 }
@@ -62,6 +63,8 @@ OrderError orderErrorOf(Failure failure) => switch (failure) {
   ValidationFailure(message: 'payment_not_accepted' || 'payment_unavailable') =>
     OrderError.paymentUnavailable,
   ValidationFailure(message: 'own_store_purchase') => OrderError.ownStore,
+  ValidationFailure(message: 'wallet_insufficient') =>
+    OrderError.walletInsufficient,
   _ => OrderError.generic,
 };
 

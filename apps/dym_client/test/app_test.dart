@@ -117,6 +117,9 @@ class _Navigator implements AppNavigator {
 
   @override
   void toHelp() => routes.add('help');
+
+  @override
+  void toWallet() => routes.add('wallet');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

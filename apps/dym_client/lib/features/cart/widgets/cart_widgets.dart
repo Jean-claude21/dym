@@ -249,6 +249,7 @@ String orderErrorLabel(DymLocalizations l10n, OrderError error) =>
       OrderError.totalChanged => l10n.orderErrorTotalChanged,
       OrderError.paymentUnavailable => l10n.orderErrorPaymentUnavailable,
       OrderError.ownStore => l10n.orderErrorOwnStore,
+      OrderError.walletInsufficient => l10n.orderErrorWalletInsufficient,
       OrderError.offline => l10n.errorOffline,
       OrderError.generic => l10n.errorGeneric,
     };
