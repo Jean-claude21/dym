@@ -60,4 +60,7 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toHelp() {}
+
+  @override
+  void toWallet() {}
 }

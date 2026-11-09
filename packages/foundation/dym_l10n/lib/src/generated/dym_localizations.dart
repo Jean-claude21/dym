@@ -6390,6 +6390,210 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Écris ton statut…'**
   String get contentTextHint;
+
+  /// Ligne wallet du compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon wallet'**
+  String get accountWallet;
+
+  /// Titre de l'écran wallet
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon wallet'**
+  String get walletTitle;
+
+  /// Solde disponible
+  ///
+  /// In fr, this message translates to:
+  /// **'Disponible'**
+  String get walletAvailable;
+
+  /// Total wallet + poches
+  ///
+  /// In fr, this message translates to:
+  /// **'Total avec les poches : {amount}'**
+  String walletTotal(String amount);
+
+  /// Action recharger
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharger'**
+  String get walletTopup;
+
+  /// Mention de simulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharge simulée : aucun argent réel n\'est débité.'**
+  String get walletTopupSimulated;
+
+  /// Action déplacer de l'argent
+  ///
+  /// In fr, this message translates to:
+  /// **'Déplacer'**
+  String get walletMove;
+
+  /// Titre des poches
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes poches'**
+  String get walletPockets;
+
+  /// Action nouvelle poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle poche'**
+  String get walletNewPocket;
+
+  /// Aucune poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée une poche pour mettre de côté : courses du mois, fêtes, précommandes.'**
+  String get walletPocketsEmpty;
+
+  /// Objectif d'une poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif {amount}'**
+  String walletPocketGoal(String amount);
+
+  /// Arrondi d'une poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrondi à {amount}'**
+  String walletPocketRoundUp(String amount);
+
+  /// Archiver une poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer la poche'**
+  String get walletPocketArchive;
+
+  /// Titre des mouvements
+  ///
+  /// In fr, this message translates to:
+  /// **'Mouvements'**
+  String get walletMovements;
+
+  /// Aucun mouvement
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun mouvement pour l\'instant.'**
+  String get walletMovementsEmpty;
+
+  /// Mouvement : recharge
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharge'**
+  String get walletKindTopup;
+
+  /// Mouvement : transfert
+  ///
+  /// In fr, this message translates to:
+  /// **'Transfert entre poches'**
+  String get walletKindTransfer;
+
+  /// Mouvement : paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement d\'une commande'**
+  String get walletKindPayment;
+
+  /// Mouvement : remboursement
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement'**
+  String get walletKindRefund;
+
+  /// Mouvement : cashback
+  ///
+  /// In fr, this message translates to:
+  /// **'Cashback'**
+  String get walletKindCashback;
+
+  /// Mouvement inconnu
+  ///
+  /// In fr, this message translates to:
+  /// **'Mouvement'**
+  String get walletKindOther;
+
+  /// Champ montant
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get walletAmount;
+
+  /// Champ nom de poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la poche'**
+  String get walletPocketName;
+
+  /// Champ objectif
+  ///
+  /// In fr, this message translates to:
+  /// **'Objectif (facultatif)'**
+  String get walletPocketGoalField;
+
+  /// Champ arrondi
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrondir chaque paiement à (facultatif)'**
+  String get walletPocketRoundUpField;
+
+  /// Origine d'un transfert
+  ///
+  /// In fr, this message translates to:
+  /// **'Depuis'**
+  String get walletFrom;
+
+  /// Destination d'un transfert
+  ///
+  /// In fr, this message translates to:
+  /// **'Vers'**
+  String get walletTo;
+
+  /// Le wallet principal
+  ///
+  /// In fr, this message translates to:
+  /// **'Wallet'**
+  String get walletMain;
+
+  /// Bouton valider
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get walletConfirm;
+
+  /// Erreur solde
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde insuffisant.'**
+  String get walletErrorInsufficient;
+
+  /// Erreur montant
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant invalide.'**
+  String get walletErrorAmount;
+
+  /// Erreur recharge coupée
+  ///
+  /// In fr, this message translates to:
+  /// **'La recharge n\'est pas disponible ici.'**
+  String get walletErrorTopupDisabled;
+
+  /// Erreur limite de poches
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as atteint le nombre maximum de poches.'**
+  String get walletErrorPocketLimit;
+
+  /// Refus : wallet insuffisant
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde du wallet insuffisant : recharge-le ou choisis un autre moyen.'**
+  String get orderErrorWalletInsufficient;
 }
 
 class _DymLocalizationsDelegate

@@ -19,6 +19,7 @@ import { pgAdminStore } from "./admin/routes.js";
 import { fcmPushSender, noPushSender, pgPushQueue } from "./notifications/push.js";
 import { pgPaymentStore } from "./payments/adapters.js";
 import { availableProviders } from "./payments/simulator.js";
+import { walletProvider } from "./payments/wallet.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
@@ -92,9 +93,13 @@ export default createApp({
   payments: {
     store: pgPaymentStore(pool),
     // Simulateur : secret présent et branche hors production (spec 010).
-    providers: availableProviders({
-      branch: process.env.NEON_BRANCH,
-      simulatorSecret: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
-    }),
+    providers: [
+      // Wallet DYM : rail interne, toujours disponible (spec 025).
+      walletProvider(),
+      ...availableProviders({
+        branch: process.env.NEON_BRANCH,
+        simulatorSecret: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
+      }),
+    ],
   },
 });

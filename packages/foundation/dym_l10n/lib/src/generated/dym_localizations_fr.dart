@@ -3766,4 +3766,118 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get contentTextHint => 'Écris ton statut…';
+
+  @override
+  String get accountWallet => 'Mon wallet';
+
+  @override
+  String get walletTitle => 'Mon wallet';
+
+  @override
+  String get walletAvailable => 'Disponible';
+
+  @override
+  String walletTotal(String amount) {
+    return 'Total avec les poches : $amount';
+  }
+
+  @override
+  String get walletTopup => 'Recharger';
+
+  @override
+  String get walletTopupSimulated =>
+      'Recharge simulée : aucun argent réel n\'est débité.';
+
+  @override
+  String get walletMove => 'Déplacer';
+
+  @override
+  String get walletPockets => 'Mes poches';
+
+  @override
+  String get walletNewPocket => 'Nouvelle poche';
+
+  @override
+  String get walletPocketsEmpty =>
+      'Crée une poche pour mettre de côté : courses du mois, fêtes, précommandes.';
+
+  @override
+  String walletPocketGoal(String amount) {
+    return 'Objectif $amount';
+  }
+
+  @override
+  String walletPocketRoundUp(String amount) {
+    return 'Arrondi à $amount';
+  }
+
+  @override
+  String get walletPocketArchive => 'Fermer la poche';
+
+  @override
+  String get walletMovements => 'Mouvements';
+
+  @override
+  String get walletMovementsEmpty => 'Aucun mouvement pour l\'instant.';
+
+  @override
+  String get walletKindTopup => 'Recharge';
+
+  @override
+  String get walletKindTransfer => 'Transfert entre poches';
+
+  @override
+  String get walletKindPayment => 'Paiement d\'une commande';
+
+  @override
+  String get walletKindRefund => 'Remboursement';
+
+  @override
+  String get walletKindCashback => 'Cashback';
+
+  @override
+  String get walletKindOther => 'Mouvement';
+
+  @override
+  String get walletAmount => 'Montant';
+
+  @override
+  String get walletPocketName => 'Nom de la poche';
+
+  @override
+  String get walletPocketGoalField => 'Objectif (facultatif)';
+
+  @override
+  String get walletPocketRoundUpField =>
+      'Arrondir chaque paiement à (facultatif)';
+
+  @override
+  String get walletFrom => 'Depuis';
+
+  @override
+  String get walletTo => 'Vers';
+
+  @override
+  String get walletMain => 'Wallet';
+
+  @override
+  String get walletConfirm => 'Valider';
+
+  @override
+  String get walletErrorInsufficient => 'Solde insuffisant.';
+
+  @override
+  String get walletErrorAmount => 'Montant invalide.';
+
+  @override
+  String get walletErrorTopupDisabled =>
+      'La recharge n\'est pas disponible ici.';
+
+  @override
+  String get walletErrorPocketLimit =>
+      'Tu as atteint le nombre maximum de poches.';
+
+  @override
+  String get orderErrorWalletInsufficient =>
+      'Solde du wallet insuffisant : recharge-le ou choisis un autre moyen.';
 }

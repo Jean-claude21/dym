@@ -8,22 +8,25 @@
 
 ## Vue d'ensemble
 
-| Phase | Objectif | Gate de sortie | Heures |
-|---|---|---|---|
-| 0 · Cadrage et validation | Valider les interfaces et les hypothèses avant de coder | 4/5 testeurs réussissent chaque parcours clé sans aide | ~10 h + sessions terrain |
-| 1 · Socle | Monorepo, design system adaptatif, référentiel générique, authentification | Une cliente et une vendeuse se connectent sur un vrai téléphone, données en base avec RLS testé | ~11 h |
-| 2 · Noyau commerce | Boucle complète publier → commander → payer → livrer → résoudre | Une vendeuse externe traite une commande réelle de bout en bout | ~49 h |
-| 3 · Pilote | Vendeuses et clientes réelles | KPIs de `METRICS.md` atteints ou écarts expliqués | ~10 h + terrain |
-| 4 · Différenciation | IA d'intention, recherche image/voix, contenu shoppable | Ouverte si H10 validée ; > 70 % d'intentions comprises | ~24 h |
-| 5 · Scale | Remplacée par les phases 6 à 13 (décision 0015), sauf `phone-otp`, `new-country`, `admin-v2` | Sur déclencheur | — |
-| 6 · Assainissement | Corrections relevées, CI au vert | CI verte sur `dev`, parcours rejoués en web | ~5 h |
-| 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h |
-| 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h |
-| 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h |
-| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h |
-| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h |
-| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h |
-| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h |
+| Phase | Objectif | Gate de sortie | Heures | État |
+|---|---|---|---|---|
+| 0 · Cadrage et validation | Valider les interfaces et les hypothèses avant de coder | 4/5 testeurs réussissent chaque parcours clé sans aide | ~10 h + sessions terrain | ✅ Faite (gate du 2026-10-02) |
+| 1 · Socle | Monorepo, design system adaptatif, référentiel générique, authentification | Une cliente et une vendeuse se connectent sur un vrai téléphone, données en base avec RLS testé | ~11 h | 🟡 Code fait (specs 001-005) ; démo téléphone à faire |
+| 2 · Noyau commerce | Boucle complète publier → commander → payer → livrer → résoudre | Une vendeuse externe traite une commande réelle de bout en bout | ~49 h | 🟡 Code fait (specs 006-015) ; commande réelle externe à faire |
+| 3 · Pilote | Vendeuses et clientes réelles | KPIs de `METRICS.md` atteints ou écarts expliqués | ~10 h + terrain | 🟡 Code fait (specs 016, 017, 022) ; terrain à faire |
+| 4 · Différenciation | IA d'intention, recherche image/voix, contenu shoppable | Ouverte si H10 validée ; > 70 % d'intentions comprises | ~24 h | 🟡 Code fait (specs 018-021) ; H10 à tester |
+| 5 · Scale | Remplacée par les phases 6 à 13 (décision 0015), sauf `phone-otp`, `new-country`, `admin-v2` | Sur déclencheur | — | ➖ Remplacée |
+| 6 · Assainissement | Corrections relevées, CI au vert | CI verte sur `dev`, parcours rejoués en web | ~5 h | ✅ Faite (spec 023) |
+| 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h | ✅ Faite (specs 024, 025) ; gate : démonstration web à faire |
+| 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ⬜ À faire |
+| 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ⬜ À faire |
+| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ⬜ À faire |
+| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ⬜ À faire |
+| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
+| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
+
+**Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain à faire · ⬜ à faire · ➖ remplacée.
+Mis à jour à chaque spec (dernière mise à jour : 2026-11-09).
 
 Les gates des phases 6 à 13 se valident par une démonstration web au porteur produit, en simulation
 pour tout service indisponible. Les durées sont des estimations.
@@ -108,74 +111,74 @@ en plus d'une heure.
 
 ## Phase 6 — Assainissement
 
-| Spec | Contenu |
-|---|---|
-| `foundation-fixes` | pgTAP aligné sur les pays ouverts (0026), mot de passe réservé aux environnements de test, moyens simulés absents de la production finale, régularisation du lot 023, texte admin sur la double authentification, boutique fermée visible dès la fiche, état réel affiché à la vendeuse, quartier d'inscription repris en adresse, confirmation d'ajout au panier, achat dans sa propre boutique interdit, dépendances vulnérables |
+| Spec | Contenu | État |
+|---|---|---|
+| `foundation-fixes` | pgTAP aligné sur les pays ouverts (0026), mot de passe réservé aux environnements de test, moyens simulés absents de la production finale, régularisation du lot 023, texte admin sur la double authentification, boutique fermée visible dès la fiche, état réel affiché à la vendeuse, quartier d'inscription repris en adresse, confirmation d'ajout au panier, achat dans sa propre boutique interdit, dépendances vulnérables | ✅ Spec 023 · PR #28 |
 
 ## Phase 7 — Argent
 
-| Spec | Contenu |
-|---|---|
-| `unified-account` | Un compte, plusieurs rôles (client, vendeur, livreur, créateur), bascule de rôle |
-| `ledger` | Grand livre à double écriture en SQL, rapprochements, audit |
-| `wallet-pockets` | Wallet, poches libres et règles, recharge simulée, paiement d'une commande, cashback, paniers à offrir |
+| Spec | Contenu | État |
+|---|---|---|
+| `unified-account` | Un compte, plusieurs rôles (client, vendeur, livreur, créateur), bascule de rôle | ✅ Déjà en place (un compte, plusieurs rôles) ; rôle créateur avec la phase 10 |
+| `ledger` | Grand livre à double écriture en SQL, rapprochements, audit | ✅ Spec 024 · PR #29 |
+| `wallet-pockets` | Wallet, poches libres et règles, recharge simulée, paiement d'une commande, cashback, paniers à offrir | ✅ Spec 025 (paniers à offrir → `spaces`) ; Function à redéployer sur staging |
 
 ## Phase 8 — Expérience et IA
 
-| Spec | Contenu |
-|---|---|
-| `premium-foundation` | Squelettes, cache d'images, animations, onglet Panier, commande en un écran |
-| `home-redesign` | Accueil « Qu'est-ce qu'on mange ? », fil personnel |
-| `ai-search-ranking` | Compréhension, savoir (quantités, noms locaux), règles de classement réglables, explication |
-| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence |
+| Spec | Contenu | État |
+|---|---|---|
+| `premium-foundation` | Squelettes, cache d'images, animations, onglet Panier, commande en un écran | ⬜ À faire |
+| `home-redesign` | Accueil « Qu'est-ce qu'on mange ? », fil personnel | ⬜ À faire |
+| `ai-search-ranking` | Compréhension, savoir (quantités, noms locaux), règles de classement réglables, explication | ⬜ À faire |
+| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence | ⬜ À faire |
 
 ## Phase 9 — Vie réelle
 
-| Spec | Contenu |
-|---|---|
-| `address-book-favorites` | Carnet, favoris, paniers enregistrés |
-| `spaces` | Espaces illimités, rôles, budget, validation, paiement partagé, commande pour un proche |
-| `preorder-slots` | Précommande à prix bloqué, créneaux, courses récurrentes |
-| `substitution-freshness` | Remplacement validé par photo, garantie fraîcheur |
-| `chat-calls` | Vocaux, médias, livreur dans la conversation, appel audio et vidéo |
+| Spec | Contenu | État |
+|---|---|---|
+| `address-book-favorites` | Carnet, favoris, paniers enregistrés | ⬜ À faire |
+| `spaces` | Espaces illimités, rôles, budget, validation, paiement partagé, commande pour un proche | ⬜ À faire |
+| `preorder-slots` | Précommande à prix bloqué, créneaux, courses récurrentes | ⬜ À faire |
+| `substitution-freshness` | Remplacement validé par photo, garantie fraîcheur | ⬜ À faire |
+| `chat-calls` | Vocaux, médias, livreur dans la conversation, appel audio et vidéo | ⬜ À faire |
 
 ## Phase 10 — Contenus
 
-| Spec | Contenu |
-|---|---|
-| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération |
-| `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires |
-| `recipe-to-cart` | « Tout pour la faire », rayon ustensiles, ingrédients génériques reliés aux vendeuses |
-| `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord |
-| `tiktok-bridge` | Import par le créateur, partage vers TikTok avec lien de panier |
+| Spec | Contenu | État |
+|---|---|---|
+| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération | ⬜ À faire |
+| `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires | ⬜ À faire |
+| `recipe-to-cart` | « Tout pour la faire », rayon ustensiles, ingrédients génériques reliés aux vendeuses | ⬜ À faire |
+| `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord | ⬜ À faire |
+| `tiktok-bridge` | Import par le créateur, partage vers TikTok avec lien de panier | ⬜ À faire |
 
 ## Phase 11 — Livreur
 
-| Spec | Contenu |
-|---|---|
-| `delivery-app` | App livreur, inscription, missions, acceptation |
-| `delivery-routing` | Tournées multi-boutiques, code de remise, consignes de conservation |
-| `delivery-cash` | Circuit du cash, gains en direct, retrait, point de recharge |
-| `live-tracking` | Suivi en direct (GPS simulé), heure d'arrivée, score, bonus, zones |
+| Spec | Contenu | État |
+|---|---|---|
+| `delivery-app` | App livreur, inscription, missions, acceptation | ⬜ À faire |
+| `delivery-routing` | Tournées multi-boutiques, code de remise, consignes de conservation | ⬜ À faire |
+| `delivery-cash` | Circuit du cash, gains en direct, retrait, point de recharge | ⬜ À faire |
+| `live-tracking` | Suivi en direct (GPS simulé), heure d'arrivée, score, bonus, zones | ⬜ À faire |
 
 ## Phase 12 — Vendeuse
 
-| Spec | Contenu |
-|---|---|
-| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile |
-| `qr-payments` | Paiement et encaissement par QR |
-| `vendor-credit` | Ardoise, relances |
-| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché |
-| `wholesale` | Achat de gros groupé |
+| Spec | Contenu | État |
+|---|---|---|
+| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile | ⬜ À faire |
+| `qr-payments` | Paiement et encaissement par QR | ⬜ À faire |
+| `vendor-credit` | Ardoise, relances | ⬜ À faire |
+| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché | ⬜ À faire |
+| `wholesale` | Achat de gros groupé | ⬜ À faire |
 
 ## Phase 13 — Différence
 
-| Spec | Contenu |
-|---|---|
-| `haggling` | Marchandage dans la limite de la vendeuse |
-| `group-buying` | Achat groupé entre voisins, départ groupé |
-| `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée |
-| `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support |
+| Spec | Contenu | État |
+|---|---|---|
+| `haggling` | Marchandage dans la limite de la vendeuse | ⬜ À faire |
+| `group-buying` | Achat groupé entre voisins, départ groupé | ⬜ À faire |
+| `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée | ⬜ À faire |
+| `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support | ⬜ À faire |
 
 ## Phase 5 — Scale (anciennes specs sur déclencheur, remplacées sauf mention)
 
