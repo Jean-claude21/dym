@@ -1,7 +1,7 @@
 -- Commande (spec 009, US3 et US4) : un achat, une commande par boutique,
 -- montants du devis, idempotence, refus, lecture limitée.
 
-select plan(30);
+select plan(31);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -137,5 +137,15 @@ select is((select count(*)::int from public.purchases), 0, 'Kodjo ne lit pas l''
 select tests.login_as((select ama from _t));
 select throws_ok(format($$select public.my_purchase('%s')$$, (select result -> 'purchase' ->> 'id' from _t)),
   'P0002', null, 'Ama ne lit pas l''achat d''Awa');
+
+-- Esi ne peut pas commander dans sa propre boutique (spec 023, FR-013).
+select tests.login_as((select esi from _t));
+select public.cart_add((select bissap_1l from _t), 1);
+select tests.logout();
+select throws_ok(
+  $$select app.place_order((select esi from _t), 'd0000000-0000-4000-8000-000000000003', jsonb_build_object(
+    'payment_method_id', (select cash from _t),
+    'modes', jsonb_build_object((select esi_store from _t), 'pickup')), (select morning from _t))$$,
+  'P0001', 'own_store_purchase', 'achat dans sa propre boutique refusé');
 
 select * from finish();

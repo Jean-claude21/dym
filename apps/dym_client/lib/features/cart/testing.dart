@@ -119,6 +119,9 @@ class MemoryCartService implements CartService {
   }
 
   @override
+  String? profileZoneId;
+
+  @override
   ValueListenable<CartView> get cart => _view;
 
   @override

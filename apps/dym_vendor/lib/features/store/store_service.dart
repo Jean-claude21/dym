@@ -31,6 +31,9 @@ abstract interface class StoreService {
   Future<Result<MyStore?>> publish();
 
   Future<Result<MyStore?>> setOpen({required bool open});
+
+  /// Vrai si la boutique reçoit des commandes maintenant.
+  Future<Result<bool>> openNow();
 }
 
 /// Implémentation Neon : dépôts `dym_data`, pays lu du profil.
@@ -95,4 +98,7 @@ class NeonStoreService implements StoreService {
   @override
   Future<Result<MyStore?>> setOpen({required bool open}) =>
       _stores.setOpen(open: open);
+
+  @override
+  Future<Result<bool>> openNow() => _stores.openNow();
 }

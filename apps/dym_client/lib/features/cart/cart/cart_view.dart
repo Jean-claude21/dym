@@ -265,13 +265,15 @@ class _CartContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (error != null || cart.blocking)
+        if (error != null || cart.blocking || vm.missingAddress)
           Padding(
             padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
             child: CartIssue(
-              label: error == null
+              label: error != null
+                  ? orderErrorLabel(l10n, error)
+                  : cart.blocking
                   ? l10n.cartBlocked
-                  : orderErrorLabel(l10n, error),
+                  : l10n.orderErrorAddressRequired,
             ),
           ),
         DymButton(

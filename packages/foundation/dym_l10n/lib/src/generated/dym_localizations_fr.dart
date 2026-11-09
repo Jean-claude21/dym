@@ -267,7 +267,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminSecurityNote =>
-      'Double authentification obligatoire · Déconnexion après 30 min d\'inactivité';
+      'Accès réservé à l\'équipe · Déconnexion après 30 min d\'inactivité';
 
   @override
   String get adminAuditNote =>
@@ -559,6 +559,17 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get myStoreClosed => 'Fermée';
+
+  @override
+  String get myStoreClosedByHours => 'Fermée pour l\'instant';
+
+  @override
+  String get myStoreClosedByHoursHint =>
+      'Hors de tes horaires : les clientes commanderont à la réouverture';
+
+  @override
+  String get productStoreClosed =>
+      'Cette boutique est fermée pour le moment. Tu pourras commander à sa réouverture.';
 
   @override
   String get myStoreClosedHint => 'Les clientes ne peuvent pas commander';
@@ -1217,6 +1228,10 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get orderErrorPaymentUnavailable =>
       'Ce moyen de paiement n\'est pas encore disponible.';
+
+  @override
+  String get orderErrorOwnStore =>
+      'Tu ne peux pas commander dans ta propre boutique.';
 
   @override
   String get orderErrorEmpty => 'Ton panier est vide.';

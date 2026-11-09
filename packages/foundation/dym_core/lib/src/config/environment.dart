@@ -88,6 +88,11 @@ class DymEnvironment {
   }
 
   /// Nom de l'environnement.
+  /// Vrai hors production finale : connexion par mot de passe et autres outils
+  /// de test. Constante de compilation, retirée du build de production.
+  static const bool testToolsEnabled =
+      String.fromEnvironment('DYM_ENV', defaultValue: 'dev') != 'production';
+
   final DymEnvironmentName name;
 
   /// URL de base de Neon Auth.

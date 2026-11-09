@@ -48,6 +48,7 @@ enum OrderError {
   addressRequired,
   totalChanged,
   paymentUnavailable,
+  ownStore,
   offline,
   generic,
 }
@@ -60,6 +61,7 @@ OrderError orderErrorOf(Failure failure) => switch (failure) {
   ValidationFailure(message: 'total_changed') => OrderError.totalChanged,
   ValidationFailure(message: 'payment_not_accepted' || 'payment_unavailable') =>
     OrderError.paymentUnavailable,
+  ValidationFailure(message: 'own_store_purchase') => OrderError.ownStore,
   _ => OrderError.generic,
 };
 
@@ -85,6 +87,10 @@ class CartViewModel extends _CartLoadingViewModel {
   bool get substitutionAllowed => service.selection.substitutionAllowed;
 
   bool get canOrder => !cart.isEmpty && !cart.blocking && !_ordering && !isBusy;
+
+  /// Une livraison est prévue, mais aucune adresse n'est choisie.
+  bool get missingAddress =>
+      !cart.isEmpty && cart.hasDelivery && cart.addressId == null;
 
   /// Progression vers la livraison offerte (nulle sans seuil).
   double? get freeDeliveryProgress {
@@ -300,7 +306,14 @@ class AddressFormViewModel extends _CartLoadingViewModel {
   bool get canSave => !isBusy && !_locating;
 
   @override
-  Future<void> load() => run(() async => null);
+  Future<void> load() async {
+    await run(() async => null);
+    final zone = service.profileZoneId;
+    if (initial == null && _zoneId == null && zones.any((z) => z.id == zone)) {
+      _zoneId = zone;
+      notifyListeners();
+    }
+  }
 
   void setKind(AddressKind value) {
     _kind = value;

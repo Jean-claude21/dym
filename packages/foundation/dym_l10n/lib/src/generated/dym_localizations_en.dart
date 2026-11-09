@@ -267,7 +267,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminSecurityNote =>
-      'Two-factor authentication required · Signed out after 30 min of inactivity';
+      'Team access only · Signed out after 30 min of inactivity';
 
   @override
   String get adminAuditNote => 'Every action is recorded in the audit log.';
@@ -555,6 +555,17 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get myStoreClosed => 'Closed';
+
+  @override
+  String get myStoreClosedByHours => 'Closed for now';
+
+  @override
+  String get myStoreClosedByHoursHint =>
+      'Outside your hours: customers can order when you reopen';
+
+  @override
+  String get productStoreClosed =>
+      'This store is closed for now. You can order when it reopens.';
 
   @override
   String get myStoreClosedHint => 'Customers can\'t order';
@@ -1209,6 +1220,9 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get orderErrorPaymentUnavailable =>
       'This payment method isn\'t available yet.';
+
+  @override
+  String get orderErrorOwnStore => 'You can\'t order from your own store.';
 
   @override
   String get orderErrorEmpty => 'Your basket is empty.';

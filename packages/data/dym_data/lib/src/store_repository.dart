@@ -62,6 +62,16 @@ class StoreRepository {
   /// Ouvre la boutique (refusé si incomplète ou suspendue).
   Future<Result<MyStore?>> publish() => _store('publish_store');
 
+  /// Vrai si la boutique reçoit des commandes maintenant (interrupteur et
+  /// horaires, calculé par la base).
+  Future<Result<bool>> openNow() async {
+    final result = await _data.rpc<Object?>('my_store_open_now');
+    return switch (result) {
+      Ok(:final value) => Ok(value == true),
+      Err(:final failure) => Err(failure),
+    };
+  }
+
   /// Ouvre ou ferme en un geste.
   Future<Result<MyStore?>> setOpen({required bool open}) =>
       _store('set_store_open', {'p_open': open});
