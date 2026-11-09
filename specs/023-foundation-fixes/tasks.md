@@ -10,5 +10,5 @@
 - [x] T008 [US3] Adresse manquante signalée dans le panier
 - [x] T009 [US4] État réel de la boutique (migration 0029, repository, service, écran)
 - [x] T010 [US5] Refus de l'achat chez soi (migration 0028, pgTAP, message)
-- [ ] T011 Analyse, tests Flutter, pgTAP et Functions verts
+- [x] T011 Analyse, tests Flutter, pgTAP et Functions verts
 - [ ] T012 Relecture humaine des migrations 0028 et 0029 (humain)
