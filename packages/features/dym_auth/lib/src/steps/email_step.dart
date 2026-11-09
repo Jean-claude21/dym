@@ -1,5 +1,6 @@
 import 'package:dym_auth/src/auth_flow_viewmodel.dart';
 import 'package:dym_auth/src/widgets/step_scaffold.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -85,15 +86,16 @@ class _EmailStepState extends State<EmailStep> {
             onSubmitted: (_) => vm.submitPassword(),
           ),
         ],
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: vm.toggleUsePassword,
-            child: Text(
-              vm.usePassword ? l10n.authUseCode : l10n.authUsePassword,
+        if (DymEnvironment.testToolsEnabled)
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: vm.toggleUsePassword,
+              child: Text(
+                vm.usePassword ? l10n.authUseCode : l10n.authUsePassword,
+              ),
             ),
           ),
-        ),
         if (vm.authError != AuthError.emailInvalid)
           AuthErrorBanner(error: vm.authError),
         const SizedBox(height: DymTokenSpace.s5),

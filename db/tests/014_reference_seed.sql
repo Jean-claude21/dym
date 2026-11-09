@@ -2,13 +2,16 @@
 
 select plan(11);
 
+-- Depuis 0026 plusieurs pays sont ouverts : l'essai ne garde que le Togo actif.
+update public.countries set is_active = false where code <> 'TG';
+
 select is(
   (select currency_code::text from public.countries where code = 'TG'),
   'XOF', 'Togo en franc CFA'
 );
 select is((select minor_units::int from public.currencies where code = 'XOF'), 0, 'XOF sans décimale');
 select is((select minor_units::int from public.currencies where code = 'GHS'), 2, 'GHS à 2 décimales');
-select ok(not (select is_active from public.countries where code = 'GH'), 'Ghana inactif au lancement');
+select ok((select is_active from public.countries where code = 'GH') is not null, 'Ghana présent au référentiel');
 select ok(
   exists (select 1 from public.zones z join public.cities c on c.id = z.city_id
           where c.slug = 'lome' and z.slug in ('be', 'tokoin', 'adawlato')

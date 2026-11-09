@@ -11,6 +11,10 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+if (process.env.DYM_TARGET !== 'staging') {
+  console.error('Refus : script de démonstration. Exiger DYM_TARGET=staging (jamais la production finale).');
+  process.exit(1);
+}
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const pg = createRequire(path.join(ROOT, 'functions/package.json'))('pg');
 const { DATABASE_URL: url, DEMO_EMAIL: base, DEMO_PASSWORD: password } = process.env;

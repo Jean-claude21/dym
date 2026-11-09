@@ -13,13 +13,20 @@
 | 0 · Cadrage et validation | Valider les interfaces et les hypothèses avant de coder | 4/5 testeurs réussissent chaque parcours clé sans aide | ~10 h + sessions terrain |
 | 1 · Socle | Monorepo, design system adaptatif, référentiel générique, authentification | Une cliente et une vendeuse se connectent sur un vrai téléphone, données en base avec RLS testé | ~11 h |
 | 2 · Noyau commerce | Boucle complète publier → commander → payer → livrer → résoudre | Une vendeuse externe traite une commande réelle de bout en bout | ~49 h |
-| 3 · Pilote | 10 puis 30 vendeuses, 300 clientes, une ville | Les 3 preuves V1 + KPIs de `METRICS.md` atteints ou écarts expliqués | ~10 h + terrain |
+| 3 · Pilote | Vendeuses et clientes réelles | KPIs de `METRICS.md` atteints ou écarts expliqués | ~10 h + terrain |
 | 4 · Différenciation | IA d'intention, recherche image/voix, contenu shoppable | Ouverte si H10 validée ; > 70 % d'intentions comprises | ~24 h |
-| 5 · Scale | Promotions, wallet, livreurs, nouveaux pays, admin V2 | Croissance sans dégradation des SLA | ~50 h, chaque spec sur déclencheur |
+| 5 · Scale | Remplacée par les phases 6 à 13 (décision 0015), sauf `phone-otp`, `new-country`, `admin-v2` | Sur déclencheur | — |
+| 6 · Assainissement | Corrections relevées, CI au vert | CI verte sur `dev`, parcours rejoués en web | ~5 h |
+| 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h |
+| 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h |
+| 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h |
+| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h |
+| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h |
+| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h |
+| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h |
 
-**Écart assumé avec l'ancien PRODUCT_MAP :** la différenciation (IA, vidéo) passe **après** le
-pilote, conformément au contrat V1 (`VISION.md` §3). Les sources la classaient en P0 ; le contrat
-l'exclut de V1.
+Les gates des phases 6 à 13 se valident par une démonstration web au porteur produit, en simulation
+pour tout service indisponible. Les durées sont des estimations.
 
 ## Délais externes à lancer à l'heure 0
 
@@ -87,8 +94,8 @@ feature flag tant que H10 n'est pas validée. Ajouts au pilote (besoin du suppor
 pendant le pilote) : A-CLI-02, A-VEN-06/07, A-FIN-01/02, A-LIT-07. V-PAY-03 sort du périmètre
 avec C-PAY-03, dont elle dépend.
 
-Pilote : 10 vendeuses, puis 30 après une semaine sans incident non résolu en plus d'une heure.
-Uniquement des correctifs de friction réelle pendant le pilote.
+Pilote : montée progressive du nombre de vendeuses après chaque semaine sans incident non résolu
+en plus d'une heure.
 
 ## Phase 4 — Différenciation (ouverte si H10 validée)
 
@@ -99,7 +106,81 @@ Uniquement des correctifs de friction réelle pendant le pilote.
 | `shoppable-content` | Stories 24 h et vidéos avec produits tagués, statistiques, modération | C-HOME-06/07, C-CAT-12, V-CONT-01..08, A-MOD-01..05 | 8 h |
 | `monitoring-nudges` | Monitoring paiements/IA, relances proactives vendeuse | A-DASH-06, A-AI-01..03, V-MSG-05, V-PROD-10 | 4 h |
 
-## Phase 5 — Scale (chaque spec sur déclencheur)
+## Phase 6 — Assainissement
+
+| Spec | Contenu |
+|---|---|
+| `foundation-fixes` | pgTAP aligné sur les pays ouverts (0026), mot de passe réservé aux environnements de test, moyens simulés absents de la production finale, régularisation du lot 023, texte admin sur la double authentification, boutique fermée visible dès la fiche, état réel affiché à la vendeuse, quartier d'inscription repris en adresse, confirmation d'ajout au panier, achat dans sa propre boutique interdit, dépendances vulnérables |
+
+## Phase 7 — Argent
+
+| Spec | Contenu |
+|---|---|
+| `unified-account` | Un compte, plusieurs rôles (client, vendeur, livreur, créateur), bascule de rôle |
+| `ledger` | Grand livre à double écriture en SQL, rapprochements, audit |
+| `wallet-pockets` | Wallet, poches libres et règles, recharge simulée, paiement d'une commande, cashback, paniers à offrir |
+
+## Phase 8 — Expérience et IA
+
+| Spec | Contenu |
+|---|---|
+| `premium-foundation` | Squelettes, cache d'images, animations, onglet Panier, commande en un écran |
+| `home-redesign` | Accueil « Qu'est-ce qu'on mange ? », fil personnel |
+| `ai-search-ranking` | Compréhension, savoir (quantités, noms locaux), règles de classement réglables, explication |
+| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence |
+
+## Phase 9 — Vie réelle
+
+| Spec | Contenu |
+|---|---|
+| `address-book-favorites` | Carnet, favoris, paniers enregistrés |
+| `spaces` | Espaces illimités, rôles, budget, validation, paiement partagé, commande pour un proche |
+| `preorder-slots` | Précommande à prix bloqué, créneaux, courses récurrentes |
+| `substitution-freshness` | Remplacement validé par photo, garantie fraîcheur |
+| `chat-calls` | Vocaux, médias, livreur dans la conversation, appel audio et vidéo |
+
+## Phase 10 — Contenus
+
+| Spec | Contenu |
+|---|---|
+| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération |
+| `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires |
+| `recipe-to-cart` | « Tout pour la faire », rayon ustensiles, ingrédients génériques reliés aux vendeuses |
+| `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord |
+| `tiktok-bridge` | Import par le créateur, partage vers TikTok avec lien de panier |
+
+## Phase 11 — Livreur
+
+| Spec | Contenu |
+|---|---|
+| `delivery-app` | App livreur, inscription, missions, acceptation |
+| `delivery-routing` | Tournées multi-boutiques, code de remise, consignes de conservation |
+| `delivery-cash` | Circuit du cash, gains en direct, retrait, point de recharge |
+| `live-tracking` | Suivi en direct (GPS simulé), heure d'arrivée, score, bonus, zones |
+
+## Phase 12 — Vendeuse
+
+| Spec | Contenu |
+|---|---|
+| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile |
+| `qr-payments` | Paiement et encaissement par QR |
+| `vendor-credit` | Ardoise, relances |
+| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché |
+| `wholesale` | Achat de gros groupé |
+
+## Phase 13 — Différence
+
+| Spec | Contenu |
+|---|---|
+| `haggling` | Marchandage dans la limite de la vendeuse |
+| `group-buying` | Achat groupé entre voisins, départ groupé |
+| `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée |
+| `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support |
+
+## Phase 5 — Scale (anciennes specs sur déclencheur, remplacées sauf mention)
+
+Seules `phone-otp`, `new-country` et `admin-v2` restent valables ; les autres lignes sont reprises
+dans les phases 6 à 13.
 
 | Spec | Déclencheur | IDs couverts | Heures |
 |---|---|---|---|
@@ -110,11 +191,10 @@ Uniquement des correctifs de friction réelle pendant le pilote.
 | `delivery-app` | > 50 commandes/jour pendant 14 jours | L-\* P0, A-LIV-01..05 | 15 h |
 | `live-tracking` | `delivery-app` active | C-ORD-05/06, L-DEL-08/09 | 6 h |
 | `admin-v2` | Pilote validé | A-ANA-04..07, A-CFG-08..10, A-FIN-08, A-SUP-04..07 | 8 h |
-| `new-country` | Ville pilote dominée | Activation par configuration (A-CFG-01..03) | 1-2 h |
+| `new-country` | Demande d'ouverture | Activation par configuration (A-CFG-01..03) | 1-2 h |
 
 ## Hors périmètre définitif
 
-C-CART-11 (panier collaboratif), C-PAY-04 (paiement fractionné), C-WAL-05 (transfert P2P),
 C-PAY-03 (capture MoMo vérifiée par IA, remplacée par la file de vérification manuelle), V-PAY-03 (alerte de capture suspecte, qui en dépend).
 
 ## Définition de terminé (pour chaque spec)

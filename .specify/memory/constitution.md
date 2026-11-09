@@ -2,16 +2,17 @@
 
 ## Core Principles
 
-### I. Contrat V1 et phases à gates
+### I. Périmètre de la vision et phases à gates
 
 - Tout travail DOIT correspondre à une spec listée dans `docs/product/ROADMAP.md` et citer ses
   identifiants de features (C-\*, V-\*, L-\*, A-\*).
 - Une phase ne s'ouvre que lorsque le gate de la précédente est atteint et consigné.
-- Jusqu'à la fin du pilote, seules les actions du contrat V1 (`docs/product/VISION.md` §3) sont
-  construites. Une feature du backlog n'en sort que si une personne réelle est bloquée par son absence.
+- Seules les fonctionnalités validées de `docs/product/VISION.md` §3 sont construites, dans le cadre
+  du grocery (produits alimentaires frais et ustensiles de cuisine). Aucune limite à une ville ou à
+  un pays.
 - Pas de refactoring de code fonctionnel sans spec qui le justifie.
 
-Justification : les versions précédentes ont échoué par excès de périmètre, pas par manque de code.
+Justification : le périmètre est large mais borné ; chaque brique est finie avant d'élargir.
 
 ### II. Valider avant de construire
 
@@ -74,7 +75,9 @@ Justification : ouvrir un nouveau pays doit être une opération de configuratio
   et `melos run test` passent ; au moins un test d'intégration couvre le parcours nominal ; une démo
   sur un Android d'entrée de gamme a eu lieu.
 - Les tests d'une règle métier sont écrits avant ou avec la règle, jamais après la livraison.
-- Aucune donnée fictive dans un flux de production ; aucun repli silencieux vers une valeur inventée.
+- Aucune donnée fictive dans un flux de production finale ; aucun repli silencieux vers une valeur
+  inventée. Un service externe indisponible est simulé derrière l'interface du vrai service, signalé
+  à l'écran, et remplacé avant la production finale (décision 0015).
 - Une nouvelle tentative réseau n'a lieu que sur erreur réseau ou 5xx, jamais sur 4xx.
 
 ### VIII. Conçu pour le terrain
@@ -140,4 +143,4 @@ Changer un élément de ce tableau exige une décision dans `docs/architecture/d
   toute dérogation est justifiée dans la section « Complexity Tracking ».
 - Guide opérationnel pour les agents : `AGENTS.md`.
 
-**Version**: 1.2.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
+**Version**: 2.0.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-11-09

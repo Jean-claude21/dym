@@ -28,6 +28,16 @@ class MyStoreViewModel extends BaseViewModel {
   bool get ready => _store != null && _config != null;
   bool get suspended => _store?.status == StoreStatus.suspended;
 
+  /// Interrupteur sur « ouverte », mais hors des horaires.
+  bool get closedByHours => (_store?.isOpen ?? false) && !_openNow;
+
+  bool _openNow = true;
+
+  Future<void> _refreshOpenNow() async {
+    final result = await _service.openNow();
+    if (result case Ok(:final value)) _openNow = value;
+  }
+
   Future<void> load() async {
     _loadFailure = null;
     setBusy(true);
@@ -37,6 +47,7 @@ class MyStoreViewModel extends BaseViewModel {
       case (Ok(value: final cfg), Ok(value: final current?)):
         _config = cfg;
         _store = current;
+        await _refreshOpenNow();
       case (Ok(), Ok()):
         _loadFailure = const NotFoundFailure('aucune boutique');
       case (Err(:final failure), _) || (_, Err(:final failure)):
@@ -56,6 +67,7 @@ class MyStoreViewModel extends BaseViewModel {
     switch (result) {
       case Ok(value: final current?):
         _store = current;
+        await _refreshOpenNow();
       case Ok():
         _toggleFailure = const NotFoundFailure('aucune boutique');
       case Err(:final failure):

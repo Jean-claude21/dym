@@ -205,6 +205,17 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                   ),
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
+                if (!store.openNow)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: DymTokenSpace.s3),
+                    child: Row(
+                      children: [
+                        Icon(Icons.schedule_rounded, color: c.pimentStrong),
+                        const SizedBox(width: DymTokenSpace.s2),
+                        Expanded(child: Text(l10n.productStoreClosed)),
+                      ],
+                    ),
+                  ),
                 Material(
                   color: c.card,
                   borderRadius: BorderRadius.circular(DymTokenRadius.tile),

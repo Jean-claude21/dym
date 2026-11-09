@@ -49,6 +49,9 @@ class LocatedPlace {
 /// partagé (mini-panier, panier, livraison). Montants et refus viennent de la
 /// base. Remplaçable en test.
 abstract interface class CartService {
+  /// Quartier choisi à l'inscription, s'il existe.
+  String? get profileZoneId;
+
   /// Dernier panier lu (vide avant la première lecture).
   ValueListenable<CartView> get cart;
 
@@ -141,6 +144,9 @@ class NeonCartService implements CartService {
   CheckoutSelection _selection = const CheckoutSelection();
   CountryConfig? _config;
   String? _orderKey;
+
+  @override
+  String? get profileZoneId => _auth.me?.profile?.zoneId;
 
   @override
   ValueListenable<CartView> get cart => _view;

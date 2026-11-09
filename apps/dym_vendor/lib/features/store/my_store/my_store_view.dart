@@ -192,8 +192,14 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                   ),
                   DymSwitchTile(
                     large: true,
-                    title: store.isOpen ? l10n.myStoreOpen : l10n.myStoreClosed,
-                    subtitle: store.isOpen
+                    title: viewModel.closedByHours
+                        ? l10n.myStoreClosedByHours
+                        : store.isOpen
+                        ? l10n.myStoreOpen
+                        : l10n.myStoreClosed,
+                    subtitle: viewModel.closedByHours
+                        ? l10n.myStoreClosedByHoursHint
+                        : store.isOpen
                         ? l10n.myStoreOpenHint
                         : l10n.myStoreClosedHint,
                     value: store.isOpen,

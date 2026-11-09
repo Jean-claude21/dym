@@ -1,6 +1,7 @@
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_viewmodel.dart';
 import 'package:dym_admin/ui/views/sign_in/google_button.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -113,14 +114,15 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
                     ? viewModel.signInWithPassword
                     : viewModel.sendCode,
               ),
-              TextButton(
-                onPressed: viewModel.toggleUsePassword,
-                child: Text(
-                  viewModel.usePassword
-                      ? l10n.authUseCode
-                      : l10n.authUsePassword,
+              if (DymEnvironment.testToolsEnabled)
+                TextButton(
+                  onPressed: viewModel.toggleUsePassword,
+                  child: Text(
+                    viewModel.usePassword
+                        ? l10n.authUseCode
+                        : l10n.authUsePassword,
+                  ),
                 ),
-              ),
             ],
           );
 

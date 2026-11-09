@@ -325,7 +325,7 @@
   "@adminContinueGoogle": {
     "description": "Bouton admin"
   },
-  "adminSecurityNote": "Double authentification obligatoire · Déconnexion après 30 min d'inactivité",
+  "adminSecurityNote": "Accès réservé à l'équipe · Déconnexion après 30 min d'inactivité",
   "@adminSecurityNote": {
     "description": "Note sécurité admin"
   },
@@ -712,6 +712,12 @@
   "@myStoreClosed": {
     "description": "Boutique fermée"
   },
+  "myStoreClosedByHours": "Fermée pour l'instant",
+  "@myStoreClosedByHours": { "description": "Boutique active mais hors de ses horaires" },
+  "myStoreClosedByHoursHint": "Hors de tes horaires : les clientes commanderont à la réouverture",
+  "@myStoreClosedByHoursHint": { "description": "Détail de la fermeture selon les horaires" },
+  "productStoreClosed": "Cette boutique est fermée pour le moment. Tu pourras commander à sa réouverture.",
+  "@productStoreClosed": { "description": "Fiche produit d'une boutique fermée" },
   "myStoreClosedHint": "Les clientes ne peuvent pas commander",
   "@myStoreClosedHint": {
     "description": "Boutique fermée"
@@ -1579,6 +1585,10 @@
   "orderErrorPaymentUnavailable": "Ce moyen de paiement n'est pas encore disponible.",
   "@orderErrorPaymentUnavailable": {
     "description": "Refus : paiement indisponible"
+  },
+  "orderErrorOwnStore": "Tu ne peux pas commander dans ta propre boutique.",
+  "@orderErrorOwnStore": {
+    "description": "Refus : achat dans sa propre boutique"
   },
   "orderErrorEmpty": "Ton panier est vide.",
   "@orderErrorEmpty": {

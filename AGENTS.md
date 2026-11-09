@@ -13,7 +13,7 @@ Les règles non négociables sont dans `.specify/memory/constitution.md` : elles
 
 | Besoin | Fichier |
 |---|---|
-| Pourquoi DYM, contrat V1, apps | `docs/product/VISION.md` |
+| Pourquoi DYM, fonctionnalités validées, apps | `docs/product/VISION.md` |
 | Phases, specs, heures, gates | `docs/product/ROADMAP.md` |
 | Hypothèses à valider | `docs/product/HYPOTHESES.md` |
 | Événements à émettre, KPIs | `docs/product/METRICS.md` |
@@ -71,6 +71,10 @@ node db/scripts/dym-db.mjs migrate --url "$DATABASE_URL_UNPOOLED" && node db/scr
 # NEON_LIVE_AUTH_URL, NEON_LIVE_DATA_API_URL, NEON_LIVE_FUNCTIONS_URL = URL de config/staging.json ;
 # NEON_LIVE_DATABASE_URL (hors dépôt) active le scénario de l'admin (rôle accordé par grant-admin).
 cd packages/data/dym_data && fvm dart test test/order_flow_live_test.dart
+# pgTAP complet sur une branche Neon propre (jetable, créée depuis `main` vide) :
+npx neonctl branches create --project-id <id> --name test-spec-NNN --parent main
+node db/scripts/dym-db.mjs migrate --neon-shims --url "$(npx neonctl connection-string test-spec-NNN --project-id <id>)"
+node db/scripts/dym-db.mjs test --url "<même URL>" && npx neonctl branches delete test-spec-NNN --project-id <id>
 # Déploiement : clés lues dans un fichier hors dépôt.
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt>
 ```

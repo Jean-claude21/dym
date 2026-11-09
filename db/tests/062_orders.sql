@@ -1,7 +1,7 @@
 -- Commande (spec 009, US3 et US4) : un achat, une commande par boutique,
 -- montants du devis, idempotence, refus, lecture limitée.
 
-select plan(30);
+select plan(31);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -14,7 +14,7 @@ select tests.create_user('awa@example.com') as awa,
        (select id from public.categories where slug = 'boissons') as boissons,
        (select id from public.categories where slug = 'tomates') as tomates,
        (select id from public.payment_methods where country_code = 'TG' and provider_code = 'cash') as cash,
-       (select id from public.payment_methods where country_code = 'TG' and operator_code = 'tmoney') as tmoney,
+       (select id from public.payment_methods where country_code = 'TG' and provider_code = 'moneroo' and operator_code = 'tmoney') as tmoney,
        '11111111-1111-4111-8111-111111111111'::uuid as bissap,
        'b1000000-0000-4000-8000-000000000001'::uuid as bissap_1l,
        '22222222-2222-4222-8222-222222222222'::uuid as tomate,
@@ -86,33 +86,33 @@ insert into public.store_payment_methods (store_id, payment_method_id)
 select s, (select tmoney from _t) from unnest(array[(select esi_store from _t), (select kodjo_store from _t)]) s;
 select throws_ok(format($$select pg_temp._place((select key1 from _t), pg_temp._request('{"payment_method_id": "%s"}'))$$,
   (select tmoney from _t)), 'P0001', 'payment_unavailable', 'Mobile Money pas encore disponible');
-select is((select count(*)::int from public.purchases), 0, 'aucun achat après les refus');
+select is((select count(*)::int from public.purchases where user_id = (select awa from _t)), 0, 'aucun achat après les refus');
 
 -- Commande : sous-total 2 900, frais 500 (Kodjo, base) + 200 (Esi), total 3 600.
 update _t set result = pg_temp._place((select key1 from _t), pg_temp._request('{"expected_total_minor": 3600}'));
 select is((select result ->> 'replayed' from _t), 'false', 'achat créé');
-select is((select count(*)::int from public.purchases), 1, 'un achat');
-select is((select count(*)::int from public.orders), 2, 'une commande par boutique');
+select is((select count(*)::int from public.purchases where user_id = (select awa from _t)), 1, 'un achat');
+select is((select count(*)::int from public.orders where purchase_id in (select id from public.purchases where user_id = (select awa from _t))), 2, 'une commande par boutique');
 select is((select result -> 'purchase' ->> 'total_minor' from _t)::int, 3600, 'total du devis');
 select is((select delivery_fee_minor::int from public.orders where store_id = (select kodjo_store from _t)), 500,
   'Kodjo porte la base');
 select is((select total_minor::int from public.orders where store_id = (select esi_store from _t)), 1600,
   'Esi : 1 400 + 200');
-select is((select status from public.orders limit 1), 'pending', 'en attente d''acceptation');
+select is((select status from public.orders where store_id = (select kodjo_store from _t)), 'pending', 'en attente d''acceptation');
 select is((select product_name || ' ' || variant_label from public.order_items
            where variant_id = (select bissap_1l from _t)), 'Jus de bissap 1 L', 'ligne figée');
 select is((select stock_quantity from public.product_variants where id = (select bissap_1l from _t)), 3,
   'stock suivi décrémenté');
-select is((select count(*)::int from public.cart_items), 0, 'panier vidé');
-select is((select address ->> 'landmark' from public.purchases), 'Portail bleu après la pharmacie', 'adresse copiée');
-select is((select substitution_allowed from public.purchases), false, 'préférence de remplacement');
+select is((select count(*)::int from public.cart_items where cart_id in (select id from public.carts where user_id = (select awa from _t))), 0, 'panier vidé');
+select is((select address ->> 'landmark' from public.purchases where user_id = (select awa from _t)), 'Portail bleu après la pharmacie', 'adresse copiée');
+select is((select substitution_allowed from public.purchases where user_id = (select awa from _t)), false, 'préférence de remplacement');
 select is((select (props ->> 'stores_count')::int from public.events where name = 'order_created'
            and actor_id = (select awa from _t)), 2, 'order_created avec stores_count');
-select ok((select commission_minor >= 0 from public.orders limit 1), 'commission figée');
+select ok((select commission_minor >= 0 from public.orders where store_id = (select kodjo_store from _t)), 'commission figée');
 
 -- Rejeu : même clé, même achat.
 select is(pg_temp._place((select key1 from _t), pg_temp._request()) ->> 'replayed', 'true', 'rejeu reconnu');
-select is((select count(*)::int from public.purchases), 1, 'toujours un seul achat');
+select is((select count(*)::int from public.purchases where user_id = (select awa from _t)), 1, 'toujours un seul achat');
 select is(pg_temp._place((select key1 from _t), pg_temp._request()) -> 'purchase' ->> 'id',
   (select result -> 'purchase' ->> 'id' from _t), 'même achat rendu');
 select throws_ok($$select pg_temp._place((select key2 from _t), pg_temp._request())$$,
@@ -137,5 +137,15 @@ select is((select count(*)::int from public.purchases), 0, 'Kodjo ne lit pas l''
 select tests.login_as((select ama from _t));
 select throws_ok(format($$select public.my_purchase('%s')$$, (select result -> 'purchase' ->> 'id' from _t)),
   'P0002', null, 'Ama ne lit pas l''achat d''Awa');
+
+-- Esi ne peut pas commander dans sa propre boutique (spec 023, FR-013).
+select tests.login_as((select esi from _t));
+select public.cart_add((select bissap_1l from _t), 1);
+select tests.logout();
+select throws_ok(
+  $$select app.place_order((select esi from _t), 'd0000000-0000-4000-8000-000000000003', jsonb_build_object(
+    'payment_method_id', (select cash from _t),
+    'modes', jsonb_build_object((select esi_store from _t), 'pickup')), (select morning from _t))$$,
+  'P0001', 'own_store_purchase', 'achat dans sa propre boutique refusé');
 
 select * from finish();

@@ -48,7 +48,7 @@ begin
 end
 $$;
 select pg_temp._order();
-update _t set o1 = (select id from public.orders order by created_at limit 1);
+update _t set o1 = (select id from public.orders where store_id = (select kodjo_store from _t) order by created_at limit 1);
 
 -- Fenêtre : pas avant l'acceptation.
 select throws_ok($$select app.open_dispute((select awa from _t), (select o1 from _t), 'missing_item', 'Il manque le gombo.')$$,

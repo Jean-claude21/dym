@@ -18,6 +18,12 @@ class MemoryStoreService implements StoreService {
   final CountryConfig config;
   final List<PaymentOption> paymentOptionsList;
 
+  /// Résultat de [openNow] (horaires simulés).
+  bool openNowValue = true;
+
+  @override
+  Future<Result<bool>> openNow() async => Ok(openNowValue);
+
   @override
   final String? profileZoneId;
 

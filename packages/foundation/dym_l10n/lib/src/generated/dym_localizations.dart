@@ -557,7 +557,7 @@ abstract class DymLocalizations {
   /// Note sécurité admin
   ///
   /// In fr, this message translates to:
-  /// **'Double authentification obligatoire · Déconnexion après 30 min d\'inactivité'**
+  /// **'Accès réservé à l\'équipe · Déconnexion après 30 min d\'inactivité'**
   String get adminSecurityNote;
 
   /// Note audit
@@ -1020,6 +1020,24 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Fermée'**
   String get myStoreClosed;
+
+  /// Boutique active mais hors de ses horaires
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermée pour l\'instant'**
+  String get myStoreClosedByHours;
+
+  /// Détail de la fermeture selon les horaires
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors de tes horaires : les clientes commanderont à la réouverture'**
+  String get myStoreClosedByHoursHint;
+
+  /// Fiche produit d'une boutique fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette boutique est fermée pour le moment. Tu pourras commander à sa réouverture.'**
+  String get productStoreClosed;
 
   /// Boutique fermée
   ///
@@ -2076,6 +2094,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Ce moyen de paiement n\'est pas encore disponible.'**
   String get orderErrorPaymentUnavailable;
+
+  /// Refus : achat dans sa propre boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu ne peux pas commander dans ta propre boutique.'**
+  String get orderErrorOwnStore;
 
   /// Refus : panier vide
   ///
