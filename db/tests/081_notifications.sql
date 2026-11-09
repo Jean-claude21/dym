@@ -58,13 +58,13 @@ values ('TG', 'simulator', '{"fr": "Simulé"}', 9, true)
 on conflict do nothing;
 update public.payment_methods set is_active = true where provider_code = 'simulator' and country_code = 'TG';
 insert into public.store_payment_methods (store_id, payment_method_id)
-select (select kodjo_store from _t), id from public.payment_methods where provider_code = 'simulator';
+select (select kodjo_store from _t), id from public.payment_methods where provider_code = 'simulator' and country_code = 'TG' and operator_code is null;
 select tests.login_as((select awa from _t));
 select public.cart_add((select tomate_tas from _t), 1);
 select tests.logout();
 update _t set p2 = app.place_order((select awa from _t), gen_random_uuid(), jsonb_build_object(
   'address_id', (select home from _t),
-  'payment_method_id', (select id from public.payment_methods where provider_code = 'simulator')),
+  'payment_method_id', (select id from public.payment_methods where provider_code = 'simulator' and country_code = 'TG' and operator_code is null)),
   (select morning from _t), '{simulator}');
 select is((select count(*)::int from public.notifications where user_id = (select kodjo from _t)), 1,
   'en attente de paiement : rien pour la vendeuse');

@@ -27,7 +27,7 @@ insert into public.payment_methods (country_code, provider_code, label, sort, is
 values ('TG', 'simulator', '{"fr": "Mobile Money (simulé)"}', 9, true)
 on conflict do nothing;
 update public.payment_methods set is_active = true where provider_code = 'simulator' and country_code = 'TG';
-update _t set sim = (select id from public.payment_methods where provider_code = 'simulator' and country_code = 'TG'),
+update _t set sim = (select id from public.payment_methods where provider_code = 'simulator' and country_code = 'TG' and operator_code is null),
               cash = (select id from public.payment_methods where provider_code = 'cash' and country_code = 'TG');
 insert into public.store_payment_methods (store_id, payment_method_id)
 select kodjo_store, sim from _t;

@@ -3,6 +3,9 @@
 
 select plan(32);
 
+-- Depuis 0026 plusieurs pays sont ouverts : l'essai ne garde que le Togo actif.
+update public.countries set is_active = false where code <> 'TG';
+
 -- Lundi 5 octobre 2026, Lomé (UTC+0) : 10 h (ouvert) et 20 h (fermé).
 create temporary table _t as
 select tests.create_user('esi@example.com') as esi,

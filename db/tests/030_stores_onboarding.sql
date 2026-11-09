@@ -12,7 +12,7 @@ select tests.create_user('esi@example.com') as esi,
        (select id from public.categories where slug = 'jus-maison') as sous_rayon,
        (select id from public.payment_methods where country_code = 'TG' and provider_code = 'cash') as cash_tg,
        (select id from public.payment_methods where country_code = 'GH' and provider_code = 'cash') as cash_gh,
-       (select id from public.payment_methods where country_code = 'TG' and operator_code = 'tmoney') as tmoney;
+       (select id from public.payment_methods where country_code = 'TG' and provider_code = 'moneroo' and operator_code = 'tmoney') as tmoney;
 grant select on _t to authenticated, anonymous;
 
 -- Awa est cliente : pas de boutique.
@@ -66,7 +66,7 @@ select is((select count(*)::int from jsonb_array_elements(public.store_payment_o
            where o ->> 'provider_code' <> 'simulator'), 3,
   'étape 6 : les 3 moyens du Togo, inactifs compris');
 select is((select o->>'is_available' from jsonb_array_elements(public.store_payment_options()) o
-            where o->>'operator_code' = 'tmoney'), 'false', 'T-Money proposé « Bientôt »');
+            where o->>'operator_code' = 'tmoney' and o->>'provider_code' = 'moneroo'), 'false', 'T-Money proposé « Bientôt »');
 select is((select o->>'is_available' from jsonb_array_elements(public.store_payment_options()) o
             where o->>'provider_code' = 'cash'), 'true', 'cash disponible');
 

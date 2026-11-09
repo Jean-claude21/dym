@@ -2,6 +2,9 @@
 
 select plan(16);
 
+-- Depuis 0026 plusieurs pays sont ouverts : l'essai ne garde que le Togo actif.
+update public.countries set is_active = false where code <> 'TG';
+
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
        tests.create_user('ama@example.com') as ama,
