@@ -90,6 +90,31 @@ class _Ops implements OpsCenterService {
     return const Ok(_settings);
   }
 
+  List<FraudSignal> signals = [
+    FraudSignal(
+      id: 'f1',
+      kind: 'shared_device',
+      subjectType: 'user',
+      subject: 'Awa',
+      createdAt: DateTime(2026, 11, 10),
+      detail: const {'accounts': 3},
+    ),
+  ];
+
+  @override
+  Future<Result<List<FraudSignal>>> fraudSignals(String country) async =>
+      Ok(signals);
+
+  @override
+  Future<Result<List<FraudSignal>>> decideFraud(
+    FraudSignal signal, {
+    required bool confirm,
+  }) async {
+    calls.add('fraud:${signal.id}:$confirm');
+    signals = [];
+    return Ok(signals);
+  }
+
   @override
   Future<Result<int>> confirmCourierCash(CourierCashDue due, String key) async {
     calls.add('cash:${due.courierId}');
@@ -110,6 +135,10 @@ void main() {
       expect(await vm.setThresholds({'pending': '15'}), isTrue);
       expect(await vm.setScope('agent@example.com', 'GH', on: true), isTrue);
       expect(await vm.confirmCash(vm.live!.courierCash.single), isTrue);
+      expect(vm.signals, hasLength(1));
+      expect(await vm.decideFraud(vm.signals.single, confirm: false), isTrue);
+      expect(vm.signals, isEmpty);
+      expect(service.calls, contains('fraud:f1:false'));
       expect(vm.live!.courierCash, isEmpty);
       await vm.selectCountry('GH');
       expect(service.calls, contains('live:GH'));
@@ -141,6 +170,10 @@ void main() {
       expect(find.text('Étal de Kodjo'), findsOneWidget);
       expect(find.text('32 min'), findsOneWidget);
       expect(find.text('Cash reçu'), findsOneWidget);
+      expect(
+        find.text('Appareil partagé par plusieurs comptes · 3'),
+        findsOneWidget,
+      );
       await tester.ensureVisible(find.text('Étal de Kodjo'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Étal de Kodjo'));

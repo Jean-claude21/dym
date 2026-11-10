@@ -48,6 +48,20 @@ class AdminSupportViewModel extends AdminViewModel {
 
   Future<bool> close() => _act(service.closeTicket, keep: false);
 
+  /// Brouillon de l'agent support ; nul en cas d'échec (message affiché).
+  Future<String?> draft() async {
+    final id = selectedId;
+    if (id == null || acting) return null;
+    acting = true;
+    actionFailure = null;
+    notifyListeners();
+    final result = await service.draftReply(id);
+    acting = false;
+    actionFailure = result.failureOrNull;
+    notifyListeners();
+    return result.valueOrNull;
+  }
+
   Future<bool> _act(
     Future<Result<SupportTicket>> Function(String id) gesture, {
     required bool keep,
@@ -298,6 +312,18 @@ class _DetailState extends State<_Detail> {
                               if (await vm.reply(_text.text)) _text.clear();
                             },
                     ),
+                  ),
+                  DymButton(
+                    label: l10n.adminSupportDraft,
+                    icon: Icons.auto_awesome_rounded,
+                    variant: DymButtonVariant.secondary,
+                    expanded: false,
+                    onPressed: vm.acting
+                        ? null
+                        : () async {
+                            final draft = await vm.draft();
+                            if (draft != null) _text.text = draft;
+                          },
                   ),
                   DymButton(
                     label: l10n.adminCloseTicket,

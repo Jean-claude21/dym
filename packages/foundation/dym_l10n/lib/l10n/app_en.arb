@@ -1748,5 +1748,19 @@
   "opsInvalid": "Invalid value.",
   "opsOutOfScope": "This country is not in your scope.",
   "opsNothingOwed": "This courier owes nothing anymore.",
-  "opsNotAdmin": "This address is not an admin's."
+  "opsNotAdmin": "This address is not an admin's.",
+  "adminSupportDraft": "AI draft",
+  "moderationAi": "AI opinion",
+  "moderationAiRemove": "remove",
+  "moderationAiKeep": "keep",
+  "moderationAiUnsure": "unsure",
+  "opsFraud": "Fraud signals",
+  "opsNoFraud": "No open signal.",
+  "opsFraudDismiss": "Dismiss",
+  "opsFraudConfirm": "Confirm",
+  "fraudClientCancelBurst": "Repeated cancellations (customer)",
+  "fraudStoreRefusalBurst": "Repeated refusals (store)",
+  "fraudSharedDevice": "Device shared by several accounts",
+  "fraudHandoverFailures": "Wrong handover codes (courier)",
+  "fraudHaggleBurst": "Haggling burst without purchase"
 }

@@ -388,10 +388,13 @@ class ModerationItem {
     this.contentKind,
     this.tags = const [],
     this.rating,
+    this.aiVerdict,
+    this.aiReason,
   });
 
   factory fromJson(Map<String, dynamic> json) {
     final preview = (json['preview'] as Map?)?.cast<String, dynamic>() ?? {};
+    final ai = (json['ai'] as Map?)?.cast<String, dynamic>();
     return ModerationItem(
       target: ReportTarget.values.byName(json['target_type'] as String),
       targetId: json['target_id'] as String,
@@ -413,6 +416,8 @@ class ModerationItem {
           : ContentKind.fromCode(preview['kind'] as String),
       tags: [for (final t in preview['tags'] as List? ?? const []) t as String],
       rating: (preview['rating'] as num?)?.toInt(),
+      aiVerdict: ai?['verdict'] as String?,
+      aiReason: ai?['reason'] as String?,
     );
   }
 
@@ -433,4 +438,8 @@ class ModerationItem {
   final ContentKind? contentKind;
   final List<String> tags;
   final int? rating;
+
+  /// Avis de l'IA (spec 054) : `keep`, `remove` ou `unsure` ; l'équipe décide.
+  final String? aiVerdict;
+  final String? aiReason;
 }

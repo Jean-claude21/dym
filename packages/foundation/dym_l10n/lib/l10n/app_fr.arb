@@ -7169,5 +7169,19 @@
   "opsInvalid": "Valeur invalide.",
   "opsOutOfScope": "Ce pays n'est pas dans ton périmètre.",
   "opsNothingOwed": "Ce livreur ne doit plus rien.",
-  "opsNotAdmin": "Cette adresse n'est pas celle d'un admin."
+  "opsNotAdmin": "Cette adresse n'est pas celle d'un admin.",
+  "adminSupportDraft": "Brouillon IA",
+  "moderationAi": "Avis de l'IA",
+  "moderationAiRemove": "à retirer",
+  "moderationAiKeep": "à garder",
+  "moderationAiUnsure": "incertain",
+  "opsFraud": "Signaux de fraude",
+  "opsNoFraud": "Aucun signal ouvert.",
+  "opsFraudDismiss": "Écarter",
+  "opsFraudConfirm": "Confirmer",
+  "fraudClientCancelBurst": "Annulations répétées (cliente)",
+  "fraudStoreRefusalBurst": "Refus répétés (boutique)",
+  "fraudSharedDevice": "Appareil partagé par plusieurs comptes",
+  "fraudHandoverFailures": "Codes de remise faux (livreur)",
+  "fraudHaggleBurst": "Marchandage en rafale sans achat"
 }

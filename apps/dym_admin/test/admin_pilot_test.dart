@@ -114,6 +114,18 @@ void main() {
       expect(vm.tickets!.single.messages.last.body, 'Nous vérifions.');
     });
 
+    test(
+      'support : brouillon de l’agent, relu avant envoi (spec 054)',
+      () async {
+        final vm = AdminSupportViewModel(service: MemoryAdminService());
+        await vm.load();
+        expect(await vm.draft(), isNull, reason: 'aucun ticket choisi');
+        vm.select('t1');
+        expect(await vm.draft(), 'Bonjour, nous regardons votre demande.');
+        expect(vm.acting, isFalse);
+      },
+    );
+
     test('clientes : recherche, profil consulté', () async {
       final service = MemoryAdminService();
       final vm = AdminClientsViewModel(service: service);

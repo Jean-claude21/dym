@@ -75,3 +75,4 @@ fiabilité (ops).
 | `haggle_proposed` (issue, remise demandée en points de base), `haggle_accepted` (offre ou contre-prix, remise), `haggle_limit_set` (pourcentage, boutique ou produit) | Serveur | Marchandage (spec 050) |
 | `group_offer_opened` (minimum, durée, livraison partagée), `group_joined` (quantité ; 0 : retrait), `group_unlocked` (membres, quantité totale) | Serveur | Achat groupé entre voisins (spec 051) |
 | `membership_started` (code de la formule, prolongation), `member_benefit_paid` (montant) | Serveur | DYM+, Pro, visibilité (spec 052) |
+| `fraud_signals_detected` (nombre), `report_triaged` (avis), `support_draft_requested` | Serveur | Antifraude, modération et support assistés (spec 054) |

@@ -10344,6 +10344,90 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Cette adresse n\'est pas celle d\'un admin.'**
   String get opsNotAdmin;
+
+  /// No description provided for @adminSupportDraft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Brouillon IA'**
+  String get adminSupportDraft;
+
+  /// No description provided for @moderationAi.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avis de l\'IA'**
+  String get moderationAi;
+
+  /// No description provided for @moderationAiRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'à retirer'**
+  String get moderationAiRemove;
+
+  /// No description provided for @moderationAiKeep.
+  ///
+  /// In fr, this message translates to:
+  /// **'à garder'**
+  String get moderationAiKeep;
+
+  /// No description provided for @moderationAiUnsure.
+  ///
+  /// In fr, this message translates to:
+  /// **'incertain'**
+  String get moderationAiUnsure;
+
+  /// No description provided for @opsFraud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signaux de fraude'**
+  String get opsFraud;
+
+  /// No description provided for @opsNoFraud.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun signal ouvert.'**
+  String get opsNoFraud;
+
+  /// No description provided for @opsFraudDismiss.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écarter'**
+  String get opsFraudDismiss;
+
+  /// No description provided for @opsFraudConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer'**
+  String get opsFraudConfirm;
+
+  /// No description provided for @fraudClientCancelBurst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulations répétées (cliente)'**
+  String get fraudClientCancelBurst;
+
+  /// No description provided for @fraudStoreRefusalBurst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Refus répétés (boutique)'**
+  String get fraudStoreRefusalBurst;
+
+  /// No description provided for @fraudSharedDevice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Appareil partagé par plusieurs comptes'**
+  String get fraudSharedDevice;
+
+  /// No description provided for @fraudHandoverFailures.
+  ///
+  /// In fr, this message translates to:
+  /// **'Codes de remise faux (livreur)'**
+  String get fraudHandoverFailures;
+
+  /// No description provided for @fraudHaggleBurst.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marchandage en rafale sans achat'**
+  String get fraudHaggleBurst;
 }
 
 class _DymLocalizationsDelegate

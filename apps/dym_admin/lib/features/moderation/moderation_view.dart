@@ -278,6 +278,18 @@ class _PreviewState extends State<_Preview> {
                   .join(', '),
             ),
             for (final note in item.notes) AdminField('', note),
+            if (item.aiVerdict case final verdict?)
+              AdminField(
+                l10n.moderationAi,
+                [
+                  switch (verdict) {
+                    'remove' => l10n.moderationAiRemove,
+                    'keep' => l10n.moderationAiKeep,
+                    _ => l10n.moderationAiUnsure,
+                  },
+                  ?item.aiReason,
+                ].join(' · '),
+              ),
             if (item.decisionReason case final reason?)
               AdminField(l10n.moderationDecision, reason),
             if (vm.actionFailure case final f?)

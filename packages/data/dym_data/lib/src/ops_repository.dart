@@ -60,6 +60,31 @@ class OpsRepository {
         params: {'p_courier': courierId, 'p_key': key},
       )).map((json) => ((json! as Map)['amount_minor'] as num).toInt());
 
+  /// Signaux de fraude ouverts d'un pays (spec 054).
+  Future<Result<List<FraudSignal>>> fraudSignals(String country) =>
+      _signals('admin_fraud_signals', {'p_country': country});
+
+  /// Écarter ([confirm] faux) ou confirmer un signal ; audité.
+  Future<Result<List<FraudSignal>>> decideFraud(
+    String signalId, {
+    required bool confirm,
+    String? note,
+  }) => _signals('admin_decide_fraud_signal', {
+    'p_id': signalId,
+    'p_confirm': confirm,
+    'p_note': note,
+  });
+
+  Future<Result<List<FraudSignal>>> _signals(
+    String fn,
+    Map<String, Object?> params,
+  ) async => (await _data.rpc<Object?>(fn, params: params)).map(
+    (json) => [
+      for (final s in json! as List)
+        FraudSignal.fromJson((s as Map).cast<String, dynamic>()),
+    ],
+  );
+
   Future<Result<OpsSettings>> _settings(
     String fn,
     Map<String, Object?> params,

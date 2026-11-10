@@ -33,6 +33,7 @@ import { aiIntentPlanner, openAiPlannerProviders, pgCopilotStore } from "./copil
 import { pgBroadcastStore } from "./broadcast/routes.js";
 import { pgShoppingReminders } from "./shopping/reminders.js";
 import { pgAffiliateSettlement } from "./content/affiliation.js";
+import { aiReportJudge, aiSupportDrafter, openAiAssistProviders, pgOpsAssistStore } from "./ops/assist.js";
 import { pgOrderPhotoStore } from "./orders/photos.js";
 import { aiContentClassifier, openAiClassifierProviders, pgCreatorContentStore } from "./content/creators.js";
 import { pgTikTokStore, tiktokOEmbedProvider } from "./content/tiktok.js";
@@ -77,6 +78,11 @@ export default createApp({
   recaps: pgVendorRecaps(pool),
   shoppingReminders: pgShoppingReminders(pool),
   affiliateSettlement: pgAffiliateSettlement(pool),
+  opsAssist: {
+    store: pgOpsAssistStore(pool),
+    judge: openAiKey ? aiReportJudge(openAiAssistProviders(openAiKey)) : undefined,
+    drafter: openAiKey ? aiSupportDrafter(openAiAssistProviders(openAiKey)) : undefined,
+  },
   creatorContent: {
     store: pgCreatorContentStore(pool),
     signer: s3PhotoSigner({ ...env.storage, bucket: PRODUCT_PHOTOS_BUCKET }),

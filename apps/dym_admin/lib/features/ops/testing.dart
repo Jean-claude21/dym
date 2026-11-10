@@ -1615,6 +1615,10 @@ class MemoryAdminService implements AdminService {
   );
 
   @override
+  Future<Result<String>> draftReply(String id) async =>
+      const Ok('Bonjour, nous regardons votre demande.');
+
+  @override
   Future<Result<SupportTicket>> replyTicket(String id, String body) async {
     final failed = _fail<SupportTicket>();
     if (failed != null) return failed;
