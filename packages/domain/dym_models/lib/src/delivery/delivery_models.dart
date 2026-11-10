@@ -188,3 +188,69 @@ class Mission {
       acceptedAt != null &&
       const ['accepted', 'preparing', 'ready'].contains(status);
 }
+
+/// Cash détenu par le livreur : dû à une boutique, ou à DYM (boutique nulle).
+@immutable
+class CourierCashLine {
+  const new({required this.amountMinor, this.storeId, this.storeName});
+
+  factory fromJson(Map<String, dynamic> json) => CourierCashLine(
+    storeId: json['store_id'] as String?,
+    storeName: json['store_name'] as String?,
+    amountMinor: minorFromJson(json['amount_minor']),
+  );
+
+  final String? storeId;
+  final String? storeName;
+  final int amountMinor;
+
+  bool get toPlatform => storeId == null;
+}
+
+/// Gains du livreur (spec 043) : `courier_earnings()`.
+@immutable
+class CourierEarnings {
+  const new({
+    this.todayCount = 0,
+    this.todayFeesMinor = 0,
+    this.walletMinor = 0,
+    this.cash = const [],
+  });
+
+  factory fromJson(Map<String, dynamic> json) => CourierEarnings(
+    todayCount: (json['today_count'] as num?)?.toInt() ?? 0,
+    todayFeesMinor: minorFromJson(json['today_fees_minor']),
+    walletMinor: minorFromJson(json['wallet_minor']),
+    cash: [
+      for (final c in json['cash'] as List? ?? const [])
+        CourierCashLine.fromJson((c as Map).cast<String, dynamic>()),
+    ],
+  );
+
+  final int todayCount;
+  final int todayFeesMinor;
+  final int walletMinor;
+  final List<CourierCashLine> cash;
+
+  int get cashTotalMinor => cash.fold(0, (sum, c) => sum + c.amountMinor);
+}
+
+/// Cash qu'un livreur doit à la boutique : `store_courier_cash()`.
+@immutable
+class StoreCourierCash {
+  const new({
+    required this.courierId,
+    required this.amountMinor,
+    this.courierName,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => StoreCourierCash(
+    courierId: json['courier_id']! as String,
+    courierName: json['courier_name'] as String?,
+    amountMinor: minorFromJson(json['amount_minor']),
+  );
+
+  final String courierId;
+  final String? courierName;
+  final int amountMinor;
+}

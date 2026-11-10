@@ -72,6 +72,41 @@ class CourierRepository {
             HandoverResult.fromJson((json! as Map).cast<String, dynamic>()),
       );
 
+  /// Gains du jour, wallet, cash à remettre (spec 043).
+  Future<Result<CourierEarnings>> earnings() async =>
+      (await _data.rpc<Object?>('courier_earnings')).map(_earnings);
+
+  /// Point de recharge : cash de la cliente vers son wallet.
+  Future<Result<CourierEarnings>> cashTopup({
+    required String code,
+    required int amountMinor,
+    required String key,
+  }) async => (await _data.rpc<Object?>(
+    'courier_cash_topup',
+    params: {'p_code': code, 'p_amount_minor': amountMinor, 'p_key': key},
+  )).map(_earnings);
+
+  /// Boutique : cash que lui doivent les livreurs.
+  Future<Result<List<StoreCourierCash>>> storeCash() async =>
+      (await _data.rpc<Object?>('store_courier_cash')).map(_storeCash);
+
+  /// Boutique : tout le cash du livreur est reçu.
+  Future<Result<List<StoreCourierCash>>> confirmStoreCash(
+    String courierId, {
+    required String key,
+  }) async => (await _data.rpc<Object?>(
+    'confirm_courier_cash',
+    params: {'p_courier': courierId, 'p_key': key},
+  )).map(_storeCash);
+
+  static CourierEarnings _earnings(Object? json) =>
+      CourierEarnings.fromJson((json! as Map).cast<String, dynamic>());
+
+  static List<StoreCourierCash> _storeCash(Object? json) => [
+    for (final c in json as List? ?? const [])
+      StoreCourierCash.fromJson((c as Map).cast<String, dynamic>()),
+  ];
+
   static CourierProfile _profile(Object? json) =>
       CourierProfile.fromJson((json! as Map).cast<String, dynamic>());
 

@@ -55,6 +55,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         couriers: CourierRepository(neon.data),
         reference: reference,
         auth: auth,
+        wallet: WalletRepository(neon.data),
       ),
     );
 }

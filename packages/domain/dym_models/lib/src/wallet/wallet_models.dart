@@ -11,6 +11,9 @@ enum WalletMovementKind {
   spaceContribution,
   spacePayout,
   affiliateCommission,
+  courierFee,
+  cashTopup,
+  walletWithdrawal,
   unknown;
 
   static WalletMovementKind parse(Object? value) => switch (value) {
@@ -22,6 +25,9 @@ enum WalletMovementKind {
     'space_contribution' => spaceContribution,
     'space_payout' => spacePayout,
     'affiliate_commission' => affiliateCommission,
+    'courier_fee' => courierFee,
+    'cash_topup' => cashTopup,
+    'wallet_withdrawal' => walletWithdrawal,
     _ => unknown,
   };
 }
@@ -97,12 +103,14 @@ class Wallet {
     required this.simulatedTopup,
     required this.pockets,
     required this.movements,
+    this.simulatedWithdrawal = false,
   });
 
   factory fromJson(Map<String, dynamic> json) => Wallet(
     currencyCode: json['currency_code']! as String,
     balanceMinor: minorFromJson(json['balance_minor']),
     simulatedTopup: json['simulated_topup'] == true,
+    simulatedWithdrawal: json['simulated_withdrawal'] == true,
     pockets: [
       for (final p
           in (json['pockets'] as List? ?? const [])
@@ -124,6 +132,9 @@ class Wallet {
 
   /// Recharge simulée autorisée (environnement de test).
   final bool simulatedTopup;
+
+  /// Retrait simulé actif (aucun versement réel, décision 0015).
+  final bool simulatedWithdrawal;
   final List<WalletPocket> pockets;
   final List<WalletMovement> movements;
 

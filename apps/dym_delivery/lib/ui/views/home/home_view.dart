@@ -1,6 +1,7 @@
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_delivery/app/app.locator.dart';
+import 'package:dym_delivery/features/earnings/earnings_view.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_delivery/features/missions/missions_views.dart';
 import 'package:dym_delivery/ui/navigation.dart';
@@ -9,7 +10,7 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
 /// Onglets de l'accueil du livreur.
-enum HomeTab { missions, runs, me }
+enum HomeTab { missions, runs, earnings, me }
 
 /// Accueil du livreur : missions proposées, mes courses, « Moi ».
 class HomeView extends StatefulWidget {
@@ -60,6 +61,7 @@ class _HomeViewState extends State<HomeView> {
       destinations: [
         DymNavItem(icon: Icons.near_me_rounded, label: l10n.missionsTitle),
         DymNavItem(icon: Icons.route_rounded, label: l10n.myRunsTitle),
+        DymNavItem(icon: Icons.payments_rounded, label: l10n.earningsTitle),
         DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
       ],
       body: switch (_tab) {
@@ -68,6 +70,7 @@ class _HomeViewState extends State<HomeView> {
           onAccepted: () => setState(() => _tab = HomeTab.runs),
         ),
         HomeTab.runs => MyRunsView(service: _missions),
+        HomeTab.earnings => EarningsView(service: _missions),
         HomeTab.me => AccountView(
           service: _service,
           onSignedOut: _navigator.toSignIn,

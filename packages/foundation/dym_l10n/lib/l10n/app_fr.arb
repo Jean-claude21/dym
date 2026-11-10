@@ -6567,5 +6567,48 @@
   },
   "handoverLocked": "Trop d'essais : l'équipe DYM va t'aider à terminer la remise.",
   "trackHandoverCode": "Code de remise",
-  "trackHandoverHint": "Donne ce code au livreur quand il te remet la commande."
+  "trackHandoverHint": "Donne ce code au livreur quand il te remet la commande.",
+  "walletWithdraw": "Retirer",
+  "walletWithdrawSimulated": "Retrait simulé : aucun versement réel tant que le fournisseur n'est pas branché.",
+  "walletKindCourierFee": "Frais de livraison",
+  "walletKindCashTopup": "Recharge en cash",
+  "walletKindWithdrawal": "Retrait",
+  "walletCashTopup": "Recharger en cash auprès d'un livreur",
+  "walletCashTopupHint": "Montre ce code au livreur DYM et donne-lui le cash : ton wallet est crédité aussitôt.",
+  "walletCashTopupExpires": "Valable jusqu'à {time}",
+  "@walletCashTopupExpires": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "earningsTitle": "Gains",
+  "earningsToday": "{count, plural, =0{Aucune course aujourd'hui} =1{1 course aujourd'hui} other{{count} courses aujourd'hui}}",
+  "@earningsToday": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "earningsWallet": "Sur mon wallet",
+  "earningsWithdraw": "Retirer mes gains",
+  "earningsWithdrawDisabled": "Le retrait n'est pas encore ouvert dans ton pays.",
+  "earningsAmount": "Montant",
+  "earningsCashTitle": "Cash à remettre",
+  "earningsCashNone": "Tu ne dois aucun cash.",
+  "earningsCashToDym": "Équipe DYM",
+  "earningsCashToDymHint": "Recharges en cash, à remettre à l'équipe.",
+  "earningsCashToStoreHint": "Prix des articles encaissés, à remettre à la boutique.",
+  "cashTopupTitle": "Point de recharge",
+  "cashTopupHint": "La cliente te montre son code de recharge ; tu prends son cash et son wallet est crédité.",
+  "cashTopupCode": "Code de la cliente",
+  "cashTopupConfirm": "Créditer son wallet",
+  "cashTopupInvalidCode": "Code inconnu, expiré ou déjà utilisé.",
+  "courierCashTitle": "Cash des livreurs",
+  "courierCashHint": "Les livreurs DYM encaissent tes commandes payées en cash ; confirme quand ils te remettent l'argent.",
+  "courierCashNone": "Aucun cash à recevoir",
+  "courierCashNoneHint": "Le cash encaissé par les livreurs pour toi apparaîtra ici.",
+  "courierCashReceived": "Reçu"
 }

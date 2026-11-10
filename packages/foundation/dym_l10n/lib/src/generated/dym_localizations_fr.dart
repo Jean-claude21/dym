@@ -5192,4 +5192,110 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get trackHandoverHint =>
       'Donne ce code au livreur quand il te remet la commande.';
+
+  @override
+  String get walletWithdraw => 'Retirer';
+
+  @override
+  String get walletWithdrawSimulated =>
+      'Retrait simulé : aucun versement réel tant que le fournisseur n\'est pas branché.';
+
+  @override
+  String get walletKindCourierFee => 'Frais de livraison';
+
+  @override
+  String get walletKindCashTopup => 'Recharge en cash';
+
+  @override
+  String get walletKindWithdrawal => 'Retrait';
+
+  @override
+  String get walletCashTopup => 'Recharger en cash auprès d\'un livreur';
+
+  @override
+  String get walletCashTopupHint =>
+      'Montre ce code au livreur DYM et donne-lui le cash : ton wallet est crédité aussitôt.';
+
+  @override
+  String walletCashTopupExpires(String time) {
+    return 'Valable jusqu\'à $time';
+  }
+
+  @override
+  String get earningsTitle => 'Gains';
+
+  @override
+  String earningsToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count courses aujourd\'hui',
+      one: '1 course aujourd\'hui',
+      zero: 'Aucune course aujourd\'hui',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get earningsWallet => 'Sur mon wallet';
+
+  @override
+  String get earningsWithdraw => 'Retirer mes gains';
+
+  @override
+  String get earningsWithdrawDisabled =>
+      'Le retrait n\'est pas encore ouvert dans ton pays.';
+
+  @override
+  String get earningsAmount => 'Montant';
+
+  @override
+  String get earningsCashTitle => 'Cash à remettre';
+
+  @override
+  String get earningsCashNone => 'Tu ne dois aucun cash.';
+
+  @override
+  String get earningsCashToDym => 'Équipe DYM';
+
+  @override
+  String get earningsCashToDymHint =>
+      'Recharges en cash, à remettre à l\'équipe.';
+
+  @override
+  String get earningsCashToStoreHint =>
+      'Prix des articles encaissés, à remettre à la boutique.';
+
+  @override
+  String get cashTopupTitle => 'Point de recharge';
+
+  @override
+  String get cashTopupHint =>
+      'La cliente te montre son code de recharge ; tu prends son cash et son wallet est crédité.';
+
+  @override
+  String get cashTopupCode => 'Code de la cliente';
+
+  @override
+  String get cashTopupConfirm => 'Créditer son wallet';
+
+  @override
+  String get cashTopupInvalidCode => 'Code inconnu, expiré ou déjà utilisé.';
+
+  @override
+  String get courierCashTitle => 'Cash des livreurs';
+
+  @override
+  String get courierCashHint =>
+      'Les livreurs DYM encaissent tes commandes payées en cash ; confirme quand ils te remettent l\'argent.';
+
+  @override
+  String get courierCashNone => 'Aucun cash à recevoir';
+
+  @override
+  String get courierCashNoneHint =>
+      'Le cash encaissé par les livreurs pour toi apparaîtra ici.';
+
+  @override
+  String get courierCashReceived => 'Reçu';
 }

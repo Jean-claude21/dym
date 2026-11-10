@@ -1,5 +1,6 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_client/features/orders/order_texts.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/features/wallet/wallet_viewmodel.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -164,6 +165,20 @@ class _BalanceCard extends StatelessWidget {
               l10n.walletTotal(vm.money(wallet.totalMinor)?.format() ?? ''),
               style: t.label.copyWith(color: c.onBrand),
             ),
+          const SizedBox(height: DymTokenSpace.s2),
+          // Recharge en cash auprès d'un livreur DYM (spec 043).
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => _cashCodeSheet(context, vm),
+              style: TextButton.styleFrom(
+                foregroundColor: c.onBrand,
+                minimumSize: const Size(48, 48),
+              ),
+              icon: const Icon(Icons.payments_rounded),
+              label: Text(l10n.walletCashTopup),
+            ),
+          ),
           const SizedBox(height: DymTokenSpace.s4),
           Row(
             children: [
@@ -183,6 +198,24 @@ class _BalanceCard extends StatelessWidget {
                           ),
                   ),
                 ),
+              if (wallet.simulatedWithdrawal) ...[
+                const SizedBox(width: DymTokenSpace.s3),
+                Expanded(
+                  child: DymButton(
+                    label: l10n.walletWithdraw,
+                    icon: Icons.account_balance_rounded,
+                    variant: DymButtonVariant.secondary,
+                    onPressed: vm.acting
+                        ? null
+                        : () => _amountSheet(
+                            context,
+                            title: l10n.walletWithdraw,
+                            note: l10n.walletWithdrawSimulated,
+                            onConfirm: vm.withdraw,
+                          ),
+                  ),
+                ),
+              ],
               if (wallet.simulatedTopup && wallet.pockets.isNotEmpty)
                 const SizedBox(width: DymTokenSpace.s3),
               if (wallet.pockets.isNotEmpty)
@@ -343,6 +376,18 @@ class _MovementRow extends StatelessWidget {
       WalletMovementKind.affiliateCommission => (
         Icons.volunteer_activism_rounded,
         l10n.walletKindAffiliate,
+      ),
+      WalletMovementKind.courierFee => (
+        Icons.two_wheeler_rounded,
+        l10n.walletKindCourierFee,
+      ),
+      WalletMovementKind.cashTopup => (
+        Icons.payments_rounded,
+        l10n.walletKindCashTopup,
+      ),
+      WalletMovementKind.walletWithdrawal => (
+        Icons.account_balance_rounded,
+        l10n.walletKindWithdrawal,
       ),
       WalletMovementKind.unknown => (
         Icons.sync_alt_rounded,
@@ -591,4 +636,51 @@ class _TransferSheetState extends State<_TransferSheet> {
       ],
     );
   }
+}
+
+/// Code à montrer au livreur : il prend le cash et crédite le wallet.
+Future<void> _cashCodeSheet(BuildContext context, WalletViewModel vm) async {
+  final l10n = DymLocalizations.of(context);
+  final code = await vm.cashCode();
+  if (!context.mounted) return;
+  await showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheet) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          DymTokenSpace.s4,
+          0,
+          DymTokenSpace.s4,
+          DymTokenSpace.s4,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.walletCashTopup, style: sheet.dym.text.title),
+            const SizedBox(height: DymTokenSpace.s2),
+            if (code == null)
+              Text(l10n.errorGeneric)
+            else ...[
+              Text(l10n.walletCashTopupHint),
+              const SizedBox(height: DymTokenSpace.s3),
+              Text(
+                code.code,
+                textAlign: TextAlign.center,
+                style: sheet.dym.text.display.copyWith(
+                  fontSize: 40,
+                  letterSpacing: 8,
+                ),
+              ),
+              Text(
+                l10n.walletCashTopupExpires(shortTime(sheet, code.expiresAt)),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ],
+        ),
+      ),
+    ),
+  );
 }
