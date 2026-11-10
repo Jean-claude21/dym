@@ -8310,6 +8310,120 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Contenu rémunéré'**
   String get paidContent;
+
+  /// No description provided for @shareAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager'**
+  String get shareAction;
+
+  /// No description provided for @shareCopied.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien copié : colle-le dans ta vidéo TikTok ou un message.'**
+  String get shareCopied;
+
+  /// No description provided for @shareFailed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partage impossible pour le moment.'**
+  String get shareFailed;
+
+  /// No description provided for @shareText.
+  ///
+  /// In fr, this message translates to:
+  /// **'{caption}\nTout pour la faire : {link}'**
+  String shareText(String caption, String link);
+
+  /// No description provided for @tiktokSeeOriginal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir sur TikTok'**
+  String get tiktokSeeOriginal;
+
+  /// No description provided for @tiktokSection.
+  ///
+  /// In fr, this message translates to:
+  /// **'TikTok'**
+  String get tiktokSection;
+
+  /// No description provided for @tiktokHandle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon compte TikTok'**
+  String get tiktokHandle;
+
+  /// No description provided for @tiktokHandleHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'@moncompte'**
+  String get tiktokHandleHint;
+
+  /// No description provided for @tiktokSaveHandle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relier mon compte'**
+  String get tiktokSaveHandle;
+
+  /// No description provided for @tiktokUnverified.
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte déclaré : la vérification par connexion TikTok arrive bientôt. N\'importe que tes propres vidéos.'**
+  String get tiktokUnverified;
+
+  /// No description provided for @tiktokImportTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer une vidéo TikTok'**
+  String get tiktokImportTitle;
+
+  /// No description provided for @tiktokLink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lien de la vidéo TikTok'**
+  String get tiktokLink;
+
+  /// No description provided for @tiktokImport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer'**
+  String get tiktokImport;
+
+  /// No description provided for @tiktokHandleRequired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relie d\'abord ton compte TikTok.'**
+  String get tiktokHandleRequired;
+
+  /// No description provided for @tiktokNotOwner.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette vidéo vient d\'un autre compte TikTok que le tien.'**
+  String get tiktokNotOwner;
+
+  /// No description provided for @tiktokNotFound.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo introuvable ou privée.'**
+  String get tiktokNotFound;
+
+  /// No description provided for @tiktokInvalidUrl.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce lien n\'est pas une vidéo TikTok.'**
+  String get tiktokInvalidUrl;
+
+  /// No description provided for @tiktokNoCover.
+  ///
+  /// In fr, this message translates to:
+  /// **'TikTok n\'a pas donné de couverture pour cette vidéo.'**
+  String get tiktokNoCover;
+
+  /// No description provided for @tiktokPickCover.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir une photo de couverture'**
+  String get tiktokPickCover;
 }
 
 class _DymLocalizationsDelegate

@@ -20,7 +20,7 @@
 | 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h | ✅ Faite (specs 024, 025) ; gate : démonstration web à faire |
 | 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
-| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | 🔵 En cours : 4 specs sur 5 |
+| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ⬜ À faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
@@ -150,8 +150,8 @@ en plus d'une heure.
 | `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération | ✅ Spec 036 · PR #44 (studio créatrice, posts photo et vidéo, catégorie choisie, proposée par l'IA ou « Autre », produits de toutes boutiques, modération existante) |
 | `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires | ✅ Spec 037 · PR #45 (score SQL à poids par pays, onglets et catégories, grille ou plein écran, abonnements créatrices et boutiques, commentaires modérés ; écran admin des poids : phase 13) |
 | `recipe-to-cart` | « Tout pour la faire », rayon ustensiles, ingrédients génériques reliés aux vendeuses | ✅ Spec 038 · PR #46 (ingrédients à la main ou par l'IA, panier composé en base chez la meilleure vendeuse du quartier, rayon ustensiles, rayons hors grocery retirés) |
-| `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord | ✅ Spec 039 (taux par produit, boutique ou minimum du pays ; dernier contenu par article ; versée au wallet après le délai de réclamation, annulée si refusée ou remboursée ; ni soi-même, ni même appareil, ni même foyer ; gains du studio, « Contenu rémunéré ») |
-| `tiktok-bridge` | Import par le créateur, partage vers TikTok avec lien de panier | ⬜ À faire |
+| `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord | ✅ Spec 039 · PR #47 (taux par produit, boutique ou minimum du pays ; dernier contenu par article ; versée au wallet après le délai de réclamation, annulée si refusée ou remboursée ; ni soi-même, ni même appareil, ni même foyer ; gains du studio, « Contenu rémunéré ») |
+| `tiktok-bridge` | Import par le créateur, partage vers TikTok avec lien de panier | ✅ Spec 040 (compte déclaré, vidéo importée par oEmbed avec couverture et « Voir sur TikTok », lien court copié qui ouvre « Tout pour la faire » ; connexion et dépôt TikTok : à l'ouverture de l'accès développeur) |
 
 ## Phase 11 — Livreur
 

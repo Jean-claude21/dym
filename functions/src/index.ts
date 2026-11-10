@@ -35,6 +35,7 @@ import { pgShoppingReminders } from "./shopping/reminders.js";
 import { pgAffiliateSettlement } from "./content/affiliation.js";
 import { pgOrderPhotoStore } from "./orders/photos.js";
 import { aiContentClassifier, openAiClassifierProviders, pgCreatorContentStore } from "./content/creators.js";
+import { pgTikTokStore, tiktokOEmbedProvider } from "./content/tiktok.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -80,6 +81,13 @@ export default createApp({
     store: pgCreatorContentStore(pool),
     signer: s3PhotoSigner({ ...env.storage, bucket: PRODUCT_PHOTOS_BUCKET }),
     classifier: openAiKey ? aiContentClassifier(openAiClassifierProviders(openAiKey)) : undefined,
+  },
+  tiktok: {
+    store: pgTikTokStore(pool),
+    provider: tiktokOEmbedProvider(),
+    signer: s3PhotoSigner({ ...env.storage, bucket: PRODUCT_PHOTOS_BUCKET }),
+    // L'app web est la première origine autorisée.
+    webUrl: allowedOrigins.split(",").map((o) => o.trim()).find(Boolean),
   },
   orderPhotos: {
     store: pgOrderPhotoStore(pool),

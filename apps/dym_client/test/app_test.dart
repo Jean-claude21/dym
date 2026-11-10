@@ -140,6 +140,9 @@ class _Navigator implements AppNavigator {
   void toRecipe(ContentItem content) => routes.add('recipe:${content.id}');
 
   @override
+  Future<void> toShared(String code) async => routes.add('shared:$code');
+
+  @override
   Future<void> toSpace(String spaceId) async => routes.add('space:$spaceId');
 
   @override

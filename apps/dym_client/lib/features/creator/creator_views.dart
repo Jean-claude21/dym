@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
+import 'package:dym_client/features/content/share_content.dart';
 import 'package:dym_client/features/creator/creator_service.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_core/dym_core.dart';
@@ -83,6 +84,27 @@ class CreatorStudioViewModel extends BaseViewModel {
 
   String money(int minor) => _config?.money(minor).format() ?? '';
 
+  bool savingHandle = false;
+
+  /// Compte TikTok déclaré ; vide : retiré.
+  Future<void> saveHandle(String handle) async {
+    if (savingHandle) return;
+    savingHandle = true;
+    problem = null;
+    notifyListeners();
+    switch (await service.setTikTokHandle(handle)) {
+      case Ok(:final value):
+        profile = value;
+      case Err(failure: final f):
+        problem = creatorErrorOf(f);
+    }
+    savingHandle = false;
+    notifyListeners();
+  }
+
+  Future<Uri?> share(ContentItem post) async =>
+      (await service.shareLink(post)).valueOrNull;
+
   Future<void> archive(ContentItem post) async {
     if (await service.archive(post.id) case Ok()) {
       posts = [
@@ -91,6 +113,73 @@ class CreatorStudioViewModel extends BaseViewModel {
       ];
       notifyListeners();
     }
+  }
+}
+
+/// Compte TikTok déclaré et import d'une vidéo (spec 040).
+class _TikTok extends StatefulWidget {
+  const new({required this.vm, required this.onImport});
+
+  final CreatorStudioViewModel vm;
+  final VoidCallback onImport;
+
+  @override
+  State<_TikTok> createState() => _TikTokState();
+}
+
+class _TikTokState extends State<_TikTok> {
+  late final _handle = TextEditingController(
+    text: widget.vm.profile?.tiktokHandle ?? '',
+  );
+
+  @override
+  void dispose() {
+    _handle.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final handle = widget.vm.profile?.tiktokHandle;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DymSectionHeader(title: l10n.tiktokSection),
+        if (handle == null) ...[
+          DymTextField(
+            label: l10n.tiktokHandle,
+            controller: _handle,
+            hint: l10n.tiktokHandleHint,
+            textInputAction: TextInputAction.done,
+            onSubmitted: widget.vm.saveHandle,
+          ),
+          const SizedBox(height: DymTokenSpace.s2),
+          DymButton(
+            label: l10n.tiktokSaveHandle,
+            icon: Icons.link_rounded,
+            variant: DymButtonVariant.secondary,
+            loading: widget.vm.savingHandle,
+            onPressed: () => widget.vm.saveHandle(_handle.text),
+          ),
+        ] else ...[
+          Text('@$handle', style: t.body),
+          Text(
+            l10n.tiktokUnverified,
+            style: t.label.copyWith(color: c.textSecondary),
+          ),
+          const SizedBox(height: DymTokenSpace.s2),
+          DymButton(
+            label: l10n.tiktokImportTitle,
+            icon: Icons.download_rounded,
+            variant: DymButtonVariant.secondary,
+            onPressed: widget.onImport,
+          ),
+        ],
+      ],
+    );
   }
 }
 
@@ -194,11 +283,15 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
     required this.service,
     required this.onBack,
     required this.onCompose,
+    this.onImportTikTok,
     super.key,
   });
 
   final CreatorService service;
   final VoidCallback onBack;
+
+  /// Import d'une vidéo TikTok (spec 040) ; `true` si un post est publié.
+  final Future<bool> Function()? onImportTikTok;
 
   /// Nouveau post ; `true` s'il est publié.
   final Future<bool> Function() onCompose;
@@ -255,6 +348,17 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
                 },
               ),
             ),
+            if (onImportTikTok case final importTikTok?) ...[
+              const SizedBox(height: DymTokenSpace.s4),
+              DymContentWidth.form(
+                child: _TikTok(
+                  vm: vm,
+                  onImport: () async {
+                    if (await importTikTok()) await vm.load();
+                  },
+                ),
+              ),
+            ],
             if (vm.commissions case final earnings?) ...[
               const SizedBox(height: DymTokenSpace.s4),
               DymContentWidth.form(
@@ -307,10 +411,20 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
                     ),
                     style: t.label.copyWith(color: c.textSecondary),
                   ),
-                  trailing: IconButton(
-                    tooltip: l10n.creatorArchive,
-                    onPressed: () => vm.archive(p),
-                    icon: const Icon(Icons.archive_rounded),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        tooltip: l10n.shareAction,
+                        onPressed: () => shareContent(context, vm.share, p),
+                        icon: const Icon(Icons.share_rounded),
+                      ),
+                      IconButton(
+                        tooltip: l10n.creatorArchive,
+                        onPressed: () => vm.archive(p),
+                        icon: const Icon(Icons.archive_rounded),
+                      ),
+                    ],
                   ),
                 ),
               ),

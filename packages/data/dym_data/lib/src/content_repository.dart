@@ -5,6 +5,15 @@ import 'package:neon_kit/neon_kit.dart';
 /// Média envoyé, prêt à publier.
 typedef ContentUpload = ({String contentId, String objectKey});
 
+/// Vidéo TikTok importée (spec 040) : couverture copiée chez DYM, ou nulle
+/// quand TikTok ne la donne pas (la créatrice en choisit une).
+typedef TikTokImport = ({
+  ContentUpload? upload,
+  String? caption,
+  String sourceUrl,
+  bool verified,
+});
+
 /// Contenus shoppables (spec 020) : lectures et gestes par la Data API,
 /// envoi des médias par URL présignée (Function).
 class ContentRepository {
@@ -317,6 +326,62 @@ class ContentRepository {
     for (final c in json as List? ?? const [])
       ContentComment.fromJson((c as Map).cast<String, dynamic>()),
   ];
+
+  // -------------------------------------------------------------- pont TikTok
+
+  /// Compte TikTok déclaré ; vide : retiré.
+  Future<Result<CreatorProfile>> setTikTokHandle(String handle) async =>
+      (await _data.rpc<Object?>(
+        'set_tiktok_handle',
+        params: {'p_handle': handle},
+      )).map(
+        (json) =>
+            CreatorProfile.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
+  /// Vidéo publique du compte déclaré : couverture copiée, légende proposée.
+  Future<Result<TikTokImport>> importTikTok(String url) =>
+      _functions.post<TikTokImport>(
+        '/v1/creator-content/tiktok-import',
+        body: {'url': url},
+        idempotencyKey: Uuid.v4(),
+        decode: (json) {
+          final m = (json! as Map).cast<String, dynamic>();
+          return (
+            upload: switch (m['object_key']) {
+              final String key => (
+                contentId: m['content_id'] as String,
+                objectKey: key,
+              ),
+              _ => null,
+            },
+            caption: m['caption'] as String?,
+            sourceUrl: m['source_url'] as String,
+            verified: m['verified'] as bool? ?? false,
+          );
+        },
+      );
+
+  /// Post publié depuis une vidéo TikTok : lien d'origine.
+  Future<Result<ContentItem>> setSource(String contentId, String url) async =>
+      (await _data.rpc<Object?>(
+        'set_content_source',
+        params: {'p_content': contentId, 'p_url': url},
+      )).map((json) => ContentItem.fromJson(json! as Map<String, dynamic>));
+
+  /// Code du lien de partage d'un contenu (le même à chaque partage).
+  Future<Result<String>> createShareLink(String contentId) async =>
+      (await _data.rpc<Object?>(
+        'create_share_link',
+        params: {'p_content': contentId},
+      )).map((json) => json! as String);
+
+  /// Contenu d'un lien de partage ouvert.
+  Future<Result<ContentItem>> openShareLink(String code) async =>
+      (await _data.rpc<Object?>(
+        'open_share_link',
+        params: {'p_code': code},
+      )).map((json) => ContentItem.fromJson(json! as Map<String, dynamic>));
 
   // ------------------------------------------------------------- affiliation
 

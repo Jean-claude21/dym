@@ -45,6 +45,15 @@ abstract interface class ContentService {
   /// Article de la recette ajouté au panier : attribué au contenu (spec 039).
   void recipeAdded(ContentItem content, String variantId);
 
+  /// Lien court du contenu, à coller sur TikTok ou ailleurs (spec 040).
+  Future<Result<Uri>> shareLink(ContentItem content);
+
+  /// Contenu d'un lien de partage ouvert.
+  Future<Result<ContentItem>> openShare(String code);
+
+  /// Ouvre la vidéo d'origine (TikTok) hors de l'app.
+  Future<void> openSource(ContentItem content);
+
   Future<Result<List<StoryGroup>>> stories();
 
   Future<Result<int>> productVideoCount(String productId);
@@ -79,7 +88,14 @@ class NeonContentService implements ContentService {
     required this._cart,
     required this._media,
     this._installs,
+    this._shareBase,
+    this._pages = const PluginExternalPageOpener(),
   });
+
+  /// Adresse publique des liens de partage (Functions) ; absente : aucun
+  /// partage.
+  final Uri? _shareBase;
+  final ExternalPageOpener _pages;
 
   /// Identifiant d'installation (antifraude de l'affiliation, spec 039).
   final InstallIdProvider? _installs;
@@ -163,6 +179,23 @@ class NeonContentService implements ContentService {
   @override
   void recipeAdded(ContentItem content, String variantId) =>
       unawaited(_touch(content, [variantId]));
+
+  @override
+  Future<Result<Uri>> shareLink(ContentItem content) async {
+    final base = _shareBase;
+    if (base == null) return const Err(UnknownFailure('partage non configuré'));
+    return (await _repository.createShareLink(content.id))
+        .map((code) => base.resolve('/s/$code'));
+  }
+
+  @override
+  Future<Result<ContentItem>> openShare(String code) =>
+      _repository.openShareLink(code);
+
+  @override
+  Future<void> openSource(ContentItem content) async {
+    if (content.sourceUrl case final url?) await _pages.open(Uri.parse(url));
+  }
 
   @override
   Future<Result<List<StoryGroup>>> stories() =>
@@ -327,6 +360,22 @@ class MemoryContentService implements ContentService {
   @override
   void recipeAdded(ContentItem content, String variantId) =>
       gestures.add('${content.id}:recipe:$variantId');
+
+  @override
+  Future<Result<Uri>> shareLink(ContentItem content) async {
+    gestures.add('${content.id}:share');
+    return Ok(Uri.parse('https://dym.test/s/${content.id}'));
+  }
+
+  @override
+  Future<Result<ContentItem>> openShare(String code) async {
+    final found = contents.where((c) => c.id == code).firstOrNull;
+    return found == null ? const Err(NotFoundFailure('lien')) : Ok(found);
+  }
+
+  @override
+  Future<void> openSource(ContentItem content) async =>
+      gestures.add('${content.id}:source');
 
   @override
   Future<Result<int>> like(ContentItem content, {required bool like}) async {

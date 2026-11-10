@@ -4881,4 +4881,65 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get paidContent => 'Paid content';
+
+  @override
+  String get shareAction => 'Share';
+
+  @override
+  String get shareCopied =>
+      'Link copied: paste it in your TikTok video or a message.';
+
+  @override
+  String get shareFailed => 'Sharing is not possible right now.';
+
+  @override
+  String shareText(String caption, String link) {
+    return '$caption\nEverything to make it: $link';
+  }
+
+  @override
+  String get tiktokSeeOriginal => 'See on TikTok';
+
+  @override
+  String get tiktokSection => 'TikTok';
+
+  @override
+  String get tiktokHandle => 'My TikTok account';
+
+  @override
+  String get tiktokHandleHint => '@myaccount';
+
+  @override
+  String get tiktokSaveHandle => 'Link my account';
+
+  @override
+  String get tiktokUnverified =>
+      'Declared account: verification through TikTok sign-in is coming soon. Only import your own videos.';
+
+  @override
+  String get tiktokImportTitle => 'Import a TikTok video';
+
+  @override
+  String get tiktokLink => 'TikTok video link';
+
+  @override
+  String get tiktokImport => 'Import';
+
+  @override
+  String get tiktokHandleRequired => 'Link your TikTok account first.';
+
+  @override
+  String get tiktokNotOwner => 'This video comes from another TikTok account.';
+
+  @override
+  String get tiktokNotFound => 'Video not found or private.';
+
+  @override
+  String get tiktokInvalidUrl => 'This link is not a TikTok video.';
+
+  @override
+  String get tiktokNoCover => 'TikTok did not provide a cover for this video.';
+
+  @override
+  String get tiktokPickCover => 'Choose a cover photo';
 }

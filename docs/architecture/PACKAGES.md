@@ -81,6 +81,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Lecture des vocaux (spec 035) | `audioplayers` (derrière `AudioPlayback`) | `dym_platform` |
 | Média des appels (spec 035) | Simulé derrière `CallProvider` ; WebRTC et serveur TURN avant la production finale | `dym_platform` |
 | Identifiant d'installation (spec 039) | UUID aléatoire dans `flutter_secure_storage` (derrière `InstallIdProvider`) | `dym_platform` |
+| Import TikTok (spec 040) | oEmbed public dans la Function (derrière `VideoImportProvider`) ; Login Kit et Share Kit à l'ouverture de l'accès | Functions |
 | Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |

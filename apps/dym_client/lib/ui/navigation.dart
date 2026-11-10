@@ -17,6 +17,7 @@ import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/content/stories.dart';
 import 'package:dym_client/features/creator/creator_service.dart';
 import 'package:dym_client/features/creator/creator_views.dart';
+import 'package:dym_client/features/creator/tiktok_views.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_view.dart';
@@ -127,6 +128,9 @@ abstract interface class AppNavigator {
   /// « Tout pour la faire » d'une recette (spec 038).
   void toRecipe(ContentItem content);
 
+  /// Lien de partage ouvert (spec 040) : « Tout pour la faire » du contenu.
+  Future<void> toShared(String code);
+
   /// Un espace (notification, liste).
   Future<void> toSpace(String spaceId);
 }
@@ -230,8 +234,27 @@ class StackedAppNavigator implements AppNavigator {
         arguments: SignInViewArguments(startWithProfile: startWithProfile),
       );
 
+  /// Lien de partage reçu à l'ouverture de l'app web (`?share=<code>`), gardé
+  /// jusqu'à l'accueil (après connexion ou création du compte).
+  static String? pendingShare = Uri.base.queryParameters['share'];
+
   @override
-  void toHome() => _navigation.clearStackAndShow<void>(Routes.homeView);
+  void toHome() {
+    unawaited(_navigation.clearStackAndShow<void>(Routes.homeView));
+    if (pendingShare case final code?) {
+      pendingShare = null;
+      unawaited(toShared(code));
+    }
+  }
+
+  @override
+  Future<void> toShared(String code) async {
+    final contents = _content;
+    if (contents == null) return;
+    if (await contents.openShare(code) case Ok(:final value)) {
+      if (value.hasRecipe) toRecipe(value);
+    }
+  }
 
   @override
   void toAisle(String categoryId) => _push(
@@ -549,6 +572,17 @@ class StackedAppNavigator implements AppNavigator {
             await _navigator.push<bool>(
               MaterialPageRoute(
                 builder: (context) => ComposePostView(
+                  service: service,
+                  onBack: () => Navigator.of(context).pop(false),
+                  onPublished: () => Navigator.of(context).pop(true),
+                ),
+              ),
+            ) ??
+            false,
+        onImportTikTok: () async =>
+            await _navigator.push<bool>(
+              MaterialPageRoute(
+                builder: (context) => TikTokImportView(
                   service: service,
                   onBack: () => Navigator.of(context).pop(false),
                   onPublished: () => Navigator.of(context).pop(true),

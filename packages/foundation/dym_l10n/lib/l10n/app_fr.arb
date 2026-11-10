@@ -6457,5 +6457,34 @@
   },
   "affiliateProductRate": "Taux d'un produit",
   "affiliateLikeStore": "Comme la boutique",
-  "paidContent": "Contenu rémunéré"
+  "paidContent": "Contenu rémunéré",
+  "shareAction": "Partager",
+  "shareCopied": "Lien copié : colle-le dans ta vidéo TikTok ou un message.",
+  "shareFailed": "Partage impossible pour le moment.",
+  "shareText": "{caption}\nTout pour la faire : {link}",
+  "@shareText": {
+    "placeholders": {
+      "caption": {
+        "type": "String"
+      },
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "tiktokSeeOriginal": "Voir sur TikTok",
+  "tiktokSection": "TikTok",
+  "tiktokHandle": "Mon compte TikTok",
+  "tiktokHandleHint": "@moncompte",
+  "tiktokSaveHandle": "Relier mon compte",
+  "tiktokUnverified": "Compte déclaré : la vérification par connexion TikTok arrive bientôt. N'importe que tes propres vidéos.",
+  "tiktokImportTitle": "Importer une vidéo TikTok",
+  "tiktokLink": "Lien de la vidéo TikTok",
+  "tiktokImport": "Importer",
+  "tiktokHandleRequired": "Relie d'abord ton compte TikTok.",
+  "tiktokNotOwner": "Cette vidéo vient d'un autre compte TikTok que le tien.",
+  "tiktokNotFound": "Vidéo introuvable ou privée.",
+  "tiktokInvalidUrl": "Ce lien n'est pas une vidéo TikTok.",
+  "tiktokNoCover": "TikTok n'a pas donné de couverture pour cette vidéo.",
+  "tiktokPickCover": "Choisir une photo de couverture"
 }

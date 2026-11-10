@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/content/report_sheet.dart';
+import 'package:dym_client/features/content/share_content.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -100,6 +101,10 @@ class FeedViewModel extends BaseViewModel {
   }
 
   /// S'abonner à l'autrice ou à la boutique ; tous ses contenus suivent.
+  /// Lien de partage ; null : partage impossible (l'écran le dit).
+  Future<Uri?> share(ContentItem content) async =>
+      (await service.shareLink(content)).valueOrNull;
+
   Future<void> toggleFollow(ContentItem content) async {
     final on = !content.followed;
     final owner = content.author?.id ?? content.store?.id;
@@ -512,6 +517,12 @@ class _ContentPage extends StatelessWidget {
                     ),
                     const SizedBox(height: DymTokenSpace.s3),
                     _RoundAction(
+                      icon: Icons.share_rounded,
+                      tooltip: l10n.shareAction,
+                      onTap: () => shareContent(context, vm.share, content),
+                    ),
+                    const SizedBox(height: DymTokenSpace.s3),
+                    _RoundAction(
                       icon: Icons.flag_outlined,
                       tooltip: l10n.reportAction,
                       onTap: () async {
@@ -617,6 +628,19 @@ class _ContentPage extends StatelessWidget {
                           Text(
                             caption,
                             style: t.body.copyWith(color: Colors.white),
+                          ),
+                        if (content.sourceUrl != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              onPressed: () => service.openSource(content),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                minimumSize: const Size(48, 40),
+                              ),
+                              icon: const Icon(Icons.open_in_new_rounded),
+                              label: Text(l10n.tiktokSeeOriginal),
+                            ),
                           ),
                         if (onRecipe case final recipe? when content.hasRecipe)
                           Padding(

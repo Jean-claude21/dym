@@ -83,6 +83,9 @@ class DemoClientNavigator implements AppNavigator {
   void toRecipe(ContentItem content) {}
 
   @override
+  Future<void> toShared(String code) async {}
+
+  @override
   Future<void> toSpace(String spaceId) async {}
 
   @override
