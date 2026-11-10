@@ -80,6 +80,9 @@ class DemoClientNavigator implements AppNavigator {
   void toGroupBuys() {}
 
   @override
+  void toMembership() {}
+
+  @override
   void toCreatorStudio() {}
 
   @override

@@ -123,6 +123,9 @@ class _Navigator implements AppNavigator {
   void toGroupOffers() => routes.add('group-offers');
 
   @override
+  void toMembership() => routes.add('membership');
+
+  @override
   void toContents() => routes.add('contents');
 
   @override

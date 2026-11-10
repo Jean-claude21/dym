@@ -165,6 +165,14 @@ DiscoverResult _$DiscoverResultFromJson(Map<String, dynamic> json) =>
                   .toList() ??
               const [],
         ),
+        sponsored: $checkedConvert(
+          'sponsored',
+          (v) =>
+              (v as List<dynamic>?)
+                  ?.map((e) => PublicStore.fromJson(e as Map<String, dynamic>))
+                  .toList() ??
+              const [],
+        ),
       );
       return val;
     }, fieldKeyMap: const {'estimateMinutes': 'estimate_minutes'});

@@ -219,6 +219,27 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                     productRow(vm.feed.fresh, open),
                   ],
                 ],
+                if (vm.result.sponsored.isNotEmpty) ...[
+                  section(l10n.homeSponsored),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.campaign_rounded,
+                          size: 18,
+                          color: c.textSecondary,
+                        ),
+                        const SizedBox(width: DymTokenSpace.s1),
+                        Text(
+                          l10n.homeSponsoredLabel,
+                          style: t.label.copyWith(color: c.textSecondary),
+                        ),
+                      ],
+                    ),
+                  ),
+                  storeRow(vm.result.sponsored),
+                ],
                 section(l10n.homeOpenStores),
                 if (open.isEmpty)
                   Text(

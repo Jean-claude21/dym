@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -89,6 +90,9 @@ abstract interface class AppNavigator {
 
   /// Offres groupées entre voisines clientes (spec 051).
   void toGroupOffers();
+
+  /// Vendeuse Pro et visibilité (spec 052).
+  void toMembership();
 
   /// Aide (écran 66).
   void toHelp();
@@ -180,6 +184,20 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toMembership() {
+    if (!locator.isRegistered<MembershipService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (context) => MembershipView(
+          service: locator<MembershipService>(),
+          title: DymLocalizations.of(context).membershipVendorTitle,
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toGroupOffers() {

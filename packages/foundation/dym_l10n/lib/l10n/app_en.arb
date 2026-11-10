@@ -1692,5 +1692,21 @@
   "groupOfferFee": "Members' delivery fee (optional)",
   "groupOfferCancel": "Cancel the offer",
   "groupOfferCancelled": "Cancelled",
-  "groupOfferInvalid": "Check the price (lower than today's price), the quantity (at least 2) and the fee."
+  "groupOfferInvalid": "Check the price (lower than today's price), the quantity (at least 2) and the fee.",
+  "accountMembership": "DYM+",
+  "membershipClientTitle": "DYM+",
+  "membershipVendorTitle": "Pro and visibility",
+  "membershipWallet": "Paid from your wallet · balance: {balance}",
+  "membershipWalletInsufficient": "Not enough in your wallet: top it up (or move your till to your wallet), then try again.",
+  "membershipNone": "No plan in your country yet.",
+  "membershipDeliveryRefund": "Delivery fee refunded to your wallet on every delivery",
+  "membershipCashback": "{percent}% extra cashback on your shopping",
+  "membershipCommission": "DYM commission cut by {percent}%",
+  "membershipSponsored": "Your store “Featured” on your areas' home, marked as sponsored",
+  "membershipPrice": "{price} for {days, plural, =1{1 day} other{{days} days}}",
+  "membershipActiveUntil": "Active until {date}",
+  "membershipSubscribe": "Get this plan",
+  "membershipExtend": "Extend",
+  "homeSponsored": "Featured",
+  "homeSponsoredLabel": "Sponsored"
 }
