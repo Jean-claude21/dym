@@ -56,6 +56,7 @@ class SpaceMember {
     required this.role,
     this.isOwner = false,
     this.isMe = false,
+    this.contributedMonthMinor = 0,
   });
 
   factory fromJson(Map<String, dynamic> json) => SpaceMember(
@@ -64,6 +65,7 @@ class SpaceMember {
     role: SpaceRole.fromCode(json['role']),
     isOwner: json['is_owner'] as bool? ?? false,
     isMe: json['is_me'] as bool? ?? false,
+    contributedMonthMinor: minorFromJson(json['contributed_month_minor'] ?? 0),
   );
 
   final String userId;
@@ -71,6 +73,9 @@ class SpaceMember {
   final SpaceRole role;
   final bool isOwner;
   final bool isMe;
+
+  /// Versé dans la poche commune ce mois (spec 032).
+  final int contributedMonthMinor;
 }
 
 /// Article du panier commun, au prix du jour.
@@ -127,6 +132,7 @@ class Space {
     this.monthlyBudgetMinor,
     this.spentMonthMinor = 0,
     this.totalMinor = 0,
+    this.pocketBalanceMinor = 0,
     this.members = const [],
     this.items = const [],
   });
@@ -141,6 +147,7 @@ class Space {
     monthlyBudgetMinor: nullableMinorFromJson(json['monthly_budget_minor']),
     spentMonthMinor: minorFromJson(json['spent_month_minor'] ?? 0),
     totalMinor: minorFromJson(json['total_minor'] ?? 0),
+    pocketBalanceMinor: minorFromJson(json['pocket_balance_minor'] ?? 0),
     members: [
       for (final m in json['members'] as List? ?? const [])
         SpaceMember.fromJson(m as Map<String, dynamic>),
@@ -162,6 +169,9 @@ class Space {
 
   /// Total du panier commun (serveur).
   final int totalMinor;
+
+  /// Solde de la poche commune (grand livre, spec 032).
+  final int pocketBalanceMinor;
   final List<SpaceMember> members;
   final List<SpaceItem> items;
 
@@ -178,6 +188,9 @@ class Space {
     final r? => totalMinor > r,
     null => false,
   };
+
+  /// La poche couvre le panier commun (affichage ; le serveur décide).
+  bool get pocketCovers => pocketBalanceMinor >= totalMinor && totalMinor > 0;
 
   static const maxNameLength = 40;
 }

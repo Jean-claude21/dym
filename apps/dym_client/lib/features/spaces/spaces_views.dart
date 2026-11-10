@@ -23,6 +23,10 @@ String spaceErrorLabel(DymLocalizations l10n, SpaceError error) =>
       SpaceError.cartEmpty => l10n.spaceErrorCartEmpty,
       SpaceError.budgetExceeded => l10n.spaceErrorBudgetExceeded,
       SpaceError.notPayer => l10n.spaceErrorNotPayer,
+      SpaceError.pocketInsufficient => l10n.spaceErrorPocketInsufficient,
+      SpaceError.walletInsufficient => l10n.walletErrorInsufficient,
+      SpaceError.spaceBalance => l10n.spaceErrorSpaceBalance,
+      SpaceError.amount => l10n.walletErrorAmount,
       SpaceError.offline => l10n.errorOffline,
       SpaceError.generic => l10n.errorGeneric,
     };
@@ -273,6 +277,8 @@ Future<String?> _ask(
   required String title,
   required String hint,
   bool caps = false,
+  bool number = false,
+  String? action,
 }) => showDialog<String>(
   context: context,
   builder: (dialog) {
@@ -283,6 +289,9 @@ Future<String?> _ask(
       content: TextField(
         controller: text,
         autofocus: true,
+        keyboardType: number
+            ? const TextInputType.numberWithOptions(decimal: true)
+            : null,
         textCapitalization: caps
             ? TextCapitalization.characters
             : TextCapitalization.sentences,
@@ -296,7 +305,7 @@ Future<String?> _ask(
         ),
         TextButton(
           onPressed: () => Navigator.of(dialog).pop(text.text),
-          child: Text(l10n.spaceJoinAction),
+          child: Text(action ?? l10n.spaceJoinAction),
         ),
       ],
     );
@@ -352,6 +361,9 @@ class SpaceView extends StackedView<SpaceViewModel> {
               DymContentWidth.form(
                 child: _BudgetCard(vm: vm, space: space),
               ),
+            DymContentWidth.form(
+              child: _PocketCard(vm: vm, space: space),
+            ),
             DymContentWidth.form(child: _CodeCard(code: space.joinCode)),
             const SizedBox(height: DymTokenSpace.s3),
             DymContentWidth.form(
@@ -400,6 +412,21 @@ class SpaceView extends StackedView<SpaceViewModel> {
                 ),
               ),
               const SizedBox(height: DymTokenSpace.s3),
+              if (space.canValidate && space.pocketBalanceMinor > 0)
+                DymContentWidth.form(
+                  child: SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    value: vm.usePocket,
+                    onChanged: vm.acting
+                        ? null
+                        : (v) => vm.setUsePocket(value: v),
+                    title: Text(l10n.spaceUsePocket, style: t.body),
+                    subtitle: Text(
+                      l10n.spaceUsePocketHint,
+                      style: t.label.copyWith(color: c.textSecondary),
+                    ),
+                  ),
+                ),
               DymContentWidth.form(
                 child: space.canValidate
                     ? DymButton(
@@ -542,6 +569,66 @@ class _BudgetCard extends StatelessWidget {
   }
 }
 
+class _PocketCard extends StatelessWidget {
+  const new({required this.vm, required this.space});
+
+  final SpaceViewModel vm;
+  final Space space;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Container(
+      margin: const EdgeInsets.only(bottom: DymTokenSpace.s3),
+      padding: const EdgeInsets.all(DymTokenSpace.s4),
+      decoration: BoxDecoration(
+        color: c.brand,
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.spacePocket,
+                  style: t.label.copyWith(color: c.onBrand),
+                ),
+                Text(
+                  vm.money(space.pocketBalanceMinor) ?? '',
+                  style: t.display.copyWith(color: c.onBrand, fontSize: 28),
+                ),
+              ],
+            ),
+          ),
+          DymButton(
+            label: l10n.spaceContribute,
+            icon: Icons.add_rounded,
+            variant: DymButtonVariant.secondary,
+            expanded: false,
+            compact: true,
+            onPressed: vm.acting
+                ? null
+                : () async {
+                    final text = await _ask(
+                      context,
+                      title: l10n.spaceContributeTitle,
+                      hint: l10n.spaceBudgetHint,
+                      action: l10n.spaceContribute,
+                      number: true,
+                    );
+                    if (text != null) await vm.contribute(text);
+                  },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _CodeCard extends StatelessWidget {
   const new({required this.code});
 
@@ -622,7 +709,16 @@ class _MemberRow extends StatelessWidget {
         style: t.body,
       ),
       subtitle: Text(
-        member.isOwner ? l10n.spaceOwner : spaceRoleLabel(l10n, member.role),
+        [
+          if (member.isOwner)
+            l10n.spaceOwner
+          else
+            spaceRoleLabel(l10n, member.role),
+          if (member.contributedMonthMinor > 0)
+            l10n.spaceContributedMonth(
+              vm.money(member.contributedMonthMinor) ?? '',
+            ),
+        ].join(' · '),
         style: t.label.copyWith(color: c.textSecondary),
       ),
       trailing: manage

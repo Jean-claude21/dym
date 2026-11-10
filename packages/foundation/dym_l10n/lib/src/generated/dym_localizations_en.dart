@@ -4425,4 +4425,39 @@ class DymLocalizationsEn extends DymLocalizations {
   String notifSpaceValidatedBody(String name, String space) {
     return '$name confirmed the “$space” basket.';
   }
+
+  @override
+  String get spacePocket => 'Shared pot';
+
+  @override
+  String get spaceContribute => 'Add money';
+
+  @override
+  String get spaceContributeTitle => 'Add from my wallet';
+
+  @override
+  String spaceContributedMonth(String amount) {
+    return 'added $amount this month';
+  }
+
+  @override
+  String get spaceUsePocket => 'Pay with the shared pot';
+
+  @override
+  String get spaceUsePocketHint =>
+      'The items amount moves to your wallet: choose “DYM Wallet” to pay.';
+
+  @override
+  String get spaceErrorPocketInsufficient =>
+      'The shared pot doesn\'t cover this basket.';
+
+  @override
+  String get spaceErrorSpaceBalance =>
+      'The shared pot is not empty: use it first.';
+
+  @override
+  String get walletKindSpaceContribution => 'Added to a space';
+
+  @override
+  String get walletKindSpacePayout => 'Received from a space';
 }

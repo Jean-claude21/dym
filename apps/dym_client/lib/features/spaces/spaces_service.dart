@@ -26,8 +26,12 @@ abstract interface class SpacesService {
 
   Future<Result<Space>> setItem(String id, String variantId, int quantity);
 
-  /// Articles passés au panier de la personne qui valide.
-  Future<Result<ReorderResult>> validate(String id);
+  /// Articles passés au panier de la personne qui valide ; [usePocket] :
+  /// financés par la poche commune (montant viré sur son wallet).
+  Future<Result<ReorderResult>> validate(String id, {bool usePocket = false});
+
+  /// Versement depuis le wallet dans la poche commune (spec 032).
+  Future<Result<Space>> contribute(String id, int amountMinor);
 
   Future<Result<CountryConfig>> countryConfig();
 
@@ -45,6 +49,9 @@ class NeonSpacesService implements SpacesService {
   final SpaceRepository _repository;
   final DiscoveryService _discovery;
   final CartService _cart;
+
+  /// Clé du versement en attente (gardée si la réponse a pu se perdre).
+  String? _pendingKey;
 
   @override
   Future<Result<List<SpaceSummary>>> spaces() => _repository.spaces();
@@ -82,9 +89,23 @@ class NeonSpacesService implements SpacesService {
       _repository.setItem(id, variantId, quantity);
 
   @override
-  Future<Result<ReorderResult>> validate(String id) async {
-    final result = await _repository.validate(id);
+  Future<Result<ReorderResult>> validate(
+    String id, {
+    bool usePocket = false,
+  }) async {
+    final result = await _repository.validate(id, usePocket: usePocket);
     if (result.isOk) await _cart.refresh();
+    return result;
+  }
+
+  @override
+  Future<Result<Space>> contribute(String id, int amountMinor) async {
+    final key = _pendingKey ??= Uuid.v4();
+    final result = await _repository.contribute(id, amountMinor, key);
+    if (result case Err(:final failure) when failure.isTransient) {
+      return result;
+    }
+    _pendingKey = null;
     return result;
   }
 

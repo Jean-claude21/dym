@@ -7542,6 +7542,66 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{name} a validé le panier de « {space} ».'**
   String notifSpaceValidatedBody(String name, String space);
+
+  /// Titre de la poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Poche commune'**
+  String get spacePocket;
+
+  /// Verser dans la poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Verser'**
+  String get spaceContribute;
+
+  /// Dialogue de versement
+  ///
+  /// In fr, this message translates to:
+  /// **'Verser depuis mon wallet'**
+  String get spaceContributeTitle;
+
+  /// Part de chacun
+  ///
+  /// In fr, this message translates to:
+  /// **'a versé {amount} ce mois'**
+  String spaceContributedMonth(String amount);
+
+  /// Interrupteur
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer avec la poche commune'**
+  String get spaceUsePocket;
+
+  /// Explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Le montant des articles passe sur ton wallet : choisis « Wallet DYM » pour payer.'**
+  String get spaceUsePocketHint;
+
+  /// Poche insuffisante
+  ///
+  /// In fr, this message translates to:
+  /// **'La poche commune ne suffit pas pour ce panier.'**
+  String get spaceErrorPocketInsufficient;
+
+  /// Poche non vide
+  ///
+  /// In fr, this message translates to:
+  /// **'La poche commune n\'est pas vide : utilise-la d\'abord.'**
+  String get spaceErrorSpaceBalance;
+
+  /// Mouvement
+  ///
+  /// In fr, this message translates to:
+  /// **'Versé à un espace'**
+  String get walletKindSpaceContribution;
+
+  /// Mouvement
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu d\'un espace'**
+  String get walletKindSpacePayout;
 }
 
 class _DymLocalizationsDelegate

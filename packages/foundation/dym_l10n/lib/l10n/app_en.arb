@@ -1281,5 +1281,15 @@
   "spaceErrorNotPayer": "Only someone who confirms can do this.",
   "accountSpaces": "My spaces",
   "notifSpaceValidatedTitle": "Shared basket confirmed",
-  "notifSpaceValidatedBody": "{name} confirmed the “{space}” basket."
+  "notifSpaceValidatedBody": "{name} confirmed the “{space}” basket.",
+  "spacePocket": "Shared pot",
+  "spaceContribute": "Add money",
+  "spaceContributeTitle": "Add from my wallet",
+  "spaceContributedMonth": "added {amount} this month",
+  "spaceUsePocket": "Pay with the shared pot",
+  "spaceUsePocketHint": "The items amount moves to your wallet: choose “DYM Wallet” to pay.",
+  "spaceErrorPocketInsufficient": "The shared pot doesn't cover this basket.",
+  "spaceErrorSpaceBalance": "The shared pot is not empty: use it first.",
+  "walletKindSpaceContribution": "Added to a space",
+  "walletKindSpacePayout": "Received from a space"
 }
