@@ -1872,6 +1872,187 @@ void main() {
     skip: skip,
     timeout: const Timeout(Duration(minutes: 3)),
   );
+
+  test(
+    'différence : marchandage, achat groupé, formules, centre d’opérations, '
+    'agent support (specs 050-054)',
+    () async {
+      final vendor = await signUp('vd');
+      final buyer = await signUp('cd');
+      final neighbour = await signUp('nd');
+      final reference = ReferenceRepository(buyer.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(1).map((z) => z.id).toList();
+      final cash = await ok(
+        buyer.data.run(
+          (db) => db
+              .from('payment_methods')
+              .select('id')
+              .eq('country_code', country.code)
+              .eq('provider_code', 'cash'),
+        ),
+        'cash',
+      );
+      final (store, variant) = await openStore(
+        vendor,
+        name: 'E2E D $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [((cash as List).first as Map)['id'] as String],
+        price: 1000,
+        pickup: true,
+      );
+      for (final (neon, name) in [
+        (buyer, 'Marchande'),
+        (neighbour, 'Voisine'),
+      ]) {
+        await ok(
+          neon.data.rpc<Object?>(
+            'complete_profile',
+            params: {
+              'p_first_name': name,
+              'p_zone_id': zones[0],
+              'p_app': 'client',
+            },
+          ),
+          'profil $name',
+        );
+      }
+
+      // Marchandage (050) : limite de 20 %, offre trop basse, contre-prix
+      // accepté, prix conclu au panier.
+      final settings = await ok(
+        HaggleRepository(vendor.data).setLimit(20),
+        'limite',
+      );
+      expect(settings.storePercent, 20);
+      final productId = settings.products.single.id;
+      final offer = await ok(
+        HaggleRepository(buyer.data).propose(variant, 1, 500),
+        'offre basse',
+      );
+      expect(offer.countered, isTrue);
+      expect(offer.priceMinor, inInclusiveRange(800, 999));
+      final deal = await ok(
+        HaggleRepository(buyer.data).accept(offer.id),
+        'contre-prix accepté',
+      );
+      expect(deal.accepted, isTrue);
+      final haggledCart = await ok(
+        CartRepository(buyer.data).cart(modes: {store: Fulfillment.pickup}),
+        'panier marchandé',
+      );
+      final line = haggledCart.stores.single.lines.single;
+      expect(line.unitPriceMinor, deal.priceMinor);
+      expect(line.listPriceMinor, 1000);
+      expect(line.haggled, isTrue);
+
+      // Achat groupé (051) : minimum de 2 atteint par deux voisines, prix de
+      // groupe au panier de la voisine.
+      final group = await ok(
+        GroupBuyRepository(vendor.data)
+            .create(productId: productId, groupPriceMinor: 700, minQuantity: 2),
+        'offre groupée',
+      );
+      await ok(GroupBuyRepository(buyer.data).join(group.id, 1), 'membre 1');
+      final reached = await ok(
+        GroupBuyRepository(neighbour.data).join(group.id, 1),
+        'membre 2',
+      );
+      expect(reached.reached, isTrue);
+      expect(reached.members, 2);
+      final groupQuote = await ok(
+        CartRepository(neighbour.data).add(variant),
+        'panier groupé',
+      );
+      expect(groupQuote.stores.single.lines.single.unitPriceMinor, 700);
+
+      // Formules (052) : DYM+ payée depuis le wallet, une seule fois par clé.
+      final memberships = MembershipRepository(neighbour.data);
+      final plans = await ok(memberships.offer('client'), 'formules');
+      final plus = plans.plans.where((p) => p.code == 'dym_plus').firstOrNull;
+      expect(plus, isNotNull, reason: 'DYM+ configurée pour ${country.code}');
+      await ok(
+        WalletRepository(neighbour.data)
+            .topupSimulated(plus!.priceMinor, Uuid.v4()),
+        'recharge',
+      );
+      final key = Uuid.v4();
+      final bought = await ok(memberships.subscribe(plus.id, key), 'DYM+');
+      expect(bought.plans.firstWhere((p) => p.id == plus.id).active, isTrue);
+      expect(bought.walletBalanceMinor, 0);
+      final replay = await ok(memberships.subscribe(plus.id, key), 'rejeu');
+      expect(replay.walletBalanceMinor, 0, reason: 'payée une seule fois');
+      final vendorPlans = await ok(
+        MembershipRepository(vendor.data).offer('vendor'),
+        'formules vendeuse',
+      );
+      expect(
+        vendorPlans.plans.map((p) => p.code),
+        containsAll(['vendor_pro', 'featured_week']),
+      );
+
+      // Centre d'opérations (053-054) et agent support : équipe seulement.
+      expect(
+        (await OpsRepository(buyer.data).live(country.code)).isOk,
+        isFalse,
+        reason: 'cliente refusée',
+      );
+      final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+      if (dbUrl == null || dbUrl.isEmpty) {
+        markTestSkipped('NEON_LIVE_DATABASE_URL absent : partie équipe');
+        return;
+      }
+      final team = await signUp('ad');
+      final grant = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'dym-db.mjs',
+        ].join(Platform.pathSeparator),
+        'grant-admin',
+        'dym-e2e-ad-$run@example.com',
+        '--url',
+        dbUrl,
+      ]);
+      expect(grant.exitCode, 0, reason: '${grant.stderr}');
+      final ops = OpsRepository(team.data);
+      expect(await ok(ops.countries(), 'pays pilotés'), contains(country.code));
+      final live = await ok(ops.live(country.code), 'vue en direct');
+      expect(live.countryCode, country.code);
+      await ok(ops.fraudSignals(country.code), 'signaux de fraude');
+      final opsSettings = await ok(ops.settings(country.code), 'réglages');
+      expect(opsSettings.thresholds, isNotEmpty);
+      expect(opsSettings.plans.map((p) => p.code), contains('dym_plus'));
+
+      final ticket = await ok(
+        SupportRepository(buyer.data).open(
+          app: 'client',
+          subject: TicketSubject.other,
+          body: 'Puis-je payer en deux fois ? (essai e2e)',
+        ),
+        'demande',
+      );
+      final draft = await AdminRepository(
+        data: team.data,
+        functions: team.functions,
+      ).draftReply(ticket.id);
+      // Modèle actif : un brouillon ; sinon indisponible, jamais un texte
+      // inventé.
+      expect(draft.isOk, isTrue, reason: '$draft');
+      expect(draft.valueOrNull!.trim(), isNotEmpty);
+      printOnFailure('brouillon : ${draft.valueOrNull}');
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 3)),
+  );
 }
 
 /// POST sans corps (page du simulateur de paiement).
