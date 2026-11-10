@@ -44,6 +44,14 @@ export default defineConfig({
       cron: "*/15 * * * *",
       enabled: true,
     },
+    shoppingReminders: {
+      type: "schedule",
+      function: "api",
+      functionPath: "/v1/jobs/shopping-reminders",
+      // SQL applique 8 h dans chaque fuseau ; un seul rappel par échéance (spec 029).
+      cron: "*/15 * * * *",
+      enabled: true,
+    },
   },
   // prévisualisation (une par PR) expirent après 7 jours. La Data API refuse
   // les branches qui expirent : elle n'y est donc pas exposée.

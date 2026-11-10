@@ -3987,4 +3987,175 @@ class DymLocalizationsFr extends DymLocalizations {
   String adminRemoveSynonym(String term) {
     return 'Retirer $term';
   }
+
+  @override
+  String get shoppingTitle => 'Mes courses';
+
+  @override
+  String get shoppingHomeTile => 'Mes listes de courses';
+
+  @override
+  String get shoppingHomeTileHint => 'Refais tes courses en un geste';
+
+  @override
+  String get shoppingIntro =>
+      'Rien n\'est commandé sans toi : l\'assistant compose, tu vérifies et tu ajoutes au panier.';
+
+  @override
+  String get shoppingEmpty =>
+      'Pas encore de liste. Crée « Courses du samedi », « Petit-déjeuner »… et l\'assistant composera ton panier.';
+
+  @override
+  String get shoppingNew => 'Nouvelle liste';
+
+  @override
+  String get shoppingFromHabits => 'Ma liste habituelle';
+
+  @override
+  String get shoppingFromHabitsHint => 'Ce que tu achètes souvent';
+
+  @override
+  String get shoppingNoHabits =>
+      'Pas encore d\'habitudes : il faut avoir commandé au moins deux fois le même produit.';
+
+  @override
+  String get shoppingDescribe => 'Décrire mes courses';
+
+  @override
+  String get shoppingDescribeHint => 'Ex. la semaine pour 4 personnes';
+
+  @override
+  String get shoppingDescribeAction => 'Proposer une liste';
+
+  @override
+  String get shoppingAiUnavailable =>
+      'L\'assistant ne répond pas. Tu peux créer ta liste à la main.';
+
+  @override
+  String get shoppingAiNothing =>
+      'Je n\'ai rien trouvé à proposer. Essaie avec d\'autres mots.';
+
+  @override
+  String shoppingItemsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles',
+      one: '1 article',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shoppingNoRepeat => 'Pas de rappel';
+
+  @override
+  String get shoppingEvery7 => 'Chaque semaine';
+
+  @override
+  String get shoppingEvery14 => 'Toutes les 2 semaines';
+
+  @override
+  String get shoppingEvery30 => 'Chaque mois';
+
+  @override
+  String shoppingNextOn(String date) {
+    return 'Prochain rappel : $date';
+  }
+
+  @override
+  String get shoppingOpen => 'Composer mon panier';
+
+  @override
+  String shoppingMore(String name) {
+    return 'Plus d\'actions pour $name';
+  }
+
+  @override
+  String get shoppingEdit => 'Modifier';
+
+  @override
+  String get shoppingDelete => 'Supprimer';
+
+  @override
+  String shoppingDeleteConfirm(String name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String get shoppingDeleted => 'Liste supprimée';
+
+  @override
+  String get shoppingEditTitle => 'Ma liste';
+
+  @override
+  String get shoppingName => 'Nom de la liste';
+
+  @override
+  String get shoppingNameHint => 'Ex. Courses du samedi';
+
+  @override
+  String get shoppingItemsTitle => 'Articles';
+
+  @override
+  String get shoppingItemHint => 'Ajouter un article (tomates, riz…)';
+
+  @override
+  String get shoppingAddItem => 'Ajouter';
+
+  @override
+  String shoppingRemoveItem(String name) {
+    return 'Retirer $name';
+  }
+
+  @override
+  String shoppingLess(String name) {
+    return 'Un de moins : $name';
+  }
+
+  @override
+  String shoppingMoreQty(String name) {
+    return 'Un de plus : $name';
+  }
+
+  @override
+  String get shoppingRepeatTitle => 'Me rappeler';
+
+  @override
+  String shoppingStartsOn(String date) {
+    return 'Premier rappel le $date';
+  }
+
+  @override
+  String get shoppingPickDate => 'Changer la date';
+
+  @override
+  String get shoppingRepeatNote =>
+      'Le jour venu, à 8 h, on te prévient : tu vérifies et tu valides.';
+
+  @override
+  String get shoppingSave => 'Enregistrer la liste';
+
+  @override
+  String get shoppingSaved => 'Liste enregistrée';
+
+  @override
+  String get shoppingErrorName => 'Donne un nom à ta liste.';
+
+  @override
+  String get shoppingErrorItems => 'Ajoute au moins un article.';
+
+  @override
+  String get shoppingErrorTooMany => '20 listes au plus : supprimes-en une.';
+
+  @override
+  String get shoppingErrorTooManyItems => '20 articles au plus par liste.';
+
+  @override
+  String get notifShoppingDueTitle => 'Tes courses sont prêtes';
+
+  @override
+  String notifShoppingDueBody(String name) {
+    return '« $name » : vérifie et valide ton panier.';
+  }
 }

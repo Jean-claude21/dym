@@ -22,7 +22,11 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     this.stories,
     this.onReorder,
     this.onOpenProduct,
+    this.onShoppingLists,
   });
+
+  /// Mes courses (spec 029) ; absent : tuile masquée.
+  final VoidCallback? onShoppingLists;
 
   /// Recommander une commande livrée (spec 027) ; absent : carte masquée.
   final ValueChanged<String>? onReorder;
@@ -192,6 +196,11 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                   const SizedBox(height: DymTokenSpace.s4),
                   row,
                 ],
+                if (onShoppingLists case final open?)
+                  Padding(
+                    padding: const EdgeInsets.only(top: DymTokenSpace.s4),
+                    child: _ShoppingTile(onTap: open),
+                  ),
                 if (vm.feed.lastOrder case final last? when onReorder != null)
                   Padding(
                     padding: const EdgeInsets.only(top: DymTokenSpace.s4),
@@ -382,6 +391,42 @@ Future<void> showZonePicker(
     },
   ),
 );
+
+/// Tuile « Mes listes de courses » (spec 029).
+class _ShoppingTile extends StatelessWidget {
+  const new({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Material(
+      color: c.card,
+      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        minTileHeight: 72,
+        onTap: onTap,
+        leading: CircleAvatar(
+          backgroundColor: c.tintVertTendre,
+          child: Icon(Icons.checklist_rounded, color: c.brandDeep),
+        ),
+        title: Text(
+          l10n.shoppingHomeTile,
+          style: t.title.copyWith(fontSize: 17),
+        ),
+        subtitle: Text(
+          l10n.shoppingHomeTileHint,
+          style: t.label.copyWith(color: c.textSecondary),
+        ),
+        trailing: Icon(Icons.arrow_forward_rounded, color: c.brandDeep),
+      ),
+    );
+  }
+}
 
 /// Carte « Recommander tes dernières courses » (spec 027).
 class _ReorderCard extends StatelessWidget {

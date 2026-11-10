@@ -28,6 +28,9 @@ class FakeStore implements CopilotStore {
   async failed() {
     this.log.push("failed");
   }
+  async listed(_user: string, count: number) {
+    this.log.push(`listed:${count}`);
+  }
 }
 
 const post = (deps: CopilotDeps | undefined, body: unknown) =>
@@ -90,5 +93,56 @@ describe("copilote", () => {
     const cleaned = cleanNeeds(many);
     expect(cleaned).toHaveLength(7);
     expect(cleaned[0]?.quantity).toBe(10);
+  });
+
+  it("besoins : plafond réglable (listes de courses)", () => {
+    const many = Array.from({ length: 30 }, (_, i) => ({ label: `p${i}`, query: `produit ${i}`, quantity: 1 }));
+    expect(cleanNeeds(many, 15)).toHaveLength(15);
+  });
+});
+
+const postList = (deps: CopilotDeps | undefined, body: unknown) =>
+  createApp({ verifyToken: async () => ({ id: "u1", claims: {} }), copilot: deps }).request(
+    "http://fn.test/v1/agent/list",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer t" },
+      body: JSON.stringify(body),
+    },
+  );
+
+describe("assistant de courses", () => {
+  it("description → articles nettoyés (15 au plus), sans boutique ni prix", async () => {
+    const store = new FakeStore();
+    let asked = 0;
+    const res = await postList(
+      {
+        store,
+        planner: {
+          plan: async ({ max }) => {
+            asked = max ?? 0;
+            return Array.from({ length: 20 }, (_, i) => ({ label: ` Riz ${i} `, query: "riz", quantity: 3 }));
+          },
+        },
+      },
+      { text: "Les courses de la semaine pour 4" },
+    );
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { items: CopilotNeed[] };
+    expect(asked).toBe(15);
+    expect(body.items).toHaveLength(15);
+    expect(body.items[0]).toEqual({ label: "Riz 0", query: "riz", quantity: 3 });
+    expect(store.picked).toEqual([]);
+    expect(store.log).toEqual(["listed:15"]);
+  });
+
+  it("IA en échec : 503 journalisé ; flag coupé : 422", async () => {
+    const store = new FakeStore();
+    const failing = { plan: async () => Promise.reject(new Error("timeout")) };
+    expect((await postList({ store, planner: failing }, { text: "la semaine" })).status).toBe(503);
+    expect(store.log).toEqual(["failed"]);
+    const off = new FakeStore();
+    off.enabled = false;
+    expect((await postList({ store: off, planner: failing }, { text: "la semaine" })).status).toBe(422);
   });
 });

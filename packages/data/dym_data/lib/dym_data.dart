@@ -16,6 +16,7 @@ export 'src/order_tracking_repository.dart';
 export 'src/pilot_repository.dart';
 export 'src/reference_repository.dart';
 export 'src/search_ai_repository.dart';
+export 'src/shopping_list_repository.dart';
 export 'src/store_repository.dart';
 export 'src/vendor_dashboard_repository.dart';
 export 'src/vendor_order_repository.dart';

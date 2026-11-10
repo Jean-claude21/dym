@@ -29,12 +29,17 @@ export interface CopilotStore {
     text: string,
   ): Promise<void>;
   failed(userId: string, latencyMs: number): Promise<void>;
+  /** Liste de courses proposée (spec 029) : journal IA, sans le texte. */
+  listed(userId: string, count: number, latencyMs: number): Promise<void>;
 }
 
-/** Découpe une intention en besoins (7 au plus) ; jamais de prix. */
+/** Découpe une intention en besoins ([max] au plus, 7 par défaut) ; jamais de prix. */
 export interface IntentPlanner {
-  plan(input: { model: AiModelConfig; text: string }): Promise<CopilotNeed[]>;
+  plan(input: { model: AiModelConfig; text: string; max?: number }): Promise<CopilotNeed[]>;
 }
+
+/** Plafond d'une liste de courses proposée par l'IA (spec 029). */
+export const AGENT_LIST_MAX = 15;
 
 export interface CopilotDeps {
   store: CopilotStore;
@@ -79,18 +84,42 @@ export function registerCopilotRoutes(
     await deps.store.proposed(userId, proposal, performance.now() - started, body.text);
     return c.json(proposal);
   });
+
+  // Assistant de courses (spec 029) : description → articles d'une liste, que la personne corrige
+  // avant d'enregistrer. Aucun choix de boutique ni prix ici (composition en SQL à l'ouverture).
+  app.post("/v1/agent/list", requireUser(verifyToken), async (c) => {
+    const body = await parseBody(c, z.object({ text: z.string().trim().min(2).max(300) }));
+    if (!deps) throw httpErrors.unavailable("assistant non configuré");
+    const userId = c.get("user").id;
+    const model = await deps.store.context(userId, null);
+    if (!deps.planner) throw httpErrors.unavailable("assistant non configuré");
+    const started = performance.now();
+    let items: CopilotNeed[];
+    try {
+      items = cleanNeeds(
+        await deps.planner.plan({ model, text: body.text, max: AGENT_LIST_MAX }),
+        AGENT_LIST_MAX,
+      );
+    } catch (error) {
+      console.error("[agent] liste en échec", error);
+      await deps.store.failed(userId, performance.now() - started);
+      throw httpErrors.unavailable("assistant en échec");
+    }
+    await deps.store.listed(userId, items.length, performance.now() - started);
+    return c.json({ items });
+  });
 }
 
-/** Besoins nettoyés : texte borné, quantité entre 1 et 10, 7 au plus. */
-export function cleanNeeds(needs: CopilotNeed[]): CopilotNeed[] {
+/** Besoins nettoyés : texte borné, quantité entre 1 et 10, [max] au plus (7 par défaut). */
+export function cleanNeeds(needs: CopilotNeed[], max = 7): CopilotNeed[] {
   return needs
     .map((n) => ({
       label: n.label.replace(/\s+/g, " ").trim().slice(0, 60),
       query: n.query.replace(/\s+/g, " ").trim().slice(0, 60),
       quantity: Math.max(1, Math.min(10, Math.round(n.quantity || 1))),
     }))
-    .filter((n) => n.query.length >= 2)
-    .slice(0, 7);
+    .filter((n) => n.label.length > 0 && n.query.length >= 2)
+    .slice(0, max);
 }
 
 // ------------------------------------------------------------------ base
@@ -128,15 +157,22 @@ export function pgCopilotStore(pool: pg.Pool): CopilotStore {
         Math.round(latencyMs),
       ]);
     },
+    async listed(userId, count, latencyMs) {
+      await one("select app.record_ai_request($1, 'intent_copilot', $2, $3) as value", [
+        userId,
+        count > 0 ? "success" : "no_result",
+        Math.round(latencyMs),
+      ]);
+    },
   };
 }
 
 // ------------------------------------------------------------------ IA
 
-const INSTRUCTIONS = [
+const instructions = (max: number) => [
   "Tu aides une cliente d'un marché d'Afrique de l'Ouest à faire ses courses.",
-  "À partir de son intention (un plat, une occasion, une liste), liste les produits à acheter :",
-  "- 1 à 7 produits, les plus importants d'abord ;",
+  "À partir de son intention (un plat, une occasion, une liste, la semaine), liste les produits à acheter :",
+  `- 1 à ${max} produits, les plus importants d'abord ;`,
   "- label : le nom affiché, en français (« Gombo frais ») ;",
   "- query : 1 à 3 mots-clés de recherche, au singulier, sans quantité (« gombo ») ;",
   "- quantity : nombre d'unités de vente (tas, bouteille, pièce), entre 1 et 10, d'après le nombre de personnes.",
@@ -147,7 +183,7 @@ export function aiIntentPlanner(
   providers: Record<string, (model: string) => LanguageModel>,
 ): IntentPlanner {
   return {
-    async plan({ model, text }) {
+    async plan({ model, text, max = 7 }) {
       const factory = providers[model.provider];
       if (!factory) throw new Error(`fournisseur d'IA inconnu : ${model.provider}`);
       const temperature =
@@ -164,10 +200,10 @@ export function aiIntentPlanner(
                   quantity: z.number().int().min(1).max(10),
                 }),
               )
-              .max(7),
+              .max(max),
           }),
         }),
-        instructions: INSTRUCTIONS,
+        instructions: instructions(max),
         temperature,
         maxRetries: 1,
         prompt: text,

@@ -27,6 +27,9 @@ import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/features/reviews/review_views.dart';
+import 'package:dym_client/features/shopping/shopping_service.dart';
+import 'package:dym_client/features/shopping/shopping_viewmodels.dart';
+import 'package:dym_client/features/shopping/shopping_views.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/features/wallet/wallet_view.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
@@ -95,6 +98,12 @@ abstract interface class AppNavigator {
 
   /// Mon wallet (spec 025).
   void toWallet();
+
+  /// Mes courses (spec 029).
+  void toShoppingLists();
+
+  /// Panier proposé pour une liste (notification de rappel).
+  Future<void> toShoppingList(String listId);
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -111,7 +120,9 @@ class StackedAppNavigator implements AppNavigator {
     CopilotService? copilot,
     ContentService? content,
     WalletService? wallet,
+    ShoppingService? shopping,
   ]) : _walletOverride = wallet,
+       _shoppingOverride = shopping,
        _support = support ?? locator<SupportService>(),
        _content =
            content ??
@@ -144,6 +155,12 @@ class StackedAppNavigator implements AppNavigator {
 
   /// Wallet (spec 025), résolu au premier usage.
   WalletService get _wallet => _walletOverride ?? locator<WalletService>();
+
+  final ShoppingService? _shoppingOverride;
+
+  /// Assistant de courses (spec 029), résolu au premier usage.
+  ShoppingService get _shopping =>
+      _shoppingOverride ?? locator<ShoppingService>();
 
   /// Recherche augmentée (spec 018) ; absente : recherche texte seule.
   final SearchAiService? _searchAi;
@@ -395,6 +412,53 @@ class StackedAppNavigator implements AppNavigator {
   @override
   void toWallet() => _push(WalletView(service: _wallet, onBack: _back));
 
+  @override
+  void toShoppingLists() => _push(
+    ShoppingListsView(
+      service: _shopping,
+      onBack: _back,
+      onEdit: _toShoppingEdit,
+      onOpen: _toShoppingProposal,
+    ),
+  );
+
+  Future<bool> _toShoppingEdit(ShoppingDraft draft) async =>
+      await _navigator.push<bool>(
+        MaterialPageRoute(
+          builder: (context) => ShoppingEditView(
+            service: _shopping,
+            draft: draft,
+            onBack: () => Navigator.of(context).pop(false),
+            onSaved: (_) => Navigator.of(context).pop(true),
+          ),
+        ),
+      ) ??
+      false;
+
+  /// Panier composé pour la liste : retrait possible, puis ajout au panier.
+  void _toShoppingProposal(ShoppingList list) => _push(
+    CopilotView(
+      service: _shopping.copilotFor(list),
+      title: list.name,
+      // Le texte ne sert qu'à lancer la proposition (liste, pas intention).
+      initialText: list.id,
+      onBack: _back,
+      onAdded: () {
+        _back();
+        toCart();
+      },
+    ),
+  );
+
+  @override
+  Future<void> toShoppingList(String listId) async {
+    final lists = (await _shopping.lists()).valueOrNull ?? const [];
+    for (final list in lists) {
+      if (list.id == listId) return _toShoppingProposal(list);
+    }
+    toShoppingLists();
+  }
+
   Future<bool> _toReport(String orderId, String storeName) async =>
       await _navigator.push<bool>(
         MaterialPageRoute(
@@ -419,6 +483,7 @@ class StackedAppNavigator implements AppNavigator {
       onBack: _back,
       onOpenOrder: toOrder,
       onOpenConversation: toChat,
+      onOpenShoppingList: (id) => unawaited(toShoppingList(id)),
     ),
   );
 

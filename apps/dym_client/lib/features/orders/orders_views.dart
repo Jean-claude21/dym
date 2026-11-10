@@ -724,6 +724,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     required this.onBack,
     required this.onOpenOrder,
     this.onOpenConversation,
+    this.onOpenShoppingList,
     super.key,
     this.clock = DateTime.now,
   });
@@ -734,6 +735,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
 
   /// Notification de message : ouvrir la conversation (spec 015).
   final ValueChanged<String>? onOpenConversation;
+
+  /// Rappel de courses : ouvrir la liste (spec 029).
+  final ValueChanged<String>? onOpenShoppingList;
   final DateTime Function() clock;
 
   @override
@@ -818,6 +822,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                                   } else if (n.param('conversation_id')
                                       case final conv?) {
                                     onOpenConversation?.call(conv);
+                                  } else if (n.param('list_id')
+                                      case final list?) {
+                                    onOpenShoppingList?.call(list);
                                   }
                                 },
                               ),

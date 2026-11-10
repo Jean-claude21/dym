@@ -10,6 +10,7 @@ import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
+import 'package:dym_client/features/shopping/shopping_service.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -147,6 +148,18 @@ Future<void> configureServices(DymEnvironment environment) async {
         photos: PluginPhotoPicker(),
         productPhoto: (key) =>
             dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerLazySingleton<ShoppingService>(
+      () => NeonShoppingService(
+        repository: ShoppingListRepository(
+          data: neon.data,
+          functions: neon.functions,
+        ),
+        copilot: locator<CopilotService>(),
+        discovery: locator<DiscoveryService>(),
+        cart: locator<CartService>(),
+        events: EventsRepository(neon.data, app: EventApp.client),
       ),
     )
     ..registerLazySingleton<WalletService>(

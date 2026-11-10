@@ -5183,5 +5183,238 @@
         "type": "String"
       }
     }
+  },
+  "shoppingTitle": "Mes courses",
+  "@shoppingTitle": {
+    "description": "Titre de l'assistant de courses"
+  },
+  "shoppingHomeTile": "Mes listes de courses",
+  "@shoppingHomeTile": {
+    "description": "Tuile de l'accueil"
+  },
+  "shoppingHomeTileHint": "Refais tes courses en un geste",
+  "@shoppingHomeTileHint": {
+    "description": "Sous-titre de la tuile"
+  },
+  "shoppingIntro": "Rien n'est commandé sans toi : l'assistant compose, tu vérifies et tu ajoutes au panier.",
+  "@shoppingIntro": {
+    "description": "Promesse de validation"
+  },
+  "shoppingEmpty": "Pas encore de liste. Crée « Courses du samedi », « Petit-déjeuner »… et l'assistant composera ton panier.",
+  "@shoppingEmpty": {
+    "description": "État vide"
+  },
+  "shoppingNew": "Nouvelle liste",
+  "@shoppingNew": {
+    "description": "Créer une liste"
+  },
+  "shoppingFromHabits": "Ma liste habituelle",
+  "@shoppingFromHabits": {
+    "description": "Liste depuis les habitudes"
+  },
+  "shoppingFromHabitsHint": "Ce que tu achètes souvent",
+  "@shoppingFromHabitsHint": {
+    "description": "Sous-titre habitudes"
+  },
+  "shoppingNoHabits": "Pas encore d'habitudes : il faut avoir commandé au moins deux fois le même produit.",
+  "@shoppingNoHabits": {
+    "description": "Aucune habitude"
+  },
+  "shoppingDescribe": "Décrire mes courses",
+  "@shoppingDescribe": {
+    "description": "Liste proposée par l'IA"
+  },
+  "shoppingDescribeHint": "Ex. la semaine pour 4 personnes",
+  "@shoppingDescribeHint": {
+    "description": "Exemple de description"
+  },
+  "shoppingDescribeAction": "Proposer une liste",
+  "@shoppingDescribeAction": {
+    "description": "Bouton de l'IA"
+  },
+  "shoppingAiUnavailable": "L'assistant ne répond pas. Tu peux créer ta liste à la main.",
+  "@shoppingAiUnavailable": {
+    "description": "IA indisponible"
+  },
+  "shoppingAiNothing": "Je n'ai rien trouvé à proposer. Essaie avec d'autres mots.",
+  "@shoppingAiNothing": {
+    "description": "IA sans résultat"
+  },
+  "shoppingItemsCount": "{count, plural, =1{1 article} other{{count} articles}}",
+  "@shoppingItemsCount": {
+    "description": "Nombre d'articles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "shoppingNoRepeat": "Pas de rappel",
+  "@shoppingNoRepeat": {
+    "description": "Sans récurrence"
+  },
+  "shoppingEvery7": "Chaque semaine",
+  "@shoppingEvery7": {
+    "description": "Récurrence 7 jours"
+  },
+  "shoppingEvery14": "Toutes les 2 semaines",
+  "@shoppingEvery14": {
+    "description": "Récurrence 14 jours"
+  },
+  "shoppingEvery30": "Chaque mois",
+  "@shoppingEvery30": {
+    "description": "Récurrence 30 jours"
+  },
+  "shoppingNextOn": "Prochain rappel : {date}",
+  "@shoppingNextOn": {
+    "description": "Date du prochain rappel",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingOpen": "Composer mon panier",
+  "@shoppingOpen": {
+    "description": "Ouvrir la proposition"
+  },
+  "shoppingMore": "Plus d'actions pour {name}",
+  "@shoppingMore": {
+    "description": "Menu d'une liste",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingEdit": "Modifier",
+  "@shoppingEdit": {
+    "description": "Modifier une liste"
+  },
+  "shoppingDelete": "Supprimer",
+  "@shoppingDelete": {
+    "description": "Supprimer une liste"
+  },
+  "shoppingDeleteConfirm": "Supprimer « {name} » ?",
+  "@shoppingDeleteConfirm": {
+    "description": "Confirmation de suppression",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingDeleted": "Liste supprimée",
+  "@shoppingDeleted": {
+    "description": "Après suppression"
+  },
+  "shoppingEditTitle": "Ma liste",
+  "@shoppingEditTitle": {
+    "description": "Titre de l'édition"
+  },
+  "shoppingName": "Nom de la liste",
+  "@shoppingName": {
+    "description": "Champ nom"
+  },
+  "shoppingNameHint": "Ex. Courses du samedi",
+  "@shoppingNameHint": {
+    "description": "Exemple de nom"
+  },
+  "shoppingItemsTitle": "Articles",
+  "@shoppingItemsTitle": {
+    "description": "Titre des articles"
+  },
+  "shoppingItemHint": "Ajouter un article (tomates, riz…)",
+  "@shoppingItemHint": {
+    "description": "Champ d'ajout"
+  },
+  "shoppingAddItem": "Ajouter",
+  "@shoppingAddItem": {
+    "description": "Bouton ajouter un article"
+  },
+  "shoppingRemoveItem": "Retirer {name}",
+  "@shoppingRemoveItem": {
+    "description": "Retirer un article",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingLess": "Un de moins : {name}",
+  "@shoppingLess": {
+    "description": "Diminuer la quantité",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingMoreQty": "Un de plus : {name}",
+  "@shoppingMoreQty": {
+    "description": "Augmenter la quantité",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingRepeatTitle": "Me rappeler",
+  "@shoppingRepeatTitle": {
+    "description": "Titre de la récurrence"
+  },
+  "shoppingStartsOn": "Premier rappel le {date}",
+  "@shoppingStartsOn": {
+    "description": "Date du premier rappel",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "shoppingPickDate": "Changer la date",
+  "@shoppingPickDate": {
+    "description": "Choisir la date"
+  },
+  "shoppingRepeatNote": "Le jour venu, à 8 h, on te prévient : tu vérifies et tu valides.",
+  "@shoppingRepeatNote": {
+    "description": "Explication du rappel"
+  },
+  "shoppingSave": "Enregistrer la liste",
+  "@shoppingSave": {
+    "description": "Enregistrer"
+  },
+  "shoppingSaved": "Liste enregistrée",
+  "@shoppingSaved": {
+    "description": "Après enregistrement"
+  },
+  "shoppingErrorName": "Donne un nom à ta liste.",
+  "@shoppingErrorName": {
+    "description": "Nom manquant"
+  },
+  "shoppingErrorItems": "Ajoute au moins un article.",
+  "@shoppingErrorItems": {
+    "description": "Liste vide"
+  },
+  "shoppingErrorTooMany": "20 listes au plus : supprimes-en une.",
+  "@shoppingErrorTooMany": {
+    "description": "Trop de listes"
+  },
+  "shoppingErrorTooManyItems": "20 articles au plus par liste.",
+  "@shoppingErrorTooManyItems": {
+    "description": "Trop d'articles"
+  },
+  "notifShoppingDueTitle": "Tes courses sont prêtes",
+  "@notifShoppingDueTitle": {
+    "description": "Notification de rappel"
+  },
+  "notifShoppingDueBody": "« {name} » : vérifie et valide ton panier.",
+  "@notifShoppingDueBody": {
+    "description": "Notification de rappel",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }
