@@ -340,6 +340,10 @@ class _MovementRow extends StatelessWidget {
         Icons.groups_rounded,
         l10n.walletKindSpacePayout,
       ),
+      WalletMovementKind.affiliateCommission => (
+        Icons.volunteer_activism_rounded,
+        l10n.walletKindAffiliate,
+      ),
       WalletMovementKind.unknown => (
         Icons.sync_alt_rounded,
         l10n.walletKindOther,

@@ -10,6 +10,8 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/discovery_fixtures.dart';
+
 const _recettes = ContentCategory(
   id: 'cat-r',
   slug: 'recettes',
@@ -101,6 +103,14 @@ class _Fake implements CreatorService {
 
   @override
   Future<Result<void>> archive(String contentId) async => const Ok(null);
+
+  CreatorCommissions earnings = const CreatorCommissions();
+
+  @override
+  Future<Result<CreatorCommissions>> commissions() async => Ok(earnings);
+
+  @override
+  Future<Result<CountryConfig>> countryConfig() async => Ok(togoConfig());
 
   @override
   ImageProvider photo(String objectKey) => MemoryImage(_pixel);
@@ -209,6 +219,44 @@ void main() {
       await tester.tap(find.text('Ouvrir mon studio'));
       await tester.pumpAndSettle();
       expect(find.text('Nouveau post'), findsOneWidget);
+    });
+
+    testWidgets('gains : en attente, versés, dernières commissions', (
+      tester,
+    ) async {
+      final service = _Fake()
+        ..current = const CreatorProfile(displayName: 'Awa cuisine')
+        ..earnings = CreatorCommissions(
+          pendingMinor: 50,
+          paidMinor: 120,
+          items: [
+            CreatorCommission(
+              id: 'a1',
+              status: CommissionStatus.pending,
+              amountMinor: 50,
+              rateBps: 500,
+              createdAt: DateTime(2026, 11, 10),
+              productName: 'Tomates',
+            ),
+          ],
+        );
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: DymTheme.light(),
+          locale: const Locale('fr'),
+          localizationsDelegates: DymLocalizations.localizationsDelegates,
+          supportedLocales: DymLocalizations.supportedLocales,
+          home: CreatorStudioView(
+            service: service,
+            onBack: () {},
+            onCompose: () async => false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Mes gains'), findsOneWidget);
+      expect(find.text('Tomates'), findsOneWidget);
+      expect(find.text('En attente de livraison'), findsOneWidget);
     });
   });
 }

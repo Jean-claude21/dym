@@ -34,6 +34,10 @@ class CreatorStudioViewModel extends BaseViewModel {
   final CreatorService service;
   CreatorProfile? profile;
   List<ContentItem> posts = const [];
+
+  /// Gains d'affiliation ; null : non chargés (section masquée).
+  CreatorCommissions? commissions;
+  CountryConfig? _config;
   bool ready = false;
   Failure? failure;
   CreatorError? problem;
@@ -47,6 +51,8 @@ class CreatorStudioViewModel extends BaseViewModel {
         profile = value;
         if (value != null) {
           posts = (await service.mine()).valueOrNull ?? const [];
+          _config ??= (await service.countryConfig()).valueOrNull;
+          commissions = (await service.commissions()).valueOrNull;
         }
         ready = true;
       case Err(failure: final f):
@@ -75,6 +81,8 @@ class CreatorStudioViewModel extends BaseViewModel {
     return result.isOk;
   }
 
+  String money(int minor) => _config?.money(minor).format() ?? '';
+
   Future<void> archive(ContentItem post) async {
     if (await service.archive(post.id) case Ok()) {
       posts = [
@@ -83,6 +91,100 @@ class CreatorStudioViewModel extends BaseViewModel {
       ];
       notifyListeners();
     }
+  }
+}
+
+/// Gains d'affiliation : en attente, versés, dernières commissions.
+class _Earnings extends StatelessWidget {
+  const new({required this.vm, required this.earnings});
+
+  final CreatorStudioViewModel vm;
+  final CreatorCommissions earnings;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        DymSectionHeader(title: l10n.creatorEarnings),
+        Row(
+          children: [
+            Expanded(
+              child: _Amount(
+                label: l10n.creatorEarningsPending,
+                value: vm.money(earnings.pendingMinor),
+              ),
+            ),
+            const SizedBox(width: DymTokenSpace.s3),
+            Expanded(
+              child: _Amount(
+                label: l10n.creatorEarningsPaid,
+                value: vm.money(earnings.paidMinor),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: DymTokenSpace.s2),
+        Text(
+          earnings.items.isEmpty
+              ? l10n.creatorEarningsEmpty
+              : l10n.creatorEarningsHint,
+          style: t.label.copyWith(color: c.textSecondary),
+        ),
+        for (final item in earnings.items.take(5))
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: Icon(switch (item.status) {
+              CommissionStatus.paid => Icons.check_circle_rounded,
+              CommissionStatus.cancelled => Icons.cancel_rounded,
+              CommissionStatus.pending => Icons.schedule_rounded,
+            }, color: c.textSecondary),
+            title: Text(
+              item.productName ?? '',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            subtitle: Text(switch (item.status) {
+              CommissionStatus.paid => l10n.creatorCommissionPaid,
+              CommissionStatus.cancelled => l10n.creatorCommissionCancelled,
+              CommissionStatus.pending => l10n.creatorCommissionPending,
+            }),
+            trailing: Text(vm.money(item.amountMinor), style: t.body),
+          ),
+      ],
+    );
+  }
+}
+
+class _Amount extends StatelessWidget {
+  const new({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.tintVertTendre,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(DymTokenSpace.s3),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: t.label.copyWith(color: c.textSecondary)),
+            Text(value, style: t.title),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -153,6 +255,12 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
                 },
               ),
             ),
+            if (vm.commissions case final earnings?) ...[
+              const SizedBox(height: DymTokenSpace.s4),
+              DymContentWidth.form(
+                child: _Earnings(vm: vm, earnings: earnings),
+              ),
+            ],
             const SizedBox(height: DymTokenSpace.s4),
             DymContentWidth.form(
               child: DymSectionHeader(title: l10n.creatorMyPosts),

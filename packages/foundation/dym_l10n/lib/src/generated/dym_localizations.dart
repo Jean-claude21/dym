@@ -8220,6 +8220,96 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Tout pour la faire'**
   String get recipeAllForIt;
+
+  /// No description provided for @creatorEarnings.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes gains'**
+  String get creatorEarnings;
+
+  /// No description provided for @creatorEarningsPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente'**
+  String get creatorEarningsPending;
+
+  /// No description provided for @creatorEarningsPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versés sur mon wallet'**
+  String get creatorEarningsPaid;
+
+  /// No description provided for @creatorEarningsHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quand une cliente achète depuis ton contenu, tu touches une commission à la livraison.'**
+  String get creatorEarningsHint;
+
+  /// No description provided for @creatorEarningsEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tague des produits ou ajoute les ingrédients : chaque achat livré depuis ton post te rapporte une commission.'**
+  String get creatorEarningsEmpty;
+
+  /// No description provided for @creatorCommissionPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de livraison'**
+  String get creatorCommissionPending;
+
+  /// No description provided for @creatorCommissionPaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versée'**
+  String get creatorCommissionPaid;
+
+  /// No description provided for @creatorCommissionCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée (commande non livrée)'**
+  String get creatorCommissionCancelled;
+
+  /// No description provided for @walletKindAffiliate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission de créatrice'**
+  String get walletKindAffiliate;
+
+  /// No description provided for @affiliateRateTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission des créatrices'**
+  String get affiliateRateTitle;
+
+  /// Taux en pour cent (affichage)
+  ///
+  /// In fr, this message translates to:
+  /// **'{value} %'**
+  String affiliatePercent(double value);
+
+  /// No description provided for @affiliateRateHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versée sur chaque vente livrée venue du contenu d\'une créatrice. Minimum du pays : {min}.'**
+  String affiliateRateHint(String min);
+
+  /// No description provided for @affiliateProductRate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Taux d\'un produit'**
+  String get affiliateProductRate;
+
+  /// No description provided for @affiliateLikeStore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comme la boutique'**
+  String get affiliateLikeStore;
+
+  /// No description provided for @paidContent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu rémunéré'**
+  String get paidContent;
 }
 
 class _DymLocalizationsDelegate

@@ -50,6 +50,7 @@ Future<void> _start(DymEnvironment environment) async {
 Future<void> configureServices(DymEnvironment environment) async {
   await setupLocator();
   final neon = createNeonClient(environment);
+  final installs = SecureInstallIdProvider();
   final reference = ReferenceRepository(neon.data);
   final locale = LocalePreference();
   final auth = NeonAuthService(
@@ -109,6 +110,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         discovery: locator<DiscoveryService>(),
         cart: locator<CartService>(),
         media: environment.media,
+        installs: installs,
       ),
     )
     ..registerLazySingleton<SupportService>(
@@ -171,6 +173,7 @@ Future<void> configureServices(DymEnvironment environment) async {
           data: neon.data,
           functions: neon.functions,
         ),
+        installs: installs,
       ),
     )
     ..registerLazySingleton<AdjustmentsService>(

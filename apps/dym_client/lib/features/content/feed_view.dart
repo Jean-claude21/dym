@@ -579,6 +579,17 @@ class _ContentPage extends StatelessWidget {
                                   visualDensity: VisualDensity.compact,
                                   label: Text(cat.label.resolve(locale)),
                                 ),
+                              // Transparence (spec 039) : la créatrice touche
+                              // une commission sur ces achats.
+                              if (content.hasRecipe)
+                                Chip(
+                                  visualDensity: VisualDensity.compact,
+                                  avatar: const Icon(
+                                    Icons.volunteer_activism_rounded,
+                                    size: 18,
+                                  ),
+                                  label: Text(l10n.paidContent),
+                                ),
                             ],
                           ),
                         if (content.store != null || content.author != null)

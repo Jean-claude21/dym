@@ -5,6 +5,7 @@ import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/widgets.dart';
 
 /// Contenus shoppables côté cliente (spec 020) : fil de vidéos (74),
@@ -41,6 +42,9 @@ abstract interface class ContentService {
   /// « Tout pour la faire » (spec 038) : panier composé en base.
   Future<Result<CopilotProposal>> recipeBasket(ContentItem content);
 
+  /// Article de la recette ajouté au panier : attribué au contenu (spec 039).
+  void recipeAdded(ContentItem content, String variantId);
+
   Future<Result<List<StoryGroup>>> stories();
 
   Future<Result<int>> productVideoCount(String productId);
@@ -74,7 +78,23 @@ class NeonContentService implements ContentService {
     required this._discovery,
     required this._cart,
     required this._media,
+    this._installs,
   });
+
+  /// Identifiant d'installation (antifraude de l'affiliation, spec 039).
+  final InstallIdProvider? _installs;
+  bool _installSent = false;
+
+  /// Contenu à l'origine d'un ajout au panier : appareil déclaré une fois,
+  /// puis attribution des variantes.
+  Future<void> _touch(ContentItem content, List<String> variantIds) async {
+    if (!_installSent) {
+      if (await _installs?.installId() case final id?) {
+        _installSent = (await _repository.registerInstall(id)).isOk;
+      }
+    }
+    await _repository.touch(content.id, variantIds);
+  }
 
   final ContentRepository _repository;
   final DiscoveryService _discovery;
@@ -141,6 +161,10 @@ class NeonContentService implements ContentService {
       _repository.recipeBasket(content.id, zoneId: _discovery.zone.value);
 
   @override
+  void recipeAdded(ContentItem content, String variantId) =>
+      unawaited(_touch(content, [variantId]));
+
+  @override
   Future<Result<List<StoryGroup>>> stories() =>
       _repository.stories(zoneId: _discovery.zone.value);
 
@@ -159,7 +183,10 @@ class NeonContentService implements ContentService {
     unawaited(_repository.clicked(content.id, product.id));
     final variant = product.defaultVariantId;
     if (variant == null) return const Err(NotFoundFailure('variante'));
-    return (await _cart.add(variant)).map((_) {});
+    final added = await _cart.add(variant);
+    // Ajout réussi : la créatrice du contenu touche sa commission (spec 039).
+    if (added.isOk) unawaited(_touch(content, [variant]));
+    return added.map((_) {});
   }
 
   @override
@@ -296,6 +323,10 @@ class MemoryContentService implements ContentService {
     gestures.add('${content.id}:add:${product.id}');
     return const Ok(null);
   }
+
+  @override
+  void recipeAdded(ContentItem content, String variantId) =>
+      gestures.add('${content.id}:recipe:$variantId');
 
   @override
   Future<Result<int>> like(ContentItem content, {required bool like}) async {

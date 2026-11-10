@@ -80,6 +80,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Micro (recherche vocale, spec 018 ; vocaux, spec 035) | `record` | `dym_platform` |
 | Lecture des vocaux (spec 035) | `audioplayers` (derrière `AudioPlayback`) | `dym_platform` |
 | Média des appels (spec 035) | Simulé derrière `CallProvider` ; WebRTC et serveur TURN avant la production finale | `dym_platform` |
+| Identifiant d'installation (spec 039) | UUID aléatoire dans `flutter_secure_storage` (derrière `InstallIdProvider`) | `dym_platform` |
 | Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |
