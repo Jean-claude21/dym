@@ -14,6 +14,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
     required this.onProducts,
     super.key,
     this.onMessages,
+    this.onTill,
   });
 
   final DashboardService service;
@@ -22,6 +23,9 @@ class DashboardView extends StackedView<DashboardViewModel> {
 
   /// Messages (V-DASH-04) ; nul : non affiché.
   final VoidCallback? onMessages;
+
+  /// « Ma caisse » (spec 045) : ventes hors app et versements.
+  final VoidCallback? onTill;
 
   @override
   DashboardViewModel viewModelBuilder(BuildContext context) =>
@@ -66,6 +70,15 @@ class DashboardView extends StackedView<DashboardViewModel> {
                     style: t.display.copyWith(color: c.brandDeep),
                   ),
                   const SizedBox(height: DymTokenSpace.s3),
+                  if (onTill case final till?) ...[
+                    DymButton(
+                      label: l.tillOpen,
+                      icon: Icons.point_of_sale_rounded,
+                      variant: DymButtonVariant.secondary,
+                      onPressed: till,
+                    ),
+                    const SizedBox(height: DymTokenSpace.s3),
+                  ],
                   if (vm.failure != null)
                     Padding(
                       padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),

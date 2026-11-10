@@ -5298,4 +5298,123 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get courierCashReceived => 'Reçu';
+
+  @override
+  String get tillTitle => 'Ma caisse';
+
+  @override
+  String get tillOpen => 'Ma caisse : ventes du jour';
+
+  @override
+  String get tillNewSale => 'Nouvelle vente';
+
+  @override
+  String tillToday(String amount) {
+    return 'Aujourd\'hui : $amount';
+  }
+
+  @override
+  String tillInApp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'En app · $count ventes',
+      one: 'En app · 1 vente',
+      zero: 'En app',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tillOffApp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Hors app · $count ventes',
+      one: 'Hors app · 1 vente',
+      zero: 'Hors app',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tillBalance => 'Mon solde chez DYM';
+
+  @override
+  String get tillPayout => 'Verser mon solde';
+
+  @override
+  String get tillPayoutSimulated =>
+      'Versement simulé : aucun argent ne part tant que le versement réel n\'est pas branché.';
+
+  @override
+  String get tillBalanceInsufficient =>
+      'Ton solde ne suffit pas pour ce versement.';
+
+  @override
+  String get tillSales => 'Ventes hors app';
+
+  @override
+  String get tillNoSale => 'Aucune vente hors app enregistrée.';
+
+  @override
+  String get tillVoid => 'Annuler la vente';
+
+  @override
+  String get tillPayouts => 'Versements';
+
+  @override
+  String get tillVoice => 'Dicter la vente';
+
+  @override
+  String get tillVoiceStop => 'J\'ai fini';
+
+  @override
+  String get tillVoiceDisabled =>
+      'La dictée n\'est pas ouverte dans ton pays : tape la vente.';
+
+  @override
+  String get tillNothingHeard => 'Rien entendu : réessaie ou tape la vente.';
+
+  @override
+  String get tillLabel => 'Ce que tu as vendu';
+
+  @override
+  String get tillLabelHint => '3 tas de tomates 1500';
+
+  @override
+  String get tillAmount => 'Montant';
+
+  @override
+  String get tillSave => 'Enregistrer la vente';
+
+  @override
+  String get tillMethodCash => 'Cash';
+
+  @override
+  String get tillMethodMobileMoney => 'Mobile money';
+
+  @override
+  String get tillMethodOther => 'Autre';
+
+  @override
+  String get tillLoadError => 'Ta caisse n\'a pas pu être chargée.';
+
+  @override
+  String get orderTimeline => 'Frise de la commande';
+
+  @override
+  String get actorVendor => 'Toi';
+
+  @override
+  String get actorClient => 'La cliente';
+
+  @override
+  String get actorCourier => 'Le livreur';
+
+  @override
+  String get actorAdmin => 'L\'équipe DYM';
+
+  @override
+  String get actorSystem => 'DYM';
 }

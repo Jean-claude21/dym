@@ -21,6 +21,8 @@ import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart'
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
+import 'package:dym_vendor/features/till/till_service.dart';
+import 'package:dym_vendor/features/till/till_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -62,6 +64,9 @@ abstract interface class AppNavigator {
 
   /// Cash encaissé pour la boutique par les livreurs DYM (spec 043).
   void toCourierCash();
+
+  /// « Ma caisse » (spec 045).
+  void toTill();
 
   /// Aide (écran 66).
   void toHelp();
@@ -153,6 +158,19 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toTill() {
+    if (!locator.isRegistered<TillService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => TillView(
+          service: locator<TillService>(),
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toCourierCash() {

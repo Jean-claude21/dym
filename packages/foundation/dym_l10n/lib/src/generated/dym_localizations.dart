@@ -8958,6 +8958,198 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Reçu'**
   String get courierCashReceived;
+
+  /// No description provided for @tillTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma caisse'**
+  String get tillTitle;
+
+  /// No description provided for @tillOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma caisse : ventes du jour'**
+  String get tillOpen;
+
+  /// No description provided for @tillNewSale.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle vente'**
+  String get tillNewSale;
+
+  /// No description provided for @tillToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui : {amount}'**
+  String tillToday(String amount);
+
+  /// No description provided for @tillInApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{En app} =1{En app · 1 vente} other{En app · {count} ventes}}'**
+  String tillInApp(int count);
+
+  /// No description provided for @tillOffApp.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Hors app} =1{Hors app · 1 vente} other{Hors app · {count} ventes}}'**
+  String tillOffApp(int count);
+
+  /// No description provided for @tillBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon solde chez DYM'**
+  String get tillBalance;
+
+  /// No description provided for @tillPayout.
+  ///
+  /// In fr, this message translates to:
+  /// **'Verser mon solde'**
+  String get tillPayout;
+
+  /// No description provided for @tillPayoutSimulated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versement simulé : aucun argent ne part tant que le versement réel n\'est pas branché.'**
+  String get tillPayoutSimulated;
+
+  /// No description provided for @tillBalanceInsufficient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton solde ne suffit pas pour ce versement.'**
+  String get tillBalanceInsufficient;
+
+  /// No description provided for @tillSales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes hors app'**
+  String get tillSales;
+
+  /// No description provided for @tillNoSale.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune vente hors app enregistrée.'**
+  String get tillNoSale;
+
+  /// No description provided for @tillVoid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la vente'**
+  String get tillVoid;
+
+  /// No description provided for @tillPayouts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Versements'**
+  String get tillPayouts;
+
+  /// No description provided for @tillVoice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dicter la vente'**
+  String get tillVoice;
+
+  /// No description provided for @tillVoiceStop.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai fini'**
+  String get tillVoiceStop;
+
+  /// No description provided for @tillVoiceDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'La dictée n\'est pas ouverte dans ton pays : tape la vente.'**
+  String get tillVoiceDisabled;
+
+  /// No description provided for @tillNothingHeard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien entendu : réessaie ou tape la vente.'**
+  String get tillNothingHeard;
+
+  /// No description provided for @tillLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que tu as vendu'**
+  String get tillLabel;
+
+  /// No description provided for @tillLabelHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'3 tas de tomates 1500'**
+  String get tillLabelHint;
+
+  /// No description provided for @tillAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get tillAmount;
+
+  /// No description provided for @tillSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer la vente'**
+  String get tillSave;
+
+  /// No description provided for @tillMethodCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash'**
+  String get tillMethodCash;
+
+  /// No description provided for @tillMethodMobileMoney.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mobile money'**
+  String get tillMethodMobileMoney;
+
+  /// No description provided for @tillMethodOther.
+  ///
+  /// In fr, this message translates to:
+  /// **'Autre'**
+  String get tillMethodOther;
+
+  /// No description provided for @tillLoadError.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta caisse n\'a pas pu être chargée.'**
+  String get tillLoadError;
+
+  /// No description provided for @orderTimeline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frise de la commande'**
+  String get orderTimeline;
+
+  /// No description provided for @actorVendor.
+  ///
+  /// In fr, this message translates to:
+  /// **'Toi'**
+  String get actorVendor;
+
+  /// No description provided for @actorClient.
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente'**
+  String get actorClient;
+
+  /// No description provided for @actorCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livreur'**
+  String get actorCourier;
+
+  /// No description provided for @actorAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM'**
+  String get actorAdmin;
+
+  /// No description provided for @actorSystem.
+  ///
+  /// In fr, this message translates to:
+  /// **'DYM'**
+  String get actorSystem;
 }
 
 class _DymLocalizationsDelegate
