@@ -21,11 +21,11 @@
 | 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
-| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | 🔵 En cours : 1 spec fusionnée, 2 en relecture, 1 à faire |
+| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | 🔵 En cours : 1 spec fusionnée, 2 en relecture, 1 reportée |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
 
-**Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain à faire · ⬜ à faire · ➖ remplacée.
+**Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
 Mis à jour à chaque spec (dernière mise à jour : 2026-11-10).
 
 Les gates des phases 6 à 13 se valident par une démonstration web au porteur produit, en simulation
@@ -160,7 +160,7 @@ en plus d'une heure.
 | `delivery-app` | App livreur, inscription, missions, acceptation | ✅ Spec 041 · PR #49 (app `dym_delivery`, même compte DYM, moyen et zones, en ligne, missions de ses zones, acceptation unique et limitée par pays, récupérée puis livrée par le livreur, coordonnées après acceptation) |
 | `delivery-routing` | Tournées multi-boutiques, code de remise, consignes de conservation | 🟡 Spec 042 · PR #50, en attente de relecture humaine (un achat multi-boutiques = une tournée, code à 4 chiffres de la cliente exigé à la remise, 5 essais, consignes par rayon ou par produit affichées au livreur) |
 | `delivery-cash` | Circuit du cash, gains en direct, retrait, point de recharge | 🟡 Spec 043 : code fait, en attente de relecture humaine (frais au wallet, cash dû à la boutique puis confirmé, code de recharge, retrait simulé ; écran de l'équipe : `ops-center`) |
-| `live-tracking` | Suivi en direct (GPS simulé), heure d'arrivée, score, bonus, zones | ⬜ À faire |
+| `live-tracking` | Suivi en direct (GPS simulé), heure d'arrivée, score, bonus, zones | ⏸️ Reportée (décision du porteur produit, 2026-11-10) : les étapes à cocher (acceptée, récupérée, remise par code) suffisent ; brouillon sur la branche `feat/044-live-tracking` (PR #52 fermée) |
 
 ## Phase 12 — Vendeuse
 
