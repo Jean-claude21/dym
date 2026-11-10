@@ -3956,4 +3956,175 @@ class DymLocalizationsEn extends DymLocalizations {
   String adminRemoveSynonym(String term) {
     return 'Remove $term';
   }
+
+  @override
+  String get shoppingTitle => 'My shopping';
+
+  @override
+  String get shoppingHomeTile => 'My shopping lists';
+
+  @override
+  String get shoppingHomeTileHint => 'Redo your shopping in one tap';
+
+  @override
+  String get shoppingIntro =>
+      'Nothing is ordered without you: the assistant builds the basket, you check it and add it to your cart.';
+
+  @override
+  String get shoppingEmpty =>
+      'No list yet. Create “Saturday shopping”, “Breakfast”… and the assistant will build your basket.';
+
+  @override
+  String get shoppingNew => 'New list';
+
+  @override
+  String get shoppingFromHabits => 'My usual list';
+
+  @override
+  String get shoppingFromHabitsHint => 'What you often buy';
+
+  @override
+  String get shoppingNoHabits =>
+      'No habits yet: you need to have ordered the same product at least twice.';
+
+  @override
+  String get shoppingDescribe => 'Describe my shopping';
+
+  @override
+  String get shoppingDescribeHint => 'E.g. the week for 4 people';
+
+  @override
+  String get shoppingDescribeAction => 'Suggest a list';
+
+  @override
+  String get shoppingAiUnavailable =>
+      'The assistant is not answering. You can create your list by hand.';
+
+  @override
+  String get shoppingAiNothing =>
+      'I found nothing to suggest. Try other words.';
+
+  @override
+  String shoppingItemsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shoppingNoRepeat => 'No reminder';
+
+  @override
+  String get shoppingEvery7 => 'Every week';
+
+  @override
+  String get shoppingEvery14 => 'Every 2 weeks';
+
+  @override
+  String get shoppingEvery30 => 'Every month';
+
+  @override
+  String shoppingNextOn(String date) {
+    return 'Next reminder: $date';
+  }
+
+  @override
+  String get shoppingOpen => 'Build my basket';
+
+  @override
+  String shoppingMore(String name) {
+    return 'More actions for $name';
+  }
+
+  @override
+  String get shoppingEdit => 'Edit';
+
+  @override
+  String get shoppingDelete => 'Delete';
+
+  @override
+  String shoppingDeleteConfirm(String name) {
+    return 'Delete “$name”?';
+  }
+
+  @override
+  String get shoppingDeleted => 'List deleted';
+
+  @override
+  String get shoppingEditTitle => 'My list';
+
+  @override
+  String get shoppingName => 'List name';
+
+  @override
+  String get shoppingNameHint => 'E.g. Saturday shopping';
+
+  @override
+  String get shoppingItemsTitle => 'Items';
+
+  @override
+  String get shoppingItemHint => 'Add an item (tomatoes, rice…)';
+
+  @override
+  String get shoppingAddItem => 'Add';
+
+  @override
+  String shoppingRemoveItem(String name) {
+    return 'Remove $name';
+  }
+
+  @override
+  String shoppingLess(String name) {
+    return 'One less: $name';
+  }
+
+  @override
+  String shoppingMoreQty(String name) {
+    return 'One more: $name';
+  }
+
+  @override
+  String get shoppingRepeatTitle => 'Remind me';
+
+  @override
+  String shoppingStartsOn(String date) {
+    return 'First reminder on $date';
+  }
+
+  @override
+  String get shoppingPickDate => 'Change the date';
+
+  @override
+  String get shoppingRepeatNote =>
+      'On the day, at 8 am, we let you know: you check and confirm.';
+
+  @override
+  String get shoppingSave => 'Save the list';
+
+  @override
+  String get shoppingSaved => 'List saved';
+
+  @override
+  String get shoppingErrorName => 'Give your list a name.';
+
+  @override
+  String get shoppingErrorItems => 'Add at least one item.';
+
+  @override
+  String get shoppingErrorTooMany => '20 lists at most: delete one.';
+
+  @override
+  String get shoppingErrorTooManyItems => '20 items at most per list.';
+
+  @override
+  String get notifShoppingDueTitle => 'Your shopping is ready';
+
+  @override
+  String notifShoppingDueBody(String name) {
+    return '“$name”: check and confirm your basket.';
+  }
 }

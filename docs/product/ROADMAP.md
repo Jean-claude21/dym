@@ -18,7 +18,7 @@
 | 5 · Scale | Remplacée par les phases 6 à 13 (décision 0015), sauf `phone-otp`, `new-country`, `admin-v2` | Sur déclencheur | — | ➖ Remplacée |
 | 6 · Assainissement | Corrections relevées, CI au vert | CI verte sur `dev`, parcours rejoués en web | ~5 h | ✅ Faite (spec 023) |
 | 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h | ✅ Faite (specs 024, 025) ; gate : démonstration web à faire |
-| 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | 🔵 En cours : 3 specs sur 4 |
+| 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ⬜ À faire |
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ⬜ À faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ⬜ À faire |
@@ -129,8 +129,8 @@ en plus d'une heure.
 |---|---|---|
 | `premium-foundation` | Squelettes, cache d'images, animations, onglet Panier, commande en un écran | ✅ Spec 026 · PR #33 |
 | `home-redesign` | Accueil « Qu'est-ce qu'on mange ? », fil personnel | ✅ Spec 027 · PR #35 |
-| `ai-search-ranking` | Compréhension, savoir (quantités, noms locaux), règles de classement réglables, explication | ✅ Spec 028 |
-| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence | ⬜ À faire |
+| `ai-search-ranking` | Compréhension, savoir (quantités, noms locaux), règles de classement réglables, explication | ✅ Spec 028 · PR #36 |
+| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence | ✅ Spec 029 (listes libres, liste habituelle, liste décrite à l'IA, panier composé en base, rappels à 8 h) |
 
 ## Phase 9 — Vie réelle
 

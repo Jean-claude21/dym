@@ -114,28 +114,33 @@ class CopilotViewModel extends BaseViewModel {
   }
 }
 
-/// Écran 73.
+/// Écran 73. Avec [title] (liste de courses, spec 029) : proposition lancée
+/// à l'ouverture, sans zone de saisie.
 class CopilotView extends StackedView<CopilotViewModel> {
   const new({
     required this.service,
     required this.onBack,
-    required this.onSearchMyself,
     required this.onAdded,
     super.key,
+    this.onSearchMyself,
     this.ai,
     this.initialText,
+    this.title,
   });
 
   final CopilotService service;
   final SearchAiService? ai;
   final VoidCallback onBack;
 
-  /// Recherche classique avec le texte de l'intention.
-  final ValueChanged<String> onSearchMyself;
+  /// Recherche classique avec le texte de l'intention ; absente : masquée.
+  final ValueChanged<String>? onSearchMyself;
 
   /// Tout est au panier : ouvrir le panier.
   final VoidCallback onAdded;
   final String? initialText;
+
+  /// Titre fixe (liste de courses) : ni bulle d'intention ni saisie.
+  final String? title;
 
   @override
   CopilotViewModel viewModelBuilder(BuildContext context) =>
@@ -179,13 +184,15 @@ class CopilotView extends StackedView<CopilotViewModel> {
                         ),
                         Expanded(
                           child: Text(
-                            l10n.copilotTitle,
+                            title ?? l10n.copilotTitle,
                             style: t.display.copyWith(fontSize: 26),
                           ),
                         ),
                       ],
                     ),
-                    if (vm.asked case final asked?)
+                    if (title != null)
+                      const SizedBox.shrink()
+                    else if (vm.asked case final asked?)
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -234,12 +241,15 @@ class CopilotView extends StackedView<CopilotViewModel> {
                                   : l10n.copilotUnavailable),
                       ),
                       const SizedBox(height: DymTokenSpace.s3),
-                      if (vm.asked case final asked?)
+                      if ((onSearchMyself, vm.asked) case (
+                        final search?,
+                        final asked?,
+                      ))
                         DymButton(
                           label: l10n.copilotSearchMyself,
                           icon: Icons.search_rounded,
                           variant: DymButtonVariant.secondary,
-                          onPressed: () => onSearchMyself(asked),
+                          onPressed: () => search(asked),
                         ),
                     ] else if (p != null)
                       _Proposal(vm: vm, proposal: p),
@@ -262,18 +272,20 @@ class CopilotView extends StackedView<CopilotViewModel> {
                                 if (await vm.addAll()) onAdded();
                               },
                       ),
-                      const SizedBox(height: DymTokenSpace.s2),
-                      DymButton(
-                        label: l10n.copilotSearchMyself,
-                        icon: Icons.search_rounded,
-                        variant: DymButtonVariant.secondary,
-                        onPressed: () => onSearchMyself(vm.asked ?? ''),
-                      ),
+                      if (onSearchMyself case final search?) ...[
+                        const SizedBox(height: DymTokenSpace.s2),
+                        DymButton(
+                          label: l10n.copilotSearchMyself,
+                          icon: Icons.search_rounded,
+                          variant: DymButtonVariant.secondary,
+                          onPressed: () => search(vm.asked ?? ''),
+                        ),
+                      ],
                     ],
                   ],
                 ),
               ),
-              _InputBar(vm: vm),
+              if (title == null) _InputBar(vm: vm),
             ],
           ),
         ),

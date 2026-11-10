@@ -6774,6 +6774,288 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Retirer {term}'**
   String adminRemoveSynonym(String term);
+
+  /// Titre de l'assistant de courses
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes courses'**
+  String get shoppingTitle;
+
+  /// Tuile de l'accueil
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes listes de courses'**
+  String get shoppingHomeTile;
+
+  /// Sous-titre de la tuile
+  ///
+  /// In fr, this message translates to:
+  /// **'Refais tes courses en un geste'**
+  String get shoppingHomeTileHint;
+
+  /// Promesse de validation
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien n\'est commandé sans toi : l\'assistant compose, tu vérifies et tu ajoutes au panier.'**
+  String get shoppingIntro;
+
+  /// État vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de liste. Crée « Courses du samedi », « Petit-déjeuner »… et l\'assistant composera ton panier.'**
+  String get shoppingEmpty;
+
+  /// Créer une liste
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle liste'**
+  String get shoppingNew;
+
+  /// Liste depuis les habitudes
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma liste habituelle'**
+  String get shoppingFromHabits;
+
+  /// Sous-titre habitudes
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce que tu achètes souvent'**
+  String get shoppingFromHabitsHint;
+
+  /// Aucune habitude
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore d\'habitudes : il faut avoir commandé au moins deux fois le même produit.'**
+  String get shoppingNoHabits;
+
+  /// Liste proposée par l'IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Décrire mes courses'**
+  String get shoppingDescribe;
+
+  /// Exemple de description
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. la semaine pour 4 personnes'**
+  String get shoppingDescribeHint;
+
+  /// Bouton de l'IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Proposer une liste'**
+  String get shoppingDescribeAction;
+
+  /// IA indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'assistant ne répond pas. Tu peux créer ta liste à la main.'**
+  String get shoppingAiUnavailable;
+
+  /// IA sans résultat
+  ///
+  /// In fr, this message translates to:
+  /// **'Je n\'ai rien trouvé à proposer. Essaie avec d\'autres mots.'**
+  String get shoppingAiNothing;
+
+  /// Nombre d'articles
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 article} other{{count} articles}}'**
+  String shoppingItemsCount(int count);
+
+  /// Sans récurrence
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de rappel'**
+  String get shoppingNoRepeat;
+
+  /// Récurrence 7 jours
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque semaine'**
+  String get shoppingEvery7;
+
+  /// Récurrence 14 jours
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes les 2 semaines'**
+  String get shoppingEvery14;
+
+  /// Récurrence 30 jours
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque mois'**
+  String get shoppingEvery30;
+
+  /// Date du prochain rappel
+  ///
+  /// In fr, this message translates to:
+  /// **'Prochain rappel : {date}'**
+  String shoppingNextOn(String date);
+
+  /// Ouvrir la proposition
+  ///
+  /// In fr, this message translates to:
+  /// **'Composer mon panier'**
+  String get shoppingOpen;
+
+  /// Menu d'une liste
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'actions pour {name}'**
+  String shoppingMore(String name);
+
+  /// Modifier une liste
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier'**
+  String get shoppingEdit;
+
+  /// Supprimer une liste
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get shoppingDelete;
+
+  /// Confirmation de suppression
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » ?'**
+  String shoppingDeleteConfirm(String name);
+
+  /// Après suppression
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste supprimée'**
+  String get shoppingDeleted;
+
+  /// Titre de l'édition
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma liste'**
+  String get shoppingEditTitle;
+
+  /// Champ nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la liste'**
+  String get shoppingName;
+
+  /// Exemple de nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. Courses du samedi'**
+  String get shoppingNameHint;
+
+  /// Titre des articles
+  ///
+  /// In fr, this message translates to:
+  /// **'Articles'**
+  String get shoppingItemsTitle;
+
+  /// Champ d'ajout
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un article (tomates, riz…)'**
+  String get shoppingItemHint;
+
+  /// Bouton ajouter un article
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter'**
+  String get shoppingAddItem;
+
+  /// Retirer un article
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {name}'**
+  String shoppingRemoveItem(String name);
+
+  /// Diminuer la quantité
+  ///
+  /// In fr, this message translates to:
+  /// **'Un de moins : {name}'**
+  String shoppingLess(String name);
+
+  /// Augmenter la quantité
+  ///
+  /// In fr, this message translates to:
+  /// **'Un de plus : {name}'**
+  String shoppingMoreQty(String name);
+
+  /// Titre de la récurrence
+  ///
+  /// In fr, this message translates to:
+  /// **'Me rappeler'**
+  String get shoppingRepeatTitle;
+
+  /// Date du premier rappel
+  ///
+  /// In fr, this message translates to:
+  /// **'Premier rappel le {date}'**
+  String shoppingStartsOn(String date);
+
+  /// Choisir la date
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer la date'**
+  String get shoppingPickDate;
+
+  /// Explication du rappel
+  ///
+  /// In fr, this message translates to:
+  /// **'Le jour venu, à 8 h, on te prévient : tu vérifies et tu valides.'**
+  String get shoppingRepeatNote;
+
+  /// Enregistrer
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer la liste'**
+  String get shoppingSave;
+
+  /// Après enregistrement
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste enregistrée'**
+  String get shoppingSaved;
+
+  /// Nom manquant
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à ta liste.'**
+  String get shoppingErrorName;
+
+  /// Liste vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute au moins un article.'**
+  String get shoppingErrorItems;
+
+  /// Trop de listes
+  ///
+  /// In fr, this message translates to:
+  /// **'20 listes au plus : supprimes-en une.'**
+  String get shoppingErrorTooMany;
+
+  /// Trop d'articles
+  ///
+  /// In fr, this message translates to:
+  /// **'20 articles au plus par liste.'**
+  String get shoppingErrorTooManyItems;
+
+  /// Notification de rappel
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes courses sont prêtes'**
+  String get notifShoppingDueTitle;
+
+  /// Notification de rappel
+  ///
+  /// In fr, this message translates to:
+  /// **'« {name} » : vérifie et valide ton panier.'**
+  String notifShoppingDueBody(String name);
 }
 
 class _DymLocalizationsDelegate

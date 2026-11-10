@@ -120,6 +120,13 @@ class _Navigator implements AppNavigator {
 
   @override
   void toWallet() => routes.add('wallet');
+
+  @override
+  void toShoppingLists() => routes.add('shopping');
+
+  @override
+  Future<void> toShoppingList(String listId) async =>
+      routes.add('shopping:$listId');
 }
 
 DymEnvironment _env(String name) => DymEnvironment.resolve(

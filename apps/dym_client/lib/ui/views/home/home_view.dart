@@ -142,6 +142,7 @@ class _HomeViewState extends State<HomeView> {
             onOpenAisle: _navigator.toAisle,
             onOpenProduct: _navigator.toProduct,
             onReorder: _reorder,
+            onShoppingLists: _navigator.toShoppingLists,
             stories: switch (_content) {
               final content? => StoriesRow(
                 service: content,

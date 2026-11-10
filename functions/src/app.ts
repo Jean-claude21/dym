@@ -11,6 +11,7 @@ import { dispatchPushes, type PushQueue, type PushSender } from "./notifications
 import { httpErrors, toHttpError } from "./lib/errors.js";
 import type { ErrorReporter } from "./lib/report.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
+import { registerShoppingReminders, type ShoppingReminders } from "./shopping/reminders.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
@@ -37,6 +38,8 @@ export interface AppDeps {
   /** Admin des opérations (spec 013). */
   admin?: AdminStore;
   recaps?: VendorRecaps;
+  /** Rappels des courses récurrentes (spec 029). */
+  shoppingReminders?: ShoppingReminders;
   /** Messagerie (spec 015). */
   messaging?: MessagingDeps;
   /** Avis (spec 016). */
@@ -107,6 +110,7 @@ export function createApp(deps: AppDeps) {
   registerDisputeRoutes(app, deps.verifyToken, deps.disputes);
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
+  registerShoppingReminders(app, deps.shoppingReminders);
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);

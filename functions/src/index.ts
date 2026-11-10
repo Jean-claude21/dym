@@ -31,6 +31,7 @@ import {
 } from "./search/adapters.js";
 import { aiIntentPlanner, openAiPlannerProviders, pgCopilotStore } from "./copilot/routes.js";
 import { pgBroadcastStore } from "./broadcast/routes.js";
+import { pgShoppingReminders } from "./shopping/reminders.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -70,6 +71,7 @@ export default createApp({
   disputes: pgDisputeStore(pool),
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
+  shoppingReminders: pgShoppingReminders(pool),
   reviews: pgReviewStore(pool),
   searchAi: {
     store: pgSearchAiStore(pool),

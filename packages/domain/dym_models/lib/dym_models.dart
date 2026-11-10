@@ -19,5 +19,6 @@ export 'src/reference/country_config.dart';
 export 'src/reference/reference_models.dart';
 export 'src/search/copilot_models.dart';
 export 'src/search/search_ai_models.dart';
+export 'src/search/shopping_models.dart';
 export 'src/store/store_models.dart';
 export 'src/wallet/wallet_models.dart';
