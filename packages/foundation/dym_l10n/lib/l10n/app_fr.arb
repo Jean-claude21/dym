@@ -5981,5 +5981,172 @@
         "type": "String"
       }
     }
+  },
+  "adjustTitle": "Remplacements et fraîcheur",
+  "@adjustTitle": {
+    "description": "Titre du panneau"
+  },
+  "adjustProposed": "{item} manque : la vendeuse propose {proposed}, même prix.",
+  "@adjustProposed": {
+    "description": "Proposition",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "proposed": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustAccepted": "{item} remplacé par {proposed}.",
+  "@adjustAccepted": {
+    "description": "Accepté",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "proposed": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustRefused": "{item} retiré : {amount} rendus sur ton wallet.",
+  "@adjustRefused": {
+    "description": "Refusé",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustFreshness": "{item} pas frais : {amount} rendus sur ton wallet.",
+  "@adjustFreshness": {
+    "description": "Fraîcheur",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustAccept": "Accepter",
+  "@adjustAccept": {
+    "description": "Bouton"
+  },
+  "adjustRefuse": "Refuser et être remboursée",
+  "@adjustRefuse": {
+    "description": "Bouton"
+  },
+  "adjustCreditedNow": "{amount} sont déjà sur ton wallet.",
+  "@adjustCreditedNow": {
+    "description": "Après crédit",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "freshnessClaim": "Un article n'est pas frais ?",
+  "@freshnessClaim": {
+    "description": "Bouton garantie"
+  },
+  "freshnessHint": "Garantie fraîcheur : envoie une photo, tu es remboursée tout de suite sur ton wallet.",
+  "@freshnessHint": {
+    "description": "Explication"
+  },
+  "freshnessWhich": "Quel article ?",
+  "@freshnessWhich": {
+    "description": "Choix de la ligne"
+  },
+  "freshnessWindowClosed": "Le délai de la garantie est passé : utilise « Signaler un problème ».",
+  "@freshnessWindowClosed": {
+    "description": "Délai dépassé"
+  },
+  "freshnessLimitReached": "Limite du mois atteinte : utilise « Signaler un problème », l'équipe regarde.",
+  "@freshnessLimitReached": {
+    "description": "Limite"
+  },
+  "freshnessAlreadyCredited": "Cet article a déjà été remboursé.",
+  "@freshnessAlreadyCredited": {
+    "description": "Déjà rendu"
+  },
+  "notifSubstitutionTitle": "Un remplacement est proposé",
+  "@notifSubstitutionTitle": {
+    "description": "Notification"
+  },
+  "notifSubstitutionBody": "{item} manque : la vendeuse propose {proposed}.",
+  "@notifSubstitutionBody": {
+    "description": "Notification",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "proposed": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorSubstituteTitle": "Un article manque ?",
+  "@vendorSubstituteTitle": {
+    "description": "Titre vendeuse"
+  },
+  "vendorSubstituteHint": "Propose un autre produit avec une photo : même quantité, même prix. La cliente valide.",
+  "@vendorSubstituteHint": {
+    "description": "Aide"
+  },
+  "vendorSubstitute": "Remplacer {item}",
+  "@vendorSubstitute": {
+    "description": "Bouton",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorSubstituteLine": "{item} → {proposed}",
+  "@vendorSubstituteLine": {
+    "description": "Ligne",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      },
+      "proposed": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorSubstituteWaiting": "En attente de la cliente",
+  "@vendorSubstituteWaiting": {
+    "description": "Statut"
+  },
+  "vendorSubstituteAccepted": "Acceptée",
+  "@vendorSubstituteAccepted": {
+    "description": "Statut"
+  },
+  "vendorSubstituteRefunded": "Remboursée à la cliente",
+  "@vendorSubstituteRefunded": {
+    "description": "Statut"
+  },
+  "vendorFreshnessClaimed": "{item} signalé pas frais",
+  "@vendorFreshnessClaimed": {
+    "description": "Réclamation",
+    "placeholders": {
+      "item": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorSubstituteNone": "Aucun autre produit disponible dans ta boutique.",
+  "@vendorSubstituteNone": {
+    "description": "Vide"
+  },
+  "vendorSubstituteNote": "Un mot pour la cliente (facultatif)",
+  "@vendorSubstituteNote": {
+    "description": "Champ"
   }
 }

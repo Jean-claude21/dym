@@ -25,6 +25,7 @@ import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/features/favorites/favorites_service.dart';
 import 'package:dym_client/features/favorites/favorites_views.dart';
+import 'package:dym_client/features/orders/adjustments_view.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
@@ -417,6 +418,9 @@ class StackedAppNavigator implements AppNavigator {
       onDispute: _toDispute,
       onReview: _toReview,
       onReordered: toCart,
+      adjustments: locator.isRegistered<AdjustmentsService>()
+          ? locator<AdjustmentsService>()
+          : null,
     ),
   );
 

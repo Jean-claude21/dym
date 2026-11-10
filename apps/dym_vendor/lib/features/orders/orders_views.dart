@@ -5,6 +5,7 @@ import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_viewmodels.dart';
 import 'package:flutter/material.dart';
@@ -335,7 +336,11 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
     required this.orderId,
     required this.onBack,
     super.key,
+    this.adjustments,
   });
+
+  /// Remplacement validé par photo (spec 034) ; absent : masqué.
+  final VendorAdjustmentsService? adjustments;
 
   final OrdersService service;
   final String orderId;
@@ -645,6 +650,12 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
             ),
           ),
       ]),
+      if (adjustments case final service?)
+        VendorAdjustmentsPanel(
+          key: ValueKey('adjust-${order.id}-${order.status.name}'),
+          service: service,
+          order: order,
+        ),
       const SizedBox(height: DymTokenSpace.s3),
       card(l10n.vendorPayment, [
         row(

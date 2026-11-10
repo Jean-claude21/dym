@@ -100,6 +100,13 @@ String timeAgo(DymLocalizations l10n, DateTime at, DateTime now) {
         n.param('space_name') ?? '',
       ),
     ),
+    'substitution_proposed' => (
+      l10n.notifSubstitutionTitle,
+      l10n.notifSubstitutionBody(
+        n.param('item_name') ?? '',
+        n.param('proposed_name') ?? '',
+      ),
+    ),
     'shopping_list_due' => (
       l10n.notifShoppingDueTitle,
       l10n.notifShoppingDueBody(n.param('list_name') ?? ''),
@@ -123,5 +130,6 @@ IconData notificationIcon(String kind) => switch (kind) {
   'store_broadcast' => Icons.campaign_rounded,
   'shopping_list_due' => Icons.checklist_rounded,
   'space_validated' => Icons.groups_rounded,
+  'substitution_proposed' => Icons.swap_horiz_rounded,
   _ => Icons.notifications_rounded,
 };

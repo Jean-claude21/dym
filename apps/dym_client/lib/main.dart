@@ -10,6 +10,7 @@ import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/favorites/favorites_service.dart';
+import 'package:dym_client/features/orders/adjustments_view.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/shopping/shopping_service.dart';
 import 'package:dym_client/features/spaces/spaces_service.dart';
@@ -150,6 +151,16 @@ Future<void> configureServices(DymEnvironment environment) async {
         photos: PluginPhotoPicker(),
         productPhoto: (key) =>
             dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerLazySingleton<AdjustmentsService>(
+      () => NeonAdjustmentsService(
+        repository: OrderAdjustmentRepository(
+          data: neon.data,
+          functions: neon.functions,
+          uploads: neon.uploads,
+        ),
+        photos: PluginPhotoPicker(),
       ),
     )
     ..registerLazySingleton<SpacesService>(

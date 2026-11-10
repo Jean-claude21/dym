@@ -7698,6 +7698,162 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'À livrer {day}, {start}–{end}'**
   String vendorOrderScheduled(String day, String start, String end);
+
+  /// Titre du panneau
+  ///
+  /// In fr, this message translates to:
+  /// **'Remplacements et fraîcheur'**
+  String get adjustTitle;
+
+  /// Proposition
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} manque : la vendeuse propose {proposed}, même prix.'**
+  String adjustProposed(String item, String proposed);
+
+  /// Accepté
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} remplacé par {proposed}.'**
+  String adjustAccepted(String item, String proposed);
+
+  /// Refusé
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} retiré : {amount} rendus sur ton wallet.'**
+  String adjustRefused(String item, String amount);
+
+  /// Fraîcheur
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} pas frais : {amount} rendus sur ton wallet.'**
+  String adjustFreshness(String item, String amount);
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter'**
+  String get adjustAccept;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser et être remboursée'**
+  String get adjustRefuse;
+
+  /// Après crédit
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} sont déjà sur ton wallet.'**
+  String adjustCreditedNow(String amount);
+
+  /// Bouton garantie
+  ///
+  /// In fr, this message translates to:
+  /// **'Un article n\'est pas frais ?'**
+  String get freshnessClaim;
+
+  /// Explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Garantie fraîcheur : envoie une photo, tu es remboursée tout de suite sur ton wallet.'**
+  String get freshnessHint;
+
+  /// Choix de la ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel article ?'**
+  String get freshnessWhich;
+
+  /// Délai dépassé
+  ///
+  /// In fr, this message translates to:
+  /// **'Le délai de la garantie est passé : utilise « Signaler un problème ».'**
+  String get freshnessWindowClosed;
+
+  /// Limite
+  ///
+  /// In fr, this message translates to:
+  /// **'Limite du mois atteinte : utilise « Signaler un problème », l\'équipe regarde.'**
+  String get freshnessLimitReached;
+
+  /// Déjà rendu
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet article a déjà été remboursé.'**
+  String get freshnessAlreadyCredited;
+
+  /// Notification
+  ///
+  /// In fr, this message translates to:
+  /// **'Un remplacement est proposé'**
+  String get notifSubstitutionTitle;
+
+  /// Notification
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} manque : la vendeuse propose {proposed}.'**
+  String notifSubstitutionBody(String item, String proposed);
+
+  /// Titre vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Un article manque ?'**
+  String get vendorSubstituteTitle;
+
+  /// Aide
+  ///
+  /// In fr, this message translates to:
+  /// **'Propose un autre produit avec une photo : même quantité, même prix. La cliente valide.'**
+  String get vendorSubstituteHint;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Remplacer {item}'**
+  String vendorSubstitute(String item);
+
+  /// Ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} → {proposed}'**
+  String vendorSubstituteLine(String item, String proposed);
+
+  /// Statut
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de la cliente'**
+  String get vendorSubstituteWaiting;
+
+  /// Statut
+  ///
+  /// In fr, this message translates to:
+  /// **'Acceptée'**
+  String get vendorSubstituteAccepted;
+
+  /// Statut
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursée à la cliente'**
+  String get vendorSubstituteRefunded;
+
+  /// Réclamation
+  ///
+  /// In fr, this message translates to:
+  /// **'{item} signalé pas frais'**
+  String vendorFreshnessClaimed(String item);
+
+  /// Vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun autre produit disponible dans ta boutique.'**
+  String get vendorSubstituteNone;
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Un mot pour la cliente (facultatif)'**
+  String get vendorSubstituteNote;
 }
 
 class _DymLocalizationsDelegate

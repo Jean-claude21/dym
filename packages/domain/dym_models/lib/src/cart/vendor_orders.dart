@@ -1,3 +1,4 @@
+import 'package:dym_models/src/cart/adjustment_models.dart';
 import 'package:dym_models/src/cart/cart_models.dart';
 import 'package:dym_models/src/cart/order_tracking.dart';
 import 'package:dym_models/src/json.dart';
@@ -83,6 +84,7 @@ class VendorOrder {
     this.etaAt,
     this.scheduledStart,
     this.scheduledEnd,
+    this.adjustments = const [],
     this.acceptedAt,
     this.deliveredAt,
     this.cashCollectedAt,
@@ -125,6 +127,10 @@ class VendorOrder {
   /// Créneau choisi (spec 033).
   final DateTime? scheduledStart;
   final DateTime? scheduledEnd;
+
+  /// Remplacements et garantie fraîcheur (spec 034).
+  @JsonKey(fromJson: adjustmentsFromJson)
+  final List<OrderAdjustment> adjustments;
   final DateTime? acceptedAt;
   final DateTime? deliveredAt;
   final DateTime? cashCollectedAt;

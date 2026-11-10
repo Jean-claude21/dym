@@ -57,3 +57,4 @@ fiabilité (ops).
 | `space_created` (budget : oui/non), `space_joined`, `space_validated` (articles, montant) | Serveur | Espaces (spec 031) |
 | `space_contributed` (montant), `space_funded` (montant) | Serveur | Argent des espaces (spec 032) |
 | `order_scheduled` (jours d'avance, précommande), `product_arrival_set` (jours d'avance) | Serveur | Précommande et créneaux (spec 033) |
+| `substitution_proposed`, `substitution_answered` (accepté), `freshness_claimed` (montant) | Serveur | Remplacement et fraîcheur (spec 034) |

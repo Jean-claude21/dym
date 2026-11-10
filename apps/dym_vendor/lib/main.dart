@@ -12,6 +12,7 @@ import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
+import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
@@ -133,6 +134,17 @@ Future<void> configureServices(DymEnvironment environment) async {
         photos: PluginPhotoPicker(),
         productPhoto: (key) =>
             dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerLazySingleton<VendorAdjustmentsService>(
+      () => NeonVendorAdjustmentsService(
+        repository: OrderAdjustmentRepository(
+          data: neon.data,
+          functions: neon.functions,
+          uploads: neon.uploads,
+        ),
+        photos: PluginPhotoPicker(),
+        products: () => locator<CatalogService>().products(),
       ),
     )
     ..registerSingleton<OrdersService>(
