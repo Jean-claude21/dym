@@ -215,6 +215,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         wallet: WalletRepository(neon.data),
         reference: reference,
         auth: auth,
+        qr: QrPaymentRepository(neon.data),
       ),
     )
     ..registerLazySingleton<CartService>(

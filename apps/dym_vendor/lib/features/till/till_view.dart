@@ -22,6 +22,7 @@ String tillMethodLabel(DymLocalizations l10n, TillMethod m) => switch (m) {
   TillMethod.cash => l10n.tillMethodCash,
   TillMethod.mobileMoney => l10n.tillMethodMobileMoney,
   TillMethod.other => l10n.tillMethodOther,
+  TillMethod.dym => l10n.tillMethodDym,
 };
 
 class TillViewModel extends BaseViewModel {
@@ -167,10 +168,18 @@ class TillViewModel extends BaseViewModel {
 /// « Ma caisse » : jour (en app, hors app, par moyen), solde, versements,
 /// ventes hors app à la main ou à la voix.
 class TillView extends StackedView<TillViewModel> {
-  const new({required this.service, required this.onBack, super.key});
+  const new({
+    required this.service,
+    required this.onBack,
+    super.key,
+    this.onQr,
+  });
 
   final TillService service;
   final VoidCallback onBack;
+
+  /// Encaisser par QR (spec 046) ; la caisse est relue au retour.
+  final Future<void> Function()? onQr;
 
   @override
   TillViewModel viewModelBuilder(BuildContext context) =>
@@ -274,6 +283,19 @@ class TillView extends StackedView<TillViewModel> {
                           ),
                         ),
                       ),
+                    if (onQr case final qr?) ...[
+                      const SizedBox(height: DymTokenSpace.s3),
+                      DymContentWidth(
+                        child: DymButton(
+                          label: l10n.qrChargeTitle,
+                          icon: Icons.qr_code_rounded,
+                          onPressed: () async {
+                            await qr();
+                            await vm.load();
+                          },
+                        ),
+                      ),
+                    ],
                     const SizedBox(height: DymTokenSpace.s4),
                     DymContentWidth(
                       child: _Tile(
@@ -507,7 +529,7 @@ class _SaleSheetState extends State<_SaleSheet> {
             Wrap(
               spacing: DymTokenSpace.s2,
               children: [
-                for (final m in TillMethod.values)
+                for (final m in TillMethod.manual)
                   ChoiceChip(
                     label: Text(tillMethodLabel(l10n, m)),
                     selected: _method == m,

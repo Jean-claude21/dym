@@ -9150,6 +9150,138 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'DYM'**
   String get actorSystem;
+
+  /// No description provided for @tillMethodDym.
+  ///
+  /// In fr, this message translates to:
+  /// **'Wallet DYM (QR)'**
+  String get tillMethodDym;
+
+  /// No description provided for @qrChargeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaisser par QR'**
+  String get qrChargeTitle;
+
+  /// No description provided for @qrChargeHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente scanne le QR (ou tape le code) et paie depuis son wallet DYM.'**
+  String get qrChargeHint;
+
+  /// No description provided for @qrChargeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Libellé (facultatif)'**
+  String get qrChargeLabel;
+
+  /// No description provided for @qrChargeShow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher le QR'**
+  String get qrChargeShow;
+
+  /// No description provided for @qrChargeCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code à taper'**
+  String get qrChargeCode;
+
+  /// No description provided for @qrChargeWaiting.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente du paiement… (valable 10 minutes)'**
+  String get qrChargeWaiting;
+
+  /// No description provided for @qrChargeCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get qrChargeCancel;
+
+  /// No description provided for @qrChargePaid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payé !'**
+  String get qrChargePaid;
+
+  /// No description provided for @qrChargeExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demande expirée ou annulée.'**
+  String get qrChargeExpired;
+
+  /// No description provided for @qrChargeAnother.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvel encaissement'**
+  String get qrChargeAnother;
+
+  /// No description provided for @walletQrPay.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer par QR'**
+  String get walletQrPay;
+
+  /// No description provided for @qrPayTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer par QR'**
+  String get qrPayTitle;
+
+  /// No description provided for @qrPayHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanne le QR de la vendeuse, ou tape son code à 6 chiffres.'**
+  String get qrPayHint;
+
+  /// No description provided for @qrPayCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de la vendeuse'**
+  String get qrPayCode;
+
+  /// No description provided for @qrPayContinue.
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get qrPayContinue;
+
+  /// No description provided for @qrPayConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer {amount}'**
+  String qrPayConfirm(String amount);
+
+  /// No description provided for @qrPayDone.
+  ///
+  /// In fr, this message translates to:
+  /// **'{amount} payés à {store}.'**
+  String qrPayDone(String amount, String store);
+
+  /// No description provided for @qrPayClose.
+  ///
+  /// In fr, this message translates to:
+  /// **'Terminer'**
+  String get qrPayClose;
+
+  /// No description provided for @qrPayInvalidCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code inconnu, expiré ou déjà payé.'**
+  String get qrPayInvalidCode;
+
+  /// No description provided for @qrPayOwnStore.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est ta propre boutique.'**
+  String get qrPayOwnStore;
+
+  /// No description provided for @qrPayCurrency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette boutique n\'est pas dans ton pays.'**
+  String get qrPayCurrency;
 }
 
 class _DymLocalizationsDelegate

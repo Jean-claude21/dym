@@ -21,6 +21,7 @@ import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart'
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
+import 'package:dym_vendor/features/till/qr_charge_view.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:dym_vendor/features/till/till_view.dart';
 import 'package:flutter/material.dart';
@@ -167,6 +168,14 @@ class StackedAppNavigator implements AppNavigator {
         builder: (_) => TillView(
           service: locator<TillService>(),
           onBack: () => _navigator.pop(),
+          onQr: () async => await _navigator.push<void>(
+            MaterialPageRoute(
+              builder: (route) => QrChargeView(
+                service: locator<TillService>(),
+                onDone: () => Navigator.of(route).pop(),
+              ),
+            ),
+          ),
         ),
       ),
     );

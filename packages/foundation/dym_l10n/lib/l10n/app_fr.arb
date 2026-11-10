@@ -6663,5 +6663,44 @@
   "actorClient": "La cliente",
   "actorCourier": "Le livreur",
   "actorAdmin": "L'équipe DYM",
-  "actorSystem": "DYM"
+  "actorSystem": "DYM",
+  "tillMethodDym": "Wallet DYM (QR)",
+  "qrChargeTitle": "Encaisser par QR",
+  "qrChargeHint": "La cliente scanne le QR (ou tape le code) et paie depuis son wallet DYM.",
+  "qrChargeLabel": "Libellé (facultatif)",
+  "qrChargeShow": "Afficher le QR",
+  "qrChargeCode": "Code à taper",
+  "qrChargeWaiting": "En attente du paiement… (valable 10 minutes)",
+  "qrChargeCancel": "Annuler",
+  "qrChargePaid": "Payé !",
+  "qrChargeExpired": "Demande expirée ou annulée.",
+  "qrChargeAnother": "Nouvel encaissement",
+  "walletQrPay": "Payer par QR",
+  "qrPayTitle": "Payer par QR",
+  "qrPayHint": "Scanne le QR de la vendeuse, ou tape son code à 6 chiffres.",
+  "qrPayCode": "Code de la vendeuse",
+  "qrPayContinue": "Continuer",
+  "qrPayConfirm": "Payer {amount}",
+  "@qrPayConfirm": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "qrPayDone": "{amount} payés à {store}.",
+  "@qrPayDone": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "qrPayClose": "Terminer",
+  "qrPayInvalidCode": "Code inconnu, expiré ou déjà payé.",
+  "qrPayOwnStore": "C'est ta propre boutique.",
+  "qrPayCurrency": "Cette boutique n'est pas dans ton pays."
 }

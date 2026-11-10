@@ -14,6 +14,11 @@ abstract interface class WalletService {
 
   /// Code de recharge en cash auprès d'un livreur.
   Future<Result<({String code, DateTime expiresAt})>> cashTopupCode();
+
+  /// Paiement par QR (spec 046) : ce qui sera payé, puis le paiement.
+  Future<Result<PaymentRequest>> qrPreview(String code);
+
+  Future<Result<PaymentRequest>> qrPay(String code);
   Future<Result<Wallet>> createPocket({
     required String name,
     int? goalMinor,
@@ -30,10 +35,16 @@ abstract interface class WalletService {
 /// Implémentation Neon. Une clé d'idempotence est gardée tant que l'écriture
 /// n'a pas abouti : un nouvel essai après coupure ne crée pas de doublon.
 class NeonWalletService implements WalletService {
-  new({required this._wallet, required this._reference, required this._auth});
+  new({
+    required this._wallet,
+    required this._reference,
+    required this._auth,
+    required this._qr,
+  });
 
   final WalletRepository _wallet;
   final ReferenceRepository _reference;
+  final QrPaymentRepository _qr;
   final AuthService _auth;
   CountryConfig? _config;
   String? _pendingKey;
@@ -65,6 +76,13 @@ class NeonWalletService implements WalletService {
       _wallet.cashTopupCode();
 
   @override
+  Future<Result<PaymentRequest>> qrPreview(String code) => _qr.preview(code);
+
+  @override
+  Future<Result<PaymentRequest>> qrPay(String code) =>
+      _keyed((key) => _qr.pay(code, key: key));
+
+  @override
   Future<Result<Wallet>> createPocket({
     required String name,
     int? goalMinor,
@@ -92,8 +110,8 @@ class NeonWalletService implements WalletService {
   @override
   Future<Result<Wallet>> archivePocket(String id) => _wallet.archivePocket(id);
 
-  Future<Result<Wallet>> _keyed(
-    Future<Result<Wallet>> Function(String key) write,
+  Future<Result<T>> _keyed<T>(
+    Future<Result<T>> Function(String key) write,
   ) async {
     final key = _pendingKey ??= Uuid.v4();
     final result = await write(key);

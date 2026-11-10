@@ -29,17 +29,30 @@ abstract interface class TillService {
   Future<Result<Till>> voidSale(TillSale sale);
 
   Future<Result<Till>> payout(int amountMinor);
+
+  /// Encaissement par QR (spec 046).
+  Future<Result<PaymentRequest>> requestPayment(
+    int amountMinor, {
+    String? label,
+  });
+
+  Future<Result<PaymentRequest>> requestStatus(PaymentRequest request);
+
+  Future<Result<PaymentRequest>> cancelRequest(PaymentRequest request);
 }
 
 class NeonTillService implements TillService {
   new({
     required this._till,
+    required this._qr,
     required this._search,
     required this.recorder,
     required this._config,
   });
 
   final TillRepository _till;
+  final QrPaymentRepository _qr;
+  String? _requestKey;
   final SearchAiRepository _search;
   final Future<Result<CountryConfig>> Function() _config;
   String? _saleKey;
@@ -94,6 +107,29 @@ class NeonTillService implements TillService {
 
   @override
   Future<Result<Till>> voidSale(TillSale sale) => _till.voidSale(sale.id);
+
+  @override
+  Future<Result<PaymentRequest>> requestPayment(
+    int amountMinor, {
+    String? label,
+  }) async {
+    final key = _requestKey ??= Uuid.v4();
+    final result = await _qr.create(
+      amountMinor: amountMinor,
+      key: key,
+      label: label,
+    );
+    if (result.failureOrNull is! NetworkFailure) _requestKey = null;
+    return result;
+  }
+
+  @override
+  Future<Result<PaymentRequest>> requestStatus(PaymentRequest request) =>
+      _qr.status(request.id);
+
+  @override
+  Future<Result<PaymentRequest>> cancelRequest(PaymentRequest request) =>
+      _qr.cancel(request.id);
 
   @override
   Future<Result<Till>> payout(int amountMinor) async {

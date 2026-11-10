@@ -5,17 +5,25 @@ import 'package:meta/meta.dart';
 enum TillMethod {
   cash,
   mobileMoney,
-  other;
+  other,
+
+  /// Payée par QR depuis le wallet DYM (spec 046) : jamais saisie.
+  dym;
 
   String get code => switch (this) {
     cash => 'cash',
     mobileMoney => 'mobile_money',
     other => 'other',
+    dym => 'dym',
   };
+
+  /// Moyens d'une vente saisie à la main.
+  static const List<TillMethod> manual = [cash, mobileMoney, other];
 
   static TillMethod parse(Object? value) => switch (value) {
     'mobile_money' => mobileMoney,
     'other' => other,
+    'dym' => dym,
     _ => cash,
   };
 }
@@ -140,4 +148,58 @@ class TillDraft {
 
   /// Produit de la boutique reconnu (stock décompté).
   final String? variantId;
+}
+
+/// État d'une demande de paiement par QR.
+enum PaymentRequestStatus {
+  open,
+  paid,
+  expired,
+  cancelled;
+
+  static PaymentRequestStatus parse(Object? value) => switch (value) {
+    'paid' => paid,
+    'expired' => expired,
+    'cancelled' => cancelled,
+    _ => open,
+  };
+}
+
+/// Demande de paiement par QR (spec 046). [code] et [qr] : côté vendeuse
+/// seulement.
+@immutable
+class PaymentRequest {
+  const new({
+    required this.id,
+    required this.amountMinor,
+    required this.currencyCode,
+    required this.status,
+    required this.expiresAt,
+    required this.storeName,
+    this.code,
+    this.qr,
+    this.label,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => PaymentRequest(
+    id: json['id']! as String,
+    code: json['code'] as String?,
+    qr: json['qr'] as String?,
+    amountMinor: minorFromJson(json['amount_minor']),
+    currencyCode: json['currency_code']! as String,
+    label: json['label'] as String?,
+    status: PaymentRequestStatus.parse(json['status']),
+    expiresAt: DateTime.parse(json['expires_at']! as String),
+    storeName: json['store_name']! as String,
+  );
+
+  final String id;
+  final String? code;
+  final String? qr;
+  final int amountMinor;
+  final String currencyCode;
+  final String? label;
+  final PaymentRequestStatus status;
+  final DateTime expiresAt;
+  final String storeName;
 }

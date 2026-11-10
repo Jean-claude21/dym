@@ -5,6 +5,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:dym_vendor/features/till/qr_charge_view.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:dym_vendor/features/till/till_view.dart';
 import 'package:flutter/material.dart';
@@ -111,6 +112,46 @@ class _Till implements TillService {
   @override
   Future<Result<Till>> voidSale(TillSale sale) async => Ok(state);
 
+  PaymentRequest? request;
+
+  @override
+  Future<Result<PaymentRequest>> requestPayment(
+    int amountMinor, {
+    String? label,
+  }) async => Ok(
+    request = PaymentRequest(
+      id: 'r1',
+      code: '123456',
+      qr: 'DYM-PAY:123456',
+      amountMinor: amountMinor,
+      currencyCode: 'XOF',
+      status: PaymentRequestStatus.open,
+      expiresAt: DateTime(2026, 11, 10, 10, 10),
+      storeName: 'Étal de Kodjo',
+    ),
+  );
+
+  /// Statut renvoyé à la prochaine relecture.
+  PaymentRequestStatus next = PaymentRequestStatus.open;
+
+  @override
+  Future<Result<PaymentRequest>> requestStatus(PaymentRequest r) async => Ok(
+    PaymentRequest(
+      id: r.id,
+      code: r.code,
+      qr: r.qr,
+      amountMinor: r.amountMinor,
+      currencyCode: r.currencyCode,
+      status: next,
+      expiresAt: r.expiresAt,
+      storeName: r.storeName,
+    ),
+  );
+
+  @override
+  Future<Result<PaymentRequest>> cancelRequest(PaymentRequest r) async =>
+      await requestStatus(r);
+
   @override
   Future<Result<Till>> payout(int amountMinor) async {
     if (amountMinor > state.balanceMinor) {
@@ -193,6 +234,23 @@ void main() {
       await tester.tap(find.text('Enregistrer la vente'));
       await tester.pumpAndSettle();
       expect(find.text('Gombo'), findsOneWidget);
+    });
+  });
+
+  group('encaisser par QR (spec 046)', () {
+    test('montant, QR affiché, payé à la relecture', () async {
+      final service = _Till();
+      final vm = QrChargeViewModel(service: service);
+      await vm.init();
+      await vm.create('abc');
+      expect(vm.problem, 'invalid_amount');
+      await vm.create('2000');
+      expect(vm.request?.qr, 'DYM-PAY:123456');
+      expect(vm.request?.amountMinor, 2000);
+      service.next = PaymentRequestStatus.paid;
+      await vm.poll();
+      expect(vm.request?.status, PaymentRequestStatus.paid);
+      vm.dispose();
     });
   });
 }
