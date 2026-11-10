@@ -52,6 +52,24 @@ abstract interface class CreatorService {
   /// Devise et décimales du pays, pour afficher les gains.
   Future<Result<CountryConfig>> countryConfig();
 
+  /// Compte TikTok déclaré (spec 040) ; vide : retiré.
+  Future<Result<CreatorProfile>> setTikTokHandle(String handle);
+
+  /// Vidéo TikTok de la créatrice : couverture copiée, légende proposée.
+  Future<Result<TikTokImport>> importTikTok(String url);
+
+  /// Post publié depuis la vidéo importée (lien d'origine, ingrédients) ;
+  /// [cover] : photo choisie quand TikTok n'a pas donné de couverture.
+  Future<Result<ContentItem>> publishImport(
+    TikTokImport video, {
+    String? caption,
+    List<ShoppingItem> ingredients = const [],
+    CreatorMedia? cover,
+  });
+
+  /// Lien de partage d'un post, à coller dans la vidéo TikTok.
+  Future<Result<Uri>> shareLink(ContentItem post);
+
   ImageProvider photo(String objectKey);
 
   ImageProvider preview(CreatorMedia media);
@@ -65,7 +83,11 @@ class NeonCreatorService implements CreatorService {
     required this._videos,
     this._lists,
     this._installs,
+    this._shareBase,
   });
+
+  /// Adresse publique des liens de partage (Functions).
+  final Uri? _shareBase;
 
   final ContentRepository _repository;
 
@@ -184,6 +206,63 @@ class NeonCreatorService implements CreatorService {
 
   @override
   Future<Result<CountryConfig>> countryConfig() => _discovery.countryConfig();
+
+  @override
+  Future<Result<CreatorProfile>> setTikTokHandle(String handle) =>
+      _repository.setTikTokHandle(handle);
+
+  @override
+  Future<Result<TikTokImport>> importTikTok(String url) =>
+      _repository.importTikTok(url);
+
+  @override
+  Future<Result<ContentItem>> publishImport(
+    TikTokImport video, {
+    String? caption,
+    List<ShoppingItem> ingredients = const [],
+    CreatorMedia? cover,
+  }) async {
+    // Catégorie proposée par l'IA si elle en trouve une, sinon « Autre ».
+    final slug = caption == null ? null : await suggestCategory(caption);
+    final known = (await categories()).valueOrNull ?? const [];
+    final category = known.where((k) => k.slug == slug).firstOrNull;
+    final source = category == null ? 'default' : 'ai';
+    final upload = video.upload;
+    final Result<ContentItem> published;
+    if (upload != null) {
+      published = await _repository.publishCreator(
+        upload: upload,
+        video: false,
+        caption: caption,
+        categoryId: category?.id,
+        categorySource: source,
+      );
+    } else if (cover != null) {
+      published = await publish(
+        media: cover,
+        caption: caption,
+        categoryId: category?.id,
+        categorySource: source,
+        ingredients: ingredients,
+      );
+    } else {
+      return const Err(ValidationFailure('cover_required'));
+    }
+    if (published case Err(:final failure)) return Err(failure);
+    final post = published.valueOrNull!;
+    if (upload != null && ingredients.isNotEmpty) {
+      await _repository.setIngredients(post.id, ingredients);
+    }
+    return await _repository.setSource(post.id, video.sourceUrl);
+  }
+
+  @override
+  Future<Result<Uri>> shareLink(ContentItem post) async {
+    final base = _shareBase;
+    if (base == null) return const Err(UnknownFailure('partage non configuré'));
+    return (await _repository.createShareLink(post.id))
+        .map((code) => base.resolve('/s/$code'));
+  }
 
   @override
   ImageProvider photo(String objectKey) => _discovery.photo(objectKey);

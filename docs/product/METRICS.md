@@ -63,3 +63,4 @@ fiabilité (ops).
 | `follow_added` (cible), `comment_added` | Serveur | Fil classé (spec 037) |
 | `recipe_basket_built` (articles, manquants) | Serveur | Tout pour la faire (spec 038) |
 | `commission_earned` (montant, taux, origine), `commission_paid` (montant, payeur) | Serveur | Affiliation (spec 039) |
+| `tiktok_imported`, `share_link_created`, `share_link_opened` | Serveur | Pont TikTok (spec 040) |

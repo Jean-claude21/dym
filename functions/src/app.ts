@@ -19,6 +19,7 @@ import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
 import { type CopilotDeps, registerCopilotRoutes } from "./copilot/routes.js";
 import { type CreatorContentDeps, registerCreatorContentRoutes } from "./content/creators.js";
+import { registerTikTokRoutes, type TikTokDeps } from "./content/tiktok.js";
 import { registerContentRoutes } from "./content/routes.js";
 import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes.js";
 
@@ -43,6 +44,8 @@ export interface AppDeps {
   recaps?: VendorRecaps;
   /** Contenus des créatrices (spec 036). */
   creatorContent?: CreatorContentDeps;
+  /** Pont TikTok et liens de partage (spec 040). */
+  tiktok?: TikTokDeps;
   /** Photos des commandes (spec 034). */
   orderPhotos?: OrderPhotoDeps;
   /** Rappels des courses récurrentes (spec 029). */
@@ -128,6 +131,7 @@ export function createApp(deps: AppDeps) {
   registerCopilotRoutes(app, deps.verifyToken, deps.copilot);
   registerContentRoutes(app, deps.verifyToken, deps.catalog);
   registerCreatorContentRoutes(app, deps.verifyToken, deps.creatorContent);
+  registerTikTokRoutes(app, deps.verifyToken, deps.tiktok);
   registerBroadcastRoutes(app, deps.verifyToken, deps.broadcasts);
 
   return app;

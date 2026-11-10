@@ -52,15 +52,19 @@ class ContentCategory {
 /// Profil créateur de la personne (spec 036).
 @immutable
 class CreatorProfile {
-  const new({required this.displayName, this.bio});
+  const new({required this.displayName, this.bio, this.tiktokHandle});
 
   factory fromJson(Map<String, dynamic> json) => CreatorProfile(
     displayName: json['display_name'] as String,
     bio: json['bio'] as String?,
+    tiktokHandle: json['tiktok_handle'] as String?,
   );
 
   final String displayName;
   final String? bio;
+
+  /// Compte TikTok déclaré (spec 040), sans « @ ».
+  final String? tiktokHandle;
 }
 
 /// État d'une commission d'affiliation.
@@ -194,6 +198,7 @@ class ContentItem {
     this.commentCount = 0,
     this.followed = false,
     this.ingredients = const [],
+    this.sourceUrl,
   });
 
   factory fromJson(Map<String, dynamic> json) => ContentItem(
@@ -236,6 +241,7 @@ class ContentItem {
       for (final i in json['ingredients'] as List? ?? const [])
         ShoppingItem.fromJson((i as Map).cast<String, dynamic>()),
     ],
+    sourceUrl: json['source_url'] as String?,
   );
 
   final String id;
@@ -275,6 +281,9 @@ class ContentItem {
   /// Ingrédients génériques d'une recette (spec 038).
   final List<ShoppingItem> ingredients;
 
+  /// Vidéo d'origine sur TikTok (spec 040) ; null : créée sur DYM.
+  final String? sourceUrl;
+
   /// « Tout pour la faire » possible.
   bool get hasRecipe => ingredients.isNotEmpty || products.isNotEmpty;
 
@@ -307,6 +316,7 @@ class ContentItem {
     commentCount: commentCount ?? this.commentCount,
     followed: followed ?? this.followed,
     ingredients: ingredients,
+    sourceUrl: sourceUrl,
   );
 }
 

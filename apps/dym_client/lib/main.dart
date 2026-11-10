@@ -111,6 +111,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         cart: locator<CartService>(),
         media: environment.media,
         installs: installs,
+        shareBase: environment.functionsUrl,
       ),
     )
     ..registerLazySingleton<SupportService>(
@@ -174,6 +175,7 @@ Future<void> configureServices(DymEnvironment environment) async {
           functions: neon.functions,
         ),
         installs: installs,
+        shareBase: environment.functionsUrl,
       ),
     )
     ..registerLazySingleton<AdjustmentsService>(
