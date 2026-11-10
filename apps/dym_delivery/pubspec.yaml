@@ -1,0 +1,36 @@
+name: dym_delivery
+description: "DYM Livreur — app des livreurs (missions, courses, gains)."
+publish_to: none
+version: 0.1.0+1
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  dym_account: ^0.1.0
+  dym_auth: ^0.1.0
+  dym_core: ^0.1.0
+  dym_data: ^0.1.0
+  dym_l10n: ^0.1.0
+  dym_models: ^0.1.0
+  dym_platform: ^0.1.0
+  dym_ui: ^0.1.0
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  neon_kit: ^0.1.0
+  stacked: ^3.5.0
+  stacked_services: ^1.6.0
+
+dev_dependencies:
+  build_runner: ^2.16.0
+  flutter_test:
+    sdk: flutter
+  stacked_generator: ^2.0.4
+  very_good_analysis: ^11.0.0
+
+flutter:
+  uses-material-design: true

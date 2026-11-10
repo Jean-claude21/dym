@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 /// Apparence de la bienvenue selon l'app.
-enum AuthVariant { client, vendor }
+enum AuthVariant { client, vendor, delivery }
 
 /// Parcours de connexion complet, partagé par les apps cliente et vendeuse.
 /// [onReady] reçoit l'utilisateur prêt (profil complet, rôle de l'app).
@@ -61,10 +61,14 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
     Widget? child,
   ) {
     final step = switch (viewModel.step) {
-      AuthStep.welcome =>
-        variant == AuthVariant.vendor
-            ? VendorWelcomeStep(viewModel: viewModel)
-            : WelcomeStep(viewModel: viewModel),
+      AuthStep.welcome => switch (variant) {
+        AuthVariant.vendor => VendorWelcomeStep(viewModel: viewModel),
+        AuthVariant.delivery => VendorWelcomeStep(
+          viewModel: viewModel,
+          delivery: true,
+        ),
+        AuthVariant.client => WelcomeStep(viewModel: viewModel),
+      },
       AuthStep.email => EmailStep(viewModel: viewModel),
       AuthStep.code => CodeStep(viewModel: viewModel),
       AuthStep.profile => ProfileStep(viewModel: viewModel),

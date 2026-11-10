@@ -8424,6 +8424,282 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Choisir une photo de couverture'**
   String get tiktokPickCover;
+
+  /// No description provided for @appNameDelivery.
+  ///
+  /// In fr, this message translates to:
+  /// **'DYM Livreur'**
+  String get appNameDelivery;
+
+  /// No description provided for @deliveryTagline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes courses, tes gains, sans dispute.'**
+  String get deliveryTagline;
+
+  /// No description provided for @deliveryWelcomeBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livre les commandes de ton quartier, à ton rythme.'**
+  String get deliveryWelcomeBody;
+
+  /// No description provided for @deliveryPoint1.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepte les courses près de toi'**
+  String get deliveryPoint1;
+
+  /// No description provided for @deliveryPoint2.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse et téléphone après acceptation'**
+  String get deliveryPoint2;
+
+  /// No description provided for @deliveryPoint3.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un seul compte DYM pour tout'**
+  String get deliveryPoint3;
+
+  /// No description provided for @missionsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Missions'**
+  String get missionsTitle;
+
+  /// No description provided for @myRunsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes courses'**
+  String get myRunsTitle;
+
+  /// No description provided for @courierOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'En ligne'**
+  String get courierOnline;
+
+  /// No description provided for @courierOffline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne'**
+  String get courierOffline;
+
+  /// No description provided for @courierOnlineHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les courses de tes zones te sont proposées.'**
+  String get courierOnlineHint;
+
+  /// No description provided for @courierOfflineHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mets-toi en ligne pour recevoir des courses.'**
+  String get courierOfflineHint;
+
+  /// No description provided for @missionsNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune course pour le moment'**
+  String get missionsNone;
+
+  /// No description provided for @missionsNoneHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu seras prévenu dès qu\'une commande de tes zones attend un livreur.'**
+  String get missionsNoneHint;
+
+  /// No description provided for @missionsGoOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu es hors ligne'**
+  String get missionsGoOnline;
+
+  /// No description provided for @missionAccept.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter la course'**
+  String get missionAccept;
+
+  /// No description provided for @missionTaken.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un autre livreur a déjà pris cette course.'**
+  String get missionTaken;
+
+  /// No description provided for @missionTooMany.
+  ///
+  /// In fr, this message translates to:
+  /// **'Termine d\'abord tes courses en cours.'**
+  String get missionTooMany;
+
+  /// No description provided for @courierSuspended.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton compte livreur est suspendu. Contacte l\'équipe DYM.'**
+  String get courierSuspended;
+
+  /// No description provided for @courierInvalidPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro de téléphone invalide.'**
+  String get courierInvalidPhone;
+
+  /// No description provided for @courierInvalidZones.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis au moins une zone de ton pays.'**
+  String get courierInvalidZones;
+
+  /// No description provided for @courierVehicleFoot.
+  ///
+  /// In fr, this message translates to:
+  /// **'À pied'**
+  String get courierVehicleFoot;
+
+  /// No description provided for @courierVehicleBike.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vélo'**
+  String get courierVehicleBike;
+
+  /// No description provided for @courierVehicleMoto.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moto'**
+  String get courierVehicleMoto;
+
+  /// No description provided for @courierVehicleCar.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voiture'**
+  String get courierVehicleCar;
+
+  /// No description provided for @courierBecomeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Devenir livreur'**
+  String get courierBecomeTitle;
+
+  /// No description provided for @courierBecomeBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Même compte DYM : ajoute ton téléphone, ton moyen et les zones où tu livres.'**
+  String get courierBecomeBody;
+
+  /// No description provided for @courierName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom affiché aux clientes'**
+  String get courierName;
+
+  /// No description provided for @courierPhone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Téléphone'**
+  String get courierPhone;
+
+  /// No description provided for @courierVehicle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon moyen'**
+  String get courierVehicle;
+
+  /// No description provided for @courierZones.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes zones'**
+  String get courierZones;
+
+  /// No description provided for @courierBecomeAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commencer à livrer'**
+  String get courierBecomeAction;
+
+  /// No description provided for @missionItems.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 article} other{{count} articles}}'**
+  String missionItems(int count);
+
+  /// No description provided for @missionPickup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récupérer chez'**
+  String get missionPickup;
+
+  /// No description provided for @missionDropoff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrer à'**
+  String get missionDropoff;
+
+  /// No description provided for @missionPreparing.
+  ///
+  /// In fr, this message translates to:
+  /// **'En préparation'**
+  String get missionPreparing;
+
+  /// No description provided for @missionReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête à récupérer'**
+  String get missionReady;
+
+  /// No description provided for @missionOnTheWay.
+  ///
+  /// In fr, this message translates to:
+  /// **'En route'**
+  String get missionOnTheWay;
+
+  /// No description provided for @missionDelivered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée'**
+  String get missionDelivered;
+
+  /// No description provided for @myRunsNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune course en cours'**
+  String get myRunsNone;
+
+  /// No description provided for @myRunsNoneHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepte une mission pour la voir ici.'**
+  String get myRunsNoneHint;
+
+  /// No description provided for @missionPickedUp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande récupérée'**
+  String get missionPickedUp;
+
+  /// No description provided for @missionHandedOver.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande remise'**
+  String get missionHandedOver;
+
+  /// No description provided for @missionWaitReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'La boutique prépare la commande.'**
+  String get missionWaitReady;
+
+  /// No description provided for @missionRelease.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rendre la course'**
+  String get missionRelease;
+
+  /// No description provided for @retryHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifie ta connexion puis réessaie.'**
+  String get retryHint;
 }
 
 class _DymLocalizationsDelegate

@@ -232,9 +232,12 @@ class _WelcomeStepState extends State<WelcomeStep> {
 /// Bienvenue de l'app vendeuse (maquette 14) : fond vert profond, photo,
 /// promesse, Google ou email.
 class VendorWelcomeStep extends StatelessWidget {
-  const new({required this.viewModel, super.key});
+  const new({required this.viewModel, super.key, this.delivery = false});
 
   final AuthFlowViewModel viewModel;
+
+  /// Accueil de l'app livreur (mêmes gestes, autres textes, sans photo).
+  final bool delivery;
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +245,9 @@ class VendorWelcomeStep extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final points = [l10n.vendorPoint1, l10n.vendorPoint2, l10n.vendorPoint3];
+    final points = delivery
+        ? [l10n.deliveryPoint1, l10n.deliveryPoint2, l10n.deliveryPoint3]
+        : [l10n.vendorPoint1, l10n.vendorPoint2, l10n.vendorPoint3];
     return Scaffold(
       backgroundColor: c.brandDeep,
       body: SafeArea(
@@ -258,25 +263,30 @@ class VendorWelcomeStep extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(DymTokenRadius.card),
-                    child: AspectRatio(
-                      aspectRatio: 1.1,
-                      child: Image(
-                        image: _asset('vendor_stall.webp'),
-                        fit: BoxFit.cover,
+                  if (delivery)
+                    Icon(Icons.two_wheeler_rounded, size: 96, color: c.plantain)
+                  else
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                      child: AspectRatio(
+                        aspectRatio: 1.1,
+                        child: Image(
+                          image: _asset('vendor_stall.webp'),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
                   const SizedBox(height: DymTokenSpace.s5),
                   Text(
-                    l10n.appNameVendor,
+                    delivery ? l10n.appNameDelivery : l10n.appNameVendor,
                     textAlign: TextAlign.center,
                     style: t.display.copyWith(fontSize: 40, color: c.onBrand),
                   ),
                   const SizedBox(height: DymTokenSpace.s2),
                   Text(
-                    l10n.vendorWelcomeBody,
+                    delivery
+                        ? l10n.deliveryWelcomeBody
+                        : l10n.vendorWelcomeBody,
                     textAlign: TextAlign.center,
                     style: t.title.copyWith(fontSize: 18, color: c.onBrand),
                   ),

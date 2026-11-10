@@ -20,7 +20,7 @@ dym/
 │  ├─ dym_client/        # Awa
 │  ├─ dym_vendor/        # Fatou
 │  ├─ dym_admin/         # Ops, Flutter Web
-│  ├─ dym_delivery/      # Phase 5, créé sur déclencheur
+│  ├─ dym_delivery/      # Kofi, livreur (spec 041)
 │  └─ dym_gallery/       # Outil : galerie de validation de dym_ui (non publiée)
 ├─ packages/
 │  ├─ foundation/

@@ -4,7 +4,7 @@ import 'package:neon_kit/neon_kit.dart';
 
 /// App qui ouvre la session : décide du rôle donné à la complétion du profil
 /// (cliente ou vendeuse) et trace la connexion.
-enum AccountApp { client, vendor, admin }
+enum AccountApp { client, vendor, admin, delivery }
 
 /// Compte de l'utilisateur connecté : lecture, complétion du profil, trace de
 /// connexion, suppression. Toutes les décisions sont prises en SQL.
