@@ -120,6 +120,9 @@ class _Navigator implements AppNavigator {
   void toHaggling() => routes.add('haggling');
 
   @override
+  void toGroupOffers() => routes.add('group-offers');
+
+  @override
   void toContents() => routes.add('contents');
 
   @override

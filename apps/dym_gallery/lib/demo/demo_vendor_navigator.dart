@@ -59,6 +59,9 @@ class DemoVendorNavigator implements AppNavigator {
   void toHaggling() {}
 
   @override
+  void toGroupOffers() {}
+
+  @override
   void toContents() {}
 
   @override
