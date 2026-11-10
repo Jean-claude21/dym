@@ -38,6 +38,9 @@ abstract interface class ContentService {
 
   Future<Result<void>> deleteComment(String commentId);
 
+  /// « Tout pour la faire » (spec 038) : panier composé en base.
+  Future<Result<CopilotProposal>> recipeBasket(ContentItem content);
+
   Future<Result<List<StoryGroup>>> stories();
 
   Future<Result<int>> productVideoCount(String productId);
@@ -132,6 +135,10 @@ class NeonContentService implements ContentService {
   @override
   Future<Result<void>> deleteComment(String commentId) =>
       _repository.deleteComment(commentId);
+
+  @override
+  Future<Result<CopilotProposal>> recipeBasket(ContentItem content) =>
+      _repository.recipeBasket(content.id, zoneId: _discovery.zone.value);
 
   @override
   Future<Result<List<StoryGroup>>> stories() =>
@@ -257,6 +264,10 @@ class MemoryContentService implements ContentService {
     }
     return Ok(List.of(list));
   }
+
+  @override
+  Future<Result<CopilotProposal>> recipeBasket(ContentItem content) async =>
+      const Ok(CopilotProposal());
 
   @override
   Future<Result<void>> deleteComment(String commentId) async {

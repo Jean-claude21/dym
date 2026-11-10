@@ -27,6 +27,9 @@ abstract interface class CreatorService {
   /// Catégorie proposée par l'IA pour la légende ; `null` : aucune.
   Future<String?> suggestCategory(String caption);
 
+  /// Ingrédients repérés par l'IA dans la légende (spec 038) ; vide : rien.
+  Future<List<ShoppingItem>> suggestIngredients(String caption);
+
   /// Produits en vente à taguer (recherche dans le quartier).
   Future<Result<List<CatalogItem>>> searchProducts(String text);
 
@@ -36,6 +39,7 @@ abstract interface class CreatorService {
     String? categoryId,
     String categorySource = 'chosen',
     List<String> productIds = const [],
+    List<ShoppingItem> ingredients = const [],
   });
 
   Future<Result<List<ContentItem>>> mine();
@@ -53,9 +57,13 @@ class NeonCreatorService implements CreatorService {
     required this._discovery,
     required this._photos,
     required this._videos,
+    this._lists,
   });
 
   final ContentRepository _repository;
+
+  /// IA des listes (spec 029), réutilisée pour les ingrédients.
+  final ShoppingListRepository? _lists;
   final DiscoveryService _discovery;
   final PhotoPicker _photos;
   final VideoPicker _videos;
@@ -97,6 +105,13 @@ class NeonCreatorService implements CreatorService {
       : (await _repository.classify(caption.trim())).valueOrNull;
 
   @override
+  Future<List<ShoppingItem>> suggestIngredients(String caption) async {
+    final lists = _lists;
+    if (lists == null || caption.trim().length < 3) return const [];
+    return (await lists.suggest(caption.trim())).valueOrNull ?? const [];
+  }
+
+  @override
   Future<Result<List<CatalogItem>>> searchProducts(String text) async =>
       (await _discovery.search(
         SearchQuery(
@@ -114,6 +129,7 @@ class NeonCreatorService implements CreatorService {
     String? categoryId,
     String categorySource = 'chosen',
     List<String> productIds = const [],
+    List<ShoppingItem> ingredients = const [],
   }) async {
     final upload = await _repository.uploadCreator(
       media.bytes,
@@ -123,7 +139,7 @@ class NeonCreatorService implements CreatorService {
       case Err(:final failure):
         return Err(failure);
       case Ok(value: final u):
-        return await _repository.publishCreator(
+        final published = await _repository.publishCreator(
           upload: u,
           video: media.isVideo,
           caption: caption,
@@ -131,6 +147,11 @@ class NeonCreatorService implements CreatorService {
           categorySource: categorySource,
           productIds: productIds,
         );
+        if (published case Ok(:final value) when ingredients.isNotEmpty) {
+          // Les ingrédients suivent le post ; un échec ne retire pas le post.
+          await _repository.setIngredients(value.id, ingredients);
+        }
+        return published;
     }
   }
 

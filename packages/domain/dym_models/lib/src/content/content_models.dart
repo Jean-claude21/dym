@@ -1,5 +1,6 @@
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/src/discovery/discovery_models.dart';
+import 'package:dym_models/src/search/shopping_models.dart';
 import 'package:meta/meta.dart';
 
 /// Story 24 h, vidéo shoppable (spec 020) ou post de créatrice (spec 036).
@@ -104,6 +105,7 @@ class ContentItem {
     this.reportCount = 0,
     this.commentCount = 0,
     this.followed = false,
+    this.ingredients = const [],
   });
 
   factory fromJson(Map<String, dynamic> json) => ContentItem(
@@ -142,6 +144,10 @@ class ContentItem {
     reportCount: (json['report_count'] as num?)?.toInt() ?? 0,
     commentCount: (json['comment_count'] as num?)?.toInt() ?? 0,
     followed: json['followed'] as bool? ?? false,
+    ingredients: [
+      for (final i in json['ingredients'] as List? ?? const [])
+        ShoppingItem.fromJson((i as Map).cast<String, dynamic>()),
+    ],
   );
 
   final String id;
@@ -178,6 +184,12 @@ class ContentItem {
   /// La personne suit l'autrice ou la boutique (spec 037).
   final bool followed;
 
+  /// Ingrédients génériques d'une recette (spec 038).
+  final List<ShoppingItem> ingredients;
+
+  /// « Tout pour la faire » possible.
+  bool get hasRecipe => ingredients.isNotEmpty || products.isNotEmpty;
+
   ContentItem copyWith({
     int? likeCount,
     bool? liked,
@@ -206,6 +218,7 @@ class ContentItem {
     reportCount: reportCount,
     commentCount: commentCount ?? this.commentCount,
     followed: followed ?? this.followed,
+    ingredients: ingredients,
   );
 }
 

@@ -183,10 +183,14 @@ class FeedView extends StackedView<FeedViewModel> {
     this.onBack,
     this.onOpenStore,
     this.videoBuilder = networkVideo,
+    this.onRecipe,
   });
 
   final ContentService service;
   final String? productId;
+
+  /// « Tout pour la faire » (spec 038) ; absent : bouton masqué.
+  final ValueChanged<ContentItem>? onRecipe;
 
   /// Présent quand le fil est ouvert depuis une fiche produit.
   final VoidCallback? onBack;
@@ -253,6 +257,7 @@ class FeedView extends StackedView<FeedViewModel> {
           active: i == vm.index,
           videoBuilder: videoBuilder,
           onOpenStore: onOpenStore,
+          onRecipe: onRecipe,
         ),
       );
     }
@@ -435,6 +440,7 @@ class _ContentPage extends StatelessWidget {
     required this.active,
     required this.videoBuilder,
     this.onOpenStore,
+    this.onRecipe,
   });
 
   final FeedViewModel vm;
@@ -442,6 +448,7 @@ class _ContentPage extends StatelessWidget {
   final bool active;
   final VideoBuilder videoBuilder;
   final ValueChanged<String>? onOpenStore;
+  final ValueChanged<ContentItem>? onRecipe;
 
   @override
   Widget build(BuildContext context) {
@@ -599,6 +606,18 @@ class _ContentPage extends StatelessWidget {
                           Text(
                             caption,
                             style: t.body.copyWith(color: Colors.white),
+                          ),
+                        if (onRecipe case final recipe? when content.hasRecipe)
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              top: DymTokenSpace.s2,
+                            ),
+                            child: DymButton(
+                              label: l10n.recipeAllForIt,
+                              icon: Icons.shopping_basket_rounded,
+                              compact: true,
+                              onPressed: () => recipe(content),
+                            ),
                           ),
                         if (product != null) ...[
                           const SizedBox(height: DymTokenSpace.s2),

@@ -307,6 +307,10 @@ class ComposeViewModel extends BaseViewModel {
   String? suggestedSlug;
   bool suggesting = false;
   final tagged = <CatalogItem>[];
+
+  /// Ingrédients génériques de la recette (spec 038).
+  List<ShoppingItem> ingredients = const [];
+  bool findingIngredients = false;
   List<CatalogItem> results = const [];
   bool publishing = false;
   CreatorError? problem;
@@ -348,6 +352,34 @@ class ComposeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void addIngredient(String label) {
+    final value = label.trim();
+    if (value.isEmpty || ingredients.length >= 15) return;
+    ingredients = [...ingredients, ShoppingItem(label: value)];
+    notifyListeners();
+  }
+
+  void removeIngredient(int index) {
+    ingredients = [...ingredients]..removeAt(index);
+    notifyListeners();
+  }
+
+  /// L'IA repère les ingrédients dans la légende ; ils s'ajoutent à la liste.
+  Future<void> findIngredients() async {
+    if (findingIngredients) return;
+    findingIngredients = true;
+    notifyListeners();
+    final found = await service.suggestIngredients(caption);
+    final known = {for (final i in ingredients) i.label.toLowerCase()};
+    ingredients = [
+      ...ingredients,
+      for (final i in found)
+        if (!known.contains(i.label.toLowerCase())) i,
+    ].take(15).toList();
+    findingIngredients = false;
+    notifyListeners();
+  }
+
   Future<void> search(String text) async {
     if (text.trim().length < 2) return;
     results = (await service.searchProducts(text)).valueOrNull ?? const [];
@@ -380,6 +412,7 @@ class ComposeViewModel extends BaseViewModel {
       categoryId: chosen?.id,
       categorySource: source,
       productIds: [for (final p in tagged) p.id],
+      ingredients: ingredients,
     );
     publishing = false;
     if (result case Err(:final failure)) problem = creatorErrorOf(failure);
@@ -533,6 +566,41 @@ class ComposePostView extends StackedView<ComposeViewModel> {
                   Text(
                     l10n.creatorCategoryHint,
                     style: t.label.copyWith(color: c.textSecondary),
+                  ),
+                  const SizedBox(height: DymTokenSpace.s3),
+                  DymContentWidth.form(
+                    child: DymSectionHeader(
+                      title: l10n.recipeIngredients,
+                      actionLabel: vm.findingIngredients
+                          ? null
+                          : l10n.recipeFindIngredients,
+                      onAction: vm.findingIngredients
+                          ? null
+                          : vm.findIngredients,
+                    ),
+                  ),
+                  DymContentWidth.form(
+                    child: Wrap(
+                      spacing: DymTokenSpace.s2,
+                      runSpacing: DymTokenSpace.s2,
+                      children: [
+                        for (final (i, item) in vm.ingredients.indexed)
+                          InputChip(
+                            label: Text('${item.label} × ${item.quantity}'),
+                            onDeleted: () => vm.removeIngredient(i),
+                            deleteButtonTooltipMessage: l10n.shoppingRemoveItem(
+                              item.label,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  DymContentWidth.form(
+                    child: DymTextField(
+                      label: l10n.recipeAddIngredient,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: vm.addIngredient,
+                    ),
                   ),
                   const SizedBox(height: DymTokenSpace.s3),
                   DymContentWidth.form(

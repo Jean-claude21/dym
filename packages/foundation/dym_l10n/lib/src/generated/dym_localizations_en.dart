@@ -4814,4 +4814,16 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get moderationComment => 'Comment';
+
+  @override
+  String get recipeIngredients => 'Ingredients';
+
+  @override
+  String get recipeFindIngredients => 'Find with AI';
+
+  @override
+  String get recipeAddIngredient => 'Add an ingredient (tomato, okra…)';
+
+  @override
+  String get recipeAllForIt => 'Everything to make it';
 }

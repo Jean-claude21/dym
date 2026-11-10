@@ -1390,5 +1390,9 @@
   "feedNoComment": "No comment yet: start the conversation!",
   "feedCommentHint": "Add a comment",
   "feedDeleteComment": "Delete my comment",
-  "moderationComment": "Comment"
+  "moderationComment": "Comment",
+  "recipeIngredients": "Ingredients",
+  "recipeFindIngredients": "Find with AI",
+  "recipeAddIngredient": "Add an ingredient (tomato, okra…)",
+  "recipeAllForIt": "Everything to make it"
 }

@@ -167,6 +167,10 @@ Future<void> configureServices(DymEnvironment environment) async {
         discovery: locator<DiscoveryService>(),
         photos: PluginPhotoPicker(),
         videos: PluginVideoPicker(),
+        lists: ShoppingListRepository(
+          data: neon.data,
+          functions: neon.functions,
+        ),
       ),
     )
     ..registerLazySingleton<AdjustmentsService>(

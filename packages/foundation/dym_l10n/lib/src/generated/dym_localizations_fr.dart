@@ -4849,4 +4849,16 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get moderationComment => 'Commentaire';
+
+  @override
+  String get recipeIngredients => 'Ingrédients';
+
+  @override
+  String get recipeFindIngredients => 'Repérer avec l\'IA';
+
+  @override
+  String get recipeAddIngredient => 'Ajouter un ingrédient (tomate, gombo…)';
+
+  @override
+  String get recipeAllForIt => 'Tout pour la faire';
 }
