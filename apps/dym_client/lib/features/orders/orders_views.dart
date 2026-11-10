@@ -204,7 +204,15 @@ class _OrderRow extends StatelessWidget {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final eta = order.etaAt;
-    final when = order.status.isActive && eta != null
+    final start = order.scheduledStart;
+    final end = order.scheduledEnd;
+    final when = order.status.isActive && start != null && end != null
+        ? l10n.orderScheduled(
+            shortDate(context, start),
+            shortTime(context, start),
+            shortTime(context, end),
+          )
+        : order.status.isActive && eta != null
         ? (order.fulfillment == Fulfillment.pickup
               ? l10n.orderPickupAt(shortTime(context, eta))
               : l10n.orderEtaAt(shortTime(context, eta)))

@@ -50,6 +50,9 @@ enum OrderError {
   paymentUnavailable,
   ownStore,
   walletInsufficient,
+  slotRequired,
+  slotInvalid,
+  slotClosed,
   offline,
   generic,
 }
@@ -65,6 +68,10 @@ OrderError orderErrorOf(Failure failure) => switch (failure) {
   ValidationFailure(message: 'own_store_purchase') => OrderError.ownStore,
   ValidationFailure(message: 'wallet_insufficient') =>
     OrderError.walletInsufficient,
+  ValidationFailure(message: 'slot_required') => OrderError.slotRequired,
+  ValidationFailure(message: 'invalid_slot' || 'slot_too_early') =>
+    OrderError.slotInvalid,
+  ValidationFailure(message: 'store_closed_at_slot') => OrderError.slotClosed,
   _ => OrderError.generic,
 };
 
@@ -91,6 +98,45 @@ class CartViewModel extends _CartLoadingViewModel {
   bool get ordering => _ordering;
   OrderError? get orderError => _orderError;
   bool get substitutionAllowed => service.selection.substitutionAllowed;
+
+  /// Créneaux du panier (spec 033) ; nuls avant chargement.
+  DeliverySlots? slots;
+
+  /// Jour affiché dans le choix du créneau.
+  DateTime? slotDay;
+
+  SlotChoice? get slot => service.selection.slot;
+
+  Future<void> loadSlots() async {
+    if (cart.isEmpty) return;
+    if (await service.slots() case Ok(:final value)) {
+      slots = value;
+      final current = slot;
+      if (current != null &&
+          !value.days.any(
+            (d) =>
+                d.date == current.date &&
+                d.windows.any((w) => w.id == current.windowId),
+          )) {
+        service.selectSlot(null);
+      }
+      slotDay ??= value.days.firstOrNull?.date;
+      notifyListeners();
+    }
+  }
+
+  void showDay(DateTime day) {
+    slotDay = day;
+    notifyListeners();
+  }
+
+  void selectSlot(SlotChoice? value) {
+    service.selectSlot(value);
+    if (_orderError case OrderError.slotRequired || OrderError.slotInvalid) {
+      _orderError = null;
+    }
+    notifyListeners();
+  }
 
   bool get canOrder => !cart.isEmpty && !cart.blocking && !_ordering && !isBusy;
 

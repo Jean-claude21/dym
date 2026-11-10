@@ -76,6 +76,7 @@ class Product {
     this.photoKeys = const [],
     this.storeCategoryIds = const [],
     this.missing = const [],
+    this.arrivalOn,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
@@ -91,6 +92,9 @@ class Product {
   final ProductStatus status;
   final bool isAvailable;
   final String? suggestionId;
+
+  /// Date d'arrivage (spec 033) ; nulle : produit normal.
+  final DateTime? arrivalOn;
   final List<ProductVariant> variants;
   final List<String> photoKeys;
   final List<String> storeCategoryIds;

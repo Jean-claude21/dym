@@ -4460,4 +4460,67 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get walletKindSpacePayout => 'Received from a space';
+
+  @override
+  String get slotTitle => 'When?';
+
+  @override
+  String get slotAsap => 'As soon as possible';
+
+  @override
+  String get slotToday => 'Today';
+
+  @override
+  String get slotTomorrow => 'Tomorrow';
+
+  @override
+  String slotWindow(String start, String end) {
+    return '$start–$end';
+  }
+
+  @override
+  String slotRequiredFrom(String date) {
+    return 'Your cart has an upcoming arrival: delivery from $date.';
+  }
+
+  @override
+  String get orderErrorSlotRequired => 'Choose a delivery slot.';
+
+  @override
+  String get orderErrorSlotInvalid =>
+      'This slot is no longer available: choose another one.';
+
+  @override
+  String get orderErrorSlotClosed =>
+      'A shop is closed at this slot: choose another one.';
+
+  @override
+  String orderScheduled(String day, String start, String end) {
+    return 'Planned $day, $start–$end';
+  }
+
+  @override
+  String productArrivalBadge(String date) {
+    return 'Arriving $date · price locked';
+  }
+
+  @override
+  String productArrivalOn(String date) {
+    return 'Arrives $date · pre-orders open';
+  }
+
+  @override
+  String get productArrivalSet => 'Set an arrival date';
+
+  @override
+  String get productArrivalClear => 'Remove the arrival date';
+
+  @override
+  String get productArrivalHint =>
+      'Arrival date: customers pre-order at a locked price';
+
+  @override
+  String vendorOrderScheduled(String day, String start, String end) {
+    return 'Deliver $day, $start–$end';
+  }
 }

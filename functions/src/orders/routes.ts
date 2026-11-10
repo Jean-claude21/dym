@@ -18,6 +18,11 @@ const orderBody = z.object({
   payment_method_id: uuid,
   substitution_allowed: z.boolean().default(true),
   expected_total_minor: z.number().int().nonnegative().nullable().optional(),
+  // Créneau (spec 033) : validé en base, dans la transaction de création.
+  slot: z
+    .object({ date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/), window_id: uuid })
+    .nullable()
+    .optional(),
 });
 
 /**
@@ -50,6 +55,7 @@ export function registerOrderRoutes(
         paymentMethodId: body.payment_method_id,
         substitutionAllowed: body.substitution_allowed,
         expectedTotalMinor: body.expected_total_minor ?? null,
+        slot: body.slot ? { date: body.slot.date, windowId: body.slot.window_id } : null,
       },
       payments?.providers.map((p) => p.code) ?? [],
     );

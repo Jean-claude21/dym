@@ -93,6 +93,14 @@ CustomerOrder _$CustomerOrderFromJson(Map<String, dynamic> json) =>
             'eta_at',
             (v) => v == null ? null : DateTime.parse(v as String),
           ),
+          scheduledStart: $checkedConvert(
+            'scheduled_start',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          scheduledEnd: $checkedConvert(
+            'scheduled_end',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
           acceptedAt: $checkedConvert(
             'accepted_at',
             (v) => v == null ? null : DateTime.parse(v as String),
@@ -190,6 +198,8 @@ CustomerOrder _$CustomerOrderFromJson(Map<String, dynamic> json) =>
         'deliveryFeeMinor': 'delivery_fee_minor',
         'itemCount': 'item_count',
         'etaAt': 'eta_at',
+        'scheduledStart': 'scheduled_start',
+        'scheduledEnd': 'scheduled_end',
         'acceptedAt': 'accepted_at',
         'deliveredAt': 'delivered_at',
         'cancelledAt': 'cancelled_at',

@@ -327,6 +327,24 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                   ),
                 ],
                 const SizedBox(height: DymTokenSpace.s3),
+                if (item.arrivalOn case final arrival?)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+                    child: Chip(
+                      avatar: Icon(
+                        Icons.event_available_rounded,
+                        color: c.brandDeep,
+                      ),
+                      backgroundColor: c.tintVertTendre,
+                      label: Text(
+                        l10n.productArrivalBadge(
+                          MaterialLocalizations.of(context)
+                              .formatMediumDate(arrival),
+                        ),
+                        style: t.label.copyWith(color: c.brandDeep),
+                      ),
+                    ),
+                  ),
                 if (price != null)
                   Text.rich(
                     TextSpan(

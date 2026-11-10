@@ -9,6 +9,8 @@ export interface OrderRequest {
   paymentMethodId: string;
   substitutionAllowed: boolean;
   expectedTotalMinor: number | null;
+  /** Créneau choisi (spec 033) ; nul : dès que possible. */
+  slot?: { date: string; windowId: string } | null;
 }
 
 /** Achat tel que servi par `app.purchase_json` (sans commission). */

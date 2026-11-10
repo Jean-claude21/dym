@@ -259,6 +259,15 @@ void main() {
       expect(vm.categories.map((c) => c.name), ['Jus', 'Sirops']);
     });
 
+    test('arrivage (spec 033) : date posée puis retirée', () async {
+      final vm = await loaded();
+      final arrival = DateTime(2026, 11, 20);
+      await vm.setArrival(vm.visible.first, arrival);
+      expect(vm.visible.first.arrivalOn, arrival);
+      await vm.setArrival(vm.visible.first, null);
+      expect(vm.visible.first.arrivalOn, isNull);
+    });
+
     test('rupture en un geste, état serveur', () async {
       final vm = await loaded();
       await vm.setAvailable(vm.visible.first, available: false);

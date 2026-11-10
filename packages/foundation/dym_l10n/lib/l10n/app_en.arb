@@ -1291,5 +1291,21 @@
   "spaceErrorPocketInsufficient": "The shared pot doesn't cover this basket.",
   "spaceErrorSpaceBalance": "The shared pot is not empty: use it first.",
   "walletKindSpaceContribution": "Added to a space",
-  "walletKindSpacePayout": "Received from a space"
+  "walletKindSpacePayout": "Received from a space",
+  "slotTitle": "When?",
+  "slotAsap": "As soon as possible",
+  "slotToday": "Today",
+  "slotTomorrow": "Tomorrow",
+  "slotWindow": "{start}–{end}",
+  "slotRequiredFrom": "Your cart has an upcoming arrival: delivery from {date}.",
+  "orderErrorSlotRequired": "Choose a delivery slot.",
+  "orderErrorSlotInvalid": "This slot is no longer available: choose another one.",
+  "orderErrorSlotClosed": "A shop is closed at this slot: choose another one.",
+  "orderScheduled": "Planned {day}, {start}–{end}",
+  "productArrivalBadge": "Arriving {date} · price locked",
+  "productArrivalOn": "Arrives {date} · pre-orders open",
+  "productArrivalSet": "Set an arrival date",
+  "productArrivalClear": "Remove the arrival date",
+  "productArrivalHint": "Arrival date: customers pre-order at a locked price",
+  "vendorOrderScheduled": "Deliver {day}, {start}–{end}"
 }

@@ -136,6 +136,14 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         'eta_at',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
+      scheduledStart: $checkedConvert(
+        'scheduled_start',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
+      scheduledEnd: $checkedConvert(
+        'scheduled_end',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
       acceptedAt: $checkedConvert(
         'accepted_at',
         (v) => v == null ? null : DateTime.parse(v as String),
@@ -198,6 +206,8 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
     'zoneName': 'zone_name',
     'substitutionAllowed': 'substitution_allowed',
     'etaAt': 'eta_at',
+    'scheduledStart': 'scheduled_start',
+    'scheduledEnd': 'scheduled_end',
     'acceptedAt': 'accepted_at',
     'deliveredAt': 'delivered_at',
     'cashCollectedAt': 'cash_collected_at',

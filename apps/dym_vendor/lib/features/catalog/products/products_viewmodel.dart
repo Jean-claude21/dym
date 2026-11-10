@@ -104,6 +104,10 @@ class ProductsViewModel extends BaseViewModel {
         () => _service.setAvailable(product.id, available: available),
       );
 
+  /// Date d'arrivage (spec 033) ; nulle : retirée.
+  Future<void> setArrival(Product product, DateTime? arrivalOn) =>
+      _apply(product.id, () => _service.setArrival(product.id, arrivalOn));
+
   Future<void> archive(Product product, {required bool archived}) => _apply(
     product.id,
     () => _service.archive(product.id, archived: archived),

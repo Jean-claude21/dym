@@ -7602,6 +7602,102 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Reçu d\'un espace'**
   String get walletKindSpacePayout;
+
+  /// Choix du créneau
+  ///
+  /// In fr, this message translates to:
+  /// **'Quand ?'**
+  String get slotTitle;
+
+  /// Sans créneau
+  ///
+  /// In fr, this message translates to:
+  /// **'Dès que possible'**
+  String get slotAsap;
+
+  /// Jour
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get slotToday;
+
+  /// Jour
+  ///
+  /// In fr, this message translates to:
+  /// **'Demain'**
+  String get slotTomorrow;
+
+  /// Créneau
+  ///
+  /// In fr, this message translates to:
+  /// **'{start}–{end}'**
+  String slotWindow(String start, String end);
+
+  /// Arrivage
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier contient un arrivage : livraison à partir du {date}.'**
+  String slotRequiredFrom(String date);
+
+  /// Créneau manquant
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisis un créneau de livraison.'**
+  String get orderErrorSlotRequired;
+
+  /// Créneau invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce créneau n\'est plus possible : choisis-en un autre.'**
+  String get orderErrorSlotInvalid;
+
+  /// Boutique fermée
+  ///
+  /// In fr, this message translates to:
+  /// **'Une boutique est fermée à ce créneau : choisis-en un autre.'**
+  String get orderErrorSlotClosed;
+
+  /// Commande programmée
+  ///
+  /// In fr, this message translates to:
+  /// **'Prévue {day}, {start}–{end}'**
+  String orderScheduled(String day, String start, String end);
+
+  /// Badge fiche
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrivage le {date} · prix bloqué'**
+  String productArrivalBadge(String date);
+
+  /// Liste vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrive le {date} · précommandes ouvertes'**
+  String productArrivalOn(String date);
+
+  /// Bouton vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Indiquer un arrivage'**
+  String get productArrivalSet;
+
+  /// Bouton vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer l\'arrivage'**
+  String get productArrivalClear;
+
+  /// Aide du calendrier
+  ///
+  /// In fr, this message translates to:
+  /// **'Date d\'arrivée : les clientes précommandent à prix bloqué'**
+  String get productArrivalHint;
+
+  /// Commande programmée (vendeuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'À livrer {day}, {start}–{end}'**
+  String vendorOrderScheduled(String day, String start, String end);
 }
 
 class _DymLocalizationsDelegate

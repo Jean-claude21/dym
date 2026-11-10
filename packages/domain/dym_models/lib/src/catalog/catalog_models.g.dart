@@ -102,6 +102,10 @@ Product _$ProductFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) =>
             (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
       ),
+      arrivalOn: $checkedConvert(
+        'arrival_on',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
     );
     return val;
   },
@@ -114,6 +118,7 @@ Product _$ProductFromJson(Map<String, dynamic> json) => $checkedCreate(
     'suggestionId': 'suggestion_id',
     'photoKeys': 'photo_keys',
     'storeCategoryIds': 'store_category_ids',
+    'arrivalOn': 'arrival_on',
   },
 );
 

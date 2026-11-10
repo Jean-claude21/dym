@@ -102,23 +102,44 @@ class MemoryCatalogService implements CatalogService {
     if (p.variants.isEmpty) 'variant',
   ];
 
-  Product _copy(Product p, {ProductStatus? status, bool? isAvailable}) =>
-      Product(
-        id: p.id,
-        name: p.name,
-        description: p.description,
-        categoryId: p.categoryId,
-        unitId: p.unitId,
-        priceMinor: p.priceMinor,
-        currencyCode: p.currencyCode,
-        status: status ?? p.status,
-        isAvailable: isAvailable ?? p.isAvailable,
-        suggestionId: p.suggestionId,
-        variants: p.variants,
-        photoKeys: p.photoKeys,
-        storeCategoryIds: p.storeCategoryIds,
-        missing: p.missing,
-      );
+  Product _copy(
+    Product p, {
+    ProductStatus? status,
+    bool? isAvailable,
+    DateTime? arrivalOn,
+    bool clearArrival = false,
+  }) => Product(
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    categoryId: p.categoryId,
+    unitId: p.unitId,
+    priceMinor: p.priceMinor,
+    currencyCode: p.currencyCode,
+    status: status ?? p.status,
+    isAvailable: isAvailable ?? p.isAvailable,
+    suggestionId: p.suggestionId,
+    variants: p.variants,
+    photoKeys: p.photoKeys,
+    storeCategoryIds: p.storeCategoryIds,
+    missing: p.missing,
+    arrivalOn: clearArrival ? null : (arrivalOn ?? p.arrivalOn),
+  );
+
+  @override
+  Future<Result<Product>> setArrival(String id, DateTime? arrivalOn) async {
+    final failed = _fail<Product>('setArrival');
+    if (failed != null) return failed;
+    final product = _find(id);
+    if (product == null) return const Err(ForbiddenFailure('inaccessible'));
+    final updated = _copy(
+      product,
+      arrivalOn: arrivalOn,
+      clearArrival: arrivalOn == null,
+    );
+    _put(updated);
+    return Ok(updated);
+  }
 
   @override
   Future<Result<Product>> saveProduct(ProductInput input) async {

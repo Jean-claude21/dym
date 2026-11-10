@@ -4493,4 +4493,67 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get walletKindSpacePayout => 'Reçu d\'un espace';
+
+  @override
+  String get slotTitle => 'Quand ?';
+
+  @override
+  String get slotAsap => 'Dès que possible';
+
+  @override
+  String get slotToday => 'Aujourd\'hui';
+
+  @override
+  String get slotTomorrow => 'Demain';
+
+  @override
+  String slotWindow(String start, String end) {
+    return '$start–$end';
+  }
+
+  @override
+  String slotRequiredFrom(String date) {
+    return 'Ton panier contient un arrivage : livraison à partir du $date.';
+  }
+
+  @override
+  String get orderErrorSlotRequired => 'Choisis un créneau de livraison.';
+
+  @override
+  String get orderErrorSlotInvalid =>
+      'Ce créneau n\'est plus possible : choisis-en un autre.';
+
+  @override
+  String get orderErrorSlotClosed =>
+      'Une boutique est fermée à ce créneau : choisis-en un autre.';
+
+  @override
+  String orderScheduled(String day, String start, String end) {
+    return 'Prévue $day, $start–$end';
+  }
+
+  @override
+  String productArrivalBadge(String date) {
+    return 'Arrivage le $date · prix bloqué';
+  }
+
+  @override
+  String productArrivalOn(String date) {
+    return 'Arrive le $date · précommandes ouvertes';
+  }
+
+  @override
+  String get productArrivalSet => 'Indiquer un arrivage';
+
+  @override
+  String get productArrivalClear => 'Retirer l\'arrivage';
+
+  @override
+  String get productArrivalHint =>
+      'Date d\'arrivée : les clientes précommandent à prix bloqué';
+
+  @override
+  String vendorOrderScheduled(String day, String start, String end) {
+    return 'À livrer $day, $start–$end';
+  }
 }

@@ -274,6 +274,15 @@ class _OrderCard extends StatelessWidget {
     final place = [
       ?order.zoneName,
       l10n.vendorOrderReceivedAt(_time(context, order.createdAt)),
+      if ((order.scheduledStart, order.scheduledEnd) case (
+        final start?,
+        final end?,
+      ))
+        l10n.vendorOrderScheduled(
+          MaterialLocalizations.of(context).formatShortDate(start.toLocal()),
+          _time(context, start),
+          _time(context, end),
+        ),
     ].join(' · ');
     return Material(
       color: c.card,
@@ -371,6 +380,19 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
                   Text(
                     l10n.vendorOrderReceivedAt(_time(context, order.createdAt)),
                     style: t.label.copyWith(color: c.textSecondary),
+                  ),
+                if ((order?.scheduledStart, order?.scheduledEnd) case (
+                  final start?,
+                  final end?,
+                ))
+                  Text(
+                    l10n.vendorOrderScheduled(
+                      MaterialLocalizations.of(context)
+                          .formatShortDate(start.toLocal()),
+                      _time(context, start),
+                      _time(context, end),
+                    ),
+                    style: t.label.copyWith(color: c.brandDeep),
                   ),
               ],
             ),

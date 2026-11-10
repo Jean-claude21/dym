@@ -82,6 +82,8 @@ class CustomerOrder {
     this.deliveryFeeMinor = 0,
     this.itemCount = 0,
     this.etaAt,
+    this.scheduledStart,
+    this.scheduledEnd,
     this.acceptedAt,
     this.deliveredAt,
     this.cancelledAt,
@@ -107,6 +109,10 @@ class CustomerOrder {
   final Fulfillment fulfillment;
   final DateTime createdAt;
   final DateTime? etaAt;
+
+  /// Créneau choisi (spec 033).
+  final DateTime? scheduledStart;
+  final DateTime? scheduledEnd;
   final DateTime? acceptedAt;
   final DateTime? deliveredAt;
   final DateTime? cancelledAt;

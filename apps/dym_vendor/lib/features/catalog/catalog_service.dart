@@ -50,6 +50,9 @@ abstract interface class CatalogService {
 
   Future<Result<Product>> setAvailable(String id, {required bool available});
 
+  /// Date d'arrivage (spec 033) ; nulle : produit normal.
+  Future<Result<Product>> setArrival(String id, DateTime? arrivalOn);
+
   Future<Result<Product>> archive(String id, {required bool archived});
 
   Future<Result<void>> deleteDraft(String id);
@@ -130,6 +133,10 @@ class NeonCatalogService implements CatalogService {
   @override
   Future<Result<Product>> setAvailable(String id, {required bool available}) =>
       _catalog.setAvailable(id, available: available);
+
+  @override
+  Future<Result<Product>> setArrival(String id, DateTime? arrivalOn) =>
+      _catalog.setArrival(id, arrivalOn);
 
   @override
   Future<Result<Product>> archive(String id, {required bool archived}) =>
