@@ -6539,5 +6539,33 @@
   "missionHandedOver": "Commande remise",
   "missionWaitReady": "La boutique prépare la commande.",
   "missionRelease": "Rendre la course",
-  "retryHint": "Vérifie ta connexion puis réessaie."
+  "retryHint": "Vérifie ta connexion puis réessaie.",
+  "missionRun": "{count, plural, =1{1 boutique} other{Tournée · {count} boutiques}}",
+  "@missionRun": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageAmbient": "Température ambiante",
+  "storageCool": "Au frais",
+  "storageFrozen": "Surgelé",
+  "storageFragile": "Fragile",
+  "handoverTitle": "Code de remise",
+  "handoverBody": "Demande à la cliente le code à 4 chiffres affiché dans son app.",
+  "handoverCode": "Code",
+  "handoverCancel": "Annuler",
+  "handoverConfirm": "Valider la remise",
+  "handoverWrong": "{count, plural, =0{Code incorrect. Contacte l'équipe DYM.} =1{Code incorrect : encore 1 essai.} other{Code incorrect : encore {count} essais.}}",
+  "@handoverWrong": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "handoverLocked": "Trop d'essais : l'équipe DYM va t'aider à terminer la remise.",
+  "trackHandoverCode": "Code de remise",
+  "trackHandoverHint": "Donne ce code au livreur quand il te remet la commande."
 }

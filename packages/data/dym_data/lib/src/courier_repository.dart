@@ -62,6 +62,16 @@ class CourierRepository {
     params: {'p_order': orderId, 'p_to': to, 'p_expected': expected},
   )).map(_mission);
 
+  /// Remise : le code donné par la cliente.
+  Future<Result<HandoverResult>> deliver(String orderId, String code) async =>
+      (await _data.rpc<Object?>(
+        'courier_deliver',
+        params: {'p_order': orderId, 'p_code': code},
+      )).map(
+        (json) =>
+            HandoverResult.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
   static CourierProfile _profile(Object? json) =>
       CourierProfile.fromJson((json! as Map).cast<String, dynamic>());
 

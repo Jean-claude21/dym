@@ -65,3 +65,4 @@ fiabilité (ops).
 | `commission_earned` (montant, taux, origine), `commission_paid` (montant, payeur) | Serveur | Affiliation (spec 039) |
 | `tiktok_imported`, `share_link_created`, `share_link_opened` | Serveur | Pont TikTok (spec 040) |
 | `courier_joined` (moyen, zones), `courier_online`, `courier_offline`, `mission_accepted` (minutes), `mission_released` | Serveur | App livreur (spec 041) |
+| `run_accepted` (boutiques), `handover_code_failed` (essais) | Serveur | Tournées et remise (spec 042) |

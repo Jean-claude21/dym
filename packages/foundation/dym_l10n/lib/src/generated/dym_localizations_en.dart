@@ -5092,4 +5092,66 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get retryHint => 'Check your connection and try again.';
+
+  @override
+  String missionRun(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Run · $count shops',
+      one: '1 shop',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageAmbient => 'Room temperature';
+
+  @override
+  String get storageCool => 'Keep cool';
+
+  @override
+  String get storageFrozen => 'Frozen';
+
+  @override
+  String get storageFragile => 'Fragile';
+
+  @override
+  String get handoverTitle => 'Handover code';
+
+  @override
+  String get handoverBody =>
+      'Ask the customer for the 4-digit code shown in her app.';
+
+  @override
+  String get handoverCode => 'Code';
+
+  @override
+  String get handoverCancel => 'Cancel';
+
+  @override
+  String get handoverConfirm => 'Confirm handover';
+
+  @override
+  String handoverWrong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Wrong code: $count tries left.',
+      one: 'Wrong code: 1 try left.',
+      zero: 'Wrong code. Contact the DYM team.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get handoverLocked =>
+      'Too many tries: the DYM team will help you finish the handover.';
+
+  @override
+  String get trackHandoverCode => 'Handover code';
+
+  @override
+  String get trackHandoverHint =>
+      'Give this code to the courier when he hands you the order.';
 }

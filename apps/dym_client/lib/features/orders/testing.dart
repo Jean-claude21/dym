@@ -62,6 +62,13 @@ class MemoryOrdersService implements OrdersService {
     return _fail<List<CustomerOrder>>() ?? Ok(List.of(_orders));
   }
 
+  /// Codes de remise par commande (spec 042).
+  final handoverCodes = <String, String>{};
+
+  @override
+  Future<Result<String?>> handoverCode(String orderId) async =>
+      Ok(handoverCodes[orderId]);
+
   @override
   Future<Result<CustomerOrder>> order(String id) async {
     reads++;

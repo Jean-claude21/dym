@@ -473,6 +473,31 @@ class _Tracking extends StatelessWidget {
             ],
           ),
         ),
+      if (vm.handoverCode case final code?)
+        CartCard(
+          child: Row(
+            children: [
+              Icon(Icons.pin_rounded, color: c.brand, size: 36),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.trackHandoverCode, style: t.label),
+                    Text(
+                      code,
+                      style: t.display.copyWith(fontSize: 32, letterSpacing: 6),
+                    ),
+                    Text(
+                      l10n.trackHandoverHint,
+                      style: t.label.copyWith(color: c.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       if (order.status == OrderStatus.refused)
         CartIssue(
           label: l10n.trackRefused(

@@ -172,8 +172,11 @@ void main() {
       final vm = MyRunsViewModel(service: service);
       await vm.load();
       expect(vm.runs, hasLength(2));
+      service.codes['o1'] = '4821';
       await vm.advance(vm.runs!.first, 'out_for_delivery');
-      await vm.advance(vm.runs!.first, 'delivered');
+      expect(await vm.deliver(vm.runs!.first, '0000'), 4);
+      expect(vm.runs!.first.delivered, isFalse);
+      expect(await vm.deliver(vm.runs!.first, ' 4821 '), isNull);
       expect(vm.runs!.first.delivered, isTrue);
       await vm.release(vm.runs!.last);
       expect(vm.runs, hasLength(1));
@@ -193,6 +196,43 @@ void main() {
       await tester.tap(find.text('Commande récupérée'));
       await tester.pumpAndSettle();
       expect(find.text('Commande remise'), findsOneWidget);
+      // Remise : le code de la cliente est demandé.
+      service.codes['o1'] = '4821';
+      await tester.tap(find.text('Commande remise'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), '4821');
+      await tester.tap(find.text('Valider la remise'));
+      await tester.pumpAndSettle();
+      expect(find.text('Livrée'), findsOneWidget);
+    });
+
+    testWidgets('carte : tournée et consignes de conservation', (tester) async {
+      final service = MemoryMissionsService(
+        config: _togo(),
+        current: _kofi,
+        open: [
+          Mission(
+            orderId: 'o1',
+            status: 'ready',
+            createdAt: DateTime(2026, 11, 10, 9),
+            deliveryFeeMinor: 500,
+            currencyCode: 'XOF',
+            itemCount: 3,
+            store: const MissionPlace(name: 'Étal de Kodjo', zoneName: 'Bè'),
+            customer: const MissionPlace(zoneName: 'Tokoin'),
+            runSize: 2,
+            storage: const [StorageHint.cool, StorageHint.fragile],
+          ),
+        ],
+      );
+      await service.setOnline(online: true);
+      await tester.pumpWidget(
+        _app(MissionsView(service: service, onAccepted: () {})),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Tournée · 2 boutiques'), findsOneWidget);
+      expect(find.text('Au frais'), findsOneWidget);
+      expect(find.text('Fragile'), findsOneWidget);
     });
   });
 }

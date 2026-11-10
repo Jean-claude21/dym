@@ -19,6 +19,13 @@ class OrderTrackingRepository {
     },
   );
 
+  /// Code de remise à donner au livreur (spec 042) ; nul : aucun.
+  Future<Result<String?>> handoverCode(String orderId) async =>
+      (await _data.rpc<Object?>(
+        'my_handover_code',
+        params: {'p_order': orderId},
+      )).map((json) => json as String?);
+
   Future<Result<CustomerOrder>> order(String id) async => _decode(
     await _data.rpc<Object?>('my_order', params: {'p_id': id}),
     (json) {
