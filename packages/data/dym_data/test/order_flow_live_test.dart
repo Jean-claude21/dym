@@ -77,6 +77,33 @@ void main() {
     return result.valueOrNull as T;
   }
 
+  /// Coupe [key] pour le pays le temps de vérifier le refus, puis rend une
+  /// fonction qui rétablit l'état effectif d'origine : un essai sur staging ne
+  /// change jamais la configuration des démonstrations.
+  Future<Future<void> Function()> isolateFlag(
+    AdminRepository admin,
+    String key,
+    String country,
+  ) async {
+    final flags = await ok(admin.featureFlags(), 'flags');
+    bool? value(String? code) => flags
+        .where((f) => f.key == key && f.countryCode == code)
+        .firstOrNull
+        ?.isEnabled;
+    final initial = value(country) ?? value(null) ?? false;
+    await ok(
+      admin.setFeatureFlag(key, enabled: false, countryCode: country),
+      'flag coupé',
+    );
+    Future<void> restore() async {
+      await admin.setFeatureFlag(key, enabled: initial, countryCode: country);
+    }
+
+    // Rétabli même si une vérification échoue en cours d'essai.
+    addTearDown(restore);
+    return restore;
+  }
+
   /// Boutique complète, ouverte tous les jours, qui livre [zones] et accepte
   /// le cash ; un produit publié à [price]. Renvoie (boutique, variante).
   Future<(String, String)> openStore(
@@ -160,8 +187,27 @@ void main() {
 
   tearDownAll(() async {
     // Clientes d'abord : leurs achats partent avec elles, puis les boutiques.
+    // Un compte peut rester (commande en cours, boutique avec historique) :
+    // ses boutiques sont alors rangées pour ne pas apparaître aux clientes.
     for (final neon in accounts.reversed) {
       await neon.data.rpc<Object?>('delete_my_account');
+    }
+    final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+    if (dbUrl != null && dbUrl.isNotEmpty) {
+      final cleanup = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'cleanup-e2e.mjs',
+        ].join(Platform.pathSeparator),
+        '--url',
+        dbUrl,
+      ]);
+      expect(cleanup.exitCode, 0, reason: '${cleanup.stderr}');
     }
   });
 
@@ -323,6 +369,86 @@ void main() {
     },
     skip: skip,
     timeout: const Timeout(Duration(minutes: 3)),
+  );
+
+  test(
+    'wallet : recharge simulée, commande payée par le wallet, solde débité',
+    () async {
+      final vendor = await signUp('vw');
+      final client = await signUp('cw');
+      final reference = ReferenceRepository(client.data);
+      final country = (await ok(reference.countries(), 'pays')).first;
+      final config = await ok(reference.countryConfig(country.code), 'config');
+      final zones = config.zones.take(1).map((z) => z.id).toList();
+      Future<String> method(String provider) async {
+        final rows = await ok(
+          client.data.run(
+            (db) => db
+                .from('payment_methods')
+                .select('id')
+                .eq('country_code', country.code)
+                .eq('provider_code', provider),
+          ),
+          provider,
+        );
+        return ((rows as List).first as Map)['id'] as String;
+      }
+
+      final cashId = await method('cash');
+      final walletId = await method('wallet');
+      final (store, variant) = await openStore(
+        vendor,
+        name: 'E2E W $run',
+        origin: 'marche',
+        zoneId: zones[0],
+        zones: zones,
+        categoryId: config.topCategories.first.id,
+        methodIds: [cashId],
+        price: 700,
+        pickup: true,
+      );
+      await ok(
+        client.data.rpc<Object?>(
+          'complete_profile',
+          params: {
+            'p_first_name': 'Wallet',
+            'p_zone_id': zones[0],
+            'p_app': 'client',
+          },
+        ),
+        'profil',
+      );
+      final wallet = WalletRepository(client.data);
+      final topped = await ok(
+        wallet.topupSimulated(5000, Uuid.v4()),
+        'recharge',
+      );
+      expect(topped.balanceMinor, 5000);
+
+      final cart = CartRepository(client.data);
+      await ok(cart.add(variant), 'ajout');
+      final quote = await ok(
+        cart.cart(modes: {store: Fulfillment.pickup}),
+        'devis',
+      );
+      final purchase = await ok(
+        OrderRepository(functions: client.functions, data: client.data).place(
+          OrderRequest(
+            addressId: quote.addressId,
+            modes: quote.modes,
+            paymentMethodId: walletId,
+            expectedTotalMinor: quote.totalMinor,
+          ),
+          idempotencyKey: Uuid.v4(),
+        ),
+        'commande par wallet',
+      );
+      expect(purchase.paymentStatus, PaymentStatus.paid);
+      final after = await ok(wallet.wallet(), 'wallet après');
+      expect(after.balanceMinor, 5000 - quote.totalMinor);
+    },
+    skip: skip,
+    timeout: const Timeout(Duration(minutes: 2)),
   );
 
   test(
@@ -1266,6 +1392,7 @@ void main() {
           'gombo.webp',
         ].join(Platform.pathSeparator),
       ).readAsBytes();
+      final restoreFlag = await isolateFlag(admin, 'ai_search', country.code);
       final refused = await search.describePhoto(photo, 'image/webp');
       expect(refused.failureOrNull?.message, 'feature_disabled');
 
@@ -1287,11 +1414,7 @@ void main() {
         final heard = await search.transcribe(_wav(silence), 'audio/wav');
         expect(heard.isOk, isTrue, reason: '${heard.failureOrNull}');
       } finally {
-        await admin.setFeatureFlag(
-          'ai_search',
-          enabled: false,
-          countryCode: country.code,
-        );
+        await restoreFlag();
       }
     },
     skip: skip,
@@ -1366,6 +1489,11 @@ void main() {
       );
       final admin = AdminRepository(data: team.data, functions: team.functions);
 
+      final restoreFlag = await isolateFlag(
+        admin,
+        'intent_copilot',
+        country.code,
+      );
       final refused = await copilot.propose('gombo', zoneId: zones[0]);
       expect(refused.failureOrNull?.message, 'feature_disabled');
 
@@ -1404,11 +1532,7 @@ void main() {
         final cart = CartRepository(client.data);
         await ok(cart.add(first.variantId), 'ajout au panier');
       } finally {
-        await admin.setFeatureFlag(
-          'intent_copilot',
-          enabled: false,
-          countryCode: country.code,
-        );
+        await restoreFlag();
       }
     },
     skip: skip,
@@ -1690,6 +1814,11 @@ void main() {
       expect(audience.lowStockThreshold, 9);
 
       final admin = AdminRepository(data: team.data, functions: team.functions);
+      final restoreFlag = await isolateFlag(
+        admin,
+        'vendor_broadcast',
+        country.code,
+      );
       final refused = await broadcasts.send(BroadcastSegment.all, 'Bonjour');
       expect(refused.failureOrNull?.message, 'feature_disabled');
       await ok(
@@ -1714,11 +1843,7 @@ void main() {
         final again = await broadcasts.send(BroadcastSegment.all, 'Encore');
         expect(again.failureOrNull?.message, 'broadcast_daily_limit');
       } finally {
-        await admin.setFeatureFlag(
-          'vendor_broadcast',
-          enabled: false,
-          countryCode: country.code,
-        );
+        await restoreFlag();
       }
       final notes = await ok(
         client.data.rpc<Object?>('my_notifications'),

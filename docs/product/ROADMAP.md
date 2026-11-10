@@ -121,7 +121,7 @@ en plus d'une heure.
 |---|---|---|
 | `unified-account` | Un compte, plusieurs rôles (client, vendeur, livreur, créateur), bascule de rôle | ✅ Déjà en place (un compte, plusieurs rôles) ; rôle créateur avec la phase 10 |
 | `ledger` | Grand livre à double écriture en SQL, rapprochements, audit | ✅ Spec 024 · PR #29 |
-| `wallet-pockets` | Wallet, poches libres et règles, recharge simulée, paiement d'une commande, cashback, paniers à offrir | ✅ Spec 025 (paniers à offrir → `spaces`) ; Function à redéployer sur staging |
+| `wallet-pockets` | Wallet, poches libres et règles, recharge simulée, paiement d'une commande, cashback, paniers à offrir | ✅ Spec 025 · PR #30, #31 (paniers à offrir → `spaces`) |
 
 ## Phase 8 — Expérience et IA
 

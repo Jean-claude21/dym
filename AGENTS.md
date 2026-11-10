@@ -76,7 +76,9 @@ npx neonctl branches create --project-id <id> --name test-spec-NNN --parent main
 node db/scripts/dym-db.mjs migrate --neon-shims --url "$(npx neonctl connection-string test-spec-NNN --project-id <id>)"
 node db/scripts/dym-db.mjs test --url "<même URL>" && npx neonctl branches delete test-spec-NNN --project-id <id>
 # Déploiement : clés lues dans un fichier hors dépôt.
-cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt>
+cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt> --no-env-pull
+# Le fichier DOIT contenir toutes les variables de neon.ts (ALLOWED_ORIGINS, OPENAI_API_KEY,
+# PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT) : une variable absente est remise à vide.
 ```
 
 Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-define=DYM_ERROR_DSN=https://<clé>@<hôte>/<projet>`
