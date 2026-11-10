@@ -11,6 +11,7 @@ import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/favorites/favorites_service.dart';
+import 'package:dym_client/features/group_buy/group_buy_view.dart';
 import 'package:dym_client/features/haggle/haggle_sheet.dart';
 import 'package:dym_client/features/orders/adjustments_view.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
@@ -194,6 +195,12 @@ Future<void> configureServices(DymEnvironment environment) async {
         repository: SpaceRepository(neon.data),
         discovery: locator<DiscoveryService>(),
         cart: locator<CartService>(),
+      ),
+    )
+    ..registerLazySingleton<GroupBuyService>(
+      () => NeonGroupBuyService(
+        repository: GroupBuyRepository(neon.data),
+        discovery: locator<DiscoveryService>(),
       ),
     )
     ..registerLazySingleton<HaggleService>(

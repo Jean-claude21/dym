@@ -134,6 +134,9 @@ class _Navigator implements AppNavigator {
   void toSpaces() => routes.add('spaces');
 
   @override
+  void toGroupBuys() => routes.add('group-buys');
+
+  @override
   void toCreatorStudio() => routes.add('creator');
 
   @override

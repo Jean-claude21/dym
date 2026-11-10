@@ -5819,4 +5819,110 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get hagglingStatusExpired => 'Expired';
+
+  @override
+  String get accountGroupBuys => 'Group purchases';
+
+  @override
+  String get groupBuyTitle => 'Group purchases with neighbours';
+
+  @override
+  String get groupBuyHint =>
+      'Join your neighbours at a seller: when the group is complete, everyone pays the group price and delivery is shared.';
+
+  @override
+  String get groupBuyEmpty => 'No group purchase near you right now.';
+
+  @override
+  String groupBuyPrice(String group, String price) {
+    return '$group instead of $price';
+  }
+
+  @override
+  String groupBuySharedDelivery(String fee) {
+    return 'Shared delivery: $fee';
+  }
+
+  @override
+  String groupBuyProgress(int committed, int min, int members) {
+    String _temp0 = intl.Intl.pluralLogic(
+      members,
+      locale: localeName,
+      other: '$members neighbours',
+      one: '1 neighbour',
+      zero: 'nobody yet',
+    );
+    return '$committed of $min · $_temp0';
+  }
+
+  @override
+  String groupBuyUntil(String date) {
+    return 'Open until $date';
+  }
+
+  @override
+  String get groupBuyUnlocked => 'Group complete: group price unlocked';
+
+  @override
+  String groupBuyMine(int quantity) {
+    return 'My share: $quantity';
+  }
+
+  @override
+  String get groupBuyJoin => 'Join the group';
+
+  @override
+  String get groupBuyChange => 'Change my share';
+
+  @override
+  String get groupBuyAddToCart => 'Put my share in the cart';
+
+  @override
+  String get groupBuyQuantity => 'Quantity';
+
+  @override
+  String get groupBuyQuantityHint => '0 to leave the group.';
+
+  @override
+  String get groupBuyLockedHint =>
+      'The group is complete: you can increase your share, not reduce it.';
+
+  @override
+  String get groupBuyClosed => 'This group purchase is closed.';
+
+  @override
+  String get groupBuyLocked =>
+      'The group is complete: your share can no longer go down.';
+
+  @override
+  String get groupOfferTitle => 'Group offers';
+
+  @override
+  String get groupOfferHint =>
+      'Offer a group price to customers in your areas: when the quantity is reached, each of them gets it, with reduced delivery fees if you wish.';
+
+  @override
+  String get groupOfferEmpty => 'No group offer.';
+
+  @override
+  String get groupOfferNew => 'New group offer';
+
+  @override
+  String get groupOfferPrice => 'Group unit price';
+
+  @override
+  String get groupOfferMin => 'Minimum total quantity';
+
+  @override
+  String get groupOfferFee => 'Members\' delivery fee (optional)';
+
+  @override
+  String get groupOfferCancel => 'Cancel the offer';
+
+  @override
+  String get groupOfferCancelled => 'Cancelled';
+
+  @override
+  String get groupOfferInvalid =>
+      'Check the price (lower than today\'s price), the quantity (at least 2) and the fee.';
 }

@@ -6973,5 +6973,77 @@
   "hagglingStatusAccepted": "Conclu",
   "hagglingStatusCountered": "Contre-prix",
   "hagglingStatusUsed": "Commandé",
-  "hagglingStatusExpired": "Expiré"
+  "hagglingStatusExpired": "Expiré",
+  "accountGroupBuys": "Achats groupés",
+  "groupBuyTitle": "Achats groupés entre voisins",
+  "groupBuyHint": "Rejoins tes voisins chez une vendeuse : quand le groupe est complet, chacun paie le prix de groupe et la livraison est partagée.",
+  "groupBuyEmpty": "Aucun achat groupé près de chez toi pour le moment.",
+  "groupBuyPrice": "{group} au lieu de {price}",
+  "@groupBuyPrice": {
+    "placeholders": {
+      "group": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "groupBuySharedDelivery": "Livraison partagée : {fee}",
+  "@groupBuySharedDelivery": {
+    "placeholders": {
+      "fee": {
+        "type": "String"
+      }
+    }
+  },
+  "groupBuyProgress": "{committed} sur {min} · {members, plural, =0{personne encore} =1{1 voisin} other{{members} voisins}}",
+  "@groupBuyProgress": {
+    "placeholders": {
+      "committed": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      },
+      "members": {
+        "type": "int"
+      }
+    }
+  },
+  "groupBuyUntil": "Ouvert jusqu'au {date}",
+  "@groupBuyUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "groupBuyUnlocked": "Groupe complet : prix de groupe débloqué",
+  "groupBuyMine": "Ma part : {quantity}",
+  "@groupBuyMine": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "groupBuyJoin": "Rejoindre le groupe",
+  "groupBuyChange": "Changer ma part",
+  "groupBuyAddToCart": "Mettre ma part au panier",
+  "groupBuyQuantity": "Quantité",
+  "groupBuyQuantityHint": "0 pour quitter le groupe.",
+  "groupBuyLockedHint": "Le groupe est complet : tu peux augmenter ta part, pas la réduire.",
+  "groupBuyClosed": "Cet achat groupé est fermé.",
+  "groupBuyLocked": "Le groupe est complet : ta part ne peut plus baisser.",
+  "groupOfferTitle": "Offres groupées",
+  "groupOfferHint": "Propose un prix de groupe aux clientes de tes quartiers : quand la quantité est atteinte, chacune l'obtient, avec des frais de livraison réduits si tu veux.",
+  "groupOfferEmpty": "Aucune offre groupée.",
+  "groupOfferNew": "Nouvelle offre groupée",
+  "groupOfferPrice": "Prix de groupe à l'unité",
+  "groupOfferMin": "Quantité totale minimale",
+  "groupOfferFee": "Frais de livraison des membres (facultatif)",
+  "groupOfferCancel": "Annuler l'offre",
+  "groupOfferCancelled": "Annulée",
+  "groupOfferInvalid": "Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais."
 }

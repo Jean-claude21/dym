@@ -13,6 +13,7 @@ import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/credit/credit_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
+import 'package:dym_vendor/features/group_buy/group_offers_view.dart';
 import 'package:dym_vendor/features/haggle/haggling_view.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/courier_cash_view.dart';
@@ -107,6 +108,13 @@ Future<void> configureServices(DymEnvironment environment) async {
         products: () => locator<CatalogService>().products(),
         config: stores.countryConfig,
         photo: (key) => dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerSingleton<GroupOffersService>(
+      NeonGroupOffersService(
+        repository: GroupBuyRepository(neon.data),
+        config: stores.countryConfig,
+        products: () => locator<CatalogService>().products(),
       ),
     )
     ..registerSingleton<HagglingService>(

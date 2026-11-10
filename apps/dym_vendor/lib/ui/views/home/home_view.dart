@@ -168,6 +168,7 @@ class _HomeViewState extends State<HomeView> {
           onStudio: _navigator.toStudio,
           onWholesale: _navigator.toWholesale,
           onHaggling: _navigator.toHaggling,
+          onGroupOffers: _navigator.toGroupOffers,
           onTill: _navigator.toTill,
           onContents: _contents ? _navigator.toContents : null,
           onBroadcast: _broadcast ? _navigator.toBroadcast : null,

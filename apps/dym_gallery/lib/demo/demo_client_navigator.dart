@@ -77,6 +77,9 @@ class DemoClientNavigator implements AppNavigator {
   void toSpaces() {}
 
   @override
+  void toGroupBuys() {}
+
+  @override
   void toCreatorStudio() {}
 
   @override

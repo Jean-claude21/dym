@@ -73,3 +73,4 @@ fiabilité (ops).
 | `end_of_market_started` (pourcentage, durée, produits) | Serveur | Partage et fin de marché (spec 048) |
 | `wholesale_offer_opened` (minimum, durée), `wholesale_committed` (quantité) | Serveur | Achat de gros (spec 049) |
 | `haggle_proposed` (issue, remise demandée en points de base), `haggle_accepted` (offre ou contre-prix, remise), `haggle_limit_set` (pourcentage, boutique ou produit) | Serveur | Marchandage (spec 050) |
+| `group_offer_opened` (minimum, durée, livraison partagée), `group_joined` (quantité ; 0 : retrait), `group_unlocked` (membres, quantité totale) | Serveur | Achat groupé entre voisins (spec 051) |

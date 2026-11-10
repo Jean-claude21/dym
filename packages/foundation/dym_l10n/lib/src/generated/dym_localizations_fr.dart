@@ -5861,4 +5861,111 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get hagglingStatusExpired => 'Expiré';
+
+  @override
+  String get accountGroupBuys => 'Achats groupés';
+
+  @override
+  String get groupBuyTitle => 'Achats groupés entre voisins';
+
+  @override
+  String get groupBuyHint =>
+      'Rejoins tes voisins chez une vendeuse : quand le groupe est complet, chacun paie le prix de groupe et la livraison est partagée.';
+
+  @override
+  String get groupBuyEmpty =>
+      'Aucun achat groupé près de chez toi pour le moment.';
+
+  @override
+  String groupBuyPrice(String group, String price) {
+    return '$group au lieu de $price';
+  }
+
+  @override
+  String groupBuySharedDelivery(String fee) {
+    return 'Livraison partagée : $fee';
+  }
+
+  @override
+  String groupBuyProgress(int committed, int min, int members) {
+    String _temp0 = intl.Intl.pluralLogic(
+      members,
+      locale: localeName,
+      other: '$members voisins',
+      one: '1 voisin',
+      zero: 'personne encore',
+    );
+    return '$committed sur $min · $_temp0';
+  }
+
+  @override
+  String groupBuyUntil(String date) {
+    return 'Ouvert jusqu\'au $date';
+  }
+
+  @override
+  String get groupBuyUnlocked => 'Groupe complet : prix de groupe débloqué';
+
+  @override
+  String groupBuyMine(int quantity) {
+    return 'Ma part : $quantity';
+  }
+
+  @override
+  String get groupBuyJoin => 'Rejoindre le groupe';
+
+  @override
+  String get groupBuyChange => 'Changer ma part';
+
+  @override
+  String get groupBuyAddToCart => 'Mettre ma part au panier';
+
+  @override
+  String get groupBuyQuantity => 'Quantité';
+
+  @override
+  String get groupBuyQuantityHint => '0 pour quitter le groupe.';
+
+  @override
+  String get groupBuyLockedHint =>
+      'Le groupe est complet : tu peux augmenter ta part, pas la réduire.';
+
+  @override
+  String get groupBuyClosed => 'Cet achat groupé est fermé.';
+
+  @override
+  String get groupBuyLocked =>
+      'Le groupe est complet : ta part ne peut plus baisser.';
+
+  @override
+  String get groupOfferTitle => 'Offres groupées';
+
+  @override
+  String get groupOfferHint =>
+      'Propose un prix de groupe aux clientes de tes quartiers : quand la quantité est atteinte, chacune l\'obtient, avec des frais de livraison réduits si tu veux.';
+
+  @override
+  String get groupOfferEmpty => 'Aucune offre groupée.';
+
+  @override
+  String get groupOfferNew => 'Nouvelle offre groupée';
+
+  @override
+  String get groupOfferPrice => 'Prix de groupe à l\'unité';
+
+  @override
+  String get groupOfferMin => 'Quantité totale minimale';
+
+  @override
+  String get groupOfferFee => 'Frais de livraison des membres (facultatif)';
+
+  @override
+  String get groupOfferCancel => 'Annuler l\'offre';
+
+  @override
+  String get groupOfferCancelled => 'Annulée';
+
+  @override
+  String get groupOfferInvalid =>
+      'Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais.';
 }

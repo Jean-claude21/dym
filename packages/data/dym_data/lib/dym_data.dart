@@ -15,6 +15,7 @@ export 'src/discovery_repository.dart';
 export 'src/dispute_repository.dart';
 export 'src/events_repository.dart';
 export 'src/favorites_repository.dart';
+export 'src/group_buy_repository.dart';
 export 'src/haggle_repository.dart';
 export 'src/messaging_repository.dart';
 export 'src/order_adjustment_repository.dart';

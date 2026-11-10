@@ -9840,6 +9840,174 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Expiré'**
   String get hagglingStatusExpired;
+
+  /// No description provided for @accountGroupBuys.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achats groupés'**
+  String get accountGroupBuys;
+
+  /// No description provided for @groupBuyTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achats groupés entre voisins'**
+  String get groupBuyTitle;
+
+  /// No description provided for @groupBuyHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rejoins tes voisins chez une vendeuse : quand le groupe est complet, chacun paie le prix de groupe et la livraison est partagée.'**
+  String get groupBuyHint;
+
+  /// No description provided for @groupBuyEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun achat groupé près de chez toi pour le moment.'**
+  String get groupBuyEmpty;
+
+  /// No description provided for @groupBuyPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'{group} au lieu de {price}'**
+  String groupBuyPrice(String group, String price);
+
+  /// No description provided for @groupBuySharedDelivery.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison partagée : {fee}'**
+  String groupBuySharedDelivery(String fee);
+
+  /// No description provided for @groupBuyProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{committed} sur {min} · {members, plural, =0{personne encore} =1{1 voisin} other{{members} voisins}}'**
+  String groupBuyProgress(int committed, int min, int members);
+
+  /// No description provided for @groupBuyUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvert jusqu\'au {date}'**
+  String groupBuyUntil(String date);
+
+  /// No description provided for @groupBuyUnlocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Groupe complet : prix de groupe débloqué'**
+  String get groupBuyUnlocked;
+
+  /// No description provided for @groupBuyMine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma part : {quantity}'**
+  String groupBuyMine(int quantity);
+
+  /// No description provided for @groupBuyJoin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rejoindre le groupe'**
+  String get groupBuyJoin;
+
+  /// No description provided for @groupBuyChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer ma part'**
+  String get groupBuyChange;
+
+  /// No description provided for @groupBuyAddToCart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mettre ma part au panier'**
+  String get groupBuyAddToCart;
+
+  /// No description provided for @groupBuyQuantity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité'**
+  String get groupBuyQuantity;
+
+  /// No description provided for @groupBuyQuantityHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'0 pour quitter le groupe.'**
+  String get groupBuyQuantityHint;
+
+  /// No description provided for @groupBuyLockedHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le groupe est complet : tu peux augmenter ta part, pas la réduire.'**
+  String get groupBuyLockedHint;
+
+  /// No description provided for @groupBuyClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet achat groupé est fermé.'**
+  String get groupBuyClosed;
+
+  /// No description provided for @groupBuyLocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le groupe est complet : ta part ne peut plus baisser.'**
+  String get groupBuyLocked;
+
+  /// No description provided for @groupOfferTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offres groupées'**
+  String get groupOfferTitle;
+
+  /// No description provided for @groupOfferHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Propose un prix de groupe aux clientes de tes quartiers : quand la quantité est atteinte, chacune l\'obtient, avec des frais de livraison réduits si tu veux.'**
+  String get groupOfferHint;
+
+  /// No description provided for @groupOfferEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune offre groupée.'**
+  String get groupOfferEmpty;
+
+  /// No description provided for @groupOfferNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle offre groupée'**
+  String get groupOfferNew;
+
+  /// No description provided for @groupOfferPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix de groupe à l\'unité'**
+  String get groupOfferPrice;
+
+  /// No description provided for @groupOfferMin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité totale minimale'**
+  String get groupOfferMin;
+
+  /// No description provided for @groupOfferFee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison des membres (facultatif)'**
+  String get groupOfferFee;
+
+  /// No description provided for @groupOfferCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler l\'offre'**
+  String get groupOfferCancel;
+
+  /// No description provided for @groupOfferCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée'**
+  String get groupOfferCancelled;
+
+  /// No description provided for @groupOfferInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais.'**
+  String get groupOfferInvalid;
 }
 
 class _DymLocalizationsDelegate

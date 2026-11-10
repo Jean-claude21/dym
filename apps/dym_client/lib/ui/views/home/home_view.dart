@@ -184,6 +184,7 @@ class _HomeViewState extends State<HomeView> {
           onFavorites: _navigator.toFavorites,
           onBaskets: _navigator.toBaskets,
           onSpaces: _navigator.toSpaces,
+          onGroupBuys: _navigator.toGroupBuys,
           onCreator: _navigator.toCreatorStudio,
         ),
       },
