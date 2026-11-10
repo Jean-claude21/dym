@@ -9282,6 +9282,138 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Cette boutique n\'est pas dans ton pays.'**
   String get qrPayCurrency;
+
+  /// No description provided for @creditTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ardoise'**
+  String get creditTitle;
+
+  /// No description provided for @creditNew.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle cliente'**
+  String get creditNew;
+
+  /// No description provided for @creditTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'On te doit {amount}'**
+  String creditTotal(String amount);
+
+  /// No description provided for @creditNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ardoise vide'**
+  String get creditNone;
+
+  /// No description provided for @creditNoneHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note ici ce que tes clientes te doivent : tu ne perds plus rien.'**
+  String get creditNoneHint;
+
+  /// No description provided for @creditLoadError.
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'ardoise n\'a pas pu être chargée.'**
+  String get creditLoadError;
+
+  /// No description provided for @creditLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond {amount}'**
+  String creditLimit(String amount);
+
+  /// No description provided for @creditOwes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Doit {amount}'**
+  String creditOwes(String amount);
+
+  /// No description provided for @creditAddDebt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle prend à crédit'**
+  String get creditAddDebt;
+
+  /// No description provided for @creditAddPayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle rembourse'**
+  String get creditAddPayment;
+
+  /// No description provided for @creditRemind.
+  ///
+  /// In fr, this message translates to:
+  /// **'Relancer sur WhatsApp'**
+  String get creditRemind;
+
+  /// No description provided for @creditArchive.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ardoise soldée : la retirer'**
+  String get creditArchive;
+
+  /// No description provided for @creditDebt.
+  ///
+  /// In fr, this message translates to:
+  /// **'Crédit'**
+  String get creditDebt;
+
+  /// No description provided for @creditPayment.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remboursement'**
+  String get creditPayment;
+
+  /// No description provided for @creditName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la cliente'**
+  String get creditName;
+
+  /// No description provided for @creditLimitField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond (facultatif)'**
+  String get creditLimitField;
+
+  /// No description provided for @creditCreate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir l\'ardoise'**
+  String get creditCreate;
+
+  /// No description provided for @creditNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note (facultatif)'**
+  String get creditNote;
+
+  /// No description provided for @creditLimitReached.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond dépassé : elle doit d\'abord rembourser.'**
+  String get creditLimitReached;
+
+  /// No description provided for @creditPaymentTooHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus que ce qu\'elle doit.'**
+  String get creditPaymentTooHigh;
+
+  /// No description provided for @creditAlreadyReminded.
+  ///
+  /// In fr, this message translates to:
+  /// **'Déjà relancée aujourd\'hui.'**
+  String get creditAlreadyReminded;
+
+  /// No description provided for @creditReminderText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour {name}, petit rappel de {store} : il reste {amount} sur ton ardoise. Merci !'**
+  String creditReminderText(String name, String amount, String store);
 }
 
 class _DymLocalizationsDelegate

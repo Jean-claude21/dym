@@ -6702,5 +6702,61 @@
   "qrPayClose": "Terminer",
   "qrPayInvalidCode": "Code inconnu, expiré ou déjà payé.",
   "qrPayOwnStore": "C'est ta propre boutique.",
-  "qrPayCurrency": "Cette boutique n'est pas dans ton pays."
+  "qrPayCurrency": "Cette boutique n'est pas dans ton pays.",
+  "creditTitle": "Ardoise",
+  "creditNew": "Nouvelle cliente",
+  "creditTotal": "On te doit {amount}",
+  "@creditTotal": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "creditNone": "Ardoise vide",
+  "creditNoneHint": "Note ici ce que tes clientes te doivent : tu ne perds plus rien.",
+  "creditLoadError": "L'ardoise n'a pas pu être chargée.",
+  "creditLimit": "Plafond {amount}",
+  "@creditLimit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "creditOwes": "Doit {amount}",
+  "@creditOwes": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "creditAddDebt": "Elle prend à crédit",
+  "creditAddPayment": "Elle rembourse",
+  "creditRemind": "Relancer sur WhatsApp",
+  "creditArchive": "Ardoise soldée : la retirer",
+  "creditDebt": "Crédit",
+  "creditPayment": "Remboursement",
+  "creditName": "Nom de la cliente",
+  "creditLimitField": "Plafond (facultatif)",
+  "creditCreate": "Ouvrir l'ardoise",
+  "creditNote": "Note (facultatif)",
+  "creditLimitReached": "Plafond dépassé : elle doit d'abord rembourser.",
+  "creditPaymentTooHigh": "Plus que ce qu'elle doit.",
+  "creditAlreadyReminded": "Déjà relancée aujourd'hui.",
+  "creditReminderText": "Bonjour {name}, petit rappel de {store} : il reste {amount} sur ton ardoise. Merci !",
+  "@creditReminderText": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      },
+      "store": {
+        "type": "String"
+      }
+    }
+  }
 }

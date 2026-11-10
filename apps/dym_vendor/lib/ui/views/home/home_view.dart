@@ -164,6 +164,7 @@ class _HomeViewState extends State<HomeView> {
           onEdit: _navigator.toStoreSetting,
           onReviews: _navigator.toReviews,
           onCourierCash: _navigator.toCourierCash,
+          onCredit: _navigator.toCredit,
           onTill: _navigator.toTill,
           onContents: _contents ? _navigator.toContents : null,
           onBroadcast: _broadcast ? _navigator.toBroadcast : null,

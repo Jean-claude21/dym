@@ -11,6 +11,7 @@ import 'package:dym_vendor/app/vendor_app.dart';
 import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
+import 'package:dym_vendor/features/credit/credit_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/courier_cash_view.dart';
@@ -104,6 +105,12 @@ Future<void> configureServices(DymEnvironment environment) async {
         products: () => locator<CatalogService>().products(),
         config: stores.countryConfig,
         photo: (key) => dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerSingleton<CreditService>(
+      NeonCreditService(
+        credits: CreditRepository(neon.data),
+        config: stores.countryConfig,
       ),
     )
     ..registerSingleton<TillService>(
