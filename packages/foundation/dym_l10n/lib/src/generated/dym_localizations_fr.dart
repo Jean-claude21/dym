@@ -5489,4 +5489,80 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get qrPayCurrency => 'Cette boutique n\'est pas dans ton pays.';
+
+  @override
+  String get creditTitle => 'Ardoise';
+
+  @override
+  String get creditNew => 'Nouvelle cliente';
+
+  @override
+  String creditTotal(String amount) {
+    return 'On te doit $amount';
+  }
+
+  @override
+  String get creditNone => 'Ardoise vide';
+
+  @override
+  String get creditNoneHint =>
+      'Note ici ce que tes clientes te doivent : tu ne perds plus rien.';
+
+  @override
+  String get creditLoadError => 'L\'ardoise n\'a pas pu être chargée.';
+
+  @override
+  String creditLimit(String amount) {
+    return 'Plafond $amount';
+  }
+
+  @override
+  String creditOwes(String amount) {
+    return 'Doit $amount';
+  }
+
+  @override
+  String get creditAddDebt => 'Elle prend à crédit';
+
+  @override
+  String get creditAddPayment => 'Elle rembourse';
+
+  @override
+  String get creditRemind => 'Relancer sur WhatsApp';
+
+  @override
+  String get creditArchive => 'Ardoise soldée : la retirer';
+
+  @override
+  String get creditDebt => 'Crédit';
+
+  @override
+  String get creditPayment => 'Remboursement';
+
+  @override
+  String get creditName => 'Nom de la cliente';
+
+  @override
+  String get creditLimitField => 'Plafond (facultatif)';
+
+  @override
+  String get creditCreate => 'Ouvrir l\'ardoise';
+
+  @override
+  String get creditNote => 'Note (facultatif)';
+
+  @override
+  String get creditLimitReached =>
+      'Plafond dépassé : elle doit d\'abord rembourser.';
+
+  @override
+  String get creditPaymentTooHigh => 'Plus que ce qu\'elle doit.';
+
+  @override
+  String get creditAlreadyReminded => 'Déjà relancée aujourd\'hui.';
+
+  @override
+  String creditReminderText(String name, String amount, String store) {
+    return 'Bonjour $name, petit rappel de $store : il reste $amount sur ton ardoise. Merci !';
+  }
 }

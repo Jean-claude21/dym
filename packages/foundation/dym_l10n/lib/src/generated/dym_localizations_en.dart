@@ -5449,4 +5449,79 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get qrPayCurrency => 'This shop is not in your country.';
+
+  @override
+  String get creditTitle => 'Credit book';
+
+  @override
+  String get creditNew => 'New customer';
+
+  @override
+  String creditTotal(String amount) {
+    return 'You are owed $amount';
+  }
+
+  @override
+  String get creditNone => 'Credit book empty';
+
+  @override
+  String get creditNoneHint =>
+      'Write down what your customers owe you: nothing gets lost.';
+
+  @override
+  String get creditLoadError => 'The credit book could not be loaded.';
+
+  @override
+  String creditLimit(String amount) {
+    return 'Limit $amount';
+  }
+
+  @override
+  String creditOwes(String amount) {
+    return 'Owes $amount';
+  }
+
+  @override
+  String get creditAddDebt => 'She buys on credit';
+
+  @override
+  String get creditAddPayment => 'She pays back';
+
+  @override
+  String get creditRemind => 'Remind on WhatsApp';
+
+  @override
+  String get creditArchive => 'Settled: remove it';
+
+  @override
+  String get creditDebt => 'Credit';
+
+  @override
+  String get creditPayment => 'Payment';
+
+  @override
+  String get creditName => 'Customer name';
+
+  @override
+  String get creditLimitField => 'Limit (optional)';
+
+  @override
+  String get creditCreate => 'Open the credit';
+
+  @override
+  String get creditNote => 'Note (optional)';
+
+  @override
+  String get creditLimitReached => 'Limit reached: she must pay back first.';
+
+  @override
+  String get creditPaymentTooHigh => 'More than she owes.';
+
+  @override
+  String get creditAlreadyReminded => 'Already reminded today.';
+
+  @override
+  String creditReminderText(String name, String amount, String store) {
+    return 'Hello $name, a small reminder from $store: $amount is left on your credit. Thank you!';
+  }
 }

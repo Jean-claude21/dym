@@ -12,6 +12,8 @@ import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
+import 'package:dym_vendor/features/credit/credit_service.dart';
+import 'package:dym_vendor/features/credit/credit_views.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/courier_cash_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
@@ -68,6 +70,9 @@ abstract interface class AppNavigator {
 
   /// « Ma caisse » (spec 045).
   void toTill();
+
+  /// Ardoise (spec 047).
+  void toCredit();
 
   /// Aide (écran 66).
   void toHelp();
@@ -159,6 +164,19 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toCredit() {
+    if (!locator.isRegistered<CreditService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => CreditView(
+          service: locator<CreditService>(),
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toTill() {

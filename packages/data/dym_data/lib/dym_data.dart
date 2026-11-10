@@ -10,6 +10,7 @@ export 'src/catalog_repository.dart';
 export 'src/content_repository.dart';
 export 'src/copilot_repository.dart';
 export 'src/courier_repository.dart';
+export 'src/credit_repository.dart';
 export 'src/discovery_repository.dart';
 export 'src/dispute_repository.dart';
 export 'src/events_repository.dart';

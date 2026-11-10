@@ -108,6 +108,9 @@ class _Navigator implements AppNavigator {
   void toTill() => routes.add('till');
 
   @override
+  void toCredit() => routes.add('credit');
+
+  @override
   void toContents() => routes.add('contents');
 
   @override
