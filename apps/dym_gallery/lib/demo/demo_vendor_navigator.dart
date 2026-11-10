@@ -53,6 +53,9 @@ class DemoVendorNavigator implements AppNavigator {
   void toStudio() {}
 
   @override
+  void toWholesale() {}
+
+  @override
   void toContents() {}
 
   @override

@@ -9498,6 +9498,156 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Fin de marché -{percent} %'**
   String endOfMarketBadge(int percent);
+
+  /// No description provided for @wholesaleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achats de gros'**
+  String get wholesaleTitle;
+
+  /// No description provided for @wholesaleHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achetez à plusieurs chez un grossiste : le prix de gros, même pour de petites quantités. Le règlement se fait avec le grossiste.'**
+  String get wholesaleHint;
+
+  /// No description provided for @wholesaleOpen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Offres en cours'**
+  String get wholesaleOpen;
+
+  /// No description provided for @wholesaleNoOffer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune offre de gros pour le moment.'**
+  String get wholesaleNoOffer;
+
+  /// No description provided for @wholesaleMine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes offres de grossiste'**
+  String get wholesaleMine;
+
+  /// No description provided for @wholesaleBecome.
+  ///
+  /// In fr, this message translates to:
+  /// **'Je suis grossiste : proposer des offres'**
+  String get wholesaleBecome;
+
+  /// No description provided for @wholesaleNewOffer.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle offre'**
+  String get wholesaleNewOffer;
+
+  /// No description provided for @wholesaleUnitPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'{price} l\'unité'**
+  String wholesaleUnitPrice(String price);
+
+  /// No description provided for @wholesaleProgress.
+  ///
+  /// In fr, this message translates to:
+  /// **'{committed} sur {min} réservés · {buyers, plural, =0{aucune acheteuse} =1{1 acheteuse} other{{buyers} acheteuses}}'**
+  String wholesaleProgress(int committed, int min, int buyers);
+
+  /// No description provided for @wholesaleUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouverte jusqu\'au {date}'**
+  String wholesaleUntil(String date);
+
+  /// No description provided for @wholesaleConfirmed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmée'**
+  String get wholesaleConfirmed;
+
+  /// No description provided for @wholesaleCancelled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulée'**
+  String get wholesaleCancelled;
+
+  /// No description provided for @wholesaleClosed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Close'**
+  String get wholesaleClosed;
+
+  /// No description provided for @wholesaleMyQuantity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma réservation : {quantity}'**
+  String wholesaleMyQuantity(int quantity);
+
+  /// No description provided for @wholesaleCommit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réserver'**
+  String get wholesaleCommit;
+
+  /// No description provided for @wholesaleChange.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer ma réservation'**
+  String get wholesaleChange;
+
+  /// No description provided for @wholesaleConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Confirmer l\'achat'**
+  String get wholesaleConfirm;
+
+  /// No description provided for @wholesaleCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler l\'offre'**
+  String get wholesaleCancel;
+
+  /// No description provided for @wholesaleQuantity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité'**
+  String get wholesaleQuantity;
+
+  /// No description provided for @wholesaleQuantityHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'0 pour retirer ta réservation.'**
+  String get wholesaleQuantityHint;
+
+  /// No description provided for @wholesaleUnitPriceField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix de gros à l\'unité'**
+  String get wholesaleUnitPriceField;
+
+  /// No description provided for @wholesaleMinQuantity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quantité minimale'**
+  String get wholesaleMinQuantity;
+
+  /// No description provided for @wholesaleDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 jour} other{{count} jours}}'**
+  String wholesaleDays(int count);
+
+  /// No description provided for @wholesalePublish.
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier l\'offre'**
+  String get wholesalePublish;
+
+  /// No description provided for @wholesaleMinimumNotReached.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le minimum n\'est pas encore atteint.'**
+  String get wholesaleMinimumNotReached;
 }
 
 class _DymLocalizationsDelegate

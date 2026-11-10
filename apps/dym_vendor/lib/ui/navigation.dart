@@ -27,6 +27,7 @@ import 'package:dym_vendor/features/till/end_of_market_view.dart';
 import 'package:dym_vendor/features/till/qr_charge_view.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:dym_vendor/features/till/till_view.dart';
+import 'package:dym_vendor/features/wholesale/wholesale_view.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -77,6 +78,9 @@ abstract interface class AppNavigator {
 
   /// Partage de la boutique et fin de marché (spec 048).
   void toStudio();
+
+  /// Achat de gros groupé (spec 049).
+  void toWholesale();
 
   /// Aide (écran 66).
   void toHelp();
@@ -168,6 +172,19 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toWholesale() {
+    if (!locator.isRegistered<WholesaleService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => WholesaleView(
+          service: locator<WholesaleService>(),
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toStudio() {

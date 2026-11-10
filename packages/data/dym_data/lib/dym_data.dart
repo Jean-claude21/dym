@@ -29,3 +29,4 @@ export 'src/till_repository.dart';
 export 'src/vendor_dashboard_repository.dart';
 export 'src/vendor_order_repository.dart';
 export 'src/wallet_repository.dart';
+export 'src/wholesale_repository.dart';

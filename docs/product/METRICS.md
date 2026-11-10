@@ -71,3 +71,4 @@ fiabilité (ops).
 | `qr_paid` (montant) | Serveur | Paiement par QR (spec 046) |
 | `credit_given`, `credit_repaid` (montant), `credit_reminded` (dû) | Serveur | Ardoise (spec 047) |
 | `end_of_market_started` (pourcentage, durée, produits) | Serveur | Partage et fin de marché (spec 048) |
+| `wholesale_offer_opened` (minimum, durée), `wholesale_committed` (quantité) | Serveur | Achat de gros (spec 049) |
