@@ -43,7 +43,7 @@ sponsorisée.
 
 ## Assumptions
 
-- Formules de départ du Togo (prix à valider par le porteur produit) : DYM+ 1 500 F / 30 jours,
+- Formules de départ du Togo (prix validés par le porteur produit le 2026-11-11) : DYM+ 1 500 F / 30 jours,
   Vendeuse Pro 3 000 F / 30 jours, « À la une » 1 000 F / 7 jours. L'écran d'administration des
   formules relève de `ops-center`.
 - Pas de renouvellement automatique : la personne prolonge elle-même.
