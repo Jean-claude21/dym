@@ -4742,4 +4742,80 @@ class DymLocalizationsFr extends DymLocalizations {
     );
     return 'Appel · $_temp0';
   }
+
+  @override
+  String get accountCreator => 'Créer et partager';
+
+  @override
+  String get creatorTitle => 'Studio créatrice';
+
+  @override
+  String get creatorIntro =>
+      'Partage tes recettes, tes astuces et tes trouvailles du marché. Tague les produits : on les achète d\'un geste.';
+
+  @override
+  String get creatorName => 'Nom de créatrice';
+
+  @override
+  String get creatorNameHint => 'Ex. Awa cuisine';
+
+  @override
+  String get creatorBio => 'Courte présentation (facultatif)';
+
+  @override
+  String get creatorBecome => 'Ouvrir mon studio';
+
+  @override
+  String get creatorErrorName => 'Ton nom de créatrice : 2 à 40 caractères.';
+
+  @override
+  String get creatorErrorMedia =>
+      'Ce média ne peut pas être publié : choisis-en un autre.';
+
+  @override
+  String get creatorNewPost => 'Nouveau post';
+
+  @override
+  String get creatorMyPosts => 'Mes posts';
+
+  @override
+  String get creatorNoPost =>
+      'Pas encore de post : partage ta première recette !';
+
+  @override
+  String creatorPostStats(int views, int clicks, int tags) {
+    return '$views vues · $clicks clics · $tags produits';
+  }
+
+  @override
+  String get creatorArchive => 'Archiver';
+
+  @override
+  String get creatorPickVideo => 'Vidéo (60 s)';
+
+  @override
+  String get creatorCaption => 'Légende';
+
+  @override
+  String get creatorCaptionHint => 'Ex. Ma sauce gombo du dimanche';
+
+  @override
+  String get creatorCategory => 'Catégorie';
+
+  @override
+  String get creatorSuggestCategory => 'Laisser l\'IA choisir';
+
+  @override
+  String get creatorCategoryHint => 'Sans choix, ton post va dans « Autre ».';
+
+  @override
+  String creatorTagProducts(int count, int max) {
+    return 'Produits tagués ($count/$max)';
+  }
+
+  @override
+  String get creatorSearchProducts => 'Chercher un produit à taguer';
+
+  @override
+  String get creatorPublish => 'Publier';
 }

@@ -20,7 +20,7 @@
 | 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h | ✅ Faite (specs 024, 025) ; gate : démonstration web à faire |
 | 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
-| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ⬜ À faire |
+| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | 🔵 En cours : 1 spec sur 5 |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ⬜ À faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
@@ -141,13 +141,13 @@ en plus d'une heure.
 | `spaces-money` | Poche commune, contributions des membres, paiement depuis l'espace, budget par personne | ✅ Spec 032 · PR #40 (poche au grand livre, versements depuis le wallet, part de chacun ce mois, validation financée par la poche) |
 | `preorder-slots` | Précommande à prix bloqué, créneaux, courses récurrentes | ✅ Spec 033 · PR #41 (créneaux par pays, arrivages à prix bloqué, commande programmée validée en base ; récurrence : spec 029) |
 | `substitution-freshness` | Remplacement validé par photo, garantie fraîcheur | ✅ Spec 034 · PR #42 (remplacement même prix validé par la cliente, refus et fraîcheur rendus sur le wallet au grand livre, délai et limite par pays) |
-| `chat-calls` | Vocaux, médias, livreur dans la conversation, appel audio et vidéo | ✅ Spec 035 (vocaux privés, appels audio et vidéo tenus en base, média simulé et signalé jusqu'au vrai fournisseur ; livreur : phase 11) |
+| `chat-calls` | Vocaux, médias, livreur dans la conversation, appel audio et vidéo | ✅ Spec 035 · PR #43 (vocaux privés, appels audio et vidéo tenus en base, média simulé et signalé jusqu'au vrai fournisseur ; livreur : phase 11) |
 
 ## Phase 10 — Contenus
 
 | Spec | Contenu | État |
 |---|---|---|
-| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération | ⬜ À faire |
+| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération | ✅ Spec 036 (studio créatrice, posts photo et vidéo, catégorie choisie, proposée par l'IA ou « Autre », produits de toutes boutiques, modération existante) |
 | `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires | ⬜ À faire |
 | `recipe-to-cart` | « Tout pour la faire », rayon ustensiles, ingrédients génériques reliés aux vendeuses | ⬜ À faire |
 | `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord | ⬜ À faire |

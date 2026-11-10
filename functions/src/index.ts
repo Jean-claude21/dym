@@ -33,6 +33,7 @@ import { aiIntentPlanner, openAiPlannerProviders, pgCopilotStore } from "./copil
 import { pgBroadcastStore } from "./broadcast/routes.js";
 import { pgShoppingReminders } from "./shopping/reminders.js";
 import { pgOrderPhotoStore } from "./orders/photos.js";
+import { aiContentClassifier, openAiClassifierProviders, pgCreatorContentStore } from "./content/creators.js";
 
 // Mode filtré : seules les variables de la plateforme utilisées sont exigées.
 // Les variables propres à la Function sont facultatives (vides : désactivées).
@@ -73,6 +74,11 @@ export default createApp({
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
   shoppingReminders: pgShoppingReminders(pool),
+  creatorContent: {
+    store: pgCreatorContentStore(pool),
+    signer: s3PhotoSigner({ ...env.storage, bucket: PRODUCT_PHOTOS_BUCKET }),
+    classifier: openAiKey ? aiContentClassifier(openAiClassifierProviders(openAiKey)) : undefined,
+  },
   orderPhotos: {
     store: pgOrderPhotoStore(pool),
     signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),

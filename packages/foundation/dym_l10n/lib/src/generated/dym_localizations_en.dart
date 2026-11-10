@@ -4708,4 +4708,80 @@ class DymLocalizationsEn extends DymLocalizations {
     );
     return 'Call · $_temp0';
   }
+
+  @override
+  String get accountCreator => 'Create and share';
+
+  @override
+  String get creatorTitle => 'Creator studio';
+
+  @override
+  String get creatorIntro =>
+      'Share your recipes, tips and market finds. Tag the products: people buy them in one tap.';
+
+  @override
+  String get creatorName => 'Creator name';
+
+  @override
+  String get creatorNameHint => 'E.g. Awa cooks';
+
+  @override
+  String get creatorBio => 'Short bio (optional)';
+
+  @override
+  String get creatorBecome => 'Open my studio';
+
+  @override
+  String get creatorErrorName => 'Your creator name: 2 to 40 characters.';
+
+  @override
+  String get creatorErrorMedia =>
+      'This media cannot be published: choose another one.';
+
+  @override
+  String get creatorNewPost => 'New post';
+
+  @override
+  String get creatorMyPosts => 'My posts';
+
+  @override
+  String get creatorNoPost => 'No post yet: share your first recipe!';
+
+  @override
+  String creatorPostStats(int views, int clicks, int tags) {
+    return '$views views · $clicks clicks · $tags products';
+  }
+
+  @override
+  String get creatorArchive => 'Archive';
+
+  @override
+  String get creatorPickVideo => 'Video (60 s)';
+
+  @override
+  String get creatorCaption => 'Caption';
+
+  @override
+  String get creatorCaptionHint => 'E.g. My Sunday okra stew';
+
+  @override
+  String get creatorCategory => 'Category';
+
+  @override
+  String get creatorSuggestCategory => 'Let AI choose';
+
+  @override
+  String get creatorCategoryHint =>
+      'Without a choice, your post goes to “Other”.';
+
+  @override
+  String creatorTagProducts(int count, int max) {
+    return 'Tagged products ($count/$max)';
+  }
+
+  @override
+  String get creatorSearchProducts => 'Search a product to tag';
+
+  @override
+  String get creatorPublish => 'Publish';
 }

@@ -378,32 +378,54 @@ class _ContentPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        InkWell(
-                          onTap: onOpenStore == null
-                              ? null
-                              : () => onOpenStore!(content.store.id),
-                          child: Wrap(
+                        if (content.store case final store?)
+                          InkWell(
+                            onTap: onOpenStore == null
+                                ? null
+                                : () => onOpenStore!(store.id),
+                            child: Wrap(
+                              spacing: DymTokenSpace.s2,
+                              runSpacing: DymTokenSpace.s1,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                Text(
+                                  store.name,
+                                  style: t.title.copyWith(color: Colors.white),
+                                ),
+                                if (originOf(store.origin) case final o?)
+                                  DymOriginBadge(
+                                    origin: o,
+                                    label: originLabel(
+                                      vm.config,
+                                      store.origin,
+                                      locale,
+                                    ),
+                                    dense: true,
+                                  ),
+                              ],
+                            ),
+                          )
+                        else if (content.author case final author?)
+                          Wrap(
                             spacing: DymTokenSpace.s2,
                             runSpacing: DymTokenSpace.s1,
                             crossAxisAlignment: WrapCrossAlignment.center,
                             children: [
+                              const Icon(
+                                Icons.person_pin_rounded,
+                                color: Colors.white,
+                              ),
                               Text(
-                                content.store.name,
+                                author.displayName,
                                 style: t.title.copyWith(color: Colors.white),
                               ),
-                              if (originOf(content.store.origin) case final o?)
-                                DymOriginBadge(
-                                  origin: o,
-                                  label: originLabel(
-                                    vm.config,
-                                    content.store.origin,
-                                    locale,
-                                  ),
-                                  dense: true,
+                              if (content.category case final cat?)
+                                Chip(
+                                  visualDensity: VisualDensity.compact,
+                                  label: Text(cat.label.resolve(locale)),
                                 ),
                             ],
                           ),
-                        ),
                         if (content.caption case final caption?)
                           Text(
                             caption,

@@ -17,6 +17,7 @@ import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
 import { type CopilotDeps, registerCopilotRoutes } from "./copilot/routes.js";
+import { type CreatorContentDeps, registerCreatorContentRoutes } from "./content/creators.js";
 import { registerContentRoutes } from "./content/routes.js";
 import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes.js";
 
@@ -39,6 +40,8 @@ export interface AppDeps {
   /** Admin des opérations (spec 013). */
   admin?: AdminStore;
   recaps?: VendorRecaps;
+  /** Contenus des créatrices (spec 036). */
+  creatorContent?: CreatorContentDeps;
   /** Photos des commandes (spec 034). */
   orderPhotos?: OrderPhotoDeps;
   /** Rappels des courses récurrentes (spec 029). */
@@ -120,6 +123,7 @@ export function createApp(deps: AppDeps) {
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
   registerCopilotRoutes(app, deps.verifyToken, deps.copilot);
   registerContentRoutes(app, deps.verifyToken, deps.catalog);
+  registerCreatorContentRoutes(app, deps.verifyToken, deps.creatorContent);
   registerBroadcastRoutes(app, deps.verifyToken, deps.broadcasts);
 
   return app;

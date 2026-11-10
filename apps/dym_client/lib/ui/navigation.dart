@@ -15,6 +15,8 @@ import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/content/stories.dart';
+import 'package:dym_client/features/creator/creator_service.dart';
+import 'package:dym_client/features/creator/creator_views.dart';
 import 'package:dym_client/features/discovery/aisle/aisle_view.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_view.dart';
@@ -118,6 +120,9 @@ abstract interface class AppNavigator {
 
   /// Mes espaces (spec 031).
   void toSpaces();
+
+  /// Studio créatrice (spec 036).
+  void toCreatorStudio();
 
   /// Un espace (notification, liste).
   Future<void> toSpace(String spaceId);
@@ -499,6 +504,29 @@ class StackedAppNavigator implements AppNavigator {
       },
     ),
   );
+
+  @override
+  void toCreatorStudio() {
+    if (!locator.isRegistered<CreatorService>()) return;
+    final service = locator<CreatorService>();
+    _push(
+      CreatorStudioView(
+        service: service,
+        onBack: _back,
+        onCompose: () async =>
+            await _navigator.push<bool>(
+              MaterialPageRoute(
+                builder: (context) => ComposePostView(
+                  service: service,
+                  onBack: () => Navigator.of(context).pop(false),
+                  onPublished: () => Navigator.of(context).pop(true),
+                ),
+              ),
+            ) ??
+            false,
+      ),
+    );
+  }
 
   @override
   void toSpaces() {
