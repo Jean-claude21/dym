@@ -21,6 +21,7 @@ class CartPageView extends StackedView<CartViewModel> {
     required this.onOrdered,
     required this.onBrowse,
     super.key,
+    this.onSave,
   });
 
   final CartService service;
@@ -32,6 +33,9 @@ class CartPageView extends StackedView<CartViewModel> {
 
   /// Panier vide : retour aux boutiques.
   final VoidCallback onBrowse;
+
+  /// « Enregistrer ce panier » (spec 030) ; absent : masqué.
+  final Future<void> Function(BuildContext context)? onSave;
 
   @override
   CartViewModel viewModelBuilder(BuildContext context) => CartViewModel(
@@ -82,6 +86,20 @@ class CartPageView extends StackedView<CartViewModel> {
             header,
             if (vm.offline && !cart.isEmpty)
               _OfflineBanner(label: l10n.errorOffline),
+            if (onSave case final save? when !cart.isEmpty)
+              DymContentWidth.form(
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: TextButton.icon(
+                      onPressed: () => save(context),
+                      icon: const Icon(Icons.bookmark_add_rounded),
+                      label: Text(l10n.basketSave),
+                    ),
+                  ),
+                ),
+              ),
             Expanded(child: body),
           ],
         ),

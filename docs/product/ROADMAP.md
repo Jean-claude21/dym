@@ -19,14 +19,14 @@
 | 6 · Assainissement | Corrections relevées, CI au vert | CI verte sur `dev`, parcours rejoués en web | ~5 h | ✅ Faite (spec 023) |
 | 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h | ✅ Faite (specs 024, 025) ; gate : démonstration web à faire |
 | 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
-| 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ⬜ À faire |
+| 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | 🔵 En cours : 1 spec sur 5 |
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ⬜ À faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ⬜ À faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain à faire · ⬜ à faire · ➖ remplacée.
-Mis à jour à chaque spec (dernière mise à jour : 2026-11-09).
+Mis à jour à chaque spec (dernière mise à jour : 2026-11-10).
 
 Les gates des phases 6 à 13 se valident par une démonstration web au porteur produit, en simulation
 pour tout service indisponible. Les durées sont des estimations.
@@ -130,13 +130,13 @@ en plus d'une heure.
 | `premium-foundation` | Squelettes, cache d'images, animations, onglet Panier, commande en un écran | ✅ Spec 026 · PR #33 |
 | `home-redesign` | Accueil « Qu'est-ce qu'on mange ? », fil personnel | ✅ Spec 027 · PR #35 |
 | `ai-search-ranking` | Compréhension, savoir (quantités, noms locaux), règles de classement réglables, explication | ✅ Spec 028 · PR #36 |
-| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence | ✅ Spec 029 (listes libres, liste habituelle, liste décrite à l'IA, panier composé en base, rappels à 8 h) |
+| `shopping-agent` | Agent de courses, composition de panier, validation, récurrence | ✅ Spec 029 · PR #37 (listes libres, liste habituelle, liste décrite à l'IA, panier composé en base, rappels à 8 h) |
 
 ## Phase 9 — Vie réelle
 
 | Spec | Contenu | État |
 |---|---|---|
-| `address-book-favorites` | Carnet, favoris, paniers enregistrés | ⬜ À faire |
+| `address-book-favorites` | Carnet, favoris, paniers enregistrés | ✅ Spec 030 (cœurs boutique et produit, « Mes favoris », paniers enregistrés remis au panier au prix du jour ; adresses : spec 009) |
 | `spaces` | Espaces illimités, rôles, budget, validation, paiement partagé, commande pour un proche | ⬜ À faire |
 | `preorder-slots` | Précommande à prix bloqué, créneaux, courses récurrentes | ⬜ À faire |
 | `substitution-freshness` | Remplacement validé par photo, garantie fraîcheur | ⬜ À faire |

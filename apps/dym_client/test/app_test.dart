@@ -125,6 +125,12 @@ class _Navigator implements AppNavigator {
   void toShoppingLists() => routes.add('shopping');
 
   @override
+  void toFavorites() => routes.add('favorites');
+
+  @override
+  void toBaskets() => routes.add('baskets');
+
+  @override
   Future<void> toShoppingList(String listId) async =>
       routes.add('shopping:$listId');
 }

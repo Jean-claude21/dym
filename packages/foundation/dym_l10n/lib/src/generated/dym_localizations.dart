@@ -7056,6 +7056,162 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'« {name} » : vérifie et valide ton panier.'**
   String notifShoppingDueBody(String name);
+
+  /// Cœur vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux favoris'**
+  String get favoriteAdd;
+
+  /// Cœur plein
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer des favoris'**
+  String get favoriteRemove;
+
+  /// Titre des favoris
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes favoris'**
+  String get favoritesTitle;
+
+  /// Section boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques'**
+  String get favoritesStores;
+
+  /// Section produits
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits'**
+  String get favoritesProducts;
+
+  /// Favoris vides
+  ///
+  /// In fr, this message translates to:
+  /// **'Touche le cœur d\'une boutique ou d\'un produit pour le retrouver ici.'**
+  String get favoritesEmpty;
+
+  /// Titre des paniers enregistrés
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes paniers'**
+  String get basketsTitle;
+
+  /// Paniers vides
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistre ton panier (petit-déjeuner, déjeuner, le mois…) depuis le panier pour le refaire en un geste.'**
+  String get basketsEmpty;
+
+  /// Bouton du panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer ce panier'**
+  String get basketSave;
+
+  /// Valider le nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get basketSaveAction;
+
+  /// Titre du dialogue
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du panier'**
+  String get basketName;
+
+  /// Exemple de nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. Petit-déjeuner'**
+  String get basketNameHint;
+
+  /// Après enregistrement
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier enregistré : retrouve-le dans « Mes paniers ».'**
+  String get basketSaved;
+
+  /// Remise au panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Remettre au panier'**
+  String get basketToCart;
+
+  /// Résumé du panier
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 article} other{{count} articles}} · {total} aujourd\'hui'**
+  String basketMeta(int count, String total);
+
+  /// Articles indisponibles
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 article indisponible} other{{count} articles indisponibles}}'**
+  String basketUnavailable(int count);
+
+  /// Articles non ajoutés
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas ajouté (plus disponible) : {items}'**
+  String basketSkipped(String items);
+
+  /// Menu du panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'actions pour {name}'**
+  String basketMore(String name);
+
+  /// Renommer
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer'**
+  String get basketRename;
+
+  /// Supprimer
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get basketDelete;
+
+  /// Confirmation
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » ?'**
+  String basketDeleteConfirm(String name);
+
+  /// Panier vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier est vide.'**
+  String get basketErrorEmpty;
+
+  /// Limite
+  ///
+  /// In fr, this message translates to:
+  /// **'20 paniers de 50 articles au plus : supprimes-en un.'**
+  String get basketErrorTooMany;
+
+  /// Nom manquant
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à ton panier.'**
+  String get basketErrorName;
+
+  /// Menu Moi
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes favoris'**
+  String get accountFavorites;
+
+  /// Menu Moi
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes paniers'**
+  String get accountBaskets;
 }
 
 class _DymLocalizationsDelegate

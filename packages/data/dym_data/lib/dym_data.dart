@@ -11,6 +11,7 @@ export 'src/copilot_repository.dart';
 export 'src/discovery_repository.dart';
 export 'src/dispute_repository.dart';
 export 'src/events_repository.dart';
+export 'src/favorites_repository.dart';
 export 'src/messaging_repository.dart';
 export 'src/order_tracking_repository.dart';
 export 'src/pilot_repository.dart';

@@ -1,8 +1,11 @@
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_client/features/favorites/favorites_service.dart';
+import 'package:dym_client/features/favorites/favorites_views.dart';
 import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -17,6 +20,7 @@ class StorePageView extends StackedView<StorePageViewModel> {
     super.key,
     this.onMessage,
     this.onReviews,
+    this.favorites,
   });
 
   final DiscoveryService service;
@@ -29,6 +33,9 @@ class StorePageView extends StackedView<StorePageViewModel> {
 
   /// Avis de la boutique (écran 64).
   final VoidCallback? onReviews;
+
+  /// Cœur de la boutique (spec 030) ; absent : masqué.
+  final FavoritesService? favorites;
 
   @override
   StorePageViewModel viewModelBuilder(BuildContext context) =>
@@ -110,6 +117,16 @@ class StorePageView extends StackedView<StorePageViewModel> {
                       onPressed: onBack,
                     ),
                   ),
+                  if (favorites case final f?)
+                    Positioned(
+                      top: MediaQuery.paddingOf(context).top + 8,
+                      right: 12,
+                      child: FavoriteButton(
+                        service: f,
+                        kind: FavoriteKind.store,
+                        id: storeId,
+                      ),
+                    ),
                 ],
               ),
               Padding(
