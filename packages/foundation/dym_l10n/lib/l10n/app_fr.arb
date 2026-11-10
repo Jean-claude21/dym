@@ -6879,5 +6879,99 @@
     }
   },
   "wholesalePublish": "Publier l'offre",
-  "wholesaleMinimumNotReached": "Le minimum n'est pas encore atteint."
+  "wholesaleMinimumNotReached": "Le minimum n'est pas encore atteint.",
+  "haggleAction": "Marchander",
+  "haggleTitle": "Marchander avec la vendeuse",
+  "haggleCurrent": "Prix affiché : {price}",
+  "@haggleCurrent": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "haggleHint": "Propose ton prix à l'unité pour {quantity, plural, =1{1 article} other{{quantity} articles}}. La vendeuse répond tout de suite.",
+  "@haggleHint": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "haggleOfferField": "Ton prix à l'unité",
+  "haggleSubmit": "Proposer",
+  "haggleAccepted": "Marché conclu : {price} l'unité. C'est dans ton panier pour 2 heures.",
+  "@haggleAccepted": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "haggleCountered": "La vendeuse propose {price} l'unité (valable 15 minutes).",
+  "@haggleCountered": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "haggleAcceptCounter": "Accepter ce prix",
+  "haggleAttemptsLeft": "{count, plural, =0{Plus d'essai aujourd'hui} =1{Encore 1 essai aujourd'hui} other{Encore {count} essais aujourd'hui}}",
+  "@haggleAttemptsLeft": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "haggleClose": "C'est bon",
+  "haggleCartBadge": "Prix marchandé",
+  "haggleErrorTooMany": "Tu as déjà marchandé 3 fois ce produit aujourd'hui.",
+  "haggleErrorNotLower": "Propose un prix plus bas que le prix affiché.",
+  "haggleErrorOff": "Cette vendeuse ne marchande pas ce produit.",
+  "haggleErrorExpired": "Ce prix n'est plus valable : propose à nouveau.",
+  "hagglingTitle": "Marchandage",
+  "hagglingHint": "Fixe jusqu'où tu acceptes de baisser. DYM répond à ta place, tout de suite ; la cliente ne voit jamais ta limite.",
+  "hagglingStoreLimit": "Remise maximale",
+  "hagglingOff": "Pas de marchandage",
+  "hagglingPercent": "{percent} %",
+  "@hagglingPercent": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "hagglingProducts": "Par produit",
+  "hagglingLikeStore": "Comme la boutique",
+  "hagglingNever": "Jamais",
+  "hagglingWeek": "{count, plural, =0{Aucun marché conclu cette semaine} =1{1 marché conclu cette semaine} other{{count} marchés conclus cette semaine}}",
+  "@hagglingWeek": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hagglingRecent": "Derniers marchandages",
+  "hagglingEmpty": "Aucun marchandage pour le moment.",
+  "hagglingLine": "{quantity} × {offer} proposé → {price}",
+  "@hagglingLine": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "offer": {
+        "type": "String"
+      },
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "hagglingStatusAccepted": "Conclu",
+  "hagglingStatusCountered": "Contre-prix",
+  "hagglingStatusUsed": "Commandé",
+  "hagglingStatusExpired": "Expiré"
 }

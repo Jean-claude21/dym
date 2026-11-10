@@ -117,6 +117,9 @@ class _Navigator implements AppNavigator {
   void toWholesale() => routes.add('wholesale');
 
   @override
+  void toHaggling() => routes.add('haggling');
+
+  @override
   void toContents() => routes.add('contents');
 
   @override

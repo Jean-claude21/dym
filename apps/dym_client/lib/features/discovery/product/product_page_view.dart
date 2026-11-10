@@ -7,6 +7,7 @@ import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_client/features/favorites/favorites_service.dart';
 import 'package:dym_client/features/favorites/favorites_views.dart';
+import 'package:dym_client/features/haggle/haggle_sheet.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -25,7 +26,11 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
     this.content,
     this.onVideos,
     this.favorites,
+    this.haggle,
   });
+
+  /// Marchandage (spec 050) ; absent : bouton masqué.
+  final HaggleService? haggle;
 
   /// Vidéos et signalement (spec 020) ; absent : rien n'est proposé.
   final ContentService? content;
@@ -363,6 +368,28 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                             ),
                           ),
                       ],
+                    ),
+                  ),
+                if (haggle case final haggle?
+                    when page.canHaggle &&
+                        canAdd &&
+                        vm.available &&
+                        vm.config != null &&
+                        vm.priceMinor != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => showHaggleSheet(
+                        context,
+                        service: haggle,
+                        config: vm.config!,
+                        variantId: variantId,
+                        quantity: vm.quantity,
+                        productName: item.name,
+                        priceMinor: vm.priceMinor!,
+                      ),
+                      icon: const Icon(Icons.handshake_rounded),
+                      label: Text(l10n.haggleAction),
                     ),
                   ),
                 if (showVariants) ...[

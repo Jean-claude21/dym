@@ -42,6 +42,7 @@ class CartLine {
     this.photoKey,
     this.stockQuantity,
     this.issues = const [],
+    this.listPriceMinor,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$CartLineFromJson(json);
@@ -67,6 +68,12 @@ class CartLine {
   bool get blocking =>
       issues.contains(CartLineIssue.unavailable) ||
       issues.contains(CartLineIssue.stock);
+
+  /// Prix du jour, quand la ligne porte un prix marchandé (spec 050).
+  @JsonKey(fromJson: nullableMinorFromJson)
+  final int? listPriceMinor;
+
+  bool get haggled => (listPriceMinor ?? 0) > unitPriceMinor;
 }
 
 /// Sous-panier d'une boutique.
