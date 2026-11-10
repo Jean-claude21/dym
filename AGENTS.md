@@ -56,7 +56,7 @@ node db/scripts/dym-db.mjs grant-admin <email> [--url <url>]   # rôle admin (au
 
 Functions (`functions/`, Node ≥ 22 en local, Node 24 sur Neon) : `npm ci && npm test`.
 
-Apps : `cd apps/dym_client && fvm flutter run -d chrome --dart-define=DYM_ENV=dev`. En
+Apps (`dym_client`, `dym_vendor`, `dym_delivery`, `dym_admin`) : `cd apps/dym_client && fvm flutter run -d chrome --dart-define=DYM_ENV=dev`. En
 `staging` ou `production`, `DYM_AUTH_URL`, `DYM_DATA_API_URL`, `DYM_FUNCTIONS_URL` et
 `DYM_MEDIA_URL` sont obligatoires.
 

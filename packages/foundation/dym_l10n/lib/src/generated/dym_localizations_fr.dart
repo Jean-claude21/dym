@@ -4979,4 +4979,155 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get tiktokPickCover => 'Choisir une photo de couverture';
+
+  @override
+  String get appNameDelivery => 'DYM Livreur';
+
+  @override
+  String get deliveryTagline => 'Tes courses, tes gains, sans dispute.';
+
+  @override
+  String get deliveryWelcomeBody =>
+      'Livre les commandes de ton quartier, à ton rythme.';
+
+  @override
+  String get deliveryPoint1 => 'Accepte les courses près de toi';
+
+  @override
+  String get deliveryPoint2 => 'Adresse et téléphone après acceptation';
+
+  @override
+  String get deliveryPoint3 => 'Un seul compte DYM pour tout';
+
+  @override
+  String get missionsTitle => 'Missions';
+
+  @override
+  String get myRunsTitle => 'Mes courses';
+
+  @override
+  String get courierOnline => 'En ligne';
+
+  @override
+  String get courierOffline => 'Hors ligne';
+
+  @override
+  String get courierOnlineHint => 'Les courses de tes zones te sont proposées.';
+
+  @override
+  String get courierOfflineHint =>
+      'Mets-toi en ligne pour recevoir des courses.';
+
+  @override
+  String get missionsNone => 'Aucune course pour le moment';
+
+  @override
+  String get missionsNoneHint =>
+      'Tu seras prévenu dès qu\'une commande de tes zones attend un livreur.';
+
+  @override
+  String get missionsGoOnline => 'Tu es hors ligne';
+
+  @override
+  String get missionAccept => 'Accepter la course';
+
+  @override
+  String get missionTaken => 'Un autre livreur a déjà pris cette course.';
+
+  @override
+  String get missionTooMany => 'Termine d\'abord tes courses en cours.';
+
+  @override
+  String get courierSuspended =>
+      'Ton compte livreur est suspendu. Contacte l\'équipe DYM.';
+
+  @override
+  String get courierInvalidPhone => 'Numéro de téléphone invalide.';
+
+  @override
+  String get courierInvalidZones => 'Choisis au moins une zone de ton pays.';
+
+  @override
+  String get courierVehicleFoot => 'À pied';
+
+  @override
+  String get courierVehicleBike => 'Vélo';
+
+  @override
+  String get courierVehicleMoto => 'Moto';
+
+  @override
+  String get courierVehicleCar => 'Voiture';
+
+  @override
+  String get courierBecomeTitle => 'Devenir livreur';
+
+  @override
+  String get courierBecomeBody =>
+      'Même compte DYM : ajoute ton téléphone, ton moyen et les zones où tu livres.';
+
+  @override
+  String get courierName => 'Nom affiché aux clientes';
+
+  @override
+  String get courierPhone => 'Téléphone';
+
+  @override
+  String get courierVehicle => 'Mon moyen';
+
+  @override
+  String get courierZones => 'Mes zones';
+
+  @override
+  String get courierBecomeAction => 'Commencer à livrer';
+
+  @override
+  String missionItems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles',
+      one: '1 article',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missionPickup => 'Récupérer chez';
+
+  @override
+  String get missionDropoff => 'Livrer à';
+
+  @override
+  String get missionPreparing => 'En préparation';
+
+  @override
+  String get missionReady => 'Prête à récupérer';
+
+  @override
+  String get missionOnTheWay => 'En route';
+
+  @override
+  String get missionDelivered => 'Livrée';
+
+  @override
+  String get myRunsNone => 'Aucune course en cours';
+
+  @override
+  String get myRunsNoneHint => 'Accepte une mission pour la voir ici.';
+
+  @override
+  String get missionPickedUp => 'Commande récupérée';
+
+  @override
+  String get missionHandedOver => 'Commande remise';
+
+  @override
+  String get missionWaitReady => 'La boutique prépare la commande.';
+
+  @override
+  String get missionRelease => 'Rendre la course';
+
+  @override
+  String get retryHint => 'Vérifie ta connexion puis réessaie.';
 }

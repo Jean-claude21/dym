@@ -4942,4 +4942,154 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get tiktokPickCover => 'Choose a cover photo';
+
+  @override
+  String get appNameDelivery => 'DYM Courier';
+
+  @override
+  String get deliveryTagline => 'Your runs, your earnings, no disputes.';
+
+  @override
+  String get deliveryWelcomeBody =>
+      'Deliver orders in your area, at your own pace.';
+
+  @override
+  String get deliveryPoint1 => 'Accept runs near you';
+
+  @override
+  String get deliveryPoint2 => 'Address and phone after accepting';
+
+  @override
+  String get deliveryPoint3 => 'One DYM account for everything';
+
+  @override
+  String get missionsTitle => 'Missions';
+
+  @override
+  String get myRunsTitle => 'My runs';
+
+  @override
+  String get courierOnline => 'Online';
+
+  @override
+  String get courierOffline => 'Offline';
+
+  @override
+  String get courierOnlineHint => 'Runs in your zones are offered to you.';
+
+  @override
+  String get courierOfflineHint => 'Go online to receive runs.';
+
+  @override
+  String get missionsNone => 'No runs right now';
+
+  @override
+  String get missionsNoneHint =>
+      'You will be notified as soon as an order in your zones needs a courier.';
+
+  @override
+  String get missionsGoOnline => 'You are offline';
+
+  @override
+  String get missionAccept => 'Accept the run';
+
+  @override
+  String get missionTaken => 'Another courier already took this run.';
+
+  @override
+  String get missionTooMany => 'Finish your current runs first.';
+
+  @override
+  String get courierSuspended =>
+      'Your courier account is suspended. Contact the DYM team.';
+
+  @override
+  String get courierInvalidPhone => 'Invalid phone number.';
+
+  @override
+  String get courierInvalidZones => 'Choose at least one zone in your country.';
+
+  @override
+  String get courierVehicleFoot => 'On foot';
+
+  @override
+  String get courierVehicleBike => 'Bike';
+
+  @override
+  String get courierVehicleMoto => 'Motorbike';
+
+  @override
+  String get courierVehicleCar => 'Car';
+
+  @override
+  String get courierBecomeTitle => 'Become a courier';
+
+  @override
+  String get courierBecomeBody =>
+      'Same DYM account: add your phone, how you travel and the zones you deliver.';
+
+  @override
+  String get courierName => 'Name shown to customers';
+
+  @override
+  String get courierPhone => 'Phone';
+
+  @override
+  String get courierVehicle => 'How I travel';
+
+  @override
+  String get courierZones => 'My zones';
+
+  @override
+  String get courierBecomeAction => 'Start delivering';
+
+  @override
+  String missionItems(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missionPickup => 'Pick up at';
+
+  @override
+  String get missionDropoff => 'Deliver to';
+
+  @override
+  String get missionPreparing => 'Being prepared';
+
+  @override
+  String get missionReady => 'Ready for pickup';
+
+  @override
+  String get missionOnTheWay => 'On the way';
+
+  @override
+  String get missionDelivered => 'Delivered';
+
+  @override
+  String get myRunsNone => 'No run in progress';
+
+  @override
+  String get myRunsNoneHint => 'Accept a mission to see it here.';
+
+  @override
+  String get missionPickedUp => 'Order picked up';
+
+  @override
+  String get missionHandedOver => 'Order handed over';
+
+  @override
+  String get missionWaitReady => 'The shop is preparing the order.';
+
+  @override
+  String get missionRelease => 'Give the run back';
+
+  @override
+  String get retryHint => 'Check your connection and try again.';
 }
