@@ -1,4 +1,5 @@
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/src/cart/slot_models.dart';
 import 'package:dym_models/src/json.dart';
 import 'package:dym_models/src/reference/reference_models.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -461,6 +462,7 @@ class OrderRequest {
     this.addressId,
     this.substitutionAllowed = true,
     this.expectedTotalMinor,
+    this.slot,
   });
 
   final String? addressId;
@@ -469,11 +471,15 @@ class OrderRequest {
   final bool substitutionAllowed;
   final int? expectedTotalMinor;
 
+  /// Créneau choisi (spec 033) ; nul : dès que possible.
+  final SlotChoice? slot;
+
   Map<String, Object?> toJson() => {
     'address_id': addressId,
     'modes': {for (final e in modes.entries) e.key: e.value.name},
     'payment_method_id': paymentMethodId,
     'substitution_allowed': substitutionAllowed,
     'expected_total_minor': expectedTotalMinor,
+    'slot': slot?.toJson(),
   };
 }

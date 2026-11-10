@@ -123,6 +123,10 @@ CatalogItem _$CatalogItemFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) =>
             (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
       ),
+      arrivalOn: $checkedConvert(
+        'arrival_on',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
     );
     return val;
   },
@@ -136,6 +140,7 @@ CatalogItem _$CatalogItemFromJson(Map<String, dynamic> json) => $checkedCreate(
     'variantCount': 'variant_count',
     'defaultVariantId': 'default_variant_id',
     'storeCategoryIds': 'store_category_ids',
+    'arrivalOn': 'arrival_on',
   },
 );
 

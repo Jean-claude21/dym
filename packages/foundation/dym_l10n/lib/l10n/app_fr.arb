@@ -5872,5 +5872,114 @@
   "walletKindSpacePayout": "Reçu d'un espace",
   "@walletKindSpacePayout": {
     "description": "Mouvement"
+  },
+  "slotTitle": "Quand ?",
+  "@slotTitle": {
+    "description": "Choix du créneau"
+  },
+  "slotAsap": "Dès que possible",
+  "@slotAsap": {
+    "description": "Sans créneau"
+  },
+  "slotToday": "Aujourd'hui",
+  "@slotToday": {
+    "description": "Jour"
+  },
+  "slotTomorrow": "Demain",
+  "@slotTomorrow": {
+    "description": "Jour"
+  },
+  "slotWindow": "{start}–{end}",
+  "@slotWindow": {
+    "description": "Créneau",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "slotRequiredFrom": "Ton panier contient un arrivage : livraison à partir du {date}.",
+  "@slotRequiredFrom": {
+    "description": "Arrivage",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "orderErrorSlotRequired": "Choisis un créneau de livraison.",
+  "@orderErrorSlotRequired": {
+    "description": "Créneau manquant"
+  },
+  "orderErrorSlotInvalid": "Ce créneau n'est plus possible : choisis-en un autre.",
+  "@orderErrorSlotInvalid": {
+    "description": "Créneau invalide"
+  },
+  "orderErrorSlotClosed": "Une boutique est fermée à ce créneau : choisis-en un autre.",
+  "@orderErrorSlotClosed": {
+    "description": "Boutique fermée"
+  },
+  "orderScheduled": "Prévue {day}, {start}–{end}",
+  "@orderScheduled": {
+    "description": "Commande programmée",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "productArrivalBadge": "Arrivage le {date} · prix bloqué",
+  "@productArrivalBadge": {
+    "description": "Badge fiche",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "productArrivalOn": "Arrive le {date} · précommandes ouvertes",
+  "@productArrivalOn": {
+    "description": "Liste vendeuse",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "productArrivalSet": "Indiquer un arrivage",
+  "@productArrivalSet": {
+    "description": "Bouton vendeuse"
+  },
+  "productArrivalClear": "Retirer l'arrivage",
+  "@productArrivalClear": {
+    "description": "Bouton vendeuse"
+  },
+  "productArrivalHint": "Date d'arrivée : les clientes précommandent à prix bloqué",
+  "@productArrivalHint": {
+    "description": "Aide du calendrier"
+  },
+  "vendorOrderScheduled": "À livrer {day}, {start}–{end}",
+  "@vendorOrderScheduled": {
+    "description": "Commande programmée (vendeuse)",
+    "placeholders": {
+      "day": {
+        "type": "String"
+      },
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
   }
 }

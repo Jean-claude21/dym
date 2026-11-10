@@ -101,6 +101,7 @@ class CatalogItem {
     this.defaultVariantId,
     this.available = true,
     this.storeCategoryIds = const [],
+    this.arrivalOn,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$CatalogItemFromJson(json);
@@ -125,6 +126,9 @@ class CatalogItem {
   final bool available;
   final CatalogItemStore store;
   final List<String> storeCategoryIds;
+
+  /// Arrivage à venir (spec 033) : précommande à prix bloqué.
+  final DateTime? arrivalOn;
 
   /// Prix affiché : le plus bas s'il y a plusieurs variantes.
   int? get displayPriceMinor =>

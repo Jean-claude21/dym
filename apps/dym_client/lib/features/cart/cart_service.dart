@@ -16,12 +16,16 @@ class CheckoutSelection {
     this.modes = const {},
     this.paymentMethodId,
     this.substitutionAllowed = true,
+    this.slot,
   });
 
   final String? addressId;
   final Map<String, Fulfillment> modes;
   final String? paymentMethodId;
   final bool substitutionAllowed;
+
+  /// Créneau choisi (spec 033) ; nul : dès que possible.
+  final SlotChoice? slot;
 
   CheckoutSelection copyWith({
     String? addressId,
@@ -33,6 +37,16 @@ class CheckoutSelection {
     modes: modes ?? this.modes,
     paymentMethodId: paymentMethodId ?? this.paymentMethodId,
     substitutionAllowed: substitutionAllowed ?? this.substitutionAllowed,
+    slot: slot,
+  );
+
+  /// Même sélection avec un autre créneau (nul : dès que possible).
+  CheckoutSelection withSlot(SlotChoice? value) => CheckoutSelection(
+    addressId: addressId,
+    modes: modes,
+    paymentMethodId: paymentMethodId,
+    substitutionAllowed: substitutionAllowed,
+    slot: value,
   );
 }
 
@@ -76,6 +90,12 @@ abstract interface class CartService {
 
   /// Référentiel du pays (devise, quartiers, origines).
   Future<Result<CountryConfig>> countryConfig();
+
+  /// Créneaux proposés pour le panier (spec 033).
+  Future<Result<DeliverySlots>> slots();
+
+  /// Créneau de la prochaine commande (nul : dès que possible).
+  void selectSlot(SlotChoice? slot);
 
   Future<Result<List<CustomerAddress>>> addresses();
 
@@ -267,6 +287,12 @@ class NeonCartService implements CartService {
   }
 
   @override
+  Future<Result<DeliverySlots>> slots() => _orders.slots();
+
+  @override
+  void selectSlot(SlotChoice? slot) => _selection = _selection.withSlot(slot);
+
+  @override
   Future<Result<Purchase>> placeOrder() async {
     final view = _view.value;
     final method = _selection.paymentMethodId ?? view.paymentMethodId;
@@ -281,6 +307,7 @@ class NeonCartService implements CartService {
         paymentMethodId: method,
         substitutionAllowed: _selection.substitutionAllowed,
         expectedTotalMinor: view.totalMinor,
+        slot: _selection.slot,
       ),
       idempotencyKey: key,
     );

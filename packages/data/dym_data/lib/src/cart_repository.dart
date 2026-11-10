@@ -90,6 +90,14 @@ class OrderRepository {
     decode: (json) => Purchase.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// Créneaux proposés pour le panier (spec 033).
+  Future<Result<DeliverySlots>> slots() async {
+    final result = await _data.rpc<Object?>('delivery_slots');
+    return result.map(
+      (json) => DeliverySlots.fromJson((json! as Map).cast<String, dynamic>()),
+    );
+  }
+
   /// Nouvelle tentative de paiement (même montant). Refus
   /// (`ValidationFailure.message`) : `already_paid`, `not_online`,
   /// `payment_not_accepted`, `payment_unavailable`.

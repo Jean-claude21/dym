@@ -321,6 +321,14 @@ class _ProductCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: t.title.copyWith(fontSize: 19),
                     ),
+                    if (product.arrivalOn case final arrival?)
+                      Text(
+                        l10n.productArrivalOn(
+                          MaterialLocalizations.of(context)
+                              .formatMediumDate(arrival),
+                        ),
+                        style: t.label.copyWith(color: c.brandDeep),
+                      ),
                     if (price != null)
                       Text.rich(
                         TextSpan(
@@ -343,6 +351,37 @@ class _ProductCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: DymTokenSpace.s2),
+              if (!product.isArchived)
+                IconButton(
+                  tooltip: product.arrivalOn == null
+                      ? l10n.productArrivalSet
+                      : l10n.productArrivalClear,
+                  onPressed: pending
+                      ? null
+                      : () async {
+                          if (product.arrivalOn != null) {
+                            await viewModel.setArrival(product, null);
+                            return;
+                          }
+                          final now = DateTime.now();
+                          final picked = await showDatePicker(
+                            context: context,
+                            helpText: l10n.productArrivalHint,
+                            initialDate: now.add(const Duration(days: 1)),
+                            firstDate: DateTime(now.year, now.month, now.day),
+                            lastDate: now.add(const Duration(days: 30)),
+                          );
+                          if (picked != null) {
+                            await viewModel.setArrival(product, picked);
+                          }
+                        },
+                  icon: Icon(
+                    product.arrivalOn == null
+                        ? Icons.event_available_rounded
+                        : Icons.event_busy_rounded,
+                    color: c.brandDeep,
+                  ),
+                ),
               if (product.isArchived)
                 TextButton(
                   onPressed: pending

@@ -81,6 +81,8 @@ class VendorOrder {
     this.delivery,
     this.payment,
     this.etaAt,
+    this.scheduledStart,
+    this.scheduledEnd,
     this.acceptedAt,
     this.deliveredAt,
     this.cashCollectedAt,
@@ -119,6 +121,10 @@ class VendorOrder {
   final VendorOrderPayment? payment;
 
   final DateTime? etaAt;
+
+  /// Créneau choisi (spec 033).
+  final DateTime? scheduledStart;
+  final DateTime? scheduledEnd;
   final DateTime? acceptedAt;
   final DateTime? deliveredAt;
   final DateTime? cashCollectedAt;

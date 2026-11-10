@@ -49,7 +49,8 @@ class CartPageView extends StackedView<CartViewModel> {
   );
 
   @override
-  void onViewModelReady(CartViewModel viewModel) => viewModel.load();
+  void onViewModelReady(CartViewModel viewModel) =>
+      viewModel.load().then((_) => viewModel.loadSlots());
 
   @override
   Widget builder(BuildContext context, CartViewModel viewModel, Widget? child) {
@@ -116,6 +117,93 @@ class CartPageView extends StackedView<CartViewModel> {
             Expanded(child: body),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// « Quand ? » (spec 033) : dès que possible, ou un jour et un créneau.
+class _SlotCard extends StatelessWidget {
+  const new({required this.vm, required this.slots});
+
+  final CartViewModel vm;
+  final DeliverySlots slots;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.dym.text;
+    final c = context.dym.colors;
+    final l10n = DymLocalizations.of(context);
+    final material = MaterialLocalizations.of(context);
+    final today = DateTime.now();
+    String dayLabel(DateTime d) {
+      final diff = DateTime(
+        d.year,
+        d.month,
+        d.day,
+      ).difference(DateTime(today.year, today.month, today.day)).inDays;
+      return switch (diff) {
+        0 => l10n.slotToday,
+        1 => l10n.slotTomorrow,
+        _ => material.formatShortDate(d),
+      };
+    }
+
+    final day =
+        slots.days.where((d) => d.date == vm.slotDay).firstOrNull ??
+        slots.days.first;
+    final chosen = vm.slot;
+    return CartCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.slotTitle, style: t.title.copyWith(fontSize: 17)),
+          if (slots.required && slots.minDate != null)
+            Text(
+              l10n.slotRequiredFrom(material.formatMediumDate(slots.minDate!)),
+              style: t.label.copyWith(color: c.brandDeep),
+            ),
+          const SizedBox(height: DymTokenSpace.s2),
+          Wrap(
+            spacing: DymTokenSpace.s2,
+            runSpacing: DymTokenSpace.s2,
+            children: [
+              if (!slots.required)
+                ChoiceChip(
+                  label: Text(l10n.slotAsap),
+                  selected: chosen == null,
+                  materialTapTargetSize: MaterialTapTargetSize.padded,
+                  onSelected: (_) => vm.selectSlot(null),
+                ),
+              for (final d in slots.days)
+                ChoiceChip(
+                  label: Text(dayLabel(d.date)),
+                  selected: d.date == day.date && chosen != null,
+                  materialTapTargetSize: MaterialTapTargetSize.padded,
+                  onSelected: (_) => vm.showDay(d.date),
+                ),
+            ],
+          ),
+          if (vm.slotDay != null || chosen != null) ...[
+            const SizedBox(height: DymTokenSpace.s2),
+            Wrap(
+              spacing: DymTokenSpace.s2,
+              runSpacing: DymTokenSpace.s2,
+              children: [
+                for (final w in day.windows)
+                  ChoiceChip(
+                    label: Text(l10n.slotWindow(w.startsAt, w.endsAt)),
+                    selected:
+                        chosen?.windowId == w.id && chosen?.date == day.date,
+                    materialTapTargetSize: MaterialTapTargetSize.padded,
+                    onSelected: (_) => vm.selectSlot(
+                      SlotChoice(date: day.date, windowId: w.id),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -264,6 +352,10 @@ class _CartContent extends StatelessWidget {
         ),
       ),
       const SizedBox(height: DymTokenSpace.s3),
+      if (vm.slots case final slots? when slots.days.isNotEmpty) ...[
+        _SlotCard(vm: vm, slots: slots),
+        const SizedBox(height: DymTokenSpace.s3),
+      ],
       if (cart.paymentMethods.isNotEmpty) ...[
         CartCard(
           child: Column(

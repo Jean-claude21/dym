@@ -8,7 +8,7 @@ export function pgOrderStore(pool: pg.Pool): OrderStore {
     async placeOrder(userId, idempotencyKey, request, providers) {
       try {
         const { rows } = await pool.query(
-          "select app.place_order($1, $2, $3, now(), $4) as value",
+          "select app.place_order_scheduled($1, $2, $3, now(), $4) as value",
           [
             userId,
             idempotencyKey,
@@ -18,6 +18,7 @@ export function pgOrderStore(pool: pg.Pool): OrderStore {
               payment_method_id: request.paymentMethodId,
               substitution_allowed: request.substitutionAllowed,
               expected_total_minor: request.expectedTotalMinor,
+              slot: request.slot ? { date: request.slot.date, window_id: request.slot.windowId } : null,
             },
             providers,
           ],

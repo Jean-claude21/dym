@@ -44,6 +44,18 @@ class CatalogRepository {
   Future<Result<Product>> publish(String id) =>
       _product('publish_product', {'p_id': id});
 
+  /// Date d'arrivage (spec 033) ; nulle : produit normal. Refus
+  /// `invalid_arrival` (date passée).
+  Future<Result<Product>> setArrival(String id, DateTime? arrivalOn) =>
+      _product('set_product_arrival', {
+        'p_product': id,
+        'p_arrival_on': arrivalOn == null
+            ? null
+            : '${arrivalOn.year.toString().padLeft(4, '0')}-'
+                  '${arrivalOn.month.toString().padLeft(2, '0')}-'
+                  '${arrivalOn.day.toString().padLeft(2, '0')}',
+      });
+
   /// Rupture ou réactivation en un geste.
   Future<Result<Product>> setAvailable(String id, {required bool available}) =>
       _product('set_product_available', {'p_id': id, 'p_available': available});

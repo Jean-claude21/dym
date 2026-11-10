@@ -98,8 +98,17 @@ describe("POST /v1/orders", () => {
         paymentMethodId: cash,
         substitutionAllowed: false,
         expectedTotalMinor: 3600,
+        slot: null,
       },
     });
+  });
+
+  it("créneau transmis à la base (spec 033), format vérifié", async () => {
+    const window = "c0000000-0000-4000-8000-000000000001";
+    const res = await post({ payment_method_id: cash, slot: { date: "2026-11-12", window_id: window } });
+    expect(res.status).toBe(201);
+    expect(orders.calls.at(-1)?.request.slot).toEqual({ date: "2026-11-12", windowId: window });
+    expect((await post({ payment_method_id: cash, slot: { date: "demain", window_id: window } })).status).toBe(422);
   });
 
   it("rejeu de la même clé : 200 et le même achat", async () => {

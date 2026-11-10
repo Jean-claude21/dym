@@ -56,3 +56,4 @@ fiabilité (ops).
 | `favorite_added` (type), `basket_saved` (lignes), `basket_reordered` (ajoutés, non ajoutés) | Serveur | Carnet (spec 030) |
 | `space_created` (budget : oui/non), `space_joined`, `space_validated` (articles, montant) | Serveur | Espaces (spec 031) |
 | `space_contributed` (montant), `space_funded` (montant) | Serveur | Argent des espaces (spec 032) |
+| `order_scheduled` (jours d'avance, précommande), `product_arrival_set` (jours d'avance) | Serveur | Précommande et créneaux (spec 033) |

@@ -405,6 +405,15 @@ class MemoryCartService implements CartService {
   Future<Result<LocatedPlace?>> locate() async =>
       _fail<LocatedPlace?>('locate') ?? Ok(located);
 
+  /// Créneaux renvoyés (spec 033).
+  DeliverySlots deliverySlots = const DeliverySlots();
+
+  @override
+  Future<Result<DeliverySlots>> slots() async => Ok(deliverySlots);
+
+  @override
+  void selectSlot(SlotChoice? slot) => _selection = _selection.withSlot(slot);
+
   @override
   Future<Result<Purchase>> placeOrder() async {
     final view = _view.value;
@@ -417,6 +426,9 @@ class MemoryCartService implements CartService {
       return const Err(ValidationFailure('address_required'));
     }
     if (view.blocking) return const Err(ValidationFailure('cart_blocked'));
+    if (deliverySlots.required && _selection.slot == null) {
+      return const Err(ValidationFailure('slot_required'));
+    }
     final address = _address;
     final online = view.paymentMethod?.isCash == false;
     final purchase = Purchase(

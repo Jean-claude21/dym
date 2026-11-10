@@ -292,6 +292,9 @@ String orderErrorLabel(DymLocalizations l10n, OrderError error) =>
       OrderError.paymentUnavailable => l10n.orderErrorPaymentUnavailable,
       OrderError.ownStore => l10n.orderErrorOwnStore,
       OrderError.walletInsufficient => l10n.orderErrorWalletInsufficient,
+      OrderError.slotRequired => l10n.orderErrorSlotRequired,
+      OrderError.slotInvalid => l10n.orderErrorSlotInvalid,
+      OrderError.slotClosed => l10n.orderErrorSlotClosed,
       OrderError.offline => l10n.errorOffline,
       OrderError.generic => l10n.errorGeneric,
     };
