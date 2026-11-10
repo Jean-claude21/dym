@@ -5683,4 +5683,140 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get wholesaleMinimumNotReached => 'The minimum is not reached yet.';
+
+  @override
+  String get haggleAction => 'Haggle';
+
+  @override
+  String get haggleTitle => 'Haggle with the seller';
+
+  @override
+  String haggleCurrent(String price) {
+    return 'Listed price: $price';
+  }
+
+  @override
+  String haggleHint(int quantity) {
+    String _temp0 = intl.Intl.pluralLogic(
+      quantity,
+      locale: localeName,
+      other: '$quantity items',
+      one: '1 item',
+    );
+    return 'Offer your unit price for $_temp0. The seller answers right away.';
+  }
+
+  @override
+  String get haggleOfferField => 'Your unit price';
+
+  @override
+  String get haggleSubmit => 'Make an offer';
+
+  @override
+  String haggleAccepted(String price) {
+    return 'Deal: $price per unit. It is in your cart for 2 hours.';
+  }
+
+  @override
+  String haggleCountered(String price) {
+    return 'The seller offers $price per unit (valid 15 minutes).';
+  }
+
+  @override
+  String get haggleAcceptCounter => 'Accept this price';
+
+  @override
+  String haggleAttemptsLeft(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more tries today',
+      one: '1 more try today',
+      zero: 'No more tries today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get haggleClose => 'Done';
+
+  @override
+  String get haggleCartBadge => 'Haggled price';
+
+  @override
+  String get haggleErrorTooMany =>
+      'You already haggled 3 times on this product today.';
+
+  @override
+  String get haggleErrorNotLower =>
+      'Offer a price lower than the listed price.';
+
+  @override
+  String get haggleErrorOff => 'This seller does not haggle on this product.';
+
+  @override
+  String get haggleErrorExpired =>
+      'This price is no longer valid: make a new offer.';
+
+  @override
+  String get hagglingTitle => 'Haggling';
+
+  @override
+  String get hagglingHint =>
+      'Set how far you agree to lower your prices. DYM answers for you, right away; customers never see your limit.';
+
+  @override
+  String get hagglingStoreLimit => 'Maximum discount';
+
+  @override
+  String get hagglingOff => 'No haggling';
+
+  @override
+  String hagglingPercent(int percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get hagglingProducts => 'Per product';
+
+  @override
+  String get hagglingLikeStore => 'Same as the store';
+
+  @override
+  String get hagglingNever => 'Never';
+
+  @override
+  String hagglingWeek(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count deals this week',
+      one: '1 deal this week',
+      zero: 'No deal this week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get hagglingRecent => 'Latest haggles';
+
+  @override
+  String get hagglingEmpty => 'No haggling yet.';
+
+  @override
+  String hagglingLine(int quantity, String offer, String price) {
+    return '$quantity × $offer offered → $price';
+  }
+
+  @override
+  String get hagglingStatusAccepted => 'Deal';
+
+  @override
+  String get hagglingStatusCountered => 'Counter-offer';
+
+  @override
+  String get hagglingStatusUsed => 'Ordered';
+
+  @override
+  String get hagglingStatusExpired => 'Expired';
 }

@@ -14,6 +14,7 @@ import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/credit/credit_service.dart';
 import 'package:dym_vendor/features/credit/credit_views.dart';
+import 'package:dym_vendor/features/haggle/haggling_view.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/courier_cash_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
@@ -81,6 +82,9 @@ abstract interface class AppNavigator {
 
   /// Achat de gros groupé (spec 049).
   void toWholesale();
+
+  /// Marchandage (spec 050).
+  void toHaggling();
 
   /// Aide (écran 66).
   void toHelp();
@@ -172,6 +176,19 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toHaggling() {
+    if (!locator.isRegistered<HagglingService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => HagglingView(
+          service: locator<HagglingService>(),
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toWholesale() {

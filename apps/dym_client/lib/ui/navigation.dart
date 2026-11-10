@@ -28,6 +28,7 @@ import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
 import 'package:dym_client/features/favorites/favorites_service.dart';
 import 'package:dym_client/features/favorites/favorites_views.dart';
+import 'package:dym_client/features/haggle/haggle_sheet.dart';
 import 'package:dym_client/features/orders/adjustments_view.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
@@ -204,6 +205,10 @@ class StackedAppNavigator implements AppNavigator {
       _spacesOverride ??
       (locator.isRegistered<SpacesService>() ? locator<SpacesService>() : null);
 
+  /// Marchandage (spec 050) ; absent des tests sans service.
+  HaggleService? get _haggle =>
+      locator.isRegistered<HaggleService>() ? locator<HaggleService>() : null;
+
   /// Favoris et paniers (spec 030) ; absents des tests sans service.
   FavoritesService? get _favorites =>
       _favoritesOverride ??
@@ -307,6 +312,7 @@ class StackedAppNavigator implements AppNavigator {
       content: _content,
       onVideos: toProductVideos,
       favorites: _favorites,
+      haggle: _haggle,
     ),
   );
 

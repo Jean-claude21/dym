@@ -9648,6 +9648,198 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Le minimum n\'est pas encore atteint.'**
   String get wholesaleMinimumNotReached;
+
+  /// No description provided for @haggleAction.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marchander'**
+  String get haggleAction;
+
+  /// No description provided for @haggleTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marchander avec la vendeuse'**
+  String get haggleTitle;
+
+  /// No description provided for @haggleCurrent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix affiché : {price}'**
+  String haggleCurrent(String price);
+
+  /// No description provided for @haggleHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Propose ton prix à l\'unité pour {quantity, plural, =1{1 article} other{{quantity} articles}}. La vendeuse répond tout de suite.'**
+  String haggleHint(int quantity);
+
+  /// No description provided for @haggleOfferField.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton prix à l\'unité'**
+  String get haggleOfferField;
+
+  /// No description provided for @haggleSubmit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Proposer'**
+  String get haggleSubmit;
+
+  /// No description provided for @haggleAccepted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marché conclu : {price} l\'unité. C\'est dans ton panier pour 2 heures.'**
+  String haggleAccepted(String price);
+
+  /// No description provided for @haggleCountered.
+  ///
+  /// In fr, this message translates to:
+  /// **'La vendeuse propose {price} l\'unité (valable 15 minutes).'**
+  String haggleCountered(String price);
+
+  /// No description provided for @haggleAcceptCounter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter ce prix'**
+  String get haggleAcceptCounter;
+
+  /// No description provided for @haggleAttemptsLeft.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Plus d\'essai aujourd\'hui} =1{Encore 1 essai aujourd\'hui} other{Encore {count} essais aujourd\'hui}}'**
+  String haggleAttemptsLeft(int count);
+
+  /// No description provided for @haggleClose.
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est bon'**
+  String get haggleClose;
+
+  /// No description provided for @haggleCartBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix marchandé'**
+  String get haggleCartBadge;
+
+  /// No description provided for @haggleErrorTooMany.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as déjà marchandé 3 fois ce produit aujourd\'hui.'**
+  String get haggleErrorTooMany;
+
+  /// No description provided for @haggleErrorNotLower.
+  ///
+  /// In fr, this message translates to:
+  /// **'Propose un prix plus bas que le prix affiché.'**
+  String get haggleErrorNotLower;
+
+  /// No description provided for @haggleErrorOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette vendeuse ne marchande pas ce produit.'**
+  String get haggleErrorOff;
+
+  /// No description provided for @haggleErrorExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce prix n\'est plus valable : propose à nouveau.'**
+  String get haggleErrorExpired;
+
+  /// No description provided for @hagglingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marchandage'**
+  String get hagglingTitle;
+
+  /// No description provided for @hagglingHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fixe jusqu\'où tu acceptes de baisser. DYM répond à ta place, tout de suite ; la cliente ne voit jamais ta limite.'**
+  String get hagglingHint;
+
+  /// No description provided for @hagglingStoreLimit.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remise maximale'**
+  String get hagglingStoreLimit;
+
+  /// No description provided for @hagglingOff.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas de marchandage'**
+  String get hagglingOff;
+
+  /// No description provided for @hagglingPercent.
+  ///
+  /// In fr, this message translates to:
+  /// **'{percent} %'**
+  String hagglingPercent(int percent);
+
+  /// No description provided for @hagglingProducts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Par produit'**
+  String get hagglingProducts;
+
+  /// No description provided for @hagglingLikeStore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comme la boutique'**
+  String get hagglingLikeStore;
+
+  /// No description provided for @hagglingNever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jamais'**
+  String get hagglingNever;
+
+  /// No description provided for @hagglingWeek.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucun marché conclu cette semaine} =1{1 marché conclu cette semaine} other{{count} marchés conclus cette semaine}}'**
+  String hagglingWeek(int count);
+
+  /// No description provided for @hagglingRecent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Derniers marchandages'**
+  String get hagglingRecent;
+
+  /// No description provided for @hagglingEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun marchandage pour le moment.'**
+  String get hagglingEmpty;
+
+  /// No description provided for @hagglingLine.
+  ///
+  /// In fr, this message translates to:
+  /// **'{quantity} × {offer} proposé → {price}'**
+  String hagglingLine(int quantity, String offer, String price);
+
+  /// No description provided for @hagglingStatusAccepted.
+  ///
+  /// In fr, this message translates to:
+  /// **'Conclu'**
+  String get hagglingStatusAccepted;
+
+  /// No description provided for @hagglingStatusCountered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contre-prix'**
+  String get hagglingStatusCountered;
+
+  /// No description provided for @hagglingStatusUsed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandé'**
+  String get hagglingStatusUsed;
+
+  /// No description provided for @hagglingStatusExpired.
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiré'**
+  String get hagglingStatusExpired;
 }
 
 class _DymLocalizationsDelegate

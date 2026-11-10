@@ -323,6 +323,7 @@ class ProductPageData {
     this.variants = const [],
     this.zoneName,
     this.servesZone = true,
+    this.canHaggle = false,
   });
 
   factory fromJson(Map<String, dynamic> json) {
@@ -348,6 +349,7 @@ class ProductPageData {
       ],
       zoneName: json['zone_name'] as String?,
       servesZone: json['serves_zone'] as bool? ?? true,
+      canHaggle: json['can_haggle'] as bool? ?? false,
     );
   }
 
@@ -360,6 +362,9 @@ class ProductPageData {
   /// Quartier de la cliente (« Livré en … à Bè »).
   final String? zoneName;
   final bool servesZone;
+
+  /// La vendeuse accepte de marchander ce produit (spec 050).
+  final bool canHaggle;
 }
 
 /// Quartier proposé à partir d'une position.

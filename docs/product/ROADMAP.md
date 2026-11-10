@@ -21,9 +21,9 @@
 | 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
-| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | 🔵 En cours : 1 spec fusionnée, 2 en relecture, 1 reportée |
-| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | 🟡 Code des 5 specs fait, en relecture ; gate : démonstration web à faire |
-| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
+| 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ✅ Faite (specs 041-043 fusionnées, migrations sur staging ; suivi en direct reporté) ; gate : démonstration web à faire |
+| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ✅ Faite (specs 045-049 fusionnées, migrations sur staging) ; gate : démonstration web à faire |
+| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | 🔵 En cours (spec 050) |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
 Mis à jour à chaque spec (dernière mise à jour : 2026-11-10).
@@ -158,25 +158,25 @@ en plus d'une heure.
 | Spec | Contenu | État |
 |---|---|---|
 | `delivery-app` | App livreur, inscription, missions, acceptation | ✅ Spec 041 · PR #49 (app `dym_delivery`, même compte DYM, moyen et zones, en ligne, missions de ses zones, acceptation unique et limitée par pays, récupérée puis livrée par le livreur, coordonnées après acceptation) |
-| `delivery-routing` | Tournées multi-boutiques, code de remise, consignes de conservation | 🟡 Spec 042 · PR #50, en attente de relecture humaine (un achat multi-boutiques = une tournée, code à 4 chiffres de la cliente exigé à la remise, 5 essais, consignes par rayon ou par produit affichées au livreur) |
-| `delivery-cash` | Circuit du cash, gains en direct, retrait, point de recharge | 🟡 Spec 043 : code fait, en attente de relecture humaine (frais au wallet, cash dû à la boutique puis confirmé, code de recharge, retrait simulé ; écran de l'équipe : `ops-center`) |
+| `delivery-routing` | Tournées multi-boutiques, code de remise, consignes de conservation | ✅ Spec 042 · PR #50 (un achat multi-boutiques = une tournée, code à 4 chiffres de la cliente exigé à la remise, 5 essais, consignes par rayon ou par produit affichées au livreur) |
+| `delivery-cash` | Circuit du cash, gains en direct, retrait, point de recharge | ✅ Spec 043 · PR #51 (frais au wallet, cash dû à la boutique puis confirmé, code de recharge, retrait simulé ; écran de l'équipe : `ops-center`) |
 | `live-tracking` | Suivi en direct (GPS simulé), heure d'arrivée, score, bonus, zones | ⏸️ Reportée (décision du porteur produit, 2026-11-10) : les étapes à cocher (acceptée, récupérée, remise par code) suffisent ; brouillon sur la branche `feat/044-live-tracking` (PR #52 fermée) |
 
 ## Phase 12 — Vendeuse
 
 | Spec | Contenu | État |
 |---|---|---|
-| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile | 🟡 Spec 045 · PR #53 : code fait, en attente de relecture humaine (ventes hors app tapées ou dictées, montant lu en base, stock décompté, « Ma caisse » du jour par moyen, solde et versement simulé, frise de la commande, accès depuis le tableau de bord) |
-| `qr-payments` | Paiement et encaissement par QR | 🟡 Spec 046 · PR #54 : code fait, en attente de relecture humaine (demande de la vendeuse en QR et code à 6 chiffres, 10 minutes ; la cliente scanne ou tape le code et paie depuis son wallet ; vente dans « Ma caisse » ; commission par pays, 0 par défaut) |
-| `vendor-credit` | Ardoise, relances | 🟡 Spec 047 · PR #55 : code fait, en attente de relecture humaine (clientes, crédits et remboursements datés, plafond, solde en base, relance WhatsApp une fois par jour, archivage une fois soldée) |
-| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché | 🟡 Spec 048 · PR #56 : code fait, en attente de relecture humaine (lien public de la boutique partagé sur WhatsApp et page légère qui l'ouvre, prix de fin de marché en pourcentage pour quelques heures appliqués partout par la fonction de prix ; studio IA et arrivages : specs 007, 019, 033) |
-| `wholesale` | Achat de gros groupé | 🟡 Spec 049 : code fait, en attente de relecture humaine (offre d'une grossiste avec minimum et date limite, réservations des vendeuses du pays, jauge, confirmation au minimum, acheteuses prévenues ; règlement hors DYM) |
+| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile | ✅ Spec 045 · PR #53 (ventes hors app tapées ou dictées, montant lu en base, stock décompté, « Ma caisse » du jour par moyen, solde et versement simulé, frise de la commande, accès depuis le tableau de bord) |
+| `qr-payments` | Paiement et encaissement par QR | ✅ Spec 046 · PR #54 (demande de la vendeuse en QR et code à 6 chiffres, 10 minutes ; la cliente scanne ou tape le code et paie depuis son wallet ; vente dans « Ma caisse » ; commission par pays, 0 par défaut) |
+| `vendor-credit` | Ardoise, relances | ✅ Spec 047 · PR #55 (clientes, crédits et remboursements datés, plafond, solde en base, relance WhatsApp une fois par jour, archivage une fois soldée) |
+| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché | ✅ Spec 048 · PR #56 (lien public de la boutique partagé sur WhatsApp et page légère qui l'ouvre, prix de fin de marché en pourcentage pour quelques heures appliqués partout par la fonction de prix ; studio IA et arrivages : specs 007, 019, 033) |
+| `wholesale` | Achat de gros groupé | ✅ Spec 049 · PR #57 (offre d'une grossiste avec minimum et date limite, réservations des vendeuses du pays, jauge, confirmation au minimum, acheteuses prévenues ; règlement hors DYM) |
 
 ## Phase 13 — Différence
 
 | Spec | Contenu | État |
 |---|---|---|
-| `haggling` | Marchandage dans la limite de la vendeuse | ⬜ À faire |
+| `haggling` | Marchandage dans la limite de la vendeuse | 🟡 Spec 050 : code fait, en attente de relecture humaine (limite de la boutique et par produit, réponse immédiate : conclu au-dessus du plancher, sinon contre-prix ; prix conclu au panier 2 heures pour la quantité marchandée, consommé par la commande ; limite jamais montrée, 3 essais par jour) |
 | `group-buying` | Achat groupé entre voisins, départ groupé | ⬜ À faire |
 | `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée | ⬜ À faire |
 | `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support | ⬜ À faire |
