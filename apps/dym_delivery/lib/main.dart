@@ -5,6 +5,7 @@ import 'package:dym_delivery/app/app.locator.dart';
 import 'package:dym_delivery/app/config_error_app.dart';
 import 'package:dym_delivery/app/delivery_app.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
+import 'package:dym_delivery/features/missions/position_reporter.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 
@@ -45,17 +46,22 @@ Future<void> configureServices(DymEnvironment environment) async {
     app: AccountApp.delivery,
     locale: locale,
   );
+  final missions = NeonMissionsService(
+    couriers: CourierRepository(neon.data),
+    reference: reference,
+    auth: auth,
+    wallet: WalletRepository(neon.data),
+  );
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
-    ..registerSingleton<MissionsService>(
-      NeonMissionsService(
-        couriers: CourierRepository(neon.data),
-        reference: reference,
-        auth: auth,
-        wallet: WalletRepository(neon.data),
+    ..registerSingleton<MissionsService>(missions)
+    ..registerSingleton(
+      PositionReporter(
+        service: missions,
+        location: const PluginLocationProvider(precise: true),
       ),
     );
 }

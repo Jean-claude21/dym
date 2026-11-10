@@ -5298,4 +5298,63 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get courierCashReceived => 'Reçu';
+
+  @override
+  String courierScore(double score) {
+    final intl.NumberFormat scoreNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String scoreString = scoreNumberFormat.format(score);
+
+    return 'Ma note : $scoreString / 5';
+  }
+
+  @override
+  String zoneHigh(String zone) {
+    return '$zone : forte demande';
+  }
+
+  @override
+  String zoneHighBonus(String zone, String bonus) {
+    return '$zone : forte demande, +$bonus par course';
+  }
+
+  @override
+  String get positionSimulated =>
+      'Position simulée : le GPS n\'est pas disponible sur cet appareil.';
+
+  @override
+  String trackCourierOnWay(String name) {
+    return '$name arrive';
+  }
+
+  @override
+  String trackDistanceM(int meters) {
+    return 'À $meters m de chez toi';
+  }
+
+  @override
+  String trackDistanceKm(double km) {
+    final intl.NumberFormat kmNumberFormat = intl.NumberFormat.decimalPattern(
+      localeName,
+    );
+    final String kmString = kmNumberFormat.format(km);
+
+    return 'À $kmString km de chez toi';
+  }
+
+  @override
+  String trackRateCourier(String name) {
+    return 'Note la remise de $name';
+  }
+
+  @override
+  String trackRateStar(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count étoiles',
+      one: '1 étoile',
+    );
+    return '$_temp0';
+  }
 }

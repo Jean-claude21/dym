@@ -40,6 +40,16 @@ abstract interface class MissionsService {
 
   /// Retrait simulé du wallet.
   Future<Result<void>> withdraw(int amountMinor);
+
+  /// Position du livreur (spec 044).
+  Future<Result<void>> reportPosition(
+    double latitude,
+    double longitude, {
+    required bool simulated,
+  });
+
+  /// Missions en attente par zone.
+  Future<Result<List<ZoneDemand>>> zoneDemand();
 }
 
 /// Implémentation Neon.
@@ -113,6 +123,20 @@ class NeonMissionsService implements MissionsService {
   @override
   Future<Result<HandoverResult>> deliver(Mission mission, String code) =>
       _couriers.deliver(mission.orderId, code);
+
+  @override
+  Future<Result<void>> reportPosition(
+    double latitude,
+    double longitude, {
+    required bool simulated,
+  }) => _couriers.reportPosition(
+    latitude: latitude,
+    longitude: longitude,
+    simulated: simulated,
+  );
+
+  @override
+  Future<Result<List<ZoneDemand>>> zoneDemand() => _couriers.zoneDemand();
 
   @override
   Future<Result<CourierEarnings>> earnings() => _couriers.earnings();
@@ -199,6 +223,7 @@ class MemoryMissionsService implements MissionsService {
         vehicle: c.vehicle,
         zoneIds: c.zoneIds,
         isOnline: online,
+        score: c.score,
       ),
     );
   }
@@ -237,6 +262,27 @@ class MemoryMissionsService implements MissionsService {
     if (i >= 0) accepted[i] = next;
     return Ok(next);
   }
+
+  /// Positions reçues (tests).
+  final positions = <({double latitude, double longitude, bool simulated})>[];
+  List<ZoneDemand> zones = const [];
+
+  @override
+  Future<Result<void>> reportPosition(
+    double latitude,
+    double longitude, {
+    required bool simulated,
+  }) async {
+    positions.add((
+      latitude: latitude,
+      longitude: longitude,
+      simulated: simulated,
+    ));
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<List<ZoneDemand>>> zoneDemand() async => Ok(zones);
 
   CourierEarnings money = const CourierEarnings();
 

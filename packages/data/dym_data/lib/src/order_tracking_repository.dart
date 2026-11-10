@@ -19,6 +19,34 @@ class OrderTrackingRepository {
     },
   );
 
+  /// Suivi en direct (spec 044) ; nul : pas en route.
+  Future<Result<OrderLive?>> live(String orderId) async =>
+      (await _data.rpc<Object?>(
+        'order_live',
+        params: {'p_order': orderId},
+      )).map(
+        (json) => json == null
+            ? null
+            : OrderLive.fromJson((json as Map).cast<String, dynamic>()),
+      );
+
+  /// Livreur DYM d'une commande livrée ; nul : aucun.
+  Future<Result<CourierRating?>> courierRating(String orderId) async =>
+      (await _data.rpc<Object?>(
+        'order_courier_rating',
+        params: {'p_order': orderId},
+      )).map(
+        (json) => json == null
+            ? null
+            : CourierRating.fromJson((json as Map).cast<String, dynamic>()),
+      );
+
+  Future<Result<void>> rateCourier(String orderId, int rating) =>
+      _data.rpc<void>(
+        'rate_courier',
+        params: {'p_order': orderId, 'p_rating': rating},
+      );
+
   /// Code de remise à donner au livreur (spec 042) ; nul : aucun.
   Future<Result<String?>> handoverCode(String orderId) async =>
       (await _data.rpc<Object?>(

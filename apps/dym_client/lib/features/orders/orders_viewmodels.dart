@@ -106,8 +106,23 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   bool _cancelling = false;
   Failure? _cancelFailure;
   String? _handoverCode;
+  OrderLive? _live;
+  CourierRating? _courierRating;
 
   CustomerOrder? get order => _order;
+
+  /// Livreur en route : distance et arrivée (spec 044).
+  OrderLive? get live => _live;
+
+  /// Livreur DYM de la commande livrée, et note donnée.
+  CourierRating? get courierRating => _courierRating;
+
+  Future<void> rateCourier(int rating) async {
+    if ((await service.rateCourier(orderId, rating)).isOk) {
+      _courierRating = (await service.courierRating(orderId)).valueOrNull;
+      notifyListeners();
+    }
+  }
 
   /// Code à donner au livreur DYM à la remise (spec 042).
   String? get handoverCode => _handoverCode;
@@ -182,6 +197,12 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
         _order?.fulfillment == Fulfillment.delivery &&
             (_order?.status.isActive ?? false)
         ? (await service.handoverCode(orderId)).valueOrNull
+        : null;
+    _live = _order?.status == OrderStatus.outForDelivery
+        ? (await service.live(orderId)).valueOrNull
+        : null;
+    _courierRating = _order?.status == OrderStatus.delivered
+        ? (await service.courierRating(orderId)).valueOrNull
         : null;
     if (_order?.status == OrderStatus.delivered) {
       if (await service.orderReview(orderId) case Ok(:final value)) {

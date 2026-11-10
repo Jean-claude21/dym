@@ -5,6 +5,7 @@ import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
@@ -281,6 +282,9 @@ class MissionsViewModel extends BaseViewModel {
   CourierProfile? profile;
   CountryConfig? config;
   List<Mission>? missions;
+
+  /// Zones en forte demande (spec 044).
+  List<ZoneDemand> zones = const [];
   Failure? failure;
   MissionError? problem;
   String? accepting;
@@ -296,6 +300,11 @@ class MissionsViewModel extends BaseViewModel {
         notifyListeners();
         return;
     }
+    zones = [
+      for (final z
+          in (await service.zoneDemand()).valueOrNull ?? const <ZoneDemand>[])
+        if (z.high) z,
+    ];
     switch (await service.available()) {
       case Ok(:final value):
         missions = value;
@@ -381,6 +390,40 @@ class MissionsView extends StackedView<MissionsViewModel> {
                     : (on) => vm.setOnline(online: on),
               ),
             ),
+            if (vm.profile?.score case final score?)
+              DymContentWidth(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+                  child: Text(l10n.courierScore(score), style: t.body),
+                ),
+              ),
+            if (vm.zones.isNotEmpty)
+              DymContentWidth(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+                  child: Wrap(
+                    spacing: DymTokenSpace.s2,
+                    runSpacing: DymTokenSpace.s1,
+                    children: [
+                      for (final z in vm.zones)
+                        Chip(
+                          avatar: const Icon(
+                            Icons.local_fire_department_rounded,
+                            size: 18,
+                          ),
+                          label: Text(
+                            z.bonusMinor > 0
+                                ? l10n.zoneHighBonus(
+                                    z.zoneName,
+                                    vm.money(z.bonusMinor),
+                                  )
+                                : l10n.zoneHigh(z.zoneName),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             if (vm.problem case final p?)
               DymContentWidth(
                 child: Padding(
@@ -611,9 +654,12 @@ class MyRunsViewModel extends BaseViewModel {
 
 /// Mes courses : récupérer, livrer, rendre.
 class MyRunsView extends StackedView<MyRunsViewModel> {
-  const new({required this.service, super.key});
+  const new({required this.service, super.key, this.simulated});
 
   final MissionsService service;
+
+  /// Position simulée en cours (bandeau, décision 0015).
+  final ValueListenable<bool>? simulated;
 
   @override
   MyRunsViewModel viewModelBuilder(BuildContext context) =>
@@ -641,6 +687,28 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
           ),
           children: [
             DymContentWidth(child: Text(l10n.myRunsTitle, style: t.display)),
+            if (simulated case final flag?)
+              ValueListenableBuilder<bool>(
+                valueListenable: flag,
+                builder: (context, on, _) => on
+                    ? DymContentWidth(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: DymTokenSpace.s2),
+                          padding: const EdgeInsets.all(DymTokenSpace.s2),
+                          decoration: BoxDecoration(
+                            color: c.plantain,
+                            borderRadius: BorderRadius.circular(
+                              DymTokenRadius.tile,
+                            ),
+                          ),
+                          child: Text(
+                            l10n.positionSimulated,
+                            style: t.label.copyWith(color: c.textPrimary),
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
             if (vm.problem case final p?)
               DymContentWidth(
                 child: Text(

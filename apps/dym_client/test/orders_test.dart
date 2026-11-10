@@ -304,6 +304,42 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('06 : livreur en route, distance, position simulée (spec 044)', (
+    tester,
+  ) async {
+    final service = _service()..advance('o1', OrderStatus.outForDelivery);
+    service.lives['o1'] = OrderLive(
+      courierName: 'Kofi',
+      simulated: true,
+      distanceM: 800,
+      etaAt: DateTime(2026, 11, 10, 10, 30),
+    );
+    await _pump(
+      tester,
+      TrackingView(service: service, orderId: 'o1', onBack: () {}),
+    );
+    expect(find.text('Kofi arrive'), findsOneWidget);
+    expect(find.text('À 800 m de chez toi'), findsOneWidget);
+    expect(find.textContaining('Position simulée'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  test('note du livreur : une fois livrée, relue après envoi', () async {
+    final service = _service()
+      ..advance('o1', OrderStatus.delivered)
+      ..courierRatings['o1'] = const CourierRating(courierName: 'Kofi');
+    final vm = TrackingViewModel(
+      service: service,
+      orderId: 'o1',
+      refreshEvery: const Duration(hours: 1),
+    );
+    await vm.load();
+    expect(vm.courierRating?.rating, isNull);
+    await vm.rateCourier(4);
+    expect(vm.courierRating?.rating, 4);
+    vm.dispose();
+  });
+
   testWidgets('44 : textes traduits, tout lire', (tester) async {
     final service = _service();
     await _pump(

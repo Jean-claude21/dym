@@ -19,6 +19,14 @@ abstract interface class OrdersService {
   /// Code de remise à donner au livreur DYM (spec 042) ; nul : aucun.
   Future<Result<String?>> handoverCode(String orderId);
 
+  /// Suivi en direct (spec 044) ; nul : pas en route.
+  Future<Result<OrderLive?>> live(String orderId);
+
+  /// Livreur DYM d'une commande livrée ; nul : aucun.
+  Future<Result<CourierRating?>> courierRating(String orderId);
+
+  Future<Result<void>> rateCourier(String orderId, int rating);
+
   Future<Result<CustomerOrder>> cancel(CustomerOrder order);
 
   Future<Result<List<AppNotification>>> notifications();
@@ -110,6 +118,17 @@ class NeonOrdersService implements OrdersService {
   @override
   Future<Result<String?>> handoverCode(String orderId) =>
       _orders.handoverCode(orderId);
+
+  @override
+  Future<Result<OrderLive?>> live(String orderId) => _orders.live(orderId);
+
+  @override
+  Future<Result<CourierRating?>> courierRating(String orderId) =>
+      _orders.courierRating(orderId);
+
+  @override
+  Future<Result<void>> rateCourier(String orderId, int rating) =>
+      _orders.rateCourier(orderId, rating);
 
   @override
   Future<Result<CustomerOrder>> cancel(CustomerOrder order) =>

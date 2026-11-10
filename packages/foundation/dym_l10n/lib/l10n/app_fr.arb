@@ -6610,5 +6610,75 @@
   "courierCashHint": "Les livreurs DYM encaissent tes commandes payées en cash ; confirme quand ils te remettent l'argent.",
   "courierCashNone": "Aucun cash à recevoir",
   "courierCashNoneHint": "Le cash encaissé par les livreurs pour toi apparaîtra ici.",
-  "courierCashReceived": "Reçu"
+  "courierCashReceived": "Reçu",
+  "courierScore": "Ma note : {score} / 5",
+  "@courierScore": {
+    "placeholders": {
+      "score": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "zoneHigh": "{zone} : forte demande",
+  "@zoneHigh": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      }
+    }
+  },
+  "zoneHighBonus": "{zone} : forte demande, +{bonus} par course",
+  "@zoneHighBonus": {
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      },
+      "bonus": {
+        "type": "String"
+      }
+    }
+  },
+  "positionSimulated": "Position simulée : le GPS n'est pas disponible sur cet appareil.",
+  "trackCourierOnWay": "{name} arrive",
+  "@trackCourierOnWay": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trackDistanceM": "À {meters} m de chez toi",
+  "@trackDistanceM": {
+    "placeholders": {
+      "meters": {
+        "type": "int"
+      }
+    }
+  },
+  "trackDistanceKm": "À {km} km de chez toi",
+  "@trackDistanceKm": {
+    "placeholders": {
+      "km": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "trackRateCourier": "Note la remise de {name}",
+  "@trackRateCourier": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trackRateStar": "{count, plural, =1{1 étoile} other{{count} étoiles}}",
+  "@trackRateStar": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

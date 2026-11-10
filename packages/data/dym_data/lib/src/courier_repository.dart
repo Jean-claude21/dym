@@ -72,6 +72,25 @@ class CourierRepository {
             HandoverResult.fromJson((json! as Map).cast<String, dynamic>()),
       );
 
+  /// Position du livreur en ligne (spec 044).
+  Future<Result<void>> reportPosition({
+    required double latitude,
+    required double longitude,
+    required bool simulated,
+  }) => _data.rpc<void>(
+    'report_position',
+    params: {'p_lat': latitude, 'p_lng': longitude, 'p_simulated': simulated},
+  );
+
+  /// Missions en attente par zone, bonus de forte demande.
+  Future<Result<List<ZoneDemand>>> zoneDemand() async =>
+      (await _data.rpc<Object?>('zone_demand')).map(
+        (json) => [
+          for (final z in json as List? ?? const [])
+            ZoneDemand.fromJson((z as Map).cast<String, dynamic>()),
+        ],
+      );
+
   /// Gains du jour, wallet, cash à remettre (spec 043).
   Future<Result<CourierEarnings>> earnings() async =>
       (await _data.rpc<Object?>('courier_earnings')).map(_earnings);

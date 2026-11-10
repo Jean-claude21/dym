@@ -1517,5 +1517,14 @@
   "courierCashHint": "DYM couriers collect your cash orders; confirm when they hand you the money.",
   "courierCashNone": "No cash to receive",
   "courierCashNoneHint": "Cash collected for you by couriers will appear here.",
-  "courierCashReceived": "Received"
+  "courierCashReceived": "Received",
+  "courierScore": "My rating: {score} / 5",
+  "zoneHigh": "{zone}: high demand",
+  "zoneHighBonus": "{zone}: high demand, +{bonus} per run",
+  "positionSimulated": "Simulated position: GPS is not available on this device.",
+  "trackCourierOnWay": "{name} is on the way",
+  "trackDistanceM": "{meters} m from you",
+  "trackDistanceKm": "{km} km from you",
+  "trackRateCourier": "Rate {name}'s delivery",
+  "trackRateStar": "{count, plural, =1{1 star} other{{count} stars}}"
 }

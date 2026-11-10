@@ -22,6 +22,7 @@ class CourierProfile {
     this.suspended = false,
     this.isOnline = false,
     this.zoneIds = const [],
+    this.score,
   });
 
   factory fromJson(Map<String, dynamic> json) => CourierProfile(
@@ -33,6 +34,7 @@ class CourierProfile {
     zoneIds: [
       for (final z in json['zone_ids'] as List? ?? const []) z as String,
     ],
+    score: (json['score'] as num?)?.toDouble(),
   );
 
   final String displayName;
@@ -41,6 +43,9 @@ class CourierProfile {
   final bool suspended;
   final bool isOnline;
   final List<String> zoneIds;
+
+  /// Moyenne des dernières notes (1 à 5) ; null : pas encore noté.
+  final double? score;
 }
 
 /// Consigne de conservation (`categories.storage`, `products.storage`).
@@ -253,4 +258,71 @@ class StoreCourierCash {
   final String courierId;
   final String? courierName;
   final int amountMinor;
+}
+
+/// Demande d'une zone : missions en attente d'un livreur (`zone_demand()`).
+@immutable
+class ZoneDemand {
+  const new({
+    required this.zoneName,
+    required this.waiting,
+    this.high = false,
+    this.bonusMinor = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => ZoneDemand(
+    zoneName: json['zone_name']! as String,
+    waiting: (json['waiting'] as num?)?.toInt() ?? 0,
+    high: json['high'] as bool? ?? false,
+    bonusMinor: minorFromJson(json['bonus_minor']),
+  );
+
+  final String zoneName;
+  final int waiting;
+  final bool high;
+  final int bonusMinor;
+}
+
+/// Suivi en direct pour la cliente (`order_live()`).
+@immutable
+class OrderLive {
+  const new({
+    required this.courierName,
+    this.simulated = false,
+    this.distanceM,
+    this.etaAt,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => OrderLive(
+    courierName: json['courier_name']! as String,
+    simulated: json['simulated'] as bool? ?? false,
+    distanceM: (json['distance_m'] as num?)?.toInt(),
+    etaAt: switch (json['eta_at']) {
+      final String at => DateTime.parse(at),
+      _ => null,
+    },
+  );
+
+  final String courierName;
+
+  /// Position simulée, faute de GPS (décision 0015).
+  final bool simulated;
+
+  /// Distance à vol d'oiseau ; null : position ou adresse sans coordonnées.
+  final int? distanceM;
+  final DateTime? etaAt;
+}
+
+/// Livreur d'une commande livrée, et note donnée (nulle : à noter).
+@immutable
+class CourierRating {
+  const new({required this.courierName, this.rating});
+
+  factory fromJson(Map<String, dynamic> json) => CourierRating(
+    courierName: json['courier_name']! as String,
+    rating: (json['rating'] as num?)?.toInt(),
+  );
+
+  final String courierName;
+  final int? rating;
 }

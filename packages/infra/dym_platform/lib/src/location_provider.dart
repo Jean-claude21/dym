@@ -20,7 +20,10 @@ abstract interface class LocationProvider {
 /// Implémentation `geolocator` : précision réduite (le quartier suffit),
 /// délai court pour la 3G.
 class PluginLocationProvider implements LocationProvider {
-  const new();
+  /// [precise] : position fine (livreur en course, spec 044).
+  const new({this.precise = false});
+
+  final bool precise;
 
   @override
   Future<Result<GeoPoint?>> current() async {
@@ -36,9 +39,9 @@ class PluginLocationProvider implements LocationProvider {
         return const Ok(null);
       }
       final position = await Geolocator.getCurrentPosition(
-        locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.low,
-          timeLimit: Duration(seconds: 15),
+        locationSettings: LocationSettings(
+          accuracy: precise ? LocationAccuracy.high : LocationAccuracy.low,
+          timeLimit: const Duration(seconds: 15),
         ),
       );
       return Ok(GeoPoint(position.latitude, position.longitude));

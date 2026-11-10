@@ -473,6 +473,39 @@ class _Tracking extends StatelessWidget {
             ],
           ),
         ),
+      if (vm.live case final live?)
+        CartCard(
+          child: Row(
+            children: [
+              Icon(Icons.two_wheeler_rounded, color: c.brand, size: 36),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.trackCourierOnWay(live.courierName),
+                      style: t.title,
+                    ),
+                    if (live.distanceM case final m?)
+                      Text(
+                        m < 1000
+                            ? l10n.trackDistanceM(m)
+                            : l10n.trackDistanceKm(m / 1000),
+                      ),
+                    if (live.etaAt case final at?)
+                      Text(l10n.trackArrives(shortTime(context, at))),
+                    if (live.simulated)
+                      Text(
+                        l10n.positionSimulated,
+                        style: t.label.copyWith(color: c.textSecondary),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       if (vm.handoverCode case final code?)
         CartCard(
           child: Row(
@@ -592,6 +625,34 @@ class _Tracking extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+            ],
+          ),
+        ),
+      ],
+      if (vm.courierRating case final rating?) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        CartCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(l10n.trackRateCourier(rating.courierName), style: t.title),
+              Row(
+                children: [
+                  for (var n = 1; n <= 5; n++)
+                    IconButton(
+                      tooltip: l10n.trackRateStar(n),
+                      onPressed: rating.rating == null
+                          ? () => vm.rateCourier(n)
+                          : null,
+                      icon: Icon(
+                        n <= (rating.rating ?? 0)
+                            ? Icons.star_rounded
+                            : Icons.star_border_rounded,
+                        color: c.brand,
+                      ),
+                    ),
+                ],
               ),
             ],
           ),

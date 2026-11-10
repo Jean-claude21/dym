@@ -67,3 +67,4 @@ fiabilité (ops).
 | `courier_joined` (moyen, zones), `courier_online`, `courier_offline`, `mission_accepted` (minutes), `mission_released` | Serveur | App livreur (spec 041) |
 | `run_accepted` (boutiques), `handover_code_failed` (essais) | Serveur | Tournées et remise (spec 042) |
 | `courier_earned` (frais, cash), `courier_cash_remitted` (montant), `wallet_withdrawn` (montant, fournisseur) | Serveur | Cash et gains du livreur (spec 043) |
+| `courier_rated` (note) | Serveur | Suivi en direct (spec 044) |

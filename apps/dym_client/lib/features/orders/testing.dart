@@ -62,6 +62,29 @@ class MemoryOrdersService implements OrdersService {
     return _fail<List<CustomerOrder>>() ?? Ok(List.of(_orders));
   }
 
+  /// Suivi en direct et notes (spec 044).
+  final lives = <String, OrderLive>{};
+  final courierRatings = <String, CourierRating>{};
+
+  @override
+  Future<Result<OrderLive?>> live(String orderId) async => Ok(lives[orderId]);
+
+  @override
+  Future<Result<CourierRating?>> courierRating(String orderId) async =>
+      Ok(courierRatings[orderId]);
+
+  @override
+  Future<Result<void>> rateCourier(String orderId, int rating) async {
+    final current = courierRatings[orderId];
+    if (current != null) {
+      courierRatings[orderId] = CourierRating(
+        courierName: current.courierName,
+        rating: rating,
+      );
+    }
+    return const Ok(null);
+  }
+
   /// Codes de remise par commande (spec 042).
   final handoverCodes = <String, String>{};
 

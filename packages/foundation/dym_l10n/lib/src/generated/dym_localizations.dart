@@ -8958,6 +8958,60 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Reçu'**
   String get courierCashReceived;
+
+  /// No description provided for @courierScore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma note : {score} / 5'**
+  String courierScore(double score);
+
+  /// No description provided for @zoneHigh.
+  ///
+  /// In fr, this message translates to:
+  /// **'{zone} : forte demande'**
+  String zoneHigh(String zone);
+
+  /// No description provided for @zoneHighBonus.
+  ///
+  /// In fr, this message translates to:
+  /// **'{zone} : forte demande, +{bonus} par course'**
+  String zoneHighBonus(String zone, String bonus);
+
+  /// No description provided for @positionSimulated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Position simulée : le GPS n\'est pas disponible sur cet appareil.'**
+  String get positionSimulated;
+
+  /// No description provided for @trackCourierOnWay.
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} arrive'**
+  String trackCourierOnWay(String name);
+
+  /// No description provided for @trackDistanceM.
+  ///
+  /// In fr, this message translates to:
+  /// **'À {meters} m de chez toi'**
+  String trackDistanceM(int meters);
+
+  /// No description provided for @trackDistanceKm.
+  ///
+  /// In fr, this message translates to:
+  /// **'À {km} km de chez toi'**
+  String trackDistanceKm(double km);
+
+  /// No description provided for @trackRateCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note la remise de {name}'**
+  String trackRateCourier(String name);
+
+  /// No description provided for @trackRateStar.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 étoile} other{{count} étoiles}}'**
+  String trackRateStar(int count);
 }
 
 class _DymLocalizationsDelegate

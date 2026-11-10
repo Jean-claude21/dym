@@ -4,6 +4,7 @@ import 'package:dym_delivery/app/app.locator.dart';
 import 'package:dym_delivery/features/earnings/earnings_view.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_delivery/features/missions/missions_views.dart';
+import 'package:dym_delivery/features/missions/position_reporter.dart';
 import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -42,6 +43,21 @@ class _HomeViewState extends State<HomeView> {
       widget.missions ?? locator<MissionsService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
+  final PositionReporter? _reporter = locator.isRegistered<PositionReporter>()
+      ? locator<PositionReporter>()
+      : null;
+
+  @override
+  void initState() {
+    super.initState();
+    _reporter?.start();
+  }
+
+  @override
+  void dispose() {
+    _reporter?.stop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +85,10 @@ class _HomeViewState extends State<HomeView> {
           service: _missions,
           onAccepted: () => setState(() => _tab = HomeTab.runs),
         ),
-        HomeTab.runs => MyRunsView(service: _missions),
+        HomeTab.runs => MyRunsView(
+          service: _missions,
+          simulated: _reporter?.simulated,
+        ),
         HomeTab.earnings => EarningsView(service: _missions),
         HomeTab.me => AccountView(
           service: _service,
