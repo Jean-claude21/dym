@@ -23,6 +23,8 @@ import 'package:dym_client/features/discovery/product/product_page_view.dart';
 import 'package:dym_client/features/discovery/search/search_view.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
 import 'package:dym_client/features/discovery/store/store_page_view.dart';
+import 'package:dym_client/features/favorites/favorites_service.dart';
+import 'package:dym_client/features/favorites/favorites_views.dart';
 import 'package:dym_client/features/orders/disputes_views.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
@@ -104,6 +106,12 @@ abstract interface class AppNavigator {
 
   /// Panier proposé pour une liste (notification de rappel).
   Future<void> toShoppingList(String listId);
+
+  /// Mes favoris (spec 030).
+  void toFavorites();
+
+  /// Mes paniers enregistrés (spec 030).
+  void toBaskets();
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -121,8 +129,10 @@ class StackedAppNavigator implements AppNavigator {
     ContentService? content,
     WalletService? wallet,
     ShoppingService? shopping,
+    FavoritesService? favorites,
   ]) : _walletOverride = wallet,
        _shoppingOverride = shopping,
+       _favoritesOverride = favorites,
        _support = support ?? locator<SupportService>(),
        _content =
            content ??
@@ -161,6 +171,15 @@ class StackedAppNavigator implements AppNavigator {
   /// Assistant de courses (spec 029), résolu au premier usage.
   ShoppingService get _shopping =>
       _shoppingOverride ?? locator<ShoppingService>();
+
+  final FavoritesService? _favoritesOverride;
+
+  /// Favoris et paniers (spec 030) ; absents des tests sans service.
+  FavoritesService? get _favorites =>
+      _favoritesOverride ??
+      (locator.isRegistered<FavoritesService>()
+          ? locator<FavoritesService>()
+          : null);
 
   /// Recherche augmentée (spec 018) ; absente : recherche texte seule.
   final SearchAiService? _searchAi;
@@ -210,6 +229,7 @@ class StackedAppNavigator implements AppNavigator {
         onBack: _back,
         onOpenProduct: toProduct,
         onMessage: () => unawaited(toStoreChat(storeId)),
+        favorites: _favorites,
         onReviews: () => _discovery.storePage(storeId).then((page) {
           if (page case Ok(:final value)) {
             _toStoreReviews(storeId, value.store.name);
@@ -230,6 +250,7 @@ class StackedAppNavigator implements AppNavigator {
           unawaited(toStoreChat(store, productId: product)),
       content: _content,
       onVideos: toProductVideos,
+      favorites: _favorites,
     ),
   );
 
@@ -304,6 +325,10 @@ class StackedAppNavigator implements AppNavigator {
       onDelivery: _toDelivery,
       onBrowse: _back,
       onOrdered: _toOrderSent,
+      onSave: switch (_favorites) {
+        final f? => (context) => saveCartAsBasket(context, f),
+        null => null,
+      },
     ),
   );
 
@@ -449,6 +474,39 @@ class StackedAppNavigator implements AppNavigator {
       },
     ),
   );
+
+  @override
+  void toFavorites() {
+    final favorites = _favorites;
+    if (favorites == null) return;
+    _push(
+      FavoritesView(
+        service: favorites,
+        discovery: _discovery,
+        onBack: _back,
+        onOpenStore: toStore,
+        onOpenProduct: toProduct,
+      ),
+    );
+  }
+
+  @override
+  void toBaskets() {
+    final favorites = _favorites;
+    if (favorites == null) return;
+    _push(
+      BasketsView(
+        service: favorites,
+        discovery: _discovery,
+        onBack: _back,
+        onAdded: () {
+          _back();
+          _cart.refresh().ignore();
+          toCart();
+        },
+      ),
+    );
+  }
 
   @override
   Future<void> toShoppingList(String listId) async {

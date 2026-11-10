@@ -4158,4 +4158,108 @@ class DymLocalizationsFr extends DymLocalizations {
   String notifShoppingDueBody(String name) {
     return '« $name » : vérifie et valide ton panier.';
   }
+
+  @override
+  String get favoriteAdd => 'Ajouter aux favoris';
+
+  @override
+  String get favoriteRemove => 'Retirer des favoris';
+
+  @override
+  String get favoritesTitle => 'Mes favoris';
+
+  @override
+  String get favoritesStores => 'Boutiques';
+
+  @override
+  String get favoritesProducts => 'Produits';
+
+  @override
+  String get favoritesEmpty =>
+      'Touche le cœur d\'une boutique ou d\'un produit pour le retrouver ici.';
+
+  @override
+  String get basketsTitle => 'Mes paniers';
+
+  @override
+  String get basketsEmpty =>
+      'Enregistre ton panier (petit-déjeuner, déjeuner, le mois…) depuis le panier pour le refaire en un geste.';
+
+  @override
+  String get basketSave => 'Enregistrer ce panier';
+
+  @override
+  String get basketSaveAction => 'Enregistrer';
+
+  @override
+  String get basketName => 'Nom du panier';
+
+  @override
+  String get basketNameHint => 'Ex. Petit-déjeuner';
+
+  @override
+  String get basketSaved =>
+      'Panier enregistré : retrouve-le dans « Mes paniers ».';
+
+  @override
+  String get basketToCart => 'Remettre au panier';
+
+  @override
+  String basketMeta(int count, String total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles',
+      one: '1 article',
+    );
+    return '$_temp0 · $total aujourd\'hui';
+  }
+
+  @override
+  String basketUnavailable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles indisponibles',
+      one: '1 article indisponible',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String basketSkipped(String items) {
+    return 'Pas ajouté (plus disponible) : $items';
+  }
+
+  @override
+  String basketMore(String name) {
+    return 'Plus d\'actions pour $name';
+  }
+
+  @override
+  String get basketRename => 'Renommer';
+
+  @override
+  String get basketDelete => 'Supprimer';
+
+  @override
+  String basketDeleteConfirm(String name) {
+    return 'Supprimer « $name » ?';
+  }
+
+  @override
+  String get basketErrorEmpty => 'Ton panier est vide.';
+
+  @override
+  String get basketErrorTooMany =>
+      '20 paniers de 50 articles au plus : supprimes-en un.';
+
+  @override
+  String get basketErrorName => 'Donne un nom à ton panier.';
+
+  @override
+  String get accountFavorites => 'Mes favoris';
+
+  @override
+  String get accountBaskets => 'Mes paniers';
 }

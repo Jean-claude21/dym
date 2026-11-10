@@ -5,6 +5,8 @@ import 'package:dym_client/features/content/report_sheet.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_client/features/favorites/favorites_service.dart';
+import 'package:dym_client/features/favorites/favorites_views.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -22,6 +24,7 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
     this.onAsk,
     this.content,
     this.onVideos,
+    this.favorites,
   });
 
   /// Vidéos et signalement (spec 020) ; absent : rien n'est proposé.
@@ -33,6 +36,9 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
   final DiscoveryService service;
   final String productId;
   final VoidCallback onBack;
+
+  /// Cœur du produit (spec 030) ; absent : masqué.
+  final FavoritesService? favorites;
   final ValueChanged<String> onOpenStore;
 
   /// Poser une question à la boutique sur ce produit (spec 015).
@@ -62,6 +68,14 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
       tooltip: l10n.authBack,
       onPressed: onBack,
     );
+    final heart = switch (favorites) {
+      final f? => FavoriteButton(
+        service: f,
+        kind: FavoriteKind.product,
+        id: productId,
+      ),
+      null => null,
+    };
     if (!vm.ready || page == null) {
       return Scaffold(
         backgroundColor: c.background,
@@ -74,6 +88,7 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                 goneMessage: l10n.productUnavailableTitle,
               ),
               Positioned(top: 8, left: 8, child: back),
+              if (heart != null) Positioned(top: 8, right: 8, child: heart),
             ],
           ),
         ),
@@ -170,6 +185,8 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                           ],
                         ),
                         Positioned(top: 8, left: 8, child: back),
+                        if (heart != null)
+                          Positioned(top: 8, right: 8, child: heart),
                       ],
                     ),
                   ),

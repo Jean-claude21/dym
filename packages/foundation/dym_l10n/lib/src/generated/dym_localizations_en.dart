@@ -4127,4 +4127,107 @@ class DymLocalizationsEn extends DymLocalizations {
   String notifShoppingDueBody(String name) {
     return '“$name”: check and confirm your basket.';
   }
+
+  @override
+  String get favoriteAdd => 'Add to favourites';
+
+  @override
+  String get favoriteRemove => 'Remove from favourites';
+
+  @override
+  String get favoritesTitle => 'My favourites';
+
+  @override
+  String get favoritesStores => 'Shops';
+
+  @override
+  String get favoritesProducts => 'Products';
+
+  @override
+  String get favoritesEmpty =>
+      'Tap the heart on a shop or a product to find it here.';
+
+  @override
+  String get basketsTitle => 'My baskets';
+
+  @override
+  String get basketsEmpty =>
+      'Save your basket (breakfast, lunch, the month…) from the cart to redo it in one tap.';
+
+  @override
+  String get basketSave => 'Save this basket';
+
+  @override
+  String get basketSaveAction => 'Save';
+
+  @override
+  String get basketName => 'Basket name';
+
+  @override
+  String get basketNameHint => 'E.g. Breakfast';
+
+  @override
+  String get basketSaved => 'Basket saved: find it in “My baskets”.';
+
+  @override
+  String get basketToCart => 'Add back to cart';
+
+  @override
+  String basketMeta(int count, String total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0 · $total today';
+  }
+
+  @override
+  String basketUnavailable(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items unavailable',
+      one: '1 item unavailable',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String basketSkipped(String items) {
+    return 'Not added (no longer available): $items';
+  }
+
+  @override
+  String basketMore(String name) {
+    return 'More actions for $name';
+  }
+
+  @override
+  String get basketRename => 'Rename';
+
+  @override
+  String get basketDelete => 'Delete';
+
+  @override
+  String basketDeleteConfirm(String name) {
+    return 'Delete “$name”?';
+  }
+
+  @override
+  String get basketErrorEmpty => 'Your cart is empty.';
+
+  @override
+  String get basketErrorTooMany =>
+      '20 baskets of 50 items at most: delete one.';
+
+  @override
+  String get basketErrorName => 'Give your basket a name.';
+
+  @override
+  String get accountFavorites => 'My favourites';
+
+  @override
+  String get accountBaskets => 'My baskets';
 }

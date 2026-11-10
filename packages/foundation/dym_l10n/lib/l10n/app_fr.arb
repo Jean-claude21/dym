@@ -5416,5 +5416,137 @@
         "type": "String"
       }
     }
+  },
+  "favoriteAdd": "Ajouter aux favoris",
+  "@favoriteAdd": {
+    "description": "Cœur vide"
+  },
+  "favoriteRemove": "Retirer des favoris",
+  "@favoriteRemove": {
+    "description": "Cœur plein"
+  },
+  "favoritesTitle": "Mes favoris",
+  "@favoritesTitle": {
+    "description": "Titre des favoris"
+  },
+  "favoritesStores": "Boutiques",
+  "@favoritesStores": {
+    "description": "Section boutiques"
+  },
+  "favoritesProducts": "Produits",
+  "@favoritesProducts": {
+    "description": "Section produits"
+  },
+  "favoritesEmpty": "Touche le cœur d'une boutique ou d'un produit pour le retrouver ici.",
+  "@favoritesEmpty": {
+    "description": "Favoris vides"
+  },
+  "basketsTitle": "Mes paniers",
+  "@basketsTitle": {
+    "description": "Titre des paniers enregistrés"
+  },
+  "basketsEmpty": "Enregistre ton panier (petit-déjeuner, déjeuner, le mois…) depuis le panier pour le refaire en un geste.",
+  "@basketsEmpty": {
+    "description": "Paniers vides"
+  },
+  "basketSave": "Enregistrer ce panier",
+  "@basketSave": {
+    "description": "Bouton du panier"
+  },
+  "basketSaveAction": "Enregistrer",
+  "@basketSaveAction": {
+    "description": "Valider le nom"
+  },
+  "basketName": "Nom du panier",
+  "@basketName": {
+    "description": "Titre du dialogue"
+  },
+  "basketNameHint": "Ex. Petit-déjeuner",
+  "@basketNameHint": {
+    "description": "Exemple de nom"
+  },
+  "basketSaved": "Panier enregistré : retrouve-le dans « Mes paniers ».",
+  "@basketSaved": {
+    "description": "Après enregistrement"
+  },
+  "basketToCart": "Remettre au panier",
+  "@basketToCart": {
+    "description": "Remise au panier"
+  },
+  "basketMeta": "{count, plural, =1{1 article} other{{count} articles}} · {total} aujourd'hui",
+  "@basketMeta": {
+    "description": "Résumé du panier",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "basketUnavailable": "{count, plural, =1{1 article indisponible} other{{count} articles indisponibles}}",
+  "@basketUnavailable": {
+    "description": "Articles indisponibles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "basketSkipped": "Pas ajouté (plus disponible) : {items}",
+  "@basketSkipped": {
+    "description": "Articles non ajoutés",
+    "placeholders": {
+      "items": {
+        "type": "String"
+      }
+    }
+  },
+  "basketMore": "Plus d'actions pour {name}",
+  "@basketMore": {
+    "description": "Menu du panier",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "basketRename": "Renommer",
+  "@basketRename": {
+    "description": "Renommer"
+  },
+  "basketDelete": "Supprimer",
+  "@basketDelete": {
+    "description": "Supprimer"
+  },
+  "basketDeleteConfirm": "Supprimer « {name} » ?",
+  "@basketDeleteConfirm": {
+    "description": "Confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "basketErrorEmpty": "Ton panier est vide.",
+  "@basketErrorEmpty": {
+    "description": "Panier vide"
+  },
+  "basketErrorTooMany": "20 paniers de 50 articles au plus : supprimes-en un.",
+  "@basketErrorTooMany": {
+    "description": "Limite"
+  },
+  "basketErrorName": "Donne un nom à ton panier.",
+  "@basketErrorName": {
+    "description": "Nom manquant"
+  },
+  "accountFavorites": "Mes favoris",
+  "@accountFavorites": {
+    "description": "Menu Moi"
+  },
+  "accountBaskets": "Mes paniers",
+  "@accountBaskets": {
+    "description": "Menu Moi"
   }
 }

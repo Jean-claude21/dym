@@ -53,3 +53,4 @@ fiabilité (ops).
 | `wallet_topped_up` (montant, fournisseur), `wallet_payment_succeeded` (montant), `pocket_created` (objectif, arrondi : oui/non) | Serveur | Wallet (spec 025) |
 | `shopping_list_saved` (articles, récurrence), `shopping_list_proposed` (articles, boutiques, manquants), `shopping_reminder_sent` (période) | Serveur | Assistant de courses (spec 029) |
 | `shopping_list_cart_added` (articles ajoutés, refusés) | App | Assistant de courses (spec 029) |
+| `favorite_added` (type), `basket_saved` (lignes), `basket_reordered` (ajoutés, non ajoutés) | Serveur | Carnet (spec 030) |

@@ -68,5 +68,11 @@ class DemoClientNavigator implements AppNavigator {
   void toShoppingLists() {}
 
   @override
+  void toFavorites() {}
+
+  @override
+  void toBaskets() {}
+
+  @override
   Future<void> toShoppingList(String listId) async {}
 }

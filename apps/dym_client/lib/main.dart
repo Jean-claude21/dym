@@ -9,6 +9,7 @@ import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
+import 'package:dym_client/features/favorites/favorites_service.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/shopping/shopping_service.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
@@ -149,6 +150,9 @@ Future<void> configureServices(DymEnvironment environment) async {
         productPhoto: (key) =>
             dymNetworkImage(environment.media(key).toString()),
       ),
+    )
+    ..registerLazySingleton<FavoritesService>(
+      () => NeonFavoritesService(FavoritesRepository(neon.data)),
     )
     ..registerLazySingleton<ShoppingService>(
       () => NeonShoppingService(

@@ -180,6 +180,8 @@ class _HomeViewState extends State<HomeView> {
           onMessages: _navigator.toMessages,
           onHelp: _navigator.toHelp,
           onWallet: _navigator.toWallet,
+          onFavorites: _navigator.toFavorites,
+          onBaskets: _navigator.toBaskets,
         ),
       },
     );
