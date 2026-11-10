@@ -5827,5 +5827,50 @@
         "type": "String"
       }
     }
+  },
+  "spacePocket": "Poche commune",
+  "@spacePocket": {
+    "description": "Titre de la poche"
+  },
+  "spaceContribute": "Verser",
+  "@spaceContribute": {
+    "description": "Verser dans la poche"
+  },
+  "spaceContributeTitle": "Verser depuis mon wallet",
+  "@spaceContributeTitle": {
+    "description": "Dialogue de versement"
+  },
+  "spaceContributedMonth": "a versé {amount} ce mois",
+  "@spaceContributedMonth": {
+    "description": "Part de chacun",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceUsePocket": "Payer avec la poche commune",
+  "@spaceUsePocket": {
+    "description": "Interrupteur"
+  },
+  "spaceUsePocketHint": "Le montant des articles passe sur ton wallet : choisis « Wallet DYM » pour payer.",
+  "@spaceUsePocketHint": {
+    "description": "Explication"
+  },
+  "spaceErrorPocketInsufficient": "La poche commune ne suffit pas pour ce panier.",
+  "@spaceErrorPocketInsufficient": {
+    "description": "Poche insuffisante"
+  },
+  "spaceErrorSpaceBalance": "La poche commune n'est pas vide : utilise-la d'abord.",
+  "@spaceErrorSpaceBalance": {
+    "description": "Poche non vide"
+  },
+  "walletKindSpaceContribution": "Versé à un espace",
+  "@walletKindSpaceContribution": {
+    "description": "Mouvement"
+  },
+  "walletKindSpacePayout": "Reçu d'un espace",
+  "@walletKindSpacePayout": {
+    "description": "Mouvement"
   }
 }

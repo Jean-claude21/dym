@@ -16,6 +16,10 @@ enum SpaceError {
   cartEmpty,
   budgetExceeded,
   notPayer,
+  pocketInsufficient,
+  walletInsufficient,
+  spaceBalance,
+  amount,
   offline,
   generic,
 }
@@ -31,6 +35,12 @@ SpaceError spaceErrorOf(Failure failure) => switch (failure) {
   ValidationFailure(message: 'cart_empty' || 'space_empty') =>
     SpaceError.cartEmpty,
   ValidationFailure(message: 'budget_exceeded') => SpaceError.budgetExceeded,
+  ValidationFailure(message: 'space_pocket_insufficient') =>
+    SpaceError.pocketInsufficient,
+  ValidationFailure(message: 'wallet_insufficient') =>
+    SpaceError.walletInsufficient,
+  ValidationFailure(message: 'wallet_amount_invalid') => SpaceError.amount,
+  ValidationFailure(message: 'space_balance') => SpaceError.spaceBalance,
   ForbiddenFailure() => SpaceError.notPayer,
   _ => SpaceError.generic,
 };
@@ -130,6 +140,28 @@ class SpaceViewModel extends BaseViewModel {
   /// Articles non ajoutés à la dernière validation.
   List<String> skipped = const [];
 
+  /// Payer avec la poche commune (spec 032).
+  bool usePocket = false;
+
+  /// Montant financé par la poche à la dernière validation.
+  int fundedMinor = 0;
+
+  void setUsePocket({required bool value}) {
+    usePocket = value;
+    notifyListeners();
+  }
+
+  /// Versement saisi en unités de la devise ; `false` si refusé.
+  Future<bool> contribute(String amountText) async {
+    final amount = amountFromText(config, amountText);
+    if (amount == null) {
+      problem = SpaceError.amount;
+      notifyListeners();
+      return false;
+    }
+    return await _apply(() => service.contribute(spaceId, amount));
+  }
+
   String? money(int? minor) =>
       minor == null ? null : config?.money(minor).format();
 
@@ -197,12 +229,16 @@ class SpaceViewModel extends BaseViewModel {
     problem = null;
     skipped = const [];
     notifyListeners();
-    final result = await service.validate(spaceId);
+    final funding = usePocket && (space?.pocketBalanceMinor ?? 0) > 0;
+    final total = space?.totalMinor ?? 0;
+    final result = await service.validate(spaceId, usePocket: funding);
     acting = false;
     var ok = false;
+    fundedMinor = 0;
     switch (result) {
       case Ok(:final value):
         skipped = value.skipped;
+        if (funding && value.added > 0) fundedMinor = total;
         ok = value.added > 0;
         if (await service.space(spaceId) case Ok(:final value)) {
           space = value;

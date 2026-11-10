@@ -8,6 +8,8 @@ enum WalletMovementKind {
   paymentReceived,
   refundPaid,
   cashback,
+  spaceContribution,
+  spacePayout,
   unknown;
 
   static WalletMovementKind parse(Object? value) => switch (value) {
@@ -16,6 +18,8 @@ enum WalletMovementKind {
     'payment_received' => paymentReceived,
     'refund_paid' => refundPaid,
     'cashback' => cashback,
+    'space_contribution' => spaceContribution,
+    'space_payout' => spacePayout,
     _ => unknown,
   };
 }

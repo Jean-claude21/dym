@@ -59,6 +59,14 @@ class SpaceRepository {
   Future<Result<void>> delete(String id) =>
       _data.rpc<void>('delete_space', params: {'p_space': id});
 
+  /// Versement depuis le wallet dans la poche commune (clé d'idempotence).
+  Future<Result<Space>> contribute(String id, int amountMinor, String key) =>
+      _space('space_contribute', {
+        'p_space': id,
+        'p_amount_minor': amountMinor,
+        'p_key': key,
+      });
+
   /// Envoie le panier de la personne dans l'espace (et le vide).
   Future<Result<Space>> sendCart(String id) =>
       _space('send_cart_to_space', {'p_space': id});
@@ -72,10 +80,15 @@ class SpaceRepository {
       });
 
   /// Valide : articles passés au panier ; refus `not_payer`, `budget_exceeded`.
-  Future<Result<ReorderResult>> validate(String id) async {
+  /// [usePocket] : financée par la poche commune (refus
+  /// `space_pocket_insufficient`).
+  Future<Result<ReorderResult>> validate(
+    String id, {
+    bool usePocket = false,
+  }) async {
     final result = await _data.rpc<Object?>(
       'validate_space',
-      params: {'p_space': id},
+      params: {'p_space': id, 'p_use_pocket': usePocket},
     );
     return result.map(
       (json) => ReorderResult.fromJson((json! as Map).cast<String, dynamic>()),

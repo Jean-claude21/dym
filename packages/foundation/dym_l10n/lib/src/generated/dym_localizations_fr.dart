@@ -4458,4 +4458,39 @@ class DymLocalizationsFr extends DymLocalizations {
   String notifSpaceValidatedBody(String name, String space) {
     return '$name a validé le panier de « $space ».';
   }
+
+  @override
+  String get spacePocket => 'Poche commune';
+
+  @override
+  String get spaceContribute => 'Verser';
+
+  @override
+  String get spaceContributeTitle => 'Verser depuis mon wallet';
+
+  @override
+  String spaceContributedMonth(String amount) {
+    return 'a versé $amount ce mois';
+  }
+
+  @override
+  String get spaceUsePocket => 'Payer avec la poche commune';
+
+  @override
+  String get spaceUsePocketHint =>
+      'Le montant des articles passe sur ton wallet : choisis « Wallet DYM » pour payer.';
+
+  @override
+  String get spaceErrorPocketInsufficient =>
+      'La poche commune ne suffit pas pour ce panier.';
+
+  @override
+  String get spaceErrorSpaceBalance =>
+      'La poche commune n\'est pas vide : utilise-la d\'abord.';
+
+  @override
+  String get walletKindSpaceContribution => 'Versé à un espace';
+
+  @override
+  String get walletKindSpacePayout => 'Reçu d\'un espace';
 }

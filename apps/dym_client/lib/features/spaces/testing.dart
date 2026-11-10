@@ -13,6 +13,10 @@ class MemorySpacesService implements SpacesService {
   final DiscoveryService discovery;
   final List<Space> stored;
   final validated = <String>[];
+
+  /// Solde du wallet de la personne (versements).
+  int walletMinor = 0;
+  final funded = <String>[];
   final sent = <String>[];
 
   /// Échec à renvoyer au prochain appel d'écriture.
@@ -40,6 +44,7 @@ class MemorySpacesService implements SpacesService {
     List<SpaceItem>? items,
     List<SpaceMember>? members,
     int? spent,
+    int? pocket,
   }) {
     final list = items ?? s.items;
     return Space(
@@ -52,6 +57,7 @@ class MemorySpacesService implements SpacesService {
       monthlyBudgetMinor: s.monthlyBudgetMinor,
       spentMonthMinor: spent ?? s.spentMonthMinor,
       totalMinor: list.fold(0, (t, i) => t + i.unitPriceMinor * i.quantity),
+      pocketBalanceMinor: pocket ?? s.pocketBalanceMinor,
       members: members ?? s.members,
       items: list,
     );
@@ -193,14 +199,41 @@ class MemorySpacesService implements SpacesService {
   }
 
   @override
-  Future<Result<ReorderResult>> validate(String id) async {
+  Future<Result<ReorderResult>> validate(
+    String id, {
+    bool usePocket = false,
+  }) async {
     if (_take() case final f?) return Err(f);
     final s = _find(id);
     if (!s.canValidate) return const Err(ForbiddenFailure('not_payer'));
     if (s.overBudget) return const Err(ValidationFailure('budget_exceeded'));
+    if (usePocket && s.pocketBalanceMinor < s.totalMinor) {
+      return const Err(ValidationFailure('space_pocket_insufficient'));
+    }
     validated.add(id);
-    _put(_copy(s, items: const [], spent: s.spentMonthMinor + s.totalMinor));
+    if (usePocket) funded.add(id);
+    _put(
+      _copy(
+        s,
+        items: const [],
+        spent: s.spentMonthMinor + s.totalMinor,
+        pocket: usePocket ? s.pocketBalanceMinor - s.totalMinor : null,
+      ),
+    );
     return Ok(ReorderResult(added: s.items.length));
+  }
+
+  @override
+  Future<Result<Space>> contribute(String id, int amountMinor) async {
+    if (_take() case final f?) return Err(f);
+    if (amountMinor > walletMinor) {
+      return const Err(ValidationFailure('wallet_insufficient'));
+    }
+    walletMinor -= amountMinor;
+    final s = _find(id);
+    final updated = _copy(s, pocket: s.pocketBalanceMinor + amountMinor);
+    _put(updated);
+    return Ok(updated);
   }
 
   @override

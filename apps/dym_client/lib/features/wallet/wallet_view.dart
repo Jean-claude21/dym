@@ -332,6 +332,14 @@ class _MovementRow extends StatelessWidget {
         Icons.redeem_rounded,
         l10n.walletKindCashback,
       ),
+      WalletMovementKind.spaceContribution => (
+        Icons.groups_rounded,
+        l10n.walletKindSpaceContribution,
+      ),
+      WalletMovementKind.spacePayout => (
+        Icons.groups_rounded,
+        l10n.walletKindSpacePayout,
+      ),
       WalletMovementKind.unknown => (
         Icons.sync_alt_rounded,
         l10n.walletKindOther,
