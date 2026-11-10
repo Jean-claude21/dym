@@ -22,7 +22,7 @@
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | 🔵 En cours : 1 spec fusionnée, 2 en relecture, 1 reportée |
-| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
+| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | 🔵 En cours : 1 spec sur 5 en relecture |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
@@ -166,7 +166,7 @@ en plus d'une heure.
 
 | Spec | Contenu | État |
 |---|---|---|
-| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile | ⬜ À faire |
+| `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile | 🟡 Spec 045 : code fait, en attente de relecture humaine (ventes hors app tapées ou dictées, montant lu en base, stock décompté, « Ma caisse » du jour par moyen, solde et versement simulé, frise de la commande, accès depuis le tableau de bord) |
 | `qr-payments` | Paiement et encaissement par QR | ⬜ À faire |
 | `vendor-credit` | Ardoise, relances | ⬜ À faire |
 | `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché | ⬜ À faire |

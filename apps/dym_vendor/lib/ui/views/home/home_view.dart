@@ -144,6 +144,7 @@ class _HomeViewState extends State<HomeView> {
           onOrders: () => setState(() => _tab = HomeTab.orders),
           onProducts: () => setState(() => _tab = HomeTab.products),
           onMessages: () => setState(() => _tab = HomeTab.messages),
+          onTill: _navigator.toTill,
         ),
         HomeTab.messages => ConversationsView(
           service: _chat,
@@ -163,6 +164,7 @@ class _HomeViewState extends State<HomeView> {
           onEdit: _navigator.toStoreSetting,
           onReviews: _navigator.toReviews,
           onCourierCash: _navigator.toCourierCash,
+          onTill: _navigator.toTill,
           onContents: _contents ? _navigator.toContents : null,
           onBroadcast: _broadcast ? _navigator.toBroadcast : null,
         ),

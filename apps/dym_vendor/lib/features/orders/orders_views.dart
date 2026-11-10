@@ -103,6 +103,35 @@ String vendorStatusLabel(DymLocalizations l10n, VendorOrder o) =>
       OrderStatus.unknown => l10n.errorGeneric,
     };
 
+/// Libellé d'un statut de la frise.
+String statusOnlyLabel(
+  DymLocalizations l10n,
+  OrderStatus status,
+  Fulfillment fulfillment,
+) => switch (status) {
+  OrderStatus.pending => l10n.orderStatusPending,
+  OrderStatus.accepted => l10n.orderStatusAccepted,
+  OrderStatus.preparing => l10n.orderStatusPreparing,
+  OrderStatus.ready => l10n.orderStatusReady,
+  OrderStatus.outForDelivery => l10n.orderStatusOutForDelivery,
+  OrderStatus.delivered =>
+    fulfillment == Fulfillment.pickup
+        ? l10n.orderStatusCollected
+        : l10n.orderStatusDelivered,
+  OrderStatus.refused => l10n.orderStatusRefused,
+  OrderStatus.cancelled => l10n.orderStatusCancelled,
+  OrderStatus.unknown => l10n.errorGeneric,
+};
+
+/// Qui a fait le geste.
+String actorLabel(DymLocalizations l10n, String role) => switch (role) {
+  'vendor' => l10n.actorVendor,
+  'client' => l10n.actorClient,
+  'courier' => l10n.actorCourier,
+  'admin' => l10n.actorAdmin,
+  _ => l10n.actorSystem,
+};
+
 String reasonLabel(DymLocalizations l10n, RefusalReason? r) => switch (r) {
   RefusalReason.outOfStock => l10n.reasonOutOfStock,
   RefusalReason.tooBusy => l10n.reasonTooBusy,
@@ -714,6 +743,24 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
           ],
         ],
       ),
+      if (order.history.isNotEmpty) ...[
+        const SizedBox(height: DymTokenSpace.s4),
+        DymSectionHeader(title: l10n.orderTimeline),
+        for (final e in order.history)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            leading: Icon(Icons.circle, size: 12, color: c.brand),
+            title: Text(statusOnlyLabel(l10n, e.toStatus, order.fulfillment)),
+            subtitle: Text(
+              actorLabel(l10n, e.actorRole),
+              style: t.label.copyWith(color: c.textSecondary),
+            ),
+            trailing: Text(
+              TimeOfDay.fromDateTime(e.occurredAt.toLocal()).format(context),
+            ),
+          ),
+      ],
     ];
     return Scaffold(
       backgroundColor: c.background,

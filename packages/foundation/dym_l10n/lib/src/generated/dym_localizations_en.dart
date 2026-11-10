@@ -5259,4 +5259,123 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get courierCashReceived => 'Received';
+
+  @override
+  String get tillTitle => 'My till';
+
+  @override
+  String get tillOpen => 'My till: today\'s sales';
+
+  @override
+  String get tillNewSale => 'New sale';
+
+  @override
+  String tillToday(String amount) {
+    return 'Today: $amount';
+  }
+
+  @override
+  String tillInApp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'In app · $count sales',
+      one: 'In app · 1 sale',
+      zero: 'In app',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tillOffApp(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Off app · $count sales',
+      one: 'Off app · 1 sale',
+      zero: 'Off app',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tillBalance => 'My balance at DYM';
+
+  @override
+  String get tillPayout => 'Pay out my balance';
+
+  @override
+  String get tillPayoutSimulated =>
+      'Simulated payout: no money leaves until the real payout is connected.';
+
+  @override
+  String get tillBalanceInsufficient =>
+      'Your balance is too low for this payout.';
+
+  @override
+  String get tillSales => 'Off-app sales';
+
+  @override
+  String get tillNoSale => 'No off-app sale recorded.';
+
+  @override
+  String get tillVoid => 'Cancel the sale';
+
+  @override
+  String get tillPayouts => 'Payouts';
+
+  @override
+  String get tillVoice => 'Dictate the sale';
+
+  @override
+  String get tillVoiceStop => 'Done';
+
+  @override
+  String get tillVoiceDisabled =>
+      'Dictation is not open in your country: type the sale.';
+
+  @override
+  String get tillNothingHeard => 'Nothing heard: try again or type the sale.';
+
+  @override
+  String get tillLabel => 'What you sold';
+
+  @override
+  String get tillLabelHint => '3 heaps of tomatoes 1500';
+
+  @override
+  String get tillAmount => 'Amount';
+
+  @override
+  String get tillSave => 'Save the sale';
+
+  @override
+  String get tillMethodCash => 'Cash';
+
+  @override
+  String get tillMethodMobileMoney => 'Mobile money';
+
+  @override
+  String get tillMethodOther => 'Other';
+
+  @override
+  String get tillLoadError => 'Your till could not be loaded.';
+
+  @override
+  String get orderTimeline => 'Order timeline';
+
+  @override
+  String get actorVendor => 'You';
+
+  @override
+  String get actorClient => 'The customer';
+
+  @override
+  String get actorCourier => 'The courier';
+
+  @override
+  String get actorAdmin => 'The DYM team';
+
+  @override
+  String get actorSystem => 'DYM';
 }

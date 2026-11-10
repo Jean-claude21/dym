@@ -17,6 +17,7 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     super.key,
     this.onReviews,
     this.onCourierCash,
+    this.onTill,
     this.onContents,
     this.onBroadcast,
   });
@@ -35,6 +36,9 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
 
   /// Cash encaissé par les livreurs DYM (spec 043) ; absent : masqué.
   final VoidCallback? onCourierCash;
+
+  /// « Ma caisse » (spec 045) ; absente : masquée.
+  final VoidCallback? onTill;
 
   @override
   MyStoreViewModel viewModelBuilder(BuildContext context) =>
@@ -231,6 +235,14 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                   icon: Icons.play_circle_rounded,
                   label: l10n.contentMine,
                   onTap: contents,
+                ),
+                const SizedBox(height: DymTokenSpace.s2),
+              ],
+              if (onTill case final till?) ...[
+                DymMenuRow(
+                  icon: Icons.point_of_sale_rounded,
+                  label: l10n.tillTitle,
+                  onTap: till,
                 ),
                 const SizedBox(height: DymTokenSpace.s2),
               ],

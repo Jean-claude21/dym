@@ -17,6 +17,7 @@ import 'package:dym_vendor/features/orders/courier_cash_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
+import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -103,6 +104,14 @@ Future<void> configureServices(DymEnvironment environment) async {
         products: () => locator<CatalogService>().products(),
         config: stores.countryConfig,
         photo: (key) => dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerSingleton<TillService>(
+      NeonTillService(
+        till: TillRepository(neon.data),
+        search: SearchAiRepository(data: neon.data, functions: neon.functions),
+        recorder: PluginVoiceRecorder(),
+        config: stores.countryConfig,
       ),
     )
     ..registerSingleton<CourierCashService>(

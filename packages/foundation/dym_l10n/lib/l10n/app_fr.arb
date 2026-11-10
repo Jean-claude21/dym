@@ -6610,5 +6610,58 @@
   "courierCashHint": "Les livreurs DYM encaissent tes commandes payées en cash ; confirme quand ils te remettent l'argent.",
   "courierCashNone": "Aucun cash à recevoir",
   "courierCashNoneHint": "Le cash encaissé par les livreurs pour toi apparaîtra ici.",
-  "courierCashReceived": "Reçu"
+  "courierCashReceived": "Reçu",
+  "tillTitle": "Ma caisse",
+  "tillOpen": "Ma caisse : ventes du jour",
+  "tillNewSale": "Nouvelle vente",
+  "tillToday": "Aujourd'hui : {amount}",
+  "@tillToday": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "tillInApp": "{count, plural, =0{En app} =1{En app · 1 vente} other{En app · {count} ventes}}",
+  "@tillInApp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tillOffApp": "{count, plural, =0{Hors app} =1{Hors app · 1 vente} other{Hors app · {count} ventes}}",
+  "@tillOffApp": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tillBalance": "Mon solde chez DYM",
+  "tillPayout": "Verser mon solde",
+  "tillPayoutSimulated": "Versement simulé : aucun argent ne part tant que le versement réel n'est pas branché.",
+  "tillBalanceInsufficient": "Ton solde ne suffit pas pour ce versement.",
+  "tillSales": "Ventes hors app",
+  "tillNoSale": "Aucune vente hors app enregistrée.",
+  "tillVoid": "Annuler la vente",
+  "tillPayouts": "Versements",
+  "tillVoice": "Dicter la vente",
+  "tillVoiceStop": "J'ai fini",
+  "tillVoiceDisabled": "La dictée n'est pas ouverte dans ton pays : tape la vente.",
+  "tillNothingHeard": "Rien entendu : réessaie ou tape la vente.",
+  "tillLabel": "Ce que tu as vendu",
+  "tillLabelHint": "3 tas de tomates 1500",
+  "tillAmount": "Montant",
+  "tillSave": "Enregistrer la vente",
+  "tillMethodCash": "Cash",
+  "tillMethodMobileMoney": "Mobile money",
+  "tillMethodOther": "Autre",
+  "tillLoadError": "Ta caisse n'a pas pu être chargée.",
+  "orderTimeline": "Frise de la commande",
+  "actorVendor": "Toi",
+  "actorClient": "La cliente",
+  "actorCourier": "Le livreur",
+  "actorAdmin": "L'équipe DYM",
+  "actorSystem": "DYM"
 }
