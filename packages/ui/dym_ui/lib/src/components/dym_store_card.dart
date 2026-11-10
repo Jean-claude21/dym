@@ -66,7 +66,19 @@ class DymStoreCard extends StatelessWidget {
                   children: [
                     Positioned.fill(
                       bottom: avatarSize / 2,
-                      child: Image(image: cover, fit: BoxFit.cover),
+                      child: Image(
+                        image: cover,
+                        fit: BoxFit.cover,
+                        // Photo absente ou réseau coupé : fond de la marque.
+                        errorBuilder: (_, _, _) => ColoredBox(
+                          color: c.tintVertTendre,
+                          child: Icon(
+                            Icons.storefront_rounded,
+                            size: 40,
+                            color: c.brand,
+                          ),
+                        ),
+                      ),
                     ),
                     Positioned(
                       left: DymTokenSpace.s3,

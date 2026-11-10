@@ -43,7 +43,13 @@ class DymAvatar extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: ring ? Border.all(color: c.card, width: 3) : null,
-                image: DecorationImage(image: image, fit: BoxFit.cover),
+                color: c.tintVertTendre,
+                image: DecorationImage(
+                  image: image,
+                  fit: BoxFit.cover,
+                  // Photo absente : le fond de la marque reste visible.
+                  onError: (_, _) {},
+                ),
               ),
             ),
             if (presenceDot)

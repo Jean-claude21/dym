@@ -61,7 +61,7 @@ void main() {
       expect(find.byType(DymSkeleton), findsOneWidget);
     });
 
-    testWidgets('bouton panier : nombre d\'articles et ouverture', (
+    testWidgets("bouton panier : nombre d'articles et ouverture", (
       tester,
     ) async {
       final service = memoryCart();

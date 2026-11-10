@@ -6,4 +6,5 @@
 - [x] T004 [US3] Adresse de livraison dans le panier ; invitation sans adresse ; vibration à la commande
 - [x] T005 Tests `apps/dym_client/test/premium_test.dart` ; analyse et suite complète vertes
 - [x] T006 Contrôle à l'écran sur staging (bouton panier, compteur)
+- [x] T008 Illustration de repli si une photo manque (carte boutique, rayon, avatar) au lieu de la croix rouge
 - [ ] T007 Validation par le porteur produit
