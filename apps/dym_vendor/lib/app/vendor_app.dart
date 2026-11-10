@@ -1,4 +1,5 @@
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -27,6 +28,18 @@ class VendorApp extends StatelessWidget {
       navigatorObservers: [StackedService.routeObserver],
       onGenerateRoute: StackedRouter().onGenerateRoute,
       initialRoute: Routes.startupView,
+      builder: (context, child) {
+        final calls = locator.isRegistered<ChatService>()
+            ? locator<ChatService>().calls
+            : null;
+        return calls == null
+            ? child!
+            : IncomingCallWatcher(
+                service: calls,
+                navigatorKey: StackedService.navigatorKey,
+                child: child!,
+              );
+      },
     ),
   );
 }

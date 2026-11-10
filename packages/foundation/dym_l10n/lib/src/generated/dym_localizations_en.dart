@@ -4623,4 +4623,89 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get vendorSubstituteNote => 'A note for the customer (optional)';
+
+  @override
+  String get chatVoiceRecord => 'Record a voice message';
+
+  @override
+  String get chatVoiceRecording => 'Recording… (60 s max)';
+
+  @override
+  String get chatVoiceSend => 'Send the voice message';
+
+  @override
+  String get chatVoiceCancel => 'Cancel the voice message';
+
+  @override
+  String get chatVoicePlay => 'Play';
+
+  @override
+  String get chatVoiceStop => 'Stop';
+
+  @override
+  String chatVoiceDuration(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get callAudio => 'Call';
+
+  @override
+  String get callVideo => 'Video call “Show me”';
+
+  @override
+  String get callRinging => 'Ringing…';
+
+  @override
+  String get callIncoming => 'Incoming call';
+
+  @override
+  String get callOngoing => 'In call';
+
+  @override
+  String get callDeclined => 'Call declined';
+
+  @override
+  String get callMissed => 'Missed call';
+
+  @override
+  String get callEnded => 'Call ended';
+
+  @override
+  String get callUnavailable => 'Calling is not possible right now.';
+
+  @override
+  String get callSimulated =>
+      'Simulated call: voice and video will use the real service before going live.';
+
+  @override
+  String get callAnswer => 'Answer';
+
+  @override
+  String get callDecline => 'Decline';
+
+  @override
+  String get callHangUp => 'Hang up';
+
+  @override
+  String get callClose => 'Close';
+
+  @override
+  String get callOpen => 'Open';
+
+  @override
+  String callIncomingFrom(String name) {
+    return '$name is calling you';
+  }
+
+  @override
+  String callSummaryEnded(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min',
+      one: '1 min',
+    );
+    return 'Call · $_temp0';
+  }
 }

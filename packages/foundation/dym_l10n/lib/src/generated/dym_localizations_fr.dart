@@ -4657,4 +4657,89 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get vendorSubstituteNote => 'Un mot pour la cliente (facultatif)';
+
+  @override
+  String get chatVoiceRecord => 'Enregistrer un vocal';
+
+  @override
+  String get chatVoiceRecording => 'Enregistrement… (60 s au plus)';
+
+  @override
+  String get chatVoiceSend => 'Envoyer le vocal';
+
+  @override
+  String get chatVoiceCancel => 'Annuler le vocal';
+
+  @override
+  String get chatVoicePlay => 'Écouter';
+
+  @override
+  String get chatVoiceStop => 'Arrêter';
+
+  @override
+  String chatVoiceDuration(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get callAudio => 'Appeler';
+
+  @override
+  String get callVideo => 'Appel vidéo « Montre-moi »';
+
+  @override
+  String get callRinging => 'Ça sonne…';
+
+  @override
+  String get callIncoming => 'Appel entrant';
+
+  @override
+  String get callOngoing => 'En communication';
+
+  @override
+  String get callDeclined => 'Appel refusé';
+
+  @override
+  String get callMissed => 'Appel manqué';
+
+  @override
+  String get callEnded => 'Appel terminé';
+
+  @override
+  String get callUnavailable => 'Appel impossible pour l\'instant.';
+
+  @override
+  String get callSimulated =>
+      'Appel simulé : la voix et l\'image passeront par le vrai service avant la mise en production.';
+
+  @override
+  String get callAnswer => 'Décrocher';
+
+  @override
+  String get callDecline => 'Refuser';
+
+  @override
+  String get callHangUp => 'Raccrocher';
+
+  @override
+  String get callClose => 'Fermer';
+
+  @override
+  String get callOpen => 'Voir';
+
+  @override
+  String callIncomingFrom(String name) {
+    return '$name t\'appelle';
+  }
+
+  @override
+  String callSummaryEnded(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min',
+      one: '1 min',
+    );
+    return 'Appel · $_temp0';
+  }
 }

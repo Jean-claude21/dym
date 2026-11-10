@@ -151,6 +151,9 @@ Future<void> configureServices(DymEnvironment environment) async {
         photos: PluginPhotoPicker(),
         productPhoto: (key) =>
             dymNetworkImage(environment.media(key).toString()),
+        recorder: PluginVoiceRecorder(),
+        playback: PluginAudioPlayback(),
+        calls: NeonCallService(repository: CallRepository(neon.data)),
       ),
     )
     ..registerLazySingleton<AdjustmentsService>(

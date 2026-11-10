@@ -1,6 +1,8 @@
 /// Services de la plateforme pour les apps DYM.
 library;
 
+export 'src/audio_playback.dart';
+export 'src/call_provider.dart';
 export 'src/error_reporting.dart';
 export 'src/external_page_opener.dart';
 export 'src/google_id_token_provider.dart';

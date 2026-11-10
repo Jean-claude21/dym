@@ -60,6 +60,37 @@ class MessagingRepository {
     'product_id': productId,
   }, idempotencyKey);
 
+  /// Envoie un vocal (spec 035) dans l'espace privé de la conversation.
+  Future<Result<ChatMessage>> sendAudio(
+    String conversationId,
+    List<int> bytes, {
+    required String contentType,
+    required int durationMs,
+    required String idempotencyKey,
+  }) async {
+    final grant = await _functions.post<Map<String, dynamic>>(
+      '/v1/conversations/$conversationId/media-uploads',
+      body: {'content_type': contentType},
+      decode: (json) => json! as Map<String, dynamic>,
+    );
+    switch (grant) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        final sent = await _uploads.put(
+          Uri.parse(value['upload_url'] as String),
+          bytes,
+          contentType: contentType,
+        );
+        if (sent case Err(:final failure)) return Err(failure);
+        return await _send(conversationId, {
+          'kind': 'audio',
+          'media_key': value['object_key'],
+          'duration_ms': durationMs,
+        }, idempotencyKey);
+    }
+  }
+
   /// Envoie une image compressée dans l'espace privé de la conversation.
   Future<Result<ChatMessage>> sendImage(
     String conversationId,

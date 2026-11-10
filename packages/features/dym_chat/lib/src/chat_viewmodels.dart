@@ -72,6 +72,15 @@ class ChatViewModel extends BaseViewModel {
   Timer? _timer;
   final _media = <String, String>{};
 
+  /// Vocal en cours d'enregistrement (spec 035).
+  bool recording = false;
+
+  /// Message vocal en lecture.
+  String? playingId;
+  StreamSubscription<String?>? _playing;
+
+  bool get canRecord => service.recorder != null;
+
   ConversationThread? get thread => _thread;
   List<ChatMessage> get messages => _thread?.messages ?? const [];
   CountryConfig? get config => _config;
@@ -205,6 +214,72 @@ class ChatViewModel extends BaseViewModel {
     }
   }
 
+  /// Micro ouvert ; refus (micro bloqué) : signalé.
+  Future<void> startRecording() async {
+    final recorder = service.recorder;
+    if (recorder == null || recording || _sending) return;
+    switch (await recorder.start()) {
+      case Ok():
+        recording = true;
+      case Err(:final failure):
+        _sendFailure = failure;
+    }
+    notifyListeners();
+  }
+
+  Future<void> cancelRecording() async {
+    if (!recording) return;
+    recording = false;
+    await service.recorder?.cancel();
+    notifyListeners();
+  }
+
+  /// Fin de l'enregistrement et envoi ; trop court : rien.
+  Future<bool> stopAndSendRecording() async {
+    final recorder = service.recorder;
+    if (recorder == null || !recording) return false;
+    recording = false;
+    notifyListeners();
+    switch (await recorder.stop()) {
+      case Err(:final failure):
+        _sendFailure = failure;
+        notifyListeners();
+        return false;
+      case Ok(value: final audio?)
+          when audio.duration >= const Duration(milliseconds: 500):
+        final key = Uuid.v4();
+        final ok = await _send(
+          () => service.sendAudio(conversationId, audio, idempotencyKey: key),
+        );
+        if (ok) await _signMedia();
+        notifyListeners();
+        return ok;
+      case Ok():
+        return false;
+    }
+  }
+
+  /// Lecture d'un vocal (lien signé) ; un second geste l'arrête.
+  Future<void> togglePlay(ChatMessage message) async {
+    final playback = service.playback;
+    final url = _media[message.id];
+    if (playback == null || url == null) return;
+    _playing ??= playback.playing.listen((u) {
+      final id = u == null
+          ? null
+          : _media.entries.where((e) => e.value == u).firstOrNull?.key;
+      if (id != playingId) {
+        playingId = id;
+        notifyListeners();
+      }
+    });
+    if (playingId == message.id) {
+      await playback.stop();
+    } else {
+      await playback.play(url);
+    }
+  }
+
   Future<bool> _send(Future<Result<ChatMessage>> Function() gesture) async {
     if (_sending) return false;
     _sending = true;
@@ -225,6 +300,8 @@ class ChatViewModel extends BaseViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_playing?.cancel());
+    if (recording) unawaited(service.recorder?.cancel());
     super.dispose();
   }
 }

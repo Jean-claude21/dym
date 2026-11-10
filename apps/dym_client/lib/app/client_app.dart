@@ -1,4 +1,5 @@
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/app/app.router.dart';
 import 'package:dym_client/features/cart/cart_service.dart';
@@ -31,13 +32,25 @@ class ClientApp extends StatelessWidget {
       navigatorObservers: [StackedService.routeObserver],
       onGenerateRoute: StackedRouter().onGenerateRoute,
       initialRoute: Routes.startupView,
-      builder: (context, child) => locator.isRegistered<CartService>()
-          ? CartScope(
-              service: locator<CartService>(),
-              onOpenCart: () => StackedAppNavigator().toCart(),
-              child: child!,
-            )
-          : child!,
+      builder: (context, child) {
+        final calls = locator.isRegistered<ChatService>()
+            ? locator<ChatService>().calls
+            : null;
+        final page = calls == null
+            ? child!
+            : IncomingCallWatcher(
+                service: calls,
+                navigatorKey: StackedService.navigatorKey,
+                child: child!,
+              );
+        return locator.isRegistered<CartService>()
+            ? CartScope(
+                service: locator<CartService>(),
+                onOpenCart: () => StackedAppNavigator().toCart(),
+                child: page,
+              )
+            : page;
+      },
     ),
   );
 }

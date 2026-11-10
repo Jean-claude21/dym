@@ -6148,5 +6148,116 @@
   "vendorSubstituteNote": "Un mot pour la cliente (facultatif)",
   "@vendorSubstituteNote": {
     "description": "Champ"
+  },
+  "chatVoiceRecord": "Enregistrer un vocal",
+  "@chatVoiceRecord": {
+    "description": "Micro"
+  },
+  "chatVoiceRecording": "Enregistrement… (60 s au plus)",
+  "@chatVoiceRecording": {
+    "description": "En cours"
+  },
+  "chatVoiceSend": "Envoyer le vocal",
+  "@chatVoiceSend": {
+    "description": "Envoi"
+  },
+  "chatVoiceCancel": "Annuler le vocal",
+  "@chatVoiceCancel": {
+    "description": "Annulation"
+  },
+  "chatVoicePlay": "Écouter",
+  "@chatVoicePlay": {
+    "description": "Lecture"
+  },
+  "chatVoiceStop": "Arrêter",
+  "@chatVoiceStop": {
+    "description": "Arrêt"
+  },
+  "chatVoiceDuration": "{seconds} s",
+  "@chatVoiceDuration": {
+    "description": "Durée",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "callAudio": "Appeler",
+  "@callAudio": {
+    "description": "Appel audio"
+  },
+  "callVideo": "Appel vidéo « Montre-moi »",
+  "@callVideo": {
+    "description": "Appel vidéo"
+  },
+  "callRinging": "Ça sonne…",
+  "@callRinging": {
+    "description": "Sonnerie"
+  },
+  "callIncoming": "Appel entrant",
+  "@callIncoming": {
+    "description": "Entrant"
+  },
+  "callOngoing": "En communication",
+  "@callOngoing": {
+    "description": "En cours"
+  },
+  "callDeclined": "Appel refusé",
+  "@callDeclined": {
+    "description": "Refusé"
+  },
+  "callMissed": "Appel manqué",
+  "@callMissed": {
+    "description": "Manqué"
+  },
+  "callEnded": "Appel terminé",
+  "@callEnded": {
+    "description": "Terminé"
+  },
+  "callUnavailable": "Appel impossible pour l'instant.",
+  "@callUnavailable": {
+    "description": "Indisponible"
+  },
+  "callSimulated": "Appel simulé : la voix et l'image passeront par le vrai service avant la mise en production.",
+  "@callSimulated": {
+    "description": "Bandeau simulation"
+  },
+  "callAnswer": "Décrocher",
+  "@callAnswer": {
+    "description": "Décrocher"
+  },
+  "callDecline": "Refuser",
+  "@callDecline": {
+    "description": "Refuser"
+  },
+  "callHangUp": "Raccrocher",
+  "@callHangUp": {
+    "description": "Raccrocher"
+  },
+  "callClose": "Fermer",
+  "@callClose": {
+    "description": "Fermer"
+  },
+  "callOpen": "Voir",
+  "@callOpen": {
+    "description": "Ouvrir l'appel"
+  },
+  "callIncomingFrom": "{name} t'appelle",
+  "@callIncomingFrom": {
+    "description": "Bandeau entrant",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "callSummaryEnded": "Appel · {minutes, plural, =1{1 min} other{{minutes} min}}",
+  "@callSummaryEnded": {
+    "description": "Résumé",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
   }
 }
