@@ -6654,6 +6654,126 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Recommander'**
   String get homeReorderAction;
+
+  /// Raison : même boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Même boutique : un seul ramassage'**
+  String get copilotReasonSameStore;
+
+  /// Raison : ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique ouverte maintenant'**
+  String get copilotReasonOpenNow;
+
+  /// Raison : mieux notée
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique la mieux notée'**
+  String get copilotReasonTopRated;
+
+  /// Raison : prix
+  ///
+  /// In fr, this message translates to:
+  /// **'Le meilleur prix'**
+  String get copilotReasonBestPrice;
+
+  /// Raison : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique de ton quartier'**
+  String get copilotReasonNearby;
+
+  /// Raison : correspondance
+  ///
+  /// In fr, this message translates to:
+  /// **'Correspond le mieux à ta demande'**
+  String get copilotReasonBestMatch;
+
+  /// Onglet réglages de la recherche
+  ///
+  /// In fr, this message translates to:
+  /// **'Recherche'**
+  String get adminTabSearch;
+
+  /// Aide des poids de classement
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids de 0 à 100 utilisés pour choisir les produits proposés par l\'assistant. Plus un poids est fort, plus le critère compte.'**
+  String get adminRankingHelp;
+
+  /// Bouton modifier les poids
+  ///
+  /// In fr, this message translates to:
+  /// **'Modifier les poids'**
+  String get adminEditRanking;
+
+  /// Poids : texte
+  ///
+  /// In fr, this message translates to:
+  /// **'Correspondance au texte'**
+  String get adminWeightText;
+
+  /// Poids : même boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Même boutique (moins de ramassages)'**
+  String get adminWeightSameStore;
+
+  /// Poids : ouverte
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique ouverte'**
+  String get adminWeightOpen;
+
+  /// Poids : note
+  ///
+  /// In fr, this message translates to:
+  /// **'Note de la boutique'**
+  String get adminWeightRating;
+
+  /// Poids : prix
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix bas'**
+  String get adminWeightPrice;
+
+  /// Poids : quartier
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique du quartier'**
+  String get adminWeightSameZone;
+
+  /// Titre des synonymes
+  ///
+  /// In fr, this message translates to:
+  /// **'Noms locaux'**
+  String get adminSynonymsTitle;
+
+  /// Bouton ajouter un synonyme
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un nom local'**
+  String get adminAddSynonym;
+
+  /// Champ terme
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom local (ex. gboma)'**
+  String get adminSynonymTerm;
+
+  /// Champ synonymes
+  ///
+  /// In fr, this message translates to:
+  /// **'Équivalents, séparés par des virgules'**
+  String get adminSynonymList;
+
+  /// Retirer un synonyme
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {term}'**
+  String adminRemoveSynonym(String term);
 }
 
 class _DymLocalizationsDelegate

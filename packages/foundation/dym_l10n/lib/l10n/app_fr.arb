@@ -5098,5 +5098,90 @@
   "homeReorderAction": "Recommander",
   "@homeReorderAction": {
     "description": "Bouton recommander"
+  },
+  "copilotReasonSameStore": "Même boutique : un seul ramassage",
+  "@copilotReasonSameStore": {
+    "description": "Raison : même boutique"
+  },
+  "copilotReasonOpenNow": "Boutique ouverte maintenant",
+  "@copilotReasonOpenNow": {
+    "description": "Raison : ouverte"
+  },
+  "copilotReasonTopRated": "Boutique la mieux notée",
+  "@copilotReasonTopRated": {
+    "description": "Raison : mieux notée"
+  },
+  "copilotReasonBestPrice": "Le meilleur prix",
+  "@copilotReasonBestPrice": {
+    "description": "Raison : prix"
+  },
+  "copilotReasonNearby": "Boutique de ton quartier",
+  "@copilotReasonNearby": {
+    "description": "Raison : quartier"
+  },
+  "copilotReasonBestMatch": "Correspond le mieux à ta demande",
+  "@copilotReasonBestMatch": {
+    "description": "Raison : correspondance"
+  },
+  "adminTabSearch": "Recherche",
+  "@adminTabSearch": {
+    "description": "Onglet réglages de la recherche"
+  },
+  "adminRankingHelp": "Poids de 0 à 100 utilisés pour choisir les produits proposés par l'assistant. Plus un poids est fort, plus le critère compte.",
+  "@adminRankingHelp": {
+    "description": "Aide des poids de classement"
+  },
+  "adminEditRanking": "Modifier les poids",
+  "@adminEditRanking": {
+    "description": "Bouton modifier les poids"
+  },
+  "adminWeightText": "Correspondance au texte",
+  "@adminWeightText": {
+    "description": "Poids : texte"
+  },
+  "adminWeightSameStore": "Même boutique (moins de ramassages)",
+  "@adminWeightSameStore": {
+    "description": "Poids : même boutique"
+  },
+  "adminWeightOpen": "Boutique ouverte",
+  "@adminWeightOpen": {
+    "description": "Poids : ouverte"
+  },
+  "adminWeightRating": "Note de la boutique",
+  "@adminWeightRating": {
+    "description": "Poids : note"
+  },
+  "adminWeightPrice": "Prix bas",
+  "@adminWeightPrice": {
+    "description": "Poids : prix"
+  },
+  "adminWeightSameZone": "Boutique du quartier",
+  "@adminWeightSameZone": {
+    "description": "Poids : quartier"
+  },
+  "adminSynonymsTitle": "Noms locaux",
+  "@adminSynonymsTitle": {
+    "description": "Titre des synonymes"
+  },
+  "adminAddSynonym": "Ajouter un nom local",
+  "@adminAddSynonym": {
+    "description": "Bouton ajouter un synonyme"
+  },
+  "adminSynonymTerm": "Nom local (ex. gboma)",
+  "@adminSynonymTerm": {
+    "description": "Champ terme"
+  },
+  "adminSynonymList": "Équivalents, séparés par des virgules",
+  "@adminSynonymList": {
+    "description": "Champ synonymes"
+  },
+  "adminRemoveSynonym": "Retirer {term}",
+  "@adminRemoveSynonym": {
+    "description": "Retirer un synonyme",
+    "placeholders": {
+      "term": {
+        "type": "String"
+      }
+    }
   }
 }

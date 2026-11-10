@@ -2,6 +2,25 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/src/json.dart';
 import 'package:meta/meta.dart';
 
+/// Raison du choix d'un produit par le copilote (spec 028), décidée en base
+/// selon les poids de classement du pays.
+enum CopilotReason {
+  sameStore('same_store'),
+  openNow('open_now'),
+  topRated('top_rated'),
+  bestPrice('best_price'),
+  nearby('nearby'),
+  bestMatch('best_match');
+
+  new(this.code);
+
+  /// Code renvoyé par la base.
+  final String code;
+
+  static CopilotReason? tryParse(Object? value) =>
+      values.where((r) => r.code == value).firstOrNull;
+}
+
 /// Ligne d'un panier proposé par le copilote (spec 019), chiffrée en base.
 @immutable
 class CopilotLine {
@@ -16,6 +35,7 @@ class CopilotLine {
     this.unitLabel,
     this.photoKey,
     this.need,
+    this.reason,
   });
 
   factory fromJson(Map<String, dynamic> json) => CopilotLine(
@@ -34,6 +54,7 @@ class CopilotLine {
     lineMinor: minorFromJson(json['line_minor']),
     photoKey: json['photo_key'] as String?,
     need: json['need'] as String?,
+    reason: CopilotReason.tryParse(json['reason']),
   );
 
   final String variantId;
@@ -48,6 +69,9 @@ class CopilotLine {
 
   /// Besoin d'origine (« Gombo »).
   final String? need;
+
+  /// Pourquoi ce produit plutôt qu'un autre (absent : rechiffrage).
+  final CopilotReason? reason;
 }
 
 /// Lignes d'une même boutique.
@@ -105,6 +129,11 @@ class CopilotProposal {
   List<Map<String, Object?>> itemsWithout(String? variantId) => [
     for (final l in lines)
       if (l.variantId != variantId)
-        {'variant_id': l.variantId, 'quantity': l.quantity, 'need': l.need},
+        {
+          'variant_id': l.variantId,
+          'quantity': l.quantity,
+          'need': l.need,
+          'reason': l.reason?.code,
+        },
   ];
 }

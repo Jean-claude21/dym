@@ -127,6 +127,18 @@ abstract interface class AdminService {
 
   Future<Result<List<AdminFeatureFlag>>> featureFlags();
 
+  /// Réglages de la recherche (spec 028).
+  Future<Result<AdminSearchSettings>> searchSettings();
+  Future<Result<AdminSearchSettings>> setRanking(
+    String? countryCode,
+    Map<String, int> weights,
+  );
+  Future<Result<AdminSearchSettings>> setSynonym(
+    String? countryCode,
+    String term,
+    List<String> synonyms,
+  );
+
   Future<Result<List<AdminMember>>> admins();
 
   Future<Result<List<AdminMember>>> inviteAdmin(String email);
@@ -369,6 +381,23 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<List<AdminFeatureFlag>>> featureFlags() =>
       _admin.featureFlags();
+
+  @override
+  Future<Result<AdminSearchSettings>> searchSettings() =>
+      _admin.searchSettings();
+
+  @override
+  Future<Result<AdminSearchSettings>> setRanking(
+    String? countryCode,
+    Map<String, int> weights,
+  ) => _admin.setRanking(countryCode, weights);
+
+  @override
+  Future<Result<AdminSearchSettings>> setSynonym(
+    String? countryCode,
+    String term,
+    List<String> synonyms,
+  ) => _admin.setSynonym(countryCode, term, synonyms);
 
   @override
   Future<Result<List<AdminMember>>> admins() => _admin.admins();

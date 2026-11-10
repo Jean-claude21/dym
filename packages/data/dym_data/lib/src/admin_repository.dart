@@ -285,6 +285,33 @@ class AdminRepository {
     'p_period': period,
   }, (json) => AdminRevenue.fromJson(_map(json)));
 
+  /// Réglages de la recherche (spec 028).
+  Future<Result<AdminSearchSettings>> searchSettings() =>
+      _rpc('admin_search_settings', const {}, _searchSettings);
+
+  /// Poids d'un pays (nul : défaut) ; audité.
+  Future<Result<AdminSearchSettings>> setRanking(
+    String? countryCode,
+    Map<String, int> weights,
+  ) => _rpc('admin_set_ranking', {
+    'p_country': countryCode,
+    'p_weights': weights,
+  }, _searchSettings);
+
+  /// Synonymes d'un terme (liste vide : terme retiré) ; audité.
+  Future<Result<AdminSearchSettings>> setSynonym(
+    String? countryCode,
+    String term,
+    List<String> synonyms,
+  ) => _rpc('admin_set_synonym', {
+    'p_country': countryCode,
+    'p_term': term,
+    'p_synonyms': synonyms,
+  }, _searchSettings);
+
+  static AdminSearchSettings _searchSettings(Object? value) =>
+      AdminSearchSettings.fromJson(value! as Map<String, dynamic>);
+
   Future<Result<List<AdminFeatureFlag>>> featureFlags() =>
       _rpc('admin_feature_flags', const {}, _flags);
 

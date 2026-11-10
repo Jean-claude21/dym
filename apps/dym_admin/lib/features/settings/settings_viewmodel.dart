@@ -12,6 +12,7 @@ enum SettingsTab {
   fees,
   categories,
   flags,
+  search,
   admins,
 }
 
@@ -29,6 +30,7 @@ class AdminSettingsViewModel extends AdminViewModel {
   AdminPricing? _pricing;
   List<AdminCategory> _categories = const [];
   List<AdminFeatureFlag> _flags = const [];
+  AdminSearchSettings _search = const AdminSearchSettings();
   List<AdminMember> _admins = const [];
   bool _acting = false;
   Failure? _actionFailure;
@@ -43,6 +45,7 @@ class AdminSettingsViewModel extends AdminViewModel {
   AdminPricing? get pricing => _pricing;
   List<AdminCategory> get categories => _categories;
   List<AdminFeatureFlag> get flags => _flags;
+  AdminSearchSettings get search => _search;
   List<AdminMember> get admins => _admins;
   bool get ready => !failed && _countries.isNotEmpty;
   bool get acting => _acting;
@@ -107,6 +110,10 @@ class AdminSettingsViewModel extends AdminViewModel {
       case SettingsTab.flags:
         final r = await service.featureFlags();
         if (r case Ok(:final value)) _flags = value;
+        return r.failureOrNull;
+      case SettingsTab.search:
+        final r = await service.searchSettings();
+        if (r case Ok(:final value)) _search = value;
         return r.failureOrNull;
       case SettingsTab.admins:
         final r = await service.admins();
@@ -188,6 +195,20 @@ class AdminSettingsViewModel extends AdminViewModel {
         if (r case Ok(:final value)) _flags = value;
         return r.failureOrNull;
       });
+
+  /// Poids de classement du pays choisi (spec 028), journalisé.
+  Future<bool> setRanking(Map<String, int> weights) => _act(() async {
+    final r = await service.setRanking(_country, weights);
+    if (r case Ok(:final value)) _search = value;
+    return r.failureOrNull;
+  });
+
+  /// Synonymes d'un nom local du pays choisi ; liste vide : retiré.
+  Future<bool> setSynonym(String term, List<String> synonyms) => _act(() async {
+    final r = await service.setSynonym(_country, term, synonyms);
+    if (r case Ok(:final value)) _search = value;
+    return r.failureOrNull;
+  });
 
   Future<bool> inviteAdmin(String email) => _act(() async {
     final r = await service.inviteAdmin(email.trim().toLowerCase());
