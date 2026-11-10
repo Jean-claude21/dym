@@ -124,6 +124,39 @@ void main() {
       await vm.delete(vm.items!.single);
       expect(vm.items, isEmpty);
     });
+
+    test(
+      'commission des créatrices : paliers depuis le minimum du pays',
+      () async {
+        final service = MemoryVendorContentService(catalog: _catalog);
+        final vm = MyContentsViewModel(service: service);
+        await vm.load();
+        expect(vm.rateChoices, [300, 500, 800, 1300]);
+        expect(vm.rate!.effectiveBps, 300);
+        await vm.chooseRate(500);
+        expect(vm.rate!.effectiveBps, 500);
+        // Revenir au minimum : le taux suit le pays.
+        await vm.chooseRate(300);
+        expect(service.gestures, ['rate:store:500', 'rate:store:null']);
+      },
+    );
+
+    test("commission d'un produit : propre ou comme la boutique", () async {
+      final service = MemoryVendorContentService(catalog: _catalog);
+      final vm = MyContentsViewModel(service: service);
+      await vm.load();
+      final product = vm.catalog.first;
+      await vm.pickRateProduct(product);
+      expect(vm.productRate!.rateBps, isNull);
+      await vm.chooseProductRate(800);
+      expect(vm.productRate!.effectiveBps, 800);
+      await vm.chooseProductRate(null);
+      expect(vm.productRate!.rateBps, isNull);
+      expect(service.gestures, [
+        'rate:${product.id}:800',
+        'rate:${product.id}:null',
+      ]);
+    });
   });
 
   group('écran 75 et mes contenus aux 7 tailles, texte 130 %', () {

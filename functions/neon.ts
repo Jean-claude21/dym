@@ -52,6 +52,14 @@ export default defineConfig({
       cron: "*/15 * * * *",
       enabled: true,
     },
+    affiliateSettlement: {
+      type: "schedule",
+      function: "api",
+      functionPath: "/v1/jobs/affiliate-settlement",
+      // SQL verse les commissions dont le délai de réclamation est passé, une fois chacune (spec 039).
+      cron: "*/15 * * * *",
+      enabled: true,
+    },
   },
   // prévisualisation (une par PR) expirent après 7 jours. La Data API refuse
   // les branches qui expirent : elle n'y est donc pas exposée.

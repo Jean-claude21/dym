@@ -1394,5 +1394,20 @@
   "recipeIngredients": "Ingredients",
   "recipeFindIngredients": "Find with AI",
   "recipeAddIngredient": "Add an ingredient (tomato, okra…)",
-  "recipeAllForIt": "Everything to make it"
+  "recipeAllForIt": "Everything to make it",
+  "creatorEarnings": "My earnings",
+  "creatorEarningsPending": "Pending",
+  "creatorEarningsPaid": "Paid to my wallet",
+  "creatorEarningsHint": "When a customer buys from your content, you earn a commission once it is delivered.",
+  "creatorEarningsEmpty": "Tag products or add ingredients: every delivered purchase from your post earns you a commission.",
+  "creatorCommissionPending": "Waiting for delivery",
+  "creatorCommissionPaid": "Paid",
+  "creatorCommissionCancelled": "Cancelled (order not delivered)",
+  "walletKindAffiliate": "Creator commission",
+  "affiliateRateTitle": "Creator commission",
+  "affiliatePercent": "{value}%",
+  "affiliateRateHint": "Paid on each delivered sale brought by a creator's content. Country minimum: {min}.",
+  "affiliateProductRate": "Rate for one product",
+  "affiliateLikeStore": "Same as the shop",
+  "paidContent": "Paid content"
 }

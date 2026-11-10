@@ -32,6 +32,7 @@ import {
 import { aiIntentPlanner, openAiPlannerProviders, pgCopilotStore } from "./copilot/routes.js";
 import { pgBroadcastStore } from "./broadcast/routes.js";
 import { pgShoppingReminders } from "./shopping/reminders.js";
+import { pgAffiliateSettlement } from "./content/affiliation.js";
 import { pgOrderPhotoStore } from "./orders/photos.js";
 import { aiContentClassifier, openAiClassifierProviders, pgCreatorContentStore } from "./content/creators.js";
 
@@ -74,6 +75,7 @@ export default createApp({
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
   shoppingReminders: pgShoppingReminders(pool),
+  affiliateSettlement: pgAffiliateSettlement(pool),
   creatorContent: {
     store: pgCreatorContentStore(pool),
     signer: s3PhotoSigner({ ...env.storage, bucket: PRODUCT_PHOTOS_BUCKET }),

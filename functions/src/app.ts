@@ -12,6 +12,7 @@ import { httpErrors, toHttpError } from "./lib/errors.js";
 import type { ErrorReporter } from "./lib/report.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { registerShoppingReminders, type ShoppingReminders } from "./shopping/reminders.js";
+import { registerAffiliateSettlement, type AffiliateSettlement } from "./content/affiliation.js";
 import { type OrderPhotoDeps, registerOrderPhotoRoutes } from "./orders/photos.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
@@ -46,6 +47,8 @@ export interface AppDeps {
   orderPhotos?: OrderPhotoDeps;
   /** Rappels des courses récurrentes (spec 029). */
   shoppingReminders?: ShoppingReminders;
+  /** Versement des commissions d'affiliation (spec 039). */
+  affiliateSettlement?: AffiliateSettlement;
   /** Messagerie (spec 015). */
   messaging?: MessagingDeps;
   /** Avis (spec 016). */
@@ -117,6 +120,7 @@ export function createApp(deps: AppDeps) {
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
   registerShoppingReminders(app, deps.shoppingReminders);
+  registerAffiliateSettlement(app, deps.affiliateSettlement);
   registerOrderPhotoRoutes(app, deps.verifyToken, deps.orderPhotos);
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);

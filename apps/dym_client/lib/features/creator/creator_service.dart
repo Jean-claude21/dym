@@ -46,6 +46,12 @@ abstract interface class CreatorService {
 
   Future<Result<void>> archive(String contentId);
 
+  /// Gains d'affiliation (spec 039).
+  Future<Result<CreatorCommissions>> commissions();
+
+  /// Devise et décimales du pays, pour afficher les gains.
+  Future<Result<CountryConfig>> countryConfig();
+
   ImageProvider photo(String objectKey);
 
   ImageProvider preview(CreatorMedia media);
@@ -58,9 +64,13 @@ class NeonCreatorService implements CreatorService {
     required this._photos,
     required this._videos,
     this._lists,
+    this._installs,
   });
 
   final ContentRepository _repository;
+
+  /// Identifiant d'installation (antifraude de l'affiliation, spec 039).
+  final InstallIdProvider? _installs;
 
   /// IA des listes (spec 029), réutilisée pour les ingrédients.
   final ShoppingListRepository? _lists;
@@ -161,6 +171,19 @@ class NeonCreatorService implements CreatorService {
   @override
   Future<Result<void>> archive(String contentId) =>
       _repository.archive(contentId);
+
+  @override
+  Future<Result<CreatorCommissions>> commissions() async {
+    // Appareil de la créatrice déclaré : ses autres comptes ne lui
+    // rapportent rien.
+    if (await _installs?.installId() case final id?) {
+      await _repository.registerInstall(id);
+    }
+    return await _repository.myCommissions();
+  }
+
+  @override
+  Future<Result<CountryConfig>> countryConfig() => _discovery.countryConfig();
 
   @override
   ImageProvider photo(String objectKey) => _discovery.photo(objectKey);

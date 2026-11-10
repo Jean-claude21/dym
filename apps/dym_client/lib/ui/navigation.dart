@@ -519,8 +519,11 @@ class StackedAppNavigator implements AppNavigator {
         service: ListCopilotService(
           base: copilot,
           proposeList: () => contents.recipeBasket(content),
-          addToCart: (variantId, quantity) async =>
-              (await _cart.add(variantId, quantity: quantity)).isOk,
+          addToCart: (variantId, quantity) async {
+            final ok = (await _cart.add(variantId, quantity: quantity)).isOk;
+            if (ok) contents.recipeAdded(content, variantId);
+            return ok;
+          },
         ),
         title: content.caption ?? content.author?.displayName ?? '',
         // Le texte ne sert qu'à lancer la composition (recette, pas intention).

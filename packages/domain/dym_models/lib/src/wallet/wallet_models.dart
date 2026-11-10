@@ -10,6 +10,7 @@ enum WalletMovementKind {
   cashback,
   spaceContribution,
   spacePayout,
+  affiliateCommission,
   unknown;
 
   static WalletMovementKind parse(Object? value) => switch (value) {
@@ -20,6 +21,7 @@ enum WalletMovementKind {
     'cashback' => cashback,
     'space_contribution' => spaceContribution,
     'space_payout' => spacePayout,
+    'affiliate_commission' => affiliateCommission,
     _ => unknown,
   };
 }

@@ -318,6 +318,52 @@ class ContentRepository {
       ContentComment.fromJson((c as Map).cast<String, dynamic>()),
   ];
 
+  // ------------------------------------------------------------- affiliation
+
+  /// Variantes ajoutées au panier depuis un contenu (spec 039) : la base
+  /// garde le dernier contenu de créatrice qui les a amenées.
+  Future<Result<void>> touch(String contentId, List<String> variantIds) =>
+      _data.rpc<void>(
+        'content_touch',
+        params: {'p_content': contentId, 'p_variants': variantIds},
+      );
+
+  /// Gains d'affiliation de la créatrice connectée.
+  Future<Result<CreatorCommissions>> myCommissions() async =>
+      (await _data.rpc<Object?>('my_commissions')).map(
+        (json) =>
+            CreatorCommissions.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
+  /// Identifiant d'installation de l'app pour le compte connecté
+  /// (antifraude : pas de commission entre comptes d'un même appareil).
+  Future<Result<void>> registerInstall(String installId) =>
+      _data.rpc<void>('register_device', params: {'p_install': installId});
+
+  /// Taux d'affiliation de la boutique (ou d'un de ses produits).
+  Future<Result<AffiliateRate>> affiliateRate({String? productId}) async =>
+      (await _data.rpc<Object?>(
+        'my_affiliate_rate',
+        params: {'p_product': productId},
+      )).map(
+        (json) =>
+            AffiliateRate.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
+  /// Nouveau taux en points de base ; null : minimum du pays (boutique) ou
+  /// taux de la boutique (produit).
+  Future<Result<AffiliateRate>> setAffiliateRate(
+    int? rateBps, {
+    String? productId,
+  }) async =>
+      (await _data.rpc<Object?>(
+        'set_affiliate_rate',
+        params: {'p_rate_bps': rateBps, 'p_product': productId},
+      )).map(
+        (json) =>
+            AffiliateRate.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
   // ---------------------------------------------------------------- recettes
 
   /// Ingrédients d'un post de l'autrice (liste vide : retirés).

@@ -6426,5 +6426,36 @@
   "recipeAllForIt": "Tout pour la faire",
   "@recipeAllForIt": {
     "description": "Bouton du fil"
-  }
+  },
+  "creatorEarnings": "Mes gains",
+  "creatorEarningsPending": "En attente",
+  "creatorEarningsPaid": "Versés sur mon wallet",
+  "creatorEarningsHint": "Quand une cliente achète depuis ton contenu, tu touches une commission à la livraison.",
+  "creatorEarningsEmpty": "Tague des produits ou ajoute les ingrédients : chaque achat livré depuis ton post te rapporte une commission.",
+  "creatorCommissionPending": "En attente de livraison",
+  "creatorCommissionPaid": "Versée",
+  "creatorCommissionCancelled": "Annulée (commande non livrée)",
+  "walletKindAffiliate": "Commission de créatrice",
+  "affiliateRateTitle": "Commission des créatrices",
+  "affiliatePercent": "{value} %",
+  "@affiliatePercent": {
+    "description": "Taux en pour cent (affichage)",
+    "placeholders": {
+      "value": {
+        "type": "double",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "affiliateRateHint": "Versée sur chaque vente livrée venue du contenu d'une créatrice. Minimum du pays : {min}.",
+  "@affiliateRateHint": {
+    "placeholders": {
+      "min": {
+        "type": "String"
+      }
+    }
+  },
+  "affiliateProductRate": "Taux d'un produit",
+  "affiliateLikeStore": "Comme la boutique",
+  "paidContent": "Contenu rémunéré"
 }

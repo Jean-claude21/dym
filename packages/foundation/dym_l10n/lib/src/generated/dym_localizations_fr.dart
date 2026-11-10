@@ -4861,4 +4861,59 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get recipeAllForIt => 'Tout pour la faire';
+
+  @override
+  String get creatorEarnings => 'Mes gains';
+
+  @override
+  String get creatorEarningsPending => 'En attente';
+
+  @override
+  String get creatorEarningsPaid => 'Versés sur mon wallet';
+
+  @override
+  String get creatorEarningsHint =>
+      'Quand une cliente achète depuis ton contenu, tu touches une commission à la livraison.';
+
+  @override
+  String get creatorEarningsEmpty =>
+      'Tague des produits ou ajoute les ingrédients : chaque achat livré depuis ton post te rapporte une commission.';
+
+  @override
+  String get creatorCommissionPending => 'En attente de livraison';
+
+  @override
+  String get creatorCommissionPaid => 'Versée';
+
+  @override
+  String get creatorCommissionCancelled => 'Annulée (commande non livrée)';
+
+  @override
+  String get walletKindAffiliate => 'Commission de créatrice';
+
+  @override
+  String get affiliateRateTitle => 'Commission des créatrices';
+
+  @override
+  String affiliatePercent(double value) {
+    final intl.NumberFormat valueNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String valueString = valueNumberFormat.format(value);
+
+    return '$valueString %';
+  }
+
+  @override
+  String affiliateRateHint(String min) {
+    return 'Versée sur chaque vente livrée venue du contenu d\'une créatrice. Minimum du pays : $min.';
+  }
+
+  @override
+  String get affiliateProductRate => 'Taux d\'un produit';
+
+  @override
+  String get affiliateLikeStore => 'Comme la boutique';
+
+  @override
+  String get paidContent => 'Contenu rémunéré';
 }

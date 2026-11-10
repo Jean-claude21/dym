@@ -1,5 +1,6 @@
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/src/discovery/discovery_models.dart';
+import 'package:dym_models/src/json.dart';
 import 'package:dym_models/src/search/shopping_models.dart';
 import 'package:meta/meta.dart';
 
@@ -60,6 +61,93 @@ class CreatorProfile {
 
   final String displayName;
   final String? bio;
+}
+
+/// État d'une commission d'affiliation.
+enum CommissionStatus {
+  pending,
+  paid,
+  cancelled;
+
+  static CommissionStatus parse(Object? value) => switch (value) {
+    'paid' => paid,
+    'cancelled' => cancelled,
+    _ => pending,
+  };
+}
+
+/// Une commission gagnée grâce à un contenu (spec 039).
+@immutable
+class CreatorCommission {
+  const new({
+    required this.id,
+    required this.status,
+    required this.amountMinor,
+    required this.rateBps,
+    required this.createdAt,
+    this.productName,
+    this.contentCaption,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => CreatorCommission(
+    id: json['id']! as String,
+    status: CommissionStatus.parse(json['status']),
+    amountMinor: minorFromJson(json['amount_minor']),
+    rateBps: (json['rate_bps']! as num).toInt(),
+    createdAt: DateTime.parse(json['created_at']! as String),
+    productName: json['product_name'] as String?,
+    contentCaption: json['content_caption'] as String?,
+  );
+
+  final String id;
+  final CommissionStatus status;
+  final int amountMinor;
+
+  /// Taux en points de base (500 = 5 %).
+  final int rateBps;
+  final DateTime createdAt;
+  final String? productName;
+  final String? contentCaption;
+}
+
+/// Gains d'affiliation de la créatrice (`public.my_commissions()`).
+@immutable
+class CreatorCommissions {
+  const new({this.pendingMinor = 0, this.paidMinor = 0, this.items = const []});
+
+  factory fromJson(Map<String, dynamic> json) => CreatorCommissions(
+    pendingMinor: minorFromJson(json['pending_minor']),
+    paidMinor: minorFromJson(json['paid_minor']),
+    items: [
+      for (final i in json['items'] as List? ?? const [])
+        CreatorCommission.fromJson((i as Map).cast<String, dynamic>()),
+    ],
+  );
+
+  final int pendingMinor;
+  final int paidMinor;
+  final List<CreatorCommission> items;
+}
+
+/// Taux d'affiliation d'une boutique (`public.my_affiliate_rate()`).
+@immutable
+class AffiliateRate {
+  const new({required this.minRateBps, this.rateBps, this.storeRateBps});
+
+  factory fromJson(Map<String, dynamic> json) => AffiliateRate(
+    rateBps: (json['affiliate_rate_bps'] as num?)?.toInt(),
+    storeRateBps: (json['store_rate_bps'] as num?)?.toInt(),
+    minRateBps: (json['min_rate_bps']! as num).toInt(),
+  );
+
+  /// Taux choisi ; null : celui du niveau au-dessus (boutique, puis pays).
+  final int? rateBps;
+
+  /// Taux de la boutique ; null : minimum du pays.
+  final int? storeRateBps;
+  final int minRateBps;
+
+  int get effectiveBps => rateBps ?? storeRateBps ?? minRateBps;
 }
 
 /// Boutique d'un contenu.

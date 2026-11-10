@@ -47,6 +47,17 @@ abstract interface class VendorContentService {
 
   Future<Result<void>> delete(String contentId);
 
+  /// Taux versé aux créatrices qui font vendre (spec 039), de la boutique ou
+  /// d'un de ses produits.
+  Future<Result<AffiliateRate>> affiliateRate({String? productId});
+
+  /// Nouveau taux en points de base ; null : niveau au-dessus (pays pour la
+  /// boutique, boutique pour un produit).
+  Future<Result<AffiliateRate>> setAffiliateRate(
+    int? rateBps, {
+    String? productId,
+  });
+
   ImageProvider photo(String objectKey);
 
   /// Aperçu d'une photo choisie, avant envoi.
@@ -148,6 +159,16 @@ class NeonVendorContentService implements VendorContentService {
   @override
   Future<Result<void>> delete(String contentId) =>
       _repository.delete(contentId);
+
+  @override
+  Future<Result<AffiliateRate>> affiliateRate({String? productId}) =>
+      _repository.affiliateRate(productId: productId);
+
+  @override
+  Future<Result<AffiliateRate>> setAffiliateRate(
+    int? rateBps, {
+    String? productId,
+  }) => _repository.setAffiliateRate(rateBps, productId: productId);
 
   @override
   ImageProvider photo(String objectKey) => _photo(objectKey);
@@ -573,8 +594,67 @@ class MyContentsViewModel extends BaseViewModel {
   List<ContentItem>? items;
   Failure? failure;
 
+  /// Taux d'affiliation ; null : non chargé (réglage masqué).
+  AffiliateRate? rate;
+  bool savingRate = false;
+
+  /// Choix proposés : minimum du pays, puis paliers jusqu'à 30 %.
+  List<int> get rateChoices {
+    final min = rate?.minRateBps;
+    if (min == null) return const [];
+    return {
+      for (final step in const [0, 200, 500, 1000])
+        if (min + step <= 3000) min + step,
+    }.toList();
+  }
+
+  Future<void> chooseRate(int bps) async {
+    final current = rate;
+    if (current == null || savingRate || bps == current.effectiveBps) return;
+    savingRate = true;
+    notifyListeners();
+    final result = await service.setAffiliateRate(
+      bps == current.minRateBps ? null : bps,
+    );
+    if (result case Ok(:final value)) rate = value;
+    savingRate = false;
+    notifyListeners();
+  }
+
+  /// Produit au taux propre, en cours de réglage.
+  Product? rateProduct;
+  AffiliateRate? productRate;
+  List<Product> catalog = const [];
+
+  Future<void> pickRateProduct(Product product) async {
+    rateProduct = product;
+    productRate = null;
+    notifyListeners();
+    productRate = (await service.affiliateRate(productId: product.id))
+        .valueOrNull;
+    notifyListeners();
+  }
+
+  /// Taux du produit ; null : comme la boutique.
+  Future<void> chooseProductRate(int? bps) async {
+    final product = rateProduct;
+    final current = productRate;
+    if (product == null || current == null || savingRate) return;
+    if (bps == current.rateBps) return;
+    savingRate = true;
+    notifyListeners();
+    final result = await service.setAffiliateRate(bps, productId: product.id);
+    if (result case Ok(:final value)) productRate = value;
+    savingRate = false;
+    notifyListeners();
+  }
+
   Future<void> load() async {
     failure = null;
+    rate ??= (await service.affiliateRate()).valueOrNull;
+    if (rate != null && catalog.isEmpty) {
+      catalog = (await service.products()).valueOrNull ?? const [];
+    }
     switch (await service.mine()) {
       case Ok(:final value):
         items = value;
@@ -662,6 +742,102 @@ class MyContentsView extends StackedView<MyContentsViewModel> {
                     96,
                   ),
                   children: [
+                    if (vm.rate case final rate?)
+                      Card(
+                        margin: const EdgeInsets.only(bottom: DymTokenSpace.s3),
+                        child: Padding(
+                          padding: const EdgeInsets.all(DymTokenSpace.s3),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(l10n.affiliateRateTitle, style: t.title),
+                              const SizedBox(height: DymTokenSpace.s1),
+                              Text(
+                                l10n.affiliateRateHint(
+                                  _percent(l10n, rate.minRateBps),
+                                ),
+                                style: t.label.copyWith(color: c.textSecondary),
+                              ),
+                              const SizedBox(height: DymTokenSpace.s2),
+                              Wrap(
+                                spacing: DymTokenSpace.s2,
+                                runSpacing: DymTokenSpace.s2,
+                                children: [
+                                  for (final bps in vm.rateChoices)
+                                    ChoiceChip(
+                                      label: Text(_percent(l10n, bps)),
+                                      selected: bps == rate.effectiveBps,
+                                      onSelected: vm.savingRate
+                                          ? null
+                                          : (_) => vm.chooseRate(bps),
+                                    ),
+                                ],
+                              ),
+                              if (vm.catalog.isNotEmpty) ...[
+                                const SizedBox(height: DymTokenSpace.s2),
+                                PopupMenuButton<Product>(
+                                  tooltip: l10n.affiliateProductRate,
+                                  onSelected: vm.pickRateProduct,
+                                  itemBuilder: (_) => [
+                                    for (final p in vm.catalog)
+                                      PopupMenuItem(
+                                        value: p,
+                                        child: Text(p.name),
+                                      ),
+                                  ],
+                                  child: ConstrainedBox(
+                                    constraints: const BoxConstraints(
+                                      minHeight: 48,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.sell_rounded,
+                                          color: c.brandDeep,
+                                        ),
+                                        const SizedBox(width: DymTokenSpace.s2),
+                                        Expanded(
+                                          child: Text(
+                                            vm.rateProduct?.name ??
+                                                l10n.affiliateProductRate,
+                                            style: t.body,
+                                          ),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_drop_down_rounded,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                if (vm.productRate case final pr?)
+                                  Wrap(
+                                    spacing: DymTokenSpace.s2,
+                                    runSpacing: DymTokenSpace.s2,
+                                    children: [
+                                      ChoiceChip(
+                                        label: Text(l10n.affiliateLikeStore),
+                                        selected: pr.rateBps == null,
+                                        onSelected: vm.savingRate
+                                            ? null
+                                            : (_) => vm.chooseProductRate(null),
+                                      ),
+                                      for (final bps in vm.rateChoices)
+                                        ChoiceChip(
+                                          label: Text(_percent(l10n, bps)),
+                                          selected: bps == pr.rateBps,
+                                          onSelected: vm.savingRate
+                                              ? null
+                                              : (_) =>
+                                                    vm.chooseProductRate(bps),
+                                        ),
+                                    ],
+                                  ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
                     if (items.isEmpty)
                       Padding(
                         padding: const EdgeInsets.all(DymTokenSpace.s5),
@@ -736,6 +912,10 @@ class MyContentsView extends StackedView<MyContentsViewModel> {
 }
 
 /// Contenus en mémoire (tests, galerie).
+/// Points de base en pourcentage lisible (250 → « 2,5 % »), affichage seul.
+String _percent(DymLocalizations l10n, int bps) =>
+    l10n.affiliatePercent(bps / 100);
+
 class MemoryVendorContentService implements VendorContentService {
   new({
     this.isEnabled = true,
@@ -831,6 +1011,35 @@ class MemoryVendorContentService implements VendorContentService {
     _contents.removeWhere((c) => c.id == contentId);
     return const Ok(null);
   }
+
+  AffiliateRate rate = const AffiliateRate(minRateBps: 300);
+  final productRates = <String, int?>{};
+
+  @override
+  Future<Result<AffiliateRate>> affiliateRate({String? productId}) async =>
+      Ok(_rateOf(productId));
+
+  @override
+  Future<Result<AffiliateRate>> setAffiliateRate(
+    int? rateBps, {
+    String? productId,
+  }) async {
+    gestures.add('rate:${productId ?? 'store'}:$rateBps');
+    if (productId == null) {
+      rate = AffiliateRate(minRateBps: rate.minRateBps, rateBps: rateBps);
+    } else {
+      productRates[productId] = rateBps;
+    }
+    return Ok(_rateOf(productId));
+  }
+
+  AffiliateRate _rateOf(String? productId) => productId == null
+      ? rate
+      : AffiliateRate(
+          minRateBps: rate.minRateBps,
+          storeRateBps: rate.rateBps,
+          rateBps: productRates[productId],
+        );
 
   @override
   ImageProvider photo(String objectKey) =>
