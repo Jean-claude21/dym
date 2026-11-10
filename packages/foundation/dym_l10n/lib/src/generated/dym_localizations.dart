@@ -7212,6 +7212,336 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Mes paniers'**
   String get accountBaskets;
+
+  /// Titre des espaces
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes espaces'**
+  String get spacesTitle;
+
+  /// Explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Un espace réunit ceux qui remplissent et ceux qui valident et paient : la maison, la famille au pays, une tontine…'**
+  String get spacesIntro;
+
+  /// Aucun espace
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore d\'espace. Crée-en un ou rejoins celui d\'un proche avec son code.'**
+  String get spacesEmpty;
+
+  /// Aucun espace (panier)
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée ou rejoins d\'abord un espace dans « Moi ».'**
+  String get spacesEmptyShort;
+
+  /// Créer
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un espace'**
+  String get spaceCreate;
+
+  /// Valider la création
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer'**
+  String get spaceCreateAction;
+
+  /// Rejoindre
+  ///
+  /// In fr, this message translates to:
+  /// **'Rejoindre'**
+  String get spaceJoin;
+
+  /// Valider le code
+  ///
+  /// In fr, this message translates to:
+  /// **'Rejoindre'**
+  String get spaceJoinAction;
+
+  /// Champ code
+  ///
+  /// In fr, this message translates to:
+  /// **'Code reçu (8 caractères)'**
+  String get spaceCodeHint;
+
+  /// Champ nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de l\'espace'**
+  String get spaceName;
+
+  /// Exemple de nom
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. Maison, Famille à Kpalimé'**
+  String get spaceNameHint;
+
+  /// Champ budget
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget du mois (facultatif)'**
+  String get spaceBudget;
+
+  /// Exemple de budget
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. 50 000'**
+  String get spaceBudgetHint;
+
+  /// Nombre de membres
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 membre} other{{count} membres}}'**
+  String spaceMembersCount(int count);
+
+  /// Rôle payeur
+  ///
+  /// In fr, this message translates to:
+  /// **'Valide et paie'**
+  String get spaceRolePayer;
+
+  /// Rôle membre
+  ///
+  /// In fr, this message translates to:
+  /// **'Remplit'**
+  String get spaceRoleMember;
+
+  /// Responsable
+  ///
+  /// In fr, this message translates to:
+  /// **'Responsable · valide et paie'**
+  String get spaceOwner;
+
+  /// Soi-même
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} (moi)'**
+  String spaceMe(String name);
+
+  /// Menu d'un membre
+  ///
+  /// In fr, this message translates to:
+  /// **'Gérer {name}'**
+  String spaceManage(String name);
+
+  /// Promouvoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Peut valider et payer'**
+  String get spaceMakePayer;
+
+  /// Rétrograder
+  ///
+  /// In fr, this message translates to:
+  /// **'Remplit seulement'**
+  String get spaceMakeMember;
+
+  /// Retirer
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer de l\'espace'**
+  String get spaceRemoveMember;
+
+  /// Section membres
+  ///
+  /// In fr, this message translates to:
+  /// **'Membres'**
+  String get spaceMembers;
+
+  /// Section panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier commun'**
+  String get spaceBasket;
+
+  /// Envoyer le panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer mon panier'**
+  String get spaceSendCart;
+
+  /// Panier commun vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Vide pour l\'instant : chacun remplit son panier comme d\'habitude, puis l\'envoie ici.'**
+  String get spaceBasketEmpty;
+
+  /// Total
+  ///
+  /// In fr, this message translates to:
+  /// **'Total : {total} + livraison'**
+  String spaceTotal(String total);
+
+  /// Valider
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider et passer au panier'**
+  String get spaceValidate;
+
+  /// Attente
+  ///
+  /// In fr, this message translates to:
+  /// **'Une personne qui valide passera la commande.'**
+  String get spaceWaitPayer;
+
+  /// Supprimer
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer l\'espace'**
+  String get spaceDelete;
+
+  /// Quitter
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter l\'espace'**
+  String get spaceLeave;
+
+  /// Confirmation
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer « {name} » pour tous ?'**
+  String spaceDeleteConfirm(String name);
+
+  /// Confirmation
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter « {name} » ?'**
+  String spaceLeaveConfirm(String name);
+
+  /// Titre du budget
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget du mois'**
+  String get spaceBudgetTitle;
+
+  /// Budget
+  ///
+  /// In fr, this message translates to:
+  /// **'{spent} dépensés sur {budget} · reste {left}'**
+  String spaceBudgetMeta(String spent, String budget, String left);
+
+  /// Code
+  ///
+  /// In fr, this message translates to:
+  /// **'Code pour inviter'**
+  String get spaceInvite;
+
+  /// Copier
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier le code'**
+  String get spaceCopyCode;
+
+  /// Après copie
+  ///
+  /// In fr, this message translates to:
+  /// **'Code copié : envoie-le à tes proches.'**
+  String get spaceCodeCopied;
+
+  /// Qui a ajouté
+  ///
+  /// In fr, this message translates to:
+  /// **'ajouté par {name}'**
+  String spaceAddedBy(String name);
+
+  /// Indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'indisponible'**
+  String get spaceUnavailable;
+
+  /// Choix de l'espace
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer mon panier à…'**
+  String get spaceSendCartTitle;
+
+  /// Bouton du panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer à un espace'**
+  String get spaceSendToSpace;
+
+  /// Après envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier envoyé à « {name} ».'**
+  String spaceCartSent(String name);
+
+  /// Nom manquant
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne un nom à l\'espace.'**
+  String get spaceErrorName;
+
+  /// Budget invalide
+  ///
+  /// In fr, this message translates to:
+  /// **'Budget invalide.'**
+  String get spaceErrorBudget;
+
+  /// Code inconnu
+  ///
+  /// In fr, this message translates to:
+  /// **'Code inconnu : vérifie-le.'**
+  String get spaceErrorUnknownCode;
+
+  /// Autre pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet espace est dans un autre pays.'**
+  String get spaceErrorOtherCountry;
+
+  /// Complet
+  ///
+  /// In fr, this message translates to:
+  /// **'Cet espace a déjà 20 membres.'**
+  String get spaceErrorFull;
+
+  /// Trop d'espaces
+  ///
+  /// In fr, this message translates to:
+  /// **'20 espaces au plus.'**
+  String get spaceErrorTooMany;
+
+  /// Vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien à envoyer ou à valider.'**
+  String get spaceErrorCartEmpty;
+
+  /// Budget dépassé
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce panier dépasse le budget du mois.'**
+  String get spaceErrorBudgetExceeded;
+
+  /// Pas payeur
+  ///
+  /// In fr, this message translates to:
+  /// **'Seule une personne qui valide peut le faire.'**
+  String get spaceErrorNotPayer;
+
+  /// Menu Moi
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes espaces'**
+  String get accountSpaces;
+
+  /// Notification
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier commun validé'**
+  String get notifSpaceValidatedTitle;
+
+  /// Notification
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} a validé le panier de « {space} ».'**
+  String notifSpaceValidatedBody(String name, String space);
 }
 
 class _DymLocalizationsDelegate

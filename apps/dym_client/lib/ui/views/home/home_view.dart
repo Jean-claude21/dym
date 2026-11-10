@@ -182,6 +182,7 @@ class _HomeViewState extends State<HomeView> {
           onWallet: _navigator.toWallet,
           onFavorites: _navigator.toFavorites,
           onBaskets: _navigator.toBaskets,
+          onSpaces: _navigator.toSpaces,
         ),
       },
     );

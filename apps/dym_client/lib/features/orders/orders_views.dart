@@ -725,6 +725,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     required this.onOpenOrder,
     this.onOpenConversation,
     this.onOpenShoppingList,
+    this.onOpenSpace,
     super.key,
     this.clock = DateTime.now,
   });
@@ -738,6 +739,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
 
   /// Rappel de courses : ouvrir la liste (spec 029).
   final ValueChanged<String>? onOpenShoppingList;
+
+  /// Panier commun validé : ouvrir l'espace (spec 031).
+  final ValueChanged<String>? onOpenSpace;
   final DateTime Function() clock;
 
   @override
@@ -825,6 +829,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                                   } else if (n.param('list_id')
                                       case final list?) {
                                     onOpenShoppingList?.call(list);
+                                  } else if (n.param('space_id')
+                                      case final space?) {
+                                    onOpenSpace?.call(space);
                                   }
                                 },
                               ),

@@ -4262,4 +4262,200 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get accountBaskets => 'Mes paniers';
+
+  @override
+  String get spacesTitle => 'Mes espaces';
+
+  @override
+  String get spacesIntro =>
+      'Un espace réunit ceux qui remplissent et ceux qui valident et paient : la maison, la famille au pays, une tontine…';
+
+  @override
+  String get spacesEmpty =>
+      'Pas encore d\'espace. Crée-en un ou rejoins celui d\'un proche avec son code.';
+
+  @override
+  String get spacesEmptyShort =>
+      'Crée ou rejoins d\'abord un espace dans « Moi ».';
+
+  @override
+  String get spaceCreate => 'Créer un espace';
+
+  @override
+  String get spaceCreateAction => 'Créer';
+
+  @override
+  String get spaceJoin => 'Rejoindre';
+
+  @override
+  String get spaceJoinAction => 'Rejoindre';
+
+  @override
+  String get spaceCodeHint => 'Code reçu (8 caractères)';
+
+  @override
+  String get spaceName => 'Nom de l\'espace';
+
+  @override
+  String get spaceNameHint => 'Ex. Maison, Famille à Kpalimé';
+
+  @override
+  String get spaceBudget => 'Budget du mois (facultatif)';
+
+  @override
+  String get spaceBudgetHint => 'Ex. 50 000';
+
+  @override
+  String spaceMembersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membres',
+      one: '1 membre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get spaceRolePayer => 'Valide et paie';
+
+  @override
+  String get spaceRoleMember => 'Remplit';
+
+  @override
+  String get spaceOwner => 'Responsable · valide et paie';
+
+  @override
+  String spaceMe(String name) {
+    return '$name (moi)';
+  }
+
+  @override
+  String spaceManage(String name) {
+    return 'Gérer $name';
+  }
+
+  @override
+  String get spaceMakePayer => 'Peut valider et payer';
+
+  @override
+  String get spaceMakeMember => 'Remplit seulement';
+
+  @override
+  String get spaceRemoveMember => 'Retirer de l\'espace';
+
+  @override
+  String get spaceMembers => 'Membres';
+
+  @override
+  String get spaceBasket => 'Panier commun';
+
+  @override
+  String get spaceSendCart => 'Envoyer mon panier';
+
+  @override
+  String get spaceBasketEmpty =>
+      'Vide pour l\'instant : chacun remplit son panier comme d\'habitude, puis l\'envoie ici.';
+
+  @override
+  String spaceTotal(String total) {
+    return 'Total : $total + livraison';
+  }
+
+  @override
+  String get spaceValidate => 'Valider et passer au panier';
+
+  @override
+  String get spaceWaitPayer => 'Une personne qui valide passera la commande.';
+
+  @override
+  String get spaceDelete => 'Supprimer l\'espace';
+
+  @override
+  String get spaceLeave => 'Quitter l\'espace';
+
+  @override
+  String spaceDeleteConfirm(String name) {
+    return 'Supprimer « $name » pour tous ?';
+  }
+
+  @override
+  String spaceLeaveConfirm(String name) {
+    return 'Quitter « $name » ?';
+  }
+
+  @override
+  String get spaceBudgetTitle => 'Budget du mois';
+
+  @override
+  String spaceBudgetMeta(String spent, String budget, String left) {
+    return '$spent dépensés sur $budget · reste $left';
+  }
+
+  @override
+  String get spaceInvite => 'Code pour inviter';
+
+  @override
+  String get spaceCopyCode => 'Copier le code';
+
+  @override
+  String get spaceCodeCopied => 'Code copié : envoie-le à tes proches.';
+
+  @override
+  String spaceAddedBy(String name) {
+    return 'ajouté par $name';
+  }
+
+  @override
+  String get spaceUnavailable => 'indisponible';
+
+  @override
+  String get spaceSendCartTitle => 'Envoyer mon panier à…';
+
+  @override
+  String get spaceSendToSpace => 'Envoyer à un espace';
+
+  @override
+  String spaceCartSent(String name) {
+    return 'Panier envoyé à « $name ».';
+  }
+
+  @override
+  String get spaceErrorName => 'Donne un nom à l\'espace.';
+
+  @override
+  String get spaceErrorBudget => 'Budget invalide.';
+
+  @override
+  String get spaceErrorUnknownCode => 'Code inconnu : vérifie-le.';
+
+  @override
+  String get spaceErrorOtherCountry => 'Cet espace est dans un autre pays.';
+
+  @override
+  String get spaceErrorFull => 'Cet espace a déjà 20 membres.';
+
+  @override
+  String get spaceErrorTooMany => '20 espaces au plus.';
+
+  @override
+  String get spaceErrorCartEmpty => 'Rien à envoyer ou à valider.';
+
+  @override
+  String get spaceErrorBudgetExceeded => 'Ce panier dépasse le budget du mois.';
+
+  @override
+  String get spaceErrorNotPayer =>
+      'Seule une personne qui valide peut le faire.';
+
+  @override
+  String get accountSpaces => 'Mes espaces';
+
+  @override
+  String get notifSpaceValidatedTitle => 'Panier commun validé';
+
+  @override
+  String notifSpaceValidatedBody(String name, String space) {
+    return '$name a validé le panier de « $space ».';
+  }
 }

@@ -5548,5 +5548,284 @@
   "accountBaskets": "Mes paniers",
   "@accountBaskets": {
     "description": "Menu Moi"
+  },
+  "spacesTitle": "Mes espaces",
+  "@spacesTitle": {
+    "description": "Titre des espaces"
+  },
+  "spacesIntro": "Un espace réunit ceux qui remplissent et ceux qui valident et paient : la maison, la famille au pays, une tontine…",
+  "@spacesIntro": {
+    "description": "Explication"
+  },
+  "spacesEmpty": "Pas encore d'espace. Crée-en un ou rejoins celui d'un proche avec son code.",
+  "@spacesEmpty": {
+    "description": "Aucun espace"
+  },
+  "spacesEmptyShort": "Crée ou rejoins d'abord un espace dans « Moi ».",
+  "@spacesEmptyShort": {
+    "description": "Aucun espace (panier)"
+  },
+  "spaceCreate": "Créer un espace",
+  "@spaceCreate": {
+    "description": "Créer"
+  },
+  "spaceCreateAction": "Créer",
+  "@spaceCreateAction": {
+    "description": "Valider la création"
+  },
+  "spaceJoin": "Rejoindre",
+  "@spaceJoin": {
+    "description": "Rejoindre"
+  },
+  "spaceJoinAction": "Rejoindre",
+  "@spaceJoinAction": {
+    "description": "Valider le code"
+  },
+  "spaceCodeHint": "Code reçu (8 caractères)",
+  "@spaceCodeHint": {
+    "description": "Champ code"
+  },
+  "spaceName": "Nom de l'espace",
+  "@spaceName": {
+    "description": "Champ nom"
+  },
+  "spaceNameHint": "Ex. Maison, Famille à Kpalimé",
+  "@spaceNameHint": {
+    "description": "Exemple de nom"
+  },
+  "spaceBudget": "Budget du mois (facultatif)",
+  "@spaceBudget": {
+    "description": "Champ budget"
+  },
+  "spaceBudgetHint": "Ex. 50 000",
+  "@spaceBudgetHint": {
+    "description": "Exemple de budget"
+  },
+  "spaceMembersCount": "{count, plural, =1{1 membre} other{{count} membres}}",
+  "@spaceMembersCount": {
+    "description": "Nombre de membres",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "spaceRolePayer": "Valide et paie",
+  "@spaceRolePayer": {
+    "description": "Rôle payeur"
+  },
+  "spaceRoleMember": "Remplit",
+  "@spaceRoleMember": {
+    "description": "Rôle membre"
+  },
+  "spaceOwner": "Responsable · valide et paie",
+  "@spaceOwner": {
+    "description": "Responsable"
+  },
+  "spaceMe": "{name} (moi)",
+  "@spaceMe": {
+    "description": "Soi-même",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceManage": "Gérer {name}",
+  "@spaceManage": {
+    "description": "Menu d'un membre",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceMakePayer": "Peut valider et payer",
+  "@spaceMakePayer": {
+    "description": "Promouvoir"
+  },
+  "spaceMakeMember": "Remplit seulement",
+  "@spaceMakeMember": {
+    "description": "Rétrograder"
+  },
+  "spaceRemoveMember": "Retirer de l'espace",
+  "@spaceRemoveMember": {
+    "description": "Retirer"
+  },
+  "spaceMembers": "Membres",
+  "@spaceMembers": {
+    "description": "Section membres"
+  },
+  "spaceBasket": "Panier commun",
+  "@spaceBasket": {
+    "description": "Section panier"
+  },
+  "spaceSendCart": "Envoyer mon panier",
+  "@spaceSendCart": {
+    "description": "Envoyer le panier"
+  },
+  "spaceBasketEmpty": "Vide pour l'instant : chacun remplit son panier comme d'habitude, puis l'envoie ici.",
+  "@spaceBasketEmpty": {
+    "description": "Panier commun vide"
+  },
+  "spaceTotal": "Total : {total} + livraison",
+  "@spaceTotal": {
+    "description": "Total",
+    "placeholders": {
+      "total": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceValidate": "Valider et passer au panier",
+  "@spaceValidate": {
+    "description": "Valider"
+  },
+  "spaceWaitPayer": "Une personne qui valide passera la commande.",
+  "@spaceWaitPayer": {
+    "description": "Attente"
+  },
+  "spaceDelete": "Supprimer l'espace",
+  "@spaceDelete": {
+    "description": "Supprimer"
+  },
+  "spaceLeave": "Quitter l'espace",
+  "@spaceLeave": {
+    "description": "Quitter"
+  },
+  "spaceDeleteConfirm": "Supprimer « {name} » pour tous ?",
+  "@spaceDeleteConfirm": {
+    "description": "Confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceLeaveConfirm": "Quitter « {name} » ?",
+  "@spaceLeaveConfirm": {
+    "description": "Confirmation",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceBudgetTitle": "Budget du mois",
+  "@spaceBudgetTitle": {
+    "description": "Titre du budget"
+  },
+  "spaceBudgetMeta": "{spent} dépensés sur {budget} · reste {left}",
+  "@spaceBudgetMeta": {
+    "description": "Budget",
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "budget": {
+        "type": "String"
+      },
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceInvite": "Code pour inviter",
+  "@spaceInvite": {
+    "description": "Code"
+  },
+  "spaceCopyCode": "Copier le code",
+  "@spaceCopyCode": {
+    "description": "Copier"
+  },
+  "spaceCodeCopied": "Code copié : envoie-le à tes proches.",
+  "@spaceCodeCopied": {
+    "description": "Après copie"
+  },
+  "spaceAddedBy": "ajouté par {name}",
+  "@spaceAddedBy": {
+    "description": "Qui a ajouté",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceUnavailable": "indisponible",
+  "@spaceUnavailable": {
+    "description": "Indisponible"
+  },
+  "spaceSendCartTitle": "Envoyer mon panier à…",
+  "@spaceSendCartTitle": {
+    "description": "Choix de l'espace"
+  },
+  "spaceSendToSpace": "Envoyer à un espace",
+  "@spaceSendToSpace": {
+    "description": "Bouton du panier"
+  },
+  "spaceCartSent": "Panier envoyé à « {name} ».",
+  "@spaceCartSent": {
+    "description": "Après envoi",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "spaceErrorName": "Donne un nom à l'espace.",
+  "@spaceErrorName": {
+    "description": "Nom manquant"
+  },
+  "spaceErrorBudget": "Budget invalide.",
+  "@spaceErrorBudget": {
+    "description": "Budget invalide"
+  },
+  "spaceErrorUnknownCode": "Code inconnu : vérifie-le.",
+  "@spaceErrorUnknownCode": {
+    "description": "Code inconnu"
+  },
+  "spaceErrorOtherCountry": "Cet espace est dans un autre pays.",
+  "@spaceErrorOtherCountry": {
+    "description": "Autre pays"
+  },
+  "spaceErrorFull": "Cet espace a déjà 20 membres.",
+  "@spaceErrorFull": {
+    "description": "Complet"
+  },
+  "spaceErrorTooMany": "20 espaces au plus.",
+  "@spaceErrorTooMany": {
+    "description": "Trop d'espaces"
+  },
+  "spaceErrorCartEmpty": "Rien à envoyer ou à valider.",
+  "@spaceErrorCartEmpty": {
+    "description": "Vide"
+  },
+  "spaceErrorBudgetExceeded": "Ce panier dépasse le budget du mois.",
+  "@spaceErrorBudgetExceeded": {
+    "description": "Budget dépassé"
+  },
+  "spaceErrorNotPayer": "Seule une personne qui valide peut le faire.",
+  "@spaceErrorNotPayer": {
+    "description": "Pas payeur"
+  },
+  "accountSpaces": "Mes espaces",
+  "@accountSpaces": {
+    "description": "Menu Moi"
+  },
+  "notifSpaceValidatedTitle": "Panier commun validé",
+  "@notifSpaceValidatedTitle": {
+    "description": "Notification"
+  },
+  "notifSpaceValidatedBody": "{name} a validé le panier de « {space} ».",
+  "@notifSpaceValidatedBody": {
+    "description": "Notification",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "space": {
+        "type": "String"
+      }
+    }
   }
 }
