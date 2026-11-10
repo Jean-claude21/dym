@@ -8700,6 +8700,90 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Vérifie ta connexion puis réessaie.'**
   String get retryHint;
+
+  /// No description provided for @missionRun.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 boutique} other{Tournée · {count} boutiques}}'**
+  String missionRun(int count);
+
+  /// No description provided for @storageAmbient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Température ambiante'**
+  String get storageAmbient;
+
+  /// No description provided for @storageCool.
+  ///
+  /// In fr, this message translates to:
+  /// **'Au frais'**
+  String get storageCool;
+
+  /// No description provided for @storageFrozen.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surgelé'**
+  String get storageFrozen;
+
+  /// No description provided for @storageFragile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fragile'**
+  String get storageFragile;
+
+  /// No description provided for @handoverTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de remise'**
+  String get handoverTitle;
+
+  /// No description provided for @handoverBody.
+  ///
+  /// In fr, this message translates to:
+  /// **'Demande à la cliente le code à 4 chiffres affiché dans son app.'**
+  String get handoverBody;
+
+  /// No description provided for @handoverCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code'**
+  String get handoverCode;
+
+  /// No description provided for @handoverCancel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler'**
+  String get handoverCancel;
+
+  /// No description provided for @handoverConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider la remise'**
+  String get handoverConfirm;
+
+  /// No description provided for @handoverWrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Code incorrect. Contacte l\'équipe DYM.} =1{Code incorrect : encore 1 essai.} other{Code incorrect : encore {count} essais.}}'**
+  String handoverWrong(int count);
+
+  /// No description provided for @handoverLocked.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop d\'essais : l\'équipe DYM va t\'aider à terminer la remise.'**
+  String get handoverLocked;
+
+  /// No description provided for @trackHandoverCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de remise'**
+  String get trackHandoverCode;
+
+  /// No description provided for @trackHandoverHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Donne ce code au livreur quand il te remet la commande.'**
+  String get trackHandoverHint;
 }
 
 class _DymLocalizationsDelegate

@@ -26,8 +26,11 @@ abstract interface class MissionsService {
 
   Future<Result<void>> release(Mission mission);
 
-  /// Geste suivant (`out_for_delivery` : récupérée, `delivered` : livrée).
+  /// Geste « récupérée » (`out_for_delivery`).
   Future<Result<Mission>> advance(Mission mission, String to);
+
+  /// Remise avec le code de la cliente (spec 042).
+  Future<Result<HandoverResult>> deliver(Mission mission, String code);
 }
 
 /// Implémentation Neon.
@@ -89,6 +92,10 @@ class NeonMissionsService implements MissionsService {
   @override
   Future<Result<Mission>> advance(Mission mission, String to) =>
       _couriers.transition(mission.orderId, to: to, expected: mission.status);
+
+  @override
+  Future<Result<HandoverResult>> deliver(Mission mission, String code) =>
+      _couriers.deliver(mission.orderId, code);
 }
 
 /// Implémentation en mémoire (tests, galerie).
@@ -183,6 +190,21 @@ class MemoryMissionsService implements MissionsService {
     return Ok(next);
   }
 
+  /// Codes de remise attendus (tests) : par commande.
+  final codes = <String, String>{};
+
+  @override
+  Future<Result<HandoverResult>> deliver(Mission mission, String code) async {
+    gestures.add('deliver:${mission.orderId}:$code');
+    if (codes[mission.orderId] != code) {
+      return const Ok(HandoverResult(ok: false, attemptsLeft: 4));
+    }
+    final done = _with(mission, 'delivered', accepted: true);
+    final i = accepted.indexWhere((m) => m.orderId == mission.orderId);
+    if (i >= 0) accepted[i] = done;
+    return Ok(HandoverResult(ok: true, mission: done));
+  }
+
   static Mission _with(Mission m, String status, {required bool accepted}) =>
       Mission(
         orderId: m.orderId,
@@ -193,6 +215,9 @@ class MemoryMissionsService implements MissionsService {
         itemCount: m.itemCount,
         store: m.store,
         customer: m.customer,
+        purchaseId: m.purchaseId,
+        runSize: m.runSize,
+        storage: m.storage,
         acceptedAt: accepted ? DateTime(2026, 11, 10, 10) : null,
         next: switch (status) {
           'ready' => const ['out_for_delivery'],

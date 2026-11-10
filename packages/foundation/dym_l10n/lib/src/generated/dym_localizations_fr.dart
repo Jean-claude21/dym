@@ -5130,4 +5130,66 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get retryHint => 'Vérifie ta connexion puis réessaie.';
+
+  @override
+  String missionRun(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tournée · $count boutiques',
+      one: '1 boutique',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get storageAmbient => 'Température ambiante';
+
+  @override
+  String get storageCool => 'Au frais';
+
+  @override
+  String get storageFrozen => 'Surgelé';
+
+  @override
+  String get storageFragile => 'Fragile';
+
+  @override
+  String get handoverTitle => 'Code de remise';
+
+  @override
+  String get handoverBody =>
+      'Demande à la cliente le code à 4 chiffres affiché dans son app.';
+
+  @override
+  String get handoverCode => 'Code';
+
+  @override
+  String get handoverCancel => 'Annuler';
+
+  @override
+  String get handoverConfirm => 'Valider la remise';
+
+  @override
+  String handoverWrong(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Code incorrect : encore $count essais.',
+      one: 'Code incorrect : encore 1 essai.',
+      zero: 'Code incorrect. Contacte l\'équipe DYM.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get handoverLocked =>
+      'Trop d\'essais : l\'équipe DYM va t\'aider à terminer la remise.';
+
+  @override
+  String get trackHandoverCode => 'Code de remise';
+
+  @override
+  String get trackHandoverHint =>
+      'Donne ce code au livreur quand il te remet la commande.';
 }

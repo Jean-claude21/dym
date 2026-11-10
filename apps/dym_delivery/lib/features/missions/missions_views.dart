@@ -15,6 +15,7 @@ enum MissionError {
   suspended,
   invalidPhone,
   invalidZones,
+  codeLocked,
   offline,
   generic,
 }
@@ -26,6 +27,7 @@ MissionError missionErrorOf(Failure failure) => switch (failure) {
   _ when failure.message == 'courier_suspended' => MissionError.suspended,
   _ when failure.message == 'invalid_phone' => MissionError.invalidPhone,
   _ when failure.message == 'invalid_zones' => MissionError.invalidZones,
+  _ when failure.message == 'code_locked' => MissionError.codeLocked,
   _ => MissionError.generic,
 };
 
@@ -36,6 +38,7 @@ String missionErrorText(DymLocalizations l10n, MissionError error) =>
       MissionError.suspended => l10n.courierSuspended,
       MissionError.invalidPhone => l10n.courierInvalidPhone,
       MissionError.invalidZones => l10n.courierInvalidZones,
+      MissionError.codeLocked => l10n.handoverLocked,
       MissionError.offline => l10n.errorOffline,
       MissionError.generic => l10n.errorGeneric,
     };
@@ -482,6 +485,26 @@ class MissionCard extends StatelessWidget {
               l10n.missionItems(mission.itemCount),
               style: t.label.copyWith(color: c.textSecondary),
             ),
+            if (mission.runSize > 1 || mission.storage.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+                child: Wrap(
+                  spacing: DymTokenSpace.s2,
+                  runSpacing: DymTokenSpace.s1,
+                  children: [
+                    if (mission.runSize > 1)
+                      Chip(
+                        avatar: const Icon(Icons.alt_route_rounded, size: 18),
+                        label: Text(l10n.missionRun(mission.runSize)),
+                      ),
+                    for (final s in mission.storage)
+                      Chip(
+                        avatar: Icon(storageIcon(s), size: 18),
+                        label: Text(storageLabel(l10n, s)),
+                      ),
+                  ],
+                ),
+              ),
             place(Icons.storefront_rounded, l10n.missionPickup, mission.store),
             place(Icons.home_rounded, l10n.missionDropoff, mission.customer),
             ?action,
@@ -495,6 +518,20 @@ class MissionCard extends StatelessWidget {
     );
   }
 }
+
+IconData storageIcon(StorageHint s) => switch (s) {
+  StorageHint.ambient => Icons.wb_sunny_rounded,
+  StorageHint.cool => Icons.ac_unit_rounded,
+  StorageHint.frozen => Icons.severe_cold_rounded,
+  StorageHint.fragile => Icons.egg_rounded,
+};
+
+String storageLabel(DymLocalizations l10n, StorageHint s) => switch (s) {
+  StorageHint.ambient => l10n.storageAmbient,
+  StorageHint.cool => l10n.storageCool,
+  StorageHint.frozen => l10n.storageFrozen,
+  StorageHint.fragile => l10n.storageFragile,
+};
 
 String missionStatusLabel(DymLocalizations l10n, String status) =>
     switch (status) {
@@ -540,6 +577,28 @@ class MyRunsViewModel extends BaseViewModel {
     acting = null;
     if (result case Err(failure: final f)) problem = missionErrorOf(f);
     await load();
+  }
+
+  /// Remise : `null` si livrée, sinon essais restants.
+  Future<int?> deliver(Mission mission, String code) async {
+    if (acting != null) return null;
+    acting = mission.orderId;
+    problem = null;
+    notifyListeners();
+    final result = await service.deliver(mission, code.trim());
+    acting = null;
+    int? left;
+    switch (result) {
+      case Ok(:final value) when value.ok:
+        left = null;
+      case Ok(:final value):
+        left = value.attemptsLeft;
+      case Err(failure: final f):
+        problem = missionErrorOf(f);
+        left = 0;
+    }
+    await load();
+    return left;
   }
 
   Future<void> release(Mission mission) async {
@@ -615,7 +674,7 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
                         label: l10n.missionHandedOver,
                         icon: Icons.task_alt_rounded,
                         loading: vm.acting == m.orderId,
-                        onPressed: () => vm.advance(m, 'delivered'),
+                        onPressed: () => _askCode(context, vm, m),
                       ),
                       _ when !m.delivered => Text(
                         l10n.missionWaitReady,
@@ -669,6 +728,89 @@ class LoadState extends StatelessWidget {
       message: l10n.retryHint,
       actionLabel: l10n.retry,
       onAction: onRetry,
+    );
+  }
+}
+
+/// Code de remise demandé à la cliente ; la base le vérifie.
+Future<void> _askCode(
+  BuildContext context,
+  MyRunsViewModel vm,
+  Mission m,
+) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final code = await showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    showDragHandle: true,
+    builder: (_) => const _CodeSheet(),
+  );
+  if (code == null || code.trim().isEmpty) return;
+  final left = await vm.deliver(m, code);
+  if (left != null && vm.problem == null) {
+    messenger?.showSnackBar(SnackBar(content: Text(l10n.handoverWrong(left))));
+  }
+}
+
+/// Saisie du code : le champ garde son contrôleur jusqu'à la fermeture.
+class _CodeSheet extends StatefulWidget {
+  const new();
+
+  @override
+  State<_CodeSheet> createState() => _CodeSheetState();
+}
+
+class _CodeSheetState extends State<_CodeSheet> {
+  final _code = TextEditingController();
+
+  @override
+  void dispose() {
+    _code.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(
+          DymTokenSpace.s4,
+          0,
+          DymTokenSpace.s4,
+          DymTokenSpace.s4 + MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.handoverTitle, style: context.dym.text.title),
+            const SizedBox(height: DymTokenSpace.s2),
+            Text(l10n.handoverBody),
+            const SizedBox(height: DymTokenSpace.s3),
+            DymTextField(
+              label: l10n.handoverCode,
+              controller: _code,
+              keyboardType: TextInputType.number,
+              maxLength: 4,
+              autofocus: true,
+            ),
+            const SizedBox(height: DymTokenSpace.s3),
+            DymButton(
+              label: l10n.handoverConfirm,
+              icon: Icons.task_alt_rounded,
+              onPressed: () => Navigator.pop(context, _code.text),
+            ),
+            const SizedBox(height: DymTokenSpace.s2),
+            DymButton(
+              label: l10n.handoverCancel,
+              variant: DymButtonVariant.secondary,
+              onPressed: () => Navigator.pop(context),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

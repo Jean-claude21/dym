@@ -291,6 +291,19 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
+  testWidgets('06 : code de remise à donner au livreur (spec 042)', (
+    tester,
+  ) async {
+    final service = _service()..handoverCodes['o2'] = '4821';
+    await _pump(
+      tester,
+      TrackingView(service: service, orderId: 'o2', onBack: () {}),
+    );
+    expect(find.text('Code de remise'), findsOneWidget);
+    expect(find.text('4821'), findsOneWidget);
+    await tester.pumpWidget(const SizedBox());
+  });
+
   testWidgets('44 : textes traduits, tout lire', (tester) async {
     final service = _service();
     await _pump(

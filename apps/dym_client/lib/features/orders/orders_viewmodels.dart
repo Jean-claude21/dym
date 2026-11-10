@@ -105,8 +105,12 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   Failure? _reorderFailure;
   bool _cancelling = false;
   Failure? _cancelFailure;
+  String? _handoverCode;
 
   CustomerOrder? get order => _order;
+
+  /// Code à donner au livreur DYM à la remise (spec 042).
+  String? get handoverCode => _handoverCode;
   Dispute? get dispute => _dispute;
 
   /// Mon avis sur la commande (nul : pas encore donné).
@@ -174,6 +178,11 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
     final result = await service.order(orderId);
     if (result case Ok(:final value)) _order = value;
     if (await service.dispute(orderId) case Ok(:final value)) _dispute = value;
+    _handoverCode =
+        _order?.fulfillment == Fulfillment.delivery &&
+            (_order?.status.isActive ?? false)
+        ? (await service.handoverCode(orderId)).valueOrNull
+        : null;
     if (_order?.status == OrderStatus.delivered) {
       if (await service.orderReview(orderId) case Ok(:final value)) {
         _review = value;

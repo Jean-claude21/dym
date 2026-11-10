@@ -43,6 +43,38 @@ class CourierProfile {
   final List<String> zoneIds;
 }
 
+/// Consigne de conservation (`categories.storage`, `products.storage`).
+enum StorageHint {
+  ambient,
+  cool,
+  frozen,
+  fragile;
+
+  static StorageHint? parse(Object? value) =>
+      values.where((v) => v.name == value).firstOrNull;
+}
+
+/// Remise par code : issue de la saisie.
+@immutable
+class HandoverResult {
+  const new({required this.ok, this.attemptsLeft = 0, this.mission});
+
+  factory fromJson(Map<String, dynamic> json) => HandoverResult(
+    ok: json['ok'] as bool? ?? false,
+    attemptsLeft: (json['attempts_left'] as num?)?.toInt() ?? 0,
+    mission: switch (json['mission']) {
+      final Map<dynamic, dynamic> m => Mission.fromJson(
+        m.cast<String, dynamic>(),
+      ),
+      _ => null,
+    },
+  );
+
+  final bool ok;
+  final int attemptsLeft;
+  final Mission? mission;
+}
+
 /// Lieu d'une mission (boutique ou cliente). Coordonnées et téléphone :
 /// seulement après acceptation.
 @immutable
@@ -88,6 +120,9 @@ class Mission {
     this.etaAt,
     this.acceptedAt,
     this.next = const [],
+    this.purchaseId,
+    this.runSize = 1,
+    this.storage = const [],
   });
 
   factory fromJson(Map<String, dynamic> json) => Mission(
@@ -112,6 +147,12 @@ class Mission {
       (json['customer'] as Map? ?? const {}).cast<String, dynamic>(),
     ),
     next: [for (final s in json['next'] as List? ?? const []) s as String],
+    purchaseId: json['purchase_id'] as String?,
+    runSize: (json['run_size'] as num?)?.toInt() ?? 1,
+    storage: [
+      for (final s in json['storage'] as List? ?? const [])
+        ?StorageHint.parse(s),
+    ],
   );
 
   final String orderId;
@@ -130,6 +171,15 @@ class Mission {
 
   /// Gestes permis au livreur (`out_for_delivery`, `delivered`).
   final List<String> next;
+
+  /// Achat de la cliente : une tournée regroupe ses commandes à livrer.
+  final String? purchaseId;
+
+  /// Boutiques de la tournée (1 : course simple).
+  final int runSize;
+
+  /// Consignes de conservation des articles.
+  final List<StorageHint> storage;
 
   bool get delivered => status == 'delivered';
 
