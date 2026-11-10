@@ -50,3 +50,7 @@ Les volets IA (antifraude, modération, agent support) font l'objet de la spec 0
 ## Assumptions
 
 - Les seuils de départ : 10 min en attente, préparation + 20 min, 60 min en route.
+- Décision du porteur produit (2026-11-11) : la ligne `ops-center` de la roadmap est découpée en deux
+  specs, 053 (vue en direct, réglages, rôles par pays) et 054 (antifraude, modération et agent support).
+- Décision du porteur produit (2026-11-11) : la limite d'un admin à des pays s'applique au centre
+  d'opérations seulement ; les autres écrans de l'admin restent globaux.

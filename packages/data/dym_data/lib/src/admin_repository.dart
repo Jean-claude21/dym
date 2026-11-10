@@ -360,6 +360,14 @@ class AdminRepository {
     (json) => SupportTicket.fromJson(_map(json)),
   );
 
+  /// Brouillon de réponse rédigé par l'agent support (spec 054) ; l'équipe
+  /// relit et envoie. `unavailable` : aucun modèle actif.
+  Future<Result<String>> draftReply(String id) => _post(
+    '/v1/admin/tickets/$id/draft',
+    const {},
+    (json) => (json! as Map)['draft'] as String,
+  );
+
   Future<Result<SupportTicket>> closeTicket(String id) => _rpc(
     'admin_close_ticket',
     {'p_ticket': id},

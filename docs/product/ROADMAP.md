@@ -23,10 +23,10 @@
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ✅ Faite (specs 041-043 fusionnées, migrations sur staging ; suivi en direct reporté) ; gate : démonstration web à faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ✅ Faite (specs 045-049 fusionnées, migrations sur staging) ; gate : démonstration web à faire |
-| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | 🔵 En cours (specs 050-053) |
+| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ✅ Faite (specs 050-054 fusionnées, migrations sur staging) ; gate : démonstration complète à faire |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
-Mis à jour à chaque spec (dernière mise à jour : 2026-11-10).
+Mis à jour à chaque spec (dernière mise à jour : 2026-11-11).
 
 Les gates des phases 6 à 13 se valident par une démonstration web au porteur produit, en simulation
 pour tout service indisponible. Les durées sont des estimations.
@@ -176,10 +176,10 @@ en plus d'une heure.
 
 | Spec | Contenu | État |
 |---|---|---|
-| `haggling` | Marchandage dans la limite de la vendeuse | 🟡 Spec 050 : code fait, en attente de relecture humaine (limite de la boutique et par produit, réponse immédiate : conclu au-dessus du plancher, sinon contre-prix ; prix conclu au panier 2 heures pour la quantité marchandée, consommé par la commande ; limite jamais montrée, 3 essais par jour) |
-| `group-buying` | Achat groupé entre voisins, départ groupé | 🟡 Spec 051 : code fait, en attente de relecture humaine (offre groupée de la vendeuse aux quartiers qu'elle livre, jauge anonyme, déblocage au minimum, prix de groupe pour sa part et frais de livraison partagés au panier, avantage consommé par la commande) |
-| `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée | 🟡 Spec 052 : code fait, en attente de relecture humaine (formules par pays payées depuis le wallet et prolongeables ; DYM+ : frais de livraison rendus et cashback en plus à la livraison ; Pro : commission réduite ; « À la une » signalée sponsorisée ; prix de départ à valider) |
-| `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support | 🟡 Spec 053 : code fait, en attente de relecture humaine (vue en direct d'un pays, retards selon des seuils par pays, cash des livreurs reçu, réglages audités : seuils, poids du fil, formules ; admins limités à des pays) · IA antifraude, modération et support : spec 054 |
+| `haggling` | Marchandage dans la limite de la vendeuse | ✅ Spec 050 · PR #58 (limite de la boutique et par produit, réponse immédiate : conclu au-dessus du plancher, sinon contre-prix ; prix conclu au panier 2 heures pour la quantité marchandée, consommé par la commande ; limite jamais montrée, 3 essais par jour) |
+| `group-buying` | Achat groupé entre voisins, départ groupé | ✅ Spec 051 · PR #59 (offre groupée de la vendeuse aux quartiers qu'elle livre, jauge anonyme, déblocage au minimum, prix de groupe pour sa part et frais de livraison partagés au panier, avantage consommé par la commande) |
+| `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée | ✅ Spec 052 · PR #60 (formules par pays payées depuis le wallet et prolongeables ; DYM+ : frais de livraison rendus et cashback en plus à la livraison ; Pro : commission réduite ; « À la une » signalée sponsorisée ; prix de départ validés le 2026-11-11, modifiables depuis le centre d'opérations) |
+| `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support | ✅ Spec 053 · PR #61 (vue en direct d'un pays, retards selon des seuils par pays, cash des livreurs reçu, réglages audités : seuils, poids du fil, formules ; admins limités à des pays, limite appliquée au centre d'opérations seulement) · ✅ Spec 054 · PR #62 (signaux de fraude par règles SQL à seuils en base, décision de l'équipe auditée ; avis de l'IA sur les signalements ; brouillon de l'agent support relu par l'équipe) |
 
 ## Phase 5 — Scale (anciennes specs sur déclencheur, remplacées sauf mention)
 

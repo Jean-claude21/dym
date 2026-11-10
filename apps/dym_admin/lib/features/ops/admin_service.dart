@@ -155,6 +155,9 @@ abstract interface class AdminService {
 
   Future<Result<SupportTicket>> replyTicket(String id, String body);
 
+  /// Brouillon de l'agent support (spec 054).
+  Future<Result<String>> draftReply(String id);
+
   Future<Result<SupportTicket>> closeTicket(String id);
 
   Future<Result<List<AdminClientRow>>> clients({String? query});
@@ -424,6 +427,9 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<SupportTicket>> replyTicket(String id, String body) =>
       _admin.replyTicket(id, body);
+
+  @override
+  Future<Result<String>> draftReply(String id) => _admin.draftReply(id);
 
   @override
   Future<Result<SupportTicket>> closeTicket(String id) =>

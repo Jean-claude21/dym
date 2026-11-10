@@ -6135,4 +6135,46 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get opsNotAdmin => 'This address is not an admin\'s.';
+
+  @override
+  String get adminSupportDraft => 'AI draft';
+
+  @override
+  String get moderationAi => 'AI opinion';
+
+  @override
+  String get moderationAiRemove => 'remove';
+
+  @override
+  String get moderationAiKeep => 'keep';
+
+  @override
+  String get moderationAiUnsure => 'unsure';
+
+  @override
+  String get opsFraud => 'Fraud signals';
+
+  @override
+  String get opsNoFraud => 'No open signal.';
+
+  @override
+  String get opsFraudDismiss => 'Dismiss';
+
+  @override
+  String get opsFraudConfirm => 'Confirm';
+
+  @override
+  String get fraudClientCancelBurst => 'Repeated cancellations (customer)';
+
+  @override
+  String get fraudStoreRefusalBurst => 'Repeated refusals (store)';
+
+  @override
+  String get fraudSharedDevice => 'Device shared by several accounts';
+
+  @override
+  String get fraudHandoverFailures => 'Wrong handover codes (courier)';
+
+  @override
+  String get fraudHaggleBurst => 'Haggling burst without purchase';
 }

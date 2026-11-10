@@ -6179,4 +6179,46 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get opsNotAdmin => 'Cette adresse n\'est pas celle d\'un admin.';
+
+  @override
+  String get adminSupportDraft => 'Brouillon IA';
+
+  @override
+  String get moderationAi => 'Avis de l\'IA';
+
+  @override
+  String get moderationAiRemove => 'à retirer';
+
+  @override
+  String get moderationAiKeep => 'à garder';
+
+  @override
+  String get moderationAiUnsure => 'incertain';
+
+  @override
+  String get opsFraud => 'Signaux de fraude';
+
+  @override
+  String get opsNoFraud => 'Aucun signal ouvert.';
+
+  @override
+  String get opsFraudDismiss => 'Écarter';
+
+  @override
+  String get opsFraudConfirm => 'Confirmer';
+
+  @override
+  String get fraudClientCancelBurst => 'Annulations répétées (cliente)';
+
+  @override
+  String get fraudStoreRefusalBurst => 'Refus répétés (boutique)';
+
+  @override
+  String get fraudSharedDevice => 'Appareil partagé par plusieurs comptes';
+
+  @override
+  String get fraudHandoverFailures => 'Codes de remise faux (livreur)';
+
+  @override
+  String get fraudHaggleBurst => 'Marchandage en rafale sans achat';
 }

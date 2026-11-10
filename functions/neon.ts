@@ -60,6 +60,22 @@ export default defineConfig({
       cron: "*/15 * * * *",
       enabled: true,
     },
+    fraudSignals: {
+      type: "schedule",
+      function: "api",
+      functionPath: "/v1/jobs/fraud-signals",
+      // Règles SQL des dernières 24 h ; un signal par règle, sujet et jour (spec 054).
+      cron: "*/15 * * * *",
+      enabled: true,
+    },
+    moderationTriage: {
+      type: "schedule",
+      function: "api",
+      functionPath: "/v1/jobs/moderation-triage",
+      // Avis de l'IA sur les signalements sans avis ; l'équipe décide (spec 054).
+      cron: "*/15 * * * *",
+      enabled: true,
+    },
   },
   // prévisualisation (une par PR) expirent après 7 jours. La Data API refuse
   // les branches qui expirent : elle n'y est donc pas exposée.

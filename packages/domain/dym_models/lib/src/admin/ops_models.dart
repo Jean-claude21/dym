@@ -85,6 +85,7 @@ class OpsLive {
     this.openTickets = 0,
     this.openReports = 0,
     this.courierCash = const [],
+    this.fraudOpen = 0,
   });
 
   factory fromJson(Map<String, dynamic> json) => OpsLive(
@@ -107,6 +108,7 @@ class OpsLive {
     openDisputes: (json['open_disputes'] as num?)?.toInt() ?? 0,
     openTickets: (json['open_tickets'] as num?)?.toInt() ?? 0,
     openReports: (json['open_reports'] as num?)?.toInt() ?? 0,
+    fraudOpen: (json['fraud_open'] as num?)?.toInt() ?? 0,
     courierCash: [
       for (final c in json['courier_cash'] as List? ?? const [])
         CourierCashDue.fromJson((c as Map).cast<String, dynamic>()),
@@ -129,6 +131,50 @@ class OpsLive {
   final int openTickets;
   final int openReports;
   final List<CourierCashDue> courierCash;
+
+  /// Signaux de fraude ouverts (spec 054).
+  final int fraudOpen;
+}
+
+/// Signal de fraude repéré par une règle (spec 054) ; l'équipe décide.
+@immutable
+class FraudSignal {
+  const new({
+    required this.id,
+    required this.kind,
+    required this.subjectType,
+    required this.createdAt,
+    this.subject,
+    this.detail = const {},
+    this.status = 'open',
+  });
+
+  factory fromJson(Map<String, dynamic> json) => FraudSignal(
+    id: json['id']! as String,
+    kind: json['kind']! as String,
+    subjectType: json['subject_type']! as String,
+    subject: json['subject'] as String?,
+    createdAt: DateTime.parse(json['created_at']! as String),
+    detail: (json['detail'] as Map?)?.cast<String, Object?>() ?? const {},
+    status: json['status'] as String? ?? 'open',
+  );
+
+  final String id;
+
+  /// Règle : `client_cancel_burst`, `store_refusal_burst`, `shared_device`,
+  /// `handover_code_failures`, `haggle_burst`.
+  final String kind;
+
+  /// `user` ou `store`.
+  final String subjectType;
+  final String? subject;
+  final DateTime createdAt;
+  final Map<String, Object?> detail;
+  final String status;
+
+  /// Nombre relevé par la règle (comptes, refus, essais…).
+  int get count =>
+      ((detail['count'] ?? detail['accounts']) as num?)?.toInt() ?? 0;
 }
 
 /// Formule vue par l'équipe.

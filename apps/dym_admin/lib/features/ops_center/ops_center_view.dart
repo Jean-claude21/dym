@@ -40,6 +40,14 @@ abstract interface class OpsCenterService {
   });
 
   Future<Result<int>> confirmCourierCash(CourierCashDue due, String key);
+
+  /// Signaux de fraude ouverts (spec 054).
+  Future<Result<List<FraudSignal>>> fraudSignals(String country);
+
+  Future<Result<List<FraudSignal>>> decideFraud(
+    FraudSignal signal, {
+    required bool confirm,
+  });
 }
 
 class NeonOpsCenterService implements OpsCenterService {
@@ -87,6 +95,16 @@ class NeonOpsCenterService implements OpsCenterService {
   @override
   Future<Result<int>> confirmCourierCash(CourierCashDue due, String key) =>
       _repository.confirmCourierCash(due.courierId, key);
+
+  @override
+  Future<Result<List<FraudSignal>>> fraudSignals(String country) =>
+      _repository.fraudSignals(country);
+
+  @override
+  Future<Result<List<FraudSignal>>> decideFraud(
+    FraudSignal signal, {
+    required bool confirm,
+  }) => _repository.decideFraud(signal.id, confirm: confirm);
 }
 
 /// Poids du fil réglables (0044).
@@ -110,6 +128,7 @@ class OpsCenterViewModel extends AdminViewModel {
   String? country;
   OpsLive? live;
   OpsSettings? settings;
+  List<FraudSignal> signals = const [];
   String? problem;
   final _cashKeys = <String, String>{};
 
@@ -125,10 +144,15 @@ class OpsCenterViewModel extends AdminViewModel {
     }
     final c = country;
     if (c == null) return null;
-    final (l, s) = await (service.live(c), service.settings(c)).wait;
+    final (l, s, f) = await (
+      service.live(c),
+      service.settings(c),
+      service.fraudSignals(c),
+    ).wait;
     if (l case Err(:final failure)) return failure;
     live = l.valueOrNull;
     settings = s.valueOrNull;
+    signals = f.valueOrNull ?? const [];
     _timer ??= Timer.periodic(_refresh, (_) => unawaited(refreshLive()));
     return null;
   });
@@ -224,6 +248,22 @@ class OpsCenterViewModel extends AdminViewModel {
     return _apply(service.setScope(email.trim(), code, on: on));
   }
 
+  /// Décision humaine sur un signal (écarté ou confirmé).
+  Future<bool> decideFraud(FraudSignal signal, {required bool confirm}) async {
+    problem = null;
+    switch (await service.decideFraud(signal, confirm: confirm)) {
+      case Ok(:final value):
+        signals = value;
+        notifyListeners();
+        await refreshLive();
+        return true;
+      case Err(:final failure):
+        problem = failure is NetworkFailure ? 'offline' : failure.message;
+        notifyListeners();
+        return false;
+    }
+  }
+
   /// Une clé par remise : rejouée telle quelle après une coupure.
   Future<bool> confirmCash(CourierCashDue due) async {
     problem = null;
@@ -247,6 +287,16 @@ class OpsCenterViewModel extends AdminViewModel {
     super.dispose();
   }
 }
+
+/// Libellé d'une règle de fraude.
+String fraudKindLabel(DymLocalizations l10n, String kind) => switch (kind) {
+  'client_cancel_burst' => l10n.fraudClientCancelBurst,
+  'store_refusal_burst' => l10n.fraudStoreRefusalBurst,
+  'shared_device' => l10n.fraudSharedDevice,
+  'handover_code_failures' => l10n.fraudHandoverFailures,
+  'haggle_burst' => l10n.fraudHaggleBurst,
+  _ => kind,
+};
 
 String _problemLabel(DymLocalizations l10n, String code) => switch (code) {
   'invalid' => l10n.opsInvalid,
@@ -406,7 +456,48 @@ class _Live extends StatelessWidget {
             tile(l10n.adminNavDisputes, '${live.openDisputes}'),
             tile(l10n.adminNavSupport, '${live.openTickets}'),
             tile(l10n.adminNavModeration, '${live.openReports}'),
+            tile(
+              l10n.opsFraud,
+              '${live.fraudOpen}',
+              tone: live.fraudOpen > 0 ? AdminTone.danger : AdminTone.neutral,
+            ),
           ],
+        ),
+        const SizedBox(height: DymTokenSpace.s4),
+        AdminCard(
+          title: l10n.opsFraud,
+          child: vm.signals.isEmpty
+              ? AdminEmpty(l10n.opsNoFraud)
+              : Column(
+                  children: [
+                    for (final f in vm.signals)
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.gpp_maybe_rounded,
+                          color: c.pimentStrong,
+                        ),
+                        title: Text(
+                          '${fraudKindLabel(l10n, f.kind)} · ${f.count}',
+                        ),
+                        subtitle: Text(f.subject ?? ''),
+                        trailing: Wrap(
+                          spacing: DymTokenSpace.s1,
+                          children: [
+                            TextButton(
+                              onPressed: () =>
+                                  vm.decideFraud(f, confirm: false),
+                              child: Text(l10n.opsFraudDismiss),
+                            ),
+                            FilledButton(
+                              onPressed: () => vm.decideFraud(f, confirm: true),
+                              child: Text(l10n.opsFraudConfirm),
+                            ),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
         ),
         const SizedBox(height: DymTokenSpace.s4),
         AdminCard(
