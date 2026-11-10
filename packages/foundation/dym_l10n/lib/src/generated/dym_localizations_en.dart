@@ -5154,4 +5154,109 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get trackHandoverHint =>
       'Give this code to the courier when he hands you the order.';
+
+  @override
+  String get walletWithdraw => 'Withdraw';
+
+  @override
+  String get walletWithdrawSimulated =>
+      'Simulated withdrawal: no real payout until the provider is connected.';
+
+  @override
+  String get walletKindCourierFee => 'Delivery fee';
+
+  @override
+  String get walletKindCashTopup => 'Cash top-up';
+
+  @override
+  String get walletKindWithdrawal => 'Withdrawal';
+
+  @override
+  String get walletCashTopup => 'Top up with cash via a courier';
+
+  @override
+  String get walletCashTopupHint =>
+      'Show this code to the DYM courier and hand over the cash: your wallet is credited at once.';
+
+  @override
+  String walletCashTopupExpires(String time) {
+    return 'Valid until $time';
+  }
+
+  @override
+  String get earningsTitle => 'Earnings';
+
+  @override
+  String earningsToday(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count runs today',
+      one: '1 run today',
+      zero: 'No run today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get earningsWallet => 'In my wallet';
+
+  @override
+  String get earningsWithdraw => 'Withdraw my earnings';
+
+  @override
+  String get earningsWithdrawDisabled =>
+      'Withdrawal is not open in your country yet.';
+
+  @override
+  String get earningsAmount => 'Amount';
+
+  @override
+  String get earningsCashTitle => 'Cash to hand over';
+
+  @override
+  String get earningsCashNone => 'You owe no cash.';
+
+  @override
+  String get earningsCashToDym => 'DYM team';
+
+  @override
+  String get earningsCashToDymHint => 'Cash top-ups, to hand over to the team.';
+
+  @override
+  String get earningsCashToStoreHint =>
+      'Price of the items collected, to hand over to the shop.';
+
+  @override
+  String get cashTopupTitle => 'Top-up point';
+
+  @override
+  String get cashTopupHint =>
+      'The customer shows her top-up code; you take her cash and her wallet is credited.';
+
+  @override
+  String get cashTopupCode => 'Customer code';
+
+  @override
+  String get cashTopupConfirm => 'Credit her wallet';
+
+  @override
+  String get cashTopupInvalidCode => 'Unknown, expired or already used code.';
+
+  @override
+  String get courierCashTitle => 'Couriers\' cash';
+
+  @override
+  String get courierCashHint =>
+      'DYM couriers collect your cash orders; confirm when they hand you the money.';
+
+  @override
+  String get courierCashNone => 'No cash to receive';
+
+  @override
+  String get courierCashNoneHint =>
+      'Cash collected for you by couriers will appear here.';
+
+  @override
+  String get courierCashReceived => 'Received';
 }

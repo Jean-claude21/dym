@@ -5,11 +5,17 @@ import 'package:dym_models/dym_models.dart';
 /// Wallet en mémoire (tests, galerie). Jamais en production. Reproduit les
 /// règles de la base utiles à l'écran (solde, poches, refus).
 class MemoryWalletService implements WalletService {
-  new({this._config, this.balanceMinor = 0, this.simulatedTopup = true});
+  new({
+    this._config,
+    this.balanceMinor = 0,
+    this.simulatedTopup = true,
+    this.simulatedWithdrawal = true,
+  });
 
   final CountryConfig? _config;
   int balanceMinor;
   bool simulatedTopup;
+  bool simulatedWithdrawal;
   final List<WalletPocket> pockets = [];
   final List<WalletMovement> movements = [];
 
@@ -20,6 +26,7 @@ class MemoryWalletService implements WalletService {
     currencyCode: _config?.currency.code ?? 'XOF',
     balanceMinor: balanceMinor,
     simulatedTopup: simulatedTopup,
+    simulatedWithdrawal: simulatedWithdrawal,
     pockets: List.unmodifiable(pockets),
     movements: List.unmodifiable(movements.reversed),
   );
@@ -45,6 +52,21 @@ class MemoryWalletService implements WalletService {
     _move(WalletMovementKind.walletTopup, amountMinor);
     return Ok(_wallet);
   }
+
+  @override
+  Future<Result<Wallet>> withdrawSimulated(int amountMinor) async {
+    if (_take() case final failure?) return Err(failure);
+    if (amountMinor > balanceMinor) {
+      return const Err(ValidationFailure('wallet_insufficient'));
+    }
+    balanceMinor -= amountMinor;
+    _move(WalletMovementKind.walletWithdrawal, -amountMinor);
+    return Ok(_wallet);
+  }
+
+  @override
+  Future<Result<({String code, DateTime expiresAt})>> cashTopupCode() async =>
+      Ok((code: '482913', expiresAt: DateTime(2026, 11, 10, 10, 15)));
 
   @override
   Future<Result<Wallet>> createPocket({

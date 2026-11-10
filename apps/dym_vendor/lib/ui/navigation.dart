@@ -13,6 +13,7 @@ import 'package:dym_vendor/features/catalog/categories/store_categories_view.dar
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
+import 'package:dym_vendor/features/orders/courier_cash_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
@@ -58,6 +59,9 @@ abstract interface class AppNavigator {
 
   /// Mes avis (écran 65).
   void toReviews();
+
+  /// Cash encaissé pour la boutique par les livreurs DYM (spec 043).
+  void toCourierCash();
 
   /// Aide (écran 66).
   void toHelp();
@@ -149,6 +153,19 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toCourierCash() {
+    if (!locator.isRegistered<CourierCashService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => CourierCashView(
+          service: locator<CourierCashService>(),
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toHelp() => _navigator.push<void>(

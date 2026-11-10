@@ -75,6 +75,14 @@ class WalletViewModel extends BaseViewModel {
   Future<bool> topup(String amountText) =>
       _act(amountText, service.topupSimulated);
 
+  /// Retrait simulé vers le fournisseur (spec 043).
+  Future<bool> withdraw(String amountText) =>
+      _act(amountText, service.withdrawSimulated);
+
+  /// Code de recharge en cash ; null : indisponible.
+  Future<({String code, DateTime expiresAt})?> cashCode() async =>
+      (await service.cashTopupCode()).valueOrNull;
+
   Future<bool> transfer({
     required String amountText,
     String? fromPocket,

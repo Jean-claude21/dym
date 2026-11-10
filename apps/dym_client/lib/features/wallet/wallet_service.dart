@@ -8,6 +8,12 @@ abstract interface class WalletService {
   Future<Result<Wallet>> wallet();
   Future<Result<CountryConfig>> countryConfig();
   Future<Result<Wallet>> topupSimulated(int amountMinor);
+
+  /// Retrait simulé (spec 043).
+  Future<Result<Wallet>> withdrawSimulated(int amountMinor);
+
+  /// Code de recharge en cash auprès d'un livreur.
+  Future<Result<({String code, DateTime expiresAt})>> cashTopupCode();
   Future<Result<Wallet>> createPocket({
     required String name,
     int? goalMinor,
@@ -49,6 +55,14 @@ class NeonWalletService implements WalletService {
   @override
   Future<Result<Wallet>> topupSimulated(int amountMinor) =>
       _keyed((key) => _wallet.topupSimulated(amountMinor, key));
+
+  @override
+  Future<Result<Wallet>> withdrawSimulated(int amountMinor) =>
+      _keyed((key) => _wallet.withdrawSimulated(amountMinor, key));
+
+  @override
+  Future<Result<({String code, DateTime expiresAt})>> cashTopupCode() =>
+      _wallet.cashTopupCode();
 
   @override
   Future<Result<Wallet>> createPocket({

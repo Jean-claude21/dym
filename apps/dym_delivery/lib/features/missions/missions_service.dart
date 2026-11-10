@@ -31,13 +31,30 @@ abstract interface class MissionsService {
 
   /// Remise avec le code de la cliente (spec 042).
   Future<Result<HandoverResult>> deliver(Mission mission, String code);
+
+  /// Gains du jour, wallet, cash à remettre (spec 043).
+  Future<Result<CourierEarnings>> earnings();
+
+  /// Point de recharge : cash de la cliente vers son wallet.
+  Future<Result<CourierEarnings>> cashTopup(String code, int amountMinor);
+
+  /// Retrait simulé du wallet.
+  Future<Result<void>> withdraw(int amountMinor);
 }
 
 /// Implémentation Neon.
 class NeonMissionsService implements MissionsService {
-  new({required this._couriers, required this._reference, required this._auth});
+  new({
+    required this._couriers,
+    required this._reference,
+    required this._auth,
+    required this._wallet,
+  });
 
   final CourierRepository _couriers;
+  final WalletRepository _wallet;
+  String? _topupKey;
+  String? _withdrawKey;
   final ReferenceRepository _reference;
   final AuthService _auth;
   CountryConfig? _config;
@@ -96,6 +113,37 @@ class NeonMissionsService implements MissionsService {
   @override
   Future<Result<HandoverResult>> deliver(Mission mission, String code) =>
       _couriers.deliver(mission.orderId, code);
+
+  @override
+  Future<Result<CourierEarnings>> earnings() => _couriers.earnings();
+
+  @override
+  Future<Result<CourierEarnings>> cashTopup(
+    String code,
+    int amountMinor,
+  ) async {
+    // Même clé tant que l'essai n'a pas abouti (nouvelle tentative réseau).
+    final key = _topupKey ??= Uuid.v4();
+    final result = await _couriers.cashTopup(
+      code: code,
+      amountMinor: amountMinor,
+      key: key,
+    );
+    if (result is! Err || result.failureOrNull is! NetworkFailure) {
+      _topupKey = null;
+    }
+    return result;
+  }
+
+  @override
+  Future<Result<void>> withdraw(int amountMinor) async {
+    final key = _withdrawKey ??= Uuid.v4();
+    final result = await _wallet.withdrawSimulated(amountMinor, key);
+    if (result is! Err || result.failureOrNull is! NetworkFailure) {
+      _withdrawKey = null;
+    }
+    return result.map((_) {});
+  }
 }
 
 /// Implémentation en mémoire (tests, galerie).
@@ -188,6 +236,46 @@ class MemoryMissionsService implements MissionsService {
     final i = accepted.indexWhere((m) => m.orderId == mission.orderId);
     if (i >= 0) accepted[i] = next;
     return Ok(next);
+  }
+
+  CourierEarnings money = const CourierEarnings();
+
+  @override
+  Future<Result<CourierEarnings>> earnings() async => Ok(money);
+
+  @override
+  Future<Result<CourierEarnings>> cashTopup(
+    String code,
+    int amountMinor,
+  ) async {
+    gestures.add('topup:$code:$amountMinor');
+    if (code != '482913') return const Err(ValidationFailure('invalid_code'));
+    return Ok(
+      money = CourierEarnings(
+        todayCount: money.todayCount,
+        todayFeesMinor: money.todayFeesMinor,
+        walletMinor: money.walletMinor,
+        cash: [
+          ...money.cash,
+          CourierCashLine(amountMinor: amountMinor),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void>> withdraw(int amountMinor) async {
+    gestures.add('withdraw:$amountMinor');
+    if (amountMinor > money.walletMinor) {
+      return const Err(ValidationFailure('wallet_insufficient'));
+    }
+    money = CourierEarnings(
+      todayCount: money.todayCount,
+      todayFeesMinor: money.todayFeesMinor,
+      walletMinor: money.walletMinor - amountMinor,
+      cash: money.cash,
+    );
+    return const Ok(null);
   }
 
   /// Codes de remise attendus (tests) : par commande.

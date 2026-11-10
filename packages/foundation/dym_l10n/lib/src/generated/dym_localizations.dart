@@ -8784,6 +8784,180 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Donne ce code au livreur quand il te remet la commande.'**
   String get trackHandoverHint;
+
+  /// No description provided for @walletWithdraw.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get walletWithdraw;
+
+  /// No description provided for @walletWithdrawSimulated.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait simulé : aucun versement réel tant que le fournisseur n\'est pas branché.'**
+  String get walletWithdrawSimulated;
+
+  /// No description provided for @walletKindCourierFee.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison'**
+  String get walletKindCourierFee;
+
+  /// No description provided for @walletKindCashTopup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharge en cash'**
+  String get walletKindCashTopup;
+
+  /// No description provided for @walletKindWithdrawal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait'**
+  String get walletKindWithdrawal;
+
+  /// No description provided for @walletCashTopup.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharger en cash auprès d\'un livreur'**
+  String get walletCashTopup;
+
+  /// No description provided for @walletCashTopupHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montre ce code au livreur DYM et donne-lui le cash : ton wallet est crédité aussitôt.'**
+  String get walletCashTopupHint;
+
+  /// No description provided for @walletCashTopupExpires.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valable jusqu\'à {time}'**
+  String walletCashTopupExpires(String time);
+
+  /// No description provided for @earningsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gains'**
+  String get earningsTitle;
+
+  /// No description provided for @earningsToday.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune course aujourd\'hui} =1{1 course aujourd\'hui} other{{count} courses aujourd\'hui}}'**
+  String earningsToday(int count);
+
+  /// No description provided for @earningsWallet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur mon wallet'**
+  String get earningsWallet;
+
+  /// No description provided for @earningsWithdraw.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer mes gains'**
+  String get earningsWithdraw;
+
+  /// No description provided for @earningsWithdrawDisabled.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le retrait n\'est pas encore ouvert dans ton pays.'**
+  String get earningsWithdrawDisabled;
+
+  /// No description provided for @earningsAmount.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant'**
+  String get earningsAmount;
+
+  /// No description provided for @earningsCashTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash à remettre'**
+  String get earningsCashTitle;
+
+  /// No description provided for @earningsCashNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu ne dois aucun cash.'**
+  String get earningsCashNone;
+
+  /// No description provided for @earningsCashToDym.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe DYM'**
+  String get earningsCashToDym;
+
+  /// No description provided for @earningsCashToDymHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharges en cash, à remettre à l\'équipe.'**
+  String get earningsCashToDymHint;
+
+  /// No description provided for @earningsCashToStoreHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix des articles encaissés, à remettre à la boutique.'**
+  String get earningsCashToStoreHint;
+
+  /// No description provided for @cashTopupTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Point de recharge'**
+  String get cashTopupTitle;
+
+  /// No description provided for @cashTopupHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente te montre son code de recharge ; tu prends son cash et son wallet est crédité.'**
+  String get cashTopupHint;
+
+  /// No description provided for @cashTopupCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de la cliente'**
+  String get cashTopupCode;
+
+  /// No description provided for @cashTopupConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créditer son wallet'**
+  String get cashTopupConfirm;
+
+  /// No description provided for @cashTopupInvalidCode.
+  ///
+  /// In fr, this message translates to:
+  /// **'Code inconnu, expiré ou déjà utilisé.'**
+  String get cashTopupInvalidCode;
+
+  /// No description provided for @courierCashTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash des livreurs'**
+  String get courierCashTitle;
+
+  /// No description provided for @courierCashHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les livreurs DYM encaissent tes commandes payées en cash ; confirme quand ils te remettent l\'argent.'**
+  String get courierCashHint;
+
+  /// No description provided for @courierCashNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun cash à recevoir'**
+  String get courierCashNone;
+
+  /// No description provided for @courierCashNoneHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le cash encaissé par les livreurs pour toi apparaîtra ici.'**
+  String get courierCashNoneHint;
+
+  /// No description provided for @courierCashReceived.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu'**
+  String get courierCashReceived;
 }
 
 class _DymLocalizationsDelegate

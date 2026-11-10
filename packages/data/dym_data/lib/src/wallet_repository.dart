@@ -17,6 +17,23 @@ class WalletRepository {
     {'p_amount_minor': amountMinor, 'p_key': key},
   );
 
+  /// Retrait simulé (spec 043) : refusé au-delà du solde.
+  Future<Result<Wallet>> withdrawSimulated(int amountMinor, String key) =>
+      _wallet('wallet_withdraw_simulated', {
+        'p_amount_minor': amountMinor,
+        'p_key': key,
+      });
+
+  /// Code à montrer au livreur pour recharger en cash (15 minutes).
+  Future<Result<({String code, DateTime expiresAt})>> cashTopupCode() async =>
+      (await _data.rpc<Object?>('cash_topup_code')).map((json) {
+        final m = (json! as Map).cast<String, dynamic>();
+        return (
+          code: m['code']! as String,
+          expiresAt: DateTime.parse(m['expires_at']! as String),
+        );
+      });
+
   Future<Result<Wallet>> createPocket({
     required String name,
     int? goalMinor,
