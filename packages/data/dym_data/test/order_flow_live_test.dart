@@ -187,8 +187,27 @@ void main() {
 
   tearDownAll(() async {
     // Clientes d'abord : leurs achats partent avec elles, puis les boutiques.
+    // Un compte peut rester (commande en cours, boutique avec historique) :
+    // ses boutiques sont alors rangées pour ne pas apparaître aux clientes.
     for (final neon in accounts.reversed) {
       await neon.data.rpc<Object?>('delete_my_account');
+    }
+    final dbUrl = env['NEON_LIVE_DATABASE_URL'];
+    if (dbUrl != null && dbUrl.isNotEmpty) {
+      final cleanup = await Process.run('node', [
+        [
+          Directory.current.path,
+          '..',
+          '..',
+          '..',
+          'db',
+          'scripts',
+          'cleanup-e2e.mjs',
+        ].join(Platform.pathSeparator),
+        '--url',
+        dbUrl,
+      ]);
+      expect(cleanup.exitCode, 0, reason: '${cleanup.stderr}');
     }
   });
 
