@@ -9414,6 +9414,90 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Bonjour {name}, petit rappel de {store} : il reste {amount} sur ton ardoise. Merci !'**
   String creditReminderText(String name, String amount, String store);
+
+  /// No description provided for @studioTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Faire connaître ma boutique'**
+  String get studioTitle;
+
+  /// No description provided for @studioShareTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager ma boutique'**
+  String get studioShareTitle;
+
+  /// No description provided for @studioShareHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoie le lien de ta boutique sur WhatsApp : tes clientes commandent en un geste.'**
+  String get studioShareHint;
+
+  /// No description provided for @studioShare.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager sur WhatsApp'**
+  String get studioShare;
+
+  /// No description provided for @studioShareText.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes produits frais sont sur DYM, commande ici : {link}'**
+  String studioShareText(String link);
+
+  /// No description provided for @eomTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix de fin de marché'**
+  String get eomTitle;
+
+  /// No description provided for @eomHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Baisse tes prix quelques heures pour écouler le frais du jour. Le prix réduit s\'affiche partout et s\'applique aux commandes.'**
+  String get eomHint;
+
+  /// No description provided for @eomPercent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Remise'**
+  String get eomPercent;
+
+  /// No description provided for @eomDuration.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pendant'**
+  String get eomDuration;
+
+  /// No description provided for @eomHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 heure} other{{count} heures}}'**
+  String eomHours(int count);
+
+  /// No description provided for @eomStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lancer -{percent} %'**
+  String eomStart(int percent);
+
+  /// No description provided for @eomActive.
+  ///
+  /// In fr, this message translates to:
+  /// **'-{percent} % sur {count} produits jusqu\'à {time}'**
+  String eomActive(int percent, int count, String time);
+
+  /// No description provided for @eomStop.
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrêter la fin de marché'**
+  String get eomStop;
+
+  /// No description provided for @endOfMarketBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fin de marché -{percent} %'**
+  String endOfMarketBadge(int percent);
 }
 
 class _DymLocalizationsDelegate

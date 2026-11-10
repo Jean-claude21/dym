@@ -70,3 +70,4 @@ fiabilité (ops).
 | `till_sale_recorded` (montant, moyen, produit reconnu), `store_paid_out` (montant, fournisseur) | Serveur | Caisse de la vendeuse (spec 045) |
 | `qr_paid` (montant) | Serveur | Paiement par QR (spec 046) |
 | `credit_given`, `credit_repaid` (montant), `credit_reminded` (dû) | Serveur | Ardoise (spec 047) |
+| `end_of_market_started` (pourcentage, durée, produits) | Serveur | Partage et fin de marché (spec 048) |

@@ -203,3 +203,24 @@ class PaymentRequest {
   final DateTime expiresAt;
   final String storeName;
 }
+
+/// Fin de marché de la boutique (`my_end_of_market()`).
+@immutable
+class EndOfMarket {
+  const new({this.active = false, this.percent, this.until, this.products = 0});
+
+  factory fromJson(Map<String, dynamic> json) => EndOfMarket(
+    active: json['active'] as bool? ?? false,
+    percent: (json['percent'] as num?)?.toInt(),
+    until: switch (json['until']) {
+      final String at => DateTime.parse(at),
+      _ => null,
+    },
+    products: (json['products'] as num?)?.toInt() ?? 0,
+  );
+
+  final bool active;
+  final int? percent;
+  final DateTime? until;
+  final int products;
+}

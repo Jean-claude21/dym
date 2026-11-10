@@ -5,6 +5,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:dym_vendor/features/till/end_of_market_view.dart';
 import 'package:dym_vendor/features/till/qr_charge_view.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:dym_vendor/features/till/till_view.dart';
@@ -113,6 +114,32 @@ class _Till implements TillService {
   Future<Result<Till>> voidSale(TillSale sale) async => Ok(state);
 
   PaymentRequest? request;
+  EndOfMarket eom = const EndOfMarket();
+  final shared = <String>[];
+
+  @override
+  Future<Result<EndOfMarket>> endOfMarket() async => Ok(eom);
+
+  @override
+  Future<Result<EndOfMarket>> startEndOfMarket(int percent, int hours) async =>
+      Ok(
+        eom = EndOfMarket(
+          active: true,
+          percent: percent,
+          until: DateTime(2026, 11, 10, 18),
+          products: 4,
+        ),
+      );
+
+  @override
+  Future<Result<EndOfMarket>> stopEndOfMarket() async =>
+      Ok(eom = const EndOfMarket());
+
+  @override
+  Future<Result<void>> shareStore(String Function(Uri link) message) async {
+    shared.add(message(Uri.parse('https://fn.test/b/s1')));
+    return const Ok(null);
+  }
 
   @override
   Future<Result<PaymentRequest>> requestPayment(
@@ -251,6 +278,22 @@ void main() {
       await vm.poll();
       expect(vm.request?.status, PaymentRequestStatus.paid);
       vm.dispose();
+    });
+  });
+
+  group('fin de marché et partage (spec 048)', () {
+    test('remise lancée puis arrêtée ; lien de la boutique partagé', () async {
+      final service = _Till();
+      final vm = EndOfMarketViewModel(service: service);
+      await vm.load();
+      vm.choose(percent: 30, hours: 2);
+      await vm.start();
+      expect(vm.state?.active, isTrue);
+      expect(vm.state?.percent, 30);
+      await vm.stop();
+      expect(vm.state?.active, isFalse);
+      await vm.share((link) => 'Commande ici : $link');
+      expect(service.shared.single, 'Commande ici : https://fn.test/b/s1');
     });
   });
 }

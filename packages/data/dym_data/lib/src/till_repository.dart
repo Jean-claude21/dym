@@ -50,6 +50,25 @@ class TillRepository {
         params: {'p_amount_minor': amountMinor, 'p_key': key},
       )).map(_till);
 
+  /// Fin de marché (spec 048).
+  Future<Result<EndOfMarket>> endOfMarket() =>
+      _eom('my_end_of_market', const {});
+
+  Future<Result<EndOfMarket>> startEndOfMarket({
+    required int percent,
+    required int hours,
+  }) => _eom('set_end_of_market', {'p_percent': percent, 'p_hours': hours});
+
+  Future<Result<EndOfMarket>> stopEndOfMarket() =>
+      _eom('clear_end_of_market', const {});
+
+  Future<Result<EndOfMarket>> _eom(
+    String fn,
+    Map<String, Object?> params,
+  ) async => (await _data.rpc<Object?>(fn, params: params)).map(
+    (json) => EndOfMarket.fromJson((json! as Map).cast<String, dynamic>()),
+  );
+
   static Till _till(Object? json) =>
       Till.fromJson((json! as Map).cast<String, dynamic>());
 }

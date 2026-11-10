@@ -31,6 +31,8 @@ export interface TikTokStore {
   declaredHandle(userId: string): Promise<string | null>;
   /** Contenu d'un lien de partage, pour la page d'accueil ; null : inconnu ou retiré. */
   sharePreview(code: string): Promise<SharePreview | null>;
+  /** Boutique partagée (spec 048) ; null : inconnue ou fermée. */
+  storePreview(storeId: string): Promise<{ name: string; zoneName: string | null; coverKey: string | null } | null>;
 }
 
 export interface SharePreview {
@@ -105,6 +107,18 @@ export function registerTikTokRoutes(
     });
   });
 
+  app.get("/b/:id", async (c) => {
+    const id = c.req.param("id").toLowerCase();
+    if (!/^[0-9a-f-]{36}$/.test(id) || !deps) return c.html(landing(null, null, null), 404);
+    const store = await deps.store.storePreview(id);
+    if (!store) return c.html(landing(null, null, null), 404);
+    const open = deps.webUrl ? `${deps.webUrl.replace(/\/$/, "")}/?store=${id}` : `dym://store/${id}`;
+    const image = store.coverKey && deps.signer ? deps.signer.publicUrl(store.coverKey) : null;
+    return c.html(
+      landing({ caption: store.name, mediaKey: null, isVideo: false, authorName: store.zoneName }, open, image, true),
+    );
+  });
+
   app.get("/s/:code", async (c) => {
     const code = c.req.param("code").toLowerCase();
     if (!/^[a-z0-9]{8}$/.test(code) || !deps) return c.html(landing(null, null, null), 404);
@@ -120,7 +134,7 @@ const escape = (value: string) =>
   value.replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]!);
 
 /** Page minimale, bilingue, sans script : aperçu pour les réseaux et bouton d'ouverture. */
-function landing(preview: SharePreview | null, open: string | null, image: string | null): string {
+function landing(preview: SharePreview | null, open: string | null, image: string | null, store = false): string {
   const title = preview?.caption ? escape(preview.caption.slice(0, 120)) : "DYM";
   const by = preview?.authorName ? escape(preview.authorName) : null;
   return `<!doctype html><html lang="fr"><head><meta charset="utf-8">
@@ -137,7 +151,7 @@ ${image ? `<img src="${escape(image)}" alt="">` : ""}
 <h1>${title}</h1>
 ${by ? `<p>${by}</p>` : ""}
 ${open
-    ? `<a href="${escape(open)}">Tout pour la faire · Everything to make it</a>`
+    ? `<a href="${escape(open)}">${store ? "Voir la boutique · See the shop" : "Tout pour la faire · Everything to make it"}</a>`
     : "<p>Ce lien n'existe plus · This link no longer exists</p>"}
 </main></body></html>`;
 }
@@ -195,6 +209,13 @@ export function pgTikTokStore(pool: pg.Pool): TikTokStore {
         [userId],
       )) === true,
     declaredHandle: (userId) => one<string | null>("select app.creator_tiktok_handle($1) as value", [userId]),
+    async storePreview(storeId) {
+      const json = await one<{ name: string; zone_name: string | null; cover_key: string | null } | null>(
+        "select app.store_share_preview($1::uuid) as value",
+        [storeId],
+      );
+      return json ? { name: json.name, zoneName: json.zone_name, coverKey: json.cover_key } : null;
+    },
     async sharePreview(code) {
       try {
         // Ouverture comptée par SQL (événement `share_link_opened`).

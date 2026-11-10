@@ -238,12 +238,19 @@ class StackedAppNavigator implements AppNavigator {
   /// jusqu'à l'accueil (après connexion ou création du compte).
   static String? pendingShare = Uri.base.queryParameters['share'];
 
+  /// Boutique partagée sur WhatsApp (`?store=<id>`, spec 048).
+  static String? pendingStore = Uri.base.queryParameters['store'];
+
   @override
   void toHome() {
     unawaited(_navigation.clearStackAndShow<void>(Routes.homeView));
     if (pendingShare case final code?) {
       pendingShare = null;
       unawaited(toShared(code));
+    }
+    if (pendingStore case final store?) {
+      pendingStore = null;
+      toStore(store);
     }
   }
 

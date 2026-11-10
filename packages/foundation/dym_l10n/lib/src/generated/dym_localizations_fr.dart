@@ -5565,4 +5565,64 @@ class DymLocalizationsFr extends DymLocalizations {
   String creditReminderText(String name, String amount, String store) {
     return 'Bonjour $name, petit rappel de $store : il reste $amount sur ton ardoise. Merci !';
   }
+
+  @override
+  String get studioTitle => 'Faire connaître ma boutique';
+
+  @override
+  String get studioShareTitle => 'Partager ma boutique';
+
+  @override
+  String get studioShareHint =>
+      'Envoie le lien de ta boutique sur WhatsApp : tes clientes commandent en un geste.';
+
+  @override
+  String get studioShare => 'Partager sur WhatsApp';
+
+  @override
+  String studioShareText(String link) {
+    return 'Mes produits frais sont sur DYM, commande ici : $link';
+  }
+
+  @override
+  String get eomTitle => 'Prix de fin de marché';
+
+  @override
+  String get eomHint =>
+      'Baisse tes prix quelques heures pour écouler le frais du jour. Le prix réduit s\'affiche partout et s\'applique aux commandes.';
+
+  @override
+  String get eomPercent => 'Remise';
+
+  @override
+  String get eomDuration => 'Pendant';
+
+  @override
+  String eomHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count heures',
+      one: '1 heure',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eomStart(int percent) {
+    return 'Lancer -$percent %';
+  }
+
+  @override
+  String eomActive(int percent, int count, String time) {
+    return '-$percent % sur $count produits jusqu\'à $time';
+  }
+
+  @override
+  String get eomStop => 'Arrêter la fin de marché';
+
+  @override
+  String endOfMarketBadge(int percent) {
+    return 'Fin de marché -$percent %';
+  }
 }

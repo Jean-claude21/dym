@@ -120,6 +120,8 @@ Future<void> configureServices(DymEnvironment environment) async {
         search: SearchAiRepository(data: neon.data, functions: neon.functions),
         recorder: PluginVoiceRecorder(),
         config: stores.countryConfig,
+        shareBase: environment.functionsUrl,
+        storeId: () async => (await stores.myStore()).valueOrNull?.id,
       ),
     )
     ..registerSingleton<CourierCashService>(

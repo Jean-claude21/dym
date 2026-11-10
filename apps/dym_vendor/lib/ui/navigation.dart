@@ -23,6 +23,7 @@ import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart'
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
+import 'package:dym_vendor/features/till/end_of_market_view.dart';
 import 'package:dym_vendor/features/till/qr_charge_view.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:dym_vendor/features/till/till_view.dart';
@@ -73,6 +74,9 @@ abstract interface class AppNavigator {
 
   /// Ardoise (spec 047).
   void toCredit();
+
+  /// Partage de la boutique et fin de marché (spec 048).
+  void toStudio();
 
   /// Aide (écran 66).
   void toHelp();
@@ -164,6 +168,19 @@ class StackedAppNavigator implements AppNavigator {
           VendorReviewsView(service: _reviews, onBack: () => _navigator.pop()),
     ),
   );
+
+  @override
+  void toStudio() {
+    if (!locator.isRegistered<TillService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (_) => EndOfMarketView(
+          service: locator<TillService>(),
+          onBack: () => _navigator.pop(),
+        ),
+      ),
+    );
+  }
 
   @override
   void toCredit() {

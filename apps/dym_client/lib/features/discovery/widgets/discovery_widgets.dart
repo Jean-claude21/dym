@@ -159,9 +159,13 @@ class ProductTile extends StatelessWidget {
       price: price ?? Money.zero(config!.currency),
       tint: tint,
       onTap: onTap,
-      badge: item.available
-          ? null
-          : DymPromoBadge(label: l10n.productOutOfStock),
+      badge: switch ((item.available, item.endOfMarketPercent)) {
+        (false, _) => DymPromoBadge(label: l10n.productOutOfStock),
+        (true, final int percent) => DymPromoBadge(
+          label: l10n.endOfMarketBadge(percent),
+        ),
+        _ => null,
+      },
       store: !showStore || origin == null
           ? null
           : DymProductStore(
