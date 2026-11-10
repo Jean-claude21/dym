@@ -7101,5 +7101,73 @@
   "membershipSubscribe": "Prendre la formule",
   "membershipExtend": "Prolonger",
   "homeSponsored": "À la une",
-  "homeSponsoredLabel": "Sponsorisé"
+  "homeSponsoredLabel": "Sponsorisé",
+  "opsTitle": "Opérations",
+  "opsSubtitle": "En direct : commandes, retards, livreurs, cash à recevoir.",
+  "opsNoCountry": "Aucun pays dans ton périmètre.",
+  "opsLiveTab": "En direct",
+  "opsSettingsTab": "Réglages",
+  "opsLast24h": "Dernières 24 heures",
+  "opsDelivered": "Livré",
+  "opsCouriersOnline": "Livreurs en ligne",
+  "opsMissionsWaiting": "Livraisons sans livreur",
+  "opsAlerts": "Commandes en retard",
+  "opsNoAlert": "Aucune commande en retard.",
+  "opsNoCourier": "sans livreur",
+  "opsMinutes": "{minutes} min",
+  "@opsMinutes": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "opsCourierCash": "Cash des livreurs à recevoir",
+  "opsNoCourierCash": "Aucun cash à recevoir.",
+  "opsCashReceived": "Cash reçu",
+  "opsThresholds": "Seuils d'alerte (minutes)",
+  "opsThresholdPending": "En attente de la vendeuse",
+  "opsThresholdReady": "Prête, au-delà de la préparation",
+  "opsThresholdTransit": "En route",
+  "opsFeedWeights": "Poids du fil des contenus",
+  "opsWeightRecency": "Fraîcheur",
+  "opsWeightEngagement": "Engagement",
+  "opsWeightFollowed": "Abonnements",
+  "opsWeightLocal": "Proximité",
+  "opsWeightAffinity": "Affinité",
+  "opsWeightShoppable": "Achetable",
+  "opsPlans": "Formules (DYM+, Pro, À la une)",
+  "opsPeriod": "{days, plural, =1{1 jour} other{{days} jours}}",
+  "@opsPeriod": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "opsPrice": "Prix",
+  "opsSave": "Enregistrer",
+  "opsScopes": "Admins limités à des pays",
+  "opsScopesHint": "Un admin limité ne pilote que ses pays. Sans limite, il pilote tous les pays.",
+  "opsScopeEmail": "E-mail de l'admin",
+  "opsScopeAdd": "Limiter à {country}",
+  "@opsScopeAdd": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "opsScopeRemove": "Retirer {country}",
+  "@opsScopeRemove": {
+    "placeholders": {
+      "country": {
+        "type": "String"
+      }
+    }
+  },
+  "opsInvalid": "Valeur invalide.",
+  "opsOutOfScope": "Ce pays n'est pas dans ton périmètre.",
+  "opsNothingOwed": "Ce livreur ne doit plus rien.",
+  "opsNotAdmin": "Cette adresse n'est pas celle d'un admin."
 }

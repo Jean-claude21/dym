@@ -10104,6 +10104,246 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Sponsorisé'**
   String get homeSponsoredLabel;
+
+  /// No description provided for @opsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérations'**
+  String get opsTitle;
+
+  /// No description provided for @opsSubtitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'En direct : commandes, retards, livreurs, cash à recevoir.'**
+  String get opsSubtitle;
+
+  /// No description provided for @opsNoCountry.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun pays dans ton périmètre.'**
+  String get opsNoCountry;
+
+  /// No description provided for @opsLiveTab.
+  ///
+  /// In fr, this message translates to:
+  /// **'En direct'**
+  String get opsLiveTab;
+
+  /// No description provided for @opsSettingsTab.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get opsSettingsTab;
+
+  /// No description provided for @opsLast24h.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernières 24 heures'**
+  String get opsLast24h;
+
+  /// No description provided for @opsDelivered.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livré'**
+  String get opsDelivered;
+
+  /// No description provided for @opsCouriersOnline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs en ligne'**
+  String get opsCouriersOnline;
+
+  /// No description provided for @opsMissionsWaiting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons sans livreur'**
+  String get opsMissionsWaiting;
+
+  /// No description provided for @opsAlerts.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes en retard'**
+  String get opsAlerts;
+
+  /// No description provided for @opsNoAlert.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune commande en retard.'**
+  String get opsNoAlert;
+
+  /// No description provided for @opsNoCourier.
+  ///
+  /// In fr, this message translates to:
+  /// **'sans livreur'**
+  String get opsNoCourier;
+
+  /// No description provided for @opsMinutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String opsMinutes(int minutes);
+
+  /// No description provided for @opsCourierCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash des livreurs à recevoir'**
+  String get opsCourierCash;
+
+  /// No description provided for @opsNoCourierCash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun cash à recevoir.'**
+  String get opsNoCourierCash;
+
+  /// No description provided for @opsCashReceived.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cash reçu'**
+  String get opsCashReceived;
+
+  /// No description provided for @opsThresholds.
+  ///
+  /// In fr, this message translates to:
+  /// **'Seuils d\'alerte (minutes)'**
+  String get opsThresholds;
+
+  /// No description provided for @opsThresholdPending.
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de la vendeuse'**
+  String get opsThresholdPending;
+
+  /// No description provided for @opsThresholdReady.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête, au-delà de la préparation'**
+  String get opsThresholdReady;
+
+  /// No description provided for @opsThresholdTransit.
+  ///
+  /// In fr, this message translates to:
+  /// **'En route'**
+  String get opsThresholdTransit;
+
+  /// No description provided for @opsFeedWeights.
+  ///
+  /// In fr, this message translates to:
+  /// **'Poids du fil des contenus'**
+  String get opsFeedWeights;
+
+  /// No description provided for @opsWeightRecency.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fraîcheur'**
+  String get opsWeightRecency;
+
+  /// No description provided for @opsWeightEngagement.
+  ///
+  /// In fr, this message translates to:
+  /// **'Engagement'**
+  String get opsWeightEngagement;
+
+  /// No description provided for @opsWeightFollowed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnements'**
+  String get opsWeightFollowed;
+
+  /// No description provided for @opsWeightLocal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Proximité'**
+  String get opsWeightLocal;
+
+  /// No description provided for @opsWeightAffinity.
+  ///
+  /// In fr, this message translates to:
+  /// **'Affinité'**
+  String get opsWeightAffinity;
+
+  /// No description provided for @opsWeightShoppable.
+  ///
+  /// In fr, this message translates to:
+  /// **'Achetable'**
+  String get opsWeightShoppable;
+
+  /// No description provided for @opsPlans.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formules (DYM+, Pro, À la une)'**
+  String get opsPlans;
+
+  /// No description provided for @opsPeriod.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days, plural, =1{1 jour} other{{days} jours}}'**
+  String opsPeriod(int days);
+
+  /// No description provided for @opsPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix'**
+  String get opsPrice;
+
+  /// No description provided for @opsSave.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer'**
+  String get opsSave;
+
+  /// No description provided for @opsScopes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Admins limités à des pays'**
+  String get opsScopes;
+
+  /// No description provided for @opsScopesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un admin limité ne pilote que ses pays. Sans limite, il pilote tous les pays.'**
+  String get opsScopesHint;
+
+  /// No description provided for @opsScopeEmail.
+  ///
+  /// In fr, this message translates to:
+  /// **'E-mail de l\'admin'**
+  String get opsScopeEmail;
+
+  /// No description provided for @opsScopeAdd.
+  ///
+  /// In fr, this message translates to:
+  /// **'Limiter à {country}'**
+  String opsScopeAdd(String country);
+
+  /// No description provided for @opsScopeRemove.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {country}'**
+  String opsScopeRemove(String country);
+
+  /// No description provided for @opsInvalid.
+  ///
+  /// In fr, this message translates to:
+  /// **'Valeur invalide.'**
+  String get opsInvalid;
+
+  /// No description provided for @opsOutOfScope.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce pays n\'est pas dans ton périmètre.'**
+  String get opsOutOfScope;
+
+  /// No description provided for @opsNothingOwed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce livreur ne doit plus rien.'**
+  String get opsNothingOwed;
+
+  /// No description provided for @opsNotAdmin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette adresse n\'est pas celle d\'un admin.'**
+  String get opsNotAdmin;
 }
 
 class _DymLocalizationsDelegate

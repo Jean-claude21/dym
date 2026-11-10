@@ -2,6 +2,7 @@ import 'package:dym_admin/app/admin_app.dart';
 import 'package:dym_admin/app/app.locator.dart';
 import 'package:dym_admin/app/config_error_app.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
+import 'package:dym_admin/features/ops_center/ops_center_view.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -46,6 +47,12 @@ Future<void> configureServices(DymEnvironment environment) async {
         reference: ReferenceRepository(neon.data),
         google: PluginGoogleIdTokenProvider.fromDefines(),
         app: AccountApp.admin,
+      ),
+    )
+    ..registerLazySingleton<OpsCenterService>(
+      () => NeonOpsCenterService(
+        repository: OpsRepository(neon.data),
+        currencies: locator<AdminService>().currencies,
       ),
     )
     ..registerSingleton<AdminService>(

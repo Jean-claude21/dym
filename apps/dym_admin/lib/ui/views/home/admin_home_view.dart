@@ -6,6 +6,8 @@ import 'package:dym_admin/features/disputes/disputes_view.dart';
 import 'package:dym_admin/features/finance/finance_view.dart';
 import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
+import 'package:dym_admin/features/ops/admin_widgets.dart';
+import 'package:dym_admin/features/ops_center/ops_center_view.dart';
 import 'package:dym_admin/features/orders/orders_views.dart';
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
@@ -20,6 +22,7 @@ import 'package:flutter/material.dart';
 /// Onglet de l'admin (specs 013 et 017), dans l'ordre de la maquette 67.
 enum AdminTab {
   dashboard,
+  ops,
   orders,
   disputes,
   stores,
@@ -40,6 +43,7 @@ class AdminHomeView extends StatefulWidget {
     super.key,
     this.service,
     this.admin,
+    this.ops,
     this.navigator,
     this.inactivity,
     this.initialTab = AdminTab.dashboard,
@@ -48,6 +52,9 @@ class AdminHomeView extends StatefulWidget {
 
   final AuthService? service;
   final AdminService? admin;
+
+  /// Centre d'opérations (spec 053) ; absent : onglet vide.
+  final OpsCenterService? ops;
   final AdminNavigator? navigator;
 
   /// Délai d'inactivité (tests) ; 30 minutes par défaut.
@@ -64,6 +71,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   String? _orderId;
   late final AuthService _service = widget.service ?? locator<AuthService>();
   late final AdminService _admin = widget.admin ?? locator<AdminService>();
+  late final OpsCenterService? _ops =
+      widget.ops ??
+      (locator.isRegistered<OpsCenterService>()
+          ? locator<OpsCenterService>()
+          : null);
   late final AdminNavigator _navigator =
       widget.navigator ?? StackedAdminNavigator();
 
@@ -90,6 +102,16 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           };
         }),
       ),
+      AdminTab.ops => switch (_ops) {
+        final ops? => OpsCenterView(
+          service: ops,
+          onOpenOrder: (id) => setState(() {
+            _tab = AdminTab.orders;
+            _orderId = id;
+          }),
+        ),
+        null => AdminEmpty(l10n.opsNoCountry),
+      },
       AdminTab.orders when orderId != null => AdminOrderView(
         key: ValueKey(orderId),
         service: _admin,
@@ -154,6 +176,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
             icon: Icons.space_dashboard_rounded,
             label: l10n.adminNavDashboard,
           ),
+          DymNavItem(icon: Icons.monitor_heart_rounded, label: l10n.opsTitle),
           DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
           DymNavItem(
             icon: Icons.report_problem_rounded,

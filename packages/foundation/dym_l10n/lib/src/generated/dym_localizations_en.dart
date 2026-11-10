@@ -6000,4 +6000,139 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get homeSponsoredLabel => 'Sponsored';
+
+  @override
+  String get opsTitle => 'Operations';
+
+  @override
+  String get opsSubtitle => 'Live: orders, delays, couriers, cash to collect.';
+
+  @override
+  String get opsNoCountry => 'No country in your scope.';
+
+  @override
+  String get opsLiveTab => 'Live';
+
+  @override
+  String get opsSettingsTab => 'Settings';
+
+  @override
+  String get opsLast24h => 'Last 24 hours';
+
+  @override
+  String get opsDelivered => 'Delivered';
+
+  @override
+  String get opsCouriersOnline => 'Couriers online';
+
+  @override
+  String get opsMissionsWaiting => 'Deliveries without courier';
+
+  @override
+  String get opsAlerts => 'Late orders';
+
+  @override
+  String get opsNoAlert => 'No late order.';
+
+  @override
+  String get opsNoCourier => 'no courier';
+
+  @override
+  String opsMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get opsCourierCash => 'Courier cash to collect';
+
+  @override
+  String get opsNoCourierCash => 'No cash to collect.';
+
+  @override
+  String get opsCashReceived => 'Cash received';
+
+  @override
+  String get opsThresholds => 'Alert thresholds (minutes)';
+
+  @override
+  String get opsThresholdPending => 'Waiting for the seller';
+
+  @override
+  String get opsThresholdReady => 'Ready, beyond preparation';
+
+  @override
+  String get opsThresholdTransit => 'On the way';
+
+  @override
+  String get opsFeedWeights => 'Content feed weights';
+
+  @override
+  String get opsWeightRecency => 'Freshness';
+
+  @override
+  String get opsWeightEngagement => 'Engagement';
+
+  @override
+  String get opsWeightFollowed => 'Follows';
+
+  @override
+  String get opsWeightLocal => 'Proximity';
+
+  @override
+  String get opsWeightAffinity => 'Affinity';
+
+  @override
+  String get opsWeightShoppable => 'Shoppable';
+
+  @override
+  String get opsPlans => 'Plans (DYM+, Pro, Featured)';
+
+  @override
+  String opsPeriod(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get opsPrice => 'Price';
+
+  @override
+  String get opsSave => 'Save';
+
+  @override
+  String get opsScopes => 'Admins limited to countries';
+
+  @override
+  String get opsScopesHint =>
+      'A limited admin only runs their countries. Without a limit, they run every country.';
+
+  @override
+  String get opsScopeEmail => 'Admin email';
+
+  @override
+  String opsScopeAdd(String country) {
+    return 'Limit to $country';
+  }
+
+  @override
+  String opsScopeRemove(String country) {
+    return 'Remove $country';
+  }
+
+  @override
+  String get opsInvalid => 'Invalid value.';
+
+  @override
+  String get opsOutOfScope => 'This country is not in your scope.';
+
+  @override
+  String get opsNothingOwed => 'This courier owes nothing anymore.';
+
+  @override
+  String get opsNotAdmin => 'This address is not an admin\'s.';
 }
