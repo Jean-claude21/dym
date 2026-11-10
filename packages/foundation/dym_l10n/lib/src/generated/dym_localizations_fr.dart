@@ -4556,4 +4556,105 @@ class DymLocalizationsFr extends DymLocalizations {
   String vendorOrderScheduled(String day, String start, String end) {
     return 'À livrer $day, $start–$end';
   }
+
+  @override
+  String get adjustTitle => 'Remplacements et fraîcheur';
+
+  @override
+  String adjustProposed(String item, String proposed) {
+    return '$item manque : la vendeuse propose $proposed, même prix.';
+  }
+
+  @override
+  String adjustAccepted(String item, String proposed) {
+    return '$item remplacé par $proposed.';
+  }
+
+  @override
+  String adjustRefused(String item, String amount) {
+    return '$item retiré : $amount rendus sur ton wallet.';
+  }
+
+  @override
+  String adjustFreshness(String item, String amount) {
+    return '$item pas frais : $amount rendus sur ton wallet.';
+  }
+
+  @override
+  String get adjustAccept => 'Accepter';
+
+  @override
+  String get adjustRefuse => 'Refuser et être remboursée';
+
+  @override
+  String adjustCreditedNow(String amount) {
+    return '$amount sont déjà sur ton wallet.';
+  }
+
+  @override
+  String get freshnessClaim => 'Un article n\'est pas frais ?';
+
+  @override
+  String get freshnessHint =>
+      'Garantie fraîcheur : envoie une photo, tu es remboursée tout de suite sur ton wallet.';
+
+  @override
+  String get freshnessWhich => 'Quel article ?';
+
+  @override
+  String get freshnessWindowClosed =>
+      'Le délai de la garantie est passé : utilise « Signaler un problème ».';
+
+  @override
+  String get freshnessLimitReached =>
+      'Limite du mois atteinte : utilise « Signaler un problème », l\'équipe regarde.';
+
+  @override
+  String get freshnessAlreadyCredited => 'Cet article a déjà été remboursé.';
+
+  @override
+  String get notifSubstitutionTitle => 'Un remplacement est proposé';
+
+  @override
+  String notifSubstitutionBody(String item, String proposed) {
+    return '$item manque : la vendeuse propose $proposed.';
+  }
+
+  @override
+  String get vendorSubstituteTitle => 'Un article manque ?';
+
+  @override
+  String get vendorSubstituteHint =>
+      'Propose un autre produit avec une photo : même quantité, même prix. La cliente valide.';
+
+  @override
+  String vendorSubstitute(String item) {
+    return 'Remplacer $item';
+  }
+
+  @override
+  String vendorSubstituteLine(String item, String proposed) {
+    return '$item → $proposed';
+  }
+
+  @override
+  String get vendorSubstituteWaiting => 'En attente de la cliente';
+
+  @override
+  String get vendorSubstituteAccepted => 'Acceptée';
+
+  @override
+  String get vendorSubstituteRefunded => 'Remboursée à la cliente';
+
+  @override
+  String vendorFreshnessClaimed(String item) {
+    return '$item signalé pas frais';
+  }
+
+  @override
+  String get vendorSubstituteNone =>
+      'Aucun autre produit disponible dans ta boutique.';
+
+  @override
+  String get vendorSubstituteNote => 'Un mot pour la cliente (facultatif)';
 }

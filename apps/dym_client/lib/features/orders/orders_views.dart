@@ -1,5 +1,6 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_client/features/orders/adjustments_view.dart';
 import 'package:dym_client/features/orders/order_texts.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_viewmodels.dart';
@@ -285,10 +286,14 @@ class TrackingView extends StackedView<TrackingViewModel> {
     this.onReview,
     this.onReordered,
     this.clock = DateTime.now,
+    this.adjustments,
   });
 
   final OrdersService service;
   final String orderId;
+
+  /// Remplacements et garantie fraîcheur (spec 034) ; absents : masqués.
+  final AdjustmentsService? adjustments;
   final VoidCallback onBack;
 
   /// Heure courante (fenêtre de signalement de 7 jours) ; fixée en test.
@@ -352,6 +357,7 @@ class TrackingView extends StackedView<TrackingViewModel> {
                       onDispute: onDispute,
                       onReview: onReview,
                       onReordered: onReordered,
+                      adjustments: adjustments,
                     ),
             ),
           ],
@@ -369,10 +375,12 @@ class _Tracking extends StatelessWidget {
     this.onDispute,
     this.onReview,
     this.onReordered,
+    this.adjustments,
   });
 
   final TrackingViewModel vm;
   final CustomerOrder order;
+  final AdjustmentsService? adjustments;
   final Future<bool> Function(String orderId, String storeName)? onReport;
   final ValueChanged<String>? onDispute;
   final Future<bool> Function(String orderId, String storeName)? onReview;
@@ -526,6 +534,13 @@ class _Tracking extends StatelessWidget {
           ],
         ),
       ),
+      if (adjustments case final service?)
+        OrderAdjustmentsPanel(
+          key: ValueKey('adjust-${order.id}-${order.status.name}'),
+          service: service,
+          order: order,
+          money: (minor) => vm.money(minor)?.format(),
+        ),
       if (order.payOnDelivery) ...[
         const SizedBox(height: DymTokenSpace.s3),
         CartCard(

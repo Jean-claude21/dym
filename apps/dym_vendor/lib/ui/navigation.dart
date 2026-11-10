@@ -12,6 +12,7 @@ import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
+import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
@@ -283,6 +284,9 @@ class StackedAppNavigator implements AppNavigator {
         service: locator<OrdersService>(),
         orderId: orderId,
         onBack: () => _navigator.pop(),
+        adjustments: locator.isRegistered<VendorAdjustmentsService>()
+            ? locator<VendorAdjustmentsService>()
+            : null,
       ),
     ),
   );

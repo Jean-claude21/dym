@@ -4523,4 +4523,104 @@ class DymLocalizationsEn extends DymLocalizations {
   String vendorOrderScheduled(String day, String start, String end) {
     return 'Deliver $day, $start–$end';
   }
+
+  @override
+  String get adjustTitle => 'Replacements and freshness';
+
+  @override
+  String adjustProposed(String item, String proposed) {
+    return '$item is missing: the seller suggests $proposed, same price.';
+  }
+
+  @override
+  String adjustAccepted(String item, String proposed) {
+    return '$item replaced by $proposed.';
+  }
+
+  @override
+  String adjustRefused(String item, String amount) {
+    return '$item removed: $amount back to your wallet.';
+  }
+
+  @override
+  String adjustFreshness(String item, String amount) {
+    return '$item not fresh: $amount back to your wallet.';
+  }
+
+  @override
+  String get adjustAccept => 'Accept';
+
+  @override
+  String get adjustRefuse => 'Refuse and get refunded';
+
+  @override
+  String adjustCreditedNow(String amount) {
+    return '$amount is already in your wallet.';
+  }
+
+  @override
+  String get freshnessClaim => 'An item is not fresh?';
+
+  @override
+  String get freshnessHint =>
+      'Freshness guarantee: send a photo and get refunded right away to your wallet.';
+
+  @override
+  String get freshnessWhich => 'Which item?';
+
+  @override
+  String get freshnessWindowClosed =>
+      'The guarantee period is over: use “Report a problem”.';
+
+  @override
+  String get freshnessLimitReached =>
+      'Monthly limit reached: use “Report a problem”, the team will check.';
+
+  @override
+  String get freshnessAlreadyCredited => 'This item was already refunded.';
+
+  @override
+  String get notifSubstitutionTitle => 'A replacement is proposed';
+
+  @override
+  String notifSubstitutionBody(String item, String proposed) {
+    return '$item is missing: the seller suggests $proposed.';
+  }
+
+  @override
+  String get vendorSubstituteTitle => 'An item is missing?';
+
+  @override
+  String get vendorSubstituteHint =>
+      'Suggest another product with a photo: same quantity, same price. The customer confirms.';
+
+  @override
+  String vendorSubstitute(String item) {
+    return 'Replace $item';
+  }
+
+  @override
+  String vendorSubstituteLine(String item, String proposed) {
+    return '$item → $proposed';
+  }
+
+  @override
+  String get vendorSubstituteWaiting => 'Waiting for the customer';
+
+  @override
+  String get vendorSubstituteAccepted => 'Accepted';
+
+  @override
+  String get vendorSubstituteRefunded => 'Refunded to the customer';
+
+  @override
+  String vendorFreshnessClaimed(String item) {
+    return '$item reported not fresh';
+  }
+
+  @override
+  String get vendorSubstituteNone => 'No other product available in your shop.';
+
+  @override
+  String get vendorSubstituteNote => 'A note for the customer (optional)';
 }

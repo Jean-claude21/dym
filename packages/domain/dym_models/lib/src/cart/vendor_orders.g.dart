@@ -144,6 +144,10 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         'scheduled_end',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
+      adjustments: $checkedConvert(
+        'adjustments',
+        (v) => v == null ? const [] : adjustmentsFromJson(v),
+      ),
       acceptedAt: $checkedConvert(
         'accepted_at',
         (v) => v == null ? null : DateTime.parse(v as String),

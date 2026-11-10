@@ -12,6 +12,7 @@ import { httpErrors, toHttpError } from "./lib/errors.js";
 import type { ErrorReporter } from "./lib/report.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { registerShoppingReminders, type ShoppingReminders } from "./shopping/reminders.js";
+import { type OrderPhotoDeps, registerOrderPhotoRoutes } from "./orders/photos.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
@@ -38,6 +39,8 @@ export interface AppDeps {
   /** Admin des opérations (spec 013). */
   admin?: AdminStore;
   recaps?: VendorRecaps;
+  /** Photos des commandes (spec 034). */
+  orderPhotos?: OrderPhotoDeps;
   /** Rappels des courses récurrentes (spec 029). */
   shoppingReminders?: ShoppingReminders;
   /** Messagerie (spec 015). */
@@ -111,6 +114,7 @@ export function createApp(deps: AppDeps) {
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
   registerShoppingReminders(app, deps.shoppingReminders);
+  registerOrderPhotoRoutes(app, deps.verifyToken, deps.orderPhotos);
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
