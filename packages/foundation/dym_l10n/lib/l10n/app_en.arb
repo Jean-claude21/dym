@@ -1127,5 +1127,11 @@
   "walletToPocket": "To {name}",
   "walletFromPocket": "From {name}",
   "cartDeliveryTo": "{zone} · {landmark}",
-  "cartAddAddress": "Add a delivery address"
+  "cartAddAddress": "Add a delivery address",
+  "homeWhatToEat": "What are we eating?",
+  "homePopular": "Most ordered near you",
+  "homeFresh": "New in",
+  "homeReorderTitle": "Reorder your groceries",
+  "homeReorderMeta": "{store} · {count, plural, =1{1 item} other{{count} items}}",
+  "homeReorderAction": "Reorder"
 }

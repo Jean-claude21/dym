@@ -13,6 +13,10 @@ class DiscoveryRepository {
   Future<Result<DiscoverResult>> discover(String zoneId) =>
       _object('discover_stores', {'p_zone': zoneId}, DiscoverResult.fromJson);
 
+  /// Fil personnel de l'accueil (spec 027) pour [zoneId].
+  Future<Result<HomeFeed>> homeFeed(String zoneId) =>
+      _object('home_feed', {'p_zone': zoneId}, HomeFeed.fromJson);
+
   /// Quartier le plus proche d'une position (rien si hors des villes ouvertes).
   Future<Result<ZoneMatch?>> nearestZone(
     double latitude,

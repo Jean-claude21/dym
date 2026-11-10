@@ -6618,6 +6618,42 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Ajoute une adresse de livraison'**
   String get cartAddAddress;
+
+  /// Question en tête de l'accueil
+  ///
+  /// In fr, this message translates to:
+  /// **'Qu\'est-ce qu\'on mange ?'**
+  String get homeWhatToEat;
+
+  /// Section des produits populaires
+  ///
+  /// In fr, this message translates to:
+  /// **'Les plus demandés près de toi'**
+  String get homePopular;
+
+  /// Section des nouveautés
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveautés'**
+  String get homeFresh;
+
+  /// Titre de la carte de réachat
+  ///
+  /// In fr, this message translates to:
+  /// **'Recommander tes courses'**
+  String get homeReorderTitle;
+
+  /// Boutique et articles de la dernière commande
+  ///
+  /// In fr, this message translates to:
+  /// **'{store} · {count, plural, =1{1 article} other{{count} articles}}'**
+  String homeReorderMeta(String store, int count);
+
+  /// Bouton recommander
+  ///
+  /// In fr, this message translates to:
+  /// **'Recommander'**
+  String get homeReorderAction;
 }
 
 class _DymLocalizationsDelegate

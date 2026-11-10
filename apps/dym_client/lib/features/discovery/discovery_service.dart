@@ -22,6 +22,9 @@ abstract interface class DiscoveryService {
   /// Boutiques qui livrent le quartier choisi, et estimation.
   Future<Result<DiscoverResult>> discover();
 
+  /// Fil personnel de l'accueil (spec 027) pour le quartier choisi.
+  Future<Result<HomeFeed>> homeFeed();
+
   /// Quartier proposé à partir de la position (`null` : position refusée
   /// ou hors des villes ouvertes). La position n'est pas conservée.
   Future<Result<ZoneMatch?>> locateZone();
@@ -96,6 +99,13 @@ class NeonDiscoveryService implements DiscoveryService {
           : value.zonesOf(value.cities.first.id).firstOrNull?.id;
     }
     return result;
+  }
+
+  @override
+  Future<Result<HomeFeed>> homeFeed() async {
+    final zoneId = _zone.value;
+    if (zoneId == null) return const Ok(HomeFeed());
+    return await _discovery.homeFeed(zoneId);
   }
 
   @override

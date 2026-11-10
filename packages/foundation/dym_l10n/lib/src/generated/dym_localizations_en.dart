@@ -3867,4 +3867,30 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get cartAddAddress => 'Add a delivery address';
+
+  @override
+  String get homeWhatToEat => 'What are we eating?';
+
+  @override
+  String get homePopular => 'Most ordered near you';
+
+  @override
+  String get homeFresh => 'New in';
+
+  @override
+  String get homeReorderTitle => 'Reorder your groceries';
+
+  @override
+  String homeReorderMeta(String store, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$store · $_temp0';
+  }
+
+  @override
+  String get homeReorderAction => 'Reorder';
 }

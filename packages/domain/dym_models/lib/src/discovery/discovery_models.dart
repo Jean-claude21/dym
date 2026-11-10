@@ -374,3 +374,56 @@ class ZoneMatch {
   final String countryCode;
   final int distanceM;
 }
+
+/// Dernière commande livrée, proposée au réachat sur l'accueil (spec 027).
+@immutable
+class LastOrder {
+  const new({
+    required this.orderId,
+    required this.storeName,
+    required this.itemCount,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => LastOrder(
+    orderId: json['order_id']! as String,
+    storeName: json['store_name']! as String,
+    itemCount: (json['item_count'] as num?)?.toInt() ?? 0,
+  );
+
+  final String orderId;
+  final String storeName;
+  final int itemCount;
+}
+
+/// Fil personnel de l'accueil (`public.home_feed`, spec 027).
+@immutable
+class HomeFeed {
+  const new({this.lastOrder, this.popular = const [], this.fresh = const []});
+
+  factory fromJson(Map<String, dynamic> json) => HomeFeed(
+    lastOrder: json['last_order'] is Map<String, dynamic>
+        ? LastOrder.fromJson(json['last_order'] as Map<String, dynamic>)
+        : null,
+    popular: [
+      for (final p
+          in (json['popular'] as List? ?? const [])
+              .cast<Map<String, dynamic>>())
+        CatalogItem.fromJson(p),
+    ],
+    fresh: [
+      for (final p
+          in (json['fresh'] as List? ?? const []).cast<Map<String, dynamic>>())
+        CatalogItem.fromJson(p),
+    ],
+  );
+
+  final LastOrder? lastOrder;
+
+  /// Les plus demandés du quartier (30 jours).
+  final List<CatalogItem> popular;
+
+  /// Publiés depuis 14 jours.
+  final List<CatalogItem> fresh;
+
+  bool get isEmpty => lastOrder == null && popular.isEmpty && fresh.isEmpty;
+}

@@ -3898,4 +3898,30 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get cartAddAddress => 'Ajoute une adresse de livraison';
+
+  @override
+  String get homeWhatToEat => 'Qu\'est-ce qu\'on mange ?';
+
+  @override
+  String get homePopular => 'Les plus demandés près de toi';
+
+  @override
+  String get homeFresh => 'Nouveautés';
+
+  @override
+  String get homeReorderTitle => 'Recommander tes courses';
+
+  @override
+  String homeReorderMeta(String store, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count articles',
+      one: '1 article',
+    );
+    return '$store · $_temp0';
+  }
+
+  @override
+  String get homeReorderAction => 'Recommander';
 }
