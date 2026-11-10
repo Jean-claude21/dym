@@ -30,8 +30,8 @@ grant execute on function pg_temp._publish(uuid, uuid, text) to authenticated;
 
 select tests.login_as((select kodjo from _t));
 select public.update_store('{"offers_pickup": true}');
-select public.set_store_hours((select jsonb_agg(jsonb_build_object('weekday', d, 'opens_at', '06:00',
-  'closes_at', '22:00')) from generate_series(1, 7) d));
+select public.set_store_hours((select jsonb_agg(jsonb_build_object('weekday', d, 'opens_at', '00:00',
+  'closes_at', '24:00')) from generate_series(1, 7) d));  -- ouvert toute la journée : le test passe à toute heure
 select pg_temp._publish((select tomate from _t), (select tomate_tas from _t), 'Tomates');
 select pg_temp._publish((select igname from _t), (select igname_tas from _t), 'Igname nouvelle');
 
