@@ -6043,4 +6043,140 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get homeSponsoredLabel => 'Sponsorisé';
+
+  @override
+  String get opsTitle => 'Opérations';
+
+  @override
+  String get opsSubtitle =>
+      'En direct : commandes, retards, livreurs, cash à recevoir.';
+
+  @override
+  String get opsNoCountry => 'Aucun pays dans ton périmètre.';
+
+  @override
+  String get opsLiveTab => 'En direct';
+
+  @override
+  String get opsSettingsTab => 'Réglages';
+
+  @override
+  String get opsLast24h => 'Dernières 24 heures';
+
+  @override
+  String get opsDelivered => 'Livré';
+
+  @override
+  String get opsCouriersOnline => 'Livreurs en ligne';
+
+  @override
+  String get opsMissionsWaiting => 'Livraisons sans livreur';
+
+  @override
+  String get opsAlerts => 'Commandes en retard';
+
+  @override
+  String get opsNoAlert => 'Aucune commande en retard.';
+
+  @override
+  String get opsNoCourier => 'sans livreur';
+
+  @override
+  String opsMinutes(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get opsCourierCash => 'Cash des livreurs à recevoir';
+
+  @override
+  String get opsNoCourierCash => 'Aucun cash à recevoir.';
+
+  @override
+  String get opsCashReceived => 'Cash reçu';
+
+  @override
+  String get opsThresholds => 'Seuils d\'alerte (minutes)';
+
+  @override
+  String get opsThresholdPending => 'En attente de la vendeuse';
+
+  @override
+  String get opsThresholdReady => 'Prête, au-delà de la préparation';
+
+  @override
+  String get opsThresholdTransit => 'En route';
+
+  @override
+  String get opsFeedWeights => 'Poids du fil des contenus';
+
+  @override
+  String get opsWeightRecency => 'Fraîcheur';
+
+  @override
+  String get opsWeightEngagement => 'Engagement';
+
+  @override
+  String get opsWeightFollowed => 'Abonnements';
+
+  @override
+  String get opsWeightLocal => 'Proximité';
+
+  @override
+  String get opsWeightAffinity => 'Affinité';
+
+  @override
+  String get opsWeightShoppable => 'Achetable';
+
+  @override
+  String get opsPlans => 'Formules (DYM+, Pro, À la une)';
+
+  @override
+  String opsPeriod(int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours',
+      one: '1 jour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get opsPrice => 'Prix';
+
+  @override
+  String get opsSave => 'Enregistrer';
+
+  @override
+  String get opsScopes => 'Admins limités à des pays';
+
+  @override
+  String get opsScopesHint =>
+      'Un admin limité ne pilote que ses pays. Sans limite, il pilote tous les pays.';
+
+  @override
+  String get opsScopeEmail => 'E-mail de l\'admin';
+
+  @override
+  String opsScopeAdd(String country) {
+    return 'Limiter à $country';
+  }
+
+  @override
+  String opsScopeRemove(String country) {
+    return 'Retirer $country';
+  }
+
+  @override
+  String get opsInvalid => 'Valeur invalide.';
+
+  @override
+  String get opsOutOfScope => 'Ce pays n\'est pas dans ton périmètre.';
+
+  @override
+  String get opsNothingOwed => 'Ce livreur ne doit plus rien.';
+
+  @override
+  String get opsNotAdmin => 'Cette adresse n\'est pas celle d\'un admin.';
 }

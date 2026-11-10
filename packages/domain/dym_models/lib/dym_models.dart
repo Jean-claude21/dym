@@ -4,6 +4,7 @@ library;
 export 'src/account/account_models.dart';
 export 'src/admin/admin_members.dart';
 export 'src/admin/admin_models.dart';
+export 'src/admin/ops_models.dart';
 export 'src/cart/adjustment_models.dart';
 export 'src/cart/cart_models.dart';
 export 'src/cart/disputes.dart';
