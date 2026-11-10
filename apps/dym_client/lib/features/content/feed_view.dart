@@ -29,6 +29,16 @@ class FeedViewModel extends BaseViewModel {
   final String? productId;
 
   bool following = false;
+
+  /// Catégorie filtrée (spec 037) ; nulle : toutes.
+  String? category;
+  List<ContentCategory> categories = const [];
+
+  /// Vue en grille (spec 037) ; sinon plein écran.
+  bool grid = false;
+
+  /// Change à chaque retour au plein écran (page initiale).
+  int pageEpoch = 0;
   List<ContentItem>? items;
   Failure? failure;
   CountryConfig? config;
@@ -45,7 +55,14 @@ class FeedViewModel extends BaseViewModel {
     _ended = false;
     notifyListeners();
     config ??= (await service.countryConfig()).valueOrNull;
-    switch (await service.feed(following: following, productId: productId)) {
+    if (categories.isEmpty && productId == null) {
+      categories = (await service.categories()).valueOrNull ?? const [];
+    }
+    switch (await service.feed(
+      following: following,
+      productId: productId,
+      category: category,
+    )) {
       case Ok(:final value):
         items = value;
         index = 0;
@@ -62,6 +79,45 @@ class FeedViewModel extends BaseViewModel {
     await load();
   }
 
+  Future<void> selectCategory(String? slug) async {
+    if (category == slug) return;
+    category = slug;
+    await load();
+  }
+
+  void toggleGrid() {
+    grid = !grid;
+    if (!grid) pageEpoch++;
+    notifyListeners();
+  }
+
+  /// Vignette touchée : retour au plein écran sur ce contenu.
+  void openFromGrid(int i) {
+    index = i;
+    grid = false;
+    pageEpoch++;
+    notifyListeners();
+  }
+
+  /// S'abonner à l'autrice ou à la boutique ; tous ses contenus suivent.
+  Future<void> toggleFollow(ContentItem content) async {
+    final on = !content.followed;
+    final owner = content.author?.id ?? content.store?.id;
+    if (await service.follow(content, on: on) case Ok(:final value)) {
+      items = [
+        for (final c in items ?? const <ContentItem>[])
+          if ((c.author?.id ?? c.store?.id) == owner)
+            c.copyWith(followed: value)
+          else
+            c,
+      ];
+      notifyListeners();
+    }
+  }
+
+  void commentsChanged(ContentItem content, int count) =>
+      _replace(content.copyWith(commentCount: count));
+
   Future<void> onPage(int i) async {
     final list = items;
     if (list == null || i >= list.length) return;
@@ -72,8 +128,10 @@ class FeedViewModel extends BaseViewModel {
       _loadingMore = true;
       final more = await service.feed(
         following: following,
-        before: list.last.createdAt,
+        before: productId == null ? null : list.last.createdAt,
         productId: productId,
+        category: category,
+        offset: list.length,
       );
       if (more case Ok(:final value)) {
         if (value.isEmpty) _ended = true;
@@ -161,8 +219,31 @@ class FeedView extends StackedView<FeedViewModel> {
           ),
         ),
       );
+    } else if (vm.grid) {
+      body = SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 104),
+          child: GridView.builder(
+            padding: const EdgeInsets.all(DymTokenSpace.s1),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 180,
+              childAspectRatio: 9 / 14,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+            ),
+            itemCount: items.length,
+            itemBuilder: (context, i) => _GridTile(
+              content: items[i],
+              service: service,
+              onTap: () => vm.openFromGrid(i),
+            ),
+          ),
+        ),
+      );
     } else {
       body = PageView.builder(
+        key: ValueKey('feed-${vm.pageEpoch}'),
+        controller: PageController(initialPage: vm.index),
         scrollDirection: Axis.vertical,
         itemCount: items.length,
         onPageChanged: vm.onPage,
@@ -202,7 +283,7 @@ class FeedView extends StackedView<FeedViewModel> {
                           color: Colors.white,
                         ),
                       ),
-                    if (productId == null)
+                    if (productId == null) ...[
                       Expanded(
                         child: Wrap(
                           spacing: DymTokenSpace.s2,
@@ -219,11 +300,62 @@ class FeedView extends StackedView<FeedViewModel> {
                           ],
                         ),
                       ),
+                      IconButton(
+                        tooltip: vm.grid ? l10n.feedFullScreen : l10n.feedGrid,
+                        onPressed: vm.toggleGrid,
+                        icon: Icon(
+                          vm.grid
+                              ? Icons.view_day_rounded
+                              : Icons.grid_view_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
             ),
           ),
+          if (productId == null && vm.categories.isNotEmpty)
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 56),
+                  child: SizedBox(
+                    height: 44,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: DymTokenSpace.s2,
+                      ),
+                      children: [
+                        for (final (slug, label) in [
+                          (null, l10n.feedAllCategories),
+                          for (final cat in vm.categories)
+                            (
+                              cat.slug,
+                              cat.label.resolve(
+                                Localizations.localeOf(context).languageCode,
+                              ),
+                            ),
+                        ])
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6),
+                            child: ChoiceChip(
+                              label: Text(label),
+                              selected: vm.category == slug,
+                              onSelected: (_) => vm.selectCategory(slug),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           if (vm.added case final name?)
             Positioned(
               left: DymTokenSpace.s3,
@@ -357,6 +489,22 @@ class _ContentPage extends StatelessWidget {
                     ),
                     const SizedBox(height: DymTokenSpace.s3),
                     _RoundAction(
+                      icon: Icons.chat_bubble_outline_rounded,
+                      label: '${content.commentCount}',
+                      tooltip: l10n.feedComments,
+                      onTap: () => showModalBottomSheet<void>(
+                        context: context,
+                        isScrollControlled: true,
+                        showDragHandle: true,
+                        builder: (_) => CommentsSheet(
+                          service: service,
+                          content: content,
+                          onCount: (n) => vm.commentsChanged(content, n),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: DymTokenSpace.s3),
+                    _RoundAction(
                       icon: Icons.flag_outlined,
                       tooltip: l10n.reportAction,
                       onTap: () async {
@@ -425,6 +573,27 @@ class _ContentPage extends StatelessWidget {
                                   label: Text(cat.label.resolve(locale)),
                                 ),
                             ],
+                          ),
+                        if (content.store != null || content.author != null)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: TextButton.icon(
+                              onPressed: () => vm.toggleFollow(content),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                minimumSize: const Size(48, 40),
+                              ),
+                              icon: Icon(
+                                content.followed
+                                    ? Icons.check_rounded
+                                    : Icons.add_rounded,
+                              ),
+                              label: Text(
+                                content.followed
+                                    ? l10n.feedFollowingOne
+                                    : l10n.feedFollow,
+                              ),
+                            ),
                           ),
                         if (content.caption case final caption?)
                           Text(
@@ -607,6 +776,211 @@ class _NetworkVideoState extends State<_NetworkVideo> {
           width: _controller.value.size.width,
           height: _controller.value.size.height,
           child: VideoPlayer(_controller),
+        ),
+      ),
+    );
+  }
+}
+
+/// Vignette de la grille (spec 037).
+class _GridTile extends StatelessWidget {
+  const new({
+    required this.content,
+    required this.service,
+    required this.onTap,
+  });
+
+  final ContentItem content;
+  final ContentService service;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return InkWell(
+      onTap: onTap,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (!content.isVideo && content.mediaKey != null)
+            Image(
+              image: service.photo(content.mediaKey!),
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
+            )
+          else
+            ColoredBox(
+              color: c.brandDeep,
+              child: const Icon(
+                Icons.play_circle_rounded,
+                color: Colors.white,
+                size: 40,
+              ),
+            ),
+          Positioned(
+            left: 4,
+            right: 4,
+            bottom: 4,
+            child: Text(
+              content.caption ?? '',
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: t.label.copyWith(
+                color: Colors.white,
+                shadows: const [Shadow(blurRadius: 4)],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Commentaires d'un contenu (spec 037).
+class CommentsSheet extends StatefulWidget {
+  const new({
+    required this.service,
+    required this.content,
+    required this.onCount,
+    super.key,
+  });
+
+  final ContentService service;
+  final ContentItem content;
+  final ValueChanged<int> onCount;
+
+  @override
+  State<CommentsSheet> createState() => _CommentsSheetState();
+}
+
+class _CommentsSheetState extends State<CommentsSheet> {
+  final _text = TextEditingController();
+  List<ContentComment>? _comments;
+  bool _sending = false;
+  String? _key;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_load());
+  }
+
+  Future<void> _load() async {
+    final result = await widget.service.comments(widget.content);
+    if (!mounted) return;
+    setState(() => _comments = result.valueOrNull ?? const []);
+  }
+
+  Future<void> _send() async {
+    final body = _text.text.trim();
+    if (body.isEmpty || _sending) return;
+    setState(() => _sending = true);
+    final key = _key ??= Uuid.v4();
+    final result = await widget.service.addComment(
+      widget.content,
+      body,
+      idempotencyKey: key,
+    );
+    if (!mounted) return;
+    setState(() {
+      _sending = false;
+      if (result case Ok(:final value)) {
+        _comments = value;
+        _text.clear();
+        _key = null;
+        widget.onCount(value.length);
+      }
+    });
+  }
+
+  Future<void> _delete(ContentComment comment) async {
+    if (await widget.service.deleteComment(comment.id) case Ok()) {
+      final list = [
+        for (final c in _comments ?? const <ContentComment>[])
+          if (c.id != comment.id) c,
+      ];
+      if (!mounted) return;
+      setState(() => _comments = list);
+      widget.onCount(list.length);
+    }
+  }
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final t = context.dym.text;
+    final c = context.dym.colors;
+    final comments = _comments;
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.6,
+          child: Column(
+            children: [
+              Text(l10n.feedComments, style: t.title),
+              Expanded(
+                child: comments == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : comments.isEmpty
+                    ? Center(
+                        child: Text(
+                          l10n.feedNoComment,
+                          style: t.body.copyWith(color: c.textSecondary),
+                        ),
+                      )
+                    : ListView(
+                        children: [
+                          for (final k in comments)
+                            ListTile(
+                              title: Text(k.authorName, style: t.label),
+                              subtitle: Text(k.body, style: t.body),
+                              trailing: k.mine
+                                  ? IconButton(
+                                      tooltip: l10n.feedDeleteComment,
+                                      onPressed: () => _delete(k),
+                                      icon: const Icon(Icons.delete_rounded),
+                                    )
+                                  : null,
+                            ),
+                        ],
+                      ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(DymTokenSpace.s2),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _text,
+                        maxLength: 300,
+                        onChanged: (_) => _key = null,
+                        decoration: InputDecoration(
+                          hintText: l10n.feedCommentHint,
+                          counterText: '',
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      tooltip: l10n.chatSend,
+                      onPressed: _sending ? null : _send,
+                      icon: Icon(Icons.send_rounded, color: c.brand),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

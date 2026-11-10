@@ -4818,4 +4818,35 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get creatorPublish => 'Publier';
+
+  @override
+  String get feedGrid => 'Vue en grille';
+
+  @override
+  String get feedFullScreen => 'Plein écran';
+
+  @override
+  String get feedAllCategories => 'Tout';
+
+  @override
+  String get feedFollow => 'S\'abonner';
+
+  @override
+  String get feedFollowingOne => 'Abonnée';
+
+  @override
+  String get feedComments => 'Commentaires';
+
+  @override
+  String get feedNoComment =>
+      'Pas encore de commentaire : lance la conversation !';
+
+  @override
+  String get feedCommentHint => 'Ajouter un commentaire';
+
+  @override
+  String get feedDeleteComment => 'Supprimer mon commentaire';
+
+  @override
+  String get moderationComment => 'Commentaire';
 }

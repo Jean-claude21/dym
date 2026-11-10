@@ -206,6 +206,7 @@ IconData _icon(ModerationItem item) => switch (item.target) {
   ReportTarget.content => Icons.play_circle_rounded,
   ReportTarget.product => Icons.inventory_2_rounded,
   ReportTarget.review => Icons.star_rounded,
+  ReportTarget.comment => Icons.chat_bubble_rounded,
 };
 
 String _targetLabel(DymLocalizations l10n, ModerationItem item) =>
@@ -216,6 +217,7 @@ String _targetLabel(DymLocalizations l10n, ModerationItem item) =>
             : l10n.moderationVideo,
       ReportTarget.product => l10n.moderationProduct,
       ReportTarget.review => l10n.moderationReview,
+      ReportTarget.comment => l10n.moderationComment,
     };
 
 class _Preview extends StatefulWidget {

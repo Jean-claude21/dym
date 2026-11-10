@@ -297,6 +297,7 @@ class ComposeViewModel extends BaseViewModel {
 
   final CreatorService service;
   CreatorMedia? media;
+
   /// Légende saisie (suivie sans reconstruire l'écran).
   String caption = '';
   List<ContentCategory> categories = const [];
@@ -329,7 +330,6 @@ class ComposeViewModel extends BaseViewModel {
     }
     notifyListeners();
   }
-
 
   void choose(String? id) {
     categoryId = id;

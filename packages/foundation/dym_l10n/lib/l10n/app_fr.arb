@@ -6370,5 +6370,45 @@
   "creatorPublish": "Publier",
   "@creatorPublish": {
     "description": "Bouton"
+  },
+  "feedGrid": "Vue en grille",
+  "@feedGrid": {
+    "description": "Bascule"
+  },
+  "feedFullScreen": "Plein écran",
+  "@feedFullScreen": {
+    "description": "Bascule"
+  },
+  "feedAllCategories": "Tout",
+  "@feedAllCategories": {
+    "description": "Puce"
+  },
+  "feedFollow": "S'abonner",
+  "@feedFollow": {
+    "description": "Bouton"
+  },
+  "feedFollowingOne": "Abonnée",
+  "@feedFollowingOne": {
+    "description": "Bouton"
+  },
+  "feedComments": "Commentaires",
+  "@feedComments": {
+    "description": "Titre"
+  },
+  "feedNoComment": "Pas encore de commentaire : lance la conversation !",
+  "@feedNoComment": {
+    "description": "Vide"
+  },
+  "feedCommentHint": "Ajouter un commentaire",
+  "@feedCommentHint": {
+    "description": "Champ"
+  },
+  "feedDeleteComment": "Supprimer mon commentaire",
+  "@feedDeleteComment": {
+    "description": "Bouton"
+  },
+  "moderationComment": "Commentaire",
+  "@moderationComment": {
+    "description": "Cible de modération"
   }
 }
