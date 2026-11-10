@@ -5050,5 +5050,21 @@
         "type": "String"
       }
     }
+  },
+  "cartDeliveryTo": "{zone} · {landmark}",
+  "cartAddAddress": "Ajoute une adresse de livraison",
+  "@cartDeliveryTo": {
+    "description": "Adresse choisie dans le panier",
+    "placeholders": {
+      "zone": {
+        "type": "String"
+      },
+      "landmark": {
+        "type": "String"
+      }
+    }
+  },
+  "@cartAddAddress": {
+    "description": "Invitation à ajouter une adresse dans le panier"
   }
 }

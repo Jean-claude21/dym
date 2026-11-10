@@ -72,13 +72,16 @@ OrderError orderErrorOf(Failure failure) => switch (failure) {
 
 /// Panier (écran 05) : sous-paniers, quantités, paiement, total, commande.
 class CartViewModel extends _CartLoadingViewModel {
-  new({required CartService service, required this.onOrdered})
+  new({required CartService service, required this.onOrdered, this.onSuccess})
     : super(service) {
     service.cart.addListener(notifyListeners);
   }
 
   /// Commande créée : écran 37.
   final void Function(Purchase purchase) onOrdered;
+
+  /// Retour sensible d'une commande réussie (vibration), fourni par la vue.
+  final void Function()? onSuccess;
 
   bool _ordering = false;
   OrderError? _orderError;
@@ -90,6 +93,12 @@ class CartViewModel extends _CartLoadingViewModel {
   bool get substitutionAllowed => service.selection.substitutionAllowed;
 
   bool get canOrder => !cart.isEmpty && !cart.blocking && !_ordering && !isBusy;
+
+  List<CustomerAddress> _addresses = const [];
+
+  /// Adresse de livraison choisie, affichée dans le panier (spec 026).
+  CustomerAddress? get deliveryAddress =>
+      _addresses.where((a) => a.id == cart.addressId).firstOrNull;
 
   /// Une livraison est prévue, mais aucune adresse n'est choisie.
   bool get missingAddress =>
@@ -106,6 +115,9 @@ class CartViewModel extends _CartLoadingViewModel {
   @override
   Future<void> load() => run(() async {
     final result = await service.refresh();
+    // Adresses : seulement pour l'affichage ; un échec n'empêche pas de
+    // commander.
+    if (await service.addresses() case Ok(:final value)) _addresses = value;
     return result.failureOrNull;
   });
 
@@ -135,6 +147,7 @@ class CartViewModel extends _CartLoadingViewModel {
     _ordering = false;
     switch (result) {
       case Ok(:final value):
+        onSuccess?.call();
         onOrdered(value);
       case Err(:final failure):
         _orderError = orderErrorOf(failure);

@@ -136,7 +136,7 @@ class NeonDiscoveryService implements DiscoveryService {
 
   @override
   ImageProvider photo(String objectKey) =>
-      NetworkImage(_environment.media(objectKey).toString());
+      dymNetworkImage(_environment.media(objectKey).toString());
 
   @override
   void searchPerformed(SearchQuery query, int total) => unawaited(

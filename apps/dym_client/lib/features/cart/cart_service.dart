@@ -342,7 +342,7 @@ class NeonCartService implements CartService {
 
   @override
   ImageProvider photo(String objectKey) =>
-      NetworkImage(_environment.media(objectKey).toString());
+      dymNetworkImage(_environment.media(objectKey).toString());
 
   @override
   String newId() => Uuid.v4();

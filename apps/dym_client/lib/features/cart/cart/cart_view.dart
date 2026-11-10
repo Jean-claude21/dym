@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/cart/cart_viewmodels.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
@@ -6,6 +8,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 /// Écran 05 : panier multi-boutiques (sous-paniers, livraison, paiement,
@@ -31,8 +34,11 @@ class CartPageView extends StackedView<CartViewModel> {
   final VoidCallback onBrowse;
 
   @override
-  CartViewModel viewModelBuilder(BuildContext context) =>
-      CartViewModel(service: service, onOrdered: onOrdered);
+  CartViewModel viewModelBuilder(BuildContext context) => CartViewModel(
+    service: service,
+    onOrdered: onOrdered,
+    onSuccess: () => unawaited(HapticFeedback.mediumImpact()),
+  );
 
   @override
   void onViewModelReady(CartViewModel viewModel) => viewModel.load();
@@ -190,6 +196,25 @@ class _CartContent extends StatelessWidget {
                         ),
                         style: t.label.copyWith(color: c.textSecondary),
                       ),
+                      if (cart.hasDelivery)
+                        switch (vm.deliveryAddress) {
+                          final a? => Text(
+                            l10n.cartDeliveryTo(a.zoneName, a.landmark),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: t.label.copyWith(
+                              color: c.textPrimary,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          null => Text(
+                            l10n.cartAddAddress,
+                            style: t.label.copyWith(
+                              color: c.pimentStrong,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        },
                     ],
                   ),
                 ),

@@ -86,7 +86,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         ),
         products: () => locator<CatalogService>().products(),
         config: stores.countryConfig,
-        photo: (key) => NetworkImage(environment.media(key).toString()),
+        photo: (key) => dymNetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerLazySingleton<VendorContentService>(
@@ -100,7 +100,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         videos: PluginVideoPicker(),
         products: () => locator<CatalogService>().products(),
         config: stores.countryConfig,
-        photo: (key) => NetworkImage(environment.media(key).toString()),
+        photo: (key) => dymNetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerSingleton<VendorReviewsService>(
@@ -131,7 +131,8 @@ Future<void> configureServices(DymEnvironment environment) async {
         role: ChatRole.vendor,
         countryConfig: stores.countryConfig,
         photos: PluginPhotoPicker(),
-        productPhoto: (key) => NetworkImage(environment.media(key).toString()),
+        productPhoto: (key) =>
+            dymNetworkImage(environment.media(key).toString()),
       ),
     )
     ..registerSingleton<OrdersService>(

@@ -25,6 +25,7 @@ export 'src/components/dym_quantity_stepper.dart';
 export 'src/components/dym_search_bar.dart';
 export 'src/components/dym_section_header.dart';
 export 'src/components/dym_selectable_card.dart';
+export 'src/components/dym_skeleton.dart';
 export 'src/components/dym_state_view.dart';
 export 'src/components/dym_store_card.dart';
 export 'src/components/dym_switch_tile.dart';

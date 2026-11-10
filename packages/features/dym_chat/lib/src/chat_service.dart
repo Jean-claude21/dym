@@ -135,5 +135,5 @@ class NeonChatService implements ChatService {
   ImageProvider productPhoto(String objectKey) => _productPhoto(objectKey);
 
   @override
-  ImageProvider mediaImage(String url) => NetworkImage(url);
+  ImageProvider mediaImage(String url) => dymNetworkImage(url);
 }

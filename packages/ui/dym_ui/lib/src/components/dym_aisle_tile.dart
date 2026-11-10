@@ -49,7 +49,11 @@ class DymAisleTile extends StatelessWidget {
                 child: Column(
                   children: [
                     Expanded(
-                      child: Image(image: image, fit: BoxFit.contain),
+                      child: Image(
+                        image: image,
+                        fit: BoxFit.contain,
+                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(

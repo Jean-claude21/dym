@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
@@ -107,17 +108,26 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
             child: ListView(
               padding: EdgeInsets.fromLTRB(inset, 12, inset, 24),
               children: [
-                Wrap(
-                  spacing: DymTokenSpace.s2,
-                  runSpacing: DymTokenSpace.s2,
-                  crossAxisAlignment: WrapCrossAlignment.center,
+                Row(
                   children: [
-                    _ZoneButton(viewModel: vm),
-                    if (vm.result.estimateMinutes != null)
-                      DymDeliveryPill(
-                        label: l10n.homeDeliveredIn(vm.result.estimateMinutes!),
-                        zem: DymIllustrations.zem,
+                    Expanded(
+                      child: Wrap(
+                        spacing: DymTokenSpace.s2,
+                        runSpacing: DymTokenSpace.s2,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [
+                          _ZoneButton(viewModel: vm),
+                          if (vm.result.estimateMinutes != null)
+                            DymDeliveryPill(
+                              label: l10n.homeDeliveredIn(
+                                vm.result.estimateMinutes!,
+                              ),
+                              zem: DymIllustrations.zem,
+                            ),
+                        ],
                       ),
+                    ),
+                    const CartButton(),
                   ],
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
