@@ -20,7 +20,7 @@
 | 7 · Argent | Compte unique, grand livre, wallet et poches | Recharger, payer, chaque franc tracé | ~18 h | ✅ Faite (specs 024, 025) ; gate : démonstration web à faire |
 | 8 · Expérience et IA | Finition, accueil, recherche et assistant | Commande en un écran ; « riz pour 4 » compris | ~22 h | ✅ Faite (specs 026-029) ; gate : démonstration web à faire |
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
-| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | 🔵 En cours : 1 spec sur 5 |
+| 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | 🔵 En cours : 2 specs sur 5 |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ⬜ À faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ⬜ À faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
@@ -147,8 +147,8 @@ en plus d'une heure.
 
 | Spec | Contenu | État |
 |---|---|---|
-| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération | ✅ Spec 036 (studio créatrice, posts photo et vidéo, catégorie choisie, proposée par l'IA ou « Autre », produits de toutes boutiques, modération existante) |
-| `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires | ⬜ À faire |
+| `creators-content` | Profil créateur, posts de tous, formats, catégorie choisie ou classée, modération | ✅ Spec 036 · PR #44 (studio créatrice, posts photo et vidéo, catégorie choisie, proposée par l'IA ou « Autre », produits de toutes boutiques, modération existante) |
+| `feed-ranking` | Lecture haut de gamme, vues flexibles, algorithme de valorisation, abonnements, commentaires | ✅ Spec 037 (score SQL à poids par pays, onglets et catégories, grille ou plein écran, abonnements créatrices et boutiques, commentaires modérés ; écran admin des poids : phase 13) |
 | `recipe-to-cart` | « Tout pour la faire », rayon ustensiles, ingrédients génériques reliés aux vendeuses | ⬜ À faire |
 | `affiliation` | Taux, attribution, commission en attente puis versée, annulation, antifraude, tableau de bord | ⬜ À faire |
 | `tiktok-bridge` | Import par le créateur, partage vers TikTok avec lien de panier | ⬜ À faire |

@@ -13,11 +13,30 @@ abstract interface class ContentService {
   /// Onglet « Vidéos » et stories proposés (flag `shoppable_content`).
   Future<bool> enabled();
 
+  /// Fil : vidéos d'un produit (par date), sinon fil classé (spec 037).
   Future<Result<List<ContentItem>>> feed({
     bool following = false,
     DateTime? before,
     String? productId,
+    String? category,
+    int offset = 0,
   });
+
+  /// Catégories des contenus (puces du fil).
+  Future<Result<List<ContentCategory>>> categories();
+
+  /// S'abonner à l'autrice ou à la boutique du contenu ; état final.
+  Future<Result<bool>> follow(ContentItem content, {required bool on});
+
+  Future<Result<List<ContentComment>>> comments(ContentItem content);
+
+  Future<Result<List<ContentComment>>> addComment(
+    ContentItem content,
+    String body, {
+    required String idempotencyKey,
+  });
+
+  Future<Result<void>> deleteComment(String commentId);
 
   Future<Result<List<StoryGroup>>> stories();
 
@@ -71,12 +90,48 @@ class NeonContentService implements ContentService {
     bool following = false,
     DateTime? before,
     String? productId,
-  }) => _repository.feed(
-    zoneId: _discovery.zone.value,
-    following: following,
-    before: before,
-    productId: productId,
-  );
+    String? category,
+    int offset = 0,
+  }) => productId != null
+      ? _repository.feed(
+          zoneId: _discovery.zone.value,
+          before: before,
+          productId: productId,
+        )
+      : _repository.rankedFeed(
+          zoneId: _discovery.zone.value,
+          following: following,
+          category: category,
+          offset: offset,
+        );
+
+  @override
+  Future<Result<List<ContentCategory>>> categories() =>
+      _repository.categories();
+
+  @override
+  Future<Result<bool>> follow(ContentItem content, {required bool on}) =>
+      _repository.follow(
+        on: on,
+        creatorId: content.author?.id,
+        storeId: content.author == null ? content.store?.id : null,
+      );
+
+  @override
+  Future<Result<List<ContentComment>>> comments(ContentItem content) =>
+      _repository.comments(content.id);
+
+  @override
+  Future<Result<List<ContentComment>>> addComment(
+    ContentItem content,
+    String body, {
+    required String idempotencyKey,
+  }) =>
+      _repository.addComment(content.id, body, idempotencyKey: idempotencyKey);
+
+  @override
+  Future<Result<void>> deleteComment(String commentId) =>
+      _repository.deleteComment(commentId);
 
   @override
   Future<Result<List<StoryGroup>>> stories() =>
@@ -146,14 +201,69 @@ class MemoryContentService implements ContentService {
     bool following = false,
     DateTime? before,
     String? productId,
+    String? category,
+    int offset = 0,
   }) async {
     if (failure case final f?) return Err(f);
-    return Ok([
-      for (final c in contents)
-        if (!following &&
-            (productId == null || c.products.any((p) => p.id == productId)))
-          c,
-    ]);
+    return Ok(
+      [
+        for (final c in contents)
+          if ((!following || c.followed) &&
+              (category == null || c.category?.slug == category) &&
+              (productId == null || c.products.any((p) => p.id == productId)))
+            c,
+      ].skip(before == null ? offset : contents.length).toList(),
+    );
+  }
+
+  /// Catégories de démonstration.
+  List<ContentCategory> contentCategories = const [];
+  final followed = <String>[];
+  final commentsById = <String, List<ContentComment>>{};
+
+  @override
+  Future<Result<List<ContentCategory>>> categories() async =>
+      Ok(contentCategories);
+
+  @override
+  Future<Result<bool>> follow(ContentItem content, {required bool on}) async {
+    final id = content.author?.id ?? content.store?.id ?? '';
+    on ? followed.add(id) : followed.remove(id);
+    return Ok(on);
+  }
+
+  @override
+  Future<Result<List<ContentComment>>> comments(ContentItem content) async =>
+      Ok(commentsById[content.id] ?? const []);
+
+  @override
+  Future<Result<List<ContentComment>>> addComment(
+    ContentItem content,
+    String body, {
+    required String idempotencyKey,
+  }) async {
+    final list = commentsById.putIfAbsent(content.id, () => []);
+    if (!list.any((c) => c.id == idempotencyKey)) {
+      list.insert(
+        0,
+        ContentComment(
+          id: idempotencyKey,
+          body: body.trim(),
+          authorName: 'Awa',
+          createdAt: DateTime.utc(2026, 11, 10),
+          mine: true,
+        ),
+      );
+    }
+    return Ok(List.of(list));
+  }
+
+  @override
+  Future<Result<void>> deleteComment(String commentId) async {
+    for (final list in commentsById.values) {
+      list.removeWhere((c) => c.id == commentId);
+    }
+    return const Ok(null);
   }
 
   @override

@@ -8136,6 +8136,66 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Publier'**
   String get creatorPublish;
+
+  /// Bascule
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue en grille'**
+  String get feedGrid;
+
+  /// Bascule
+  ///
+  /// In fr, this message translates to:
+  /// **'Plein écran'**
+  String get feedFullScreen;
+
+  /// Puce
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get feedAllCategories;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'S\'abonner'**
+  String get feedFollow;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnée'**
+  String get feedFollowingOne;
+
+  /// Titre
+  ///
+  /// In fr, this message translates to:
+  /// **'Commentaires'**
+  String get feedComments;
+
+  /// Vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de commentaire : lance la conversation !'**
+  String get feedNoComment;
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un commentaire'**
+  String get feedCommentHint;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer mon commentaire'**
+  String get feedDeleteComment;
+
+  /// Cible de modération
+  ///
+  /// In fr, this message translates to:
+  /// **'Commentaire'**
+  String get moderationComment;
 }
 
 class _DymLocalizationsDelegate

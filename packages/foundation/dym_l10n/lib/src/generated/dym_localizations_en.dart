@@ -4784,4 +4784,34 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get creatorPublish => 'Publish';
+
+  @override
+  String get feedGrid => 'Grid view';
+
+  @override
+  String get feedFullScreen => 'Full screen';
+
+  @override
+  String get feedAllCategories => 'All';
+
+  @override
+  String get feedFollow => 'Follow';
+
+  @override
+  String get feedFollowingOne => 'Following';
+
+  @override
+  String get feedComments => 'Comments';
+
+  @override
+  String get feedNoComment => 'No comment yet: start the conversation!';
+
+  @override
+  String get feedCommentHint => 'Add a comment';
+
+  @override
+  String get feedDeleteComment => 'Delete my comment';
+
+  @override
+  String get moderationComment => 'Comment';
 }

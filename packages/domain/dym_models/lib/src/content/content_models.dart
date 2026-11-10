@@ -102,6 +102,8 @@ class ContentItem {
     this.viewCount = 0,
     this.clickCount = 0,
     this.reportCount = 0,
+    this.commentCount = 0,
+    this.followed = false,
   });
 
   factory fromJson(Map<String, dynamic> json) => ContentItem(
@@ -138,6 +140,8 @@ class ContentItem {
     viewCount: (json['view_count'] as num?)?.toInt() ?? 0,
     clickCount: (json['click_count'] as num?)?.toInt() ?? 0,
     reportCount: (json['report_count'] as num?)?.toInt() ?? 0,
+    commentCount: (json['comment_count'] as num?)?.toInt() ?? 0,
+    followed: json['followed'] as bool? ?? false,
   );
 
   final String id;
@@ -168,28 +172,67 @@ class ContentItem {
   final int clickCount;
   final int reportCount;
 
-  ContentItem copyWith({int? likeCount, bool? liked, String? status}) =>
-      ContentItem(
-        id: id,
-        kind: kind,
-        mediaKey: mediaKey,
-        isVideo: isVideo,
-        isText: isText,
-        background: background,
-        caption: caption,
-        status: status ?? this.status,
-        createdAt: createdAt,
-        expiresAt: expiresAt,
-        store: store,
-        author: author,
-        category: category,
-        likeCount: likeCount ?? this.likeCount,
-        liked: liked ?? this.liked,
-        products: products,
-        viewCount: viewCount,
-        clickCount: clickCount,
-        reportCount: reportCount,
-      );
+  /// Commentaires publiés (spec 037).
+  final int commentCount;
+
+  /// La personne suit l'autrice ou la boutique (spec 037).
+  final bool followed;
+
+  ContentItem copyWith({
+    int? likeCount,
+    bool? liked,
+    String? status,
+    int? commentCount,
+    bool? followed,
+  }) => ContentItem(
+    id: id,
+    kind: kind,
+    mediaKey: mediaKey,
+    isVideo: isVideo,
+    isText: isText,
+    background: background,
+    caption: caption,
+    status: status ?? this.status,
+    createdAt: createdAt,
+    expiresAt: expiresAt,
+    store: store,
+    author: author,
+    category: category,
+    likeCount: likeCount ?? this.likeCount,
+    liked: liked ?? this.liked,
+    products: products,
+    viewCount: viewCount,
+    clickCount: clickCount,
+    reportCount: reportCount,
+    commentCount: commentCount ?? this.commentCount,
+    followed: followed ?? this.followed,
+  );
+}
+
+/// Commentaire d'un contenu (spec 037).
+@immutable
+class ContentComment {
+  const new({
+    required this.id,
+    required this.body,
+    required this.authorName,
+    required this.createdAt,
+    this.mine = false,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => ContentComment(
+    id: json['id'] as String,
+    body: json['body'] as String,
+    authorName: json['author_name'] as String? ?? '?',
+    createdAt: DateTime.parse(json['created_at'] as String),
+    mine: json['mine'] as bool? ?? false,
+  );
+
+  final String id;
+  final String body;
+  final String authorName;
+  final DateTime createdAt;
+  final bool mine;
 }
 
 /// Stories d'une boutique (rangée de l'accueil, C-HOME-07).
@@ -213,7 +256,7 @@ class StoryGroup {
 enum ReportReason { misleading, offensive, forbidden, spam, other }
 
 /// Cible d'un signalement.
-enum ReportTarget { content, product, review }
+enum ReportTarget { content, product, review, comment }
 
 /// Ligne de la file de modération (écran 76) : une cible signalée.
 @immutable

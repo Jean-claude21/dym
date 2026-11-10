@@ -1380,5 +1380,15 @@
   "creatorCategoryHint": "Without a choice, your post goes to “Other”.",
   "creatorTagProducts": "Tagged products ({count}/{max})",
   "creatorSearchProducts": "Search a product to tag",
-  "creatorPublish": "Publish"
+  "creatorPublish": "Publish",
+  "feedGrid": "Grid view",
+  "feedFullScreen": "Full screen",
+  "feedAllCategories": "All",
+  "feedFollow": "Follow",
+  "feedFollowingOne": "Following",
+  "feedComments": "Comments",
+  "feedNoComment": "No comment yet: start the conversation!",
+  "feedCommentHint": "Add a comment",
+  "feedDeleteComment": "Delete my comment",
+  "moderationComment": "Comment"
 }

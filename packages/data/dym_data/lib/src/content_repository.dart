@@ -262,4 +262,59 @@ class ContentRepository {
 
   Future<Result<List<ContentItem>>> myCreatorContents() async =>
       (await _data.rpc<Object?>('my_creator_contents')).map(_items);
+
+  // ---------------------------------------------------------------- fil classé
+
+  /// Fil classé par la base (spec 037) : onglet, catégorie, décalage.
+  Future<Result<List<ContentItem>>> rankedFeed({
+    String? zoneId,
+    bool following = false,
+    String? category,
+    int offset = 0,
+  }) async => (await _data.rpc<Object?>(
+    'content_feed_ranked',
+    params: {
+      'p_zone': zoneId,
+      'p_tab': following ? 'following' : 'for_you',
+      'p_category': category,
+      'p_offset': offset,
+    },
+  )).map(_items);
+
+  /// S'abonner à une créatrice ([creatorId]) ou une boutique ([storeId]).
+  Future<Result<bool>> follow({
+    required bool on,
+    String? creatorId,
+    String? storeId,
+  }) async => (await _data.rpc<Object?>(
+    'follow',
+    params: {
+      'p_kind': creatorId != null ? 'creator' : 'store',
+      'p_id': creatorId ?? storeId,
+      'p_on': on,
+    },
+  )).map((json) => json == true);
+
+  Future<Result<List<ContentComment>>> comments(String contentId) async =>
+      (await _data.rpc<Object?>(
+        'content_comments_list',
+        params: {'p_content': contentId},
+      )).map(_comments);
+
+  Future<Result<List<ContentComment>>> addComment(
+    String contentId,
+    String body, {
+    required String idempotencyKey,
+  }) async => (await _data.rpc<Object?>(
+    'add_comment',
+    params: {'p_content': contentId, 'p_body': body, 'p_key': idempotencyKey},
+  )).map(_comments);
+
+  Future<Result<void>> deleteComment(String commentId) =>
+      _data.rpc<void>('delete_comment', params: {'p_comment': commentId});
+
+  static List<ContentComment> _comments(Object? json) => [
+    for (final c in json as List? ?? const [])
+      ContentComment.fromJson((c as Map).cast<String, dynamic>()),
+  ];
 }
