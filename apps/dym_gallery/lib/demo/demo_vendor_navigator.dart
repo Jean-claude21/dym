@@ -62,6 +62,9 @@ class DemoVendorNavigator implements AppNavigator {
   void toGroupOffers() {}
 
   @override
+  void toMembership() {}
+
+  @override
   void toContents() {}
 
   @override

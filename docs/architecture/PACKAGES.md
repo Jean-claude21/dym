@@ -39,7 +39,7 @@ dym/
 │     ├─ dym_auth/       # Écrans + viewmodels Stacked d'authentification (4 apps)
 │     ├─ dym_notifications/  # Centre de notifications (créé avec order-lifecycle)
 │     ├─ dym_chat/       # Messagerie (créé avec messaging)
-│     └─ dym_account/    # Profil, réglages, FAQ, support
+│     └─ dym_account/    # Profil, réglages, FAQ, support, formules (DYM+, Pro)
 ├─ functions/            # Neon Functions (TypeScript)
 ├─ db/                   # migrations/ · seeds/ · tests/ (pgTAP)
 └─ site/                 # Site léger (Coolify)

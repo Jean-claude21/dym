@@ -137,6 +137,9 @@ class _Navigator implements AppNavigator {
   void toGroupBuys() => routes.add('group-buys');
 
   @override
+  void toMembership() => routes.add('membership');
+
+  @override
   void toCreatorStudio() => routes.add('creator');
 
   @override

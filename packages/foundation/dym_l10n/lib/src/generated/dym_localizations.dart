@@ -10008,6 +10008,102 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais.'**
   String get groupOfferInvalid;
+
+  /// No description provided for @accountMembership.
+  ///
+  /// In fr, this message translates to:
+  /// **'DYM+'**
+  String get accountMembership;
+
+  /// No description provided for @membershipClientTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'DYM+'**
+  String get membershipClientTitle;
+
+  /// No description provided for @membershipVendorTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pro et visibilité'**
+  String get membershipVendorTitle;
+
+  /// No description provided for @membershipWallet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payé depuis ton wallet · solde : {balance}'**
+  String membershipWallet(String balance);
+
+  /// No description provided for @membershipWalletInsufficient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde du wallet insuffisant : recharge-le (ou verse ta caisse vers ton wallet), puis réessaie.'**
+  String get membershipWalletInsufficient;
+
+  /// No description provided for @membershipNone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune formule dans ton pays pour le moment.'**
+  String get membershipNone;
+
+  /// No description provided for @membershipDeliveryRefund.
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais de livraison remboursés sur ton wallet à chaque livraison'**
+  String get membershipDeliveryRefund;
+
+  /// No description provided for @membershipCashback.
+  ///
+  /// In fr, this message translates to:
+  /// **'{percent} % de cashback en plus sur tes courses'**
+  String membershipCashback(num percent);
+
+  /// No description provided for @membershipCommission.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commission DYM réduite de {percent} %'**
+  String membershipCommission(num percent);
+
+  /// No description provided for @membershipSponsored.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta boutique « À la une » de l\'accueil de tes quartiers, signalée comme sponsorisée'**
+  String get membershipSponsored;
+
+  /// No description provided for @membershipPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'{price} pour {days, plural, =1{1 jour} other{{days} jours}}'**
+  String membershipPrice(String price, int days);
+
+  /// No description provided for @membershipActiveUntil.
+  ///
+  /// In fr, this message translates to:
+  /// **'Active jusqu\'au {date}'**
+  String membershipActiveUntil(String date);
+
+  /// No description provided for @membershipSubscribe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prendre la formule'**
+  String get membershipSubscribe;
+
+  /// No description provided for @membershipExtend.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prolonger'**
+  String get membershipExtend;
+
+  /// No description provided for @homeSponsored.
+  ///
+  /// In fr, this message translates to:
+  /// **'À la une'**
+  String get homeSponsored;
+
+  /// No description provided for @homeSponsoredLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Sponsorisé'**
+  String get homeSponsoredLabel;
 }
 
 class _DymLocalizationsDelegate

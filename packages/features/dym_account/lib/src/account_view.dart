@@ -23,6 +23,7 @@ class AccountView extends StackedView<AccountViewModel> {
     this.onSpaces,
     this.onCreator,
     this.onGroupBuys,
+    this.onMembership,
   });
 
   final AuthService service;
@@ -52,6 +53,9 @@ class AccountView extends StackedView<AccountViewModel> {
 
   /// Achats groupés entre voisins (spec 051) ; absent : ligne masquée.
   final VoidCallback? onGroupBuys;
+
+  /// DYM+ (spec 052) ; absent : ligne masquée.
+  final VoidCallback? onMembership;
 
   /// Studio créatrice (spec 036) ; absent : ligne masquée.
   final VoidCallback? onCreator;
@@ -149,6 +153,11 @@ class AccountView extends StackedView<AccountViewModel> {
                     Icons.account_balance_wallet_rounded,
                     l10n.accountWallet,
                     onWallet,
+                  ),
+                  (
+                    Icons.workspace_premium_rounded,
+                    l10n.accountMembership,
+                    onMembership,
                   ),
                   (Icons.groups_rounded, l10n.accountSpaces, onSpaces),
                   (

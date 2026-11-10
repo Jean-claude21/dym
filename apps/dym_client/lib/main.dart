@@ -197,6 +197,13 @@ Future<void> configureServices(DymEnvironment environment) async {
         cart: locator<CartService>(),
       ),
     )
+    ..registerLazySingleton<MembershipService>(
+      () => NeonMembershipService(
+        repository: MembershipRepository(neon.data),
+        audience: 'client',
+        config: locator<DiscoveryService>().countryConfig,
+      ),
+    )
     ..registerLazySingleton<GroupBuyService>(
       () => NeonGroupBuyService(
         repository: GroupBuyRepository(neon.data),

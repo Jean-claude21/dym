@@ -7045,5 +7045,61 @@
   "groupOfferFee": "Frais de livraison des membres (facultatif)",
   "groupOfferCancel": "Annuler l'offre",
   "groupOfferCancelled": "Annulée",
-  "groupOfferInvalid": "Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais."
+  "groupOfferInvalid": "Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais.",
+  "accountMembership": "DYM+",
+  "membershipClientTitle": "DYM+",
+  "membershipVendorTitle": "Pro et visibilité",
+  "membershipWallet": "Payé depuis ton wallet · solde : {balance}",
+  "@membershipWallet": {
+    "placeholders": {
+      "balance": {
+        "type": "String"
+      }
+    }
+  },
+  "membershipWalletInsufficient": "Solde du wallet insuffisant : recharge-le (ou verse ta caisse vers ton wallet), puis réessaie.",
+  "membershipNone": "Aucune formule dans ton pays pour le moment.",
+  "membershipDeliveryRefund": "Frais de livraison remboursés sur ton wallet à chaque livraison",
+  "membershipCashback": "{percent} % de cashback en plus sur tes courses",
+  "@membershipCashback": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "membershipCommission": "Commission DYM réduite de {percent} %",
+  "@membershipCommission": {
+    "placeholders": {
+      "percent": {
+        "type": "num",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "membershipSponsored": "Ta boutique « À la une » de l'accueil de tes quartiers, signalée comme sponsorisée",
+  "membershipPrice": "{price} pour {days, plural, =1{1 jour} other{{days} jours}}",
+  "@membershipPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "membershipActiveUntil": "Active jusqu'au {date}",
+  "@membershipActiveUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "membershipSubscribe": "Prendre la formule",
+  "membershipExtend": "Prolonger",
+  "homeSponsored": "À la une",
+  "homeSponsoredLabel": "Sponsorisé"
 }

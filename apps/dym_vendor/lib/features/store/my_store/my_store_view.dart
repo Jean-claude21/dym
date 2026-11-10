@@ -23,6 +23,7 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     this.onWholesale,
     this.onHaggling,
     this.onGroupOffers,
+    this.onMembership,
     this.onContents,
     this.onBroadcast,
   });
@@ -59,6 +60,9 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
 
   /// Offres groupées (spec 051) ; absent : masqué.
   final VoidCallback? onGroupOffers;
+
+  /// Pro et visibilité (spec 052) ; absent : masqué.
+  final VoidCallback? onMembership;
 
   @override
   MyStoreViewModel viewModelBuilder(BuildContext context) =>
@@ -263,6 +267,14 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                   icon: Icons.point_of_sale_rounded,
                   label: l10n.tillTitle,
                   onTap: till,
+                ),
+                const SizedBox(height: DymTokenSpace.s2),
+              ],
+              if (onMembership case final membership?) ...[
+                DymMenuRow(
+                  icon: Icons.workspace_premium_rounded,
+                  label: l10n.membershipVendorTitle,
+                  onTap: membership,
                 ),
                 const SizedBox(height: DymTokenSpace.s2),
               ],

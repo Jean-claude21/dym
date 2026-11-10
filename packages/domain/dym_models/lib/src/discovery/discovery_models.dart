@@ -145,13 +145,20 @@ class CatalogItem {
 @immutable
 @JsonSerializable()
 class DiscoverResult {
-  const new({this.estimateMinutes, this.stores = const []});
+  const new({
+    this.estimateMinutes,
+    this.stores = const [],
+    this.sponsored = const [],
+  });
 
   factory fromJson(Map<String, dynamic> json) => _$DiscoverResultFromJson(json);
 
   /// « Livré en … min » (nul : aucune boutique ouverte).
   final int? estimateMinutes;
   final List<PublicStore> stores;
+
+  /// « À la une » : boutiques sponsorisées, signalées comme telles (spec 052).
+  final List<PublicStore> sponsored;
 
   List<PublicStore> get openStores => stores.where((s) => s.openNow).toList();
 }

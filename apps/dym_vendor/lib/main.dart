@@ -110,6 +110,13 @@ Future<void> configureServices(DymEnvironment environment) async {
         photo: (key) => dymNetworkImage(environment.media(key).toString()),
       ),
     )
+    ..registerSingleton<MembershipService>(
+      NeonMembershipService(
+        repository: MembershipRepository(neon.data),
+        audience: 'vendor',
+        config: stores.countryConfig,
+      ),
+    )
     ..registerSingleton<GroupOffersService>(
       NeonGroupOffersService(
         repository: GroupBuyRepository(neon.data),

@@ -5968,4 +5968,79 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get groupOfferInvalid =>
       'Vérifie le prix (plus bas que le prix du jour), la quantité (au moins 2) et les frais.';
+
+  @override
+  String get accountMembership => 'DYM+';
+
+  @override
+  String get membershipClientTitle => 'DYM+';
+
+  @override
+  String get membershipVendorTitle => 'Pro et visibilité';
+
+  @override
+  String membershipWallet(String balance) {
+    return 'Payé depuis ton wallet · solde : $balance';
+  }
+
+  @override
+  String get membershipWalletInsufficient =>
+      'Solde du wallet insuffisant : recharge-le (ou verse ta caisse vers ton wallet), puis réessaie.';
+
+  @override
+  String get membershipNone => 'Aucune formule dans ton pays pour le moment.';
+
+  @override
+  String get membershipDeliveryRefund =>
+      'Frais de livraison remboursés sur ton wallet à chaque livraison';
+
+  @override
+  String membershipCashback(num percent) {
+    final intl.NumberFormat percentNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String percentString = percentNumberFormat.format(percent);
+
+    return '$percentString % de cashback en plus sur tes courses';
+  }
+
+  @override
+  String membershipCommission(num percent) {
+    final intl.NumberFormat percentNumberFormat =
+        intl.NumberFormat.decimalPattern(localeName);
+    final String percentString = percentNumberFormat.format(percent);
+
+    return 'Commission DYM réduite de $percentString %';
+  }
+
+  @override
+  String get membershipSponsored =>
+      'Ta boutique « À la une » de l\'accueil de tes quartiers, signalée comme sponsorisée';
+
+  @override
+  String membershipPrice(String price, int days) {
+    String _temp0 = intl.Intl.pluralLogic(
+      days,
+      locale: localeName,
+      other: '$days jours',
+      one: '1 jour',
+    );
+    return '$price pour $_temp0';
+  }
+
+  @override
+  String membershipActiveUntil(String date) {
+    return 'Active jusqu\'au $date';
+  }
+
+  @override
+  String get membershipSubscribe => 'Prendre la formule';
+
+  @override
+  String get membershipExtend => 'Prolonger';
+
+  @override
+  String get homeSponsored => 'À la une';
+
+  @override
+  String get homeSponsoredLabel => 'Sponsorisé';
 }

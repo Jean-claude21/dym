@@ -127,6 +127,9 @@ abstract interface class AppNavigator {
   /// Achats groupés entre voisins (spec 051).
   void toGroupBuys();
 
+  /// DYM+ (spec 052).
+  void toMembership();
+
   /// Studio créatrice (spec 036).
   void toCreatorStudio();
 
@@ -607,6 +610,20 @@ class StackedAppNavigator implements AppNavigator {
               ),
             ) ??
             false,
+      ),
+    );
+  }
+
+  @override
+  void toMembership() {
+    if (!locator.isRegistered<MembershipService>()) return;
+    _push(
+      Builder(
+        builder: (context) => MembershipView(
+          service: locator<MembershipService>(),
+          title: DymLocalizations.of(context).membershipClientTitle,
+          onBack: _back,
+        ),
       ),
     );
   }

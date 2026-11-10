@@ -185,6 +185,7 @@ class _HomeViewState extends State<HomeView> {
           onBaskets: _navigator.toBaskets,
           onSpaces: _navigator.toSpaces,
           onGroupBuys: _navigator.toGroupBuys,
+          onMembership: _navigator.toMembership,
           onCreator: _navigator.toCreatorStudio,
         ),
       },
