@@ -109,6 +109,7 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton<TillService>(
       NeonTillService(
         till: TillRepository(neon.data),
+        qr: QrPaymentRepository(neon.data),
         search: SearchAiRepository(data: neon.data, functions: neon.functions),
         recorder: PluginVoiceRecorder(),
         config: stores.countryConfig,

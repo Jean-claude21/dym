@@ -5417,4 +5417,76 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get actorSystem => 'DYM';
+
+  @override
+  String get tillMethodDym => 'Wallet DYM (QR)';
+
+  @override
+  String get qrChargeTitle => 'Encaisser par QR';
+
+  @override
+  String get qrChargeHint =>
+      'La cliente scanne le QR (ou tape le code) et paie depuis son wallet DYM.';
+
+  @override
+  String get qrChargeLabel => 'Libellé (facultatif)';
+
+  @override
+  String get qrChargeShow => 'Afficher le QR';
+
+  @override
+  String get qrChargeCode => 'Code à taper';
+
+  @override
+  String get qrChargeWaiting => 'En attente du paiement… (valable 10 minutes)';
+
+  @override
+  String get qrChargeCancel => 'Annuler';
+
+  @override
+  String get qrChargePaid => 'Payé !';
+
+  @override
+  String get qrChargeExpired => 'Demande expirée ou annulée.';
+
+  @override
+  String get qrChargeAnother => 'Nouvel encaissement';
+
+  @override
+  String get walletQrPay => 'Payer par QR';
+
+  @override
+  String get qrPayTitle => 'Payer par QR';
+
+  @override
+  String get qrPayHint =>
+      'Scanne le QR de la vendeuse, ou tape son code à 6 chiffres.';
+
+  @override
+  String get qrPayCode => 'Code de la vendeuse';
+
+  @override
+  String get qrPayContinue => 'Continuer';
+
+  @override
+  String qrPayConfirm(String amount) {
+    return 'Payer $amount';
+  }
+
+  @override
+  String qrPayDone(String amount, String store) {
+    return '$amount payés à $store.';
+  }
+
+  @override
+  String get qrPayClose => 'Terminer';
+
+  @override
+  String get qrPayInvalidCode => 'Code inconnu, expiré ou déjà payé.';
+
+  @override
+  String get qrPayOwnStore => 'C\'est ta propre boutique.';
+
+  @override
+  String get qrPayCurrency => 'Cette boutique n\'est pas dans ton pays.';
 }

@@ -1,6 +1,7 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_client/features/orders/order_texts.dart';
+import 'package:dym_client/features/wallet/qr_pay_view.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/features/wallet/wallet_viewmodel.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -166,6 +167,23 @@ class _BalanceCard extends StatelessWidget {
               style: t.label.copyWith(color: c.onBrand),
             ),
           const SizedBox(height: DymTokenSpace.s2),
+          // Paiement chez une vendeuse par QR (spec 046).
+          DymButton(
+            label: l10n.walletQrPay,
+            icon: Icons.qr_code_scanner_rounded,
+            variant: DymButtonVariant.surface,
+            onPressed: () async {
+              await Navigator.of(context).push<void>(
+                MaterialPageRoute(
+                  builder: (route) => QrPayView(
+                    service: vm.service,
+                    onDone: () => Navigator.of(route).pop(),
+                  ),
+                ),
+              );
+              await vm.load();
+            },
+          ),
           // Recharge en cash auprès d'un livreur DYM (spec 043).
           Align(
             alignment: Alignment.centerLeft,

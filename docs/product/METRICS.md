@@ -68,3 +68,4 @@ fiabilité (ops).
 | `run_accepted` (boutiques), `handover_code_failed` (essais) | Serveur | Tournées et remise (spec 042) |
 | `courier_earned` (frais, cash), `courier_cash_remitted` (montant), `wallet_withdrawn` (montant, fournisseur) | Serveur | Cash et gains du livreur (spec 043) |
 | `till_sale_recorded` (montant, moyen, produit reconnu), `store_paid_out` (montant, fournisseur) | Serveur | Caisse de la vendeuse (spec 045) |
+| `qr_paid` (montant) | Serveur | Paiement par QR (spec 046) |

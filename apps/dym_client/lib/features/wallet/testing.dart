@@ -64,6 +64,39 @@ class MemoryWalletService implements WalletService {
     return Ok(_wallet);
   }
 
+  /// Demande de paiement en attente (spec 046).
+  PaymentRequest? qrRequest;
+
+  @override
+  Future<Result<PaymentRequest>> qrPreview(String code) async {
+    final r = qrRequest;
+    return r == null || code.replaceFirst('DYM-PAY:', '') != r.code
+        ? const Err(ValidationFailure('invalid_code'))
+        : Ok(r);
+  }
+
+  @override
+  Future<Result<PaymentRequest>> qrPay(String code) async {
+    final r = qrRequest;
+    if (r == null || code.replaceFirst('DYM-PAY:', '') != r.code) {
+      return const Err(ValidationFailure('invalid_code'));
+    }
+    if (r.amountMinor > balanceMinor) {
+      return const Err(ValidationFailure('wallet_insufficient'));
+    }
+    balanceMinor -= r.amountMinor;
+    return Ok(
+      PaymentRequest(
+        id: r.id,
+        amountMinor: r.amountMinor,
+        currencyCode: r.currencyCode,
+        status: PaymentRequestStatus.paid,
+        expiresAt: r.expiresAt,
+        storeName: r.storeName,
+      ),
+    );
+  }
+
   @override
   Future<Result<({String code, DateTime expiresAt})>> cashTopupCode() async =>
       Ok((code: '482913', expiresAt: DateTime(2026, 11, 10, 10, 15)));
