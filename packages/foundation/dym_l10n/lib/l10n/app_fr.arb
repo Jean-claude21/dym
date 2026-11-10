@@ -6410,5 +6410,21 @@
   "moderationComment": "Commentaire",
   "@moderationComment": {
     "description": "Cible de modération"
+  },
+  "recipeIngredients": "Ingrédients",
+  "@recipeIngredients": {
+    "description": "Section"
+  },
+  "recipeFindIngredients": "Repérer avec l'IA",
+  "@recipeFindIngredients": {
+    "description": "Bouton IA"
+  },
+  "recipeAddIngredient": "Ajouter un ingrédient (tomate, gombo…)",
+  "@recipeAddIngredient": {
+    "description": "Champ"
+  },
+  "recipeAllForIt": "Tout pour la faire",
+  "@recipeAllForIt": {
+    "description": "Bouton du fil"
   }
 }

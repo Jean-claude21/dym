@@ -24,7 +24,13 @@ const _autre = ContentCategory(
 class _Fake implements CreatorService {
   CreatorProfile? current;
   String? suggestion = 'recettes';
-  ({String? categoryId, String source, List<String> products})? published;
+  ({
+    String? categoryId,
+    String source,
+    List<String> products,
+    List<ShoppingItem> ingredients,
+  })?
+  published;
 
   @override
   Future<Result<CreatorProfile?>> profile() async => Ok(current);
@@ -55,6 +61,12 @@ class _Fake implements CreatorService {
   Future<String?> suggestCategory(String caption) async => suggestion;
 
   @override
+  Future<List<ShoppingItem>> suggestIngredients(String caption) async => const [
+    ShoppingItem(label: 'Gombo', query: 'gombo', quantity: 2),
+    ShoppingItem(label: 'Tomates', query: 'tomate'),
+  ];
+
+  @override
   Future<Result<List<CatalogItem>>> searchProducts(String text) async =>
       const Ok([]);
 
@@ -65,11 +77,13 @@ class _Fake implements CreatorService {
     String? categoryId,
     String categorySource = 'chosen',
     List<String> productIds = const [],
+    List<ShoppingItem> ingredients = const [],
   }) async {
     published = (
       categoryId: categoryId,
       source: categorySource,
       products: productIds,
+      ingredients: ingredients,
     );
     return Ok(
       ContentItem(
@@ -137,6 +151,24 @@ void main() {
       expect(service.published!.categoryId, isNull);
       expect(service.published!.source, 'default');
     });
+
+    test(
+      'ingrédients : IA puis saisie, sans doublon, publiés avec le post',
+      () async {
+        final service = _Fake();
+        final vm = ComposeViewModel(service: service);
+        await vm.load();
+        await vm.pick(video: false, source: PhotoSource.gallery);
+        vm
+          ..caption = 'Sauce gombo pour 4'
+          ..addIngredient('tomates');
+        await vm.findIngredients();
+        expect(vm.ingredients.map((i) => i.label), ['tomates', 'Gombo']);
+        vm.removeIngredient(0);
+        expect(await vm.publish(), isTrue);
+        expect(service.published!.ingredients.single.label, 'Gombo');
+      },
+    );
 
     test('produits tagués : 5 au plus', () {
       final vm = ComposeViewModel(service: _Fake());

@@ -8196,6 +8196,30 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Commentaire'**
   String get moderationComment;
+
+  /// Section
+  ///
+  /// In fr, this message translates to:
+  /// **'Ingrédients'**
+  String get recipeIngredients;
+
+  /// Bouton IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Repérer avec l\'IA'**
+  String get recipeFindIngredients;
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un ingrédient (tomate, gombo…)'**
+  String get recipeAddIngredient;
+
+  /// Bouton du fil
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout pour la faire'**
+  String get recipeAllForIt;
 }
 
 class _DymLocalizationsDelegate

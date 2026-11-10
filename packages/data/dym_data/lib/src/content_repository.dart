@@ -317,4 +317,31 @@ class ContentRepository {
     for (final c in json as List? ?? const [])
       ContentComment.fromJson((c as Map).cast<String, dynamic>()),
   ];
+
+  // ---------------------------------------------------------------- recettes
+
+  /// Ingrédients d'un post de l'autrice (liste vide : retirés).
+  Future<Result<void>> setIngredients(
+    String contentId,
+    List<ShoppingItem> items,
+  ) async => (await _data.rpc<Object?>(
+    'set_content_ingredients',
+    params: {
+      'p_content': contentId,
+      'p_items': [for (final i in items) i.toJson()],
+    },
+  )).map((_) {});
+
+  /// « Tout pour la faire » : panier composé et chiffré en base.
+  Future<Result<CopilotProposal>> recipeBasket(
+    String contentId, {
+    String? zoneId,
+  }) async =>
+      (await _data.rpc<Object?>(
+        'recipe_basket',
+        params: {'p_content': contentId, 'p_zone': zoneId},
+      )).map(
+        (json) =>
+            CopilotProposal.fromJson((json! as Map).cast<String, dynamic>()),
+      );
 }

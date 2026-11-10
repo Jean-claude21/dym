@@ -156,6 +156,7 @@ class _HomeViewState extends State<HomeView> {
           final content? => FeedView(
             service: content,
             onOpenStore: _navigator.toStore,
+            onRecipe: _navigator.toRecipe,
           ),
           null => const SizedBox.shrink(),
         },

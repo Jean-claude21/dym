@@ -137,6 +137,9 @@ class _Navigator implements AppNavigator {
   void toCreatorStudio() => routes.add('creator');
 
   @override
+  void toRecipe(ContentItem content) => routes.add('recipe:${content.id}');
+
+  @override
   Future<void> toSpace(String spaceId) async => routes.add('space:$spaceId');
 
   @override

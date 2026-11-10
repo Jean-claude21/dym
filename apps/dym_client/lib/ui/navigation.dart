@@ -124,6 +124,9 @@ abstract interface class AppNavigator {
   /// Studio créatrice (spec 036).
   void toCreatorStudio();
 
+  /// « Tout pour la faire » d'une recette (spec 038).
+  void toRecipe(ContentItem content);
+
   /// Un espace (notification, liste).
   Future<void> toSpace(String spaceId);
 }
@@ -287,6 +290,7 @@ class StackedAppNavigator implements AppNavigator {
         productId: productId,
         onBack: _back,
         onOpenStore: toStore,
+        onRecipe: toRecipe,
       ),
     );
   }
@@ -504,6 +508,31 @@ class StackedAppNavigator implements AppNavigator {
       },
     ),
   );
+
+  @override
+  void toRecipe(ContentItem content) {
+    final copilot = _copilot;
+    final contents = _content;
+    if (copilot == null || contents == null) return;
+    _push(
+      CopilotView(
+        service: ListCopilotService(
+          base: copilot,
+          proposeList: () => contents.recipeBasket(content),
+          addToCart: (variantId, quantity) async =>
+              (await _cart.add(variantId, quantity: quantity)).isOk,
+        ),
+        title: content.caption ?? content.author?.displayName ?? '',
+        // Le texte ne sert qu'à lancer la composition (recette, pas intention).
+        initialText: content.id,
+        onBack: _back,
+        onAdded: () {
+          _back();
+          toCart();
+        },
+      ),
+    );
+  }
 
   @override
   void toCreatorStudio() {

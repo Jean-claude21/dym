@@ -80,6 +80,9 @@ class DemoClientNavigator implements AppNavigator {
   void toCreatorStudio() {}
 
   @override
+  void toRecipe(ContentItem content) {}
+
+  @override
   Future<void> toSpace(String spaceId) async {}
 
   @override
