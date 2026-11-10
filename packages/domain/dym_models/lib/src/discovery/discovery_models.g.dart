@@ -127,6 +127,11 @@ CatalogItem _$CatalogItemFromJson(Map<String, dynamic> json) => $checkedCreate(
         'arrival_on',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
+      endOfMarketPercent: $checkedConvert(
+        'end_of_market_percent',
+        (v) => (v as num?)?.toInt(),
+        readValue: _endOfMarketPercent,
+      ),
     );
     return val;
   },
@@ -141,6 +146,7 @@ CatalogItem _$CatalogItemFromJson(Map<String, dynamic> json) => $checkedCreate(
     'defaultVariantId': 'default_variant_id',
     'storeCategoryIds': 'store_category_ids',
     'arrivalOn': 'arrival_on',
+    'endOfMarketPercent': 'end_of_market_percent',
   },
 );
 

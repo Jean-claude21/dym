@@ -5,6 +5,8 @@ import { type TikTokDeps, type TikTokStore, tiktokOEmbedProvider, type VideoImpo
 const store: TikTokStore = {
   isCreator: async (userId) => userId !== "autre",
   declaredHandle: async (userId) => (userId === "sans-compte" ? null : "awa.cuisine"),
+  storePreview: async (id) =>
+    id === "11111111-1111-4111-8111-111111111111" ? { name: "Étal de Kodjo", zoneName: "Bè", coverKey: null } : null,
   sharePreview: async (code) =>
     code === "ab12cd34"
       ? { caption: "Sauce <gombo>", mediaKey: "creators/u/contents/c.jpg", isVideo: false, authorName: "Awa" }
@@ -81,6 +83,15 @@ describe("pont TikTok (spec 040)", () => {
     expect(html).toContain('og:image" content="https://cdn/creators/u/contents/c.jpg"');
     expect((await app().request("http://fn.test/s/zzzzzzzz")).status).toBe(404);
     expect((await app().request("http://fn.test/s/x")).status).toBe(404);
+  });
+
+  it("boutique partagée : page et lien vers l'app web (spec 048)", async () => {
+    const res = await app().request("http://fn.test/b/11111111-1111-4111-8111-111111111111");
+    expect(res.status).toBe(200);
+    const html = await res.text();
+    expect(html).toContain("Étal de Kodjo");
+    expect(html).toContain('href="https://app.dym.test/?store=11111111-1111-4111-8111-111111111111"');
+    expect((await app().request("http://fn.test/b/22222222-2222-4222-8222-222222222222")).status).toBe(404);
   });
 
   it("oEmbed : compte lu dans la réponse ; vidéo inconnue : nulle", async () => {

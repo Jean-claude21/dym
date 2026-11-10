@@ -102,6 +102,7 @@ class CatalogItem {
     this.available = true,
     this.storeCategoryIds = const [],
     this.arrivalOn,
+    this.endOfMarketPercent,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$CatalogItemFromJson(json);
@@ -129,6 +130,11 @@ class CatalogItem {
 
   /// Arrivage à venir (spec 033) : précommande à prix bloqué.
   final DateTime? arrivalOn;
+
+  /// Fin de marché en cours (spec 048) : remise en pourcentage, déjà
+  /// appliquée au prix.
+  @JsonKey(readValue: _endOfMarketPercent)
+  final int? endOfMarketPercent;
 
   /// Prix affiché : le plus bas s'il y a plusieurs variantes.
   int? get displayPriceMinor =>
@@ -431,3 +437,6 @@ class HomeFeed {
 
   bool get isEmpty => lastOrder == null && popular.isEmpty && fresh.isEmpty;
 }
+
+Object? _endOfMarketPercent(Map<dynamic, dynamic> json, String key) =>
+    (json['end_of_market'] as Map?)?['percent'];

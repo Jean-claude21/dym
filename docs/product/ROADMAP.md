@@ -22,7 +22,7 @@
 | 9 · Vie réelle | Carnet, espaces, précommande, créneaux, chat, appel | Un espace remplit, valide et paie | ~24 h | ✅ Faite (specs 030-035) ; gate : démonstration web à faire |
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | 🔵 En cours : 1 spec fusionnée, 2 en relecture, 1 reportée |
-| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | 🔵 En cours : 3 specs sur 5 en relecture |
+| 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | 🔵 En cours : 4 specs sur 5 en relecture |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ⬜ À faire |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
@@ -168,8 +168,8 @@ en plus d'une heure.
 |---|---|---|
 | `vendor-till` | Caisse en app et hors app, à la voix, « Ma caisse », frise de commande, tableau de bord utile | 🟡 Spec 045 · PR #53 : code fait, en attente de relecture humaine (ventes hors app tapées ou dictées, montant lu en base, stock décompté, « Ma caisse » du jour par moyen, solde et versement simulé, frise de la commande, accès depuis le tableau de bord) |
 | `qr-payments` | Paiement et encaissement par QR | 🟡 Spec 046 · PR #54 : code fait, en attente de relecture humaine (demande de la vendeuse en QR et code à 6 chiffres, 10 minutes ; la cliente scanne ou tape le code et paie depuis son wallet ; vente dans « Ma caisse » ; commission par pays, 0 par défaut) |
-| `vendor-credit` | Ardoise, relances | 🟡 Spec 047 : code fait, en attente de relecture humaine (clientes, crédits et remboursements datés, plafond, solde en base, relance WhatsApp une fois par jour, archivage une fois soldée) |
-| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché | ⬜ À faire |
+| `vendor-credit` | Ardoise, relances | 🟡 Spec 047 · PR #55 : code fait, en attente de relecture humaine (clientes, crédits et remboursements datés, plafond, solde en base, relance WhatsApp une fois par jour, archivage une fois soldée) |
+| `vendor-studio` | Studio IA, boutique partageable sur WhatsApp, arrivages, fin de marché | 🟡 Spec 048 : code fait, en attente de relecture humaine (lien public de la boutique partagé sur WhatsApp et page légère qui l'ouvre, prix de fin de marché en pourcentage pour quelques heures appliqués partout par la fonction de prix ; studio IA et arrivages : specs 007, 019, 033) |
 | `wholesale` | Achat de gros groupé | ⬜ À faire |
 
 ## Phase 13 — Différence

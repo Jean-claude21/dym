@@ -1593,5 +1593,19 @@
   "creditLimitReached": "Limit reached: she must pay back first.",
   "creditPaymentTooHigh": "More than she owes.",
   "creditAlreadyReminded": "Already reminded today.",
-  "creditReminderText": "Hello {name}, a small reminder from {store}: {amount} is left on your credit. Thank you!"
+  "creditReminderText": "Hello {name}, a small reminder from {store}: {amount} is left on your credit. Thank you!",
+  "studioTitle": "Promote my shop",
+  "studioShareTitle": "Share my shop",
+  "studioShareHint": "Send your shop link on WhatsApp: your customers order in one tap.",
+  "studioShare": "Share on WhatsApp",
+  "studioShareText": "My fresh products are on DYM, order here: {link}",
+  "eomTitle": "End-of-market prices",
+  "eomHint": "Lower your prices for a few hours to sell today's fresh produce. The reduced price shows everywhere and applies to orders.",
+  "eomPercent": "Discount",
+  "eomDuration": "For",
+  "eomHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "eomStart": "Start -{percent}%",
+  "eomActive": "-{percent}% on {count} products until {time}",
+  "eomStop": "Stop the end-of-market prices",
+  "endOfMarketBadge": "End of market -{percent}%"
 }

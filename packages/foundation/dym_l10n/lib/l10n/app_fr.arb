@@ -6758,5 +6758,60 @@
         "type": "String"
       }
     }
+  },
+  "studioTitle": "Faire connaître ma boutique",
+  "studioShareTitle": "Partager ma boutique",
+  "studioShareHint": "Envoie le lien de ta boutique sur WhatsApp : tes clientes commandent en un geste.",
+  "studioShare": "Partager sur WhatsApp",
+  "studioShareText": "Mes produits frais sont sur DYM, commande ici : {link}",
+  "@studioShareText": {
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "eomTitle": "Prix de fin de marché",
+  "eomHint": "Baisse tes prix quelques heures pour écouler le frais du jour. Le prix réduit s'affiche partout et s'applique aux commandes.",
+  "eomPercent": "Remise",
+  "eomDuration": "Pendant",
+  "eomHours": "{count, plural, =1{1 heure} other{{count} heures}}",
+  "@eomHours": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "eomStart": "Lancer -{percent} %",
+  "@eomStart": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "eomActive": "-{percent} % sur {count} produits jusqu'à {time}",
+  "@eomActive": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "eomStop": "Arrêter la fin de marché",
+  "endOfMarketBadge": "Fin de marché -{percent} %",
+  "@endOfMarketBadge": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
   }
 }

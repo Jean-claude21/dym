@@ -5524,4 +5524,64 @@ class DymLocalizationsEn extends DymLocalizations {
   String creditReminderText(String name, String amount, String store) {
     return 'Hello $name, a small reminder from $store: $amount is left on your credit. Thank you!';
   }
+
+  @override
+  String get studioTitle => 'Promote my shop';
+
+  @override
+  String get studioShareTitle => 'Share my shop';
+
+  @override
+  String get studioShareHint =>
+      'Send your shop link on WhatsApp: your customers order in one tap.';
+
+  @override
+  String get studioShare => 'Share on WhatsApp';
+
+  @override
+  String studioShareText(String link) {
+    return 'My fresh products are on DYM, order here: $link';
+  }
+
+  @override
+  String get eomTitle => 'End-of-market prices';
+
+  @override
+  String get eomHint =>
+      'Lower your prices for a few hours to sell today\'s fresh produce. The reduced price shows everywhere and applies to orders.';
+
+  @override
+  String get eomPercent => 'Discount';
+
+  @override
+  String get eomDuration => 'For';
+
+  @override
+  String eomHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours',
+      one: '1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String eomStart(int percent) {
+    return 'Start -$percent%';
+  }
+
+  @override
+  String eomActive(int percent, int count, String time) {
+    return '-$percent% on $count products until $time';
+  }
+
+  @override
+  String get eomStop => 'Stop the end-of-market prices';
+
+  @override
+  String endOfMarketBadge(int percent) {
+    return 'End of market -$percent%';
+  }
 }

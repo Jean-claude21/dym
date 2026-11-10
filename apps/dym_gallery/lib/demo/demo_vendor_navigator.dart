@@ -50,6 +50,9 @@ class DemoVendorNavigator implements AppNavigator {
   void toCredit() {}
 
   @override
+  void toStudio() {}
+
+  @override
   void toContents() {}
 
   @override

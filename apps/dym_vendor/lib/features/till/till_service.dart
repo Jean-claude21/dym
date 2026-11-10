@@ -30,6 +30,16 @@ abstract interface class TillService {
 
   Future<Result<Till>> payout(int amountMinor);
 
+  /// Fin de marché (spec 048).
+  Future<Result<EndOfMarket>> endOfMarket();
+
+  Future<Result<EndOfMarket>> startEndOfMarket(int percent, int hours);
+
+  Future<Result<EndOfMarket>> stopEndOfMarket();
+
+  /// Lien public de la boutique, partagé sur WhatsApp.
+  Future<Result<void>> shareStore(String Function(Uri link) message);
+
   /// Encaissement par QR (spec 046).
   Future<Result<PaymentRequest>> requestPayment(
     int amountMinor, {
@@ -48,7 +58,14 @@ class NeonTillService implements TillService {
     required this._search,
     required this.recorder,
     required this._config,
+    required this._shareBase,
+    required this._storeId,
+    this._pages = const PluginExternalPageOpener(),
   });
+
+  final Uri _shareBase;
+  final Future<String?> Function() _storeId;
+  final ExternalPageOpener _pages;
 
   final TillRepository _till;
   final QrPaymentRepository _qr;
@@ -121,6 +138,27 @@ class NeonTillService implements TillService {
     );
     if (result.failureOrNull is! NetworkFailure) _requestKey = null;
     return result;
+  }
+
+  @override
+  Future<Result<EndOfMarket>> endOfMarket() => _till.endOfMarket();
+
+  @override
+  Future<Result<EndOfMarket>> startEndOfMarket(int percent, int hours) =>
+      _till.startEndOfMarket(percent: percent, hours: hours);
+
+  @override
+  Future<Result<EndOfMarket>> stopEndOfMarket() => _till.stopEndOfMarket();
+
+  @override
+  Future<Result<void>> shareStore(String Function(Uri link) message) async {
+    final id = await _storeId();
+    if (id == null) return const Err(NotFoundFailure('boutique'));
+    final link = _shareBase.resolve('/b/$id');
+    final opened = await _pages.open(
+      Uri.https('wa.me', '/', {'text': message(link)}),
+    );
+    return opened.map((_) {});
   }
 
   @override
