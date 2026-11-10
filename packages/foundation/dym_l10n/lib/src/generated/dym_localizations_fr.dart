@@ -3924,4 +3924,67 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get homeReorderAction => 'Recommander';
+
+  @override
+  String get copilotReasonSameStore => 'Même boutique : un seul ramassage';
+
+  @override
+  String get copilotReasonOpenNow => 'Boutique ouverte maintenant';
+
+  @override
+  String get copilotReasonTopRated => 'Boutique la mieux notée';
+
+  @override
+  String get copilotReasonBestPrice => 'Le meilleur prix';
+
+  @override
+  String get copilotReasonNearby => 'Boutique de ton quartier';
+
+  @override
+  String get copilotReasonBestMatch => 'Correspond le mieux à ta demande';
+
+  @override
+  String get adminTabSearch => 'Recherche';
+
+  @override
+  String get adminRankingHelp =>
+      'Poids de 0 à 100 utilisés pour choisir les produits proposés par l\'assistant. Plus un poids est fort, plus le critère compte.';
+
+  @override
+  String get adminEditRanking => 'Modifier les poids';
+
+  @override
+  String get adminWeightText => 'Correspondance au texte';
+
+  @override
+  String get adminWeightSameStore => 'Même boutique (moins de ramassages)';
+
+  @override
+  String get adminWeightOpen => 'Boutique ouverte';
+
+  @override
+  String get adminWeightRating => 'Note de la boutique';
+
+  @override
+  String get adminWeightPrice => 'Prix bas';
+
+  @override
+  String get adminWeightSameZone => 'Boutique du quartier';
+
+  @override
+  String get adminSynonymsTitle => 'Noms locaux';
+
+  @override
+  String get adminAddSynonym => 'Ajouter un nom local';
+
+  @override
+  String get adminSynonymTerm => 'Nom local (ex. gboma)';
+
+  @override
+  String get adminSynonymList => 'Équivalents, séparés par des virgules';
+
+  @override
+  String adminRemoveSynonym(String term) {
+    return 'Retirer $term';
+  }
 }

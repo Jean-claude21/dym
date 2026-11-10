@@ -239,6 +239,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
                     SettingsTab.fees => l10n.adminTabFees,
                     SettingsTab.categories => l10n.adminTabCategories,
                     SettingsTab.flags => l10n.adminTabFlags,
+                    SettingsTab.search => l10n.adminTabSearch,
                     SettingsTab.admins => l10n.adminTabAdmins,
                   },
                   selected: vm.tab == t,
@@ -260,6 +261,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
               SettingsTab.fees => _Fees(vm: vm),
               SettingsTab.categories => _Categories(vm: vm),
               SettingsTab.flags => _Flags(vm: vm),
+              SettingsTab.search => _Search(vm: vm),
               SettingsTab.admins => _Admins(vm: vm),
             },
         ],
@@ -890,6 +892,141 @@ class _Flags extends StatelessWidget {
                       : (v) => vm.setFlag(f, enabled: v),
                 ),
             ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Recherche (spec 028) : poids du classement et noms locaux du pays choisi.
+class _Search extends StatelessWidget {
+  const new({required this.vm});
+
+  final AdminSettingsViewModel vm;
+
+  static String weightLabel(DymLocalizations l10n, String key) => switch (key) {
+    'weight_text' => l10n.adminWeightText,
+    'weight_same_store' => l10n.adminWeightSameStore,
+    'weight_open' => l10n.adminWeightOpen,
+    'weight_rating' => l10n.adminWeightRating,
+    'weight_price' => l10n.adminWeightPrice,
+    _ => l10n.adminWeightSameZone,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final rule = vm.search.ruleFor(vm.country);
+    final synonyms = vm.search.synonyms
+        .where((s) => s.countryCode == vm.country || s.countryCode == null)
+        .toList();
+
+    Future<void> editWeights() async {
+      final values = await showSettingDialog(
+        context,
+        title: l10n.adminEditRanking,
+        fields: [
+          for (final key in RankingRule.keys)
+            SettingField(
+              key,
+              weightLabel(l10n, key),
+              initial: '${rule.weights[key] ?? 0}',
+              keyboard: TextInputType.number,
+            ),
+        ],
+      );
+      if (values == null) return;
+      final weights = <String, int>{};
+      for (final key in RankingRule.keys) {
+        final v = int.tryParse(values[key]?.trim() ?? '');
+        if (v == null || v < 0 || v > 100) return;
+        weights[key] = v;
+      }
+      await vm.setRanking(weights);
+    }
+
+    Future<void> addSynonym() async {
+      final values = await showSettingDialog(
+        context,
+        title: l10n.adminAddSynonym,
+        fields: [
+          SettingField('term', l10n.adminSynonymTerm),
+          SettingField('synonyms', l10n.adminSynonymList),
+        ],
+      );
+      if (values == null) return;
+      final list = (values['synonyms'] ?? '')
+          .split(',')
+          .map((s) => s.trim())
+          .where((s) => s.isNotEmpty)
+          .toList();
+      final term = values['term']?.trim() ?? '';
+      if (term.isEmpty || list.isEmpty) return;
+      await vm.setSynonym(term, list);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          l10n.adminRankingHelp,
+          style: t.body.copyWith(color: c.textSecondary),
+        ),
+        const SizedBox(height: DymTokenSpace.s2),
+        AdminCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (final key in RankingRule.keys)
+                AdminField(weightLabel(l10n, key), '${rule.weights[key] ?? 0}'),
+            ],
+          ),
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: DymButton(
+            label: l10n.adminEditRanking,
+            icon: Icons.tune_rounded,
+            expanded: false,
+            onPressed: vm.acting ? null : editWeights,
+          ),
+        ),
+        const SizedBox(height: DymTokenSpace.s5),
+        Text(l10n.adminSynonymsTitle, style: t.title),
+        const SizedBox(height: DymTokenSpace.s2),
+        AdminCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (synonyms.isEmpty) AdminEmpty(l10n.adminNoData),
+              for (final s in synonyms)
+                ListTile(
+                  title: Text(s.term),
+                  subtitle: Text(s.synonyms.join(', ')),
+                  trailing: IconButton(
+                    tooltip: l10n.adminRemoveSynonym(s.term),
+                    icon: const Icon(Icons.delete_outline_rounded),
+                    onPressed: vm.acting
+                        ? null
+                        : () => vm.setSynonym(s.term, const []),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: DymButton(
+            label: l10n.adminAddSynonym,
+            icon: Icons.add_rounded,
+            variant: DymButtonVariant.secondary,
+            expanded: false,
+            onPressed: vm.acting ? null : addSynonym,
           ),
         ),
       ],

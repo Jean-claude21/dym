@@ -3893,4 +3893,67 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get homeReorderAction => 'Reorder';
+
+  @override
+  String get copilotReasonSameStore => 'Same store: one pickup';
+
+  @override
+  String get copilotReasonOpenNow => 'Store open now';
+
+  @override
+  String get copilotReasonTopRated => 'Best rated store';
+
+  @override
+  String get copilotReasonBestPrice => 'Best price';
+
+  @override
+  String get copilotReasonNearby => 'Store in your neighbourhood';
+
+  @override
+  String get copilotReasonBestMatch => 'Best match for your request';
+
+  @override
+  String get adminTabSearch => 'Search';
+
+  @override
+  String get adminRankingHelp =>
+      'Weights from 0 to 100 used to pick the products suggested by the assistant. The higher the weight, the more the criterion counts.';
+
+  @override
+  String get adminEditRanking => 'Edit weights';
+
+  @override
+  String get adminWeightText => 'Text match';
+
+  @override
+  String get adminWeightSameStore => 'Same store (fewer pickups)';
+
+  @override
+  String get adminWeightOpen => 'Store open';
+
+  @override
+  String get adminWeightRating => 'Store rating';
+
+  @override
+  String get adminWeightPrice => 'Low price';
+
+  @override
+  String get adminWeightSameZone => 'Store in the neighbourhood';
+
+  @override
+  String get adminSynonymsTitle => 'Local names';
+
+  @override
+  String get adminAddSynonym => 'Add a local name';
+
+  @override
+  String get adminSynonymTerm => 'Local name (e.g. gboma)';
+
+  @override
+  String get adminSynonymList => 'Equivalents, comma separated';
+
+  @override
+  String adminRemoveSynonym(String term) {
+    return 'Remove $term';
+  }
 }

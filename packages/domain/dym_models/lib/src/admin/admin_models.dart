@@ -1240,3 +1240,79 @@ class AdminVendorView {
   final double? rating;
   final int reviewCount;
 }
+
+/// Poids de classement d'un pays (nul : défaut), réglés par l'équipe.
+@immutable
+class RankingRule {
+  const new({required this.weights, this.countryCode});
+
+  factory fromJson(Map<String, dynamic> json) => RankingRule(
+    countryCode: json['country_code'] as String?,
+    weights: {for (final key in keys) key: (json[key] as num?)?.toInt() ?? 0},
+  );
+
+  /// Clés des poids, dans l'ordre d'affichage.
+  static const keys = [
+    'weight_text',
+    'weight_same_store',
+    'weight_open',
+    'weight_rating',
+    'weight_price',
+    'weight_same_zone',
+  ];
+
+  final String? countryCode;
+  final Map<String, int> weights;
+}
+
+/// Nom local et ses équivalents (« gboma » → épinard, feuille).
+@immutable
+class SearchSynonym {
+  const new({
+    required this.id,
+    required this.term,
+    required this.synonyms,
+    this.countryCode,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => SearchSynonym(
+    id: json['id']! as String,
+    countryCode: json['country_code'] as String?,
+    term: json['term']! as String,
+    synonyms: [for (final s in json['synonyms'] as List? ?? const []) '$s'],
+  );
+
+  final String id;
+  final String? countryCode;
+  final String term;
+  final List<String> synonyms;
+}
+
+/// Réglages de la recherche (`public.admin_search_settings`).
+@immutable
+class AdminSearchSettings {
+  const new({this.rules = const [], this.synonyms = const []});
+
+  factory fromJson(Map<String, dynamic> json) => AdminSearchSettings(
+    rules: [
+      for (final r
+          in (json['rules'] as List? ?? const []).cast<Map<String, dynamic>>())
+        RankingRule.fromJson(r),
+    ],
+    synonyms: [
+      for (final s
+          in (json['synonyms'] as List? ?? const [])
+              .cast<Map<String, dynamic>>())
+        SearchSynonym.fromJson(s),
+    ],
+  );
+
+  final List<RankingRule> rules;
+  final List<SearchSynonym> synonyms;
+
+  /// Poids effectifs d'un pays : les siens, sinon ceux par défaut.
+  RankingRule ruleFor(String? country) =>
+      rules.where((r) => r.countryCode == country).firstOrNull ??
+      rules.where((r) => r.countryCode == null).firstOrNull ??
+      const RankingRule(weights: {});
+}

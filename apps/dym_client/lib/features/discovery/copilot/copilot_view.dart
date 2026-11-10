@@ -452,6 +452,23 @@ class _Line extends StatelessWidget {
                   ].join(' · '),
                   style: t.body.copyWith(color: c.brandDeep),
                 ),
+                if (line.reason case final reason?)
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.lightbulb_outline_rounded,
+                        size: 16,
+                        color: c.textSecondary,
+                      ),
+                      const SizedBox(width: DymTokenSpace.s1),
+                      Flexible(
+                        child: Text(
+                          copilotReasonLabel(l10n, reason),
+                          style: t.label.copyWith(color: c.textSecondary),
+                        ),
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),
@@ -598,3 +615,14 @@ class _InputBarState extends State<_InputBar> {
     );
   }
 }
+
+/// Raison du choix, en clair (spec 028).
+String copilotReasonLabel(DymLocalizations l10n, CopilotReason reason) =>
+    switch (reason) {
+      CopilotReason.sameStore => l10n.copilotReasonSameStore,
+      CopilotReason.openNow => l10n.copilotReasonOpenNow,
+      CopilotReason.topRated => l10n.copilotReasonTopRated,
+      CopilotReason.bestPrice => l10n.copilotReasonBestPrice,
+      CopilotReason.nearby => l10n.copilotReasonNearby,
+      CopilotReason.bestMatch => l10n.copilotReasonBestMatch,
+    };

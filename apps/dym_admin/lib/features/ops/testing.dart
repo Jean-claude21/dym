@@ -11,6 +11,50 @@ class MemoryAdminService implements AdminService {
     _seed();
   }
 
+  @override
+  Future<Result<AdminSearchSettings>> searchSettings() async => Ok(search);
+
+  @override
+  Future<Result<AdminSearchSettings>> setRanking(
+    String? countryCode,
+    Map<String, int> weights,
+  ) async {
+    final base = search.ruleFor(countryCode).weights;
+    search = AdminSearchSettings(
+      rules: [
+        for (final r in search.rules)
+          if (r.countryCode != countryCode) r,
+        RankingRule(countryCode: countryCode, weights: {...base, ...weights}),
+      ],
+      synonyms: search.synonyms,
+    );
+    return Ok(search);
+  }
+
+  @override
+  Future<Result<AdminSearchSettings>> setSynonym(
+    String? countryCode,
+    String term,
+    List<String> synonyms,
+  ) async {
+    final key = term.trim().toLowerCase();
+    search = AdminSearchSettings(
+      rules: search.rules,
+      synonyms: [
+        for (final s in search.synonyms)
+          if (s.term != key || s.countryCode != countryCode) s,
+        if (synonyms.isNotEmpty)
+          SearchSynonym(
+            id: 's-$key',
+            countryCode: countryCode,
+            term: key,
+            synonyms: synonyms,
+          ),
+      ],
+    );
+    return Ok(search);
+  }
+
   final DateTime now;
   final Currency currency;
 
@@ -477,6 +521,30 @@ class MemoryAdminService implements AdminService {
   }
 
   // ---------------------------------------------------------------- lectures
+
+  /// Réglages de la recherche (spec 028).
+  AdminSearchSettings search = const AdminSearchSettings(
+    rules: [
+      RankingRule(
+        weights: {
+          'weight_text': 40,
+          'weight_same_store': 30,
+          'weight_open': 20,
+          'weight_rating': 10,
+          'weight_price': 10,
+          'weight_same_zone': 10,
+        },
+      ),
+    ],
+    synonyms: [
+      SearchSynonym(
+        id: 's1',
+        countryCode: 'TG',
+        term: 'gboma',
+        synonyms: ['épinard', 'feuille'],
+      ),
+    ],
+  );
 
   @override
   Future<Result<Map<String, Currency>>> currencies() async =>
