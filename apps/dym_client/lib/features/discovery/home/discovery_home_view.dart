@@ -20,7 +20,15 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     super.key,
     this.onCopilot,
     this.stories,
+    this.onReorder,
+    this.onOpenProduct,
   });
+
+  /// Recommander une commande livrée (spec 027) ; absent : carte masquée.
+  final ValueChanged<String>? onReorder;
+
+  /// Fiche produit, depuis les rangées du fil personnel.
+  final ValueChanged<String>? onOpenProduct;
 
   /// Rangée des stories du quartier (spec 020), si le flag est actif.
   final Widget? stories;
@@ -70,6 +78,24 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
         child: Text(title, style: t.title.copyWith(fontSize: 22)),
       ),
     );
+    Widget productRow(List<CatalogItem> items, ValueChanged<String> open) =>
+        SizedBox(
+          height: 250,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: items.length,
+            separatorBuilder: (_, _) => const SizedBox(width: DymTokenSpace.s3),
+            itemBuilder: (context, i) => SizedBox(
+              width: 168,
+              child: ProductTile(
+                item: items[i],
+                service: vm.service,
+                config: vm.config,
+                onTap: () => open(items[i].id),
+              ),
+            ),
+          ),
+        );
     Widget storeRow(List<PublicStore> stores) => SizedBox(
       height: 252 * MediaQuery.textScalerOf(context).scale(1).clamp(1, 1.3),
       child: ListView.separated(
@@ -130,8 +156,12 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                     const CartButton(),
                   ],
                 ),
+                const SizedBox(height: DymTokenSpace.s4),
+                Semantics(
+                  header: true,
+                  child: Text(l10n.homeWhatToEat, style: t.display),
+                ),
                 const SizedBox(height: DymTokenSpace.s3),
-                ?stories,
                 DymSearchBar(hint: l10n.homeSearchHint, onTap: onSearch),
                 if (onCopilot case final open?
                     when vm.config?.isEnabled('intent_copilot') ?? false) ...[
@@ -157,6 +187,28 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                       ),
                     ),
                   ),
+                ],
+                if (stories case final row?) ...[
+                  const SizedBox(height: DymTokenSpace.s4),
+                  row,
+                ],
+                if (vm.feed.lastOrder case final last? when onReorder != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: DymTokenSpace.s4),
+                    child: _ReorderCard(
+                      order: last,
+                      onReorder: () => onReorder!(last.orderId),
+                    ),
+                  ),
+                if (onOpenProduct case final open?) ...[
+                  if (vm.feed.popular.isNotEmpty) ...[
+                    section(l10n.homePopular),
+                    productRow(vm.feed.popular, open),
+                  ],
+                  if (vm.feed.fresh.isNotEmpty) ...[
+                    section(l10n.homeFresh),
+                    productRow(vm.feed.fresh, open),
+                  ],
                 ],
                 section(l10n.homeOpenStores),
                 if (open.isEmpty)
@@ -330,3 +382,50 @@ Future<void> showZonePicker(
     },
   ),
 );
+
+/// Carte « Recommander tes dernières courses » (spec 027).
+class _ReorderCard extends StatelessWidget {
+  const new({required this.order, required this.onReorder});
+
+  final LastOrder order;
+  final VoidCallback onReorder;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Container(
+      padding: const EdgeInsets.all(DymTokenSpace.s4),
+      decoration: BoxDecoration(
+        color: c.tintPlantainClair,
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.replay_rounded, color: c.brandDeep, size: 32),
+          const SizedBox(width: DymTokenSpace.s3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.homeReorderTitle, style: t.title),
+                Text(
+                  l10n.homeReorderMeta(order.storeName, order.itemCount),
+                  style: t.label.copyWith(color: c.textSecondary),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: DymTokenSpace.s2),
+          DymButton(
+            label: l10n.homeReorderAction,
+            expanded: false,
+            compact: true,
+            onPressed: onReorder,
+          ),
+        ],
+      ),
+    );
+  }
+}

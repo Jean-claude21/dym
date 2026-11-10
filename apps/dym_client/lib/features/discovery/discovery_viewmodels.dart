@@ -44,6 +44,10 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
   DiscoveryService get service => _service;
   CountryConfig? get config => _config;
   DiscoverResult get result => _result;
+
+  /// Fil personnel (spec 027) ; vide s'il n'a pas pu être chargé.
+  HomeFeed get feed => _feed;
+  HomeFeed _feed = const HomeFeed();
   bool get ready => _config != null && !failed;
   bool get locating => _locating;
   bool get locationUnavailable => _locationUnavailable;
@@ -67,7 +71,12 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
     final config = await _service.countryConfig();
     if (config case Err(:final failure)) return failure;
     _config = config.valueOrNull;
-    final result = await _service.discover();
+    final (result, feed) = await (
+      _service.discover(),
+      _service.homeFeed(),
+    ).wait;
+    // Fil personnel : un échec n'empêche pas d'afficher boutiques et rayons.
+    _feed = feed.valueOrNull ?? const HomeFeed();
     switch (result) {
       case Ok(:final value):
         _result = value;

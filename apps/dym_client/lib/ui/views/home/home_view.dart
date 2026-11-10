@@ -13,6 +13,7 @@ import 'package:dym_client/features/discovery/home/discovery_home_view.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/ui/navigation.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -99,6 +100,22 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
+  /// Recommander (spec 027) : articles encore disponibles au panier, puis
+  /// ouverture du panier ; message si rien n'a pu être ajouté.
+  Future<void> _reorder(String orderId) async {
+    final l10n = DymLocalizations.of(context);
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    final result = await _orders.reorder(orderId);
+    if (!mounted) return;
+    switch (result) {
+      case Ok():
+        await CartScope.maybeOf(context)?.service.refresh();
+        _navigator.toCart();
+      case Err():
+        messenger?.showSnackBar(SnackBar(content: Text(l10n.errorGeneric)));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
@@ -123,6 +140,8 @@ class _HomeViewState extends State<HomeView> {
             onCopilot: _navigator.toCopilot,
             onOpenStore: _navigator.toStore,
             onOpenAisle: _navigator.toAisle,
+            onOpenProduct: _navigator.toProduct,
+            onReorder: _reorder,
             stories: switch (_content) {
               final content? => StoriesRow(
                 service: content,

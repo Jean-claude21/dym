@@ -5066,5 +5066,37 @@
   },
   "@cartAddAddress": {
     "description": "Invitation à ajouter une adresse dans le panier"
+  },
+  "homeWhatToEat": "Qu'est-ce qu'on mange ?",
+  "@homeWhatToEat": {
+    "description": "Question en tête de l'accueil"
+  },
+  "homePopular": "Les plus demandés près de toi",
+  "@homePopular": {
+    "description": "Section des produits populaires"
+  },
+  "homeFresh": "Nouveautés",
+  "@homeFresh": {
+    "description": "Section des nouveautés"
+  },
+  "homeReorderTitle": "Recommander tes courses",
+  "@homeReorderTitle": {
+    "description": "Titre de la carte de réachat"
+  },
+  "homeReorderMeta": "{store} · {count, plural, =1{1 article} other{{count} articles}}",
+  "@homeReorderMeta": {
+    "description": "Boutique et articles de la dernière commande",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "homeReorderAction": "Recommander",
+  "@homeReorderAction": {
+    "description": "Bouton recommander"
   }
 }

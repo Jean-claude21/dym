@@ -69,6 +69,20 @@ class MemoryDiscoveryService implements DiscoveryService {
   }
 
   @override
+  Future<Result<HomeFeed>> homeFeed() async {
+    final failed = _fail<HomeFeed>('homeFeed');
+    if (failed != null) return failed;
+    if (feedFailure case final failure?) return Err(failure);
+    return Ok(feed);
+  }
+
+  /// Échec propre au fil personnel (les boutiques restent servies).
+  Failure? feedFailure;
+
+  /// Fil personnel renvoyé par [homeFeed].
+  HomeFeed feed = const HomeFeed();
+
+  @override
   Future<Result<DiscoverResult>> discover() async {
     final failed = _fail<DiscoverResult>('discover');
     if (failed != null) return failed;
