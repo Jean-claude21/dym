@@ -22,6 +22,8 @@ export interface MessagingStore {
     mediaKey: string | null;
     productId: string | null;
     idempotencyKey: string;
+    /** Vocal (spec 035). */
+    durationMs?: number | null;
   }): Promise<MessagingJson>;
   uploadAllowed(userId: string, conversationId: string): Promise<boolean>;
   /** Clés des images lisibles par l'utilisatrice, par message. */
@@ -46,7 +48,7 @@ export function pgMessagingStore(pool: pg.Pool): MessagingStore {
   return {
     start: (u, s) => one<MessagingJson>("select app.start_conversation($1, $2) as value", [u, s]),
     send: (i) =>
-      one<MessagingJson>("select app.send_message($1, $2, $3, $4, $5, $6, $7) as value", [
+      one<MessagingJson>("select app.send_message($1, $2, $3, $4, $5, $6, $7, $8) as value", [
         i.userId,
         i.conversationId,
         i.kind,
@@ -54,6 +56,7 @@ export function pgMessagingStore(pool: pg.Pool): MessagingStore {
         i.mediaKey,
         i.productId,
         i.idempotencyKey,
+        i.durationMs ?? null,
       ]),
     uploadAllowed: (u, c) => one<boolean>("select app.chat_upload_allowed($1, $2) as value", [u, c]),
     mediaKeys: (u, ids) =>
@@ -92,7 +95,14 @@ export interface MessagingDeps {
 const uuid = z.string().uuid();
 const UPLOAD_EXPIRES_IN = 600;
 const READ_EXPIRES_IN = 300;
-const extensions = { "image/jpeg": "jpg", "image/webp": "webp" } as const;
+const extensions = {
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+  "audio/wav": "wav",
+  "audio/mp4": "m4a",
+  "audio/webm": "webm",
+  "audio/ogg": "ogg",
+} as const;
 
 /**
  * Messagerie (spec 015) ; la base vérifie la participation :
@@ -131,10 +141,11 @@ export function registerMessagingRoutes(
     const body = await parseBody(
       c,
       z.object({
-        kind: z.enum(["text", "image", "product"]),
+        kind: z.enum(["text", "image", "product", "audio"]),
         body: z.string().max(1000).nullable().optional(),
         media_key: z.string().max(300).nullable().optional(),
         product_id: uuid.nullable().optional(),
+        duration_ms: z.number().int().min(500).max(60000).nullable().optional(),
       }),
     );
     const message = await need().store.send({
@@ -145,13 +156,16 @@ export function registerMessagingRoutes(
       mediaKey: body.media_key ?? null,
       productId: body.product_id ?? null,
       idempotencyKey: key,
+      durationMs: body.duration_ms ?? null,
     });
     return c.json(message, 201);
   });
 
   app.post("/v1/conversations/:id/media-uploads", auth, async (c) => {
     const conversationId = id(c.req.param("id"));
-    const body = await parseBody(c, z.object({ content_type: z.enum(["image/jpeg", "image/webp"]) }));
+    const body = await parseBody(c, z.object({
+        content_type: z.enum(["image/jpeg", "image/webp", "audio/wav", "audio/mp4", "audio/webm", "audio/ogg"]),
+      }));
     const d = need();
     if (!d.signer) throw httpErrors.unavailable("stockage non configuré");
     if (!(await d.store.uploadAllowed(c.get("user").id, conversationId))) {

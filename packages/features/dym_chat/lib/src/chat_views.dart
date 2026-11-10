@@ -1,3 +1,5 @@
+import 'package:dym_chat/src/call_service.dart';
+import 'package:dym_chat/src/call_views.dart';
 import 'package:dym_chat/src/chat_service.dart';
 import 'package:dym_chat/src/chat_viewmodels.dart';
 import 'package:dym_core/dym_core.dart';
@@ -339,6 +341,23 @@ class ChatView extends StackedView<ChatViewModel> {
   @override
   void onViewModelReady(ChatViewModel viewModel) => viewModel.load();
 
+  Future<void> _call(
+    BuildContext context,
+    CallService calls,
+    CallKind kind,
+    String name,
+  ) => Navigator.of(context).push<void>(
+    MaterialPageRoute(
+      builder: (route) => CallView(
+        service: calls,
+        conversationId: conversationId,
+        kind: kind,
+        peerName: name,
+        onClose: () => Navigator.of(route).pop(),
+      ),
+    ),
+  );
+
   @override
   Widget builder(BuildContext context, ChatViewModel viewModel, Widget? child) {
     final c = context.dym.colors;
@@ -378,6 +397,18 @@ class ChatView extends StackedView<ChatViewModel> {
               style: t.title.copyWith(fontSize: 20),
             ),
           ),
+          if (service.calls case final calls?) ...[
+            IconButton(
+              tooltip: l10n.callAudio,
+              onPressed: () => _call(context, calls, CallKind.audio, name),
+              icon: Icon(Icons.call_rounded, color: c.brandDeep),
+            ),
+            IconButton(
+              tooltip: l10n.callVideo,
+              onPressed: () => _call(context, calls, CallKind.video, name),
+              icon: Icon(Icons.videocam_rounded, color: c.brandDeep),
+            ),
+          ],
         ],
       ),
     );
@@ -526,6 +557,13 @@ class _Bubble extends StatelessWidget {
     );
     final Widget content = switch (message.kind) {
       MessageKind.image => _Photo(message: message, vm: vm, time: time),
+      MessageKind.audio => _AudioBubble(
+        message: message,
+        vm: vm,
+        mine: mine,
+        time: time,
+      ),
+      MessageKind.call => _CallBubble(message: message, time: time),
       MessageKind.product => _ProductCard(
         message: message,
         vm: vm,
@@ -719,6 +757,104 @@ class _ProductCard extends StatelessWidget {
   }
 }
 
+/// Vocal : lecture, durée.
+class _AudioBubble extends StatelessWidget {
+  const new({
+    required this.message,
+    required this.vm,
+    required this.mine,
+    required this.time,
+  });
+
+  final ChatMessage message;
+  final ChatViewModel vm;
+  final bool mine;
+  final Widget time;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final playing = vm.playingId == message.id;
+    final seconds = ((message.durationMs ?? 0) / 1000).round();
+    return Container(
+      padding: const EdgeInsets.fromLTRB(4, 4, DymTokenSpace.s3, 4),
+      decoration: BoxDecoration(
+        color: mine ? c.tintVertTendre : c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            tooltip: playing ? l10n.chatVoiceStop : l10n.chatVoicePlay,
+            onPressed: vm.mediaUrl(message.id) == null
+                ? null
+                : () => vm.togglePlay(message),
+            icon: Icon(
+              playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+              color: c.brandDeep,
+            ),
+          ),
+          Icon(Icons.graphic_eq_rounded, color: c.brandDeep),
+          const SizedBox(width: DymTokenSpace.s1),
+          Text(l10n.chatVoiceDuration(seconds), style: t.label),
+          const SizedBox(width: DymTokenSpace.s2),
+          time,
+        ],
+      ),
+    );
+  }
+}
+
+/// Résumé d'un appel dans le fil.
+class _CallBubble extends StatelessWidget {
+  const new({required this.message, required this.time});
+
+  final ChatMessage message;
+  final Widget time;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final call = message.call;
+    final video = call?.kind == CallKind.video;
+    final label = switch (call?.status) {
+      CallStatus.ended => l10n.callSummaryEnded(
+        ((call?.durationS ?? 0) / 60).ceil(),
+      ),
+      CallStatus.declined => l10n.callDeclined,
+      _ => l10n.callMissed,
+    };
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: DymTokenSpace.s3,
+        vertical: DymTokenSpace.s2,
+      ),
+      decoration: BoxDecoration(
+        color: c.tintPlantainClair,
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            video ? Icons.videocam_rounded : Icons.call_rounded,
+            color: c.brandDeep,
+          ),
+          const SizedBox(width: DymTokenSpace.s2),
+          Flexible(child: Text(label, style: t.label)),
+          const SizedBox(width: DymTokenSpace.s2),
+          time,
+        ],
+      ),
+    );
+  }
+}
+
 class _Composer extends StatefulWidget {
   const new({required this.vm, this.pickProduct});
 
@@ -788,6 +924,41 @@ class _ComposerState extends State<_Composer> {
             icon: Icon(icon, color: c.brandDeep),
           ),
         );
+    if (vm.recording) {
+      return Container(
+        color: c.card,
+        padding: const EdgeInsets.all(DymTokenSpace.s2),
+        child: Row(
+          children: [
+            IconButton(
+              tooltip: l10n.chatVoiceCancel,
+              onPressed: vm.cancelRecording,
+              icon: Icon(Icons.delete_rounded, color: c.pimentStrong),
+            ),
+            Icon(Icons.fiber_manual_record_rounded, color: c.pimentStrong),
+            const SizedBox(width: DymTokenSpace.s2),
+            Expanded(
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  l10n.chatVoiceRecording,
+                  style: context.dym.text.body,
+                ),
+              ),
+            ),
+            IconButton.filled(
+              tooltip: l10n.chatVoiceSend,
+              style: IconButton.styleFrom(
+                backgroundColor: c.brand,
+                minimumSize: const Size(52, 52),
+              ),
+              onPressed: vm.stopAndSendRecording,
+              icon: Icon(Icons.send_rounded, color: c.onBrand),
+            ),
+          ],
+        ),
+      );
+    }
     return Container(
       color: c.card,
       padding: const EdgeInsets.fromLTRB(
@@ -798,6 +969,12 @@ class _ComposerState extends State<_Composer> {
       ),
       child: Row(
         children: [
+          if (vm.canRecord)
+            round(
+              Icons.mic_rounded,
+              l10n.chatVoiceRecord,
+              vm.sending ? null : vm.startRecording,
+            ),
           if (widget.pickProduct != null)
             round(
               Icons.add_rounded,

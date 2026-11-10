@@ -7854,6 +7854,150 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Un mot pour la cliente (facultatif)'**
   String get vendorSubstituteNote;
+
+  /// Micro
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer un vocal'**
+  String get chatVoiceRecord;
+
+  /// En cours
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrement… (60 s au plus)'**
+  String get chatVoiceRecording;
+
+  /// Envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer le vocal'**
+  String get chatVoiceSend;
+
+  /// Annulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler le vocal'**
+  String get chatVoiceCancel;
+
+  /// Lecture
+  ///
+  /// In fr, this message translates to:
+  /// **'Écouter'**
+  String get chatVoicePlay;
+
+  /// Arrêt
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrêter'**
+  String get chatVoiceStop;
+
+  /// Durée
+  ///
+  /// In fr, this message translates to:
+  /// **'{seconds} s'**
+  String chatVoiceDuration(int seconds);
+
+  /// Appel audio
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get callAudio;
+
+  /// Appel vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel vidéo « Montre-moi »'**
+  String get callVideo;
+
+  /// Sonnerie
+  ///
+  /// In fr, this message translates to:
+  /// **'Ça sonne…'**
+  String get callRinging;
+
+  /// Entrant
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel entrant'**
+  String get callIncoming;
+
+  /// En cours
+  ///
+  /// In fr, this message translates to:
+  /// **'En communication'**
+  String get callOngoing;
+
+  /// Refusé
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel refusé'**
+  String get callDeclined;
+
+  /// Manqué
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel manqué'**
+  String get callMissed;
+
+  /// Terminé
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel terminé'**
+  String get callEnded;
+
+  /// Indisponible
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel impossible pour l\'instant.'**
+  String get callUnavailable;
+
+  /// Bandeau simulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel simulé : la voix et l\'image passeront par le vrai service avant la mise en production.'**
+  String get callSimulated;
+
+  /// Décrocher
+  ///
+  /// In fr, this message translates to:
+  /// **'Décrocher'**
+  String get callAnswer;
+
+  /// Refuser
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get callDecline;
+
+  /// Raccrocher
+  ///
+  /// In fr, this message translates to:
+  /// **'Raccrocher'**
+  String get callHangUp;
+
+  /// Fermer
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer'**
+  String get callClose;
+
+  /// Ouvrir l'appel
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir'**
+  String get callOpen;
+
+  /// Bandeau entrant
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} t\'appelle'**
+  String callIncomingFrom(String name);
+
+  /// Résumé
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel · {minutes, plural, =1{1 min} other{{minutes} min}}'**
+  String callSummaryEnded(int minutes);
 }
 
 class _DymLocalizationsDelegate

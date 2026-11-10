@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:dym_chat/src/call_service.dart';
 import 'package:dym_chat/src/chat_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
@@ -314,6 +315,23 @@ class MemoryChatService implements ChatService {
     required String idempotencyKey,
   }) =>
       _add(conversationId, MessageKind.image, key: idempotencyKey, media: true);
+
+  @override
+  Future<Result<ChatMessage>> sendAudio(
+    String conversationId,
+    RecordedAudio audio, {
+    required String idempotencyKey,
+  }) =>
+      _add(conversationId, MessageKind.audio, key: idempotencyKey, media: true);
+
+  @override
+  VoiceRecorder? recorder;
+
+  @override
+  AudioPlayback? playback;
+
+  @override
+  CallService? calls;
 
   @override
   Future<Result<Map<String, String>>> mediaUrls(

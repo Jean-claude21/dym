@@ -34,6 +34,8 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
             v == null ? null : CatalogItem.fromJson(v as Map<String, dynamic>),
       ),
       productId: $checkedConvert('product_id', (v) => v as String?),
+      durationMs: $checkedConvert('duration_ms', (v) => (v as num?)?.toInt()),
+      call: $checkedConvert('call', (v) => CallSummary.maybeFromJson(v)),
     );
     return val;
   },
@@ -43,6 +45,7 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
     'createdAt': 'created_at',
     'hasMedia': 'has_media',
     'productId': 'product_id',
+    'durationMs': 'duration_ms',
   },
 );
 
@@ -50,6 +53,8 @@ const _$MessageKindEnumMap = {
   MessageKind.text: 'text',
   MessageKind.image: 'image',
   MessageKind.product: 'product',
+  MessageKind.audio: 'audio',
+  MessageKind.call: 'call',
   MessageKind.unknown: 'unknown',
 };
 

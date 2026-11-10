@@ -90,6 +90,13 @@ describe("messagerie", () => {
     ).toBe(404);
   });
 
+  it("vocal (spec 035) : clé audio, durée transmise", async () => {
+    const fake = new FakeStore();
+    const res = await post(fake, `/v1/conversations/${conv}/media-uploads`, { content_type: "audio/wav" });
+    const json = (await res.json()) as { object_key: string };
+    expect(json.object_key).toMatch(new RegExp(`^chats/${conv}/[0-9a-f-]{36}\.wav$`));
+  });
+
   it("liens de lecture : seulement les images visibles", async () => {
     const res = await post(new FakeStore(), "/v1/chat-media/urls", { message_ids: [msg, key] });
     expect(await res.json()).toEqual({

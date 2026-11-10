@@ -1,3 +1,4 @@
+import 'package:dym_chat/src/call_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
@@ -41,7 +42,23 @@ abstract interface class ChatService {
     required String idempotencyKey,
   });
 
-  /// Liens de lecture signés des images, par message.
+  /// Vocal (spec 035), envoyé dans l'espace privé de la conversation.
+  Future<Result<ChatMessage>> sendAudio(
+    String conversationId,
+    RecordedAudio audio, {
+    required String idempotencyKey,
+  });
+
+  /// Micro (spec 035) ; absent : pas de vocaux.
+  VoiceRecorder? get recorder;
+
+  /// Lecture des vocaux (spec 035) ; absente : bulle sans lecture.
+  AudioPlayback? get playback;
+
+  /// Appels (spec 035) ; absents : pas de bouton d'appel.
+  CallService? get calls;
+
+  /// Liens de lecture signés des images et vocaux, par message.
   Future<Result<Map<String, String>>> mediaUrls(List<String> messageIds);
 
   Future<Result<PickedPhoto?>> pickPhoto(PhotoSource source);
@@ -61,7 +78,19 @@ class NeonChatService implements ChatService {
     required this._countryConfig,
     required this._photos,
     required this._productPhoto,
+    this.recorder,
+    this.playback,
+    this.calls,
   });
+
+  @override
+  final VoiceRecorder? recorder;
+
+  @override
+  final AudioPlayback? playback;
+
+  @override
+  final CallService? calls;
 
   final MessagingRepository _repository;
   final Future<Result<CountryConfig>> Function() _countryConfig;
@@ -120,6 +149,19 @@ class NeonChatService implements ChatService {
     conversationId,
     photo.bytes,
     contentType: photo.contentType,
+    idempotencyKey: idempotencyKey,
+  );
+
+  @override
+  Future<Result<ChatMessage>> sendAudio(
+    String conversationId,
+    RecordedAudio audio, {
+    required String idempotencyKey,
+  }) => _repository.sendAudio(
+    conversationId,
+    audio.bytes,
+    contentType: audio.contentType,
+    durationMs: audio.duration.inMilliseconds,
     idempotencyKey: idempotencyKey,
   );
 
