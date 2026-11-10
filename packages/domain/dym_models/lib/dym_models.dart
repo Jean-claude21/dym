@@ -28,4 +28,5 @@ export 'src/search/shopping_models.dart';
 export 'src/store/credit_models.dart';
 export 'src/store/store_models.dart';
 export 'src/store/till_models.dart';
+export 'src/store/wholesale_models.dart';
 export 'src/wallet/wallet_models.dart';

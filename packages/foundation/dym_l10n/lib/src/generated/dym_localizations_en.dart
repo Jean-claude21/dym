@@ -5584,4 +5584,103 @@ class DymLocalizationsEn extends DymLocalizations {
   String endOfMarketBadge(int percent) {
     return 'End of market -$percent%';
   }
+
+  @override
+  String get wholesaleTitle => 'Bulk buying';
+
+  @override
+  String get wholesaleHint =>
+      'Buy together from a wholesaler: wholesale price, even for small quantities. Payment is made with the wholesaler.';
+
+  @override
+  String get wholesaleOpen => 'Open offers';
+
+  @override
+  String get wholesaleNoOffer => 'No bulk offer right now.';
+
+  @override
+  String get wholesaleMine => 'My wholesale offers';
+
+  @override
+  String get wholesaleBecome => 'I am a wholesaler: publish offers';
+
+  @override
+  String get wholesaleNewOffer => 'New offer';
+
+  @override
+  String wholesaleUnitPrice(String price) {
+    return '$price per unit';
+  }
+
+  @override
+  String wholesaleProgress(int committed, int min, int buyers) {
+    String _temp0 = intl.Intl.pluralLogic(
+      buyers,
+      locale: localeName,
+      other: '$buyers buyers',
+      one: '1 buyer',
+      zero: 'no buyer',
+    );
+    return '$committed of $min reserved · $_temp0';
+  }
+
+  @override
+  String wholesaleUntil(String date) {
+    return 'Open until $date';
+  }
+
+  @override
+  String get wholesaleConfirmed => 'Confirmed';
+
+  @override
+  String get wholesaleCancelled => 'Cancelled';
+
+  @override
+  String get wholesaleClosed => 'Closed';
+
+  @override
+  String wholesaleMyQuantity(int quantity) {
+    return 'My reservation: $quantity';
+  }
+
+  @override
+  String get wholesaleCommit => 'Reserve';
+
+  @override
+  String get wholesaleChange => 'Change my reservation';
+
+  @override
+  String get wholesaleConfirm => 'Confirm the purchase';
+
+  @override
+  String get wholesaleCancel => 'Cancel the offer';
+
+  @override
+  String get wholesaleQuantity => 'Quantity';
+
+  @override
+  String get wholesaleQuantityHint => '0 to remove your reservation.';
+
+  @override
+  String get wholesaleUnitPriceField => 'Wholesale unit price';
+
+  @override
+  String get wholesaleMinQuantity => 'Minimum quantity';
+
+  @override
+  String wholesaleDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get wholesalePublish => 'Publish the offer';
+
+  @override
+  String get wholesaleMinimumNotReached => 'The minimum is not reached yet.';
 }

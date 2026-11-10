@@ -19,6 +19,7 @@ import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
+import 'package:dym_vendor/features/wholesale/wholesale_view.dart';
 import 'package:flutter/material.dart';
 
 Future<void> main() async {
@@ -105,6 +106,13 @@ Future<void> configureServices(DymEnvironment environment) async {
         products: () => locator<CatalogService>().products(),
         config: stores.countryConfig,
         photo: (key) => dymNetworkImage(environment.media(key).toString()),
+      ),
+    )
+    ..registerSingleton<WholesaleService>(
+      NeonWholesaleService(
+        repository: WholesaleRepository(neon.data),
+        config: stores.countryConfig,
+        products: () => locator<CatalogService>().products(),
       ),
     )
     ..registerSingleton<CreditService>(

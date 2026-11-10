@@ -114,6 +114,9 @@ class _Navigator implements AppNavigator {
   void toStudio() => routes.add('studio');
 
   @override
+  void toWholesale() => routes.add('wholesale');
+
+  @override
   void toContents() => routes.add('contents');
 
   @override

@@ -6813,5 +6813,71 @@
         "type": "int"
       }
     }
-  }
+  },
+  "wholesaleTitle": "Achats de gros",
+  "wholesaleHint": "Achetez à plusieurs chez un grossiste : le prix de gros, même pour de petites quantités. Le règlement se fait avec le grossiste.",
+  "wholesaleOpen": "Offres en cours",
+  "wholesaleNoOffer": "Aucune offre de gros pour le moment.",
+  "wholesaleMine": "Mes offres de grossiste",
+  "wholesaleBecome": "Je suis grossiste : proposer des offres",
+  "wholesaleNewOffer": "Nouvelle offre",
+  "wholesaleUnitPrice": "{price} l'unité",
+  "@wholesaleUnitPrice": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleProgress": "{committed} sur {min} réservés · {buyers, plural, =0{aucune acheteuse} =1{1 acheteuse} other{{buyers} acheteuses}}",
+  "@wholesaleProgress": {
+    "placeholders": {
+      "committed": {
+        "type": "int"
+      },
+      "min": {
+        "type": "int"
+      },
+      "buyers": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleUntil": "Ouverte jusqu'au {date}",
+  "@wholesaleUntil": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "wholesaleConfirmed": "Confirmée",
+  "wholesaleCancelled": "Annulée",
+  "wholesaleClosed": "Close",
+  "wholesaleMyQuantity": "Ma réservation : {quantity}",
+  "@wholesaleMyQuantity": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesaleCommit": "Réserver",
+  "wholesaleChange": "Changer ma réservation",
+  "wholesaleConfirm": "Confirmer l'achat",
+  "wholesaleCancel": "Annuler l'offre",
+  "wholesaleQuantity": "Quantité",
+  "wholesaleQuantityHint": "0 pour retirer ta réservation.",
+  "wholesaleUnitPriceField": "Prix de gros à l'unité",
+  "wholesaleMinQuantity": "Quantité minimale",
+  "wholesaleDays": "{count, plural, =1{1 jour} other{{count} jours}}",
+  "@wholesaleDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "wholesalePublish": "Publier l'offre",
+  "wholesaleMinimumNotReached": "Le minimum n'est pas encore atteint."
 }
