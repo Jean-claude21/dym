@@ -166,4 +166,100 @@ class ContentRepository {
     for (final c in json! as List)
       ContentItem.fromJson(c as Map<String, dynamic>),
   ];
+
+  // ---------------------------------------------------------------- créatrices
+
+  Future<Result<CreatorProfile?>> creatorProfile() async =>
+      (await _data.rpc<Object?>('my_creator_profile')).map(
+        (json) => json == null
+            ? null
+            : CreatorProfile.fromJson((json as Map).cast<String, dynamic>()),
+      );
+
+  Future<Result<CreatorProfile>> becomeCreator(
+    String name, {
+    String? bio,
+  }) async =>
+      (await _data.rpc<Object?>(
+        'become_creator',
+        params: {'p_display_name': name, 'p_bio': bio},
+      )).map(
+        (json) =>
+            CreatorProfile.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
+  /// Catégories du référentiel (actives), dans l'ordre.
+  Future<Result<List<ContentCategory>>> categories() async {
+    final result = await _data.run(
+      (db) => db
+          .from('content_categories')
+          .select('id, slug, label')
+          .order('sort', ascending: true),
+    );
+    return result.map(
+      (rows) => [for (final r in rows) ContentCategory.fromJson(r)],
+    );
+  }
+
+  /// Catégorie proposée par l'IA pour une légende ; `Ok(null)` : aucune.
+  Future<Result<String?>> classify(String caption) => _functions.post(
+    '/v1/creator-content/classify',
+    body: {'caption': caption},
+    decode: (json) => (json as Map?)?['slug'] as String?,
+  );
+
+  /// Envoie une photo ou une vidéo dans le dossier de la créatrice.
+  Future<Result<ContentUpload>> uploadCreator(
+    List<int> bytes, {
+    required String contentType,
+  }) async {
+    final grant = await _functions.post<Map<String, dynamic>>(
+      '/v1/creator-content/uploads',
+      body: {'content_type': contentType},
+      idempotencyKey: Uuid.v4(),
+      decode: (json) => json! as Map<String, dynamic>,
+    );
+    switch (grant) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(value: final g):
+        final sent = await _uploads.put(
+          Uri.parse(g['upload_url'] as String),
+          bytes,
+          contentType: contentType,
+        );
+        return sent.map(
+          (_) => (
+            contentId: g['content_id'] as String,
+            objectKey: g['object_key'] as String,
+          ),
+        );
+    }
+  }
+
+  /// [categorySource] : `chosen`, `ai` ou `default` (nulle : « Autre »).
+  Future<Result<ContentItem>> publishCreator({
+    required ContentUpload upload,
+    required bool video,
+    String? caption,
+    String? categoryId,
+    String categorySource = 'chosen',
+    List<String> productIds = const [],
+  }) async => (await _data.rpc<Object?>(
+    'save_creator_content',
+    params: {
+      'p_content': {
+        'id': upload.contentId,
+        'kind': video ? 'video' : 'post',
+        'media_key': upload.objectKey,
+        'caption': caption,
+        'category_id': categoryId,
+        'category_source': categorySource,
+        'product_ids': productIds,
+      },
+    },
+  )).map((json) => ContentItem.fromJson(json! as Map<String, dynamic>));
+
+  Future<Result<List<ContentItem>>> myCreatorContents() async =>
+      (await _data.rpc<Object?>('my_creator_contents')).map(_items);
 }

@@ -1,12 +1,64 @@
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/src/discovery/discovery_models.dart';
 import 'package:meta/meta.dart';
 
-/// Story 24 h ou vidéo shoppable (spec 020).
+/// Story 24 h, vidéo shoppable (spec 020) ou post de créatrice (spec 036).
 enum ContentKind {
   story,
-  video;
+  video,
+  post;
 
-  static ContentKind fromCode(String? code) => code == 'story' ? story : video;
+  static ContentKind fromCode(String? code) => switch (code) {
+    'story' => story,
+    'post' => post,
+    _ => video,
+  };
+}
+
+/// Autrice d'un post (spec 036).
+@immutable
+class ContentAuthor {
+  const new({required this.id, required this.displayName, this.bio});
+
+  factory fromJson(Map<String, dynamic> json) => ContentAuthor(
+    id: json['id'] as String,
+    displayName: json['display_name'] as String,
+    bio: json['bio'] as String?,
+  );
+
+  final String id;
+  final String displayName;
+  final String? bio;
+}
+
+/// Catégorie d'un contenu (référentiel).
+@immutable
+class ContentCategory {
+  const new({required this.id, required this.slug, required this.label});
+
+  factory fromJson(Map<String, dynamic> json) => ContentCategory(
+    id: json['id'] as String,
+    slug: json['slug'] as String,
+    label: LocalizedText.fromJson(json['label']),
+  );
+
+  final String id;
+  final String slug;
+  final LocalizedText label;
+}
+
+/// Profil créateur de la personne (spec 036).
+@immutable
+class CreatorProfile {
+  const new({required this.displayName, this.bio});
+
+  factory fromJson(Map<String, dynamic> json) => CreatorProfile(
+    displayName: json['display_name'] as String,
+    bio: json['bio'] as String?,
+  );
+
+  final String displayName;
+  final String? bio;
 }
 
 /// Boutique d'un contenu.
@@ -35,8 +87,10 @@ class ContentItem {
     required this.kind,
     required this.mediaKey,
     required this.isVideo,
-    required this.store,
     required this.createdAt,
+    this.store,
+    this.author,
+    this.category,
     this.isText = false,
     this.background,
     this.caption,
@@ -63,7 +117,18 @@ class ContentItem {
     expiresAt: json['expires_at'] == null
         ? null
         : DateTime.parse(json['expires_at'] as String),
-    store: ContentStore.fromJson(json['store'] as Map<String, dynamic>),
+    store: switch (json['store']) {
+      final Map<String, dynamic> s => ContentStore.fromJson(s),
+      _ => null,
+    },
+    author: switch (json['author']) {
+      final Map<String, dynamic> a => ContentAuthor.fromJson(a),
+      _ => null,
+    },
+    category: switch (json['category']) {
+      final Map<String, dynamic> c => ContentCategory.fromJson(c),
+      _ => null,
+    },
     likeCount: (json['like_count'] as num?)?.toInt() ?? 0,
     liked: json['liked'] as bool? ?? false,
     products: [
@@ -89,7 +154,13 @@ class ContentItem {
   final String status;
   final DateTime createdAt;
   final DateTime? expiresAt;
-  final ContentStore store;
+
+  /// Boutique (contenus de vendeuse) ; nulle pour un post de créatrice.
+  final ContentStore? store;
+
+  /// Autrice (post de créatrice, spec 036).
+  final ContentAuthor? author;
+  final ContentCategory? category;
   final int likeCount;
   final bool liked;
   final List<CatalogItem> products;
@@ -110,6 +181,8 @@ class ContentItem {
         createdAt: createdAt,
         expiresAt: expiresAt,
         store: store,
+        author: author,
+        category: category,
         likeCount: likeCount ?? this.likeCount,
         liked: liked ?? this.liked,
         products: products,

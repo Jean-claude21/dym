@@ -6259,5 +6259,116 @@
         "type": "int"
       }
     }
+  },
+  "accountCreator": "Créer et partager",
+  "@accountCreator": {
+    "description": "Menu Moi"
+  },
+  "creatorTitle": "Studio créatrice",
+  "@creatorTitle": {
+    "description": "Titre"
+  },
+  "creatorIntro": "Partage tes recettes, tes astuces et tes trouvailles du marché. Tague les produits : on les achète d'un geste.",
+  "@creatorIntro": {
+    "description": "Explication"
+  },
+  "creatorName": "Nom de créatrice",
+  "@creatorName": {
+    "description": "Champ"
+  },
+  "creatorNameHint": "Ex. Awa cuisine",
+  "@creatorNameHint": {
+    "description": "Exemple"
+  },
+  "creatorBio": "Courte présentation (facultatif)",
+  "@creatorBio": {
+    "description": "Champ"
+  },
+  "creatorBecome": "Ouvrir mon studio",
+  "@creatorBecome": {
+    "description": "Bouton"
+  },
+  "creatorErrorName": "Ton nom de créatrice : 2 à 40 caractères.",
+  "@creatorErrorName": {
+    "description": "Erreur"
+  },
+  "creatorErrorMedia": "Ce média ne peut pas être publié : choisis-en un autre.",
+  "@creatorErrorMedia": {
+    "description": "Erreur"
+  },
+  "creatorNewPost": "Nouveau post",
+  "@creatorNewPost": {
+    "description": "Bouton"
+  },
+  "creatorMyPosts": "Mes posts",
+  "@creatorMyPosts": {
+    "description": "Section"
+  },
+  "creatorNoPost": "Pas encore de post : partage ta première recette !",
+  "@creatorNoPost": {
+    "description": "Vide"
+  },
+  "creatorPostStats": "{views} vues · {clicks} clics · {tags} produits",
+  "@creatorPostStats": {
+    "description": "Stats",
+    "placeholders": {
+      "views": {
+        "type": "int"
+      },
+      "clicks": {
+        "type": "int"
+      },
+      "tags": {
+        "type": "int"
+      }
+    }
+  },
+  "creatorArchive": "Archiver",
+  "@creatorArchive": {
+    "description": "Archiver"
+  },
+  "creatorPickVideo": "Vidéo (60 s)",
+  "@creatorPickVideo": {
+    "description": "Choix vidéo"
+  },
+  "creatorCaption": "Légende",
+  "@creatorCaption": {
+    "description": "Champ"
+  },
+  "creatorCaptionHint": "Ex. Ma sauce gombo du dimanche",
+  "@creatorCaptionHint": {
+    "description": "Exemple"
+  },
+  "creatorCategory": "Catégorie",
+  "@creatorCategory": {
+    "description": "Section"
+  },
+  "creatorSuggestCategory": "Laisser l'IA choisir",
+  "@creatorSuggestCategory": {
+    "description": "Bouton IA"
+  },
+  "creatorCategoryHint": "Sans choix, ton post va dans « Autre ».",
+  "@creatorCategoryHint": {
+    "description": "Aide"
+  },
+  "creatorTagProducts": "Produits tagués ({count}/{max})",
+  "@creatorTagProducts": {
+    "description": "Section",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "creatorSearchProducts": "Chercher un produit à taguer",
+  "@creatorSearchProducts": {
+    "description": "Champ"
+  },
+  "creatorPublish": "Publier",
+  "@creatorPublish": {
+    "description": "Bouton"
   }
 }

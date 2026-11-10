@@ -6,6 +6,7 @@ import 'package:dym_client/app/client_app.dart';
 import 'package:dym_client/app/config_error_app.dart';
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/creator/creator_service.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
@@ -154,6 +155,18 @@ Future<void> configureServices(DymEnvironment environment) async {
         recorder: PluginVoiceRecorder(),
         playback: PluginAudioPlayback(),
         calls: NeonCallService(repository: CallRepository(neon.data)),
+      ),
+    )
+    ..registerLazySingleton<CreatorService>(
+      () => NeonCreatorService(
+        repository: ContentRepository(
+          data: neon.data,
+          functions: neon.functions,
+          uploads: neon.uploads,
+        ),
+        discovery: locator<DiscoveryService>(),
+        photos: PluginPhotoPicker(),
+        videos: PluginVideoPicker(),
       ),
     )
     ..registerLazySingleton<AdjustmentsService>(

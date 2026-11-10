@@ -7998,6 +7998,144 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Appel · {minutes, plural, =1{1 min} other{{minutes} min}}'**
   String callSummaryEnded(int minutes);
+
+  /// Menu Moi
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer et partager'**
+  String get accountCreator;
+
+  /// Titre
+  ///
+  /// In fr, this message translates to:
+  /// **'Studio créatrice'**
+  String get creatorTitle;
+
+  /// Explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Partage tes recettes, tes astuces et tes trouvailles du marché. Tague les produits : on les achète d\'un geste.'**
+  String get creatorIntro;
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de créatrice'**
+  String get creatorName;
+
+  /// Exemple
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. Awa cuisine'**
+  String get creatorNameHint;
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Courte présentation (facultatif)'**
+  String get creatorBio;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir mon studio'**
+  String get creatorBecome;
+
+  /// Erreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton nom de créatrice : 2 à 40 caractères.'**
+  String get creatorErrorName;
+
+  /// Erreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce média ne peut pas être publié : choisis-en un autre.'**
+  String get creatorErrorMedia;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau post'**
+  String get creatorNewPost;
+
+  /// Section
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes posts'**
+  String get creatorMyPosts;
+
+  /// Vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de post : partage ta première recette !'**
+  String get creatorNoPost;
+
+  /// Stats
+  ///
+  /// In fr, this message translates to:
+  /// **'{views} vues · {clicks} clics · {tags} produits'**
+  String creatorPostStats(int views, int clicks, int tags);
+
+  /// Archiver
+  ///
+  /// In fr, this message translates to:
+  /// **'Archiver'**
+  String get creatorArchive;
+
+  /// Choix vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo (60 s)'**
+  String get creatorPickVideo;
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Légende'**
+  String get creatorCaption;
+
+  /// Exemple
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. Ma sauce gombo du dimanche'**
+  String get creatorCaptionHint;
+
+  /// Section
+  ///
+  /// In fr, this message translates to:
+  /// **'Catégorie'**
+  String get creatorCategory;
+
+  /// Bouton IA
+  ///
+  /// In fr, this message translates to:
+  /// **'Laisser l\'IA choisir'**
+  String get creatorSuggestCategory;
+
+  /// Aide
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans choix, ton post va dans « Autre ».'**
+  String get creatorCategoryHint;
+
+  /// Section
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits tagués ({count}/{max})'**
+  String creatorTagProducts(int count, int max);
+
+  /// Champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher un produit à taguer'**
+  String get creatorSearchProducts;
+
+  /// Bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier'**
+  String get creatorPublish;
 }
 
 class _DymLocalizationsDelegate

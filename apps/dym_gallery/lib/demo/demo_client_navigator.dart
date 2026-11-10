@@ -77,6 +77,9 @@ class DemoClientNavigator implements AppNavigator {
   void toSpaces() {}
 
   @override
+  void toCreatorStudio() {}
+
+  @override
   Future<void> toSpace(String spaceId) async {}
 
   @override
