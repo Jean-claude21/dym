@@ -131,6 +131,12 @@ class _Navigator implements AppNavigator {
   void toBaskets() => routes.add('baskets');
 
   @override
+  void toSpaces() => routes.add('spaces');
+
+  @override
+  Future<void> toSpace(String spaceId) async => routes.add('space:$spaceId');
+
+  @override
   Future<void> toShoppingList(String listId) async =>
       routes.add('shopping:$listId');
 }
@@ -306,6 +312,11 @@ void main() {
       expect(find.text('Boutiques ouvertes près de toi'), findsOneWidget);
       await tester.tap(find.text('Moi').first);
       await tester.pump();
+      await tester.dragUntilVisible(
+        find.text('Se déconnecter'),
+        find.byType(Scrollable).last,
+        const Offset(0, -300),
+      );
       await tester.tap(find.text('Se déconnecter'));
       await tester.pump();
       expect(auth.calls, ['signOut']);

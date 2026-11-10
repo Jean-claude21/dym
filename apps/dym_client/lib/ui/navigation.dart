@@ -32,6 +32,8 @@ import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_client/features/shopping/shopping_service.dart';
 import 'package:dym_client/features/shopping/shopping_viewmodels.dart';
 import 'package:dym_client/features/shopping/shopping_views.dart';
+import 'package:dym_client/features/spaces/spaces_service.dart';
+import 'package:dym_client/features/spaces/spaces_views.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/features/wallet/wallet_view.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
@@ -112,6 +114,12 @@ abstract interface class AppNavigator {
 
   /// Mes paniers enregistrés (spec 030).
   void toBaskets();
+
+  /// Mes espaces (spec 031).
+  void toSpaces();
+
+  /// Un espace (notification, liste).
+  Future<void> toSpace(String spaceId);
 }
 
 /// Navigation Stacked (pile vidée : on ne revient pas en arrière après la
@@ -130,7 +138,9 @@ class StackedAppNavigator implements AppNavigator {
     WalletService? wallet,
     ShoppingService? shopping,
     FavoritesService? favorites,
+    SpacesService? spaces,
   ]) : _walletOverride = wallet,
+       _spacesOverride = spaces,
        _shoppingOverride = shopping,
        _favoritesOverride = favorites,
        _support = support ?? locator<SupportService>(),
@@ -173,6 +183,13 @@ class StackedAppNavigator implements AppNavigator {
       _shoppingOverride ?? locator<ShoppingService>();
 
   final FavoritesService? _favoritesOverride;
+
+  final SpacesService? _spacesOverride;
+
+  /// Espaces (spec 031) ; absents des tests sans service.
+  SpacesService? get _spaces =>
+      _spacesOverride ??
+      (locator.isRegistered<SpacesService>() ? locator<SpacesService>() : null);
 
   /// Favoris et paniers (spec 030) ; absents des tests sans service.
   FavoritesService? get _favorites =>
@@ -329,6 +346,10 @@ class StackedAppNavigator implements AppNavigator {
         final f? => (context) => saveCartAsBasket(context, f),
         null => null,
       },
+      onSendToSpace: switch (_spaces) {
+        final s? => (context) => sendCartToSpace(context, s).then((_) {}),
+        null => null,
+      },
     ),
   );
 
@@ -476,6 +497,32 @@ class StackedAppNavigator implements AppNavigator {
   );
 
   @override
+  void toSpaces() {
+    final spaces = _spaces;
+    if (spaces == null) return;
+    _push(SpacesView(service: spaces, onBack: _back, onOpen: toSpace));
+  }
+
+  @override
+  Future<void> toSpace(String spaceId) async {
+    final spaces = _spaces;
+    if (spaces == null) return;
+    await _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (context) => SpaceView(
+          service: spaces,
+          spaceId: spaceId,
+          onBack: () => Navigator.of(context).pop(),
+          onValidated: () {
+            Navigator.of(context).pop();
+            toCart();
+          },
+        ),
+      ),
+    );
+  }
+
+  @override
   void toFavorites() {
     final favorites = _favorites;
     if (favorites == null) return;
@@ -542,6 +589,7 @@ class StackedAppNavigator implements AppNavigator {
       onOpenOrder: toOrder,
       onOpenConversation: toChat,
       onOpenShoppingList: (id) => unawaited(toShoppingList(id)),
+      onOpenSpace: (id) => unawaited(toSpace(id)),
     ),
   );
 

@@ -4230,4 +4230,199 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get accountBaskets => 'My baskets';
+
+  @override
+  String get spacesTitle => 'My spaces';
+
+  @override
+  String get spacesIntro =>
+      'A space brings together those who fill the basket and those who confirm and pay: home, family back home, a savings group…';
+
+  @override
+  String get spacesEmpty =>
+      'No space yet. Create one or join a relative\'s with their code.';
+
+  @override
+  String get spacesEmptyShort => 'First create or join a space in “Me”.';
+
+  @override
+  String get spaceCreate => 'Create a space';
+
+  @override
+  String get spaceCreateAction => 'Create';
+
+  @override
+  String get spaceJoin => 'Join';
+
+  @override
+  String get spaceJoinAction => 'Join';
+
+  @override
+  String get spaceCodeHint => 'Code you received (8 characters)';
+
+  @override
+  String get spaceName => 'Space name';
+
+  @override
+  String get spaceNameHint => 'E.g. Home, Family in Kpalimé';
+
+  @override
+  String get spaceBudget => 'Monthly budget (optional)';
+
+  @override
+  String get spaceBudgetHint => 'E.g. 50,000';
+
+  @override
+  String spaceMembersCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count members',
+      one: '1 member',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get spaceRolePayer => 'Confirms and pays';
+
+  @override
+  String get spaceRoleMember => 'Fills the basket';
+
+  @override
+  String get spaceOwner => 'Owner · confirms and pays';
+
+  @override
+  String spaceMe(String name) {
+    return '$name (me)';
+  }
+
+  @override
+  String spaceManage(String name) {
+    return 'Manage $name';
+  }
+
+  @override
+  String get spaceMakePayer => 'Can confirm and pay';
+
+  @override
+  String get spaceMakeMember => 'Fills only';
+
+  @override
+  String get spaceRemoveMember => 'Remove from the space';
+
+  @override
+  String get spaceMembers => 'Members';
+
+  @override
+  String get spaceBasket => 'Shared basket';
+
+  @override
+  String get spaceSendCart => 'Send my cart';
+
+  @override
+  String get spaceBasketEmpty =>
+      'Empty for now: everyone fills their cart as usual, then sends it here.';
+
+  @override
+  String spaceTotal(String total) {
+    return 'Total: $total + delivery';
+  }
+
+  @override
+  String get spaceValidate => 'Confirm and move to cart';
+
+  @override
+  String get spaceWaitPayer => 'Someone who confirms will place the order.';
+
+  @override
+  String get spaceDelete => 'Delete the space';
+
+  @override
+  String get spaceLeave => 'Leave the space';
+
+  @override
+  String spaceDeleteConfirm(String name) {
+    return 'Delete “$name” for everyone?';
+  }
+
+  @override
+  String spaceLeaveConfirm(String name) {
+    return 'Leave “$name”?';
+  }
+
+  @override
+  String get spaceBudgetTitle => 'Monthly budget';
+
+  @override
+  String spaceBudgetMeta(String spent, String budget, String left) {
+    return '$spent spent of $budget · $left left';
+  }
+
+  @override
+  String get spaceInvite => 'Invite code';
+
+  @override
+  String get spaceCopyCode => 'Copy the code';
+
+  @override
+  String get spaceCodeCopied => 'Code copied: send it to your relatives.';
+
+  @override
+  String spaceAddedBy(String name) {
+    return 'added by $name';
+  }
+
+  @override
+  String get spaceUnavailable => 'unavailable';
+
+  @override
+  String get spaceSendCartTitle => 'Send my cart to…';
+
+  @override
+  String get spaceSendToSpace => 'Send to a space';
+
+  @override
+  String spaceCartSent(String name) {
+    return 'Cart sent to “$name”.';
+  }
+
+  @override
+  String get spaceErrorName => 'Give the space a name.';
+
+  @override
+  String get spaceErrorBudget => 'Invalid budget.';
+
+  @override
+  String get spaceErrorUnknownCode => 'Unknown code: check it.';
+
+  @override
+  String get spaceErrorOtherCountry => 'This space is in another country.';
+
+  @override
+  String get spaceErrorFull => 'This space already has 20 members.';
+
+  @override
+  String get spaceErrorTooMany => '20 spaces at most.';
+
+  @override
+  String get spaceErrorCartEmpty => 'Nothing to send or confirm.';
+
+  @override
+  String get spaceErrorBudgetExceeded =>
+      'This basket exceeds the monthly budget.';
+
+  @override
+  String get spaceErrorNotPayer => 'Only someone who confirms can do this.';
+
+  @override
+  String get accountSpaces => 'My spaces';
+
+  @override
+  String get notifSpaceValidatedTitle => 'Shared basket confirmed';
+
+  @override
+  String notifSpaceValidatedBody(String name, String space) {
+    return '$name confirmed the “$space” basket.';
+  }
 }

@@ -54,3 +54,4 @@ fiabilité (ops).
 | `shopping_list_saved` (articles, récurrence), `shopping_list_proposed` (articles, boutiques, manquants), `shopping_reminder_sent` (période) | Serveur | Assistant de courses (spec 029) |
 | `shopping_list_cart_added` (articles ajoutés, refusés) | App | Assistant de courses (spec 029) |
 | `favorite_added` (type), `basket_saved` (lignes), `basket_reordered` (ajoutés, non ajoutés) | Serveur | Carnet (spec 030) |
+| `space_created` (budget : oui/non), `space_joined`, `space_validated` (articles, montant) | Serveur | Espaces (spec 031) |

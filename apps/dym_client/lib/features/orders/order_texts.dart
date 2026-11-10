@@ -93,6 +93,13 @@ String timeAgo(DymLocalizations l10n, DateTime at, DateTime now) {
       l10n.notifDisputeResolvedBody,
     ),
     'store_broadcast' => (store, n.param('message') ?? ''),
+    'space_validated' => (
+      l10n.notifSpaceValidatedTitle,
+      l10n.notifSpaceValidatedBody(
+        n.param('by_name') ?? '',
+        n.param('space_name') ?? '',
+      ),
+    ),
     'shopping_list_due' => (
       l10n.notifShoppingDueTitle,
       l10n.notifShoppingDueBody(n.param('list_name') ?? ''),
@@ -115,5 +122,6 @@ IconData notificationIcon(String kind) => switch (kind) {
   'dispute_resolved' => Icons.verified_rounded,
   'store_broadcast' => Icons.campaign_rounded,
   'shopping_list_due' => Icons.checklist_rounded,
+  'space_validated' => Icons.groups_rounded,
   _ => Icons.notifications_rounded,
 };

@@ -20,6 +20,7 @@ class AccountView extends StackedView<AccountViewModel> {
     this.onWallet,
     this.onFavorites,
     this.onBaskets,
+    this.onSpaces,
   });
 
   final AuthService service;
@@ -43,6 +44,9 @@ class AccountView extends StackedView<AccountViewModel> {
   /// Favoris et paniers enregistrés (spec 030) ; absents : lignes masquées.
   final VoidCallback? onFavorites;
   final VoidCallback? onBaskets;
+
+  /// Espaces partagés (spec 031) ; absent : ligne masquée.
+  final VoidCallback? onSpaces;
 
   @override
   AccountViewModel viewModelBuilder(BuildContext context) =>
@@ -138,6 +142,7 @@ class AccountView extends StackedView<AccountViewModel> {
                     l10n.accountWallet,
                     onWallet,
                   ),
+                  (Icons.groups_rounded, l10n.accountSpaces, onSpaces),
                   (Icons.favorite_rounded, l10n.accountFavorites, onFavorites),
                   (
                     Icons.shopping_basket_rounded,

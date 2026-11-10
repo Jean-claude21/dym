@@ -22,6 +22,7 @@ class CartPageView extends StackedView<CartViewModel> {
     required this.onBrowse,
     super.key,
     this.onSave,
+    this.onSendToSpace,
   });
 
   final CartService service;
@@ -36,6 +37,9 @@ class CartPageView extends StackedView<CartViewModel> {
 
   /// « Enregistrer ce panier » (spec 030) ; absent : masqué.
   final Future<void> Function(BuildContext context)? onSave;
+
+  /// « Envoyer à un espace » (spec 031) ; absent : masqué.
+  final Future<void> Function(BuildContext context)? onSendToSpace;
 
   @override
   CartViewModel viewModelBuilder(BuildContext context) => CartViewModel(
@@ -86,17 +90,26 @@ class CartPageView extends StackedView<CartViewModel> {
             header,
             if (vm.offline && !cart.isEmpty)
               _OfflineBanner(label: l10n.errorOffline),
-            if (onSave case final save? when !cart.isEmpty)
+            if (!cart.isEmpty && (onSave != null || onSendToSpace != null))
               DymContentWidth.form(
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: TextButton.icon(
-                      onPressed: () => save(context),
-                      icon: const Icon(Icons.bookmark_add_rounded),
-                      label: Text(l10n.basketSave),
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    children: [
+                      if (onSendToSpace case final send?)
+                        TextButton.icon(
+                          onPressed: () => send(context),
+                          icon: const Icon(Icons.groups_rounded),
+                          label: Text(l10n.spaceSendToSpace),
+                        ),
+                      if (onSave case final save?)
+                        TextButton.icon(
+                          onPressed: () => save(context),
+                          icon: const Icon(Icons.bookmark_add_rounded),
+                          label: Text(l10n.basketSave),
+                        ),
+                    ],
                   ),
                 ),
               ),
