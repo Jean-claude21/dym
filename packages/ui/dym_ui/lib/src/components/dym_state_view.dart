@@ -31,7 +31,11 @@ class DymStateView extends StatelessWidget {
     super.key,
     this.actionLabel,
     this.onAction,
+    this.icon,
   });
+
+  /// Icône propre au sujet (favoris, adresses…) ; sinon celle de [kind].
+  final IconData? icon;
 
   /// Nature de l'état.
   final DymStateKind kind;
@@ -58,7 +62,7 @@ class DymStateView extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(kind.icon, size: 52, color: iconColor),
+          Icon(icon ?? kind.icon, size: 52, color: iconColor),
           const SizedBox(height: DymTokenSpace.s4),
           Text(
             title,

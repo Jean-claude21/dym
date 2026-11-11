@@ -74,7 +74,7 @@ MemoryOrdersService _orders() => MemoryOrdersService(
 void main() {
   HomeView home(ClientTab tab) => HomeView(
     service: _Auth(),
-    discovery: memoryDiscovery(),
+    discovery: memoryDiscovery(photos: capturePhoto),
     navigator: _Nav(),
     orders: _orders(),
     initialTab: tab,

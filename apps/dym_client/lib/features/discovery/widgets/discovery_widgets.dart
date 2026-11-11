@@ -272,6 +272,212 @@ class ProductTile extends StatelessWidget {
   }
 }
 
+/// Produit en ligne (design « Épuré », planche 09) : photo carrée sur menthe,
+/// nom, unité, prix à droite, « + » ou quantité au panier ; « Rupture » à la
+/// place du « + ». Posé sur le fond, séparé par des filets.
+class ProductRow extends StatelessWidget {
+  const new({
+    required this.item,
+    required this.service,
+    required this.config,
+    required this.onTap,
+    super.key,
+    this.showStore = false,
+  });
+
+  final CatalogItem item;
+  final DiscoveryService service;
+  final CountryConfig? config;
+  final VoidCallback onTap;
+  final bool showStore;
+
+  @override
+  Widget build(BuildContext context) {
+    final cart = CartScope.maybeOf(context);
+    if (cart == null || !item.available) return _row(context, null, 0);
+    return ValueListenableBuilder(
+      valueListenable: cart.service.cart,
+      builder: (context, view, _) {
+        final variant = item.defaultVariantId;
+        return _row(context, (q) {
+          if (variant == null) {
+            onTap(); // variante inconnue : choix sur la fiche
+          } else if (cartQuantityOf(view, variant) == 0) {
+            unawaited(addToCart(context, variant, quantity: q));
+          } else {
+            unawaited(cart.service.setQuantity(variant, q));
+          }
+        }, cartQuantityOf(view, variant));
+      },
+    );
+  }
+
+  Widget _row(BuildContext context, ValueChanged<int>? onQuantity, int inCart) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final price = moneyOf(config, item.displayPriceMinor);
+    final unit = item.unitLabel?.resolve(locale);
+    final meta = [?unit, if (showStore) item.store.name].join(' · ');
+    // Plusieurs formats : « dès 400 F CFA » à droite, une seule fois.
+    final from = item.variantCount > 1 && price != null;
+    return InkWell(
+      onTap: onTap,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 80),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+          child: Row(
+            children: [
+              ProductThumb(
+                image: item.photoKey == null
+                    ? null
+                    : service.photo(item.photoKey!),
+                size: 64,
+              ),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.body.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    if (meta.isNotEmpty)
+                      Text(
+                        meta,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.label.copyWith(
+                          color: c.textSecondary,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    if (item.endOfMarketPercent case final percent?)
+                      Text(
+                        l10n.endOfMarketBadge(percent),
+                        style: t.label.copyWith(color: c.pimentStrong),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: DymTokenSpace.s2),
+              if (price != null && inCart == 0)
+                if (from)
+                  Text(
+                    l10n.productFrom(price.format()),
+                    style: t.body.copyWith(fontWeight: FontWeight.w600),
+                  )
+                else
+                  MoneyText(price, size: 15, color: c.textPrimary),
+              const SizedBox(width: DymTokenSpace.s1),
+              if (!item.available)
+                DymPromoBadge(label: l10n.productOutOfStock)
+              else if (inCart > 0 && onQuantity != null)
+                DymQuantityStepper(
+                  quantity: inCart,
+                  dense: true,
+                  decreaseLabel: l10n.productStockDecrease,
+                  increaseLabel: l10n.productStockIncrease,
+                  onChanged: onQuantity,
+                )
+              else if (onQuantity != null)
+                RoundAddButton(
+                  tooltip: l10n.cartAddShort,
+                  onPressed: () => onQuantity(1),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// « + » vert de 32 px dans une zone tactile de 48 px.
+class RoundAddButton extends StatelessWidget {
+  const new({required this.tooltip, required this.onPressed, super.key});
+
+  final String tooltip;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Tooltip(
+      message: tooltip,
+      child: Semantics(
+        button: true,
+        enabled: onPressed != null,
+        child: InkResponse(
+          onTap: onPressed,
+          radius: 24,
+          child: SizedBox(
+            width: 48,
+            height: 48,
+            child: Center(
+              child: Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: onPressed == null ? c.muted : c.brand,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.add_rounded,
+                  size: 22,
+                  color: onPressed == null ? c.textSecondary : c.onBrand,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Liste de produits à filets.
+class ProductList extends StatelessWidget {
+  const new({
+    required this.items,
+    required this.service,
+    required this.config,
+    required this.onOpen,
+    super.key,
+    this.showStore = false,
+  });
+
+  final List<CatalogItem> items;
+  final DiscoveryService service;
+  final CountryConfig? config;
+  final ValueChanged<String> onOpen;
+  final bool showStore;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Column(
+      children: [
+        for (final (i, item) in items.indexed) ...[
+          if (i > 0) Divider(height: 1, color: c.hairline),
+          ProductRow(
+            item: item,
+            service: service,
+            config: config,
+            showStore: showStore,
+            onTap: () => onOpen(item.id),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
 /// Grille responsive de cartes produit.
 class ProductGrid extends StatelessWidget {
   const new({

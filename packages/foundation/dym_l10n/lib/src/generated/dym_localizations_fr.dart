@@ -1048,6 +1048,28 @@ class DymLocalizationsFr extends DymLocalizations {
   String get productChoose => 'Choisis';
 
   @override
+  String productAddPrice(String price) {
+    return 'Ajouter · $price';
+  }
+
+  @override
+  String get productFormat => 'Format';
+
+  @override
+  String get productSameStore => 'De la même boutique';
+
+  @override
+  String storeFactMinutes(int count) {
+    return '$count min';
+  }
+
+  @override
+  String get storeFactDelivery => 'Livraison';
+
+  @override
+  String get storeFactPickup => 'Retrait possible';
+
+  @override
   String productDeliveryEstimate(int minutes, String zone) {
     return 'Livré en $minutes min environ à $zone';
   }
@@ -5351,6 +5373,9 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get walletCashTopup => 'Recharger en cash auprès d\'un livreur';
+
+  @override
+  String get walletCashTopupShort => 'Recharge cash';
 
   @override
   String get walletCashTopupHint =>

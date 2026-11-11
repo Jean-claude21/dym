@@ -77,7 +77,7 @@ class SearchView extends StackedView<SearchViewModel> {
       );
     } else if (vm.tooShort) {
       body = vm.history.isEmpty
-          ? _Message(text: l10n.searchPrompt)
+          ? _Start(viewModel: vm)
           : _History(viewModel: vm);
     } else if (vm.isBusy && results == null) {
       body = const DiscoveryState(failure: null, onRetry: _noop);
@@ -205,6 +205,72 @@ String _sortLabel(DymLocalizations l10n, SearchSort sort) => switch (sort) {
   SearchSort.priceAsc => l10n.sortPriceAsc,
   SearchSort.priceDesc => l10n.sortPriceDesc,
 };
+
+/// Avant la saisie : rayons en photos, un toucher lance la recherche.
+class _Start extends StatelessWidget {
+  const new({required this.viewModel});
+
+  final SearchViewModel viewModel;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final aisles = viewModel.aisles;
+    if (aisles.isEmpty) return _Message(text: l10n.searchPrompt);
+    return ListView(
+      padding: EdgeInsets.fromLTRB(
+        DymLayout.gutter(context),
+        DymTokenSpace.s4,
+        DymLayout.gutter(context),
+        DymTokenSpace.s4,
+      ),
+      children: [
+        Text(
+          l10n.homeAisles,
+          style: t.body.copyWith(fontWeight: FontWeight.w600),
+        ),
+        for (final (i, aisle) in aisles.indexed) ...[
+          if (i > 0) Divider(height: 1, color: c.hairline),
+          InkWell(
+            onTap: () => viewModel.searchFor(
+              aisle.label.resolve(locale),
+              SearchSource.text,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 60),
+              child: Row(
+                children: [
+                  ClipOval(
+                    child: Container(
+                      width: 44,
+                      height: 44,
+                      color: c.tintVertTendre,
+                      padding: const EdgeInsets.all(4),
+                      child: Image(
+                        image:
+                            DymIllustrations.aisle(aisle.icon) ??
+                            DymIllustrations.storeOpened,
+                        excludeFromSemantics: true,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: DymTokenSpace.s3),
+                  Expanded(
+                    child: Text(aisle.label.resolve(locale), style: t.body),
+                  ),
+                  Icon(Icons.north_west_rounded, color: c.textSecondary),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
+}
 
 class _Message extends StatelessWidget {
   const new({required this.text, this.busy = false});

@@ -1849,6 +1849,42 @@ abstract class DymLocalizations {
   /// **'Choisis'**
   String get productChoose;
 
+  /// No description provided for @productAddPrice.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter · {price}'**
+  String productAddPrice(String price);
+
+  /// Choix de la variante
+  ///
+  /// In fr, this message translates to:
+  /// **'Format'**
+  String get productFormat;
+
+  /// Autres produits de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'De la même boutique'**
+  String get productSameStore;
+
+  /// No description provided for @storeFactMinutes.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} min'**
+  String storeFactMinutes(int count);
+
+  /// Fait de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get storeFactDelivery;
+
+  /// Fait de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait possible'**
+  String get storeFactPickup;
+
   /// Délai estimé
   ///
   /// In fr, this message translates to:
@@ -8946,6 +8982,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Recharger en cash auprès d\'un livreur'**
   String get walletCashTopup;
+
+  /// Tuile : recharge en cash auprès d'un livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharge cash'**
+  String get walletCashTopupShort;
 
   /// No description provided for @walletCashTopupHint.
   ///

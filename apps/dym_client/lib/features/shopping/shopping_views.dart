@@ -146,6 +146,7 @@ class ShoppingListsView extends StackedView<ShoppingListsViewModel> {
               DymContentWidth.form(
                 child: DymStateView(
                   kind: DymStateKind.empty,
+                  icon: Icons.checklist_rounded,
                   title: l10n.shoppingTitle,
                   message: l10n.shoppingEmpty,
                 ),

@@ -127,6 +127,7 @@ class AisleView extends StackedView<AisleViewModel> {
                   : vm.products.isEmpty
                   ? DymStateView(
                       kind: DymStateKind.empty,
+                      icon: Icons.eco_outlined,
                       title: l10n.aisleEmpty,
                       message: '',
                     )

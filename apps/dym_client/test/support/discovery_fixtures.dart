@@ -1,6 +1,7 @@
 import 'package:dym_client/features/discovery/testing.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:flutter/widgets.dart';
 
 /// Référentiel du Togo réduit (quartiers, rayons, origines, unités).
 CountryConfig togoConfig() {
@@ -173,11 +174,14 @@ List<ProductPageData> products() => [
   _product('epices', 'Épices du marché', kodjo, 'epices', 300),
 ];
 
-MemoryDiscoveryService memoryDiscovery({ZoneMatch? zoneMatch}) =>
-    MemoryDiscoveryService(
-      config: togoConfig(),
-      stores: [esi, kodjo, afi],
-      products: products(),
-      zoneMatch: zoneMatch,
-      initialZone: 'be',
-    );
+MemoryDiscoveryService memoryDiscovery({
+  ZoneMatch? zoneMatch,
+  ImageProvider Function(String key)? photos,
+}) => MemoryDiscoveryService(
+  config: togoConfig(),
+  stores: [esi, kodjo, afi],
+  products: products(),
+  zoneMatch: zoneMatch,
+  initialZone: 'be',
+  photoResolver: photos,
+);

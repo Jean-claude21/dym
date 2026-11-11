@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -77,3 +80,19 @@ Future<void> capture(
     matchesGoldenFile('goldens/$name.png'),
   );
 }
+
+/// Photos de contrôle (générées, sans texte) pour juger les pages avec de
+/// vraies images : couverture de boutique, bissap, tomates, gombo.
+ImageProvider capturePhoto(String key) {
+  final name = switch (key) {
+    _ when key.contains('cover') => 'cover',
+    _ when key.contains('tomate') => 'tomates',
+    _ when key.contains('bissap') || key.contains('sirop') => 'bissap',
+    _ => 'gombo',
+  };
+  return MemoryImage(
+    _photos[name] ??= File('test/capture/photos/$name.webp').readAsBytesSync(),
+  );
+}
+
+final _photos = <String, Uint8List>{};

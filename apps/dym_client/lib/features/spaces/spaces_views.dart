@@ -142,6 +142,7 @@ class SpacesView extends StackedView<SpacesViewModel> {
               DymContentWidth.form(
                 child: DymStateView(
                   kind: DymStateKind.empty,
+                  icon: Icons.groups_outlined,
                   title: l10n.spacesTitle,
                   message: l10n.spacesEmpty,
                 ),
@@ -592,7 +593,7 @@ class _PocketCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: DymTokenSpace.s3),
       padding: const EdgeInsets.all(DymTokenSpace.s4),
       decoration: BoxDecoration(
-        color: c.brand,
+        color: c.tintVertTendre,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
       ),
       child: Row(
@@ -603,11 +604,11 @@ class _PocketCard extends StatelessWidget {
               children: [
                 Text(
                   l10n.spacePocket,
-                  style: t.label.copyWith(color: c.onBrand),
+                  style: t.label.copyWith(color: c.brandDeep),
                 ),
                 Text(
                   vm.money(space.pocketBalanceMinor) ?? '',
-                  style: t.display.copyWith(color: c.onBrand, fontSize: 28),
+                  style: t.display.copyWith(color: c.brandDeep, fontSize: 28),
                 ),
               ],
             ),
@@ -779,19 +780,12 @@ class _ItemRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s1),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DymTokenRadius.tile / 2),
-            child: SizedBox.square(
-              dimension: 52,
-              child: item.photoKey == null
-                  ? ColoredBox(color: c.tintVertTendre)
-                  : Image(
-                      image: vm.service.photo(item.photoKey!),
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) =>
-                          ColoredBox(color: c.tintVertTendre),
-                    ),
-            ),
+          ProductThumb(
+            image: switch (item.photoKey) {
+              final key? => vm.service.photo(key),
+              null => null,
+            },
+            size: 52,
           ),
           const SizedBox(width: DymTokenSpace.s2),
           Expanded(

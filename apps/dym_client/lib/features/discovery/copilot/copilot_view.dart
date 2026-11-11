@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/copilot/copilot_service.dart';
 import 'package:dym_client/features/discovery/search/voice_search_view.dart';
 import 'package:dym_client/features/discovery/search_ai_service.dart';
@@ -439,32 +440,30 @@ class _Line extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s1),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(DymTokenRadius.tile / 2),
-            child: SizedBox.square(
-              dimension: 56,
-              child: line.photoKey == null
-                  ? ColoredBox(color: c.tintVertTendre)
-                  : Image(
-                      image: vm.service.photo(line.photoKey!),
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) =>
-                          ColoredBox(color: c.tintVertTendre),
-                    ),
-            ),
+          ProductThumb(
+            image: switch (line.photoKey) {
+              final key? => vm.service.photo(key),
+              null => null,
+            },
           ),
           const SizedBox(width: DymTokenSpace.s2),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(line.name, style: t.title.copyWith(fontSize: 16)),
+                Text(
+                  line.name,
+                  style: t.body.copyWith(fontWeight: FontWeight.w600),
+                ),
                 Text(
                   [
                     '${line.quantity}${unit == null ? '' : ' $unit'}',
                     ?price?.format(),
                   ].join(' · '),
-                  style: t.body.copyWith(color: c.brandDeep),
+                  style: t.label.copyWith(
+                    color: c.textSecondary,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
                 if (line.reason case final reason?)
                   Row(
@@ -494,8 +493,7 @@ class _Line extends StatelessWidget {
                     dimension: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : Icon(Icons.close_rounded, color: c.pimentStrong),
-            style: IconButton.styleFrom(backgroundColor: c.tintPimentClair),
+                : Icon(Icons.close_rounded, color: c.textSecondary),
           ),
         ],
       ),

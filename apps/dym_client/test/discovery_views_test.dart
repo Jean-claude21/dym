@@ -189,7 +189,7 @@ void main() {
         debounce: Duration.zero,
       ),
     );
-    expect(find.text('Tape au moins 2 lettres.'), findsOneWidget);
+    expect(find.text('Rayons'), findsOneWidget); // rayons avant la saisie
     await tester.enterText(find.byType(TextField), 'biss');
     await tester.pumpAndSettle();
     expect(find.text('2 résultats · Pertinence'), findsOneWidget);
@@ -207,8 +207,11 @@ void main() {
     );
     expect(find.text('Livré en 50 min environ à Bè'), findsOneWidget);
     expect(find.text('En stock'), findsOneWidget);
-    await _tap(tester, find.textContaining('1 L ·'));
-    expect(find.text('Rupture'), findsOneWidget);
+    await _tap(tester, find.textContaining('1 L —'));
+    expect(
+      find.text('Rupture'),
+      findsWidgets,
+    ); // format choisi + « même boutique »
     expect(service.viewed, ['bissap']);
   });
 

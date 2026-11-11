@@ -160,6 +160,7 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
                         if (vm.conversations.isEmpty)
                           DymStateView(
                             kind: DymStateKind.empty,
+                            icon: Icons.chat_bubble_outline_rounded,
                             title: l10n.chatEmptyList,
                             message: '',
                           ),
