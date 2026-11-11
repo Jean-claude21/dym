@@ -447,6 +447,10 @@ class AdminOrderView extends StackedView<AdminOrderViewModel> {
       ].join(' · '),
       leading: back,
       actions: [
+        AdminPill(
+          orderStatusLabel(l10n, o.order.status),
+          tone: AdminTone.success,
+        ),
         if (o.stuck)
           AdminPill(
             l10n.adminStuckSince(sinceLabel(l10n, o.lastChangeAt, now)),
@@ -460,22 +464,89 @@ class AdminOrderView extends StackedView<AdminOrderViewModel> {
             icon: Icons.forum_rounded,
           ),
       ],
-      child: wide
-          ? Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _Facts(
+            facts: [
+              (l10n.adminColCustomer, o.customer.firstName ?? '—'),
+              (l10n.adminColStore, o.storeName),
+              (
+                l10n.adminColAmount,
+                vm.money(o.order.totalMinor, o.order.currencyCode),
+              ),
+            ],
+          ),
+          const SizedBox(height: DymTokenSpace.s3),
+          if (wide)
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(flex: 3, child: Column(children: main)),
-                const SizedBox(width: DymTokenSpace.s3),
+                const SizedBox(width: DymTokenSpace.s4),
                 Expanded(flex: 2, child: actions),
               ],
             )
-          : Column(
-              children: [
-                actions,
-                const SizedBox(height: DymTokenSpace.s3),
-                ...main,
-              ],
+          else ...[
+            actions,
+            const SizedBox(height: DymTokenSpace.s3),
+            ...main,
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Cliente · boutique · montant, séparés par des filets (planche 06).
+class _Facts extends StatelessWidget {
+  const new({required this.facts});
+
+  final List<(String, String)> facts;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s3),
+      decoration: BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: c.hairline)),
+      ),
+      child: Wrap(
+        runSpacing: DymTokenSpace.s2,
+        children: [
+          for (final (label, value) in facts)
+            Container(
+              constraints: const BoxConstraints(minWidth: 180),
+              padding: const EdgeInsets.only(right: DymTokenSpace.s4),
+              margin: const EdgeInsets.only(right: DymTokenSpace.s4),
+              decoration: BoxDecoration(
+                border: Border(right: BorderSide(color: c.hairline)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    style: t.label.copyWith(
+                      color: c.textSecondary,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  Text(
+                    value,
+                    style: t.body.copyWith(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ],
+              ),
             ),
+        ],
+      ),
     );
   }
 }

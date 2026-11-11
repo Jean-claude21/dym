@@ -5,6 +5,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/catalog/products/products_view.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
@@ -226,6 +227,18 @@ void main() {
       t,
       'encaisser',
       QrChargeView(service: _Till(), onDone: () {}),
+    );
+  });
+  testWidgets('éditeur', (t) async {
+    await _capture(
+      t,
+      'editeur',
+      ProductEditorView(
+        service: memoryCatalog(),
+        product: esiProducts().first,
+        onDone: (_) {},
+        onCancel: () {},
+      ),
     );
   });
 }

@@ -134,7 +134,7 @@ class _StoreTile extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                backgroundColor: c.tintPlantainClair,
+                backgroundColor: c.tintVertTendre,
                 child: Text(
                   row.name.characters.first,
                   style: t.title.copyWith(color: c.brandDeep),
@@ -154,7 +154,7 @@ class _StoreTile extends StatelessWidget {
                 ),
               ),
               if (origin.isNotEmpty)
-                Flexible(child: AdminPill(origin, tone: AdminTone.warning)),
+                Flexible(child: AdminPill(origin, tone: AdminTone.success)),
               const Icon(Icons.chevron_right_rounded),
             ],
           ),

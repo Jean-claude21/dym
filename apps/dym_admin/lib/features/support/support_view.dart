@@ -276,7 +276,7 @@ class _DetailState extends State<_Detail> {
                   padding: const EdgeInsets.all(DymTokenSpace.s2),
                   decoration: BoxDecoration(
                     color: m.authorRole == 'team'
-                        ? c.tintPlantainClair
+                        ? c.tintVertTendre
                         : c.background,
                     borderRadius: BorderRadius.circular(DymTokenRadius.chip),
                   ),

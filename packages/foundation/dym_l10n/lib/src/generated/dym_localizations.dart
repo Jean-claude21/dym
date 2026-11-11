@@ -9229,6 +9229,12 @@ abstract class DymLocalizations {
   /// **'Ma caisse'**
   String get tillTitle;
 
+  /// Libellé du total du jour de la caisse
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get tillTodayLabel;
+
   /// No description provided for @tillOpen.
   ///
   /// In fr, this message translates to:
@@ -9558,6 +9564,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Ardoise'**
   String get creditTitle;
+
+  /// Libellé du total de l'ardoise
+  ///
+  /// In fr, this message translates to:
+  /// **'On te doit'**
+  String get creditOwedLabel;
 
   /// No description provided for @creditNew.
   ///

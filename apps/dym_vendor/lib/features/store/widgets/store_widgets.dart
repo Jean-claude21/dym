@@ -14,13 +14,11 @@ class StoreSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
+    // Section à plat (design « Épuré ») : filet au-dessus, pas de carte.
     return Container(
-      padding: const EdgeInsets.all(DymTokenSpace.s4),
+      padding: const EdgeInsets.only(top: DymTokenSpace.s3),
       decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
-        border: Border.all(color: c.hairline),
-        boxShadow: const [DymTokenShadows.card],
+        border: Border(top: BorderSide(color: c.hairline)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,7 +31,10 @@ class StoreSection extends StatelessWidget {
                       ? const SizedBox.shrink()
                       : Text(
                           title!,
-                          style: context.dym.text.title.copyWith(fontSize: 19),
+                          style: context.dym.text.body.copyWith(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                 ),
                 if (trailing != null) Flexible(child: trailing!),
@@ -48,7 +49,7 @@ class StoreSection extends StatelessWidget {
   }
 }
 
-/// Note « adresse privée » (cadenas, teinte pêche).
+/// Note « adresse privée » (cadenas, fond discret).
 class StorePrivacyNote extends StatelessWidget {
   const new({required this.text, super.key});
 
@@ -60,18 +61,19 @@ class StorePrivacyNote extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(DymTokenSpace.s3),
       decoration: BoxDecoration(
-        color: c.tintPeche,
+        color: c.muted,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
       ),
       child: Row(
         children: [
-          Icon(Icons.lock_rounded, color: c.originMaisonFg),
+          Icon(Icons.lock_outline_rounded, color: c.textSecondary),
           const SizedBox(width: DymTokenSpace.s3),
           Expanded(
             child: Text(
               text,
               style: context.dym.text.label.copyWith(
-                color: c.originMaisonFg,
+                color: c.textPrimary,
+                fontWeight: FontWeight.w400,
                 fontSize: 14,
               ),
             ),

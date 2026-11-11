@@ -5492,6 +5492,9 @@ class DymLocalizationsEn extends DymLocalizations {
   String get tillTitle => 'My till';
 
   @override
+  String get tillTodayLabel => 'Today';
+
+  @override
   String get tillOpen => 'My till: today\'s sales';
 
   @override
@@ -5683,6 +5686,9 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get creditTitle => 'Credit book';
+
+  @override
+  String get creditOwedLabel => 'You are owed';
 
   @override
   String get creditNew => 'New customer';

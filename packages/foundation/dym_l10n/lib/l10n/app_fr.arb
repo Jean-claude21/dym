@@ -6694,6 +6694,8 @@
   "courierCashNoneHint": "Le cash encaissé par les livreurs pour toi apparaîtra ici.",
   "courierCashReceived": "Reçu",
   "tillTitle": "Ma caisse",
+  "tillTodayLabel": "Aujourd'hui",
+  "@tillTodayLabel": {"description": "Libellé du total du jour de la caisse"},
   "tillOpen": "Ma caisse : ventes du jour",
   "tillNewSale": "Nouvelle vente",
   "tillToday": "Aujourd'hui : {amount}",
@@ -6788,6 +6790,8 @@
   "qrPayOwnStore": "C'est ta propre boutique.",
   "qrPayCurrency": "Cette boutique n'est pas dans ton pays.",
   "creditTitle": "Ardoise",
+  "creditOwedLabel": "On te doit",
+  "@creditOwedLabel": {"description": "Libellé du total de l'ardoise"},
   "creditNew": "Nouvelle cliente",
   "creditTotal": "On te doit {amount}",
   "@creditTotal": {

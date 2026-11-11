@@ -5534,6 +5534,9 @@ class DymLocalizationsFr extends DymLocalizations {
   String get tillTitle => 'Ma caisse';
 
   @override
+  String get tillTodayLabel => 'Aujourd\'hui';
+
+  @override
   String get tillOpen => 'Ma caisse : ventes du jour';
 
   @override
@@ -5726,6 +5729,9 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get creditTitle => 'Ardoise';
+
+  @override
+  String get creditOwedLabel => 'On te doit';
 
   @override
   String get creditNew => 'Nouvelle cliente';

@@ -102,7 +102,10 @@ class StoreCategoriesView extends StackedView<StoreCategoriesViewModel> {
                     child: IconButton(
                       tooltip: l10n.authBack,
                       onPressed: onBack,
-                      icon: Icon(Icons.arrow_back_rounded, color: c.brandDeep),
+                      icon: Icon(
+                        Icons.arrow_back_rounded,
+                        color: c.textPrimary,
+                      ),
                     ),
                   ),
                 ],
@@ -110,17 +113,12 @@ class StoreCategoriesView extends StackedView<StoreCategoriesViewModel> {
               const SizedBox(height: DymTokenSpace.s3),
               Semantics(
                 header: true,
-                child: Text(
-                  l10n.categoriesTitle,
-                  textAlign: TextAlign.center,
-                  style: t.display.copyWith(fontSize: 36, color: c.brandDeep),
-                ),
+                child: Text(l10n.categoriesTitle, style: t.display),
               ),
               const SizedBox(height: DymTokenSpace.s1),
               Text(
                 l10n.categoriesSubtitle,
-                textAlign: TextAlign.center,
-                style: t.body.copyWith(fontSize: 17, color: c.textSecondary),
+                style: t.body.copyWith(color: c.textSecondary),
               ),
               const SizedBox(height: DymTokenSpace.s4),
               if (vm.active.isEmpty && vm.archived.isEmpty)

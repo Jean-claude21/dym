@@ -254,7 +254,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Aucune vente hors app enregistrée.'), findsOneWidget);
-      await tester.tap(find.text('Nouvelle vente'));
+      await tester.tap(find.text('Vente cash'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).at(0), 'Gombo');
       await tester.enterText(find.byType(TextField).at(1), '700');

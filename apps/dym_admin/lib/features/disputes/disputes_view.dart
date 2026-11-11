@@ -125,9 +125,7 @@ class _DisputeTile extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: late
-                      ? c.tintPimentClair
-                      : c.tintPlantainClair,
+                  backgroundColor: late ? c.tintPimentClair : c.tintPeche,
                   child: Icon(
                     _reasonIcon(row.reason),
                     color: late ? c.pimentStrong : c.textPrimary,
@@ -233,7 +231,7 @@ class _DetailState extends State<_Detail> {
                       decoration: BoxDecoration(
                         color: switch (m.authorRole) {
                           'vendor' => c.tintVertTendre,
-                          'admin' => c.tintPlantainClair,
+                          'admin' => c.tintVertTendre,
                           _ => c.background,
                         },
                         borderRadius: BorderRadius.circular(

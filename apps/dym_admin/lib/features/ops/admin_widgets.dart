@@ -179,9 +179,10 @@ class AdminPill extends StatelessWidget {
     final c = context.dym.colors;
     final (bg, fg) = switch (tone) {
       AdminTone.success => (c.tintVertTendre, c.brandDeep),
-      AdminTone.warning => (c.tintPlantainClair, c.textPrimary),
+      // Jaune réservé au cash et aux notes : l'alerte prend la teinte pêche.
+      AdminTone.warning => (c.tintPeche, c.originMaisonFg),
       AdminTone.danger => (c.tintPimentClair, c.pimentStrong),
-      AdminTone.neutral => (c.background, c.textSecondary),
+      AdminTone.neutral => (c.muted, c.textSecondary),
     };
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -365,7 +366,7 @@ class AdminAlert extends StatelessWidget {
     final c = context.dym.colors;
     final (bg, fg) = tone == AdminTone.danger
         ? (c.tintPimentClair, c.pimentStrong)
-        : (c.tintPlantainClair, c.textPrimary);
+        : (c.tintPeche, c.originMaisonFg);
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: DymTokenSpace.s2),

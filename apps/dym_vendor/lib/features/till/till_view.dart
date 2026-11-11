@@ -205,13 +205,6 @@ class TillView extends StackedView<TillViewModel> {
           icon: const Icon(Icons.arrow_back_rounded),
         ),
       ),
-      floatingActionButton: till == null
-          ? null
-          : FloatingActionButton.extended(
-              onPressed: () => _saleSheet(context, vm),
-              icon: const Icon(Icons.add_rounded),
-              label: Text(l10n.tillNewSale),
-            ),
       body: SafeArea(
         child: till == null
             ? Center(
@@ -236,155 +229,170 @@ class TillView extends StackedView<TillViewModel> {
                     DymLayout.gutter(context),
                     DymTokenSpace.s2,
                     DymLayout.gutter(context),
-                    96,
+                    DymTokenSpace.s5,
                   ),
                   children: [
-                    DymContentWidth(
-                      child: Text(
-                        l10n.tillToday(vm.money(till.todayMinor)),
-                        style: t.display,
+                    for (final w in <Widget>[
+                      // Total du jour en grand, comme l'encaissement.
+                      Text(
+                        l10n.tillTodayLabel,
+                        style: t.body.copyWith(color: c.textSecondary),
                       ),
-                    ),
-                    const SizedBox(height: DymTokenSpace.s2),
-                    DymContentWidth(
-                      child: Row(
+                      Text(
+                        vm.money(till.todayMinor),
+                        style: t.display.copyWith(
+                          fontSize: 40,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                      const SizedBox(height: DymTokenSpace.s2),
+                      _Split(
+                        left: (
+                          l10n.tillInApp(till.todayAppCount),
+                          vm.money(till.todayAppMinor),
+                        ),
+                        right: (
+                          l10n.tillOffApp(till.todayOffAppCount),
+                          vm.money(till.todayOffAppMinor),
+                        ),
+                      ),
+                      if (till.byMethod.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+                          child: Text(
+                            [
+                              for (final e in till.byMethod.entries)
+                                [
+                                  tillMethodLabel(l10n, e.key),
+                                  vm.money(e.value),
+                                ].join(' '),
+                            ].join(' · '),
+                            style: t.label.copyWith(
+                              color: c.textSecondary,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: DymTokenSpace.s4),
+                      // Vendre d'abord : vente cash (dictée possible), QR.
+                      Row(
                         children: [
                           Expanded(
-                            child: _Tile(
-                              label: l10n.tillInApp(till.todayAppCount),
-                              value: vm.money(till.todayAppMinor),
+                            child: DymButton(
+                              label: l10n.vendorCashSale,
+                              icon: Icons.add_rounded,
+                              onPressed: () => _saleSheet(context, vm),
                             ),
                           ),
-                          const SizedBox(width: DymTokenSpace.s3),
-                          Expanded(
-                            child: _Tile(
-                              label: l10n.tillOffApp(till.todayOffAppCount),
-                              value: vm.money(till.todayOffAppMinor),
+                          if (onQr case final qr?) ...[
+                            const SizedBox(width: DymTokenSpace.s2),
+                            Expanded(
+                              child: DymButton(
+                                label: l10n.vendorCharge,
+                                icon: Icons.qr_code_2_rounded,
+                                variant: DymButtonVariant.secondary,
+                                onPressed: () async {
+                                  await qr();
+                                  await vm.load();
+                                },
+                              ),
                             ),
-                          ),
+                          ],
                         ],
                       ),
-                    ),
-                    if (till.byMethod.isNotEmpty)
-                      DymContentWidth(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: DymTokenSpace.s2),
-                          child: Wrap(
-                            spacing: DymTokenSpace.s2,
-                            children: [
-                              for (final e in till.byMethod.entries)
-                                Chip(
-                                  label: Text(
-                                    '${tillMethodLabel(l10n, e.key)} · '
-                                    '${vm.money(e.value)}',
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (onQr case final qr?) ...[
-                      const SizedBox(height: DymTokenSpace.s3),
-                      DymContentWidth(
-                        child: DymButton(
-                          label: l10n.qrChargeTitle,
-                          icon: Icons.qr_code_rounded,
-                          onPressed: () async {
-                            await qr();
-                            await vm.load();
-                          },
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: DymTokenSpace.s4),
-                    DymContentWidth(
-                      child: _Tile(
-                        label: l10n.tillBalance,
-                        value: vm.money(till.balanceMinor),
-                      ),
-                    ),
-                    const SizedBox(height: DymTokenSpace.s2),
-                    DymContentWidth(
-                      child: DymButton(
-                        label: l10n.tillPayout,
-                        icon: Icons.account_balance_rounded,
-                        variant: DymButtonVariant.secondary,
-                        onPressed:
-                            till.balanceMinor <= 0 ||
-                                !till.simulatedPayout ||
-                                vm.acting
-                            ? null
-                            : () => _payoutSheet(context, vm),
-                      ),
-                    ),
-                    if (vm.problem case final p?)
-                      DymContentWidth(
-                        child: Padding(
+                      if (vm.problem case final p?)
+                        Padding(
                           padding: const EdgeInsets.only(top: DymTokenSpace.s2),
                           child: Text(
                             tillProblem(l10n, p),
                             style: t.body.copyWith(color: c.pimentStrong),
                           ),
                         ),
-                      ),
-                    const SizedBox(height: DymTokenSpace.s4),
-                    DymContentWidth(
-                      child: DymSectionHeader(title: l10n.tillSales),
-                    ),
-                    if (till.sales.isEmpty)
-                      DymContentWidth(
-                        child: Text(
-                          l10n.tillNoSale,
-                          style: t.body.copyWith(color: c.textSecondary),
-                        ),
-                      ),
-                    for (final s in till.sales)
-                      DymContentWidth(
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          minTileHeight: 56,
-                          title: Text(
-                            s.label,
-                            style: s.voided
-                                ? t.body.copyWith(
-                                    decoration: TextDecoration.lineThrough,
-                                    color: c.textSecondary,
-                                  )
-                                : t.body,
-                          ),
-                          subtitle: Text(tillMethodLabel(l10n, s.method)),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(vm.money(s.amountMinor), style: t.title),
-                              if (!s.voided)
-                                IconButton(
-                                  tooltip: l10n.tillVoid,
-                                  onPressed: () => vm.voidSale(s),
-                                  icon: const Icon(Icons.undo_rounded),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    if (till.payouts.isNotEmpty) ...[
                       const SizedBox(height: DymTokenSpace.s4),
-                      DymContentWidth(
-                        child: DymSectionHeader(title: l10n.tillPayouts),
+                      Text(
+                        l10n.tillSales,
+                        style: t.body.copyWith(fontWeight: FontWeight.w600),
                       ),
-                      for (final p in till.payouts)
-                        DymContentWidth(
-                          child: ListTile(
-                            contentPadding: EdgeInsets.zero,
-                            leading: const Icon(Icons.account_balance_rounded),
-                            title: Text(vm.money(p.amountMinor)),
-                            subtitle: Text(
-                              MaterialLocalizations.of(context)
-                                  .formatShortDate(p.at.toLocal()),
-                            ),
+                      if (till.sales.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: DymTokenSpace.s2,
+                          ),
+                          child: Text(
+                            l10n.tillNoSale,
+                            style: t.body.copyWith(color: c.textSecondary),
                           ),
                         ),
-                    ],
+                      for (final (i, s) in till.sales.indexed) ...[
+                        if (i > 0) Divider(height: 1, color: c.hairline),
+                        _SaleRow(
+                          label: s.label,
+                          method: tillMethodLabel(l10n, s.method),
+                          amount: vm.money(s.amountMinor),
+                          voided: s.voided,
+                          voidLabel: l10n.tillVoid,
+                          onVoid: s.voided ? null : () => vm.voidSale(s),
+                        ),
+                      ],
+                      const SizedBox(height: DymTokenSpace.s4),
+                      Divider(height: 1, color: c.hairline),
+                      // Solde chez DYM et versement.
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(minHeight: 64),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.account_balance_wallet_outlined,
+                              color: c.textPrimary,
+                            ),
+                            const SizedBox(width: DymTokenSpace.s3),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(l10n.tillBalance, style: t.body),
+                                  Text(
+                                    vm.money(till.balanceMinor),
+                                    style: t.body.copyWith(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            TextButton.icon(
+                              onPressed:
+                                  till.balanceMinor <= 0 ||
+                                      !till.simulatedPayout ||
+                                      vm.acting
+                                  ? null
+                                  : () => _payoutSheet(context, vm),
+                              icon: const Icon(Icons.account_balance_outlined),
+                              label: Text(l10n.tillPayout),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(height: 1, color: c.hairline),
+                      if (till.payouts.isNotEmpty) ...[
+                        const SizedBox(height: DymTokenSpace.s4),
+                        Text(
+                          l10n.tillPayouts,
+                          style: t.body.copyWith(fontWeight: FontWeight.w600),
+                        ),
+                        for (final (i, p) in till.payouts.indexed) ...[
+                          if (i > 0) Divider(height: 1, color: c.hairline),
+                          _SaleRow(
+                            label: MaterialLocalizations.of(context)
+                                .formatShortDate(p.at.toLocal()),
+                            method: l10n.tillPayout,
+                            amount: vm.money(p.amountMinor),
+                          ),
+                        ],
+                      ],
+                    ])
+                      DymContentWidth(child: w),
                   ],
                 ),
               ),
@@ -393,30 +401,112 @@ class TillView extends StackedView<TillViewModel> {
   }
 }
 
-class _Tile extends StatelessWidget {
-  const new({required this.label, required this.value});
+/// Deux montants côte à côte, séparés par un filet (en app · hors app).
+class _Split extends StatelessWidget {
+  const new({required this.left, required this.right});
 
-  final String label;
-  final String value;
+  final (String, String) left;
+  final (String, String) right;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: c.tintVertTendre,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+    Widget half((String, String) v) => Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            v.$1,
+            style: t.label.copyWith(
+              color: c.textSecondary,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          Text(v.$2, style: t.body.copyWith(fontWeight: FontWeight.w700)),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(DymTokenSpace.s3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    );
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+      decoration: BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: c.hairline)),
+      ),
+      child: IntrinsicHeight(
+        child: Row(
           children: [
-            Text(label, style: t.label.copyWith(color: c.textSecondary)),
-            Text(value, style: t.title),
+            half(left),
+            VerticalDivider(width: DymTokenSpace.s4, color: c.hairline),
+            half(right),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Vente (ou versement) en ligne à filet ; annulation discrète.
+class _SaleRow extends StatelessWidget {
+  const new({
+    required this.label,
+    required this.method,
+    required this.amount,
+    this.voided = false,
+    this.voidLabel,
+    this.onVoid,
+  });
+
+  final String label;
+  final String method;
+  final String amount;
+  final bool voided;
+  final String? voidLabel;
+  final VoidCallback? onVoid;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 60),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: t.body.copyWith(
+                    decoration: voided ? TextDecoration.lineThrough : null,
+                    color: voided ? c.textSecondary : c.textPrimary,
+                  ),
+                ),
+                Text(
+                  method,
+                  style: t.label.copyWith(
+                    color: c.textSecondary,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            amount,
+            style: t.body.copyWith(
+              fontWeight: FontWeight.w700,
+              color: voided ? c.textSecondary : c.textPrimary,
+            ),
+          ),
+          if (onVoid case final undo?)
+            IconButton(
+              tooltip: voidLabel,
+              onPressed: undo,
+              icon: Icon(Icons.undo_rounded, color: c.textSecondary),
+            ),
+        ],
       ),
     );
   }

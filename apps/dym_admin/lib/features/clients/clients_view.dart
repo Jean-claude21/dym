@@ -120,7 +120,7 @@ class AdminClientsView extends StackedView<AdminClientsViewModel> {
                         child: ListTile(
                           minTileHeight: 56,
                           leading: CircleAvatar(
-                            backgroundColor: c.tintPlantainClair,
+                            backgroundColor: c.tintVertTendre,
                             child: Text(
                               r.firstName.characters.first,
                               style: t.title.copyWith(color: c.brandDeep),
