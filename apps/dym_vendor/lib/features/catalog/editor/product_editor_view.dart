@@ -113,9 +113,6 @@ class ProductEditorView extends StackedView<ProductEditorViewModel> {
             DymButton(
               label: published ? l10n.storeSave : l10n.productPublish,
               icon: published ? null : Icons.storefront_rounded,
-              variant: published
-                  ? DymButtonVariant.primary
-                  : DymButtonVariant.plantain,
               loading: viewModel.isBusy,
               onPressed: viewModel.canPublish ? viewModel.publish : null,
             ),

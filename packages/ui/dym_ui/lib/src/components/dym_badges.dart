@@ -67,7 +67,8 @@ enum DymPromoTone {
   /// Rouge piment foncé, texte blanc : promotion (« −20 % »).
   promo,
 
-  /// Jaune plantain, texte encre : mise en avant (« Arrivage du jour »).
+  /// Menthe, texte vert profond : mise en avant (« Arrivage du jour »,
+  /// « Bientôt »). Le jaune reste réservé au cash et aux notes.
   highlight,
 
   /// Rouge piment foncé : nouveauté (« Nouveau »).
@@ -90,7 +91,7 @@ class DymPromoBadge extends StatelessWidget {
     final c = context.dym.colors;
     final (bg, fg) = switch (tone) {
       DymPromoTone.promo || DymPromoTone.fresh => (c.pimentStrong, c.onBrand),
-      DymPromoTone.highlight => (c.plantain, c.textPrimary),
+      DymPromoTone.highlight => (c.tintVertTendre, c.brandDeep),
     };
     return Container(
       padding: const EdgeInsets.symmetric(

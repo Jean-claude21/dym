@@ -109,9 +109,6 @@ class StoreOnboardingView extends StackedView<StoreOnboardingViewModel> {
                 ? l10n.storeOpenAction
                 : l10n.storeContinue,
             icon: last ? Icons.storefront_rounded : null,
-            variant: last
-                ? DymButtonVariant.plantain
-                : DymButtonVariant.primary,
             loading: viewModel.isBusy,
             onPressed: viewModel.canContinue ? viewModel.submit : null,
           ),

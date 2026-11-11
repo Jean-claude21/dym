@@ -131,4 +131,17 @@ void main() {
       AdminDashboardView(service: MemoryAdminService(), onOpen: (_) {}),
     );
   });
+  for (final section in [FinanceSection.refunds, FinanceSection.payments]) {
+    testWidgets('finances ${section.name}', (t) async {
+      await _capture(
+        t,
+        'admin_finances_${section.name}',
+        AdminFinanceView(
+          service: MemoryAdminService(),
+          clock: () => _now,
+          initialSection: section,
+        ),
+      );
+    });
+  }
 }
