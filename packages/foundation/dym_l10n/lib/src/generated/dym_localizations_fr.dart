@@ -2126,6 +2126,15 @@ class DymLocalizationsFr extends DymLocalizations {
   String get adminNavAudit => 'Journal';
 
   @override
+  String get adminNavLive => 'En direct';
+
+  @override
+  String get adminNavAccounts => 'Comptes';
+
+  @override
+  String get adminNavConfig => 'Configuration';
+
+  @override
   String get adminNavDisputes => 'Litiges';
 
   @override
@@ -5201,6 +5210,15 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get myRunsTitle => 'Mes courses';
+
+  @override
+  String get runsActiveTitle => 'Course en cours';
+
+  @override
+  String get runsHistoryTitle => 'Historique';
+
+  @override
+  String get runsHistoryNone => 'Pas encore de course terminée.';
 
   @override
   String get courierOnline => 'En ligne';

@@ -335,10 +335,18 @@ class MissionsViewModel extends BaseViewModel {
 
 /// Missions proposées : interrupteur en ligne, liste, acceptation.
 class MissionsView extends StackedView<MissionsViewModel> {
-  const new({required this.service, required this.onAccepted, super.key});
+  const new({
+    required this.service,
+    required this.onAccepted,
+    super.key,
+    this.active,
+  });
 
   final MissionsService service;
   final VoidCallback onAccepted;
+
+  /// Course en cours (tournée), posée au-dessus des propositions.
+  final Widget? active;
 
   @override
   MissionsViewModel viewModelBuilder(BuildContext context) =>
@@ -366,21 +374,47 @@ class MissionsView extends StackedView<MissionsViewModel> {
             DymTokenSpace.s5,
           ),
           children: [
-            DymContentWidth(child: Text(l10n.missionsTitle, style: t.display)),
-            const SizedBox(height: DymTokenSpace.s2),
+            // Titre et « En ligne » sur une ligne (planche 05).
             DymContentWidth(
-              child: DymSwitchTile(
-                large: true,
-                title: online ? l10n.courierOnline : l10n.courierOffline,
-                subtitle: online
-                    ? l10n.courierOnlineHint
-                    : l10n.courierOfflineHint,
-                value: online,
-                onChanged: vm.profile == null
-                    ? null
-                    : (on) => vm.setOnline(online: on),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Semantics(
+                      header: true,
+                      child: Text(l10n.missionsTitle, style: t.display),
+                    ),
+                  ),
+                  MergeSemantics(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          online ? l10n.courierOnline : l10n.courierOffline,
+                          style: t.body,
+                        ),
+                        const SizedBox(width: DymTokenSpace.s2),
+                        Switch(
+                          value: online,
+                          onChanged: vm.profile == null
+                              ? null
+                              : (on) => vm.setOnline(online: on),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+            DymContentWidth(
+              child: Text(
+                online ? l10n.courierOnlineHint : l10n.courierOfflineHint,
+                style: t.label.copyWith(
+                  color: c.textSecondary,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ),
+            if (active case final a?) DymContentWidth(child: a),
             if (vm.problem case final p?)
               DymContentWidth(
                 child: Padding(
@@ -449,7 +483,8 @@ class MissionCard extends StatelessWidget {
     final l10n = DymLocalizations.of(context);
     Widget place(IconData icon, String title, MissionPlace p) => ListTile(
       contentPadding: EdgeInsets.zero,
-      leading: Icon(icon, color: c.brandDeep),
+      dense: true,
+      leading: Icon(icon, color: c.textSecondary),
       title: Text(title, style: t.label.copyWith(color: c.textSecondary)),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -463,81 +498,158 @@ class MissionCard extends StatelessWidget {
         ],
       ),
     );
-    return Card(
+    final route = [
+      ?mission.store.name,
+      [?mission.customer.name, ?mission.customer.zoneName].join(' · '),
+    ].where((e) => e.isNotEmpty).join(' → ');
+    return Container(
       margin: const EdgeInsets.only(bottom: DymTokenSpace.s3),
-      child: Padding(
-        padding: const EdgeInsets.all(DymTokenSpace.s3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    missionStatusLabel(l10n, mission.status),
-                    style: t.title,
-                  ),
+      padding: const EdgeInsets.all(DymTokenSpace.s3),
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: c.tintVertTendre,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.chip),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                child: Text(
+                  missionStatusLabel(l10n, mission.status),
+                  style: t.label.copyWith(color: c.brandDeep),
+                ),
+              ),
+              const Spacer(),
+              Text(
+                l10n.missionItems(mission.itemCount),
+                style: t.label.copyWith(
+                  color: c.textSecondary,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: DymTokenSpace.s2),
+          if (route.isNotEmpty)
+            Text(
+              route,
+              style: t.body.copyWith(fontSize: 17, fontWeight: FontWeight.w600),
+            ),
+          const SizedBox(height: DymTokenSpace.s2),
+          Wrap(
+            spacing: DymTokenSpace.s2,
+            runSpacing: DymTokenSpace.s2,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text.rich(
+                TextSpan(
                   children: [
-                    Text(money(mission.deliveryFeeMinor), style: t.title),
-                    Text(
-                      l10n.missionFeeLabel,
-                      style: t.label.copyWith(color: c.textSecondary),
+                    TextSpan(
+                      text: '${l10n.missionFeeLabel} ',
+                      style: t.body.copyWith(color: c.textSecondary),
+                    ),
+                    TextSpan(
+                      text: money(mission.deliveryFeeMinor),
+                      style: t.body.copyWith(fontWeight: FontWeight.w700),
                     ),
                   ],
                 ),
-              ],
-            ),
-            Text(
-              l10n.missionItems(mission.itemCount),
-              style: t.label.copyWith(color: c.textSecondary),
-            ),
-            if (mission.scheduledStart case final start?)
-              _MissionFact(
-                icon: Icons.event_rounded,
-                text: l10n.missionSlot(
-                  missionSlotLabel(context, start, mission.scheduledEnd),
-                ),
               ),
-            if (mission.cashToCollectMinor > 0)
-              _MissionFact(
-                icon: Icons.payments_rounded,
-                text: l10n.missionCashToCollect(
-                  money(mission.cashToCollectMinor),
+              // Cash à encaisser : le jaune est réservé au cash.
+              if (mission.cashToCollectMinor > 0)
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: c.plantain,
+                    borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+                  ),
+                  child: Text(
+                    l10n.missionCashToCollect(
+                      money(mission.cashToCollectMinor),
+                    ),
+                    style: t.label.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: c.textPrimary,
+                    ),
+                  ),
                 ),
-                strong: true,
-              ),
-            if (mission.runSize > 1 || mission.storage.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: DymTokenSpace.s2),
-                child: Wrap(
-                  spacing: DymTokenSpace.s2,
-                  runSpacing: DymTokenSpace.s1,
-                  children: [
-                    if (mission.runSize > 1)
-                      Chip(
-                        avatar: const Icon(Icons.alt_route_rounded, size: 18),
-                        label: Text(l10n.missionRun(mission.runSize)),
-                      ),
-                    for (final s in mission.storage)
-                      Chip(
-                        avatar: Icon(storageIcon(s), size: 18),
-                        label: Text(storageLabel(l10n, s)),
-                      ),
-                  ],
-                ),
-              ),
-            place(Icons.storefront_rounded, l10n.missionPickup, mission.store),
-            place(Icons.home_rounded, l10n.missionDropoff, mission.customer),
-            ?action,
-            if (secondary case final s?) ...[
-              const SizedBox(height: DymTokenSpace.s2),
-              s,
             ],
+          ),
+          if (mission.scheduledStart case final start?)
+            _MissionFact(
+              icon: Icons.event_outlined,
+              text: l10n.missionSlot(
+                missionSlotLabel(context, start, mission.scheduledEnd),
+              ),
+            ),
+          if (mission.runSize > 1 || mission.storage.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+              child: Wrap(
+                spacing: DymTokenSpace.s2,
+                runSpacing: DymTokenSpace.s1,
+                children: [
+                  if (mission.runSize > 1)
+                    _Hint(
+                      icon: Icons.alt_route_rounded,
+                      label: l10n.missionRun(mission.runSize),
+                    ),
+                  for (final h in mission.storage)
+                    _Hint(icon: storageIcon(h), label: storageLabel(l10n, h)),
+                ],
+              ),
+            ),
+          const SizedBox(height: DymTokenSpace.s1),
+          Divider(height: DymTokenSpace.s4, color: c.hairline),
+          place(Icons.storefront_outlined, l10n.missionPickup, mission.store),
+          place(Icons.home_outlined, l10n.missionDropoff, mission.customer),
+          if (action case final a?) ...[
+            const SizedBox(height: DymTokenSpace.s2),
+            a,
           ],
-        ),
+          if (secondary case final s?) ...[
+            const SizedBox(height: DymTokenSpace.s2),
+            s,
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// Consigne (au frais, fragile, tournée) : icône et libellé sur menthe.
+class _Hint extends StatelessWidget {
+  const new({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: c.muted,
+        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: c.textPrimary),
+          const SizedBox(width: 4),
+          Text(label, style: context.dym.text.label),
+        ],
       ),
     );
   }
@@ -633,11 +745,19 @@ class MyRunsViewModel extends BaseViewModel {
   }
 }
 
-/// Mes courses : récupérer, livrer, rendre.
+/// Courses du livreur : en cours (récupérer, livrer, rendre), posées dans
+/// « Missions » ([embedded]), ou terminées dans « Historique ».
 class MyRunsView extends StackedView<MyRunsViewModel> {
-  const new({required this.service, super.key});
+  const new({required this.service, super.key, this.history = false})
+    : embedded = !history;
 
   final MissionsService service;
+
+  /// Historique : courses livrées seulement, page à part entière.
+  final bool history;
+
+  /// En cours : liste sans en-tête ni défilement, dans « Missions ».
+  final bool embedded;
 
   @override
   MyRunsViewModel viewModelBuilder(BuildContext context) =>
@@ -652,7 +772,62 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final runs = vm.runs;
+    final all = vm.runs;
+    final runs = all?.where((m) => m.delivered == history).toList();
+    Widget card(Mission m) => MissionCard(
+      mission: m,
+      money: vm.money,
+      action: switch (m.next.firstOrNull) {
+        'out_for_delivery' => DymButton(
+          label: l10n.missionPickedUp,
+          icon: Icons.inventory_2_outlined,
+          loading: vm.acting == m.orderId,
+          onPressed: () => vm.advance(m, 'out_for_delivery'),
+        ),
+        'delivered' => DymButton(
+          label: l10n.missionHandedOver,
+          icon: Icons.task_alt_rounded,
+          loading: vm.acting == m.orderId,
+          onPressed: () => _askCode(context, vm, m),
+        ),
+        _ when !m.delivered => Text(
+          l10n.missionWaitReady,
+          style: t.body.copyWith(color: c.textSecondary),
+        ),
+        _ => null,
+      },
+      secondary: m.releasable
+          ? DymButton(
+              label: l10n.missionRelease,
+              icon: Icons.undo_rounded,
+              variant: DymButtonVariant.secondary,
+              onPressed: () => vm.release(m),
+            )
+          : null,
+    );
+    if (embedded) {
+      // Rien en cours : la section disparaît.
+      if (runs == null || runs.isEmpty) return const SizedBox.shrink();
+      return Padding(
+        padding: const EdgeInsets.only(top: DymTokenSpace.s4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l10n.runsActiveTitle,
+              style: t.body.copyWith(fontWeight: FontWeight.w600),
+            ),
+            if (vm.problem case final p?)
+              Text(
+                missionErrorText(l10n, p),
+                style: t.body.copyWith(color: c.pimentStrong),
+              ),
+            const SizedBox(height: DymTokenSpace.s2),
+            for (final m in runs) card(m),
+          ],
+        ),
+      );
+    }
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: vm.load,
@@ -664,58 +839,24 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
             DymTokenSpace.s5,
           ),
           children: [
-            DymContentWidth(child: Text(l10n.myRunsTitle, style: t.display)),
-            if (vm.problem case final p?)
-              DymContentWidth(
-                child: Text(
-                  missionErrorText(l10n, p),
-                  style: t.body.copyWith(color: c.pimentStrong),
-                ),
+            DymContentWidth(
+              child: Semantics(
+                header: true,
+                child: Text(l10n.runsHistoryTitle, style: t.display),
               ),
+            ),
             const SizedBox(height: DymTokenSpace.s3),
             if (runs == null)
               LoadState(failure: vm.failure, onRetry: vm.load)
             else if (runs.isEmpty)
               DymStateView(
                 kind: DymStateKind.empty,
-                title: l10n.myRunsNone,
-                message: l10n.myRunsNoneHint,
+                icon: Icons.history_rounded,
+                title: l10n.runsHistoryTitle,
+                message: l10n.runsHistoryNone,
               )
             else
-              for (final m in runs)
-                DymContentWidth(
-                  child: MissionCard(
-                    mission: m,
-                    money: vm.money,
-                    action: switch (m.next.firstOrNull) {
-                      'out_for_delivery' => DymButton(
-                        label: l10n.missionPickedUp,
-                        icon: Icons.inventory_2_rounded,
-                        loading: vm.acting == m.orderId,
-                        onPressed: () => vm.advance(m, 'out_for_delivery'),
-                      ),
-                      'delivered' => DymButton(
-                        label: l10n.missionHandedOver,
-                        icon: Icons.task_alt_rounded,
-                        loading: vm.acting == m.orderId,
-                        onPressed: () => _askCode(context, vm, m),
-                      ),
-                      _ when !m.delivered => Text(
-                        l10n.missionWaitReady,
-                        style: t.body.copyWith(color: c.textSecondary),
-                      ),
-                      _ => null,
-                    },
-                    secondary: m.releasable
-                        ? DymButton(
-                            label: l10n.missionRelease,
-                            icon: Icons.undo_rounded,
-                            variant: DymButtonVariant.secondary,
-                            onPressed: () => vm.release(m),
-                          )
-                        : null,
-                  ),
-                ),
+              for (final m in runs) DymContentWidth(child: card(m)),
           ],
         ),
       ),
@@ -768,7 +909,9 @@ Future<void> _askCode(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (_) => const _CodeSheet(),
+    builder: (_) => _CodeSheet(
+      cash: m.cashToCollectMinor > 0 ? vm.money(m.cashToCollectMinor) : null,
+    ),
   );
   if (code == null || code.trim().isEmpty) return;
   final left = await vm.deliver(m, code);
@@ -777,54 +920,121 @@ Future<void> _askCode(
   }
 }
 
-/// Saisie du code : le champ garde son contrôleur jusqu'à la fermeture.
+/// Remise (planche 05) : quatre cases, clavier géant, cash à encaisser.
 class _CodeSheet extends StatefulWidget {
-  const new();
+  const new({this.cash});
+
+  /// Cash à encaisser auprès de la cliente, formaté ; nul : déjà payé.
+  final String? cash;
 
   @override
   State<_CodeSheet> createState() => _CodeSheetState();
 }
 
 class _CodeSheetState extends State<_CodeSheet> {
-  final _code = TextEditingController();
-
-  @override
-  void dispose() {
-    _code.dispose();
-    super.dispose();
-  }
+  static const _length = 4;
+  String _code = '';
 
   @override
   Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     return SafeArea(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
+        padding: const EdgeInsets.fromLTRB(
           DymTokenSpace.s4,
           0,
           DymTokenSpace.s4,
-          DymTokenSpace.s4 + MediaQuery.viewInsetsOf(context).bottom,
+          DymTokenSpace.s4,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l10n.handoverTitle, style: context.dym.text.title),
-            const SizedBox(height: DymTokenSpace.s2),
-            Text(l10n.handoverBody),
-            const SizedBox(height: DymTokenSpace.s3),
-            DymTextField(
-              label: l10n.handoverCode,
-              controller: _code,
-              keyboardType: TextInputType.number,
-              maxLength: 4,
-              autofocus: true,
+            Text(l10n.handoverTitle, style: t.title),
+            const SizedBox(height: DymTokenSpace.s1),
+            Text(
+              l10n.handoverBody,
+              style: t.label.copyWith(
+                color: c.textSecondary,
+                fontWeight: FontWeight.w400,
+              ),
             ),
+            const SizedBox(height: DymTokenSpace.s3),
+            Semantics(
+              label: l10n.handoverCode,
+              value: _code,
+              liveRegion: true,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (var i = 0; i < _length; i++)
+                    Container(
+                      width: 56,
+                      height: 60,
+                      margin: const EdgeInsets.symmetric(horizontal: 6),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        color: c.card,
+                        borderRadius: BorderRadius.circular(
+                          DymTokenRadius.field,
+                        ),
+                        border: Border.all(
+                          color: i == _code.length ? c.brand : c.lineStrong,
+                          width: i == _code.length ? 2 : 1,
+                        ),
+                      ),
+                      child: Text(
+                        i < _code.length ? _code[i] : '',
+                        style: t.display.copyWith(fontSize: 28),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            const SizedBox(height: DymTokenSpace.s3),
+            DymKeypad(
+              onDigit: (d) => setState(() {
+                if (_code.length < _length) _code += d;
+              }),
+              onErase: () => setState(() {
+                if (_code.isNotEmpty) {
+                  _code = _code.substring(0, _code.length - 1);
+                }
+              }),
+              eraseLabel: l10n.tillErase,
+            ),
+            if (widget.cash case final cash?) ...[
+              const SizedBox(height: DymTokenSpace.s1),
+              // Jaune : réservé au cash.
+              Container(
+                padding: const EdgeInsets.all(DymTokenSpace.s3),
+                decoration: BoxDecoration(
+                  color: c.plantain,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.button),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.payments_outlined, color: c.textPrimary),
+                    const SizedBox(width: DymTokenSpace.s2),
+                    Expanded(
+                      child: Text(
+                        l10n.missionCashToCollect(cash),
+                        style: t.body.copyWith(fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: DymTokenSpace.s3),
             DymButton(
               label: l10n.handoverConfirm,
               icon: Icons.task_alt_rounded,
-              onPressed: () => Navigator.pop(context, _code.text),
+              onPressed: _code.length == _length
+                  ? () => Navigator.pop(context, _code)
+                  : null,
             ),
             const SizedBox(height: DymTokenSpace.s2),
             DymButton(
@@ -853,30 +1063,21 @@ String missionSlotLabel(BuildContext context, DateTime start, DateTime? end) {
 }
 
 class _MissionFact extends StatelessWidget {
-  const new({required this.icon, required this.text, this.strong = false});
+  const new({required this.icon, required this.text});
 
   final IconData icon;
   final String text;
-  final bool strong;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
-    final t = context.dym.text;
     return Padding(
       padding: const EdgeInsets.only(top: DymTokenSpace.s2),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: strong ? c.brandDeep : c.textSecondary),
+          Icon(icon, size: 18, color: c.textSecondary),
           const SizedBox(width: DymTokenSpace.s2),
-          Expanded(
-            child: Text(
-              text,
-              style: strong
-                  ? t.body.copyWith(fontWeight: FontWeight.w700)
-                  : t.body,
-            ),
-          ),
+          Expanded(child: Text(text, style: context.dym.text.label)),
         ],
       ),
     );

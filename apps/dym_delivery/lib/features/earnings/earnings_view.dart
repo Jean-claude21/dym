@@ -130,80 +130,94 @@ class EarningsView extends StackedView<EarningsViewModel> {
             if (e == null)
               LoadState(failure: vm.failure, onRetry: vm.load)
             else ...[
+              // Ce que je gagne, ce que je dois (planche 05).
               DymContentWidth(
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: _Tile(
-                        label: l10n.earningsToday(e.todayCount),
-                        value: vm.money(e.todayFeesMinor),
+                    Text(
+                      l10n.earningsToday(e.todayCount),
+                      style: t.body.copyWith(color: c.textSecondary),
+                    ),
+                    Text(
+                      vm.money(e.todayFeesMinor),
+                      style: t.display.copyWith(
+                        fontSize: 40,
+                        letterSpacing: -1,
                       ),
                     ),
-                    const SizedBox(width: DymTokenSpace.s3),
-                    Expanded(
-                      child: _Tile(
-                        label: l10n.earningsWallet,
-                        value: vm.money(e.walletMinor),
-                      ),
+                    const SizedBox(height: DymTokenSpace.s2),
+                    Divider(height: 1, color: c.hairline),
+                    _Line(
+                      icon: Icons.account_balance_wallet_outlined,
+                      label: l10n.earningsWallet,
+                      value: vm.money(e.walletMinor),
                     ),
+                    Divider(height: 1, color: c.hairline),
                   ],
                 ),
               ),
-              const SizedBox(height: DymTokenSpace.s3),
+              const SizedBox(height: DymTokenSpace.s4),
+              DymContentWidth(
+                child: Text(
+                  l10n.earningsCashTitle,
+                  style: t.body.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ),
+              if (e.cash.isEmpty)
+                DymContentWidth(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: DymTokenSpace.s2,
+                    ),
+                    child: Text(
+                      l10n.earningsCashNone,
+                      style: t.body.copyWith(color: c.textSecondary),
+                    ),
+                  ),
+                )
+              else
+                for (final (i, line) in e.cash.indexed)
+                  DymContentWidth(
+                    child: Column(
+                      children: [
+                        if (i > 0) Divider(height: 1, color: c.hairline),
+                        _Line(
+                          icon: line.toPlatform
+                              ? Icons.account_balance_outlined
+                              : Icons.storefront_outlined,
+                          label: line.toPlatform
+                              ? l10n.earningsCashToDym
+                              : line.storeName ?? '',
+                          hint: line.toPlatform
+                              ? l10n.earningsCashToDymHint
+                              : l10n.earningsCashToStoreHint,
+                          value: vm.money(line.amountMinor),
+                        ),
+                      ],
+                    ),
+                  ),
+              const SizedBox(height: DymTokenSpace.s4),
               DymContentWidth(
                 child: DymButton(
                   label: l10n.earningsWithdraw,
-                  icon: Icons.account_balance_rounded,
-                  variant: DymButtonVariant.secondary,
+                  icon: Icons.account_balance_outlined,
                   onPressed: e.walletMinor <= 0 || vm.acting
                       ? null
                       : () => _withdrawSheet(context, vm),
                 ),
               ),
-              const SizedBox(height: DymTokenSpace.s4),
+              const SizedBox(height: DymTokenSpace.s2),
+              // Point de recharge : le cash d'une cliente va sur son wallet.
               DymContentWidth(
-                child: DymSectionHeader(title: l10n.earningsCashTitle),
-              ),
-              if (e.cash.isEmpty)
-                DymContentWidth(
-                  child: Text(
-                    l10n.earningsCashNone,
-                    style: t.body.copyWith(color: c.textSecondary),
-                  ),
-                )
-              else
-                for (final line in e.cash)
-                  DymContentWidth(
-                    child: ListTile(
-                      contentPadding: EdgeInsets.zero,
-                      leading: Icon(
-                        line.toPlatform
-                            ? Icons.account_balance_rounded
-                            : Icons.storefront_rounded,
-                        color: c.brandDeep,
-                      ),
-                      title: Text(
-                        line.toPlatform
-                            ? l10n.earningsCashToDym
-                            : line.storeName ?? '',
-                      ),
-                      subtitle: Text(
-                        line.toPlatform
-                            ? l10n.earningsCashToDymHint
-                            : l10n.earningsCashToStoreHint,
-                      ),
-                      trailing: Text(
-                        vm.money(line.amountMinor),
-                        style: t.title,
-                      ),
+                child: DymMenuGroup(
+                  children: [
+                    DymMenuRow(
+                      icon: Icons.location_on_outlined,
+                      label: l10n.cashTopupTitle,
+                      onTap: vm.acting ? null : () => _topupSheet(context, vm),
                     ),
-                  ),
-              const SizedBox(height: DymTokenSpace.s4),
-              DymContentWidth(
-                child: DymButton(
-                  label: l10n.cashTopupTitle,
-                  icon: Icons.payments_rounded,
-                  onPressed: vm.acting ? null : () => _topupSheet(context, vm),
+                  ],
                 ),
               ),
               if (vm.problem case final p?)
@@ -224,28 +238,49 @@ class EarningsView extends StackedView<EarningsViewModel> {
   }
 }
 
-class _Tile extends StatelessWidget {
-  const new({required this.label, required this.value});
+/// Ligne à filet : icône, libellé (et précision), montant à droite.
+class _Line extends StatelessWidget {
+  const new({
+    required this.icon,
+    required this.label,
+    required this.value,
+    this.hint,
+  });
 
+  final IconData icon;
   final String label;
   final String value;
+  final String? hint;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: c.tintVertTendre,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-      ),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(minHeight: 56),
       child: Padding(
-        padding: const EdgeInsets.all(DymTokenSpace.s3),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+        child: Row(
           children: [
-            Text(label, style: t.label.copyWith(color: c.textSecondary)),
-            Text(value, style: t.title),
+            Icon(icon, color: c.textPrimary),
+            const SizedBox(width: DymTokenSpace.s3),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label, style: t.body),
+                  if (hint case final h?)
+                    Text(
+                      h,
+                      style: t.label.copyWith(
+                        color: c.textSecondary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Text(value, style: t.body.copyWith(fontWeight: FontWeight.w700)),
           ],
         ),
       ),

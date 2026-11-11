@@ -152,7 +152,8 @@ void main() {
       expect(find.text('Tu es hors ligne'), findsOneWidget);
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Étal de Kodjo'), findsOneWidget);
+      // Trajet « boutique → cliente » et lieu de ramassage.
+      expect(find.textContaining('Étal de Kodjo'), findsWidgets);
       expect(find.text('3 articles'), findsOneWidget);
       await tester.tap(find.text('Accepter la course'));
       await tester.pumpAndSettle();
@@ -190,8 +191,11 @@ void main() {
         open: [_mission('o1')],
       );
       await service.accept(_mission('o1'));
-      await tester.pumpWidget(_app(MyRunsView(service: service)));
+      await tester.pumpWidget(
+        _app(ListView(children: [MyRunsView(service: service)])),
+      );
       await tester.pumpAndSettle();
+      expect(find.text('Course en cours'), findsOneWidget);
       expect(find.text('Commande récupérée'), findsOneWidget);
       await tester.tap(find.text('Commande récupérée'));
       await tester.pumpAndSettle();
@@ -200,8 +204,18 @@ void main() {
       service.codes['o1'] = '4821';
       await tester.tap(find.text('Commande remise'));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextField), '4821');
+      // Clavier géant : un chiffre par touche.
+      for (final d in '4821'.split('')) {
+        await tester.tap(find.bySemanticsLabel(d).last);
+        await tester.pump();
+      }
       await tester.tap(find.text('Valider la remise'));
+      await tester.pumpAndSettle();
+      // Livrée : elle quitte « en cours » et passe dans l'historique.
+      expect(find.text('Commande remise'), findsNothing);
+      await tester.pumpWidget(
+        _app(MyRunsView(service: service, history: true)),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Livrée'), findsOneWidget);
     });

@@ -2773,6 +2773,12 @@
   "@adminNavAudit": {
     "description": "Onglet : journal"
   },
+  "adminNavLive": "En direct",
+  "@adminNavLive": {"description": "Domaine des opérations"},
+  "adminNavAccounts": "Comptes",
+  "@adminNavAccounts": {"description": "Domaine : boutiques, clientes"},
+  "adminNavConfig": "Configuration",
+  "@adminNavConfig": {"description": "Domaine : référentiels et réglages"},
   "adminNavDisputes": "Litiges",
   "@adminNavDisputes": {
     "description": "Onglet : litiges"
@@ -6558,6 +6564,12 @@
   "deliveryPoint3": "Un seul compte DYM pour tout",
   "missionsTitle": "Missions",
   "myRunsTitle": "Mes courses",
+  "runsActiveTitle": "Course en cours",
+  "@runsActiveTitle": {"description": "Section des missions acceptées"},
+  "runsHistoryTitle": "Historique",
+  "@runsHistoryTitle": {"description": "Onglet du livreur : courses terminées"},
+  "runsHistoryNone": "Pas encore de course terminée.",
+  "@runsHistoryNone": {"description": "Historique vide"},
   "courierOnline": "En ligne",
   "courierOffline": "Hors ligne",
   "courierOnlineHint": "Les courses de tes zones te sont proposées.",

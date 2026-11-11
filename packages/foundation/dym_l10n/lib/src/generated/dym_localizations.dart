@@ -3667,6 +3667,24 @@ abstract class DymLocalizations {
   /// **'Journal'**
   String get adminNavAudit;
 
+  /// Domaine des opérations
+  ///
+  /// In fr, this message translates to:
+  /// **'En direct'**
+  String get adminNavLive;
+
+  /// Domaine : boutiques, clientes
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptes'**
+  String get adminNavAccounts;
+
+  /// Domaine : référentiels et réglages
+  ///
+  /// In fr, this message translates to:
+  /// **'Configuration'**
+  String get adminNavConfig;
+
   /// Onglet : litiges
   ///
   /// In fr, this message translates to:
@@ -8676,6 +8694,24 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Mes courses'**
   String get myRunsTitle;
+
+  /// Section des missions acceptées
+  ///
+  /// In fr, this message translates to:
+  /// **'Course en cours'**
+  String get runsActiveTitle;
+
+  /// Onglet du livreur : courses terminées
+  ///
+  /// In fr, this message translates to:
+  /// **'Historique'**
+  String get runsHistoryTitle;
+
+  /// Historique vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas encore de course terminée.'**
+  String get runsHistoryNone;
 
   /// No description provided for @courierOnline.
   ///

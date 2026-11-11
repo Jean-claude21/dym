@@ -2111,6 +2111,15 @@ class DymLocalizationsEn extends DymLocalizations {
   String get adminNavAudit => 'Log';
 
   @override
+  String get adminNavLive => 'Live';
+
+  @override
+  String get adminNavAccounts => 'Accounts';
+
+  @override
+  String get adminNavConfig => 'Configuration';
+
+  @override
   String get adminNavDisputes => 'Disputes';
 
   @override
@@ -5161,6 +5170,15 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get myRunsTitle => 'My runs';
+
+  @override
+  String get runsActiveTitle => 'Current run';
+
+  @override
+  String get runsHistoryTitle => 'History';
+
+  @override
+  String get runsHistoryNone => 'No finished run yet.';
 
   @override
   String get courierOnline => 'Online';
