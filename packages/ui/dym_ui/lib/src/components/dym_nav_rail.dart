@@ -42,16 +42,14 @@ class DymNavRail extends StatelessWidget {
     final c = context.dym.colors;
     final itemHeight = extended
         ? DymTokenSize.touchMin + 8
-        : 50 + MediaQuery.textScalerOf(context).scale(20);
+        : 54 + MediaQuery.textScalerOf(context).scale(20);
     return Container(
       width: extended
           ? DymTokenLayout.railExtendedWidth
           : DymTokenLayout.railWidth,
       decoration: BoxDecoration(
         color: c.card,
-        border: Border(
-          right: BorderSide(color: c.textSecondary.withValues(alpha: 0.12)),
-        ),
+        border: Border(right: BorderSide(color: c.hairline)),
       ),
       child: SafeArea(
         right: false,
@@ -130,7 +128,7 @@ class _ExtendedTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: DymTokenSpace.s2),
-          Icon(item.icon, color: color, size: 26),
+          Icon(item.icon, color: color, size: 24),
           const SizedBox(width: DymTokenSpace.s3),
           Expanded(
             child: Text(
@@ -139,7 +137,7 @@ class _ExtendedTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: context.dym.text.label.copyWith(
                 fontSize: 15,
-                fontWeight: active ? FontWeight.w800 : FontWeight.w600,
+                fontWeight: active ? FontWeight.w600 : FontWeight.w500,
                 color: active ? c.brandDeep : c.textSecondary,
               ),
             ),

@@ -29,9 +29,12 @@ class DymColors extends ThemeExtension<DymColors> {
     required this.originMaisonFg,
     required this.originBoutiqueBg,
     required this.originBoutiqueFg,
+    required this.hairline,
+    required this.lineStrong,
+    required this.muted,
   });
 
-  /// Thème clair validé (décision 0009).
+  /// Thème clair « Épuré » (décision 0016).
   static const light = DymColors(
     brand: DymTokenColors.brandPrimary,
     brandDeep: DymTokenColors.brandPrimaryDeep,
@@ -56,6 +59,9 @@ class DymColors extends ThemeExtension<DymColors> {
     originMaisonFg: DymTokenColors.originMaisonFg,
     originBoutiqueBg: DymTokenColors.originBoutiqueBg,
     originBoutiqueFg: DymTokenColors.originBoutiqueFg,
+    hairline: DymTokenColors.lineHairline,
+    lineStrong: DymTokenColors.lineStrong,
+    muted: DymTokenColors.surfaceMuted,
   );
 
   /// Vert profond : action principale unique.
@@ -79,7 +85,7 @@ class DymColors extends ThemeExtension<DymColors> {
   /// Indigo : liens, badge « Boutique ».
   final Color indigo;
 
-  /// Fond crème.
+  /// Fond blanc cassé.
   final Color background;
 
   /// Fond des cartes.
@@ -127,6 +133,15 @@ class DymColors extends ThemeExtension<DymColors> {
   /// Texte du badge « Boutique ».
   final Color originBoutiqueFg;
 
+  /// Filet de séparation et bordure de carte (1 px).
+  final Color hairline;
+
+  /// Bordure des contrôles (champs, boutons secondaires, puces).
+  final Color lineStrong;
+
+  /// Fond discret (squelettes, champs désactivés).
+  final Color muted;
+
   @override
   DymColors copyWith({Color? brand, Color? background}) => DymColors(
     brand: brand ?? this.brand,
@@ -152,6 +167,9 @@ class DymColors extends ThemeExtension<DymColors> {
     originMaisonFg: originMaisonFg,
     originBoutiqueBg: originBoutiqueBg,
     originBoutiqueFg: originBoutiqueFg,
+    hairline: hairline,
+    lineStrong: lineStrong,
+    muted: muted,
   );
 
   @override

@@ -55,7 +55,8 @@ class StartupView extends StackedView<StartupViewModel> {
                           l10n.appNameClient,
                           textAlign: TextAlign.center,
                           style: t.display.copyWith(
-                            fontSize: 56,
+                            fontSize: 48,
+                            letterSpacing: -1.5,
                             color: c.brand,
                           ),
                         ),

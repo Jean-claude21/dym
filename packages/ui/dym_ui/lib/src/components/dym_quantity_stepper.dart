@@ -54,12 +54,12 @@ class DymQuantityStepper extends StatelessWidget {
         ),
         onPressed: next == null ? null : () => onChanged(next),
         icon: Icon(icon, size: dense ? 20 : 22),
-        color: c.brandDeep,
-        disabledColor: c.brandDeep.withValues(alpha: 0.3),
+        color: c.textPrimary,
+        disabledColor: c.textSecondary.withValues(alpha: 0.4),
       ),
     );
-    // Zone tactile de 48 de haut ; pastille visible de 40 en version dense.
-    final inset = dense ? 4.0 : 0.0;
+    // Zone tactile de 48 de haut ; cadre visible de 38 (36 en dense), coins 10.
+    final inset = dense ? 6.0 : 5.0;
     return SizedBox(
       height: DymTokenSize.touchMin,
       child: Stack(
@@ -70,8 +70,9 @@ class DymQuantityStepper extends StatelessWidget {
             bottom: inset,
             child: DecoratedBox(
               decoration: BoxDecoration(
-                color: c.tintVertTendre,
-                borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+                color: c.card,
+                borderRadius: BorderRadius.circular(DymTokenRadius.field),
+                border: Border.all(color: c.lineStrong),
               ),
             ),
           ),
@@ -87,10 +88,6 @@ class DymQuantityStepper extends StatelessWidget {
                 constraints: BoxConstraints(minWidth: dense ? 28 : 34),
                 height: dense ? 28 : 32,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: c.card,
-                  borderRadius: BorderRadius.circular(DymTokenSpace.s2),
-                ),
                 child: AnimatedSwitcher(
                   duration: DymMotion.of(context, DymMotion.fast),
                   transitionBuilder: (child, animation) =>

@@ -23,8 +23,8 @@
 | 10 · Contenus | Créateurs, fil, recettes, ustensiles, affiliation | Commission versée après un achat livré | ~26 h | ✅ Faite (specs 036-040) ; gate : démonstration web à faire |
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ✅ Faite (specs 041-043 fusionnées, migrations sur staging ; suivi en direct reporté) ; gate : démonstration web à faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ✅ Faite (specs 045-049 fusionnées, migrations sur staging) ; gate : démonstration web à faire |
-| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ✅ Faite (specs 050-054 fusionnées, migrations sur staging) ; gate : démonstration complète à faire |
-| 14 · Épuré | Design system épuré, navigation des quatre apps, flux vidéo, fluidité terrain | Les huit parcours de `PARCOURS.md` rejoués sur un Android d'entrée de gamme en plein soleil, aux budgets de fluidité, validés par le porteur produit | ~46 h | ⬜ Design et parcours validés le 2026-11-11 ; specs à créer après accord |
+| 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ✅ Faite (specs 050-054 fusionnées, migrations sur staging) ; gate : démonstration web complète du 2026-11-11, ouverture de la phase 14 accordée par le porteur produit le 2026-11-11 |
+| 14 · Épuré | Design system épuré, navigation des quatre apps, flux vidéo, fluidité terrain | Les huit parcours de `PARCOURS.md` rejoués sur un Android d'entrée de gamme en plein soleil, aux budgets de fluidité, validés par le porteur produit | ~46 h | 🔵 En cours (design et parcours validés, accord du 2026-11-11) |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
 Mis à jour à chaque spec (dernière mise à jour : 2026-11-11).
@@ -188,10 +188,12 @@ Refonte visuelle et de navigation des quatre apps, sans nouvelle règle métier 
 Références : [`docs/design/PARCOURS.md`](../design/PARCOURS.md) (sitemaps, parcours, règles
 d'implémentation) et les planches validées de [`docs/design/screens/epure/`](../design/screens/epure/).
 Une spec à la fois, dans cet ordre : chaque spec suivante s'appuie sur les composants de la première.
+Le nouveau design s'applique strictement à **chaque page** de chaque app (bienvenue, connexion,
+inscription, onboarding compris) : une page n'est terminée que propre et conforme aux planches.
 
 | Spec | Contenu | Heures | État |
 |---|---|---|---|
-| `design-system-epure` | Décision de design (remplace 0009 et 0011), tokens : vert `#145C43`, Inter, rayons 10–12 px, filets plutôt que cartes ; composants `dym_ui` (boutons, puces, champs à libellé visible, cartes, barre et rail de navigation, mini-panier, états vide, chargement, erreur, hors ligne) ; boutons accessibles avec leur action ; galerie et captures aux sept tailles | 10 h | ⬜ |
+| `design-system-epure` | Décision de design (remplace 0009 et 0011), tokens : vert `#145C43`, Inter, rayons 10–12 px, filets plutôt que cartes ; composants `dym_ui` (boutons, puces, champs à libellé visible, cartes, barre et rail de navigation, mini-panier, états vide, chargement, erreur, hors ligne) ; boutons accessibles avec leur action ; pages partagées de bienvenue, connexion, code et profil (`dym_auth`) avec photographies dédiées ; galerie et captures aux sept tailles | 12 h | ✅ Spec 055 (thème, composants, pages d'entrée avec photos, décision 0016) |
 | `client-navigation` | Cliente : Accueil · Marché · Cuisine · Panier · Moi ; bandeau « commande en cours », « Racheter », micro dans la recherche ; commandes, wallet, espaces et compte regroupés dans Moi ; confirmation qui rappelle le créneau | 9 h | ⬜ |
 | `cuisine-video-feed` | Flux vidéo plein écran à faire défiler ; produits de la vidéo, « Tout pour la recette » et quantités pour N personnes sans quitter la vidéo ; barre sombre en lecture ; une seule vidéo préchargée, qualité selon le réseau | 7 h | ⬜ |
 | `vendor-navigation` | Vendeuse : Aujourd'hui (« Encaisser » en tête) · Commandes · Catalogue · Messages · Boutique ; rupture en un geste ; photo produit recadrée sur fond menthe (détourage automatique si le studio IA le permet) ; compte rangé dans Boutique | 8 h | ⬜ |

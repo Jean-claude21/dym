@@ -50,7 +50,7 @@ class DymOriginBadge extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: context.dym.text.label.copyWith(
                   fontSize: dense ? 12 : 13,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                   color: fg,
                 ),
               ),
@@ -105,7 +105,7 @@ class DymPromoBadge extends StatelessWidget {
         label,
         style: context.dym.text.label.copyWith(
           fontSize: 12,
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w600,
           color: fg,
         ),
       ),

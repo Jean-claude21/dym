@@ -35,7 +35,7 @@ class DymSectionHeader extends StatelessWidget {
           TextButton(
             onPressed: onAction,
             style: TextButton.styleFrom(
-              foregroundColor: c.brandDeep,
+              foregroundColor: c.brand,
               minimumSize: const Size(0, DymTokenSize.touchMin),
               padding: const EdgeInsets.symmetric(horizontal: DymTokenSpace.s2),
             ),
@@ -45,9 +45,8 @@ class DymSectionHeader extends StatelessWidget {
                 Text(
                   actionLabel!,
                   style: context.dym.text.label.copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    color: c.brandDeep,
+                    fontWeight: FontWeight.w600,
+                    color: c.brand,
                   ),
                 ),
                 const Icon(Icons.chevron_right_rounded, size: 20),

@@ -99,12 +99,12 @@ class _DymMiniCartBarState extends State<DymMiniCartBar>
             excludeSemantics: true,
             child: Material(
               color: c.brand,
-              borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-              elevation: 2,
-              shadowColor: c.textPrimary.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(DymTokenRadius.button),
+              elevation: 3,
+              shadowColor: DymTokenShadows.floating.color,
               child: InkWell(
                 onTap: widget.onTap,
-                borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                borderRadius: BorderRadius.circular(DymTokenRadius.button),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
                   child: Row(
@@ -121,38 +121,31 @@ class _DymMiniCartBarState extends State<DymMiniCartBar>
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: context.dym.text.label.copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                             color: c.onBrand,
                           ),
                         ),
                       ),
                       const SizedBox(width: DymTokenSpace.s2),
-                      Container(
-                        height: 44,
-                        padding: const EdgeInsets.only(left: 12, right: 6),
-                        decoration: BoxDecoration(
-                          color: c.plantain,
-                          borderRadius: BorderRadius.circular(
-                            DymTokenRadius.chip,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.actionLabel,
+                            style: context.dym.text.body.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: c.onBrand,
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              widget.actionLabel,
-                              style: context.dym.text.title.copyWith(
-                                fontSize: 14,
-                              ),
-                            ),
-                            Icon(
-                              Icons.chevron_right_rounded,
-                              color: c.textPrimary,
-                            ),
-                          ],
-                        ),
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            color: c.onBrand,
+                            size: 20,
+                          ),
+                        ],
                       ),
+                      const SizedBox(width: DymTokenSpace.s2),
                     ],
                   ),
                 ),
@@ -184,8 +177,8 @@ class _Thumb extends StatelessWidget {
         return Transform.scale(scale: scale, child: child);
       },
       child: SizedBox(
-        width: 46,
-        height: 44,
+        width: 40,
+        height: 40,
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -212,7 +205,7 @@ class _Thumb extends StatelessWidget {
                   '$count',
                   style: context.dym.text.label.copyWith(
                     fontSize: 12,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     color: c.onBrand,
                   ),
                 ),

@@ -45,15 +45,18 @@ class _DymSkeletonState extends State<DymSkeleton>
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
-    Widget box({required double height, double? width, double radius = 12}) =>
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            color: c.textSecondary.withValues(alpha: 0.12),
-            borderRadius: BorderRadius.circular(radius),
-          ),
-        );
+    Widget box({
+      required double height,
+      double? width,
+      double radius = DymTokenRadius.tile,
+    }) => Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        color: c.muted,
+        borderRadius: BorderRadius.circular(radius),
+      ),
+    );
     return Semantics(
       label: widget.label,
       liveRegion: true,
@@ -64,7 +67,7 @@ class _DymSkeletonState extends State<DymSkeleton>
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.all(DymTokenSpace.s4),
             children: [
-              box(height: 120, radius: DymTokenRadius.tile),
+              box(height: 120),
               const SizedBox(height: DymTokenSpace.s5),
               for (var i = 0; i < widget.rows; i++) ...[
                 Row(

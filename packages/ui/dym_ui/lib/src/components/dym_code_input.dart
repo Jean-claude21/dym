@@ -143,7 +143,7 @@ class _Box extends StatelessWidget {
         ? c.pimentStrong
         : active
         ? c.brand
-        : c.textSecondary.withValues(alpha: 0.15);
+        : c.lineStrong;
     return AspectRatio(
       aspectRatio: 0.82,
       child: AnimatedContainer(

@@ -274,7 +274,12 @@ void main() {
         ),
       );
       final row = find.textContaining('Horaires');
-      await tester.ensureVisible(row);
+      // Liste paresseuse : la ligne peut être hors de l'écran.
+      await tester.scrollUntilVisible(
+        row,
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
       await tester.tap(row);
       await tester.pumpAndSettle();

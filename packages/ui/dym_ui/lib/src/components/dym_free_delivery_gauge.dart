@@ -57,7 +57,7 @@ class DymFreeDeliveryGauge extends StatelessWidget {
                   TextSpan(
                     style: t.label.copyWith(
                       fontSize: 14,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w600,
                     ),
                     children: [
                       TextSpan(text: '$lead '),

@@ -70,7 +70,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get welcomeSlide2Body =>
-      'Market tomatoes, homemade bissap: order everything at once.';
+      'Market tomatoes, smoked fish, spices: you order everything at once.';
 
   @override
   String get welcomeSlide3Title => 'Cash or Mobile Money';

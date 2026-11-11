@@ -57,8 +57,8 @@ void main() {
     });
 
     test('typographie : familles embarquées et chiffres tabulaires', () {
-      expect(DymTokenTypography.display.fontFamily, contains('Nunito'));
-      expect(DymTokenTypography.body.fontFamily, contains('NunitoSans'));
+      expect(DymTokenTypography.display.fontFamily, contains('Inter'));
+      expect(DymTokenTypography.body.fontFamily, contains('Inter'));
       expect(
         DymTokenTypography.price.fontFeatures,
         contains(const FontFeature.tabularFigures()),

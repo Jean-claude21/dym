@@ -1,7 +1,7 @@
 /// Design system DYM « Le marché de Lomé, livré chez toi ».
 ///
-/// Thème généré depuis `docs/design/tokens/dym.tokens.json`, polices Nunito et
-/// Nunito Sans embarquées, composants conformes aux écrans validés.
+/// Thème « Épuré » généré depuis `docs/design/tokens/dym.tokens.json`, police
+/// Inter embarquée, composants conformes aux planches de `docs/design/screens/epure/`.
 library;
 
 export 'src/components/dym_aisle_tile.dart';

@@ -53,10 +53,9 @@ class DymSelectableCard extends StatelessWidget {
           color: c.card,
           borderRadius: BorderRadius.circular(DymTokenRadius.card),
           border: Border.all(
-            color: selected ? c.brand : Colors.transparent,
-            width: 2.5,
+            color: selected ? c.brand : c.hairline,
+            width: selected ? 2 : 1,
           ),
-          boxShadow: const [DymTokenShadows.card],
         ),
         child: Material(
           color: Colors.transparent,
