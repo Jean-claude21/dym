@@ -24,6 +24,7 @@
 | 11 · Livreur | App, tournées, cash, suivi en direct | Commande livrée de bout en bout par l'app livreur | ~26 h | ✅ Faite (specs 041-043 fusionnées, migrations sur staging ; suivi en direct reporté) ; gate : démonstration web à faire |
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ✅ Faite (specs 045-049 fusionnées, migrations sur staging) ; gate : démonstration web à faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ✅ Faite (specs 050-054 fusionnées, migrations sur staging) ; gate : démonstration complète à faire |
+| 14 · Épuré | Design system épuré, navigation des quatre apps, flux vidéo, fluidité terrain | Les huit parcours de `PARCOURS.md` rejoués sur un Android d'entrée de gamme en plein soleil, aux budgets de fluidité, validés par le porteur produit | ~46 h | ⬜ Design et parcours validés le 2026-11-11 ; specs à créer après accord |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
 Mis à jour à chaque spec (dernière mise à jour : 2026-11-11).
@@ -180,6 +181,27 @@ en plus d'une heure.
 | `group-buying` | Achat groupé entre voisins, départ groupé | ✅ Spec 051 · PR #59 (offre groupée de la vendeuse aux quartiers qu'elle livre, jauge anonyme, déblocage au minimum, prix de groupe pour sa part et frais de livraison partagés au panier, avantage consommé par la commande) |
 | `memberships` | DYM+, vendeuse Pro, visibilité sponsorisée | ✅ Spec 052 · PR #60 (formules par pays payées depuis le wallet et prolongeables ; DYM+ : frais de livraison rendus et cashback en plus à la livraison ; Pro : commission réduite ; « À la une » signalée sponsorisée ; prix de départ validés le 2026-11-11, modifiables depuis le centre d'opérations) |
 | `ops-center` | Centre d'opérations en direct, rôles par pays, antifraude et modération par IA, agent support | ✅ Spec 053 · PR #61 (vue en direct d'un pays, retards selon des seuils par pays, cash des livreurs reçu, réglages audités : seuils, poids du fil, formules ; admins limités à des pays, limite appliquée au centre d'opérations seulement) · ✅ Spec 054 · PR #62 (signaux de fraude par règles SQL à seuils en base, décision de l'équipe auditée ; avis de l'IA sur les signalements ; brouillon de l'agent support relu par l'équipe) |
+
+## Phase 14 — Épuré
+
+Refonte visuelle et de navigation des quatre apps, sans nouvelle règle métier sauf mention.
+Références : [`docs/design/PARCOURS.md`](../design/PARCOURS.md) (sitemaps, parcours, règles
+d'implémentation) et les planches validées de [`docs/design/screens/epure/`](../design/screens/epure/).
+Une spec à la fois, dans cet ordre : chaque spec suivante s'appuie sur les composants de la première.
+
+| Spec | Contenu | Heures | État |
+|---|---|---|---|
+| `design-system-epure` | Décision de design (remplace 0009 et 0011), tokens : vert `#145C43`, Inter, rayons 10–12 px, filets plutôt que cartes ; composants `dym_ui` (boutons, puces, champs à libellé visible, cartes, barre et rail de navigation, mini-panier, états vide, chargement, erreur, hors ligne) ; boutons accessibles avec leur action ; galerie et captures aux sept tailles | 10 h | ⬜ |
+| `client-navigation` | Cliente : Accueil · Marché · Cuisine · Panier · Moi ; bandeau « commande en cours », « Racheter », micro dans la recherche ; commandes, wallet, espaces et compte regroupés dans Moi ; confirmation qui rappelle le créneau | 9 h | ⬜ |
+| `cuisine-video-feed` | Flux vidéo plein écran à faire défiler ; produits de la vidéo, « Tout pour la recette » et quantités pour N personnes sans quitter la vidéo ; barre sombre en lecture ; une seule vidéo préchargée, qualité selon le réseau | 7 h | ⬜ |
+| `vendor-navigation` | Vendeuse : Aujourd'hui (« Encaisser » en tête) · Commandes · Catalogue · Messages · Boutique ; rupture en un geste ; photo produit recadrée sur fond menthe (détourage automatique si le studio IA le permet) ; compte rangé dans Boutique | 8 h | ⬜ |
+| `courier-refresh` | Livreur : Missions (tournée, remise par code au clavier géant) · Historique · Gains · Moi | 4 h | ⬜ |
+| `ops-console` | Opérations : sept domaines (En direct, Commandes, Support, Comptes, Finances, Configuration, Journal) à la place des onze onglets | 4 h | ⬜ |
+| `field-performance` | Premier écran depuis le cache, gestes optimistes et file hors ligne, images WebP à budget, mesures sur Android d'entrée de gamme ; les huit parcours de `PARCOURS.md` en tests d'intégration | 4 h | ⬜ |
+
+Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au
+défilement, ouverture en moins de 3 s, validés par le porteur produit. La phase s'ouvre quand le
+gate de la phase 13 est consigné.
 
 ## Phase 5 — Scale (anciennes specs sur déclencheur, remplacées sauf mention)
 
