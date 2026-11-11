@@ -116,12 +116,15 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: vm.unread > 0 ? c.plantain : c.tintVertTendre,
+              color: vm.unread > 0 ? c.brand : c.tintVertTendre,
               borderRadius: BorderRadius.circular(DymTokenRadius.chip),
             ),
             child: Text(
               l10n.chatUnread(vm.unread),
-              style: t.label.copyWith(fontWeight: FontWeight.w700),
+              style: t.label.copyWith(
+                fontWeight: FontWeight.w600,
+                color: vm.unread > 0 ? c.onBrand : c.brandDeep,
+              ),
             ),
           ),
       ],
@@ -223,7 +226,7 @@ class _ConversationTile extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundColor: c.tintPlantainClair,
+                  backgroundColor: c.tintVertTendre,
                   child: Text(
                     name.isEmpty ? '?' : name.characters.first.toUpperCase(),
                     style: t.title.copyWith(fontSize: 22, color: c.brandDeep),
@@ -281,13 +284,16 @@ class _ConversationTile extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: c.plantain,
+                          color: c.brand,
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Text(
                           '${conversation.unread}',
                           textAlign: TextAlign.center,
-                          style: t.label.copyWith(fontWeight: FontWeight.w700),
+                          style: t.label.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: c.onBrand,
+                          ),
                         ),
                       ),
                   ],
@@ -386,7 +392,7 @@ class ChatView extends StackedView<ChatViewModel> {
           ),
           CircleAvatar(
             radius: 22,
-            backgroundColor: c.tintPlantainClair,
+            backgroundColor: c.tintVertTendre,
             child: Text(
               name.isEmpty ? '?' : name.characters.first.toUpperCase(),
               style: t.title.copyWith(color: c.brandDeep),
@@ -843,7 +849,7 @@ class _CallBubble extends StatelessWidget {
         vertical: DymTokenSpace.s2,
       ),
       decoration: BoxDecoration(
-        color: c.tintPlantainClair,
+        color: c.muted,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
       ),
       child: Row(

@@ -498,7 +498,7 @@ class _TicketTile extends StatelessWidget {
               vertical: 4,
             ),
             decoration: BoxDecoration(
-              color: closed ? c.background : c.tintPlantainClair,
+              color: closed ? c.background : c.tintVertTendre,
               borderRadius: BorderRadius.circular(DymTokenRadius.chip),
             ),
             child: Text(

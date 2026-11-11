@@ -70,7 +70,7 @@ class _StoriesRowState extends State<StoriesRow> {
                       padding: const EdgeInsets.all(3),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: c.plantain, width: 3),
+                        border: Border.all(color: c.brand, width: 3),
                       ),
                       child: CircleAvatar(
                         radius: 30,

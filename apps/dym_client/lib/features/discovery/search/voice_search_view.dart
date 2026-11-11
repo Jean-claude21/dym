@@ -341,7 +341,7 @@ class _Wave extends StatelessWidget {
                 width: 8,
                 height: 140 * levels[i] * (1 - (i - n / 2).abs() / n),
                 decoration: BoxDecoration(
-                  color: (i - n / 2).abs() < n / 5 ? c.brand : c.plantain,
+                  color: (i - n / 2).abs() < n / 5 ? c.brand : c.tintVertTendre,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
