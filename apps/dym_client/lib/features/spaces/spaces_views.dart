@@ -542,11 +542,14 @@ class _BudgetCard extends StatelessWidget {
           const SizedBox(height: DymTokenSpace.s2),
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: ratio,
-              minHeight: 10,
-              color: space.overBudget ? c.pimentStrong : c.brand,
-              backgroundColor: c.tintVertTendre,
+            child: // Jauge déjà dite en texte.
+            ExcludeSemantics(
+              child: LinearProgressIndicator(
+                value: ratio,
+                minHeight: 10,
+                color: space.overBudget ? c.pimentStrong : c.brand,
+                backgroundColor: c.tintVertTendre,
+              ),
             ),
           ),
           const SizedBox(height: DymTokenSpace.s2),

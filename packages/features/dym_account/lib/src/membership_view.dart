@@ -152,16 +152,23 @@ class MembershipView extends StackedView<MembershipViewModel> {
                 ),
                 children: [
                   DymContentWidth(
-                    child: Text(
-                      l10n.membershipWallet(vm.money(offer.walletBalanceMinor)),
-                      style: t.label.copyWith(color: c.textSecondary),
-                    ),
+                    child: Text(switch (offer.storeBalanceMinor) {
+                      final store? => l10n.membershipStoreBalance(
+                        vm.money(store),
+                        vm.money(offer.walletBalanceMinor),
+                      ),
+                      null => l10n.membershipWallet(
+                        vm.money(offer.walletBalanceMinor),
+                      ),
+                    }, style: t.label.copyWith(color: c.textSecondary)),
                   ),
                   if (vm.problem case final p?)
                     DymContentWidth(
                       child: Text(switch (p) {
                         'wallet_insufficient' =>
-                          l10n.membershipWalletInsufficient,
+                          offer.storeBalanceMinor == null
+                              ? l10n.membershipWalletInsufficient
+                              : l10n.membershipStoreInsufficient,
                         'offline' => l10n.errorOffline,
                         _ => l10n.errorGeneric,
                       }, style: t.body.copyWith(color: c.pimentStrong)),

@@ -198,58 +198,54 @@ class _BalanceCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: DymTokenSpace.s4),
-          Row(
+          // Libellés visibles : les boutons passent à la ligne.
+          Wrap(
+            spacing: DymTokenSpace.s3,
+            runSpacing: DymTokenSpace.s3,
             children: [
               if (wallet.simulatedTopup)
-                Expanded(
-                  child: DymButton(
-                    label: l10n.walletTopup,
-                    icon: Icons.add_card_rounded,
-                    variant: DymButtonVariant.secondary,
-                    onPressed: vm.acting
-                        ? null
-                        : () => _amountSheet(
-                            context,
-                            title: l10n.walletTopup,
-                            note: l10n.walletTopupSimulated,
-                            onConfirm: vm.topup,
-                          ),
-                  ),
+                DymButton(
+                  label: l10n.walletTopup,
+                  icon: Icons.add_card_rounded,
+                  variant: DymButtonVariant.secondary,
+                  expanded: false,
+                  onPressed: vm.acting
+                      ? null
+                      : () => _amountSheet(
+                          context,
+                          title: l10n.walletTopup,
+                          note: l10n.walletTopupSimulated,
+                          onConfirm: vm.topup,
+                        ),
                 ),
-              if (wallet.simulatedWithdrawal) ...[
-                const SizedBox(width: DymTokenSpace.s3),
-                Expanded(
-                  child: DymButton(
-                    label: l10n.walletWithdraw,
-                    icon: Icons.account_balance_rounded,
-                    variant: DymButtonVariant.secondary,
-                    onPressed: vm.acting
-                        ? null
-                        : () => _amountSheet(
-                            context,
-                            title: l10n.walletWithdraw,
-                            note: l10n.walletWithdrawSimulated,
-                            onConfirm: vm.withdraw,
-                          ),
-                  ),
+              if (wallet.simulatedWithdrawal)
+                DymButton(
+                  label: l10n.walletWithdraw,
+                  icon: Icons.account_balance_rounded,
+                  variant: DymButtonVariant.secondary,
+                  expanded: false,
+                  onPressed: vm.acting
+                      ? null
+                      : () => _amountSheet(
+                          context,
+                          title: l10n.walletWithdraw,
+                          note: l10n.walletWithdrawSimulated,
+                          onConfirm: vm.withdraw,
+                        ),
                 ),
-              ],
-              if (wallet.simulatedTopup && wallet.pockets.isNotEmpty)
-                const SizedBox(width: DymTokenSpace.s3),
               if (wallet.pockets.isNotEmpty)
-                Expanded(
-                  child: DymButton(
-                    label: l10n.walletMove,
-                    icon: Icons.swap_horiz_rounded,
-                    variant: DymButtonVariant.secondary,
-                    onPressed: vm.acting
-                        ? null
-                        : () => showModalBottomSheet<void>(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (_) => _TransferSheet(vm: vm),
-                          ),
-                  ),
+                DymButton(
+                  label: l10n.walletMove,
+                  icon: Icons.swap_horiz_rounded,
+                  variant: DymButtonVariant.secondary,
+                  expanded: false,
+                  onPressed: vm.acting
+                      ? null
+                      : () => showModalBottomSheet<void>(
+                          context: context,
+                          isScrollControlled: true,
+                          builder: (_) => _TransferSheet(vm: vm),
+                        ),
                 ),
             ],
           ),
@@ -315,11 +311,14 @@ class _PocketCard extends StatelessWidget {
             const SizedBox(height: DymTokenSpace.s2),
             ClipRRect(
               borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-              child: LinearProgressIndicator(
-                value: progress,
-                minHeight: 6,
-                color: c.brand,
-                backgroundColor: c.tintVertTendre,
+              child: // Jauge déjà dite en texte.
+              ExcludeSemantics(
+                child: LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 6,
+                  color: c.brand,
+                  backgroundColor: c.tintVertTendre,
+                ),
               ),
             ),
             const SizedBox(height: DymTokenSpace.s1),

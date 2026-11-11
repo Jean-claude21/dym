@@ -47,6 +47,8 @@ class DymSearchBar extends StatelessWidget {
         children: [
           Expanded(
             child: Semantics(
+              container: true,
+              onTap: onTap,
               button: true,
               label: hint,
               excludeSemantics: true,

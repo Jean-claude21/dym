@@ -40,6 +40,8 @@ class DymSelectableCard extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     return Semantics(
+      container: true,
+      onTap: onTap,
       button: true,
       selected: selected,
       label: '$title. $description',

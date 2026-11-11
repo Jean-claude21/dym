@@ -30,6 +30,8 @@ class DymMenuRow extends StatelessWidget {
     final t = context.dym.text;
     final color = destructive ? c.pimentStrong : c.brand;
     return Semantics(
+      container: true,
+      onTap: onTap,
       button: true,
       enabled: onTap != null,
       label: value == null ? label : '$label, $value',

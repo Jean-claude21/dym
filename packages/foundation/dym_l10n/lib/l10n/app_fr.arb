@@ -125,7 +125,7 @@
   "@authEmailInvalid": {
     "description": "Email invalide"
   },
-  "authEmailPrivacy": "Ton email reste privé : les vendeuses ne le voient pas.",
+  "authEmailPrivacy": "Ton email reste privé : il n'est montré à personne.",
   "@authEmailPrivacy": {
     "description": "Confidentialité de l'email"
   },
@@ -199,7 +199,7 @@
   "@authZoneLabel": {
     "description": "Choix du quartier"
   },
-  "authZoneHint": "Ton quartier sert à te montrer les boutiques proches et le délai de livraison.",
+  "authZoneHint": "Ton quartier sert à te proposer ce qui est près de toi.",
   "@authZoneHint": {
     "description": "Explication du quartier"
   },
@@ -716,11 +716,11 @@
   "@myStoreClosedByHours": {
     "description": "Boutique active mais hors de ses horaires"
   },
-  "myStoreClosedByHoursHint": "Hors de tes horaires : les clientes commanderont à la réouverture",
+  "myStoreClosedByHoursHint": "Hors de tes horaires : les clientes peuvent commander pour un créneau où tu es ouverte",
   "@myStoreClosedByHoursHint": {
     "description": "Détail de la fermeture selon les horaires"
   },
-  "productStoreClosed": "Cette boutique est fermée pour le moment. Tu pourras commander à sa réouverture.",
+  "productStoreClosed": "Cette boutique est fermée pour le moment. Tu peux commander pour un créneau où elle est ouverte.",
   "@productStoreClosed": {
     "description": "Fiche produit d'une boutique fermée"
   },
@@ -1095,7 +1095,7 @@
   "@homeSearchHint": {
     "description": "Barre de recherche de l'accueil"
   },
-  "homeOpenStores": "Boutiques ouvertes près de toi",
+  "homeOpenStores": "Boutiques près de toi",
   "@homeOpenStores": {
     "description": "Section accueil"
   },
@@ -1478,7 +1478,7 @@
   "@cartDelivery": {
     "description": "Ligne livraison"
   },
-  "cartDeliveryMeta": "{pickups, plural, =0{Retrait sur place} =1{1 ramassage} other{{pickups} ramassages}} · {minutes} min",
+  "cartDeliveryMeta": "{pickups, plural, =0{Retrait sur place} =1{1 boutique} other{{pickups} boutiques}} · {minutes} min",
   "@cartDeliveryMeta": {
     "description": "Ramassages et délai",
     "placeholders": {
@@ -1971,7 +1971,7 @@
   "@ordersMineEmptyMessage": {
     "description": "Liste cliente vide"
   },
-  "orderEtaAt": "Livrée vers {time}",
+  "orderEtaAt": "Prévue vers {time}",
   "@orderEtaAt": {
     "description": "Heure de livraison estimée",
     "placeholders": {
@@ -3585,7 +3585,7 @@
   "@dashboardActiveOrdersHint": {
     "description": "Accueil vendeuse : sous-titre des commandes en cours"
   },
-  "dashboardStockHint": "Remets-le en stock pour continuer à vendre",
+  "dashboardStockHint": "À remettre en stock pour continuer à vendre",
   "@dashboardStockHint": {
     "description": "Accueil vendeuse : sous-titre des ruptures"
   },
@@ -6308,7 +6308,7 @@
   "@creatorNoPost": {
     "description": "Vide"
   },
-  "creatorPostStats": "{views} vues · {clicks} clics · {tags} produits",
+  "creatorPostStats": "{views, plural, =0{0 vue} =1{1 vue} other{{views} vues}} · {clicks, plural, =0{0 clic} =1{1 clic} other{{clicks} clics}} · {tags, plural, =1{1 produit} other{{tags} produits}}",
   "@creatorPostStats": {
     "description": "Stats",
     "placeholders": {
@@ -6528,6 +6528,11 @@
     }
   },
   "missionPickup": "Récupérer chez",
+  "missionFeeLabel": "Ta course",
+  "missionSlot": "Créneau : {slot}",
+  "@missionSlot": {"placeholders": {"slot": {"type": "String"}}},
+  "missionCashToCollect": "À encaisser : {amount} en cash",
+  "@missionCashToCollect": {"placeholders": {"amount": {"type": "String"}}},
   "missionDropoff": "Livrer à",
   "missionPreparing": "En préparation",
   "missionReady": "Prête à récupérer",
@@ -6927,6 +6932,7 @@
   },
   "haggleClose": "C'est bon",
   "haggleCartBadge": "Prix marchandé",
+  "groupBuyCartBadge": "Prix de groupe",
   "haggleErrorTooMany": "Tu as déjà marchandé 3 fois ce produit aujourd'hui.",
   "haggleErrorNotLower": "Propose un prix plus bas que le prix affiché.",
   "haggleErrorOff": "Cette vendeuse ne marchande pas ce produit.",
@@ -7057,7 +7063,10 @@
       }
     }
   },
-  "membershipWalletInsufficient": "Solde du wallet insuffisant : recharge-le (ou verse ta caisse vers ton wallet), puis réessaie.",
+  "membershipWalletInsufficient": "Solde du wallet insuffisant : recharge-le, puis réessaie.",
+  "membershipStoreBalance": "Payé depuis le solde de ta boutique ({store}), sinon ton wallet ({wallet})",
+  "@membershipStoreBalance": {"placeholders": {"store": {"type": "String"}, "wallet": {"type": "String"}}},
+  "membershipStoreInsufficient": "Ni le solde de ta boutique ni ton wallet ne suffisent : vends ou recharge ton wallet, puis réessaie.",
   "membershipNone": "Aucune formule dans ton pays pour le moment.",
   "membershipDeliveryRefund": "Frais de livraison remboursés sur ton wallet à chaque livraison",
   "membershipCashback": "{percent} % de cashback en plus sur tes courses",
@@ -7122,6 +7131,10 @@
       }
     }
   },
+  "opsDelayHours": "{hours} h {minutes} min",
+  "@opsDelayHours": {"placeholders": {"hours": {"type": "int"}, "minutes": {"type": "int"}}},
+  "opsDelayDays": "{days} j {hours} h",
+  "@opsDelayDays": {"placeholders": {"days": {"type": "int"}, "hours": {"type": "int"}}},
   "opsCourierCash": "Cash des livreurs à recevoir",
   "opsNoCourierCash": "Aucun cash à recevoir.",
   "opsCashReceived": "Cash reçu",

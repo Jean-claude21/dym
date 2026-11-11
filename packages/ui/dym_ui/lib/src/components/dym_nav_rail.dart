@@ -69,6 +69,8 @@ class DymNavRail extends StatelessWidget {
               ],
               for (var i = 0; i < items.length; i++)
                 Semantics(
+                  container: true,
+                  onTap: () => onTap(i),
                   button: true,
                   selected: i == currentIndex,
                   label: items[i].label,

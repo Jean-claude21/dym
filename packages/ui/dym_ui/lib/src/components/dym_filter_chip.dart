@@ -37,6 +37,8 @@ class DymFilterChip extends StatelessWidget {
     final fill = tinted ? c.tintVertTendre : (selected ? c.brand : c.card);
     final ink = tinted ? c.brandDeep : (selected ? c.onBrand : c.textPrimary);
     return Semantics(
+      container: true,
+      onTap: onTap,
       button: true,
       selected: selected,
       label: label,

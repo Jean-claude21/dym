@@ -324,7 +324,7 @@ void main() {
         HomeView(service: auth, discovery: memoryDiscovery(), navigator: nav),
       );
       await tester.pump();
-      expect(find.text('Boutiques ouvertes près de toi'), findsOneWidget);
+      expect(find.text('Boutiques près de toi'), findsOneWidget);
       await tester.tap(find.text('Moi').first);
       await tester.pump();
       await tester.dragUntilVisible(

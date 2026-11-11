@@ -92,6 +92,8 @@ class _DymMiniCartBarState extends State<DymMiniCartBar>
         child: IgnorePointer(
           ignoring: !visible,
           child: Semantics(
+            container: true,
+            onTap: widget.onTap,
             button: true,
             label: '${widget.summary}. ${widget.actionLabel}',
             excludeSemantics: true,

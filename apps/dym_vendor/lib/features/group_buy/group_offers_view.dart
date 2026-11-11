@@ -245,9 +245,12 @@ class GroupOffersView extends StackedView<GroupOffersViewModel> {
                                     l10n.groupBuySharedDelivery(vm.money(fee)),
                                   ),
                                 const SizedBox(height: DymTokenSpace.s2),
-                                LinearProgressIndicator(
-                                  value: o.progress,
-                                  minHeight: 8,
+                                // Jauge déjà dite en texte.
+                                ExcludeSemantics(
+                                  child: LinearProgressIndicator(
+                                    value: o.progress,
+                                    minHeight: 8,
+                                  ),
                                 ),
                                 Text(
                                   l10n.groupBuyProgress(

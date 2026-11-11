@@ -96,7 +96,8 @@ class DymTextField extends StatelessWidget {
           cursorColor: c.brand,
           decoration: InputDecoration(
             labelText: label,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
+            // Libellé visible pendant la saisie (lecteurs d'écran compris).
+            floatingLabelBehavior: FloatingLabelBehavior.auto,
             hintText: hint,
             suffixText: suffixText,
             suffixStyle: t.title.copyWith(fontSize: 17, color: c.textPrimary),

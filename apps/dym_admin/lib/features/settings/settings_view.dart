@@ -1120,7 +1120,7 @@ class _AdminsState extends State<_Admins> {
                         l10n.adminAdminsPending,
                     ].join(' · '),
                   ),
-                  trailing: a.isDefault
+                  trailing: a.isDefault || a.isMe
                       ? null
                       : IconButton(
                           tooltip: l10n.adminAdminsRemove,
