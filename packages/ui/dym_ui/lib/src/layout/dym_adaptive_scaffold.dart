@@ -24,6 +24,7 @@ class DymAdaptiveScaffold extends StatefulWidget {
     required this.body,
     super.key,
     this.backgroundColor,
+    this.darkBottomNav = false,
     this.railLeading,
     this.maxBottomItems,
     this.moreItem,
@@ -43,6 +44,9 @@ class DymAdaptiveScaffold extends StatefulWidget {
 
   /// Fond de l'écran.
   final Color? backgroundColor;
+
+  /// Barre basse sombre (lecture vidéo plein écran).
+  final bool darkBottomNav;
 
   /// Élément en tête du rail (moyenne et au-delà).
   final Widget? railLeading;
@@ -104,6 +108,7 @@ class _DymAdaptiveScaffoldState extends State<DymAdaptiveScaffold> {
       return Scaffold(
         backgroundColor: widget.backgroundColor,
         bottomNavigationBar: DymBottomNav(
+          dark: widget.darkBottomNav,
           items: shown,
           currentIndex: current,
           onTap: (i) {

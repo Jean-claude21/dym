@@ -3,6 +3,7 @@
 library;
 
 export 'src/config/environment.dart';
+export 'src/i18n/compact_count.dart';
 export 'src/i18n/localized_text.dart';
 export 'src/id/uuid.dart';
 export 'src/money/currency.dart';

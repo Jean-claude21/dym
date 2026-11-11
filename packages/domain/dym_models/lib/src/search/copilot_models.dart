@@ -101,10 +101,14 @@ class CopilotProposal {
     this.totalMinor = 0,
     this.stores = const [],
     this.missing = const [],
+    this.servings,
+    this.baseServings,
   });
 
   factory fromJson(Map<String, dynamic> json, {List<String>? missing}) =>
       CopilotProposal(
+        servings: (json['servings'] as num?)?.toInt(),
+        baseServings: (json['base_servings'] as num?)?.toInt(),
         currencyCode: json['currency_code'] as String?,
         totalMinor: minorFromJson(json['total_minor'] ?? 0),
         stores: [
@@ -120,6 +124,11 @@ class CopilotProposal {
   final int totalMinor;
   final List<CopilotStoreLines> stores;
   final List<String> missing;
+
+  /// Recette (spec 057) : portions demandées et portions de référence ;
+  /// nulles hors recette.
+  final int? servings;
+  final int? baseServings;
 
   List<CopilotLine> get lines => [for (final s in stores) ...s.lines];
 

@@ -4427,7 +4427,7 @@
   "@feedForYou": {
     "description": "Onglet du fil (74)"
   },
-  "feedFollowing": "Boutiques suivies",
+  "feedFollowing": "Abonnements",
   "@feedFollowing": {
     "description": "Onglet du fil : boutiques où la cliente a commandé"
   },
@@ -6428,10 +6428,36 @@
   "@recipeAddIngredient": {
     "description": "Champ"
   },
-  "recipeAllForIt": "Tout pour la faire",
+  "recipeAllForIt": "Tout pour la recette",
   "@recipeAllForIt": {
     "description": "Bouton du fil"
   },
+  "feedInThisVideo": "Dans cette vidéo",
+  "@feedInThisVideo": {"description": "Feuille des produits d'une vidéo"},
+  "feedProductCount": "{count, plural, =1{1 produit} other{{count} produits}}",
+  "@feedProductCount": {"placeholders": {"count": {"type": "int"}}},
+  "feedCreator": "Créatrice",
+  "@feedCreator": {"description": "Rôle sous le nom de l'autrice"},
+  "feedSeeCart": "Voir",
+  "@feedSeeCart": {"description": "Ouvre le panier après un ajout"},
+  "recipeAllForTotal": "Tout pour la recette · {total}",
+  "@recipeAllForTotal": {"placeholders": {"total": {"type": "String"}}},
+  "recipeForPeople": "pour {count}",
+  "@recipeForPeople": {"placeholders": {"count": {"type": "int"}}},
+  "recipeServings": "{count, plural, =1{Pour 1 personne} other{Pour {count} personnes}}",
+  "@recipeServings": {"placeholders": {"count": {"type": "int"}}},
+  "recipeServingsLess": "Une personne de moins",
+  "@recipeServingsLess": {"description": "Bouton moins des portions"},
+  "recipeServingsMore": "Une personne de plus",
+  "@recipeServingsMore": {"description": "Bouton plus des portions"},
+  "recipeAddLines": "{count, plural, =1{Ajouter 1 article} other{Ajouter {count} articles}} · {total}",
+  "@recipeAddLines": {"placeholders": {"count": {"type": "int"}, "total": {"type": "String"}}},
+  "recipeAddSome": "{count, plural, =1{Ajouter 1 article} other{Ajouter {count} articles}}",
+  "@recipeAddSome": {"placeholders": {"count": {"type": "int"}}},
+  "recipeAddedLines": "{count, plural, =1{1 article ajouté au panier} other{{count} articles ajoutés au panier}}",
+  "@recipeAddedLines": {"placeholders": {"count": {"type": "int"}}},
+  "recipeStores": "{count, plural, =1{1 boutique} other{{count} boutiques}} · livraison calculée au panier",
+  "@recipeStores": {"placeholders": {"count": {"type": "int"}}},
   "creatorEarnings": "Mes gains",
   "creatorEarningsPending": "En attente",
   "creatorEarningsPaid": "Versés sur mon wallet",

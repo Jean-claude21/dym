@@ -340,7 +340,6 @@ class StackedAppNavigator implements AppNavigator {
         productId: productId,
         onBack: _back,
         onOpenStore: toStore,
-        onRecipe: toRecipe,
       ),
     );
   }

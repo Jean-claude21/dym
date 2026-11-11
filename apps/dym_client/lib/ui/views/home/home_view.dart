@@ -130,6 +130,8 @@ class _HomeViewState extends State<HomeView> {
     final hasCart = CartScope.maybeOf(context) != null;
     return DymAdaptiveScaffold(
       backgroundColor: c.background,
+      // Barre sombre seulement pendant la vidéo (design « Épuré »).
+      darkBottomNav: _tab == ClientTab.cuisine,
       currentIndex: _tabs.indexOf(_tab).clamp(0, _tabs.length - 1),
       onDestinationSelected: (i) => _select(_tabs[i]),
       destinations: [
@@ -181,10 +183,9 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         ClientTab.cuisine => switch (_content) {
-          final content? => FeedView(
-            service: content,
-            onOpenStore: _navigator.toStore,
-            onRecipe: _navigator.toRecipe,
+          // Mini-panier par-dessus la vidéo (PARCOURS, Kossi).
+          final content? => WithMiniCart(
+            child: FeedView(service: content, onOpenStore: _navigator.toStore),
           ),
           null => const SizedBox.shrink(),
         },

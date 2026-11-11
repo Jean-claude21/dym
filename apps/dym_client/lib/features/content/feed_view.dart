@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/content/recipe_sheets.dart';
 import 'package:dym_client/features/content/report_sheet.dart';
 import 'package:dym_client/features/content/share_content.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
@@ -45,8 +47,11 @@ class FeedViewModel extends BaseViewModel {
   CountryConfig? config;
   int index = 0;
 
-  /// Produit tout juste ajouté (message).
+  /// Produit tout juste ajouté, ou nombre d'articles de la recette
+  /// (message « ajouté au panier · Voir », effacé après quelques secondes).
   String? added;
+  int addedCount = 0;
+  Timer? _addedTimer;
   bool _loadingMore = false;
   bool _ended = false;
 
@@ -162,9 +167,31 @@ class FeedViewModel extends BaseViewModel {
 
   Future<bool> add(ContentItem content, CatalogItem product) async {
     final result = await service.addToCart(content, product);
-    added = result.isOk ? product.name : null;
-    notifyListeners();
+    if (result.isOk) _showAdded(name: product.name);
     return result.isOk;
+  }
+
+  /// Articles de la recette ajoutés (feuille « pour N »).
+  void recipeAdded(int count) {
+    if (count > 0) _showAdded(count: count);
+  }
+
+  void _showAdded({String? name, int count = 0}) {
+    added = name;
+    addedCount = count;
+    _addedTimer?.cancel();
+    _addedTimer = Timer(const Duration(seconds: 4), () {
+      added = null;
+      addedCount = 0;
+      notifyListeners();
+    });
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _addedTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> report(ContentItem content, ReportReason reason) =>
@@ -188,14 +215,10 @@ class FeedView extends StackedView<FeedViewModel> {
     this.onBack,
     this.onOpenStore,
     this.videoBuilder = networkVideo,
-    this.onRecipe,
   });
 
   final ContentService service;
   final String? productId;
-
-  /// « Tout pour la faire » (spec 038) ; absent : bouton masqué.
-  final ValueChanged<ContentItem>? onRecipe;
 
   /// Présent quand le fil est ouvert depuis une fiche produit.
   final VoidCallback? onBack;
@@ -262,128 +285,148 @@ class FeedView extends StackedView<FeedViewModel> {
           active: i == vm.index,
           videoBuilder: videoBuilder,
           onOpenStore: onOpenStore,
-          onRecipe: onRecipe,
         ),
       );
     }
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final locale = Localizations.localeOf(context).languageCode;
+    final cart = CartScope.maybeOf(context);
+    final addedText = switch ((vm.added, vm.addedCount)) {
+      (final String name, _) => l10n.feedAdded(name),
+      (_, final int n) when n > 0 => l10n.recipeAddedLines(n),
+      _ => null,
+    };
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
         fit: StackFit.expand,
         children: [
           Positioned.fill(child: body),
+          // Haut : Pour toi · Abonnements, grille ; catégories en puces.
           Positioned(
             top: 0,
             left: 0,
             right: 0,
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: DymTokenSpace.s2,
-                  vertical: DymTokenSpace.s1,
-                ),
-                child: Row(
+                padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (onBack case final back?)
-                      IconButton(
-                        tooltip: l10n.authBack,
-                        onPressed: back,
-                        icon: const Icon(
-                          Icons.arrow_back_rounded,
-                          color: Colors.white,
-                        ),
-                      ),
-                    if (productId == null) ...[
-                      Expanded(
-                        child: Wrap(
-                          spacing: DymTokenSpace.s2,
+                    Row(
+                      children: [
+                        if (onBack case final back?)
+                          IconButton(
+                            tooltip: l10n.authBack,
+                            onPressed: back,
+                            icon: const Icon(
+                              Icons.arrow_back_rounded,
+                              color: Colors.white,
+                              shadows: _shadow,
+                            ),
+                          )
+                        else
+                          const SizedBox(width: DymTokenSpace.s2),
+                        if (productId == null) ...[
+                          for (final (i, (following, label)) in [
+                            (false, l10n.feedForYou),
+                            (true, l10n.feedFollowing),
+                          ].indexed) ...[
+                            if (i > 0)
+                              const Text(
+                                '·',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  shadows: _shadow,
+                                ),
+                              ),
+                            _Tab(
+                              label: label,
+                              selected: vm.following == following,
+                              onTap: () => vm.selectTab(following: following),
+                            ),
+                          ],
+                          const Spacer(),
+                          IconButton(
+                            tooltip: vm.grid
+                                ? l10n.feedFullScreen
+                                : l10n.feedGrid,
+                            onPressed: vm.toggleGrid,
+                            icon: Icon(
+                              vm.grid
+                                  ? Icons.view_day_outlined
+                                  : Icons.grid_view_outlined,
+                              color: Colors.white,
+                              shadows: _shadow,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    if (productId == null && vm.categories.isNotEmpty)
+                      SizedBox(
+                        height: 44,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: DymTokenSpace.s2,
+                          ),
                           children: [
-                            for (final (following, label) in [
-                              (false, l10n.feedForYou),
-                              (true, l10n.feedFollowing),
+                            for (final (slug, label) in [
+                              (null, l10n.feedAllCategories),
+                              for (final cat in vm.categories)
+                                (cat.slug, cat.label.resolve(locale)),
                             ])
-                              _Tab(
-                                label: label,
-                                selected: vm.following == following,
-                                onTap: () => vm.selectTab(following: following),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 6),
+                                child: _DarkChip(
+                                  label: label,
+                                  selected: vm.category == slug,
+                                  onTap: () => vm.selectCategory(slug),
+                                ),
                               ),
                           ],
                         ),
                       ),
-                      IconButton(
-                        tooltip: vm.grid ? l10n.feedFullScreen : l10n.feedGrid,
-                        onPressed: vm.toggleGrid,
-                        icon: Icon(
-                          vm.grid
-                              ? Icons.view_day_rounded
-                              : Icons.grid_view_rounded,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ),
             ),
           ),
-          if (productId == null && vm.categories.isNotEmpty)
-            Positioned(
-              top: 0,
-              left: 0,
-              right: 0,
-              child: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 56),
-                  child: SizedBox(
-                    height: 44,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: DymTokenSpace.s2,
-                      ),
-                      children: [
-                        for (final (slug, label) in [
-                          (null, l10n.feedAllCategories),
-                          for (final cat in vm.categories)
-                            (
-                              cat.slug,
-                              cat.label.resolve(
-                                Localizations.localeOf(context).languageCode,
-                              ),
-                            ),
-                        ])
-                          Padding(
-                            padding: const EdgeInsets.only(right: 6),
-                            child: ChoiceChip(
-                              label: Text(label),
-                              selected: vm.category == slug,
-                              onSelected: (_) => vm.selectCategory(slug),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          if (vm.added case final name?)
+          // « 5 articles ajoutés au panier · Voir » (planche 02, étape 4).
+          if (addedText != null)
             Positioned(
               left: DymTokenSpace.s3,
               right: DymTokenSpace.s3,
-              top: 96,
+              top: MediaQuery.paddingOf(context).top + 104,
               child: Semantics(
                 liveRegion: true,
                 child: Material(
-                  color: context.dym.colors.brandDeep,
-                  borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                  color: c.card,
+                  elevation: 2,
+                  shadowColor: DymTokenShadows.floating.color,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.card),
                   child: Padding(
-                    padding: const EdgeInsets.all(DymTokenSpace.s2),
-                    child: Text(
-                      l10n.feedAdded(name),
-                      textAlign: TextAlign.center,
-                      style: context.dym.text.body.copyWith(
-                        color: Colors.white,
-                      ),
+                    padding: const EdgeInsets.fromLTRB(12, 4, 4, 4),
+                    child: Row(
+                      children: [
+                        Icon(Icons.check_circle_rounded, color: c.brand),
+                        const SizedBox(width: DymTokenSpace.s2),
+                        Expanded(
+                          child: Text(
+                            addedText,
+                            style: t.label.copyWith(color: c.textPrimary),
+                          ),
+                        ),
+                        if (cart != null)
+                          TextButton(
+                            onPressed: cart.onOpenCart,
+                            child: Text(l10n.feedSeeCart),
+                          )
+                        else
+                          const SizedBox(height: 48),
+                      ],
                     ),
                   ),
                 ),
@@ -394,6 +437,9 @@ class FeedView extends StackedView<FeedViewModel> {
     );
   }
 }
+
+/// Ombre des textes et icônes posés sur la vidéo (pas de voile ni dégradé).
+const _shadow = [Shadow(blurRadius: 8, color: Colors.black54)];
 
 class _Tab extends StatelessWidget {
   const new({required this.label, required this.selected, required this.onTap});
@@ -411,24 +457,56 @@ class _Tab extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DymTokenRadius.button),
-        child: Container(
+        child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 48),
-          padding: const EdgeInsets.symmetric(horizontal: DymTokenSpace.s2),
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: selected ? context.dym.colors.brand : Colors.transparent,
-                width: 3,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: DymTokenSpace.s2),
+            child: Align(
+              widthFactor: 1,
+              child: Text(
+                label,
+                style: t.body.copyWith(
+                  fontSize: 16,
+                  fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                  color: selected ? Colors.white : Colors.white70,
+                  shadows: _shadow,
+                ),
               ),
             ),
           ),
-          child: Align(
-            widthFactor: 1,
+        ),
+      ),
+    );
+  }
+}
+
+/// Puce de catégorie posée sur la vidéo.
+class _DarkChip extends StatelessWidget {
+  const new({required this.label, required this.selected, required this.onTap});
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: Material(
+        color: selected ? Colors.white : Colors.black38,
+        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             child: Text(
               label,
-              style: t.title.copyWith(
-                color: selected ? Colors.white : Colors.white70,
-                shadows: const [Shadow(blurRadius: 6)],
+              style: context.dym.text.label.copyWith(
+                fontWeight: FontWeight.w600,
+                color: selected ? c.textPrimary : Colors.white,
               ),
             ),
           ),
@@ -445,7 +523,6 @@ class _ContentPage extends StatelessWidget {
     required this.active,
     required this.videoBuilder,
     this.onOpenStore,
-    this.onRecipe,
   });
 
   final FeedViewModel vm;
@@ -453,7 +530,27 @@ class _ContentPage extends StatelessWidget {
   final bool active;
   final VideoBuilder videoBuilder;
   final ValueChanged<String>? onOpenStore;
-  final ValueChanged<ContentItem>? onRecipe;
+
+  Future<void> _openProducts(BuildContext context) async {
+    final recipe = await showVideoProducts(
+      context,
+      service: vm.service,
+      content: content,
+      config: vm.config,
+      onAdd: (p) => vm.add(content, p),
+    );
+    if (recipe && context.mounted) await _openRecipe(context);
+  }
+
+  Future<void> _openRecipe(BuildContext context) async {
+    final count = await showRecipeSheet(
+      context,
+      service: vm.service,
+      content: content,
+      config: vm.config,
+    );
+    vm.recipeAdded(count);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -462,8 +559,14 @@ class _ContentPage extends StatelessWidget {
     final l10n = DymLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
     final service = vm.service;
-    final product = content.products.firstOrNull;
-    final price = moneyOf(vm.config, product?.minPriceMinor);
+    final products = content.products;
+    final store = content.store;
+    final author = content.author;
+    final name = store?.name ?? author?.displayName;
+    final storeOrigin = store == null
+        ? null
+        : originLabel(vm.config, store.origin, locale);
+    final white = t.body.copyWith(color: Colors.white, shadows: _shadow);
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -480,247 +583,210 @@ class _ContentPage extends StatelessWidget {
             errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
           ),
         Positioned(
-          left: DymTokenSpace.s2,
+          left: DymTokenSpace.s3,
           right: DymTokenSpace.s2,
-          bottom: DymTokenSpace.s2,
+          bottom: DymTokenSpace.s3,
           child: SafeArea(
             top: false,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Column(
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    _RoundAction(
-                      icon: content.liked
-                          ? Icons.favorite_rounded
-                          : Icons.favorite_border_rounded,
-                      label: '${content.likeCount}',
-                      tooltip: l10n.feedLike,
-                      onTap: () => vm.toggleLike(content),
-                    ),
-                    const SizedBox(height: DymTokenSpace.s3),
-                    _RoundAction(
-                      icon: Icons.chat_bubble_outline_rounded,
-                      label: '${content.commentCount}',
-                      tooltip: l10n.feedComments,
-                      onTap: () => showModalBottomSheet<void>(
-                        context: context,
-                        isScrollControlled: true,
-                        showDragHandle: true,
-                        builder: (_) => CommentsSheet(
-                          service: service,
-                          content: content,
-                          onCount: (n) => vm.commentsChanged(content, n),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: DymTokenSpace.s3),
-                    _RoundAction(
-                      icon: Icons.share_rounded,
-                      tooltip: l10n.shareAction,
-                      onTap: () => shareContent(context, vm.share, content),
-                    ),
-                    const SizedBox(height: DymTokenSpace.s3),
-                    _RoundAction(
-                      icon: Icons.flag_outlined,
-                      tooltip: l10n.reportAction,
-                      onTap: () async {
-                        final reason = await showReportSheet(context);
-                        if (reason != null) await vm.report(content, reason);
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withValues(alpha: 0.55),
-                    borderRadius: BorderRadius.circular(DymTokenRadius.card),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(DymTokenSpace.s3),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (content.store case final store?)
-                          InkWell(
-                            onTap: onOpenStore == null
-                                ? null
-                                : () => onOpenStore!(store.id),
-                            child: Wrap(
-                              spacing: DymTokenSpace.s2,
-                              runSpacing: DymTokenSpace.s1,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                Text(
-                                  store.name,
-                                  style: t.title.copyWith(color: Colors.white),
-                                ),
-                                if (originOf(store.origin) case final o?)
-                                  DymOriginBadge(
-                                    origin: o,
-                                    label: originLabel(
-                                      vm.config,
-                                      store.origin,
-                                      locale,
+                    // Autrice, mention, légende.
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (name != null)
+                            InkWell(
+                              onTap: store == null || onOpenStore == null
+                                  ? null
+                                  : () => onOpenStore!(store.id),
+                              child: Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: name,
+                                      style: white.copyWith(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
-                                    dense: true,
-                                  ),
-                              ],
-                            ),
-                          )
-                        else if (content.author case final author?)
-                          Wrap(
-                            spacing: DymTokenSpace.s2,
-                            runSpacing: DymTokenSpace.s1,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.person_pin_rounded,
-                                color: Colors.white,
-                              ),
-                              Text(
-                                author.displayName,
-                                style: t.title.copyWith(color: Colors.white),
-                              ),
-                              if (content.category case final cat?)
-                                Chip(
-                                  visualDensity: VisualDensity.compact,
-                                  label: Text(cat.label.resolve(locale)),
+                                    if (store == null)
+                                      TextSpan(
+                                        text: ' · ${l10n.feedCreator}',
+                                        style: white,
+                                      )
+                                    else if (originOf(store.origin) != null)
+                                      TextSpan(
+                                        text: ' · $storeOrigin',
+                                        style: white,
+                                      ),
+                                  ],
                                 ),
-                              // Transparence (spec 039) : la créatrice touche
-                              // une commission sur ces achats.
-                              if (content.hasRecipe)
-                                Chip(
-                                  visualDensity: VisualDensity.compact,
-                                  avatar: const Icon(
-                                    Icons.volunteer_activism_rounded,
-                                    size: 18,
-                                  ),
-                                  label: Text(l10n.paidContent),
-                                ),
-                            ],
-                          ),
-                        if (content.store != null || content.author != null)
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton.icon(
-                              onPressed: () => vm.toggleFollow(content),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.white,
-                                minimumSize: const Size(48, 40),
-                              ),
-                              icon: Icon(
-                                content.followed
-                                    ? Icons.check_rounded
-                                    : Icons.add_rounded,
-                              ),
-                              label: Text(
-                                content.followed
-                                    ? l10n.feedFollowingOne
-                                    : l10n.feedFollow,
                               ),
                             ),
-                          ),
-                        if (content.caption case final caption?)
-                          Text(
-                            caption,
-                            style: t.body.copyWith(color: Colors.white),
-                          ),
-                        if (content.sourceUrl != null)
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: TextButton.icon(
+                          if (content.hasRecipe && author != null) ...[
+                            const SizedBox(height: 4),
+                            // Transparence (spec 039) : l'autrice touche une
+                            // commission sur ces achats.
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white24,
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: Text(
+                                l10n.paidContent,
+                                style: t.label.copyWith(
+                                  fontSize: 13,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                          if (content.caption case final caption?) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              caption,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: white,
+                            ),
+                          ],
+                          if (content.category case final cat?)
+                            Text(
+                              '# ${cat.label.resolve(locale)}',
+                              style: white.copyWith(fontSize: 14),
+                            ),
+                          if (content.sourceUrl != null)
+                            TextButton.icon(
                               onPressed: () => service.openSource(content),
                               style: TextButton.styleFrom(
                                 foregroundColor: Colors.white,
+                                padding: EdgeInsets.zero,
                                 minimumSize: const Size(48, 40),
                               ),
                               icon: const Icon(Icons.open_in_new_rounded),
                               label: Text(l10n.tiktokSeeOriginal),
                             ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: DymTokenSpace.s2),
+                    // Actions : abonnement, j'aime, commentaires, partage,
+                    // signalement.
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (name != null)
+                          _FollowAvatar(
+                            initial: name.characters.first,
+                            followed: content.followed,
+                            label: content.followed
+                                ? l10n.feedFollowingOne
+                                : l10n.feedFollow,
+                            onTap: () => vm.toggleFollow(content),
                           ),
-                        if (onRecipe case final recipe? when content.hasRecipe)
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: DymTokenSpace.s2,
+                        _SideAction(
+                          icon: content.liked
+                              ? Icons.favorite_rounded
+                              : Icons.favorite_border_rounded,
+                          color: content.liked ? c.piment : Colors.white,
+                          label: compactCount(content.likeCount, locale),
+                          tooltip: l10n.feedLike,
+                          onTap: () => vm.toggleLike(content),
+                        ),
+                        _SideAction(
+                          icon: Icons.chat_bubble_outline_rounded,
+                          label: compactCount(content.commentCount, locale),
+                          tooltip: l10n.feedComments,
+                          onTap: () => showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            showDragHandle: true,
+                            builder: (_) => CommentsSheet(
+                              service: service,
+                              content: content,
+                              onCount: (n) => vm.commentsChanged(content, n),
                             ),
+                          ),
+                        ),
+                        _SideAction(
+                          icon: Icons.reply_rounded,
+                          mirror: true,
+                          label: l10n.shareAction,
+                          tooltip: l10n.shareAction,
+                          onTap: () => shareContent(context, vm.share, content),
+                        ),
+                        _SideAction(
+                          icon: Icons.flag_outlined,
+                          tooltip: l10n.reportAction,
+                          onTap: () async {
+                            final reason = await showReportSheet(context);
+                            if (reason != null) {
+                              await vm.report(content, reason);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                // Produits de la vidéo : deux vignettes, « +N », recette.
+                if (products.isNotEmpty || content.hasRecipe) ...[
+                  const SizedBox(height: DymTokenSpace.s3),
+                  SizedBox(
+                    // Deux lignes de texte : la hauteur suit le texte agrandi.
+                    height:
+                        56 *
+                        MediaQuery.textScalerOf(context).scale(1).clamp(1, 1.5),
+                    child: Row(
+                      children: [
+                        for (final p in products.take(2))
+                          Flexible(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 6),
+                              child: _ProductPill(
+                                product: p,
+                                image: switch (p.photoKey) {
+                                  final key? => service.photo(key),
+                                  null => null,
+                                },
+                                price: moneyOf(
+                                  vm.config,
+                                  p.minPriceMinor ?? p.priceMinor,
+                                ),
+                                onTap: () => _openProducts(context),
+                              ),
+                            ),
+                          ),
+                        if (products.length > 2)
+                          _MorePill(
+                            label: '+${products.length - 2}',
+                            tooltip: l10n.feedInThisVideo,
+                            onTap: () => _openProducts(context),
+                          )
+                        else if (products.isEmpty)
+                          Expanded(
                             child: DymButton(
                               label: l10n.recipeAllForIt,
-                              icon: Icons.shopping_basket_rounded,
+                              icon: Icons.shopping_basket_outlined,
                               compact: true,
-                              onPressed: () => recipe(content),
+                              onPressed: () => _openRecipe(context),
                             ),
                           ),
-                        if (product != null) ...[
-                          const SizedBox(height: DymTokenSpace.s2),
-                          Material(
-                            color: c.card,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                DymTokenRadius.tile,
-                              ),
-                              side: BorderSide(color: c.hairline),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(DymTokenSpace.s2),
-                              child: Row(
-                                children: [
-                                  if (product.photoKey case final key?)
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(
-                                        DymTokenRadius.tile / 2,
-                                      ),
-                                      child: Image(
-                                        image: service.photo(key),
-                                        width: 64,
-                                        height: 56,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, _, _) =>
-                                            const SizedBox(width: 64),
-                                      ),
-                                    ),
-                                  const SizedBox(width: DymTokenSpace.s2),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          product.name,
-                                          style: t.title.copyWith(fontSize: 16),
-                                        ),
-                                        Text(
-                                          [
-                                            ?product.unitLabel?.resolve(locale),
-                                            ?price?.format(),
-                                          ].join(' · '),
-                                          style: t.body.copyWith(
-                                            color: c.brandDeep,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  DymButton(
-                                    label: l10n.feedAdd,
-                                    compact: true,
-                                    expanded: false,
-                                    onPressed: product.available
-                                        ? () => vm.add(content, product)
-                                        : null,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),
-                ),
+                ],
               ],
             ),
           ),
@@ -730,46 +796,228 @@ class _ContentPage extends StatelessWidget {
   }
 }
 
-class _RoundAction extends StatelessWidget {
+/// Avatar de l'autrice ou de la boutique, « + » vert pour s'abonner.
+class _FollowAvatar extends StatelessWidget {
+  const new({
+    required this.initial,
+    required this.followed,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String initial;
+  final bool followed;
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Semantics(
+      button: true,
+      label: label,
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: SizedBox(
+          width: 56,
+          height: 64,
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: c.tintVertTendre,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                child: Text(
+                  initial.toUpperCase(),
+                  style: context.dym.text.title.copyWith(color: c.brandDeep),
+                ),
+              ),
+              Positioned(
+                bottom: 4,
+                child: Container(
+                  width: 22,
+                  height: 22,
+                  decoration: BoxDecoration(
+                    color: followed ? Colors.white : c.brand,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    followed ? Icons.check_rounded : Icons.add_rounded,
+                    size: 16,
+                    color: followed ? c.brand : c.onBrand,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Action de la colonne de droite : icône blanche ombrée, libellé dessous.
+class _SideAction extends StatelessWidget {
   const new({
     required this.icon,
     required this.tooltip,
     required this.onTap,
     this.label,
+    this.color = Colors.white,
+    this.mirror = false,
   });
 
   final IconData icon;
   final String tooltip;
   final VoidCallback onTap;
   final String? label;
+  final Color color;
+  final bool mirror;
 
   @override
-  Widget build(BuildContext context) => Material(
-    color: Colors.black.withValues(alpha: 0.45),
-    shape: const StadiumBorder(),
-    child: InkWell(
-      customBorder: const StadiumBorder(),
-      onTap: onTap,
-      child: Tooltip(
-        message: tooltip,
-        child: Container(
+  Widget build(BuildContext context) {
+    final glyph = Icon(icon, color: color, size: 32, shadows: _shadow);
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        customBorder: const CircleBorder(),
+        child: ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 56, minHeight: 56),
-          padding: const EdgeInsets.all(DymTokenSpace.s2),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (mirror)
+                  Transform.flip(flipX: true, child: glyph)
+                else
+                  glyph,
+                if (label case final l?)
+                  Text(
+                    l,
+                    style: context.dym.text.label.copyWith(
+                      fontSize: 13,
+                      color: Colors.white,
+                      shadows: _shadow,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Vignette d'un produit de la vidéo (photo, nom, prix) ; ouvre la feuille.
+class _ProductPill extends StatelessWidget {
+  const new({
+    required this.product,
+    required this.image,
+    required this.price,
+    required this.onTap,
+  });
+
+  final CatalogItem product;
+  final ImageProvider? image;
+  final Money? price;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return Material(
+      color: c.card,
+      borderRadius: BorderRadius.circular(DymTokenRadius.field),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(DymTokenRadius.field),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: Row(
             children: [
-              Icon(icon, color: Colors.white, size: 28),
-              if (label case final l?)
-                Text(
-                  l,
-                  style: context.dym.text.label.copyWith(color: Colors.white),
+              ProductThumb(image: image, size: 44),
+              const SizedBox(width: DymTokenSpace.s2),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.label.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: c.textPrimary,
+                      ),
+                    ),
+                    if (price != null)
+                      Text(
+                        price!.format(),
+                        maxLines: 1,
+                        style: t.label.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: c.textSecondary,
+                        ),
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
+}
+
+class _MorePill extends StatelessWidget {
+  const new({required this.label, required this.tooltip, required this.onTap});
+
+  final String label;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Semantics(
+      button: true,
+      label: tooltip,
+      child: Material(
+        color: c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.field),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DymTokenRadius.field),
+          child: SizedBox(
+            width: 56,
+            child: Center(
+              child: Text(
+                label,
+                style: context.dym.text.body.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: c.textPrimary,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 /// Lecteur réseau (`video_player`) : en boucle, lecture quand la page est

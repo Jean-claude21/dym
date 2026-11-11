@@ -1,3 +1,4 @@
+import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/content/stories.dart';
@@ -7,6 +8,7 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'support/cart_fixtures.dart';
 import 'support/discovery_fixtures.dart';
 
 const _sizes = [
@@ -28,22 +30,26 @@ const _tomatoes = CatalogItem(
   store: CatalogItemStore(id: 's1', name: "Étal d'Akossiwa", zoneName: 'Bè'),
 );
 
-ContentItem _content(String id, {ContentKind kind = ContentKind.video}) =>
-    ContentItem(
-      id: id,
-      kind: kind,
-      mediaKey: 'stores/s1/contents/$id.mp4',
-      isVideo: true,
-      caption: 'Tomates du jour, arrivées ce matin !',
-      createdAt: DateTime.utc(2026, 10, 5, 8),
-      store: const ContentStore(
-        id: 's1',
-        name: "Étal d'Akossiwa",
-        origin: 'marche',
-      ),
-      likeCount: 128,
-      products: const [_tomatoes],
-    );
+ContentItem _content(
+  String id, {
+  ContentKind kind = ContentKind.video,
+  List<ShoppingItem> ingredients = const [],
+}) => ContentItem(
+  id: id,
+  kind: kind,
+  mediaKey: 'stores/s1/contents/$id.mp4',
+  isVideo: true,
+  caption: 'Tomates du jour, arrivées ce matin !',
+  createdAt: DateTime.utc(2026, 10, 5, 8),
+  store: const ContentStore(
+    id: 's1',
+    name: "Étal d'Akossiwa",
+    origin: 'marche',
+  ),
+  likeCount: 128,
+  products: const [_tomatoes],
+  ingredients: ingredients,
+);
 
 Widget _video(BuildContext context, Uri url, {required bool active}) =>
     const ColoredBox(color: Color(0xFF225533));
@@ -241,7 +247,17 @@ void main() {
       contents: [_content('c1')],
     );
     await _pump(tester, FeedView(service: service, videoBuilder: _video));
-    await tester.tap(find.text(l10n.feedAdd));
+    // Vignette du produit → « Dans cette vidéo » → « + », sans quitter.
+    await tester.tap(find.text('Tomates fraîches'));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining(l10n.feedInThisVideo, findRichText: true),
+      findsOne,
+    );
+    await tester.tap(find.byTooltip(l10n.feedAdd));
+    await tester.pumpAndSettle();
+    expect(service.gestures, contains('c1:add:p-tomates'));
+    await tester.tapAt(const Offset(200, 20));
     await tester.pumpAndSettle();
     expect(find.text(l10n.feedAdded('Tomates fraîches')), findsOneWidget);
     await tester.tap(find.byTooltip(l10n.reportAction));
@@ -249,6 +265,74 @@ void main() {
     await tester.tap(find.text(l10n.reportSpam));
     await tester.pumpAndSettle();
     expect(service.gestures.last, 'c1:report:spam');
+  });
+
+  testWidgets('recette pour N personnes, ajout sans quitter (spec 057)', (
+    tester,
+  ) async {
+    final l10n = await DymLocalizations.delegate.load(const Locale('fr'));
+    CopilotLine line(String id, String name, int quantity) => CopilotLine(
+      variantId: id,
+      productId: id,
+      name: name,
+      quantity: quantity,
+      unitPriceMinor: 500,
+      lineMinor: 500 * quantity,
+    );
+    final service = MemoryContentService(
+      discovery: memoryDiscovery(),
+      contents: [
+        _content(
+          'c1',
+          ingredients: const [ShoppingItem(label: 'Gombo', quantity: 2)],
+        ),
+      ],
+      // Quantités recalculées « par la base » selon les portions.
+      recipe: (servings) {
+        final n = servings ?? 4;
+        return CopilotProposal(
+          servings: n,
+          baseServings: 4,
+          totalMinor: 500 * (1 + n ~/ 2),
+          stores: [
+            CopilotStoreLines(
+              id: 's1',
+              name: "Étal d'Akossiwa",
+              lines: [
+                line('tomates', 'Tomates', 1),
+                line('gombo', 'Gombo', n ~/ 2),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+    final cart = memoryCart();
+    await _pump(
+      tester,
+      CartScope(
+        service: cart,
+        onOpenCart: () {},
+        child: FeedView(service: service, videoBuilder: _video),
+      ),
+    );
+    await tester.tap(find.text('Tomates fraîches'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Tout pour la recette'));
+    await tester.pumpAndSettle();
+    expect(find.text(l10n.recipeServings(4)), findsOneWidget);
+    await tester.tap(find.byTooltip(l10n.recipeServingsMore));
+    await tester.pumpAndSettle();
+    expect(service.gestures, contains('c1:basket:5'));
+    expect(find.text(l10n.recipeServings(5)), findsOneWidget);
+    await tester.tap(find.textContaining('Ajouter 2 articles'));
+    await tester.pumpAndSettle();
+    expect(
+      service.gestures,
+      containsAll(['c1:recipe:tomates', 'c1:recipe:gombo']),
+    );
+    expect(cart.events.where((e) => e == 'cart_item_added'), hasLength(2));
+    expect(find.text(l10n.recipeAddedLines(2)), findsOneWidget);
   });
 
   testWidgets('74 vide : message', (tester) async {

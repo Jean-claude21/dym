@@ -3361,7 +3361,7 @@ class DymLocalizationsEn extends DymLocalizations {
   String get feedForYou => 'For you';
 
   @override
-  String get feedFollowing => 'Followed shops';
+  String get feedFollowing => 'Following';
 
   @override
   String get feedEmpty => 'No videos in your area yet.';
@@ -4858,7 +4858,98 @@ class DymLocalizationsEn extends DymLocalizations {
   String get recipeAddIngredient => 'Add an ingredient (tomato, okra…)';
 
   @override
-  String get recipeAllForIt => 'Everything to make it';
+  String get recipeAllForIt => 'Everything for the recipe';
+
+  @override
+  String get feedInThisVideo => 'In this video';
+
+  @override
+  String feedProductCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count products',
+      one: '1 product',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get feedCreator => 'Creator';
+
+  @override
+  String get feedSeeCart => 'View';
+
+  @override
+  String recipeAllForTotal(String total) {
+    return 'Everything for the recipe · $total';
+  }
+
+  @override
+  String recipeForPeople(int count) {
+    return 'for $count';
+  }
+
+  @override
+  String recipeServings(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'For $count people',
+      one: 'For 1 person',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get recipeServingsLess => 'One person less';
+
+  @override
+  String get recipeServingsMore => 'One person more';
+
+  @override
+  String recipeAddLines(int count, String total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count items',
+      one: 'Add 1 item',
+    );
+    return '$_temp0 · $total';
+  }
+
+  @override
+  String recipeAddSome(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Add $count items',
+      one: 'Add 1 item',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recipeAddedLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items added to your basket',
+      one: '1 item added to your basket',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String recipeStores(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count shops',
+      one: '1 shop',
+    );
+    return '$_temp0 · delivery worked out in the basket';
+  }
 
   @override
   String get creatorEarnings => 'My earnings';
