@@ -644,7 +644,7 @@ class _ItemRow extends StatelessWidget {
           IconButton(
             tooltip: l10n.shoppingRemoveItem(item.label),
             onPressed: () => vm.remove(index),
-            icon: Icon(Icons.close_rounded, color: c.pimentStrong),
+            icon: Icon(Icons.close_rounded, color: c.textSecondary),
           ),
         ],
       ),

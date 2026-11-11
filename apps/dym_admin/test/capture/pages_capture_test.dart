@@ -2,11 +2,16 @@
 library;
 
 import 'package:dym_admin/features/audit/audit_view.dart';
+import 'package:dym_admin/features/clients/clients_view.dart';
+import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/disputes/disputes_view.dart';
 import 'package:dym_admin/features/finance/finance_view.dart';
+import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/testing.dart';
 import 'package:dym_admin/features/orders/orders_views.dart';
+import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
+import 'package:dym_admin/features/support/support_view.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +94,41 @@ void main() {
       t,
       'admin_journal',
       AdminAuditView(service: MemoryAdminService()),
+    );
+  });
+  testWidgets('clientes', (t) async {
+    await _capture(
+      t,
+      'admin_clientes',
+      AdminClientsView(service: MemoryAdminService(), clock: () => _now),
+    );
+  });
+  testWidgets('support', (t) async {
+    await _capture(
+      t,
+      'admin_support',
+      AdminSupportView(service: MemoryAdminService(), clock: () => _now),
+    );
+  });
+  testWidgets('modération', (t) async {
+    await _capture(
+      t,
+      'admin_moderation',
+      AdminModerationView(service: MemoryAdminService(), clock: () => _now),
+    );
+  });
+  testWidgets('configuration', (t) async {
+    await _capture(
+      t,
+      'admin_configuration',
+      AdminSettingsView(service: MemoryAdminService()),
+    );
+  });
+  testWidgets('tableau de bord', (t) async {
+    await _capture(
+      t,
+      'admin_tableau',
+      AdminDashboardView(service: MemoryAdminService(), onOpen: (_) {}),
     );
   });
 }

@@ -116,7 +116,8 @@ class AdminClientsView extends StackedView<AdminClientsViewModel> {
                       Material(
                         color: r.id == vm.selectedId
                             ? c.tintVertTendre
-                            : c.card,
+                            : Colors.transparent,
+                        shape: Border(bottom: BorderSide(color: c.hairline)),
                         child: ListTile(
                           minTileHeight: 56,
                           leading: CircleAvatar(

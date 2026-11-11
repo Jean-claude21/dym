@@ -119,7 +119,8 @@ class _StoreTile extends StatelessWidget {
         ) ??
         '';
     return Material(
-      color: selected ? c.tintVertTendre : c.card,
+      color: selected ? c.tintVertTendre : Colors.transparent,
+      shape: Border(bottom: BorderSide(color: c.hairline)),
       child: InkWell(
         onTap: onTap,
         child: Container(

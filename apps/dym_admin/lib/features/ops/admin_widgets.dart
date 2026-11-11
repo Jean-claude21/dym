@@ -297,10 +297,7 @@ class AdminSplit extends StatelessWidget {
         children: [
           Expanded(flex: listFlex, child: list),
           const SizedBox(width: DymTokenSpace.s3),
-          Expanded(
-            flex: detailFlex,
-            child: detail ?? AdminEmpty(l10n.adminSelectItem),
-          ),
+          Expanded(flex: detailFlex, child: detail ?? const _NoSelection()),
         ],
       );
     }
@@ -316,6 +313,35 @@ class AdminSplit extends StatelessWidget {
         ),
         Expanded(child: d),
       ],
+    );
+  }
+}
+
+/// Panneau de détail vide : invite à choisir dans la liste.
+class _NoSelection extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Container(
+      height: 220,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.touch_app_outlined, size: 40, color: c.textSecondary),
+          const SizedBox(height: DymTokenSpace.s2),
+          Text(
+            DymLocalizations.of(context).adminSelectItem,
+            style: context.dym.text.body.copyWith(color: c.textSecondary),
+          ),
+        ],
+      ),
     );
   }
 }

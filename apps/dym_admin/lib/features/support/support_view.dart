@@ -156,17 +156,12 @@ class AdminSupportView extends StackedView<AdminSupportViewModel> {
                     if (tickets.isEmpty) AdminEmpty(l10n.adminNoTickets),
                     for (final tk in tickets)
                       Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: DymTokenSpace.s2,
-                        ),
+                        padding: EdgeInsets.zero,
                         child: Material(
                           color: tk.id == vm.selectedId
                               ? c.tintVertTendre
-                              : c.card,
-                          borderRadius: BorderRadius.circular(
-                            DymTokenRadius.tile,
-                          ),
-                          clipBehavior: Clip.antiAlias,
+                              : Colors.transparent,
+                          shape: Border(bottom: BorderSide(color: c.hairline)),
                           child: ListTile(
                             minTileHeight: 64,
                             onTap: () => vm.select(tk.id),

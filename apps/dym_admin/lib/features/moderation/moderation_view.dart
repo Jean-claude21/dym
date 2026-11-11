@@ -144,8 +144,11 @@ class AdminModerationView extends StackedView<AdminModerationViewModel> {
                           color: item.targetId == vm.selectedId
                               ? c.tintPimentClair
                               : c.card,
-                          borderRadius: BorderRadius.circular(
-                            DymTokenRadius.tile,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              DymTokenRadius.tile,
+                            ),
+                            side: BorderSide(color: c.hairline),
                           ),
                           clipBehavior: Clip.antiAlias,
                           child: ListTile(

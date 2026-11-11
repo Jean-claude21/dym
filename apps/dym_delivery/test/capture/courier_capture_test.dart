@@ -195,4 +195,15 @@ void main() {
       );
     await _capture(t, 'gains', EarningsView(service: service), tab: 2);
   });
+  testWidgets('inscription', (t) async {
+    await _capture(
+      t,
+      'inscription',
+      CourierOnboardingView(
+        service: MemoryMissionsService(config: _togo()),
+        onDone: () {},
+        firstName: 'Komlan',
+      ),
+    );
+  });
 }
