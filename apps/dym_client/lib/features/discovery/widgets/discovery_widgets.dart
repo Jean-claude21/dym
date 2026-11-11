@@ -121,7 +121,7 @@ class StoreRow extends StatelessWidget {
             children: [
               ClipOval(
                 child: Image(
-                  image: photo,
+                  image: DymSizedImage.sized(context, photo, 52),
                   width: 52,
                   height: 52,
                   fit: BoxFit.cover,

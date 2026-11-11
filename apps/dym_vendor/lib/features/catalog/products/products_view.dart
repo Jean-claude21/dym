@@ -252,7 +252,7 @@ class _ProductCard extends StatelessWidget {
     final price = viewModel.price(product);
     final unit = viewModel.unitLabel(product, locale);
     final stock = product.trackedStock;
-    final faded = !product.isAvailable || product.isArchived;
+    final faded = !viewModel.available(product) || product.isArchived;
     final pending = viewModel.isPending(product.id);
     final photo = product.photoKeys.isEmpty
         ? null
@@ -395,7 +395,7 @@ class _ProductCard extends StatelessWidget {
                     Semantics(
                       label: '${l10n.productInStock}, ${product.name}',
                       child: Switch(
-                        value: product.isAvailable,
+                        value: viewModel.available(product),
                         activeTrackColor: c.brand,
                         onChanged: pending
                             ? null

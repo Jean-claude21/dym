@@ -1,5 +1,6 @@
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_ui/src/components/dym_quantity_stepper.dart';
+import 'package:dym_ui/src/foundation/dym_sized_image.dart';
 import 'package:dym_ui/src/foundation/money_text.dart';
 import 'package:dym_ui/src/foundation/store_origin.dart';
 import 'package:dym_ui/src/theme/dym_motion.dart';
@@ -167,7 +168,7 @@ class DymProductCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image(
+          DymSizedImage(
             image: image,
             fit: BoxFit.contain,
             errorBuilder: (_, _, _) =>
