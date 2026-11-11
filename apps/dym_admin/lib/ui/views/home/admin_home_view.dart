@@ -34,6 +34,10 @@ enum AdminTab {
   audit,
 }
 
+/// Sept domaines de la console (design « Épuré », PARCOURS §4.4) ; chacun
+/// regroupe des écrans existants, choisis par des puces.
+enum AdminDomain { live, orders, support, accounts, finance, settings, audit }
+
 /// Admin de l'équipe : tableau de bord (67), commandes (52, 53), litiges
 /// (54), boutiques (55), clientes (68), finances (57, 70), support (69),
 /// modération (76), réglages (56) et journal (58). Déconnexion après 30 min
@@ -151,16 +155,31 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       ),
       AdminTab.audit => AdminAuditView(service: _admin),
     };
+    final domain = _domainOf(_tab);
+    final tabs = _tabsOf(domain);
+    String tabLabel(AdminTab tab) => switch (tab) {
+      AdminTab.ops => l10n.opsTitle,
+      AdminTab.dashboard => l10n.adminNavDashboard,
+      AdminTab.support => l10n.adminNavSupport,
+      AdminTab.disputes => l10n.adminNavDisputes,
+      AdminTab.moderation => l10n.adminNavModeration,
+      AdminTab.stores => l10n.navStores,
+      AdminTab.clients => l10n.adminNavClients,
+      AdminTab.orders => l10n.navOrders,
+      AdminTab.finance => l10n.adminNavFinance,
+      AdminTab.settings => l10n.adminNavConfig,
+      AdminTab.audit => l10n.adminNavAudit,
+    };
     return InactivityGuard(
       timeout: widget.inactivity ?? const Duration(minutes: 30),
       onTimeout: () => _signOut(notice: AdminNotice.inactive),
       child: DymAdaptiveScaffold(
         backgroundColor: c.background,
-        currentIndex: _tab.index,
+        currentIndex: domain.index,
         maxBottomItems: 4,
         moreItem: DymNavItem(icon: Icons.menu_rounded, label: l10n.navMore),
         onDestinationSelected: (i) => setState(() {
-          _tab = AdminTab.values[i];
+          _tab = _tabsOf(AdminDomain.values[i]).first;
           _orderId = null;
         }),
         railLeading: Padding(
@@ -168,41 +187,90 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           child: Text(
             l10n.appNameAdmin,
             textAlign: TextAlign.center,
-            style: t.title.copyWith(color: c.brandDeep),
+            style: t.display.copyWith(fontSize: 22),
           ),
         ),
         destinations: [
+          DymNavItem(icon: Icons.show_chart_rounded, label: l10n.adminNavLive),
+          DymNavItem(icon: Icons.shopping_cart_outlined, label: l10n.navOrders),
           DymNavItem(
-            icon: Icons.space_dashboard_rounded,
-            label: l10n.adminNavDashboard,
-          ),
-          DymNavItem(icon: Icons.monitor_heart_rounded, label: l10n.opsTitle),
-          DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
-          DymNavItem(
-            icon: Icons.report_problem_rounded,
-            label: l10n.adminNavDisputes,
-          ),
-          DymNavItem(icon: Icons.storefront_rounded, label: l10n.navStores),
-          DymNavItem(icon: Icons.people_rounded, label: l10n.adminNavClients),
-          DymNavItem(
-            icon: Icons.account_balance_wallet_rounded,
-            label: l10n.adminNavFinance,
-          ),
-          DymNavItem(
-            icon: Icons.support_agent_rounded,
+            icon: Icons.chat_bubble_outline_rounded,
             label: l10n.adminNavSupport,
           ),
           DymNavItem(
-            icon: Icons.shield_rounded,
-            label: l10n.adminNavModeration,
+            icon: Icons.people_outline_rounded,
+            label: l10n.adminNavAccounts,
           ),
-          DymNavItem(icon: Icons.tune_rounded, label: l10n.navSettings),
-          DymNavItem(icon: Icons.history_rounded, label: l10n.adminNavAudit),
+          DymNavItem(
+            icon: Icons.account_balance_outlined,
+            label: l10n.adminNavFinance,
+          ),
+          DymNavItem(icon: Icons.settings_outlined, label: l10n.adminNavConfig),
+          DymNavItem(icon: Icons.menu_book_outlined, label: l10n.adminNavAudit),
         ],
         body: SafeArea(
-          child: KeyedSubtree(key: ValueKey(_tab), child: body),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Sous-sections du domaine (ex. Support : demandes, litiges,
+              // modération).
+              if (tabs.length > 1)
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    DymLayout.gutter(context),
+                    DymTokenSpace.s3,
+                    DymLayout.gutter(context),
+                    0,
+                  ),
+                  child: Wrap(
+                    spacing: DymTokenSpace.s2,
+                    runSpacing: DymTokenSpace.s2,
+                    children: [
+                      for (final tab in tabs)
+                        DymFilterChip(
+                          label: tabLabel(tab),
+                          selected: tab == _tab,
+                          onTap: () => setState(() {
+                            _tab = tab;
+                            _orderId = null;
+                          }),
+                        ),
+                    ],
+                  ),
+                ),
+              Expanded(
+                child: KeyedSubtree(key: ValueKey(_tab), child: body),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  AdminDomain _domainOf(AdminTab tab) => switch (tab) {
+    AdminTab.ops || AdminTab.dashboard => AdminDomain.live,
+    AdminTab.orders => AdminDomain.orders,
+    AdminTab.support ||
+    AdminTab.disputes ||
+    AdminTab.moderation => AdminDomain.support,
+    AdminTab.stores || AdminTab.clients => AdminDomain.accounts,
+    AdminTab.finance => AdminDomain.finance,
+    AdminTab.settings => AdminDomain.settings,
+    AdminTab.audit => AdminDomain.audit,
+  };
+
+  List<AdminTab> _tabsOf(AdminDomain domain) => switch (domain) {
+    AdminDomain.live => [if (_ops != null) AdminTab.ops, AdminTab.dashboard],
+    AdminDomain.orders => const [AdminTab.orders],
+    AdminDomain.support => const [
+      AdminTab.support,
+      AdminTab.disputes,
+      AdminTab.moderation,
+    ],
+    AdminDomain.accounts => const [AdminTab.stores, AdminTab.clients],
+    AdminDomain.finance => const [AdminTab.finance],
+    AdminDomain.settings => const [AdminTab.settings],
+    AdminDomain.audit => const [AdminTab.audit],
+  };
 }
