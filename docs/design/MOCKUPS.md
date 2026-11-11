@@ -8,6 +8,10 @@
 
 ## Avancement
 
+**Phase 14 — design « Épuré » validé le 2026-11-11.** Planches de référence dans
+[`screens/epure/`](screens/epure/) ; sitemaps, parcours et règles dans [PARCOURS.md](PARCOURS.md).
+Elles remplacent les écrans ci-dessous à mesure que les specs de la phase 14 sont livrées.
+
 Direction validée le 2026-10-01 ([DESIGN_DIRECTION.md](DESIGN_DIRECTION.md)). Écrans déjà rendus
 dans [`screens/`](screens/) : parcours 2, 3, 4, 5, 7, 9 (étape « Où vends-tu ? ») et 12. Spec 005 :
 parcours 1 complet, « Moi » (parcours 8, suppression du compte), connexion vendeuse et admin
