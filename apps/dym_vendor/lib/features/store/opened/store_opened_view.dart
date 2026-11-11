@@ -127,6 +127,7 @@ class StoreOpenedView extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                             DymTokenRadius.card,
                           ),
+                          border: Border.all(color: c.hairline),
                         ),
                         child: Column(
                           children: [

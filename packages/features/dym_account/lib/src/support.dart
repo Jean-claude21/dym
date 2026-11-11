@@ -293,6 +293,7 @@ class SupportView extends StackedView<SupportViewModel> {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -467,7 +468,10 @@ class _TicketTile extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          side: BorderSide(color: c.hairline),
+        ),
         clipBehavior: Clip.antiAlias,
         child: ExpansionTile(
           shape: const Border(),
@@ -524,7 +528,7 @@ class _TicketTile extends StatelessWidget {
                       if (m.authorRole == 'team')
                         Text(
                           l10n.disputeTeam,
-                          style: t.label.copyWith(fontWeight: FontWeight.w800),
+                          style: t.label.copyWith(fontWeight: FontWeight.w700),
                         ),
                       Text(m.body, style: t.body),
                     ],

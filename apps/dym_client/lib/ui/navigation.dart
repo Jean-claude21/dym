@@ -79,10 +79,17 @@ abstract interface class AppNavigator {
   /// Panier (écran 05).
   void toCart();
 
+  /// Panier de l'onglet « Panier » (design « Épuré ») : sans retour quand
+  /// [onBack] est nul.
+  Widget cartPage({required VoidCallback onBrowse, VoidCallback? onBack});
+
+  /// Mes commandes, depuis « Moi » (design « Épuré »).
+  void toMyOrders();
+
   /// Mes adresses (écran 35).
   void toAddresses();
 
-  /// Onglet « Commandes » (écran 43), pile vidée.
+  /// « Moi » puis « Mes commandes » (écran 43), pile vidée.
   void toOrders();
 
   /// Suivi d'une commande (écran 06).
@@ -388,21 +395,33 @@ class StackedAppNavigator implements AppNavigator {
   }
 
   @override
-  void toCart() => _push(
-    CartPageView(
-      service: _cart,
+  void toCart() => _push(cartPage(onBack: _back, onBrowse: _back));
+
+  @override
+  Widget cartPage({required VoidCallback onBrowse, VoidCallback? onBack}) =>
+      CartPageView(
+        service: _cart,
+        onBack: onBack,
+        onDelivery: _toDelivery,
+        onBrowse: onBrowse,
+        onOrdered: _toOrderSent,
+        onSave: switch (_favorites) {
+          final f? => (context) => saveCartAsBasket(context, f),
+          null => null,
+        },
+        onSendToSpace: switch (_spaces) {
+          final s? => (context) => sendCartToSpace(context, s).then((_) {}),
+          null => null,
+        },
+      );
+
+  @override
+  void toMyOrders() => _push(
+    MyOrdersView(
+      service: _orders,
+      onOpen: toOrder,
+      onNotifications: toNotifications,
       onBack: _back,
-      onDelivery: _toDelivery,
-      onBrowse: _back,
-      onOrdered: _toOrderSent,
-      onSave: switch (_favorites) {
-        final f? => (context) => saveCartAsBasket(context, f),
-        null => null,
-      },
-      onSendToSpace: switch (_spaces) {
-        final s? => (context) => sendCartToSpace(context, s).then((_) {}),
-        null => null,
-      },
     ),
   );
 
@@ -453,12 +472,15 @@ class StackedAppNavigator implements AppNavigator {
   );
 
   @override
-  void toOrders() => _navigator.pushAndRemoveUntil<void>(
-    MaterialPageRoute(
-      builder: (_) => const HomeView(initialTab: ClientTab.orders),
-    ),
-    (_) => false,
-  );
+  void toOrders() {
+    _navigator.pushAndRemoveUntil<void>(
+      MaterialPageRoute(
+        builder: (_) => const HomeView(initialTab: ClientTab.me),
+      ),
+      (_) => false,
+    );
+    toMyOrders();
+  }
 
   @override
   void toOrder(String orderId) => _push(

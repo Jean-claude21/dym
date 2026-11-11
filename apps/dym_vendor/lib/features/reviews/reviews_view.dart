@@ -187,6 +187,7 @@ class VendorReviewsView extends StackedView<VendorReviewsViewModel> {
               decoration: BoxDecoration(
                 color: c.card,
                 borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                border: Border.all(color: c.hairline),
               ),
               child: Row(
                 children: [
@@ -226,6 +227,7 @@ class VendorReviewsView extends StackedView<VendorReviewsViewModel> {
                 decoration: BoxDecoration(
                   color: c.card,
                   borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                  border: Border.all(color: c.hairline),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,

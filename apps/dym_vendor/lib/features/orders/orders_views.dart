@@ -75,7 +75,7 @@ class PaymentPill extends StatelessWidget {
             child: Text(
               paid ? l10n.paymentConfirmed : l10n.paymentCashOnDelivery,
               style: context.dym.text.label.copyWith(
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w700,
                 color: c.brandDeep,
               ),
             ),
@@ -316,7 +316,10 @@ class _OrderCard extends StatelessWidget {
     ].join(' · ');
     return Material(
       color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        side: BorderSide(color: c.hairline),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
@@ -520,6 +523,7 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        border: Border.all(color: c.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

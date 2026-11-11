@@ -384,7 +384,10 @@ class _Photos extends StatelessWidget {
         children: [
           Material(
             color: c.card,
-            borderRadius: BorderRadius.circular(DymTokenRadius.card),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(DymTokenRadius.card),
+              side: BorderSide(color: c.hairline),
+            ),
             child: InkWell(
               borderRadius: BorderRadius.circular(DymTokenRadius.card),
               onTap: vm.uploading
@@ -481,7 +484,7 @@ class _Photos extends StatelessWidget {
                           l10n.productAddPhoto,
                           style: t.label.copyWith(
                             color: c.brandDeep,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ],

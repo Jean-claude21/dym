@@ -168,7 +168,7 @@ void main() {
         onOpenAisle: _noop,
       ),
     );
-    expect(find.text('Livré en 35 min'), findsOneWidget);
+    expect(find.textContaining('Livré en 35 min'), findsOneWidget);
     await _tap(tester, find.text('Bè, Lomé'));
     await _tap(tester, find.text('Utiliser ma position'));
     expect(find.text('Tu es à Tokoin ?'), findsOneWidget);

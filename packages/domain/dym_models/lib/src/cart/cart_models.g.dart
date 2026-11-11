@@ -418,6 +418,14 @@ PurchaseOrder _$PurchaseOrderFromJson(Map<String, dynamic> json) =>
                     .toList() ??
                 const [],
           ),
+          scheduledStart: $checkedConvert(
+            'scheduled_start',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          scheduledEnd: $checkedConvert(
+            'scheduled_end',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
         );
         return val;
       },
@@ -426,6 +434,8 @@ PurchaseOrder _$PurchaseOrderFromJson(Map<String, dynamic> json) =>
         'deliveryFeeMinor': 'delivery_fee_minor',
         'totalMinor': 'total_minor',
         'itemCount': 'item_count',
+        'scheduledStart': 'scheduled_start',
+        'scheduledEnd': 'scheduled_end',
       },
     );
 

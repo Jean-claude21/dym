@@ -155,7 +155,7 @@ class _AddressCard extends StatelessWidget {
                           l10n.addressDefault,
                           style: t.label.copyWith(
                             color: c.onBrand,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),

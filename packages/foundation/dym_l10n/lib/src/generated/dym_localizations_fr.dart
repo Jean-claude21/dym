@@ -845,6 +845,21 @@ class DymLocalizationsFr extends DymLocalizations {
   String get navAisles => 'Rayons';
 
   @override
+  String get navMarket => 'Marché';
+
+  @override
+  String get navCuisine => 'Cuisine';
+
+  @override
+  String get navCart => 'Panier';
+
+  @override
+  String get homeDeliverTo => 'Livraison à';
+
+  @override
+  String get homeActiveOrder => 'Commande en cours';
+
+  @override
   String homeDeliveredIn(int minutes) {
     return 'Livré en $minutes min';
   }

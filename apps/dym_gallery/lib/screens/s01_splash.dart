@@ -21,7 +21,7 @@ class SplashScreen extends StatelessWidget {
       'DYM',
       style: context.dym.text.display.copyWith(
         fontSize: 112,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.w700,
         height: 1,
         letterSpacing: -2,
         color: c.brand,

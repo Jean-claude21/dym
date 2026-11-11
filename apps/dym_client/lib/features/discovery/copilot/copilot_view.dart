@@ -311,6 +311,7 @@ class _Note extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        border: Border.all(color: c.hairline),
       ),
       child: Row(
         children: [
@@ -360,6 +361,7 @@ class _Proposal extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
       ),
       child: Padding(
         padding: const EdgeInsets.all(DymTokenSpace.s3),
@@ -581,6 +583,7 @@ class _InputBarState extends State<_InputBar> {
         decoration: BoxDecoration(
           color: c.card,
           borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          border: Border.all(color: c.hairline),
         ),
         child: Row(
           children: [

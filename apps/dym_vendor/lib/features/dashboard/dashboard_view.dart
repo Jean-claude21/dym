@@ -197,7 +197,7 @@ class _Alert extends StatelessWidget {
                       action,
                       style: t.label.copyWith(
                         color: c.pimentStrong,
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
@@ -227,6 +227,7 @@ class _Periods extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
       ),
       child: Row(
         children: [
@@ -328,6 +329,7 @@ class _Revenue extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -414,7 +416,10 @@ class _Action extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.card),
+          side: BorderSide(color: c.hairline),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,

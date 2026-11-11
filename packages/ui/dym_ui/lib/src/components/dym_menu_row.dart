@@ -28,7 +28,7 @@ class DymMenuRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    final color = destructive ? c.pimentStrong : c.brand;
+    final color = destructive ? c.pimentStrong : c.textPrimary;
     return Semantics(
       container: true,
       onTap: onTap,
@@ -36,14 +36,14 @@ class DymMenuRow extends StatelessWidget {
       enabled: onTap != null,
       label: value == null ? label : '$label, $value',
       excludeSemantics: true,
+      // Ligne plate (design « Épuré ») : posée dans un DymMenuGroup ou sur le
+      // fond, séparée par des filets.
       child: Material(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
           child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 60),
+            constraints: const BoxConstraints(minHeight: 54),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: DymTokenSpace.s4,
@@ -51,24 +51,21 @@ class DymMenuRow extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(icon, color: color, size: 26),
-                  const SizedBox(width: DymTokenSpace.s4),
+                  Icon(icon, color: color, size: 22),
+                  const SizedBox(width: DymTokenSpace.s3 + 2),
                   Expanded(
                     child: Text.rich(
                       TextSpan(
                         text: label,
-                        style: t.title.copyWith(
-                          fontSize: 17,
+                        style: t.body.copyWith(
+                          fontWeight: FontWeight.w500,
                           color: destructive ? c.pimentStrong : c.textPrimary,
                         ),
                         children: [
                           if (value != null)
                             TextSpan(
                               text: ' · $value',
-                              style: t.body.copyWith(
-                                fontSize: 16,
-                                color: c.textSecondary,
-                              ),
+                              style: t.body.copyWith(color: c.textSecondary),
                             ),
                         ],
                       ),
@@ -79,6 +76,44 @@ class DymMenuRow extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Groupe de [DymMenuRow] : carte blanche à filet, lignes séparées par des
+/// filets alignés sur le texte (design « Épuré »).
+class DymMenuGroup extends StatelessWidget {
+  /// Crée un groupe ; les éléments nuls sont ignorés.
+  const new({required this.children, super.key});
+
+  /// Lignes du groupe.
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    if (children.isEmpty) return const SizedBox.shrink();
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        child: Column(
+          children: [
+            for (final (i, row) in children.indexed) ...[
+              if (i > 0)
+                Divider(
+                  indent: DymTokenSpace.s4 + 22 + DymTokenSpace.s3 + 2,
+                  color: c.hairline,
+                ),
+              row,
+            ],
+          ],
         ),
       ),
     );

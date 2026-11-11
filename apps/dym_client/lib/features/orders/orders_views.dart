@@ -11,7 +11,7 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Pastille de statut (en cours : plantain ; acceptée : vert ; livrée :
+/// Pastille de statut (en cours : menthe ; acceptée : vert ; livrée :
 /// neutre ; refusée ou annulée : piment clair).
 class OrderStatusPill extends StatelessWidget {
   const new({required this.status, required this.fulfillment, super.key});
@@ -25,15 +25,12 @@ class OrderStatusPill extends StatelessWidget {
     final l10n = DymLocalizations.of(context);
     final (fill, ink) = switch (status) {
       OrderStatus.accepted => (c.brand, c.onBrand),
-      OrderStatus.delivered => (
-        c.textSecondary.withValues(alpha: 0.15),
-        c.textPrimary,
-      ),
+      OrderStatus.delivered => (c.muted, c.textSecondary),
       OrderStatus.refused || OrderStatus.cancelled => (
         c.pimentStrong.withValues(alpha: 0.12),
         c.pimentStrong,
       ),
-      _ => (c.tintPlantainClair, c.textPrimary),
+      _ => (c.tintVertTendre, c.brandDeep),
     };
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -47,7 +44,7 @@ class OrderStatusPill extends StatelessWidget {
       child: Text(
         orderStatusLabel(l10n, status, fulfillment: fulfillment),
         style: context.dym.text.label.copyWith(
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w600,
           color: ink,
         ),
       ),
@@ -93,11 +90,15 @@ class MyOrdersView extends StackedView<MyOrdersViewModel> {
     required this.onOpen,
     required this.onNotifications,
     super.key,
+    this.onBack,
   });
 
   final OrdersService service;
   final ValueChanged<String> onOpen;
   final VoidCallback onNotifications;
+
+  /// Retour (page ouverte depuis « Moi ») ; nul : pas de bouton.
+  final VoidCallback? onBack;
 
   @override
   MyOrdersViewModel viewModelBuilder(BuildContext context) =>
@@ -118,15 +119,16 @@ class MyOrdersView extends StackedView<MyOrdersViewModel> {
     final vm = viewModel;
     final header = DymContentWidth.form(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 4, 4),
+        padding: EdgeInsets.fromLTRB(onBack == null ? 16 : 4, 12, 4, 4),
         child: Row(
           children: [
-            Expanded(
-              child: Text(
-                l10n.ordersMineTitle,
-                style: t.display.copyWith(fontSize: 30),
+            if (onBack case final back?)
+              IconButton(
+                tooltip: l10n.authBack,
+                onPressed: back,
+                icon: const Icon(Icons.arrow_back_rounded),
               ),
-            ),
+            Expanded(child: Text(l10n.ordersMineTitle, style: t.display)),
             NotificationsBell(service: service, onOpen: onNotifications),
           ],
         ),
@@ -137,7 +139,7 @@ class MyOrdersView extends StackedView<MyOrdersViewModel> {
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
-          child: Text(title, style: t.title.copyWith(fontSize: 20)),
+          child: Text(title, style: t.title),
         ),
         for (final o in orders)
           Padding(
@@ -146,47 +148,51 @@ class MyOrdersView extends StackedView<MyOrdersViewModel> {
           ),
       ],
     );
-    return SafeArea(
-      child: Column(
-        children: [
-          header,
-          Expanded(
-            child: !vm.ready
-                ? DiscoveryState(
-                    failure: vm.isBusy ? null : vm.failure,
-                    onRetry: vm.load,
-                  )
-                : RefreshIndicator(
-                    color: c.brand,
-                    onRefresh: vm.refresh,
-                    child: ListView(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                      children: [
-                        if (vm.offline)
-                          DymContentWidth.form(
-                            child: CartIssue(label: l10n.errorOffline),
-                          ),
-                        if (vm.isEmpty)
-                          DymContentWidth.form(
-                            child: DymStateView(
-                              kind: DymStateKind.empty,
-                              title: l10n.ordersEmptyTitle,
-                              message: l10n.ordersMineEmptyMessage,
+    // Page à part entière depuis « Moi » : son propre Scaffold.
+    return Scaffold(
+      backgroundColor: c.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            header,
+            Expanded(
+              child: !vm.ready
+                  ? DiscoveryState(
+                      failure: vm.isBusy ? null : vm.failure,
+                      onRetry: vm.load,
+                    )
+                  : RefreshIndicator(
+                      color: c.brand,
+                      onRefresh: vm.refresh,
+                      child: ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                        children: [
+                          if (vm.offline)
+                            DymContentWidth.form(
+                              child: CartIssue(label: l10n.errorOffline),
                             ),
-                          ),
-                        if (vm.active.isNotEmpty)
-                          DymContentWidth.form(
-                            child: section(l10n.ordersActive, vm.active),
-                          ),
-                        if (vm.done.isNotEmpty)
-                          DymContentWidth.form(
-                            child: section(l10n.ordersDone, vm.done),
-                          ),
-                      ],
+                          if (vm.isEmpty)
+                            DymContentWidth.form(
+                              child: DymStateView(
+                                kind: DymStateKind.empty,
+                                title: l10n.ordersEmptyTitle,
+                                message: l10n.ordersMineEmptyMessage,
+                              ),
+                            ),
+                          if (vm.active.isNotEmpty)
+                            DymContentWidth.form(
+                              child: section(l10n.ordersActive, vm.active),
+                            ),
+                          if (vm.done.isNotEmpty)
+                            DymContentWidth.form(
+                              child: section(l10n.ordersDone, vm.done),
+                            ),
+                        ],
+                      ),
                     ),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -221,7 +227,10 @@ class _OrderRow extends StatelessWidget {
     final total = vm.money(order.totalMinor)?.format() ?? '';
     return Material(
       color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        side: BorderSide(color: c.hairline),
+      ),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
@@ -709,7 +718,7 @@ class _Step extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    final color = done ? c.brand : (current ? c.plantain : c.textSecondary);
+    final color = done || current ? c.brand : c.textSecondary;
     return Semantics(
       selected: current,
       child: Row(
@@ -835,7 +844,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                       child: Text(
                         l10n.notificationsReadAll,
                         style: t.label.copyWith(
-                          fontWeight: FontWeight.w800,
+                          fontWeight: FontWeight.w700,
                           color: c.brandDeep,
                         ),
                       ),

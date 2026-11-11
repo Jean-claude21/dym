@@ -233,7 +233,7 @@ class _Substitution extends StatelessWidget {
                   "Étal d'Akossiwa a remplacé :",
                   style: t.label.copyWith(
                     fontSize: 15,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text.rich(
@@ -420,7 +420,7 @@ class _Label extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: context.dym.text.label.copyWith(fontWeight: FontWeight.w800),
+        style: context.dym.text.label.copyWith(fontWeight: FontWeight.w700),
       ),
     );
   }

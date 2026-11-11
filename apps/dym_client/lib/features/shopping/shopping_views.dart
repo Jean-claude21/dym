@@ -247,7 +247,10 @@ class _Action extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          side: BorderSide(color: c.hairline),
+        ),
         clipBehavior: Clip.antiAlias,
         child: ListTile(
           minTileHeight: 64,
@@ -300,6 +303,7 @@ class _ListCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

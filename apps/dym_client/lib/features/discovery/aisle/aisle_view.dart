@@ -50,27 +50,33 @@ class AisleView extends StackedView<AisleViewModel> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 4, 4, 0),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    tooltip: l10n.authBack,
-                    onPressed: onBack,
-                    icon: Icon(Icons.arrow_back_rounded, color: c.brandDeep),
+                  Row(
+                    children: [
+                      IconButton(
+                        tooltip: l10n.authBack,
+                        onPressed: onBack,
+                        icon: Icon(
+                          Icons.arrow_back_rounded,
+                          color: c.textPrimary,
+                        ),
+                      ),
+                      const Spacer(),
+                      IconButton(
+                        tooltip: l10n.searchHint,
+                        onPressed: onSearch,
+                        icon: Icon(Icons.search_rounded, color: c.textPrimary),
+                      ),
+                    ],
                   ),
-                  Expanded(
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 4),
                     child: Semantics(
                       header: true,
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: t.display.copyWith(fontSize: 28),
-                      ),
+                      child: Text(title, style: t.display),
                     ),
-                  ),
-                  IconButton(
-                    tooltip: l10n.searchHint,
-                    onPressed: onSearch,
-                    icon: Icon(Icons.search_rounded, color: c.brandDeep),
                   ),
                 ],
               ),

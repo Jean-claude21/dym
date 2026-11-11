@@ -165,6 +165,7 @@ class VoiceSearchView extends StackedView<VoiceSearchViewModel> {
                         borderRadius: BorderRadius.circular(
                           DymTokenRadius.chip,
                         ),
+                        border: Border.all(color: c.hairline),
                       ),
                       child: Row(
                         children: [
@@ -228,6 +229,7 @@ class VoiceSearchView extends StackedView<VoiceSearchViewModel> {
                   decoration: BoxDecoration(
                     color: c.card,
                     borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                    border: Border.all(color: c.hairline),
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(DymTokenSpace.s4),

@@ -31,7 +31,10 @@ class DymSwitchTile extends StatelessWidget {
     return MergeSemantics(
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          side: BorderSide(color: c.hairline),
+        ),
         child: InkWell(
           onTap: toggle,
           borderRadius: BorderRadius.circular(DymTokenRadius.tile),
@@ -39,7 +42,7 @@ class DymSwitchTile extends StatelessWidget {
             constraints: BoxConstraints(minHeight: large ? 88 : 64),
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: DymTokenSpace.s4,
+                horizontal: DymTokenSpace.s3,
                 vertical: DymTokenSpace.s3,
               ),
               child: Row(
@@ -63,7 +66,7 @@ class DymSwitchTile extends StatelessWidget {
                           title,
                           style: large
                               ? t.display.copyWith(fontSize: 26)
-                              : t.title.copyWith(fontSize: 17),
+                              : t.body.copyWith(fontWeight: FontWeight.w600),
                         ),
                         if (subtitle != null)
                           Text(

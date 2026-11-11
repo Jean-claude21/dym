@@ -1507,6 +1507,36 @@ abstract class DymLocalizations {
   /// **'Rayons'**
   String get navAisles;
 
+  /// No description provided for @navMarket.
+  ///
+  /// In fr, this message translates to:
+  /// **'Marché'**
+  String get navMarket;
+
+  /// No description provided for @navCuisine.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cuisine'**
+  String get navCuisine;
+
+  /// No description provided for @navCart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier'**
+  String get navCart;
+
+  /// No description provided for @homeDeliverTo.
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison à'**
+  String get homeDeliverTo;
+
+  /// No description provided for @homeActiveOrder.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande en cours'**
+  String get homeActiveOrder;
+
   /// Estimation de livraison
   ///
   /// In fr, this message translates to:

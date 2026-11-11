@@ -91,9 +91,10 @@ class SpacesView extends StackedView<SpacesViewModel> {
             ),
             const SizedBox(height: DymTokenSpace.s3),
             DymContentWidth.form(
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
+                  SizedBox(
                     child: DymButton(
                       label: l10n.spaceCreate,
                       icon: Icons.add_rounded,
@@ -105,8 +106,8 @@ class SpacesView extends StackedView<SpacesViewModel> {
                             },
                     ),
                   ),
-                  const SizedBox(width: DymTokenSpace.s2),
-                  Expanded(
+                  const SizedBox(height: DymTokenSpace.s2),
+                  SizedBox(
                     child: DymButton(
                       label: l10n.spaceJoin,
                       icon: Icons.group_add_rounded,
@@ -151,7 +152,10 @@ class SpacesView extends StackedView<SpacesViewModel> {
                   padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
                   child: Material(
                     color: c.card,
-                    borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                      side: BorderSide(color: c.hairline),
+                    ),
                     clipBehavior: Clip.antiAlias,
                     child: ListTile(
                       minTileHeight: 72,
@@ -534,6 +538,7 @@ class _BudgetCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        border: Border.all(color: c.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

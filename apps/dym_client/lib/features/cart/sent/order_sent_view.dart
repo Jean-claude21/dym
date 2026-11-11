@@ -2,6 +2,7 @@ import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/cart/cart_viewmodels.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
+import 'package:dym_client/features/orders/order_texts.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
@@ -53,16 +54,15 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
         child: Container(
           width: 96,
           height: 96,
-          decoration: BoxDecoration(color: c.brand, shape: BoxShape.circle),
-          child: Icon(Icons.check_rounded, color: c.onBrand, size: 56),
+          decoration: BoxDecoration(
+            color: c.tintVertTendre,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(Icons.check_rounded, color: c.brandDeep, size: 52),
         ),
       ),
       const SizedBox(height: DymTokenSpace.s3),
-      Text(
-        l10n.orderSentTitle,
-        textAlign: TextAlign.center,
-        style: t.display.copyWith(fontSize: 30),
-      ),
+      Text(l10n.orderSentTitle, textAlign: TextAlign.center, style: t.display),
       const SizedBox(height: DymTokenSpace.s1),
       Text(
         l10n.orderSentSubtitle,
@@ -84,22 +84,18 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
           children: [
             Row(
               children: [
-                Icon(Icons.payments_rounded, color: c.brand),
+                Icon(Icons.payments_outlined, color: c.brandDeep),
                 const SizedBox(width: DymTokenSpace.s2),
                 Expanded(
                   child: Text(
                     p.paymentMethod.label.resolve(locale),
-                    style: t.title.copyWith(fontSize: 17),
+                    style: t.body.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ),
+                if (p.isPaid) const _PaymentBadge(paid: true),
               ],
             ),
-            const SizedBox(height: DymTokenSpace.s2),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: _PaymentBadge(paid: p.isPaid),
-            ),
-            const Divider(height: 20),
+            Divider(height: 24, color: c.hairline),
             SumRow(
               label: l10n.cartTotal,
               amount: vm.money(p.totalMinor),
@@ -109,7 +105,7 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
               const SizedBox(height: DymTokenSpace.s2),
               Row(
                 children: [
-                  Icon(Icons.location_on_rounded, color: c.brand),
+                  Icon(Icons.location_on_outlined, color: c.brandDeep),
                   const SizedBox(width: DymTokenSpace.s2),
                   Expanded(
                     child: Text(
@@ -193,66 +189,102 @@ class _OrderCard extends StatelessWidget {
     final mode = order.fulfillment == Fulfillment.delivery
         ? l10n.deliveryModeDelivery
         : l10n.deliveryModePickup;
+    final start = order.scheduledStart;
+    final end = order.scheduledEnd;
     return CartCard(
-      child: Row(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DymAvatar(
-            image: storeFallback(order.store.origin),
-            size: 52,
-            ring: false,
-          ),
-          const SizedBox(width: DymTokenSpace.s3),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(order.store.name, style: t.title.copyWith(fontSize: 18)),
-                if (origin != null)
-                  DymOriginBadge(origin: origin, label: originText),
-                Text(
-                  '${l10n.orderItems(order.itemCount)} · $mode',
-                  style: t.label.copyWith(color: c.textSecondary),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Wrap(
+                  spacing: DymTokenSpace.s2,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      order.store.name,
+                      style: t.body.copyWith(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (origin != null)
+                      DymOriginBadge(
+                        origin: origin,
+                        label: originText,
+                        dense: true,
+                      ),
+                  ],
                 ),
-                const SizedBox(height: DymTokenSpace.s1),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: DymTokenSpace.s2,
-                    vertical: 4,
+              ),
+              if (total != null)
+                MoneyText(total!, size: 16, color: c.textPrimary),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${l10n.orderItems(order.itemCount)} · $mode',
+            style: t.label.copyWith(
+              color: c.textSecondary,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          if (start != null && end != null) ...[
+            const SizedBox(height: DymTokenSpace.s2),
+            Row(
+              children: [
+                Icon(Icons.event_outlined, size: 18, color: c.brandDeep),
+                const SizedBox(width: DymTokenSpace.s1),
+                Expanded(
+                  child: Text(
+                    l10n.orderScheduled(
+                      shortDate(context, start),
+                      shortTime(context, start),
+                      shortTime(context, end),
+                    ),
+                    style: t.label.copyWith(color: c.brandDeep),
                   ),
-                  decoration: BoxDecoration(
-                    color: c.tintPlantainClair,
-                    borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.schedule_rounded,
-                        size: 18,
-                        color: c.textPrimary,
-                      ),
-                      const SizedBox(width: DymTokenSpace.s1),
-                      Flexible(
-                        child: Text(
-                          l10n.orderPending,
-                          style: t.label.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: DymTokenSpace.s2),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: DymTokenSpace.s2,
+              vertical: 4,
+            ),
+            decoration: BoxDecoration(
+              color: c.tintVertTendre,
+              borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.schedule_outlined, size: 16, color: c.brandDeep),
+                const SizedBox(width: DymTokenSpace.s1),
+                Flexible(
+                  child: Text(
+                    l10n.orderPending,
+                    style: t.label.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: c.brandDeep,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          if (total != null) MoneyText(total!, size: 17, color: c.brandDeep),
         ],
       ),
     );
   }
 }
 
-/// « Paiement confirmé » (vert) ou « Cash à la livraison » (crème).
+/// « Paiement confirmé » (menthe).
 class _PaymentBadge extends StatelessWidget {
   const new({required this.paid});
 
@@ -268,14 +300,14 @@ class _PaymentBadge extends StatelessWidget {
         vertical: 4,
       ),
       decoration: BoxDecoration(
-        color: paid ? c.tintVertTendre : c.tintPlantainClair,
+        color: c.tintVertTendre,
         borderRadius: BorderRadius.circular(DymTokenRadius.chip),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            paid ? Icons.check_circle_rounded : Icons.payments_rounded,
+            paid ? Icons.check_circle_outline_rounded : Icons.payments_outlined,
             size: 18,
             color: c.brandDeep,
           ),
@@ -284,7 +316,7 @@ class _PaymentBadge extends StatelessWidget {
             child: Text(
               paid ? l10n.paymentConfirmed : l10n.paymentCashOnDelivery,
               style: context.dym.text.label.copyWith(
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w600,
                 color: c.brandDeep,
               ),
             ),

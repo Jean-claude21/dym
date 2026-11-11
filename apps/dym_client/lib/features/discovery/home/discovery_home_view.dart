@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
@@ -10,7 +9,9 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Écran 02 : accueil (quartier, estimation, boutiques ouvertes, rayons).
+/// Accueil de la cliente (design « Épuré », PARCOURS §4.1) : quartier,
+/// recherche avec micro, commande en cours, racheter, rayons, produits,
+/// « À la une » et boutiques en liste.
 class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
   const new({
     required this.service,
@@ -23,7 +24,15 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     this.onReorder,
     this.onOpenProduct,
     this.onShoppingLists,
+    this.onNotifications,
+    this.activeOrder,
   });
+
+  /// Centre de notifications (cloche de l'en-tête) ; absent : masquée.
+  final VoidCallback? onNotifications;
+
+  /// Bandeau « Commande en cours » (design « Épuré »).
+  final Widget? activeOrder;
 
   /// Mes courses (spec 029) ; absent : tuile masquée.
   final VoidCallback? onShoppingLists;
@@ -72,47 +81,51 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     }
     final open = vm.result.openStores;
     final closed = vm.result.stores.where((s) => !s.openNow).toList();
-    Widget section(String title) => Padding(
-      padding: const EdgeInsets.only(
-        top: DymTokenSpace.s5,
-        bottom: DymTokenSpace.s3,
-      ),
-      child: Semantics(
-        header: true,
-        child: Text(title, style: t.title.copyWith(fontSize: 22)),
-      ),
-    );
-    Widget productRow(List<CatalogItem> items, ValueChanged<String> open) =>
-        SizedBox(
-          height: 250,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: items.length,
-            separatorBuilder: (_, _) => const SizedBox(width: DymTokenSpace.s3),
-            itemBuilder: (context, i) => SizedBox(
-              width: 168,
-              child: ProductTile(
-                item: items[i],
-                service: vm.service,
-                config: vm.config,
-                onTap: () => open(items[i].id),
-              ),
-            ),
+    Widget section(String title, {String? action, VoidCallback? onAction}) =>
+        Padding(
+          padding: const EdgeInsets.only(
+            top: DymTokenSpace.s5,
+            bottom: DymTokenSpace.s2,
+          ),
+          child: DymSectionHeader(
+            title: title,
+            actionLabel: action,
+            onAction: onAction,
           ),
         );
-    Widget storeRow(List<PublicStore> stores) => SizedBox(
-      height: 252 * MediaQuery.textScalerOf(context).scale(1).clamp(1, 1.3),
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: stores.length,
-        separatorBuilder: (_, _) => const SizedBox(width: DymTokenSpace.s3),
-        itemBuilder: (context, i) => StoreTile(
-          store: stores[i],
-          service: vm.service,
-          config: vm.config,
-          onTap: () => onOpenStore(stores[i].id),
+    Widget productRow(List<CatalogItem> items, ValueChanged<String> open) {
+      final scale = MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 1.3);
+      return SizedBox(
+        height: 236 * scale,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: items.length,
+          separatorBuilder: (_, _) => const SizedBox(width: DymTokenSpace.s3),
+          itemBuilder: (context, i) => SizedBox(
+            width: 152,
+            child: ProductTile(
+              item: items[i],
+              service: vm.service,
+              config: vm.config,
+              onTap: () => open(items[i].id),
+            ),
+          ),
         ),
-      ),
+      );
+    }
+
+    Widget storeList(List<PublicStore> stores) => Column(
+      children: [
+        for (final (i, store) in stores.indexed) ...[
+          if (i > 0) Divider(color: c.hairline),
+          StoreRow(
+            store: store,
+            service: vm.service,
+            config: vm.config,
+            onTap: () => onOpenStore(store.id),
+          ),
+        ],
+      ],
     );
     return SafeArea(
       child: LayoutBuilder(
@@ -121,157 +134,128 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
             box.maxWidth,
             gutter: DymLayout.gutter(context),
           );
-          final inner = box.maxWidth - inset * 2;
-          const spacing = DymTokenSpace.s2;
-          final columns = DymLayout.columns(
-            inner,
-            minTileWidth: 84 * MediaQuery.textScalerOf(context).scale(1),
-            spacing: spacing,
-            max: 8,
-            itemCount: vm.aisles.length,
-          );
-          final tile = (inner - spacing * (columns - 1)) / columns;
-          final tints = tileTints(c);
           final locale = Localizations.localeOf(context).languageCode;
+          final aisleSize =
+              84 * MediaQuery.textScalerOf(context).scale(1).clamp(1.0, 1.3);
           return RefreshIndicator(
             onRefresh: vm.load,
             child: ListView(
-              padding: EdgeInsets.fromLTRB(inset, 12, inset, 24),
+              padding: EdgeInsets.fromLTRB(inset, 8, inset, 96),
               children: [
                 Row(
                   children: [
-                    Expanded(
-                      child: Wrap(
-                        spacing: DymTokenSpace.s2,
-                        runSpacing: DymTokenSpace.s2,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          _ZoneButton(viewModel: vm),
-                          if (vm.result.estimateMinutes != null)
-                            DymDeliveryPill(
-                              label: l10n.homeDeliveredIn(
-                                vm.result.estimateMinutes!,
-                              ),
-                              zem: DymIllustrations.zem,
-                            ),
-                        ],
+                    Expanded(child: _ZoneButton(viewModel: vm)),
+                    if (onNotifications case final bell?)
+                      IconButton(
+                        tooltip: l10n.notificationsTitle,
+                        onPressed: bell,
+                        icon: const Icon(Icons.notifications_none_rounded),
                       ),
-                    ),
-                    const CartButton(),
                   ],
                 ),
-                const SizedBox(height: DymTokenSpace.s4),
+                const SizedBox(height: DymTokenSpace.s3),
                 Semantics(
                   header: true,
                   child: Text(l10n.homeWhatToEat, style: t.display),
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
-                DymSearchBar(hint: l10n.homeSearchHint, onTap: onSearch),
-                if (onCopilot case final open?
+                DymSearchBar(
+                  hint: l10n.homeSearchHint,
+                  onTap: onSearch,
+                  onMic: onSearch,
+                  micLabel: l10n.voiceSearchAction,
+                ),
+                if (activeOrder case final banner?) ...[
+                  const SizedBox(height: DymTokenSpace.s3),
+                  banner,
+                ],
+                if (onCopilot case final copilot?
                     when vm.config?.isEnabled('intent_copilot') ?? false) ...[
-                  const SizedBox(height: DymTokenSpace.s2),
-                  Material(
-                    color: c.tintVertTendre,
-                    borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-                    clipBehavior: Clip.antiAlias,
-                    child: ListTile(
-                      minTileHeight: 64,
-                      onTap: open,
-                      leading: Icon(
-                        Icons.auto_awesome_rounded,
-                        color: c.brandDeep,
-                      ),
-                      title: Text(
-                        l10n.copilotEntry,
-                        style: t.body.copyWith(color: c.brandDeep),
-                      ),
-                      trailing: Icon(
-                        Icons.arrow_forward_rounded,
-                        color: c.brandDeep,
-                      ),
-                    ),
+                  const SizedBox(height: DymTokenSpace.s3),
+                  _LinkRow(
+                    icon: Icons.auto_awesome_outlined,
+                    label: l10n.copilotEntry,
+                    onTap: copilot,
+                    accent: true,
                   ),
                 ],
                 if (stories case final row?) ...[
                   const SizedBox(height: DymTokenSpace.s4),
                   row,
                 ],
-                if (onShoppingLists case final open?)
-                  Padding(
-                    padding: const EdgeInsets.only(top: DymTokenSpace.s4),
-                    child: _ShoppingTile(onTap: open),
-                  ),
                 if (vm.feed.lastOrder case final last? when onReorder != null)
                   Padding(
-                    padding: const EdgeInsets.only(top: DymTokenSpace.s4),
+                    padding: const EdgeInsets.only(top: DymTokenSpace.s3),
                     child: _ReorderCard(
                       order: last,
                       onReorder: () => onReorder!(last.orderId),
                     ),
                   ),
-                if (onOpenProduct case final open?) ...[
+                if (onShoppingLists case final lists?)
+                  Padding(
+                    padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+                    child: _LinkRow(
+                      icon: Icons.checklist_rounded,
+                      label: l10n.shoppingHomeTile,
+                      hint: l10n.shoppingHomeTileHint,
+                      onTap: lists,
+                    ),
+                  ),
+                if (vm.aisles.isNotEmpty) ...[
+                  section(l10n.homeAisles),
+                  SizedBox(
+                    height: aisleSize + 44,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: vm.aisles.length,
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(width: DymTokenSpace.s2),
+                      itemBuilder: (context, i) {
+                        final aisle = vm.aisles[i];
+                        return SizedBox(
+                          width: aisleSize,
+                          child: DymAisleTile(
+                            image:
+                                DymIllustrations.aisle(aisle.icon) ??
+                                DymIllustrations.storeOpened,
+                            label: aisle.label.resolve(locale),
+                            tint: c.tintVertTendre,
+                            onTap: () => onOpenAisle(aisle.id),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+                if (onOpenProduct case final openProduct?) ...[
                   if (vm.feed.popular.isNotEmpty) ...[
                     section(l10n.homePopular),
-                    productRow(vm.feed.popular, open),
+                    productRow(vm.feed.popular, openProduct),
                   ],
                   if (vm.feed.fresh.isNotEmpty) ...[
                     section(l10n.homeFresh),
-                    productRow(vm.feed.fresh, open),
+                    productRow(vm.feed.fresh, openProduct),
                   ],
                 ],
                 if (vm.result.sponsored.isNotEmpty) ...[
                   section(l10n.homeSponsored),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.campaign_rounded,
-                          size: 18,
-                          color: c.textSecondary,
-                        ),
-                        const SizedBox(width: DymTokenSpace.s1),
-                        Text(
-                          l10n.homeSponsoredLabel,
-                          style: t.label.copyWith(color: c.textSecondary),
-                        ),
-                      ],
+                  Text(
+                    l10n.homeSponsoredLabel,
+                    style: t.label.copyWith(
+                      fontWeight: FontWeight.w400,
+                      color: c.textSecondary,
                     ),
                   ),
-                  storeRow(vm.result.sponsored),
+                  storeList(vm.result.sponsored),
                 ],
                 section(l10n.homeOpenStores),
-                if (open.isEmpty)
+                if (open.isEmpty && closed.isEmpty)
                   Text(
                     l10n.homeNoOpenStore,
                     style: t.body.copyWith(color: c.textSecondary),
                   )
                 else
-                  storeRow(open),
-                if (closed.isNotEmpty) ...[
-                  section(l10n.homeOtherStores),
-                  storeRow(closed),
-                ],
-                section(l10n.homeAisles),
-                Wrap(
-                  spacing: spacing,
-                  runSpacing: spacing,
-                  children: [
-                    for (final (i, aisle) in vm.aisles.indexed)
-                      SizedBox(
-                        width: tile,
-                        height: tile * 1.15,
-                        child: DymAisleTile(
-                          image:
-                              DymIllustrations.aisle(aisle.icon) ??
-                              DymIllustrations.storeOpened,
-                          label: aisle.label.resolve(locale),
-                          tint: tints[i % tints.length],
-                          onTap: () => onOpenAisle(aisle.id),
-                        ),
-                      ),
-                  ],
-                ),
+                  storeList([...open, ...closed]),
               ],
             ),
           );
@@ -294,35 +278,48 @@ class _ZoneButton extends StatelessWidget {
     final zone = viewModel.zone?.name ?? '';
     final city = viewModel.cityName;
     final label = city == null ? zone : '$zone, $city';
+    final minutes = viewModel.result.estimateMinutes;
     return Semantics(
       button: true,
       label: l10n.homeChangeZone(label),
       excludeSemantics: true,
-      child: Material(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-          onTap: () => showZonePicker(context, viewModel),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 48),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.location_on_rounded, color: c.brand),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      label,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.title.copyWith(fontSize: 17),
-                    ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(DymTokenRadius.button),
+        onTap: () => showZonePicker(context, viewModel),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 48),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  minutes == null
+                      ? l10n.homeDeliverTo
+                      : [
+                          l10n.homeDeliverTo,
+                          l10n.homeDeliveredIn(minutes),
+                        ].join(' · '),
+                  style: t.label.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: c.textSecondary,
                   ),
-                  const Icon(Icons.expand_more_rounded),
-                ],
-              ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        label,
+                        overflow: TextOverflow.ellipsis,
+                        style: t.title.copyWith(fontSize: 17),
+                      ),
+                    ),
+                    const Icon(Icons.expand_more_rounded, size: 22),
+                  ],
+                ),
+              ],
             ),
           ),
         ),
@@ -413,43 +410,82 @@ Future<void> showZonePicker(
   ),
 );
 
-/// Tuile « Mes listes de courses » (spec 029).
-class _ShoppingTile extends StatelessWidget {
-  const new({required this.onTap});
+/// Ligne d'accès (assistant, listes de courses) : icône dans un carré menthe,
+/// libellé, chevron, carte à filet.
+class _LinkRow extends StatelessWidget {
+  const new({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.hint,
+    this.accent = false,
+  });
 
+  final IconData icon;
+  final String label;
+  final String? hint;
   final VoidCallback onTap;
+  final bool accent;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    final l10n = DymLocalizations.of(context);
     return Material(
       color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        side: BorderSide(color: c.hairline),
+      ),
       clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        minTileHeight: 72,
+      child: InkWell(
         onTap: onTap,
-        leading: CircleAvatar(
-          backgroundColor: c.tintVertTendre,
-          child: Icon(Icons.checklist_rounded, color: c.brandDeep),
+        child: Padding(
+          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: c.tintVertTendre,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.field),
+                ),
+                child: Icon(icon, color: c.brandDeep, size: 22),
+              ),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: t.body.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: accent ? c.brandDeep : c.textPrimary,
+                      ),
+                    ),
+                    if (hint != null)
+                      Text(
+                        hint!,
+                        style: t.label.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: c.textSecondary,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: c.textSecondary),
+            ],
+          ),
         ),
-        title: Text(
-          l10n.shoppingHomeTile,
-          style: t.title.copyWith(fontSize: 17),
-        ),
-        subtitle: Text(
-          l10n.shoppingHomeTileHint,
-          style: t.label.copyWith(color: c.textSecondary),
-        ),
-        trailing: Icon(Icons.arrow_forward_rounded, color: c.brandDeep),
       ),
     );
   }
 }
 
-/// Carte « Recommander tes dernières courses » (spec 027).
+/// Carte « Racheter tes dernières courses » (spec 027).
 class _ReorderCard extends StatelessWidget {
   const new({required this.order, required this.onReorder});
 
@@ -462,23 +498,40 @@ class _ReorderCard extends StatelessWidget {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     return Container(
-      padding: const EdgeInsets.all(DymTokenSpace.s4),
+      padding: const EdgeInsets.all(DymTokenSpace.s3),
       decoration: BoxDecoration(
-        color: c.tintPlantainClair,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        color: c.card,
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
       ),
       child: Row(
         children: [
-          Icon(Icons.replay_rounded, color: c.brandDeep, size: 32),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: c.tintVertTendre,
+              borderRadius: BorderRadius.circular(DymTokenRadius.field),
+            ),
+            child: Icon(Icons.replay_rounded, color: c.brandDeep, size: 22),
+          ),
           const SizedBox(width: DymTokenSpace.s3),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.homeReorderTitle, style: t.title),
+                Text(
+                  l10n.homeReorderTitle,
+                  style: t.body.copyWith(fontWeight: FontWeight.w600),
+                ),
                 Text(
                   l10n.homeReorderMeta(order.storeName, order.itemCount),
-                  style: t.label.copyWith(color: c.textSecondary),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.label.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: c.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -488,6 +541,7 @@ class _ReorderCard extends StatelessWidget {
             label: l10n.homeReorderAction,
             expanded: false,
             compact: true,
+            variant: DymButtonVariant.secondary,
             onPressed: onReorder,
           ),
         ],

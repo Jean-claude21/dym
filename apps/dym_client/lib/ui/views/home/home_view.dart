@@ -7,21 +7,22 @@ import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/content/stories.dart';
-import 'package:dym_client/features/discovery/aisle/aisles_view.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/home/discovery_home_view.dart';
+import 'package:dym_client/features/discovery/market/market_view.dart';
+import 'package:dym_client/features/orders/active_order_banner.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
-import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Onglets de la cliente.
-enum ClientTab { home, aisles, videos, orders, me }
+/// Onglets de la cliente (design « Épuré », PARCOURS §3).
+enum ClientTab { home, market, cuisine, cart, me }
 
-/// Accueil de la cliente : découverte (écran 02), rayons et « Moi ».
+/// Coquille de la cliente : Accueil · Marché · Cuisine · Panier · Moi.
+/// « Cuisine » n'apparaît que si les contenus sont activés.
 class HomeView extends StatefulWidget {
   const new({
     super.key,
@@ -33,7 +34,7 @@ class HomeView extends StatefulWidget {
     this.initialTab = ClientTab.home,
   });
 
-  /// Contenus shoppables (tests) ; onglet « Vidéos » si le flag est actif.
+  /// Contenus shoppables (tests) ; onglet « Cuisine » si le flag est actif.
   final ContentService? content;
 
   /// Service d'authentification (tests).
@@ -62,14 +63,16 @@ class _HomeViewState extends State<HomeView> {
       widget.discovery ?? locator<DiscoveryService>();
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
-  late final OrdersService _orders = widget.orders ?? locator<OrdersService>();
+  late final OrdersService? _orders =
+      widget.orders ??
+      (locator.isRegistered<OrdersService>() ? locator<OrdersService>() : null);
   late final ContentService? _content =
       widget.content ??
       (locator.isRegistered<ContentService>()
           ? locator<ContentService>()
           : null);
   bool _cartLoaded = false;
-  bool _videos = false;
+  bool _cuisine = false;
 
   @override
   void initState() {
@@ -78,7 +81,7 @@ class _HomeViewState extends State<HomeView> {
     if (content != null) {
       unawaited(
         content.enabled().then((on) {
-          if (mounted && on) setState(() => _videos = true);
+          if (mounted && on) setState(() => _cuisine = true);
         }),
       );
     }
@@ -86,7 +89,7 @@ class _HomeViewState extends State<HomeView> {
 
   List<ClientTab> get _tabs => [
     for (final t in ClientTab.values)
-      if (t != ClientTab.videos || _videos) t,
+      if (t != ClientTab.cuisine || _cuisine) t,
   ];
 
   @override
@@ -105,7 +108,9 @@ class _HomeViewState extends State<HomeView> {
   Future<void> _reorder(String orderId) async {
     final l10n = DymLocalizations.of(context);
     final messenger = ScaffoldMessenger.maybeOf(context);
-    final result = await _orders.reorder(orderId);
+    final orders = _orders;
+    if (orders == null) return;
+    final result = await orders.reorder(orderId);
     if (!mounted) return;
     switch (result) {
       case Ok():
@@ -116,21 +121,27 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
+  void _select(ClientTab tab) => setState(() => _tab = tab);
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
+    final hasCart = CartScope.maybeOf(context) != null;
     return DymAdaptiveScaffold(
       backgroundColor: c.background,
       currentIndex: _tabs.indexOf(_tab).clamp(0, _tabs.length - 1),
-      onDestinationSelected: (i) => setState(() => _tab = _tabs[i]),
+      onDestinationSelected: (i) => _select(_tabs[i]),
       destinations: [
-        DymNavItem(icon: Icons.home_rounded, label: l10n.navHome),
-        DymNavItem(icon: Icons.grid_view_rounded, label: l10n.navAisles),
-        if (_videos)
-          DymNavItem(icon: Icons.play_circle_rounded, label: l10n.navVideos),
-        DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
-        DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
+        DymNavItem(icon: Icons.home_outlined, label: l10n.navHome),
+        DymNavItem(icon: Icons.storefront_outlined, label: l10n.navMarket),
+        if (_cuisine)
+          DymNavItem(icon: Icons.soup_kitchen_outlined, label: l10n.navCuisine),
+        DymNavItem(icon: Icons.shopping_basket_outlined, label: l10n.navCart),
+        DymNavItem(
+          icon: Icons.person_outline_rounded,
+          label: l10n.accountTitle,
+        ),
       ],
       body: switch (_tab) {
         ClientTab.home => WithMiniCart(
@@ -143,6 +154,14 @@ class _HomeViewState extends State<HomeView> {
             onOpenProduct: _navigator.toProduct,
             onReorder: _reorder,
             onShoppingLists: _navigator.toShoppingLists,
+            onNotifications: _navigator.toNotifications,
+            activeOrder: switch (_orders) {
+              final orders? => ActiveOrderBanner(
+                service: orders,
+                onOpen: _navigator.toOrder,
+              ),
+              null => null,
+            },
             stories: switch (_content) {
               final content? => StoriesRow(
                 service: content,
@@ -152,7 +171,16 @@ class _HomeViewState extends State<HomeView> {
             },
           ),
         ),
-        ClientTab.videos => switch (_content) {
+        ClientTab.market => WithMiniCart(
+          child: MarketView(
+            service: _discovery,
+            onSearch: _navigator.toSearch,
+            onOpenAisle: _navigator.toAisle,
+            onOpenStore: _navigator.toStore,
+            onGroupBuys: _navigator.toGroupBuys,
+          ),
+        ),
+        ClientTab.cuisine => switch (_content) {
           final content? => FeedView(
             service: content,
             onOpenStore: _navigator.toStore,
@@ -160,23 +188,22 @@ class _HomeViewState extends State<HomeView> {
           ),
           null => const SizedBox.shrink(),
         },
-        ClientTab.aisles => WithMiniCart(
-          child: AislesView(
-            service: _discovery,
-            onOpenAisle: _navigator.toAisle,
-          ),
-        ),
-        ClientTab.orders => MyOrdersView(
-          service: _orders,
-          onOpen: _navigator.toOrder,
-          onNotifications: _navigator.toNotifications,
-        ),
+        ClientTab.cart =>
+          hasCart
+              ? _navigator.cartPage(onBrowse: () => _select(ClientTab.market))
+              : const SizedBox.shrink(),
         ClientTab.me => AccountView(
           service: _service,
           onSignedOut: _navigator.toSignIn,
-          onAddresses: CartScope.maybeOf(context) == null
-              ? null
-              : _navigator.toAddresses,
+          banner: switch (_orders) {
+            final orders? => ActiveOrderBanner(
+              service: orders,
+              onOpen: _navigator.toOrder,
+            ),
+            null => null,
+          },
+          onOrders: _navigator.toMyOrders,
+          onAddresses: hasCart ? _navigator.toAddresses : null,
           onNotifications: _navigator.toNotificationSettings,
           onMessages: _navigator.toMessages,
           onHelp: _navigator.toHelp,

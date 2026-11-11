@@ -19,6 +19,7 @@ class StoreSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        border: Border.all(color: c.hairline),
         boxShadow: const [DymTokenShadows.card],
       ),
       child: Column(

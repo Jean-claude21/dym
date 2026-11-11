@@ -285,7 +285,7 @@ class _ThreadState extends State<_Thread> {
               ),
               child: Text(
                 d.isOpen ? l10n.disputeOpenStatus : l10n.disputeResolvedStatus,
-                style: t.label.copyWith(fontWeight: FontWeight.w800),
+                style: t.label.copyWith(fontWeight: FontWeight.w700),
               ),
             ),
             const SizedBox(height: DymTokenSpace.s1),

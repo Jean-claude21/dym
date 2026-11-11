@@ -162,35 +162,45 @@ class CartHeader extends StatelessWidget {
 
   final String title;
   final String? subtitle;
-  final VoidCallback onBack;
+
+  /// Retour ; nul dans l'onglet « Panier » (pas de bouton).
+  final VoidCallback? onBack;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
+    // Design « Épuré » : retour seul sur sa ligne, titre aligné à gauche.
     return DymContentWidth(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: Row(
+        padding: EdgeInsets.fromLTRB(4, onBack == null ? 16 : 0, 16, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            IconButton(
-              tooltip: l10n.authBack,
-              onPressed: onBack,
-              icon: Icon(Icons.arrow_back_rounded, color: c.textPrimary),
-            ),
-            Expanded(
+            if (onBack case final back?)
+              IconButton(
+                tooltip: l10n.authBack,
+                onPressed: back,
+                icon: Icon(Icons.arrow_back_rounded, color: c.textPrimary),
+              ),
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: t.display.copyWith(fontSize: 24),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      title,
+                      style: onBack == null
+                          ? t.display
+                          : t.display.copyWith(fontSize: 26),
+                    ),
                   ),
                   if (subtitle != null)
                     Text(
                       subtitle!,
-                      textAlign: TextAlign.center,
                       style: t.label.copyWith(
                         color: c.textSecondary,
                         fontSize: 14,
@@ -199,7 +209,6 @@ class CartHeader extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 48),
           ],
         ),
       ),
@@ -207,7 +216,7 @@ class CartHeader extends StatelessWidget {
   }
 }
 
-/// Carte blanche des écrans du panier.
+/// Carte blanche à filet des écrans du panier (design « Épuré »).
 class CartCard extends StatelessWidget {
   const new({required this.child, super.key, this.color});
 
@@ -221,9 +230,47 @@ class CartCard extends StatelessWidget {
     decoration: BoxDecoration(
       color: color ?? context.dym.colors.card,
       borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      border: color == null
+          ? Border.all(color: context.dym.colors.hairline)
+          : null,
     ),
     child: child,
   );
+}
+
+/// Vignette produit carrée sur menthe (rayon 10) ; icône si pas de photo.
+class ProductThumb extends StatelessWidget {
+  const new({required this.image, super.key, this.size = 56});
+
+  final ImageProvider? image;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final placeholder = Icon(
+      Icons.eco_outlined,
+      color: c.brandDeep,
+      size: size * 0.42,
+    );
+    return Container(
+      width: size,
+      height: size,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: c.tintVertTendre,
+        borderRadius: BorderRadius.circular(DymTokenRadius.image),
+      ),
+      child: switch (image) {
+        final img? => Image(
+          image: img,
+          fit: BoxFit.cover,
+          errorBuilder: (_, _, _) => placeholder,
+        ),
+        null => placeholder,
+      },
+    );
+  }
 }
 
 /// Pastille d'alerte (rupture, boutique fermée…) : icône + texte.

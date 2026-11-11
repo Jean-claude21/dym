@@ -85,7 +85,7 @@ class _CartScreenState extends State<CartScreen> {
                     'Si un produit manque',
                     style: t.label.copyWith(
                       fontSize: 15,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
@@ -119,7 +119,7 @@ class _CartScreenState extends State<CartScreen> {
                     'Livraison',
                     style: t.label.copyWith(
                       fontSize: 15,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
@@ -152,7 +152,7 @@ class _CartScreenState extends State<CartScreen> {
               'Paiement',
               style: t.label.copyWith(
                 fontSize: 15,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 8),
@@ -391,7 +391,7 @@ class _CartScreenState extends State<CartScreen> {
                 overflow: TextOverflow.ellipsis,
                 style: t.label.copyWith(
                   fontSize: 15,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Text(p.unit, style: t.label.copyWith(color: c.textSecondary)),

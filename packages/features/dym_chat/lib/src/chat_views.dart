@@ -121,7 +121,7 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
             ),
             child: Text(
               l10n.chatUnread(vm.unread),
-              style: t.label.copyWith(fontWeight: FontWeight.w800),
+              style: t.label.copyWith(fontWeight: FontWeight.w700),
             ),
           ),
       ],
@@ -209,7 +209,10 @@ class _ConversationTile extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.card),
+          side: BorderSide(color: c.hairline),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
@@ -283,7 +286,7 @@ class _ConversationTile extends StatelessWidget {
                         child: Text(
                           '${conversation.unread}',
                           textAlign: TextAlign.center,
-                          style: t.label.copyWith(fontWeight: FontWeight.w800),
+                          style: t.label.copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),
                   ],
@@ -682,6 +685,7 @@ class _ProductCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: c.card,
           borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          border: Border.all(color: c.hairline),
         ),
         child: Text(
           l10n.chatProductUnavailable,
@@ -694,7 +698,10 @@ class _ProductCard extends StatelessWidget {
     final open = onOpenProduct;
     return Material(
       color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        side: BorderSide(color: c.hairline),
+      ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: open == null ? null : () => open(item.id),

@@ -91,6 +91,13 @@ class _Navigator implements AppNavigator {
   void toCart() => routes.add('cart');
 
   @override
+  Widget cartPage({required VoidCallback onBrowse, VoidCallback? onBack}) =>
+      const Text('cart-page');
+
+  @override
+  void toMyOrders() => routes.add('myOrders');
+
+  @override
   void toAddresses() => routes.add('addresses');
 
   @override
@@ -281,7 +288,7 @@ void main() {
   group('accueil, rayons et « Moi »', () {
     for (final size in sizes) {
       for (final locale in const [Locale('fr'), Locale('en')]) {
-        for (final tab in [0, 1, 2]) {
+        for (final tab in [0, 1, 2, 3]) {
           testWidgets(
             'onglet $tab · ${size.width.toInt()}×${size.height.toInt()} · '
             '${locale.languageCode} · texte 130 %',
@@ -299,8 +306,9 @@ void main() {
               );
               final fr = locale.languageCode == 'fr';
               final label = switch (tab) {
-                1 => fr ? 'Rayons' : 'Aisles',
-                2 => fr ? 'Moi' : 'Me',
+                1 => fr ? 'Marché' : 'Market',
+                2 => fr ? 'Panier' : 'Basket',
+                3 => fr ? 'Moi' : 'Me',
                 _ => null,
               };
               if (label != null) {
@@ -332,6 +340,9 @@ void main() {
         find.byType(Scrollable).last,
         const Offset(0, -300),
       );
+      // La ligne doit sortir de sous la barre de navigation.
+      await tester.drag(find.byType(Scrollable).last, const Offset(0, -300));
+      await tester.pump();
       await tester.tap(find.text('Se déconnecter'));
       await tester.pump();
       expect(auth.calls, ['signOut']);

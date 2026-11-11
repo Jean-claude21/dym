@@ -283,7 +283,10 @@ class _ProductCard extends StatelessWidget {
     };
     return Material(
       color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.card),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        side: BorderSide(color: c.hairline),
+      ),
       child: InkWell(
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
         onTap: () => viewModel.edit(product),
@@ -447,7 +450,7 @@ class _Badge extends StatelessWidget {
         label,
         style: context.dym.text.label.copyWith(
           fontSize: 13,
-          fontWeight: FontWeight.w800,
+          fontWeight: FontWeight.w700,
           color: foreground,
         ),
       ),

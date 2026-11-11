@@ -24,6 +24,8 @@ class AccountView extends StackedView<AccountViewModel> {
     this.onCreator,
     this.onGroupBuys,
     this.onMembership,
+    this.onOrders,
+    this.banner,
   });
 
   final AuthService service;
@@ -60,6 +62,12 @@ class AccountView extends StackedView<AccountViewModel> {
   /// Studio créatrice (spec 036) ; absent : ligne masquée.
   final VoidCallback? onCreator;
 
+  /// Mes commandes (app cliente, design « Épuré ») ; absent : ligne masquée.
+  final VoidCallback? onOrders;
+
+  /// Bandeau en tête (commande en cours) ; nul : rien.
+  final Widget? banner;
+
   @override
   AccountViewModel viewModelBuilder(BuildContext context) =>
       AccountViewModel(service: service, onSignedOut: onSignedOut);
@@ -74,6 +82,62 @@ class AccountView extends StackedView<AccountViewModel> {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
 
+    DymMenuRow? row(IconData icon, String label, VoidCallback? tap) =>
+        tap == null ? null : DymMenuRow(icon: icon, label: label, onTap: tap);
+    List<Widget> rows(List<DymMenuRow?> items) => [...items.nonNulls];
+    final groups = [
+      rows([
+        row(Icons.receipt_long_outlined, l10n.ordersMineTitle, onOrders),
+        row(
+          Icons.account_balance_wallet_outlined,
+          l10n.accountWallet,
+          onWallet,
+        ),
+        row(
+          Icons.workspace_premium_outlined,
+          l10n.accountMembership,
+          onMembership,
+        ),
+        row(Icons.groups_outlined, l10n.accountSpaces, onSpaces),
+        row(Icons.diversity_3_outlined, l10n.accountGroupBuys, onGroupBuys),
+        row(Icons.chat_bubble_outline_rounded, l10n.chatMyMessages, onMessages),
+      ]),
+      rows([
+        row(Icons.favorite_border_rounded, l10n.accountFavorites, onFavorites),
+        row(Icons.shopping_basket_outlined, l10n.accountBaskets, onBaskets),
+        row(Icons.location_on_outlined, l10n.accountAddresses, onAddresses),
+        row(Icons.auto_awesome_outlined, l10n.accountCreator, onCreator),
+        row(
+          Icons.notifications_none_rounded,
+          l10n.accountNotifications,
+          onNotifications,
+        ),
+      ]),
+      rows([
+        row(
+          Icons.language_rounded,
+          l10n.accountLanguage(l10n.languageName),
+          viewModel.isBusy ? null : () => _chooseLanguage(context, viewModel),
+        ),
+        row(Icons.help_outline_rounded, l10n.accountHelp, onHelp),
+      ]),
+      [
+        DymMenuRow(
+          icon: Icons.logout_rounded,
+          label: l10n.accountSignOut,
+          onTap: viewModel.isBusy ? null : viewModel.signOut,
+        ),
+        DymMenuRow(
+          icon: Icons.delete_outline_rounded,
+          label: l10n.accountDelete,
+          destructive: true,
+          onTap: viewModel.isBusy
+              ? null
+              : () => _confirmDelete(context, viewModel),
+        ),
+      ],
+    ].where((g) => g.isNotEmpty);
+
     return Scaffold(
       backgroundColor: c.background,
       body: SafeArea(
@@ -87,128 +151,74 @@ class AccountView extends StackedView<AccountViewModel> {
             return ListView(
               padding: EdgeInsets.fromLTRB(inset, 16, inset, 24),
               children: [
-                Text(
-                  l10n.accountTitle,
-                  textAlign: TextAlign.center,
-                  style: t.display.copyWith(fontSize: 30),
-                ),
-                const SizedBox(height: DymTokenSpace.s5),
-                Container(
-                  padding: const EdgeInsets.all(DymTokenSpace.s4),
-                  decoration: BoxDecoration(
-                    color: c.card,
-                    borderRadius: BorderRadius.circular(DymTokenRadius.card),
-                  ),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 34,
-                        backgroundColor: c.tintVertTendre,
-                        child: Text(
-                          viewModel.initial,
-                          style: t.display.copyWith(
-                            fontSize: 28,
-                            color: c.brandDeep,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: DymTokenSpace.s4),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              viewModel.firstName,
-                              style: t.display.copyWith(fontSize: 26),
-                            ),
-                            if (viewModel.email != null)
-                              Text(
-                                viewModel.email!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: t.body.copyWith(color: c.textSecondary),
-                              ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                Semantics(
+                  header: true,
+                  child: Text(l10n.accountTitle, style: t.display),
                 ),
                 const SizedBox(height: DymTokenSpace.s4),
-                if (onMessages case final messages?) ...[
-                  DymMenuRow(
-                    icon: Icons.chat_bubble_rounded,
-                    label: l10n.chatMyMessages,
-                    onTap: messages,
-                  ),
+                if (banner case final b?) ...[
+                  b,
                   const SizedBox(height: DymTokenSpace.s3),
                 ],
-                for (final (icon, label, tap) in [
-                  (
-                    Icons.edit_rounded,
-                    l10n.accountEditName,
-                    viewModel.isBusy ? null : () => _rename(context, viewModel),
-                  ),
-                  (
-                    Icons.account_balance_wallet_rounded,
-                    l10n.accountWallet,
-                    onWallet,
-                  ),
-                  (
-                    Icons.workspace_premium_rounded,
-                    l10n.accountMembership,
-                    onMembership,
-                  ),
-                  (Icons.groups_rounded, l10n.accountSpaces, onSpaces),
-                  (
-                    Icons.diversity_3_rounded,
-                    l10n.accountGroupBuys,
-                    onGroupBuys,
-                  ),
-                  (Icons.auto_awesome_rounded, l10n.accountCreator, onCreator),
-                  (Icons.favorite_rounded, l10n.accountFavorites, onFavorites),
-                  (
-                    Icons.shopping_basket_rounded,
-                    l10n.accountBaskets,
-                    onBaskets,
-                  ),
-                  (
-                    Icons.location_on_rounded,
-                    l10n.accountAddresses,
-                    onAddresses,
-                  ),
-                  (
-                    Icons.notifications_rounded,
-                    l10n.accountNotifications,
-                    onNotifications,
-                  ),
-                  (
-                    Icons.language_rounded,
-                    l10n.accountLanguage(l10n.languageName),
-                    viewModel.isBusy
+                Semantics(
+                  button: true,
+                  label: l10n.accountEditName,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                    onTap: viewModel.isBusy
                         ? null
-                        : () => _chooseLanguage(context, viewModel),
+                        : () => _rename(context, viewModel),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: DymTokenSpace.s2,
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 26,
+                            backgroundColor: c.tintVertTendre,
+                            child: Text(
+                              viewModel.initial,
+                              style: t.title.copyWith(color: c.brandDeep),
+                            ),
+                          ),
+                          const SizedBox(width: DymTokenSpace.s3),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  viewModel.firstName,
+                                  style: t.title.copyWith(fontSize: 18),
+                                ),
+                                if (viewModel.email != null)
+                                  Text(
+                                    viewModel.email!,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: t.label.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      color: c.textSecondary,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          Icon(
+                            Icons.edit_outlined,
+                            size: 20,
+                            color: c.textSecondary,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  (Icons.help_rounded, l10n.accountHelp, onHelp),
-                ])
-                  if (tap != null) ...[
-                    DymMenuRow(icon: icon, label: label, onTap: tap),
-                    const SizedBox(height: DymTokenSpace.s3),
-                  ],
-                DymMenuRow(
-                  icon: Icons.logout_rounded,
-                  label: l10n.accountSignOut,
-                  onTap: viewModel.isBusy ? null : viewModel.signOut,
                 ),
                 const SizedBox(height: DymTokenSpace.s3),
-                DymMenuRow(
-                  icon: Icons.delete_rounded,
-                  label: l10n.accountDelete,
-                  destructive: true,
-                  onTap: viewModel.isBusy
-                      ? null
-                      : () => _confirmDelete(context, viewModel),
-                ),
+                for (final group in groups) ...[
+                  DymMenuGroup(children: group),
+                  const SizedBox(height: DymTokenSpace.s3),
+                ],
                 AuthErrorBanner(error: viewModel.authError),
               ],
             );

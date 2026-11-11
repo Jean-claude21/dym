@@ -402,6 +402,8 @@ class PurchaseOrder {
     required this.totalMinor,
     this.itemCount = 0,
     this.items = const [],
+    this.scheduledStart,
+    this.scheduledEnd,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$PurchaseOrderFromJson(json);
@@ -420,6 +422,11 @@ class PurchaseOrder {
   final int totalMinor;
   final int itemCount;
   final List<OrderLine> items;
+
+  /// Créneau choisi (spec 033), rappelé à la confirmation (spec 056) ;
+  /// nul : dès que possible.
+  final DateTime? scheduledStart;
+  final DateTime? scheduledEnd;
 }
 
 /// Achat : une commande par boutique, un paiement.
