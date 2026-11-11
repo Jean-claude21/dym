@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dym_account/dym_account.dart';
+import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -75,6 +76,12 @@ abstract interface class AppNavigator {
 
   /// « Ma caisse » (spec 045).
   void toTill();
+
+  /// « Encaisser » (planche 04) : QR ou code, sans passer par la caisse.
+  void toCharge();
+
+  /// « Mon compte », rangé dans Boutique (design « Épuré »).
+  void toAccount();
 
   /// Ardoise (spec 047).
   void toCredit();
@@ -284,6 +291,33 @@ class StackedAppNavigator implements AppNavigator {
       ),
     );
   }
+
+  @override
+  void toCharge() {
+    if (!locator.isRegistered<TillService>()) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (route) => QrChargeView(
+          service: locator<TillService>(),
+          onDone: () => Navigator.of(route).pop(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void toAccount() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (route) => Scaffold(
+        appBar: AppBar(),
+        body: AccountView(
+          service: locator<AuthService>(),
+          onSignedOut: toSignIn,
+          onHelp: toHelp,
+        ),
+      ),
+    ),
+  );
 
   @override
   void toCourierCash() {

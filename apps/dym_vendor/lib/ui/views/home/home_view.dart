@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -19,11 +18,11 @@ import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:dym_vendor/ui/navigation.dart';
 import 'package:flutter/material.dart';
 
-/// Onglets de l'accueil de la vendeuse.
-enum HomeTab { dashboard, orders, messages, products, store, me }
+/// Onglets de la vendeuse (design « Épuré », PARCOURS §3).
+enum HomeTab { dashboard, orders, products, messages, store }
 
-/// Accueil de la vendeuse : « Mes produits » (écran 24), « Ma boutique »
-/// (écran 23) et « Moi ».
+/// Coquille de la vendeuse : Aujourd'hui · Commandes · Catalogue · Messages ·
+/// Boutique. Le compte est rangé dans Boutique.
 class HomeView extends StatefulWidget {
   const new({
     this.broadcasts,
@@ -116,34 +115,37 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
+  void _select(HomeTab tab) => setState(() => _tab = tab);
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
+    final name = _service.me?.profile?.firstName;
     return DymAdaptiveScaffold(
       backgroundColor: c.background,
       currentIndex: _tab.index,
-      onDestinationSelected: (i) => setState(() => _tab = HomeTab.values[i]),
+      onDestinationSelected: (i) => _select(HomeTab.values[i]),
       destinations: [
-        DymNavItem(icon: Icons.home_rounded, label: l10n.navHome),
-        DymNavItem(icon: Icons.receipt_long_rounded, label: l10n.navOrders),
+        DymNavItem(icon: Icons.today_outlined, label: l10n.navToday),
+        DymNavItem(icon: Icons.receipt_long_outlined, label: l10n.navOrders),
+        DymNavItem(icon: Icons.grid_view_outlined, label: l10n.navCatalog),
         DymNavItem(
-          icon: Icons.chat_bubble_rounded,
+          icon: Icons.chat_bubble_outline_rounded,
           label: l10n.chatMessagesTitle,
         ),
-        DymNavItem(
-          icon: Icons.shopping_basket_rounded,
-          label: l10n.navProducts,
-        ),
-        DymNavItem(icon: Icons.storefront_rounded, label: l10n.navStore),
-        DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
+        DymNavItem(icon: Icons.storefront_outlined, label: l10n.navStore),
       ],
       body: switch (_tab) {
         HomeTab.dashboard => DashboardView(
           service: _dashboard,
-          onOrders: () => setState(() => _tab = HomeTab.orders),
-          onProducts: () => setState(() => _tab = HomeTab.products),
-          onMessages: () => setState(() => _tab = HomeTab.messages),
+          greeting: name == null || name.isEmpty
+              ? null
+              : l10n.vendorGreeting(name),
+          onOrders: () => _select(HomeTab.orders),
+          onProducts: () => _select(HomeTab.products),
+          onMessages: () => _select(HomeTab.messages),
+          onCharge: _navigator.toCharge,
           onTill: _navigator.toTill,
         ),
         HomeTab.messages => ConversationsView(
@@ -173,11 +175,7 @@ class _HomeViewState extends State<HomeView> {
           onTill: _navigator.toTill,
           onContents: _contents ? _navigator.toContents : null,
           onBroadcast: _broadcast ? _navigator.toBroadcast : null,
-        ),
-        HomeTab.me => AccountView(
-          service: _service,
-          onSignedOut: _navigator.toSignIn,
-          onHelp: _navigator.toHelp,
+          onAccount: _navigator.toAccount,
         ),
       },
     );

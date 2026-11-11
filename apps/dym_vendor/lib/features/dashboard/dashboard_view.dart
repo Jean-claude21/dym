@@ -6,7 +6,8 @@ import 'package:dym_vendor/features/dashboard/dashboard_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Accueil de la vendeuse (maquette 59).
+/// « Aujourd'hui » de la vendeuse (design « Épuré », planche 04) : encaisser
+/// en premier, ventes de la période, ce qui demande une action.
 class DashboardView extends StackedView<DashboardViewModel> {
   const new({
     required this.service,
@@ -15,6 +16,8 @@ class DashboardView extends StackedView<DashboardViewModel> {
     super.key,
     this.onMessages,
     this.onTill,
+    this.onCharge,
+    this.greeting,
   });
 
   final DashboardService service;
@@ -24,8 +27,14 @@ class DashboardView extends StackedView<DashboardViewModel> {
   /// Messages (V-DASH-04) ; nul : non affiché.
   final VoidCallback? onMessages;
 
-  /// « Ma caisse » (spec 045) : ventes hors app et versements.
+  /// « Vente cash » : la caisse (spec 045), ventes hors app.
   final VoidCallback? onTill;
+
+  /// « Encaisser » : QR ou code pour la cliente (spec 046).
+  final VoidCallback? onCharge;
+
+  /// « Bonjour Fatou » ; nul : titre de la page.
+  final String? greeting;
 
   @override
   DashboardViewModel viewModelBuilder(BuildContext context) =>
@@ -53,35 +62,80 @@ class DashboardView extends StackedView<DashboardViewModel> {
       );
     }
     final summary = vm.summary!;
+    final todo = <Widget>[
+      _Row(
+        icon: Icons.shopping_cart_outlined,
+        title: l.dashboardNewOrders(summary.pendingOrders),
+        alert: summary.pendingOrders > 0 || summary.criticalNotifications > 0,
+        onTap: onOrders,
+      ),
+      _Row(
+        icon: Icons.inventory_2_outlined,
+        title: l.dashboardActiveOrders(summary.activeOrders),
+        onTap: onOrders,
+      ),
+      _Row(
+        icon: Icons.remove_shopping_cart_outlined,
+        title: l.dashboardStock(summary.outOfStock),
+        alert: summary.outOfStock > 0,
+        onTap: onProducts,
+      ),
+      if (onMessages case final messages?)
+        _Row(
+          icon: Icons.chat_bubble_outline_rounded,
+          title: l.dashboardUnreadMessages(vm.unreadMessages),
+          alert: vm.unreadMessages > 0,
+          onTap: messages,
+        ),
+    ];
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: vm.load,
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
-          padding: EdgeInsets.all(DymLayout.gutter(context)),
+          padding: EdgeInsets.fromLTRB(
+            DymLayout.gutter(context),
+            16,
+            DymLayout.gutter(context),
+            24,
+          ),
           children: [
             DymContentWidth.form(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    l.dashboardTitle,
-                    textAlign: TextAlign.center,
-                    style: t.display.copyWith(color: c.brandDeep),
+                  Semantics(
+                    header: true,
+                    child: Text(greeting ?? l.navToday, style: t.display),
                   ),
-                  const SizedBox(height: DymTokenSpace.s3),
-                  if (onTill case final till?) ...[
-                    DymButton(
-                      label: l.tillOpen,
-                      icon: Icons.point_of_sale_rounded,
-                      variant: DymButtonVariant.secondary,
-                      onPressed: till,
-                    ),
-                    const SizedBox(height: DymTokenSpace.s3),
-                  ],
+                  const SizedBox(height: DymTokenSpace.s4),
+                  // Encaisser en premier (PARCOURS, Fatou).
+                  Row(
+                    children: [
+                      if (onCharge case final charge?)
+                        Expanded(
+                          child: DymButton(
+                            label: l.vendorCharge,
+                            icon: Icons.qr_code_2_rounded,
+                            onPressed: charge,
+                          ),
+                        ),
+                      if (onCharge != null && onTill != null)
+                        const SizedBox(width: DymTokenSpace.s2),
+                      if (onTill case final till?)
+                        Expanded(
+                          child: DymButton(
+                            label: l.vendorCashSale,
+                            icon: Icons.payments_outlined,
+                            variant: DymButtonVariant.secondary,
+                            onPressed: till,
+                          ),
+                        ),
+                    ],
+                  ),
                   if (vm.failure != null)
                     Padding(
-                      padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+                      padding: const EdgeInsets.only(top: DymTokenSpace.s2),
                       child: Text(
                         vm.offline
                             ? l.dashboardOffline
@@ -89,62 +143,64 @@ class DashboardView extends StackedView<DashboardViewModel> {
                         style: t.label.copyWith(color: c.textSecondary),
                       ),
                     ),
-                  if (summary.criticalNotifications > 0) ...[
-                    _Alert(
-                      title: l.dashboardCritical(summary.criticalNotifications),
-                      action: l.dashboardCriticalAction,
-                      onTap: onOrders,
-                    ),
-                    const SizedBox(height: DymTokenSpace.s3),
-                  ],
+                  const SizedBox(height: DymTokenSpace.s4),
+                  Divider(height: 1, color: c.hairline),
+                  const SizedBox(height: DymTokenSpace.s3),
                   _Periods(vm: vm),
                   const SizedBox(height: DymTokenSpace.s3),
-                  _Revenue(vm: vm, summary: summary),
-                  const SizedBox(height: DymTokenSpace.s4),
-                  Text(l.dashboardToDo, style: t.title.copyWith(fontSize: 24)),
-                  const SizedBox(height: DymTokenSpace.s2),
-                  _Action(
-                    icon: Icons.shopping_cart_rounded,
-                    tint: c.tintVertTendre,
-                    color: c.brand,
-                    title: l.dashboardNewOrders(summary.pendingOrders),
-                    subtitle: l.dashboardNewOrdersHint,
-                    onTap: onOrders,
+                  Text(
+                    l.dashboardRevenue,
+                    style: t.body.copyWith(color: c.textSecondary),
                   ),
-                  _Action(
-                    icon: Icons.inventory_2_rounded,
-                    tint: c.tintPlantainClair,
-                    color: c.huile,
-                    title: l.dashboardActiveOrders(summary.activeOrders),
-                    subtitle: l.dashboardActiveOrdersHint,
-                    onTap: onOrders,
-                  ),
-                  _Action(
-                    icon: Icons.warning_rounded,
-                    tint: summary.outOfStock > 0
-                        ? c.tintPimentClair
-                        : c.tintVertTendre,
-                    color: summary.outOfStock > 0 ? c.pimentStrong : c.brand,
-                    title: l.dashboardStock(summary.outOfStock),
-                    subtitle: l.dashboardStockHint,
-                    onTap: onProducts,
-                  ),
-                  if (onMessages case final messages?)
-                    _Action(
-                      icon: Icons.chat_bubble_rounded,
-                      tint: vm.unreadMessages > 0
-                          ? c.tintPlantainClair
-                          : c.tintVertTendre,
-                      color: c.brandDeep,
-                      title: l.dashboardUnreadMessages(vm.unreadMessages),
-                      subtitle: l.dashboardUnreadMessagesHint,
-                      onTap: messages,
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      vm.revenue?.format() ?? '',
+                      style: t.display.copyWith(
+                        fontSize: 38,
+                        letterSpacing: -1,
+                      ),
                     ),
+                  ),
+                  Text(
+                    l.dashboardTotals(
+                      summary.orderCount,
+                      summary.pendingPayments,
+                    ),
+                    style: t.label.copyWith(
+                      color: c.textSecondary,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  if (summary.orderCount == 0) ...[
+                    const SizedBox(height: DymTokenSpace.s1),
+                    Text(
+                      l.dashboardEmpty,
+                      style: t.label.copyWith(
+                        color: c.textSecondary,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: DymTokenSpace.s4),
+                  Text(
+                    l.dashboardToDo,
+                    style: t.body.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                  for (final (i, row) in todo.indexed) ...[
+                    if (i == 0) const SizedBox(height: DymTokenSpace.s1),
+                    Divider(height: 1, color: c.hairline),
+                    row,
+                  ],
+                  Divider(height: 1, color: c.hairline),
                   const SizedBox(height: DymTokenSpace.s3),
                   Text(
                     l.dashboardRecapHint,
-                    textAlign: TextAlign.center,
-                    style: t.label.copyWith(color: c.textSecondary),
+                    style: t.label.copyWith(
+                      color: c.textSecondary,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
@@ -156,62 +212,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
   }
 }
 
-class _Alert extends StatelessWidget {
-  const new({required this.title, required this.action, required this.onTap});
-
-  final String title;
-  final String action;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    return Material(
-      color: c.tintPimentClair,
-      borderRadius: BorderRadius.circular(DymTokenRadius.card),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(DymTokenSpace.s3),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: c.card,
-                child: Icon(
-                  Icons.notifications_active_rounded,
-                  color: c.pimentStrong,
-                  size: 30,
-                ),
-              ),
-              const SizedBox(width: DymTokenSpace.s3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: t.title.copyWith(fontSize: 18)),
-                    const SizedBox(height: 4),
-                    Text(
-                      action,
-                      style: t.label.copyWith(
-                        color: c.pimentStrong,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right_rounded),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
+/// Jour · semaine · mois : puces au rayon des boutons.
 class _Periods extends StatelessWidget {
   const new({required this.vm});
 
@@ -219,237 +220,64 @@ class _Periods extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
     final l = DymLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
-        border: Border.all(color: c.hairline),
-      ),
-      child: Row(
-        children: [
-          for (final period in DashboardPeriod.values)
-            Expanded(
-              child: Semantics(
-                selected: vm.period == period,
-                button: true,
-                child: Material(
-                  color: vm.period == period ? c.brand : Colors.transparent,
-                  borderRadius: BorderRadius.circular(DymTokenRadius.card),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () => vm.selectPeriod(period),
-                    child: Container(
-                      constraints: const BoxConstraints(minHeight: 48),
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: Text(
-                        switch (period) {
-                          DashboardPeriod.day => l.dashboardDay,
-                          DashboardPeriod.week => l.dashboardWeek,
-                          DashboardPeriod.month => l.dashboardMonth,
-                        },
-                        textAlign: TextAlign.center,
-                        style: t.title.copyWith(
-                          fontSize: 16,
-                          color: vm.period == period
-                              ? c.onBrand
-                              : c.textSecondary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
+    return Wrap(
+      spacing: DymTokenSpace.s2,
+      children: [
+        for (final period in DashboardPeriod.values)
+          DymFilterChip(
+            label: switch (period) {
+              DashboardPeriod.day => l.dashboardDay,
+              DashboardPeriod.week => l.dashboardWeek,
+              DashboardPeriod.month => l.dashboardMonth,
+            },
+            selected: vm.period == period,
+            onTap: () => vm.selectPeriod(period),
+          ),
+      ],
     );
   }
 }
 
-class _Revenue extends StatelessWidget {
-  const new({required this.vm, required this.summary});
-
-  final DashboardViewModel vm;
-  final VendorDashboard summary;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    final l = DymLocalizations.of(context);
-    Widget tile(
-      IconData icon,
-      Color tint,
-      Color color,
-      int count,
-      String label,
-    ) => Container(
-      padding: const EdgeInsets.all(DymTokenSpace.s3),
-      decoration: BoxDecoration(
-        color: tint,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: color, size: 30),
-          const SizedBox(width: DymTokenSpace.s2),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('$count', style: t.display.copyWith(fontSize: 30)),
-                Text(label, style: t.body),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-    final orders = tile(
-      Icons.shopping_cart_rounded,
-      c.tintVertTendre,
-      c.brand,
-      summary.orderCount,
-      l.dashboardOrderCount(summary.orderCount),
-    );
-    final payments = tile(
-      Icons.payments_rounded,
-      c.tintPeche,
-      c.huile,
-      summary.pendingPayments,
-      l.dashboardPendingPayments(summary.pendingPayments),
-    );
-    return Container(
-      padding: const EdgeInsets.all(DymTokenSpace.s3),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
-        border: Border.all(color: c.hairline),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 34,
-                backgroundColor: c.brand,
-                child: Icon(Icons.savings_rounded, color: c.onBrand, size: 34),
-              ),
-              const SizedBox(width: DymTokenSpace.s3),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l.dashboardRevenue, style: t.title),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: MoneyText(vm.revenue!, size: 34),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: DymTokenSpace.s3),
-          LayoutBuilder(
-            builder: (context, box) => box.maxWidth < 300
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      orders,
-                      const SizedBox(height: DymTokenSpace.s2),
-                      payments,
-                    ],
-                  )
-                : Row(
-                    children: [
-                      Expanded(child: orders),
-                      const SizedBox(width: DymTokenSpace.s2),
-                      Expanded(child: payments),
-                    ],
-                  ),
-          ),
-          const SizedBox(height: DymTokenSpace.s2),
-          Text(
-            l.dashboardRevenueExplanation,
-            style: t.label.copyWith(color: c.textSecondary),
-          ),
-          if (summary.orderCount == 0) ...[
-            const SizedBox(height: DymTokenSpace.s2),
-            Text(l.dashboardEmpty, style: t.body),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _Action extends StatelessWidget {
+/// Ligne « À traiter » : icône au trait, texte, point rouge si urgent.
+class _Row extends StatelessWidget {
   const new({
     required this.icon,
-    required this.tint,
-    required this.color,
     required this.title,
-    required this.subtitle,
     required this.onTap,
+    this.alert = false,
   });
 
   final IconData icon;
-  final Color tint;
-  final Color color;
   final String title;
-  final String subtitle;
   final VoidCallback onTap;
+  final bool alert;
 
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
-      child: Material(
-        color: c.card,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(DymTokenRadius.card),
-          side: BorderSide(color: c.hairline),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Container(
-            constraints: const BoxConstraints(minHeight: 72),
-            padding: const EdgeInsets.all(DymTokenSpace.s3),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 26,
-                  backgroundColor: tint,
-                  child: Icon(icon, color: color),
+    return InkWell(
+      onTap: onTap,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 56),
+        child: Row(
+          children: [
+            Icon(icon, color: c.textPrimary),
+            const SizedBox(width: DymTokenSpace.s3),
+            Expanded(child: Text(title, style: t.body)),
+            if (alert)
+              Container(
+                width: 10,
+                height: 10,
+                margin: const EdgeInsets.only(right: DymTokenSpace.s2),
+                decoration: BoxDecoration(
+                  color: c.piment,
+                  shape: BoxShape.circle,
                 ),
-                const SizedBox(width: DymTokenSpace.s3),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title, style: t.title.copyWith(fontSize: 18)),
-                      Text(
-                        subtitle,
-                        style: t.body.copyWith(color: c.textSecondary),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.chevron_right_rounded),
-              ],
-            ),
-          ),
+              ),
+            Icon(Icons.chevron_right_rounded, color: c.textSecondary),
+          ],
         ),
       ),
     );

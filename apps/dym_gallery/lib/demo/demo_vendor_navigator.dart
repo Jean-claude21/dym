@@ -47,6 +47,12 @@ class DemoVendorNavigator implements AppNavigator {
   void toTill() {}
 
   @override
+  void toCharge() {}
+
+  @override
+  void toAccount() {}
+
+  @override
   void toCredit() {}
 
   @override

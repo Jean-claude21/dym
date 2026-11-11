@@ -288,6 +288,35 @@ class DymLocalizationsEn extends DymLocalizations {
   String get navStore => 'Shop';
 
   @override
+  String get navToday => 'Today';
+
+  @override
+  String get navCatalog => 'Catalogue';
+
+  @override
+  String vendorGreeting(String name) {
+    return 'Hello $name';
+  }
+
+  @override
+  String get vendorCharge => 'Charge';
+
+  @override
+  String get vendorCashSale => 'Cash sale';
+
+  @override
+  String get storeMyAccount => 'My account';
+
+  @override
+  String get storeGroupMoney => 'Money';
+
+  @override
+  String get storeGroupSell => 'Sell more';
+
+  @override
+  String get storeGroupSettings => 'Settings';
+
+  @override
   String storeStepLabel(int current, int total) {
     return 'Step $current of $total';
   }
@@ -2679,6 +2708,25 @@ class DymLocalizationsEn extends DymLocalizations {
       one: 'payment awaited',
     );
     return '$_temp0';
+  }
+
+  @override
+  String dashboardTotals(int orders, int payments) {
+    String _temp0 = intl.Intl.pluralLogic(
+      orders,
+      locale: localeName,
+      other: '$orders orders',
+      one: '1 order',
+      zero: 'No order',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      payments,
+      locale: localeName,
+      other: '$payments payments pending',
+      one: '1 payment pending',
+      zero: 'no payment pending',
+    );
+    return '$_temp0 · $_temp1';
   }
 
   @override
@@ -5556,6 +5604,9 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get qrChargeShow => 'Show the QR';
+
+  @override
+  String get tillErase => 'Delete last digit';
 
   @override
   String get qrChargeCode => 'Code to type';

@@ -26,7 +26,11 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     this.onMembership,
     this.onContents,
     this.onBroadcast,
+    this.onAccount,
   });
+
+  /// « Mon compte » (aide, langue, déconnexion) ; nul : masqué.
+  final VoidCallback? onAccount;
 
   /// Relancer mes clientes (spec 021) ; nul : non affiché.
   final VoidCallback? onBroadcast;
@@ -111,21 +115,21 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     );
     final origin = summary.origin;
     final rows = [
-      (Icons.edit_note_rounded, l10n.storeSummaryName, null, StoreStep.name),
+      (Icons.edit_note_outlined, l10n.storeSummaryName, null, StoreStep.name),
       (
-        Icons.storefront_rounded,
+        Icons.storefront_outlined,
         l10n.myStoreRowOrigin,
         summary.originLabel,
         StoreStep.origin,
       ),
       (
-        Icons.location_on_rounded,
+        Icons.location_on_outlined,
         l10n.storeAddressLabel,
         l10n.myStoreAddressPrivate,
         StoreStep.address,
       ),
       (
-        Icons.category_rounded,
+        Icons.category_outlined,
         l10n.myStoreRowCategory,
         config.categories
             .where((cat) => cat.id == store.mainCategoryId)
@@ -135,7 +139,7 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
         StoreStep.category,
       ),
       (
-        Icons.delivery_dining_rounded,
+        Icons.delivery_dining_outlined,
         l10n.myStoreRowDelivery,
         l10n.myStoreDeliveryValue(
           summary.deliveryZoneCount,
@@ -144,18 +148,39 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
         StoreStep.delivery,
       ),
       (
-        Icons.account_balance_wallet_rounded,
+        Icons.account_balance_wallet_outlined,
         l10n.myStoreRowPayment,
         summary.paymentLabels.isEmpty ? null : summary.paymentLabels,
         StoreStep.payment,
       ),
       (
-        Icons.schedule_rounded,
+        Icons.schedule_outlined,
         l10n.myStoreRowHours,
         hoursSummary(context, store.hours),
         StoreStep.hours,
       ),
     ];
+    Widget group(String? title, List<Widget> rows) => rows.isEmpty
+        ? const SizedBox.shrink()
+        : Padding(
+            padding: const EdgeInsets.only(top: DymTokenSpace.s4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (title != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+                    child: Text(
+                      title,
+                      style: t.body.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                DymMenuGroup(children: rows),
+              ],
+            ),
+          );
+    DymMenuRow row(IconData icon, String label, VoidCallback onTap) =>
+        DymMenuRow(icon: icon, label: label, onTap: onTap);
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, box) {
@@ -165,184 +190,122 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
             maxWidth: DymTokenLayout.formMax,
           );
           return ListView(
-            padding: EdgeInsets.fromLTRB(inset, 12, inset, 24),
+            padding: EdgeInsets.fromLTRB(inset, 16, inset, 24),
             children: [
-              Text(
-                l10n.appNameVendor,
-                textAlign: TextAlign.center,
-                style: t.title.copyWith(color: c.brandDeep),
-              ),
               Semantics(
                 header: true,
-                child: Text(
-                  l10n.myStoreTitle,
-                  textAlign: TextAlign.center,
-                  style: t.display.copyWith(fontSize: 40, color: c.brandDeep),
-                ),
+                child: Text(l10n.navStore, style: t.display),
               ),
-              const SizedBox(height: DymTokenSpace.s4),
-              StoreSection(
+              const SizedBox(height: DymTokenSpace.s3),
+              // La boutique et son ouverture, en un geste.
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: c.tintPeche,
-                        child: Text(
-                          summary.initial,
-                          style: t.display.copyWith(
-                            fontSize: 34,
-                            color: c.originMaisonFg,
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundColor: c.tintVertTendre,
+                    child: Text(
+                      summary.initial,
+                      style: t.title.copyWith(color: c.brandDeep),
+                    ),
+                  ),
+                  const SizedBox(width: DymTokenSpace.s3),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          store.name,
+                          style: t.body.copyWith(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                      const SizedBox(width: DymTokenSpace.s4),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              store.name,
-                              style: t.display.copyWith(fontSize: 28),
+                        if (origin != null && summary.originLabel != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: DymOriginBadge(
+                              origin: origin,
+                              label: summary.originLabel!,
+                              dense: true,
                             ),
-                            if (origin != null &&
-                                summary.originLabel != null) ...[
-                              const SizedBox(height: DymTokenSpace.s1),
-                              DymOriginBadge(
-                                origin: origin,
-                                label: summary.originLabel!,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Divider(
-                    height: DymTokenSpace.s5,
-                    color: c.textSecondary.withValues(alpha: 0.12),
-                  ),
-                  DymSwitchTile(
-                    large: true,
-                    title: viewModel.closedByHours
-                        ? l10n.myStoreClosedByHours
-                        : store.isOpen
-                        ? l10n.myStoreOpen
-                        : l10n.myStoreClosed,
-                    subtitle: viewModel.closedByHours
-                        ? l10n.myStoreClosedByHoursHint
-                        : store.isOpen
-                        ? l10n.myStoreOpenHint
-                        : l10n.myStoreClosedHint,
-                    value: store.isOpen,
-                    onChanged: viewModel.suspended || viewModel.toggling
-                        ? null
-                        : (open) => viewModel.setOpen(open: open),
+                          ),
+                      ],
+                    ),
                   ),
                 ],
               ),
               const SizedBox(height: DymTokenSpace.s3),
+              DymSwitchTile(
+                title: viewModel.closedByHours
+                    ? l10n.myStoreClosedByHours
+                    : store.isOpen
+                    ? l10n.myStoreOpen
+                    : l10n.myStoreClosed,
+                subtitle: viewModel.closedByHours
+                    ? l10n.myStoreClosedByHoursHint
+                    : store.isOpen
+                    ? l10n.myStoreOpenHint
+                    : l10n.myStoreClosedHint,
+                value: store.isOpen,
+                onChanged: viewModel.suspended || viewModel.toggling
+                    ? null
+                    : (open) => viewModel.setOpen(open: open),
+              ),
               if (viewModel.suspended)
                 StorePrivacyNote(text: l10n.myStoreSuspended)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
-              if (onBroadcast case final broadcast?) ...[
-                DymMenuRow(
-                  icon: Icons.campaign_rounded,
-                  label: l10n.broadcastEntry,
-                  onTap: broadcast,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onContents case final contents?) ...[
-                DymMenuRow(
-                  icon: Icons.play_circle_rounded,
-                  label: l10n.contentMine,
-                  onTap: contents,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onTill case final till?) ...[
-                DymMenuRow(
-                  icon: Icons.point_of_sale_rounded,
-                  label: l10n.tillTitle,
-                  onTap: till,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onMembership case final membership?) ...[
-                DymMenuRow(
-                  icon: Icons.workspace_premium_rounded,
-                  label: l10n.membershipVendorTitle,
-                  onTap: membership,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onGroupOffers case final groups?) ...[
-                DymMenuRow(
-                  icon: Icons.diversity_3_rounded,
-                  label: l10n.groupOfferTitle,
-                  onTap: groups,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onHaggling case final haggling?) ...[
-                DymMenuRow(
-                  icon: Icons.handshake_rounded,
-                  label: l10n.hagglingTitle,
-                  onTap: haggling,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onWholesale case final wholesale?) ...[
-                DymMenuRow(
-                  icon: Icons.warehouse_rounded,
-                  label: l10n.wholesaleTitle,
-                  onTap: wholesale,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onStudio case final studio?) ...[
-                DymMenuRow(
-                  icon: Icons.campaign_rounded,
-                  label: l10n.studioTitle,
-                  onTap: studio,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onCredit case final credit?) ...[
-                DymMenuRow(
-                  icon: Icons.menu_book_rounded,
-                  label: l10n.creditTitle,
-                  onTap: credit,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onCourierCash case final cash?) ...[
-                DymMenuRow(
-                  icon: Icons.two_wheeler_rounded,
-                  label: l10n.courierCashTitle,
-                  onTap: cash,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              if (onReviews case final reviews?) ...[
-                DymMenuRow(
-                  icon: Icons.star_rounded,
-                  label: l10n.reviewMine,
-                  onTap: reviews,
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
-              for (final (icon, label, value, step) in rows) ...[
-                DymMenuRow(
-                  icon: icon,
-                  label: label,
-                  value: value,
-                  onTap: () => viewModel.edit(step),
-                ),
-                const SizedBox(height: DymTokenSpace.s2),
-              ],
+              group(l10n.storeGroupMoney, [
+                if (onTill case final till?)
+                  row(Icons.point_of_sale_outlined, l10n.tillTitle, till),
+                if (onCredit case final credit?)
+                  row(Icons.menu_book_outlined, l10n.creditTitle, credit),
+                if (onCourierCash case final cash?)
+                  row(Icons.two_wheeler_outlined, l10n.courierCashTitle, cash),
+              ]),
+              group(l10n.storeGroupSell, [
+                if (onHaggling case final haggling?)
+                  row(Icons.handshake_outlined, l10n.hagglingTitle, haggling),
+                if (onGroupOffers case final groups?)
+                  row(Icons.diversity_3_outlined, l10n.groupOfferTitle, groups),
+                if (onWholesale case final wholesale?)
+                  row(Icons.warehouse_outlined, l10n.wholesaleTitle, wholesale),
+                if (onMembership case final membership?)
+                  row(
+                    Icons.workspace_premium_outlined,
+                    l10n.membershipVendorTitle,
+                    membership,
+                  ),
+                if (onStudio case final studio?)
+                  row(Icons.campaign_outlined, l10n.studioTitle, studio),
+                if (onContents case final contents?)
+                  row(
+                    Icons.play_circle_outline_rounded,
+                    l10n.contentMine,
+                    contents,
+                  ),
+                if (onBroadcast case final broadcast?)
+                  row(Icons.send_outlined, l10n.broadcastEntry, broadcast),
+                if (onReviews case final reviews?)
+                  row(Icons.star_outline_rounded, l10n.reviewMine, reviews),
+              ]),
+              group(l10n.storeGroupSettings, [
+                for (final (icon, label, value, step) in rows)
+                  DymMenuRow(
+                    icon: icon,
+                    label: label,
+                    value: value,
+                    onTap: () => viewModel.edit(step),
+                  ),
+              ]),
+              group(null, [
+                if (onAccount case final account?)
+                  row(
+                    Icons.person_outline_rounded,
+                    l10n.storeMyAccount,
+                    account,
+                  ),
+              ]),
             ],
           );
         },

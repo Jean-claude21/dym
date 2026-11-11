@@ -42,7 +42,8 @@ class DymNavRail extends StatelessWidget {
     final c = context.dym.colors;
     final itemHeight = extended
         ? DymTokenSize.touchMin + 8
-        : 54 + MediaQuery.textScalerOf(context).scale(20);
+        // Deux lignes de libellé possibles (« Aujourd'hui » à 130 %).
+        : 54 + MediaQuery.textScalerOf(context).scale(34);
     return Container(
       width: extended
           ? DymTokenLayout.railExtendedWidth
