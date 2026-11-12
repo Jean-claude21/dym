@@ -127,8 +127,9 @@ Changer un élément de ce tableau exige une décision dans `docs/architecture/d
   - `hotfix/<slug>` : correctif urgent créé depuis `main`, fusionné dans `main` puis dans `dev`.
 - Aucun commit direct sur `main` ni sur `dev` : tout passe par une pull request.
 - Commits conventionnels (`feat:`, `fix:`, `docs:`, `chore:`, `test:`, `refactor:`).
-- Relecture humaine obligatoire avant fusion pour : migrations, RLS, authentification, argent,
-  transitions de statut, webhooks.
+- Relecture renforcée avant fusion pour : migrations, RLS, authentification, argent,
+  transitions de statut, webhooks. Elle est déléguée à l'agent (décision du porteur, 2026-11-12) :
+  diff relu, CI verte, pgTAP sur une branche Neon jetable ; l'agent fusionne alors dans `dev`.
 - La CI exécute l'analyse, les tests Dart, pgTAP et la vérification des migrations sur une branche
   Neon éphémère.
 
@@ -143,4 +144,4 @@ Changer un élément de ce tableau exige une décision dans `docs/architecture/d
   toute dérogation est justifiée dans la section « Complexity Tracking ».
 - Guide opérationnel pour les agents : `AGENTS.md`.
 
-**Version**: 2.0.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-11-09
+**Version**: 2.1.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-11-12
