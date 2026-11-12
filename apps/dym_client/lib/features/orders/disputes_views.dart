@@ -358,7 +358,7 @@ class _ThreadState extends State<_Thread> {
         if (d.isOpen)
           DymContentWidth.form(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 8, 12),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 12),
               child: Row(
                 children: [
                   Expanded(
@@ -370,6 +370,7 @@ class _ThreadState extends State<_Thread> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                   ),
+                  const SizedBox(width: DymTokenSpace.s2),
                   IconButton.filled(
                     tooltip: l10n.disputeSendMessage,
                     style: IconButton.styleFrom(

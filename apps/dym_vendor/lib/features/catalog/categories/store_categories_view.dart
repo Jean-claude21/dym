@@ -330,7 +330,7 @@ class _NewCategoryState extends State<_NewCategory> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               field,
-              const SizedBox(height: DymTokenSpace.s2),
+              const SizedBox(height: DymTokenSpace.s3),
               DymButton(
                 label: l10n.categoriesAdd,
                 icon: Icons.add_rounded,

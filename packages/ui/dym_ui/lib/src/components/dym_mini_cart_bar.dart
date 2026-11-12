@@ -196,8 +196,9 @@ class _Thumb extends StatelessWidget {
                 height: 22,
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 alignment: Alignment.center,
+                // Badge du panier : jaune soleil (moment fort).
                 decoration: BoxDecoration(
-                  color: c.pimentStrong,
+                  color: c.plantain,
                   borderRadius: BorderRadius.circular(DymTokenRadius.chip),
                   border: Border.all(color: c.onBrand, width: 1.5),
                 ),
@@ -205,8 +206,8 @@ class _Thumb extends StatelessWidget {
                   '$count',
                   style: context.dym.text.label.copyWith(
                     fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: c.onBrand,
+                    fontWeight: FontWeight.w700,
+                    color: c.textPrimary,
                   ),
                 ),
               ),

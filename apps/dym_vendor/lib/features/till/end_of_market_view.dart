@@ -133,8 +133,10 @@ class EndOfMarketView extends StackedView<EndOfMarketViewModel> {
               DymContentWidth.form(
                 child: Text(l10n.eomPercent, style: t.label),
               ),
+              const SizedBox(height: DymTokenSpace.s3),
               DymContentWidth.form(
                 child: Wrap(
+                  runSpacing: DymTokenSpace.s2,
                   spacing: DymTokenSpace.s2,
                   children: [
                     for (final p in EndOfMarketViewModel.percents)
@@ -152,6 +154,7 @@ class EndOfMarketView extends StackedView<EndOfMarketViewModel> {
               ),
               DymContentWidth.form(
                 child: Wrap(
+                  runSpacing: DymTokenSpace.s2,
                   spacing: DymTokenSpace.s2,
                   children: [
                     for (final h in EndOfMarketViewModel.durations)

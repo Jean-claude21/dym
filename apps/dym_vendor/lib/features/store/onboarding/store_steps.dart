@@ -173,6 +173,7 @@ class _AddressStep extends StatelessWidget {
       children: [
         StoreFieldLabel(l10n.storeZoneLabel, suffix: l10n.storeZoneVisible),
         Wrap(
+          runSpacing: DymTokenSpace.s2,
           spacing: DymTokenSpace.s2,
           children: [
             for (final zone in zones)
@@ -184,7 +185,6 @@ class _AddressStep extends StatelessWidget {
           ],
         ),
         _gap,
-        StoreFieldLabel(l10n.storeAddressLabel),
         StoreTextField(
           label: l10n.storeAddressLabel,
           hint: l10n.storeAddressHint,
@@ -193,7 +193,6 @@ class _AddressStep extends StatelessWidget {
           maxLength: StoreOnboardingViewModel.addressMax,
         ),
         _gap,
-        StoreFieldLabel(l10n.storeLandmarkLabel),
         StoreTextField(
           label: l10n.storeLandmarkLabel,
           hint: l10n.storeLandmarkHint,
@@ -369,6 +368,7 @@ class _DeliveryStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         StoreSection(
+          title: l10n.storeDeliveryZonesTitle,
           trailing: TextButton(
             onPressed: vm.selectAllDeliveryZones,
             style: TextButton.styleFrom(
@@ -378,6 +378,7 @@ class _DeliveryStep extends StatelessWidget {
           ),
           children: [
             Wrap(
+              runSpacing: DymTokenSpace.s2,
               spacing: DymTokenSpace.s2,
               children: [
                 for (final zone in zones)
@@ -396,6 +397,7 @@ class _DeliveryStep extends StatelessWidget {
           title: l10n.storePrepTitle,
           children: [
             Wrap(
+              runSpacing: DymTokenSpace.s2,
               spacing: DymTokenSpace.s2,
               children: [
                 for (final minutes in vm.prepChoices)
@@ -546,7 +548,7 @@ class _PaymentCard extends StatelessWidget {
                             if (!available)
                               DymPromoBadge(
                                 label: l10n.storePaymentSoon,
-                                tone: DymPromoTone.highlight,
+                                tone: DymPromoTone.info,
                               ),
                           ],
                         ),

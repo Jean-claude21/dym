@@ -988,6 +988,7 @@ class _FiltersSheetState extends State<SearchFiltersSheet> {
                 ),
                 label(l10n.filtersSort),
                 Wrap(
+                  runSpacing: DymTokenSpace.s2,
                   spacing: DymTokenSpace.s2,
                   children: [
                     for (final (sort, text) in [
@@ -1004,6 +1005,7 @@ class _FiltersSheetState extends State<SearchFiltersSheet> {
                 ),
                 label(l10n.filtersOrigin),
                 Wrap(
+                  runSpacing: DymTokenSpace.s2,
                   spacing: DymTokenSpace.s2,
                   children: [
                     for (final origin
@@ -1037,6 +1039,7 @@ class _FiltersSheetState extends State<SearchFiltersSheet> {
                   ),
                 label(l10n.filtersAisle),
                 Wrap(
+                  runSpacing: DymTokenSpace.s2,
                   spacing: DymTokenSpace.s2,
                   children: [
                     for (final category

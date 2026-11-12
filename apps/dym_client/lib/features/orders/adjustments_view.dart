@@ -311,7 +311,7 @@ class _ClaimSheetState extends State<_ClaimSheet> {
               onPressed: () =>
                   Navigator.of(context).pop((_variant, PhotoSource.camera)),
             ),
-            const SizedBox(height: DymTokenSpace.s2),
+            const SizedBox(height: DymTokenSpace.s3),
             DymButton(
               label: l10n.photoFromGallery,
               icon: Icons.photo_library_rounded,

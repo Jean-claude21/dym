@@ -487,12 +487,14 @@ class _NewOfferState extends State<_NewOffer> {
           controller: _price,
           keyboardType: TextInputType.number,
         ),
+        const SizedBox(height: DymTokenSpace.s4),
         DymTextField(
           label: l10n.wholesaleMinQuantity,
           controller: _min,
           keyboardType: TextInputType.number,
         ),
         Wrap(
+          runSpacing: DymTokenSpace.s2,
           spacing: DymTokenSpace.s2,
           children: [
             for (final d in const [3, 7, 14])

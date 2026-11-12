@@ -11,7 +11,11 @@ class DymAvatar extends StatelessWidget {
     this.presenceDot = false,
     this.ring = true,
     this.semanticLabel,
+    this.initial,
   });
+
+  /// Initiale affichée sous la photo : visible si la photo manque.
+  final String? initial;
 
   /// Photo.
   final ImageProvider image;
@@ -31,6 +35,7 @@ class DymAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
+    final letter = initial?.trim();
     return Semantics(
       image: true,
       label: semanticLabel,
@@ -44,6 +49,22 @@ class DymAvatar extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: ring ? Border.all(color: c.card, width: 3) : null,
                 color: c.tintVertTendre,
+              ),
+              alignment: Alignment.center,
+              child: letter == null || letter.isEmpty
+                  ? null
+                  : Text(
+                      letter.characters.first.toUpperCase(),
+                      style: context.dym.text.title.copyWith(
+                        color: c.brandDeep,
+                        fontSize: size * 0.4,
+                      ),
+                    ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: ring ? Border.all(color: c.card, width: 3) : null,
                 image: DecorationImage(
                   image: image,
                   fit: BoxFit.cover,

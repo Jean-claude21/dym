@@ -239,6 +239,7 @@ class OrdersView extends StackedView<OrdersViewModel> {
             const SizedBox(height: DymTokenSpace.s2),
             DymContentWidth.form(
               child: Wrap(
+                runSpacing: DymTokenSpace.s2,
                 spacing: DymTokenSpace.s2,
                 children: [
                   for (final (scope, label) in [
@@ -957,7 +958,7 @@ class _DisputeReplySheetState extends State<DisputeReplySheet> {
                 maxLength: 1000,
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(height: DymTokenSpace.s2),
+              const SizedBox(height: DymTokenSpace.s4),
               ListenableBuilder(
                 listenable: _text,
                 builder: (context, _) => DymButton(
@@ -1090,7 +1091,7 @@ class _RefusalSheetState extends State<RefusalSheet> {
                 maxLength: 200,
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(height: DymTokenSpace.s2),
+              const SizedBox(height: DymTokenSpace.s4),
               DymButton(
                 label: l10n.vendorRefuseConfirm,
                 icon: Icons.close_rounded,

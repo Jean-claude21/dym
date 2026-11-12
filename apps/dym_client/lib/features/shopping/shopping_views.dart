@@ -425,7 +425,7 @@ class _DescribeSheetState extends State<_DescribeSheet> {
             textInputAction: TextInputAction.send,
             onSubmitted: (_) => _send(),
           ),
-          const SizedBox(height: DymTokenSpace.s3),
+          const SizedBox(height: DymTokenSpace.s4),
           DymButton(
             label: l10n.shoppingDescribeAction,
             icon: Icons.auto_awesome_rounded,

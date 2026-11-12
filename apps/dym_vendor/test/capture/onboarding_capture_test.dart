@@ -108,6 +108,15 @@ Future<void> _capture(WidgetTester tester, String name, Widget child) async {
 }
 
 void main() {
+  for (final step in [3, 4, 5, 6, 7]) {
+    testWidgets('étape $step', (tester) async {
+      await _capture(
+        tester,
+        'v_onboarding_$step',
+        StoreOnboardingView(service: _atStep(step), onOpened: (_, _) {}),
+      );
+    });
+  }
   testWidgets('onboarding', (tester) async {
     await _capture(
       tester,

@@ -74,7 +74,10 @@ MemoryOrdersService _orders() => MemoryOrdersService(
 void main() {
   HomeView home(ClientTab tab) => HomeView(
     service: _Auth(),
-    discovery: memoryDiscovery(photos: capturePhoto),
+    discovery: memoryDiscovery(
+      photos: capturePhoto,
+      flags: const [FeatureFlag(key: 'intent_copilot', isEnabled: true)],
+    ),
     navigator: _Nav(),
     orders: _orders(),
     initialTab: tab,

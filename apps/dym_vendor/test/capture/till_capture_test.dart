@@ -9,6 +9,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:dym_vendor/features/till/end_of_market_view.dart';
 import 'package:dym_vendor/features/till/till_service.dart';
 import 'package:dym_vendor/features/till/till_view.dart';
 import 'package:flutter/material.dart';
@@ -232,5 +233,12 @@ Future<void> _capture(WidgetTester tester, String name, Widget child) async {
 void main() {
   testWidgets('till', (tester) async {
     await _capture(tester, 'v_till', TillView(service: _Till(), onBack: () {}));
+  });
+  testWidgets('fin de marché', (tester) async {
+    await _capture(
+      tester,
+      'v_fin_marche',
+      EndOfMarketView(service: _Till(), onBack: () {}),
+    );
   });
 }

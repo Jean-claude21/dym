@@ -148,7 +148,7 @@ class OrderSentView extends StackedView<OrderSentViewModel> {
                         icon: Icons.local_shipping_rounded,
                         onPressed: onTrack,
                       ),
-                      const SizedBox(height: DymTokenSpace.s2),
+                      const SizedBox(height: DymTokenSpace.s3),
                     ],
                     DymButton(
                       label: l10n.orderBackHome,

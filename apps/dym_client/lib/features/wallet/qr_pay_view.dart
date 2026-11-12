@@ -126,7 +126,7 @@ class QrPayView extends StackedView<QrPayViewModel> {
                   children: [
                     Text(preview.storeName, style: t.title),
                     if (preview.label case final label?) Text(label),
-                    const SizedBox(height: DymTokenSpace.s2),
+                    const SizedBox(height: DymTokenSpace.s3),
                     Text(vm.money(preview.amountMinor), style: t.display),
                     const SizedBox(height: DymTokenSpace.s3),
                     DymButton(
@@ -201,6 +201,7 @@ class _CodeEntryState extends State<_CodeEntry> {
           maxLength: 6,
           onSubmitted: widget.onSubmit,
         ),
+        const SizedBox(height: DymTokenSpace.s4),
         DymButton(
           label: l10n.qrPayContinue,
           variant: DymButtonVariant.secondary,

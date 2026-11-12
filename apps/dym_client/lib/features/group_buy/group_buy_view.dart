@@ -238,7 +238,7 @@ class GroupOfferCard extends StatelessWidget {
               ),
             ],
             if (offer.open && !offer.ordered) ...[
-              const SizedBox(height: DymTokenSpace.s2),
+              const SizedBox(height: DymTokenSpace.s3),
               DymButton(
                 label: offer.joined ? l10n.groupBuyChange : l10n.groupBuyJoin,
                 icon: Icons.group_add_rounded,
@@ -311,7 +311,7 @@ class _JoinSheetState extends State<_JoinSheet> {
               keyboardType: TextInputType.number,
               autofocus: true,
             ),
-            const SizedBox(height: DymTokenSpace.s3),
+            const SizedBox(height: DymTokenSpace.s4),
             DymButton(
               label: l10n.groupBuyJoin,
               loading: _busy,

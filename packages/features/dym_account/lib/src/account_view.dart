@@ -406,7 +406,7 @@ class _NameSheetState extends State<_NameSheet> {
               autofillHints: const [AutofillHints.givenName],
               onSubmitted: (_) => save(),
             ),
-            const SizedBox(height: DymTokenSpace.s3),
+            const SizedBox(height: DymTokenSpace.s4),
             ListenableBuilder(
               listenable: _name,
               builder: (context, _) => DymButton(

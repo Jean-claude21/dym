@@ -275,7 +275,7 @@ class _AmountFormState extends State<_AmountForm> {
           ),
           const SizedBox(height: DymTokenSpace.s2),
           DymTextField(label: l10n.qrChargeLabel, controller: _label),
-          const SizedBox(height: DymTokenSpace.s3),
+          const SizedBox(height: DymTokenSpace.s4),
           DymButton(
             label: l10n.qrChargeShow,
             icon: Icons.qr_code_rounded,

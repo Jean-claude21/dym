@@ -243,6 +243,7 @@ class _OrderRow extends StatelessWidget {
                 image: storeFallback(order.store.origin),
                 size: 52,
                 ring: false,
+                initial: order.store.name,
               ),
               const SizedBox(width: DymTokenSpace.s3),
               Expanded(
@@ -423,7 +424,7 @@ class _Tracking extends StatelessWidget {
                 variant: DymButtonVariant.destructive,
                 onPressed: () => Navigator.pop(sheet, true),
               ),
-              const SizedBox(height: DymTokenSpace.s2),
+              const SizedBox(height: DymTokenSpace.s3),
               DymButton(
                 label: l10n.trackCancelKeep,
                 variant: DymButtonVariant.secondary,

@@ -346,7 +346,7 @@ class CreditView extends StackedView<CreditViewModel> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: DymTokenSpace.s2),
+                      const SizedBox(height: DymTokenSpace.s3),
                       DymContentWidth(
                         child: DymButton(
                           label: l10n.creditRemind,
@@ -451,11 +451,13 @@ class _NewCreditState extends State<_NewCredit> {
           controller: _name,
           autofocus: true,
         ),
+        const SizedBox(height: DymTokenSpace.s4),
         DymTextField(
           label: l10n.courierPhone,
           controller: _phone,
           keyboardType: TextInputType.phone,
         ),
+        const SizedBox(height: DymTokenSpace.s4),
         DymTextField(
           label: l10n.creditLimitField,
           controller: _limit,
@@ -504,6 +506,7 @@ class _EntryState extends State<_Entry> {
           keyboardType: TextInputType.number,
           autofocus: true,
         ),
+        const SizedBox(height: DymTokenSpace.s4),
         DymTextField(label: l10n.creditNote, controller: _note),
       ],
       action: l10n.tillSave,

@@ -251,7 +251,7 @@ class VoiceSearchView extends StackedView<VoiceSearchViewModel> {
                         const SizedBox(height: DymTokenSpace.s3),
                         Wrap(
                           spacing: DymTokenSpace.s2,
-                          runSpacing: DymTokenSpace.s2,
+                          runSpacing: DymTokenSpace.s3,
                           children: [
                             DymButton(
                               label: l10n.voiceSearch,

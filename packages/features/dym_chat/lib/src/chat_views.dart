@@ -106,7 +106,7 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
         Expanded(
           child: Text(
             l10n.chatMessagesTitle,
-            style: t.display.copyWith(fontSize: 32, color: c.brandDeep),
+            style: t.display,
           ),
         ),
         if (vm.ready)
@@ -653,9 +653,15 @@ class _Photo extends StatelessWidget {
                     image: vm.service.mediaImage(url),
                     fit: BoxFit.cover,
                     semanticLabel: l10n.chatPhoto,
-                    errorBuilder: (_, _, _) => Icon(
-                      Icons.broken_image_rounded,
-                      color: c.textSecondary,
+                    // Photo illisible : un cadre menthe, jamais une icône
+                    // flottante.
+                    errorBuilder: (_, _, _) => ColoredBox(
+                      color: c.tintVertTendre,
+                      child: Icon(
+                        Icons.photo_rounded,
+                        size: 48,
+                        color: c.brandDeep,
+                      ),
                     ),
                   ),
           ),
@@ -665,6 +671,12 @@ class _Photo extends StatelessWidget {
     );
   }
 }
+
+/// Vignette produit sans photo : la feuille sur menthe, comme partout.
+Widget _leaf(DymColors c) => ColoredBox(
+  color: c.tintVertTendre,
+  child: Icon(Icons.eco_outlined, color: c.brandDeep, size: 40),
+);
 
 class _ProductCard extends StatelessWidget {
   const new({
@@ -723,12 +735,11 @@ class _ProductCard extends StatelessWidget {
                   width: 96,
                   height: 96,
                   child: item.photoKey == null
-                      ? ColoredBox(color: c.tintVertTendre)
+                      ? _leaf(c)
                       : Image(
                           image: vm.service.productPhoto(item.photoKey!),
                           fit: BoxFit.cover,
-                          errorBuilder: (_, _, _) =>
-                              ColoredBox(color: c.tintVertTendre),
+                          errorBuilder: (_, _, _) => _leaf(c),
                         ),
                 ),
               ),
@@ -740,6 +751,7 @@ class _ProductCard extends StatelessWidget {
                   children: [
                     Text(item.name, style: t.title.copyWith(fontSize: 18)),
                     Wrap(
+                      runSpacing: DymTokenSpace.s2,
                       spacing: 4,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [

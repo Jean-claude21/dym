@@ -156,7 +156,7 @@ class _TikTokState extends State<_TikTok> {
             textInputAction: TextInputAction.done,
             onSubmitted: widget.vm.saveHandle,
           ),
-          const SizedBox(height: DymTokenSpace.s2),
+          const SizedBox(height: DymTokenSpace.s4),
           DymButton(
             label: l10n.tiktokSaveHandle,
             icon: Icons.link_rounded,
@@ -170,7 +170,7 @@ class _TikTokState extends State<_TikTok> {
             l10n.tiktokUnverified,
             style: t.label.copyWith(color: c.textSecondary),
           ),
-          const SizedBox(height: DymTokenSpace.s2),
+          const SizedBox(height: DymTokenSpace.s3),
           DymButton(
             label: l10n.tiktokImportTitle,
             icon: Icons.download_rounded,
@@ -484,7 +484,7 @@ class _BecomeState extends State<_Become> {
             maxLength: 40,
           ),
         ),
-        const SizedBox(height: DymTokenSpace.s3),
+        const SizedBox(height: DymTokenSpace.s4),
         DymContentWidth.form(
           child: DymTextField(
             label: l10n.creatorBio,
@@ -497,7 +497,7 @@ class _BecomeState extends State<_Become> {
           DymContentWidth.form(
             child: CartIssue(label: creatorErrorLabel(l10n, p)),
           ),
-        const SizedBox(height: DymTokenSpace.s3),
+        const SizedBox(height: DymTokenSpace.s4),
         DymContentWidth.form(
           child: DymButton(
             label: l10n.creatorBecome,
@@ -759,6 +759,7 @@ class ComposePostView extends StackedView<ComposeViewModel> {
                       onChanged: (value) => vm.caption = value,
                     ),
                   ),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymContentWidth.form(
                     child: DymSectionHeader(
                       title: l10n.creatorCategory,
@@ -860,7 +861,7 @@ class ComposePostView extends StackedView<ComposeViewModel> {
                     DymContentWidth.form(
                       child: CartIssue(label: creatorErrorLabel(l10n, pr)),
                     ),
-                  const SizedBox(height: DymTokenSpace.s3),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymContentWidth.form(
                     child: DymButton(
                       label: l10n.creatorPublish,

@@ -106,7 +106,7 @@ class SpacesView extends StackedView<SpacesViewModel> {
                             },
                     ),
                   ),
-                  const SizedBox(height: DymTokenSpace.s2),
+                  const SizedBox(height: DymTokenSpace.s3),
                   SizedBox(
                     child: DymButton(
                       label: l10n.spaceJoin,

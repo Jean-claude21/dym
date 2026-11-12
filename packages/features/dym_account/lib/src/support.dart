@@ -299,7 +299,7 @@ class SupportView extends StackedView<SupportViewModel> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(l10n.supportNew, style: t.title.copyWith(fontSize: 22)),
-          const SizedBox(height: DymTokenSpace.s2),
+          const SizedBox(height: DymTokenSpace.s4),
           DropdownButtonFormField<TicketSubject>(
             initialValue: vm.subject,
             isExpanded: true,
@@ -314,7 +314,7 @@ class SupportView extends StackedView<SupportViewModel> {
             onChanged: vm.setSubject,
           ),
           if (vm.orders.isNotEmpty) ...[
-            const SizedBox(height: DymTokenSpace.s2),
+            const SizedBox(height: DymTokenSpace.s4),
             DropdownButtonFormField<String?>(
               initialValue: vm.orderId,
               isExpanded: true,
@@ -330,7 +330,7 @@ class SupportView extends StackedView<SupportViewModel> {
               onChanged: vm.setOrder,
             ),
           ],
-          const SizedBox(height: DymTokenSpace.s2),
+          const SizedBox(height: DymTokenSpace.s4),
           _BodyField(vm: vm),
           if (vm.sendFailure != null)
             Text(
@@ -341,7 +341,7 @@ class SupportView extends StackedView<SupportViewModel> {
             ),
           if (vm.sent)
             Text(l10n.supportSent, style: t.label.copyWith(color: c.brandDeep)),
-          const SizedBox(height: DymTokenSpace.s2),
+          const SizedBox(height: DymTokenSpace.s4),
           DymButton(
             label: l10n.supportSend,
             icon: Icons.send_rounded,

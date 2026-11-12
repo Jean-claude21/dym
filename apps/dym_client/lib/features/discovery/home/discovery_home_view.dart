@@ -71,6 +71,23 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final vm = viewModel;
+    final shortcuts = [
+      if (onCopilot case final copilot?
+          when vm.config?.isEnabled('intent_copilot') ?? false)
+        _Shortcut(
+          icon: Icons.auto_awesome_outlined,
+          label: l10n.homeCopilotShort,
+          hint: l10n.homeCopilotHint,
+          onTap: copilot,
+        ),
+      if (onShoppingLists case final lists?)
+        _Shortcut(
+          icon: Icons.checklist_rounded,
+          label: l10n.shoppingHomeTile,
+          hint: l10n.shoppingHomeTileHint,
+          onTap: lists,
+        ),
+    ];
     if (!vm.ready) {
       return SafeArea(
         child: DiscoveryState(
@@ -169,14 +186,22 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                   const SizedBox(height: DymTokenSpace.s3),
                   banner,
                 ],
-                if (onCopilot case final copilot?
-                    when vm.config?.isEnabled('intent_copilot') ?? false) ...[
+                // Deux raccourcis côte à côte : moins de cartes empilées.
+                if (shortcuts case [final only]) ...[
                   const SizedBox(height: DymTokenSpace.s3),
-                  _LinkRow(
-                    icon: Icons.auto_awesome_outlined,
-                    label: l10n.copilotEntry,
-                    onTap: copilot,
-                    accent: true,
+                  only.asRow(),
+                ] else if (shortcuts.isNotEmpty) ...[
+                  const SizedBox(height: DymTokenSpace.s3),
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final (i, tile) in shortcuts.indexed) ...[
+                          if (i > 0) const SizedBox(width: DymTokenSpace.s2),
+                          Expanded(child: tile),
+                        ],
+                      ],
+                    ),
                   ),
                 ],
                 if (stories case final row?) ...[
@@ -189,16 +214,6 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                     child: _ReorderCard(
                       order: last,
                       onReorder: () => onReorder!(last.orderId),
-                    ),
-                  ),
-                if (onShoppingLists case final lists?)
-                  Padding(
-                    padding: const EdgeInsets.only(top: DymTokenSpace.s2),
-                    child: _LinkRow(
-                      icon: Icons.checklist_rounded,
-                      label: l10n.shoppingHomeTile,
-                      hint: l10n.shoppingHomeTileHint,
-                      onTap: lists,
                     ),
                   ),
                 if (vm.aisles.isNotEmpty) ...[
@@ -412,20 +427,26 @@ Future<void> showZonePicker(
 
 /// Ligne d'accès (assistant, listes de courses) : icône dans un carré menthe,
 /// libellé, chevron, carte à filet.
-class _LinkRow extends StatelessWidget {
+/// Raccourci compact : icône sur menthe, libellé, précision.
+class _Shortcut extends StatelessWidget {
   const new({
     required this.icon,
     required this.label,
+    required this.hint,
     required this.onTap,
-    this.hint,
-    this.accent = false,
+    this.row = false,
   });
 
   final IconData icon;
   final String label;
-  final String? hint;
+  final String hint;
   final VoidCallback onTap;
-  final bool accent;
+
+  /// Seul raccourci : une ligne (icône à gauche) plutôt qu'une tuile haute.
+  final bool row;
+
+  _Shortcut asRow() =>
+      _Shortcut(icon: icon, label: label, hint: hint, onTap: onTap, row: true);
 
   @override
   Widget build(BuildContext context) {
@@ -442,41 +463,50 @@ class _LinkRow extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(DymTokenSpace.s3),
-          child: Row(
+          child: Flex(
+            direction: row ? Axis.horizontal : Axis.vertical,
+            crossAxisAlignment: row
+                ? CrossAxisAlignment.center
+                : CrossAxisAlignment.start,
             children: [
               Container(
-                width: 40,
-                height: 40,
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
                   color: c.tintVertTendre,
                   borderRadius: BorderRadius.circular(DymTokenRadius.field),
                 ),
-                child: Icon(icon, color: c.brandDeep, size: 22),
+                child: Icon(icon, color: c.brandDeep, size: 20),
               ),
-              const SizedBox(width: DymTokenSpace.s3),
-              Expanded(
+              const SizedBox(
+                height: DymTokenSpace.s2,
+                width: DymTokenSpace.s3,
+              ),
+              Flexible(
+                fit: row ? FlexFit.tight : FlexFit.loose,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       label,
-                      style: t.body.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: accent ? c.brandDeep : c.textPrimary,
+                      maxLines: row ? 1 : 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.body.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      hint,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.label.copyWith(
+                        fontWeight: FontWeight.w400,
+                        color: c.textSecondary,
                       ),
                     ),
-                    if (hint != null)
-                      Text(
-                        hint!,
-                        style: t.label.copyWith(
-                          fontWeight: FontWeight.w400,
-                          color: c.textSecondary,
-                        ),
-                      ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: c.textSecondary),
+              if (row) Icon(Icons.chevron_right, color: c.textSecondary),
             ],
           ),
         ),

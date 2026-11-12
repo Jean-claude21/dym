@@ -292,7 +292,7 @@ class _DetailState extends State<_Detail> {
               const SizedBox(height: DymTokenSpace.s2),
               Wrap(
                 spacing: DymTokenSpace.s2,
-                runSpacing: DymTokenSpace.s2,
+                runSpacing: DymTokenSpace.s3,
                 children: [
                   ListenableBuilder(
                     listenable: _text,

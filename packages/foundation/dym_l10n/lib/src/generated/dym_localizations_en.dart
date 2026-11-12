@@ -415,6 +415,9 @@ class DymLocalizationsEn extends DymLocalizations {
   String get storeDeliveryTitle => 'Where do you deliver?';
 
   @override
+  String get storeDeliveryZonesTitle => 'Areas served';
+
+  @override
   String get storeDeliverySubtitle =>
       'The neighbourhoods you take orders from. DYM handles the moto-taxi.';
 
@@ -973,6 +976,12 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get aisleAll => 'All';
+
+  @override
+  String get aisleWhere => 'Where to buy';
+
+  @override
+  String get aisleAnywhere => 'Anywhere';
 
   @override
   String get aisleEmpty => 'Nothing in this aisle for your neighbourhood yet.';
@@ -3380,6 +3389,12 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get copilotEntry =>
       'Tell me what you want to cook, I\'ll build your basket.';
+
+  @override
+  String get homeCopilotShort => 'Build my basket';
+
+  @override
+  String get homeCopilotHint => 'Say what you\'re cooking';
 
   @override
   String get copilotExample => 'For example: “Okra stew for 4 people tonight”';

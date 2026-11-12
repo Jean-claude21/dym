@@ -201,6 +201,8 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `courier-refresh` | Livreur : Missions (tournée, remise par code au clavier géant) · Historique · Gains · Moi | 4 h | ✅ Spec 060 (missions avec course en cours, remise au clavier géant `DymKeypad`, historique, gains à filets) |
 | `ops-console` | Opérations : sept domaines (En direct, Commandes, Support, Comptes, Finances, Configuration, Journal) à la place des onze onglets | 4 h | ✅ Spec 061 (sept domaines avec sous-sections en puces, En direct selon la planche 06) |
 | `field-performance` | Premier écran depuis le cache, gestes optimistes et file hors ligne, images WebP à budget, mesures sur Android d'entrée de gamme ; les huit parcours de `PARCOURS.md` en tests d'intégration | 4 h | 🟡 Spec 062, partielle : images à budget (test), décodage à la taille affichée, rupture optimiste ; restent le cache persistant (décision de stockage), la file hors ligne, la vidéo selon le réseau, les mesures Android et les huit parcours en intégration |
+| `remaining-pages` | Pages restantes refaites ou revisitées (caisse, ardoise, éditeur, fiche commande admin, puis toutes les autres) | 3 h | ✅ Spec 063 |
+| `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au
 défilement, ouverture en moins de 3 s, validés par le porteur produit. La phase s'ouvre quand le

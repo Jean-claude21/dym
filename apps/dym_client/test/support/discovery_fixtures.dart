@@ -4,7 +4,7 @@ import 'package:dym_models/dym_models.dart';
 import 'package:flutter/widgets.dart';
 
 /// Référentiel du Togo réduit (quartiers, rayons, origines, unités).
-CountryConfig togoConfig() {
+CountryConfig togoConfig({List<FeatureFlag> flags = const []}) {
   const zones = [('be', 'Bè'), ('tokoin', 'Tokoin'), ('agoe', 'Agoè')];
   const categories = [
     ('legumes', null, 'Légumes', 'Vegetables', 'legumes'),
@@ -61,7 +61,7 @@ CountryConfig togoConfig() {
     units: const [],
     paymentMethods: const [],
     deliveryFees: const [],
-    featureFlags: const [],
+    featureFlags: flags,
   );
 }
 
@@ -177,8 +177,9 @@ List<ProductPageData> products() => [
 MemoryDiscoveryService memoryDiscovery({
   ZoneMatch? zoneMatch,
   ImageProvider Function(String key)? photos,
+  List<FeatureFlag> flags = const [],
 }) => MemoryDiscoveryService(
-  config: togoConfig(),
+  config: togoConfig(flags: flags),
   stores: [esi, kodjo, afi],
   products: products(),
   zoneMatch: zoneMatch,

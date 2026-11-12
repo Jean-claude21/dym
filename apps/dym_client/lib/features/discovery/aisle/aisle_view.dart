@@ -81,43 +81,43 @@ class AisleView extends StackedView<AisleViewModel> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 56,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(
-                  horizontal: DymLayout.gutter(context),
-                ),
-                children: [
-                  for (final chip in [
+            // Sous-rayons : la catégorie de produit (Tomates, Feuilles…).
+            if (vm.subCategories.isNotEmpty)
+              _ChipRow(
+                chips: [
+                  (
+                    l10n.aisleAll,
+                    vm.subCategoryId == null,
+                    () => vm.selectSubCategory(null),
+                  ),
+                  for (final s in vm.subCategories)
                     (
-                      l10n.aisleAll,
-                      vm.origin == null && vm.subCategoryId == null,
-                      () => vm.selectOrigin(null),
+                      s.label.resolve(locale),
+                      vm.subCategoryId == s.id,
+                      () => vm.selectSubCategory(s.id),
                     ),
-                    for (final o in origins)
-                      (
-                        o.label.resolve(locale),
-                        vm.origin == o.code,
-                        () => vm.selectOrigin(o.code),
-                      ),
-                    for (final s in vm.subCategories)
-                      (
-                        s.label.resolve(locale),
-                        vm.subCategoryId == s.id,
-                        () => vm.selectSubCategory(s.id),
-                      ),
-                  ]) ...[
-                    DymFilterChip(
-                      label: chip.$1,
-                      selected: chip.$2,
-                      onTap: chip.$3,
-                    ),
-                    const SizedBox(width: DymTokenSpace.s2),
-                  ],
                 ],
               ),
-            ),
+            // Où acheter : un filtre sur la vendeuse, pas une catégorie.
+            if (origins.isNotEmpty)
+              _ChipRow(
+                lead: l10n.aisleWhere,
+                small: true,
+                chips: [
+                  (
+                    l10n.aisleAnywhere,
+                    vm.origin == null,
+                    () => vm.selectOrigin(null),
+                  ),
+                  for (final o in origins)
+                    (
+                      o.label.resolve(locale),
+                      vm.origin == o.code,
+                      () => vm.selectOrigin(o.code),
+                    ),
+                ],
+              ),
+            const SizedBox(height: DymTokenSpace.s2),
             Expanded(
               child: !vm.ready || vm.isBusy
                   ? DiscoveryState(
@@ -162,6 +162,53 @@ class AisleView extends StackedView<AisleViewModel> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Rangée de puces défilante ; [lead] l'introduit (« Où acheter »).
+class _ChipRow extends StatelessWidget {
+  const new({required this.chips, this.lead, this.small = false});
+
+  final List<(String, bool, VoidCallback)> chips;
+  final String? lead;
+  final bool small;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return SizedBox(
+      height: small ? 48 : 56,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(horizontal: DymLayout.gutter(context)),
+        children: [
+          if (lead case final l?)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(right: DymTokenSpace.s2),
+                child: Text(
+                  l,
+                  style: t.label.copyWith(
+                    color: c.textSecondary,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ),
+          for (final (label, selected, onTap) in chips) ...[
+            Center(
+              child: DymFilterChip(
+                label: label,
+                selected: selected,
+                onTap: onTap,
+              ),
+            ),
+            const SizedBox(width: DymTokenSpace.s2),
+          ],
+        ],
       ),
     );
   }

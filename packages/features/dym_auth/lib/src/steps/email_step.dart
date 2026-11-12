@@ -75,7 +75,7 @@ class _EmailStepState extends State<EmailStep> {
           },
         ),
         if (vm.usePassword) ...[
-          const SizedBox(height: DymTokenSpace.s3),
+          const SizedBox(height: DymTokenSpace.s4),
           DymTextField(
             label: l10n.authPasswordLabel,
             icon: Icons.key_rounded,

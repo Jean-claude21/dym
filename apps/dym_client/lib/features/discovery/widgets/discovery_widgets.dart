@@ -257,6 +257,7 @@ class ProductTile extends StatelessWidget {
         (false, _) => DymPromoBadge(label: l10n.productOutOfStock),
         (true, final int percent) => DymPromoBadge(
           label: l10n.endOfMarketBadge(percent),
+          tone: DymPromoTone.highlight,
         ),
         _ => null,
       },

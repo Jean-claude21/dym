@@ -818,6 +818,12 @@ abstract class DymLocalizations {
   /// **'Où livres-tu ?'**
   String get storeDeliveryTitle;
 
+  /// Titre de la liste des quartiers de livraison (inscription vendeuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'Quartiers desservis'**
+  String get storeDeliveryZonesTitle;
+
   /// Étape 5
   ///
   /// In fr, this message translates to:
@@ -1734,6 +1740,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Tous'**
   String get aisleAll;
+
+  /// Filtre d'origine de la vendeuse dans un rayon
+  ///
+  /// In fr, this message translates to:
+  /// **'Où acheter'**
+  String get aisleWhere;
+
+  /// Toutes les origines
+  ///
+  /// In fr, this message translates to:
+  /// **'Partout'**
+  String get aisleAnywhere;
 
   /// Rayon vide
   ///
@@ -5760,6 +5778,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Dis-moi ce que tu veux cuisiner, je compose ton panier.'**
   String get copilotEntry;
+
+  /// Raccourci du copilote sur l'Accueil
+  ///
+  /// In fr, this message translates to:
+  /// **'Composer mon panier'**
+  String get homeCopilotShort;
+
+  /// Précision du raccourci copilote
+  ///
+  /// In fr, this message translates to:
+  /// **'Dis ce que tu cuisines'**
+  String get homeCopilotHint;
 
   /// Exemple d'intention
   ///

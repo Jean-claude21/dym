@@ -113,9 +113,6 @@ class ProductEditorView extends StackedView<ProductEditorViewModel> {
             DymButton(
               label: published ? l10n.storeSave : l10n.productPublish,
               icon: published ? null : Icons.storefront_rounded,
-              variant: published
-                  ? DymButtonVariant.primary
-                  : DymButtonVariant.plantain,
               loading: viewModel.isBusy,
               onPressed: viewModel.canPublish ? viewModel.publish : null,
             ),
@@ -163,7 +160,7 @@ class _PhotoStep extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  StoreFieldLabel(l10n.productNameLabel),
+                  // Le libellé flottant du champ suffit.
                   StoreTextField(
                     label: l10n.productNameLabel,
                     hint: l10n.productNameHint,
@@ -178,6 +175,7 @@ class _PhotoStep extends StatelessWidget {
                   const SizedBox(height: DymTokenSpace.s4),
                   StoreFieldLabel(l10n.productAisleLabel),
                   Wrap(
+                    runSpacing: DymTokenSpace.s2,
                     spacing: DymTokenSpace.s2,
                     children: [
                       for (final category in vm.topCategories)
@@ -191,6 +189,7 @@ class _PhotoStep extends StatelessWidget {
                   if (vm.subCategories.isNotEmpty) ...[
                     const SizedBox(height: DymTokenSpace.s2),
                     Wrap(
+                      runSpacing: DymTokenSpace.s2,
                       spacing: DymTokenSpace.s2,
                       children: [
                         for (final sub in vm.subCategories)
@@ -648,6 +647,7 @@ class _PriceStep extends StatelessWidget {
             if (units.isNotEmpty) ...[
               const SizedBox(height: DymTokenSpace.s3),
               Wrap(
+                runSpacing: DymTokenSpace.s2,
                 spacing: DymTokenSpace.s2,
                 children: [
                   for (final unit in units)
@@ -707,6 +707,7 @@ class _PriceStep extends StatelessWidget {
           title: l10n.productStoreCategoryTitle,
           children: [
             Wrap(
+              runSpacing: DymTokenSpace.s2,
               spacing: DymTokenSpace.s2,
               children: [
                 for (final category in vm.storeCategories)

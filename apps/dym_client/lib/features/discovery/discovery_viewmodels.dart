@@ -179,15 +179,16 @@ class AisleViewModel extends _LoadingViewModel {
     }
   });
 
+  /// Où acheter (marché, maison, boutique) : filtre sur la vendeuse,
+  /// indépendant du sous-rayon.
   Future<void> selectOrigin(String? code) async {
     origin = code;
-    subCategoryId = null;
     await load();
   }
 
+  /// Sous-rayon (Tomates, Feuilles…) : catégorie de produit.
   Future<void> selectSubCategory(String? id) async {
     subCategoryId = id;
-    origin = null;
     await load();
   }
 
