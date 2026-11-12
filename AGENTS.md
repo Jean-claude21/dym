@@ -121,10 +121,13 @@ Les scripts Melos sont définis dans le `pubspec.yaml` racine.
 - **Réseau :** nouvelle tentative seulement sur erreur réseau ou 5xx ; clé d'idempotence sur toute création.
 - **Fichiers générés** (`*.g.dart`, `*.freezed.dart`, `*.router.dart`, `*.locator.dart`) : ne jamais les modifier à la main.
 
-## Zones sensibles (relecture humaine obligatoire)
+## Zones sensibles (relecture renforcée)
 
 Migrations, politiques RLS, authentification, argent et paiements, transitions de statut,
-webhooks, secrets. Un agent peut les proposer ; il ne les fusionne pas seul.
+webhooks, secrets. Le porteur délègue la relecture et la fusion à l'agent (décision du 2026-11-12) :
+l'agent lit le diff, fait passer l'analyse, les tests, pgTAP sur une branche Neon jetable créée
+depuis `main` puis supprimée, et la CI ; il fusionne alors dans `dev` sans attendre. La branche
+Neon `main` (production) n'est jamais modifiée par un agent.
 
 ## Interdits
 
