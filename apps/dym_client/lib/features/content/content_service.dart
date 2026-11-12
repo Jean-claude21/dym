@@ -40,7 +40,10 @@ abstract interface class ContentService {
   Future<Result<void>> deleteComment(String commentId);
 
   /// « Tout pour la faire » (spec 038) : panier composé en base.
-  Future<Result<CopilotProposal>> recipeBasket(ContentItem content);
+  Future<Result<CopilotProposal>> recipeBasket(
+    ContentItem content, {
+    int? servings,
+  });
 
   /// Article de la recette ajouté au panier : attribué au contenu (spec 039).
   void recipeAdded(ContentItem content, String variantId);
@@ -173,8 +176,14 @@ class NeonContentService implements ContentService {
       _repository.deleteComment(commentId);
 
   @override
-  Future<Result<CopilotProposal>> recipeBasket(ContentItem content) =>
-      _repository.recipeBasket(content.id, zoneId: _discovery.zone.value);
+  Future<Result<CopilotProposal>> recipeBasket(
+    ContentItem content, {
+    int? servings,
+  }) => _repository.recipeBasket(
+    content.id,
+    zoneId: _discovery.zone.value,
+    servings: servings,
+  );
 
   @override
   void recipeAdded(ContentItem content, String variantId) =>
@@ -251,6 +260,7 @@ class MemoryContentService implements ContentService {
     this.groups = const [],
     this.isEnabled = true,
     this.failure,
+    this.recipe,
   });
 
   final DiscoveryService discovery;
@@ -258,6 +268,9 @@ class MemoryContentService implements ContentService {
   final List<StoryGroup> groups;
   final bool isEnabled;
   final Failure? failure;
+
+  /// Panier de recette selon les portions (tests, galerie).
+  final CopilotProposal Function(int? servings)? recipe;
   final gestures = <String>[];
 
   @override
@@ -326,8 +339,13 @@ class MemoryContentService implements ContentService {
   }
 
   @override
-  Future<Result<CopilotProposal>> recipeBasket(ContentItem content) async =>
-      const Ok(CopilotProposal());
+  Future<Result<CopilotProposal>> recipeBasket(
+    ContentItem content, {
+    int? servings,
+  }) async {
+    gestures.add('${content.id}:basket:${servings ?? '-'}');
+    return Ok(recipe?.call(servings) ?? const CopilotProposal());
+  }
 
   @override
   Future<Result<void>> deleteComment(String commentId) async {

@@ -5752,7 +5752,7 @@ abstract class DymLocalizations {
   /// Onglet du fil : boutiques où la cliente a commandé
   ///
   /// In fr, this message translates to:
-  /// **'Boutiques suivies'**
+  /// **'Abonnements'**
   String get feedFollowing;
 
   /// Fil vide
@@ -8248,8 +8248,86 @@ abstract class DymLocalizations {
   /// Bouton du fil
   ///
   /// In fr, this message translates to:
-  /// **'Tout pour la faire'**
+  /// **'Tout pour la recette'**
   String get recipeAllForIt;
+
+  /// Feuille des produits d'une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Dans cette vidéo'**
+  String get feedInThisVideo;
+
+  /// No description provided for @feedProductCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 produit} other{{count} produits}}'**
+  String feedProductCount(int count);
+
+  /// Rôle sous le nom de l'autrice
+  ///
+  /// In fr, this message translates to:
+  /// **'Créatrice'**
+  String get feedCreator;
+
+  /// Ouvre le panier après un ajout
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir'**
+  String get feedSeeCart;
+
+  /// No description provided for @recipeAllForTotal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout pour la recette · {total}'**
+  String recipeAllForTotal(String total);
+
+  /// No description provided for @recipeForPeople.
+  ///
+  /// In fr, this message translates to:
+  /// **'pour {count}'**
+  String recipeForPeople(int count);
+
+  /// No description provided for @recipeServings.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Pour 1 personne} other{Pour {count} personnes}}'**
+  String recipeServings(int count);
+
+  /// Bouton moins des portions
+  ///
+  /// In fr, this message translates to:
+  /// **'Une personne de moins'**
+  String get recipeServingsLess;
+
+  /// Bouton plus des portions
+  ///
+  /// In fr, this message translates to:
+  /// **'Une personne de plus'**
+  String get recipeServingsMore;
+
+  /// No description provided for @recipeAddLines.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Ajouter 1 article} other{Ajouter {count} articles}} · {total}'**
+  String recipeAddLines(int count, String total);
+
+  /// No description provided for @recipeAddSome.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Ajouter 1 article} other{Ajouter {count} articles}}'**
+  String recipeAddSome(int count);
+
+  /// No description provided for @recipeAddedLines.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 article ajouté au panier} other{{count} articles ajoutés au panier}}'**
+  String recipeAddedLines(int count);
+
+  /// No description provided for @recipeStores.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 boutique} other{{count} boutiques}} · livraison calculée au panier'**
+  String recipeStores(int count);
 
   /// No description provided for @creatorEarnings.
   ///

@@ -443,14 +443,20 @@ class ContentRepository {
     },
   )).map((_) {});
 
-  /// « Tout pour la faire » : panier composé et chiffré en base.
+  /// « Tout pour la faire » : panier composé et chiffré en base ; quantités
+  /// des ingrédients recalculées en base pour [servings] personnes.
   Future<Result<CopilotProposal>> recipeBasket(
     String contentId, {
     String? zoneId,
+    int? servings,
   }) async =>
       (await _data.rpc<Object?>(
         'recipe_basket',
-        params: {'p_content': contentId, 'p_zone': zoneId},
+        params: {
+          'p_content': contentId,
+          'p_zone': zoneId,
+          'p_servings': ?servings,
+        },
       )).map(
         (json) =>
             CopilotProposal.fromJson((json! as Map).cast<String, dynamic>()),

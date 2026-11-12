@@ -61,7 +61,7 @@ fiabilité (ops).
 | `voice_message_sent` (durée), `call_started` (type), `call_ended` (issue, durée) | Serveur | Vocaux et appels (spec 035) |
 | `creator_joined`, `content_published` (+ catégorie, provenance, créatrice) | Serveur | Créateurs (spec 036) |
 | `follow_added` (cible), `comment_added` | Serveur | Fil classé (spec 037) |
-| `recipe_basket_built` (articles, manquants) | Serveur | Tout pour la faire (spec 038) |
+| `recipe_basket_built` (articles, manquants, portions) | Serveur | Tout pour la recette (specs 038, 057) |
 | `commission_earned` (montant, taux, origine), `commission_paid` (montant, payeur) | Serveur | Affiliation (spec 039) |
 | `tiktok_imported`, `share_link_created`, `share_link_opened` | Serveur | Pont TikTok (spec 040) |
 | `courier_joined` (moyen, zones), `courier_online`, `courier_offline`, `mission_accepted` (minutes), `mission_released` | Serveur | App livreur (spec 041) |

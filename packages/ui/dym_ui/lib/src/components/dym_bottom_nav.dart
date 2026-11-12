@@ -26,7 +26,11 @@ class DymBottomNav extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
     super.key,
+    this.dark = false,
   });
+
+  /// Variante sombre, seulement pendant la lecture vidéo (design « Épuré »).
+  final bool dark;
 
   /// Éléments.
   final List<DymNavItem> items;
@@ -42,8 +46,10 @@ class DymBottomNav extends StatelessWidget {
     final c = context.dym.colors;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: c.card,
-        border: Border(top: BorderSide(color: c.hairline)),
+        color: dark ? Colors.black : c.card,
+        border: Border(
+          top: BorderSide(color: dark ? Colors.white12 : c.hairline),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -85,6 +91,7 @@ class DymBottomNav extends StatelessWidget {
                           child: DymNavTile(
                             item: items[i],
                             active: i == currentIndex,
+                            dark: dark,
                           ),
                         ),
                       ),

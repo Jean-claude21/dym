@@ -46,6 +46,8 @@
 | ![Livreur](screens/epure/05-livreur.webp) | Livreur : missions, tournée, remise, gains |
 | ![Opérations](screens/epure/06-operations.webp) | Opérations : en direct, détail d'une commande (sans barre basse sur ordinateur) |
 | ![États](screens/epure/07-etats-et-grands-ecrans.webp) | États vide, chargement, erreur, hors ligne ; tablette, téléphone couché |
+| ![Produit](screens/epure/08-cliente-page-produit.webp) | Cliente : page produit, avant / après (direction validée le 2026-11-11 ; la photo de la vendeuse sera plus grande) |
+| ![Boutique](screens/epure/09-cliente-page-boutique.webp) | Cliente : page boutique, avant / après (direction validée le 2026-11-11 ; aucun texte dans la photo de couverture) |
 
 ## 3. Navigation
 

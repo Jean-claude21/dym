@@ -7,7 +7,12 @@ import 'package:flutter/material.dart';
 /// libellé, trait sous l'élément actif. Interne à dym_ui.
 class DymNavTile extends StatelessWidget {
   /// Crée la tuile.
-  const new({required this.item, required this.active, super.key});
+  const new({
+    required this.item,
+    required this.active,
+    super.key,
+    this.dark = false,
+  });
 
   /// Élément affiché.
   final DymNavItem item;
@@ -15,10 +20,15 @@ class DymNavTile extends StatelessWidget {
   /// Élément actif.
   final bool active;
 
+  /// Sur fond noir (lecture vidéo) : blanc et gris clair.
+  final bool dark;
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
-    final color = active ? c.brand : c.textSecondary;
+    final color = dark
+        ? (active ? Colors.white : Colors.white70)
+        : (active ? c.brand : c.textSecondary);
     // Indicateur au-dessus de l'icône (design « Épuré »).
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -28,7 +38,7 @@ class DymNavTile extends StatelessWidget {
           width: active ? 22 : 0,
           height: 3,
           decoration: BoxDecoration(
-            color: c.brand,
+            color: dark ? Colors.white : c.brand,
             borderRadius: BorderRadius.circular(2),
           ),
         ),

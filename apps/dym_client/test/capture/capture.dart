@@ -8,12 +8,14 @@ import '../support/cart_fixtures.dart';
 
 /// Rend [child] en téléphone portrait (412 × 915, ×2) et l'enregistre dans
 /// `goldens/[name].png` : captures de contrôle du design « Épuré ».
-/// [scroll] fait défiler la première liste pour voir le bas de la page.
+/// [scroll] fait défiler la première liste pour voir le bas de la page ;
+/// [before] joue des gestes (feuille ouverte…) avant la capture.
 Future<void> capture(
   WidgetTester tester,
   String name,
   Widget child, {
   double scroll = 0,
+  Future<void> Function(WidgetTester tester)? before,
 }) async {
   const size = Size(412, 915);
   tester.view
@@ -53,6 +55,18 @@ Future<void> capture(
       );
     }
   });
+  if (before != null) {
+    await before(tester);
+    await tester.runAsync(() async {
+      for (final element in find.byType(Image).evaluate()) {
+        await precacheImage(
+          (element.widget as Image).image,
+          element,
+          onError: (_, _) {},
+        );
+      }
+    });
+  }
   if (scroll > 0) {
     final list = find.byType(Scrollable).first;
     await tester.drag(list, Offset(0, -scroll));
