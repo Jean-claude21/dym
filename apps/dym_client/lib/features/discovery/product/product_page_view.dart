@@ -449,6 +449,7 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                     ],
                     const SizedBox(height: DymTokenSpace.s2),
                     Wrap(
+                      runSpacing: DymTokenSpace.s2,
                       spacing: DymTokenSpace.s1,
                       children: [
                         if (content case final content?)

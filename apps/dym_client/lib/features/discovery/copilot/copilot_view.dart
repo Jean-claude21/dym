@@ -274,7 +274,7 @@ class CopilotView extends StackedView<CopilotViewModel> {
                               },
                       ),
                       if (onSearchMyself case final search?) ...[
-                        const SizedBox(height: DymTokenSpace.s2),
+                        const SizedBox(height: DymTokenSpace.s3),
                         DymButton(
                           label: l10n.copilotSearchMyself,
                           icon: Icons.search_rounded,

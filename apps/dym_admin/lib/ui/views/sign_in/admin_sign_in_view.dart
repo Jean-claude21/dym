@@ -95,7 +95,7 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
                 autofillHints: const [AutofillHints.email],
               ),
               if (viewModel.usePassword) ...[
-                const SizedBox(height: DymTokenSpace.s3),
+                const SizedBox(height: DymTokenSpace.s4),
                 DymTextField(
                   label: l10n.authPasswordLabel,
                   obscureText: true,
@@ -104,7 +104,7 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
                   autofillHints: const [AutofillHints.password],
                 ),
               ],
-              const SizedBox(height: DymTokenSpace.s3),
+              const SizedBox(height: DymTokenSpace.s4),
               DymButton(
                 label: viewModel.usePassword
                     ? l10n.authSignInPassword

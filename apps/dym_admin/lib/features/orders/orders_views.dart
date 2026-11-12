@@ -846,13 +846,13 @@ class _ActionsState extends State<_Actions> {
               ),
             const SizedBox(height: DymTokenSpace.s1),
             DymTextField(label: l10n.adminCourierName, controller: _name),
-            const SizedBox(height: DymTokenSpace.s2),
+            const SizedBox(height: DymTokenSpace.s4),
             DymTextField(
               label: l10n.adminPhone,
               controller: _phone,
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: DymTokenSpace.s2),
+            const SizedBox(height: DymTokenSpace.s4),
             ListenableBuilder(
               listenable: Listenable.merge([_name, _phone]),
               builder: (context, _) => DymButton(

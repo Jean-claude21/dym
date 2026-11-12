@@ -244,7 +244,11 @@ class _BalanceCard extends StatelessWidget {
         LayoutBuilder(
           builder: (context, box) {
             const gap = DymTokenSpace.s2;
-            final columns = box.maxWidth >= 360 ? 3 : 2;
+            // Pas de tuile orpheline : toutes sur une ligne si elles y
+            // tiennent (84 dp mini), sinon par deux.
+            final columns = actions.length * 84 <= box.maxWidth
+                ? actions.length
+                : 2;
             final width = (box.maxWidth - gap * (columns - 1)) / columns;
             return Wrap(
               spacing: gap,
@@ -288,9 +292,14 @@ class _ActionTile extends StatelessWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 92),
           child: Padding(
-            padding: const EdgeInsets.all(DymTokenSpace.s2),
+            padding: const EdgeInsets.fromLTRB(
+              DymTokenSpace.s1,
+              DymTokenSpace.s4,
+              DymTokenSpace.s1,
+              DymTokenSpace.s2,
+            ),
+            // Icônes alignées d'une tuile à l'autre, libellé sur 2 lignes.
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   icon,
@@ -661,13 +670,13 @@ class _PocketSheetState extends State<_PocketSheet> {
           maxLength: 40,
           textCapitalization: TextCapitalization.sentences,
         ),
-        const SizedBox(height: DymTokenSpace.s3),
+        const SizedBox(height: DymTokenSpace.s4),
         DymTextField(
           label: l10n.walletPocketGoalField,
           controller: _goal,
           keyboardType: amount,
         ),
-        const SizedBox(height: DymTokenSpace.s3),
+        const SizedBox(height: DymTokenSpace.s4),
         DymTextField(
           label: l10n.walletPocketRoundUpField,
           controller: _roundUp,

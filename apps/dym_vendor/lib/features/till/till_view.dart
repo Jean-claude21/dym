@@ -609,7 +609,7 @@ class _SaleSheetState extends State<_SaleSheet> {
               textInputAction: TextInputAction.next,
               onSubmitted: (text) async => _apply(await vm.read(text)),
             ),
-            const SizedBox(height: DymTokenSpace.s3),
+            const SizedBox(height: DymTokenSpace.s4),
             DymTextField(
               label: l10n.tillAmount,
               controller: _amount,
@@ -617,6 +617,7 @@ class _SaleSheetState extends State<_SaleSheet> {
             ),
             const SizedBox(height: DymTokenSpace.s3),
             Wrap(
+              runSpacing: DymTokenSpace.s2,
               spacing: DymTokenSpace.s2,
               children: [
                 for (final m in TillMethod.manual)
@@ -627,7 +628,7 @@ class _SaleSheetState extends State<_SaleSheet> {
                   ),
               ],
             ),
-            const SizedBox(height: DymTokenSpace.s3),
+            const SizedBox(height: DymTokenSpace.s4),
             DymButton(
               label: l10n.tillSave,
               icon: Icons.check_rounded,
@@ -704,7 +705,7 @@ class _PayoutSheetState extends State<_PayoutSheet> {
               keyboardType: TextInputType.number,
               autofocus: true,
             ),
-            const SizedBox(height: DymTokenSpace.s3),
+            const SizedBox(height: DymTokenSpace.s4),
             DymButton(
               label: l10n.tillPayout,
               loading: _busy,

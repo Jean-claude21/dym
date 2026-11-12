@@ -213,7 +213,7 @@ class _Waiting extends StatelessWidget {
           icon: Icons.open_in_new_rounded,
           onPressed: p.payment?.checkoutUrl == null ? null : vm.openPage,
         ),
-        const SizedBox(height: DymTokenSpace.s2),
+        const SizedBox(height: DymTokenSpace.s3),
         DymButton(
           label: l10n.paymentPayOnDeliveryInstead,
           variant: DymButtonVariant.secondary,
@@ -286,7 +286,7 @@ class _Failed extends StatelessWidget {
           loading: vm.acting,
           onPressed: vm.acting ? null : vm.retry,
         ),
-        const SizedBox(height: DymTokenSpace.s2),
+        const SizedBox(height: DymTokenSpace.s3),
         DymButton(
           label: l10n.paymentPayOnDelivery,
           icon: Icons.payments_rounded,

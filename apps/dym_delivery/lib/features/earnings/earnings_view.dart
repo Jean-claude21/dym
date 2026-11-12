@@ -379,7 +379,7 @@ class _FormSheetState extends State<_FormSheet> {
               autofocus: i == 0,
             ),
           ],
-          const SizedBox(height: DymTokenSpace.s3),
+          const SizedBox(height: DymTokenSpace.s4),
           DymButton(
             label: widget.action,
             loading: _busy,

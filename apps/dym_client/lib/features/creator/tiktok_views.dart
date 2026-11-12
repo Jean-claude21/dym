@@ -165,16 +165,32 @@ class TikTokImportView extends StackedView<TikTokImportViewModel> {
                   // Compte déclaré, pas encore prouvé (décision 0015).
                   DymContentWidth.form(
                     child: Container(
-                      padding: const EdgeInsets.all(DymTokenSpace.s2),
+                      padding: const EdgeInsets.all(DymTokenSpace.s3),
                       decoration: BoxDecoration(
-                        color: c.plantain,
+                        color: c.tintVertTendre,
                         borderRadius: BorderRadius.circular(
                           DymTokenRadius.tile,
                         ),
                       ),
-                      child: Text(
-                        l10n.tiktokUnverified,
-                        style: t.label.copyWith(color: c.textPrimary),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: 18,
+                            color: c.brandDeep,
+                          ),
+                          const SizedBox(width: DymTokenSpace.s2),
+                          Expanded(
+                            child: Text(
+                              l10n.tiktokUnverified,
+                              style: t.label.copyWith(
+                                color: c.brandDeep,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -189,7 +205,7 @@ class TikTokImportView extends StackedView<TikTokImportViewModel> {
                         onSubmitted: (_) => vm.import(),
                       ),
                     ),
-                    const SizedBox(height: DymTokenSpace.s3),
+                    const SizedBox(height: DymTokenSpace.s4),
                     DymContentWidth.form(
                       child: DymButton(
                         label: l10n.tiktokImport,
@@ -215,7 +231,7 @@ class TikTokImportView extends StackedView<TikTokImportViewModel> {
                         ),
                       ),
                     if (vm.needsCover) ...[
-                      const SizedBox(height: DymTokenSpace.s2),
+                      const SizedBox(height: DymTokenSpace.s3),
                       DymContentWidth.form(
                         child: DymButton(
                           label: l10n.tiktokPickCover,

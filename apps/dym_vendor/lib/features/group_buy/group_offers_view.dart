@@ -362,13 +362,13 @@ class _NewGroupOfferState extends State<_NewGroupOffer> {
                 controller: _price,
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: DymTokenSpace.s3),
+              const SizedBox(height: DymTokenSpace.s4),
               DymTextField(
                 label: l10n.groupOfferMin,
                 controller: _min,
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: DymTokenSpace.s3),
+              const SizedBox(height: DymTokenSpace.s4),
               DymTextField(
                 label: l10n.groupOfferFee,
                 controller: _fee,
@@ -376,6 +376,7 @@ class _NewGroupOfferState extends State<_NewGroupOffer> {
               ),
               const SizedBox(height: DymTokenSpace.s3),
               Wrap(
+                runSpacing: DymTokenSpace.s2,
                 spacing: DymTokenSpace.s2,
                 children: [
                   for (final d in const [1, 3, 7])
@@ -386,7 +387,7 @@ class _NewGroupOfferState extends State<_NewGroupOffer> {
                     ),
                 ],
               ),
-              const SizedBox(height: DymTokenSpace.s3),
+              const SizedBox(height: DymTokenSpace.s4),
               DymButton(
                 label: l10n.wholesalePublish,
                 icon: Icons.groups_rounded,

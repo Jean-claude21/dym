@@ -175,6 +175,21 @@ class DymProductCard extends StatelessWidget {
                 Icon(Icons.shopping_basket_rounded, color: c.textSecondary),
           ),
           if (badge != null) Positioned(left: 0, top: 0, child: badge!),
+          if (layout == DymProductCardLayout.grid &&
+              quantity > 0 &&
+              onQuantityChanged != null)
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Center(
+                child: DymQuantityStepper(
+                  quantity: quantity,
+                  onChanged: onQuantityChanged!,
+                  dense: true,
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -199,13 +214,19 @@ class DymProductCard extends StatelessWidget {
               else
                 AspectRatio(aspectRatio: 1.1, child: _image(context, null)),
               const SizedBox(height: DymTokenSpace.s2),
-              Text(
-                name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: t.body.copyWith(
-                  fontWeight: FontWeight.w600,
-                  height: 1.25,
+              // Deux lignes toujours réservées : toutes les cartes d'une
+              // rangée gardent la même photo (REVUE_CAPTURES §2 et §3).
+              SizedBox(
+                height:
+                    MediaQuery.textScalerOf(context).scale(15) * 1.25 * 2 + 1,
+                child: Text(
+                  name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.body.copyWith(
+                    fontWeight: FontWeight.w600,
+                    height: 1.25,
+                  ),
                 ),
               ),
               const SizedBox(height: 2),
@@ -229,22 +250,6 @@ class DymProductCard extends StatelessWidget {
                   ),
                   _addOrStepper(context, compact: false),
                 ],
-              ),
-              AnimatedSize(
-                duration: DymMotion.of(context, DymMotion.medium),
-                curve: DymMotion.standard,
-                child: quantity == 0 || onQuantityChanged == null
-                    ? const SizedBox(width: double.infinity)
-                    : Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Center(
-                          child: DymQuantityStepper(
-                            quantity: quantity,
-                            onChanged: onQuantityChanged!,
-                            dense: true,
-                          ),
-                        ),
-                      ),
               ),
             ],
           ),

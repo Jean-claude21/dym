@@ -504,6 +504,10 @@
   "@storeDeliveryTitle": {
     "description": "Étape 5"
   },
+  "storeDeliveryZonesTitle": "Quartiers desservis",
+  "@storeDeliveryZonesTitle": {
+    "description": "Titre de la liste des quartiers de livraison (inscription vendeuse)"
+  },
   "storeDeliverySubtitle": "Les quartiers où tu acceptes les commandes. DYM s'occupe du zem.",
   "@storeDeliverySubtitle": {
     "description": "Étape 5"
@@ -1239,6 +1243,10 @@
   "@aisleAll": {
     "description": "Filtre de rayon"
   },
+  "aisleWhere": "Où acheter",
+  "@aisleWhere": {"description": "Filtre d'origine de la vendeuse dans un rayon"},
+  "aisleAnywhere": "Partout",
+  "@aisleAnywhere": {"description": "Toutes les origines"},
   "aisleEmpty": "Rien dans ce rayon pour ton quartier pour l'instant.",
   "@aisleEmpty": {
     "description": "Rayon vide"
@@ -4382,6 +4390,10 @@
   "@copilotEntry": {
     "description": "Point d'entrée du copilote (accueil)"
   },
+  "homeCopilotShort": "Composer mon panier",
+  "@homeCopilotShort": {"description": "Raccourci du copilote sur l'Accueil"},
+  "homeCopilotHint": "Dis ce que tu cuisines",
+  "@homeCopilotHint": {"description": "Précision du raccourci copilote"},
   "copilotExample": "Par exemple : « Une sauce gombo pour 4 personnes ce soir »",
   "@copilotExample": {
     "description": "Exemple d'intention"

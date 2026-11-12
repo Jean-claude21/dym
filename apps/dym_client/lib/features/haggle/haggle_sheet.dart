@@ -223,7 +223,7 @@ class _HaggleSheetState extends State<HaggleSheet> {
                         l10n.haggleCountered(_money(haggle.priceMinor)),
                         style: t.title,
                       ),
-                      const SizedBox(height: DymTokenSpace.s2),
+                      const SizedBox(height: DymTokenSpace.s3),
                       DymButton(
                         label: l10n.haggleAcceptCounter,
                         icon: Icons.handshake_rounded,
@@ -251,7 +251,7 @@ class _HaggleSheetState extends State<HaggleSheet> {
                       controller: _offer,
                       keyboardType: TextInputType.number,
                     ),
-                    const SizedBox(height: DymTokenSpace.s3),
+                    const SizedBox(height: DymTokenSpace.s4),
                     DymButton(
                       label: l10n.haggleSubmit,
                       icon: Icons.sell_rounded,

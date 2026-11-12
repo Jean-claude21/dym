@@ -222,6 +222,7 @@ class _Periods extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = DymLocalizations.of(context);
     return Wrap(
+      runSpacing: DymTokenSpace.s2,
       spacing: DymTokenSpace.s2,
       children: [
         for (final period in DashboardPeriod.values)

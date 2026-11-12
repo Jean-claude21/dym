@@ -187,7 +187,7 @@ class CourierOnboardingView extends StackedView<CourierOnboardingViewModel> {
                       onChanged: (_) => vm.edited(),
                     ),
                   ),
-                  const SizedBox(height: DymTokenSpace.s3),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymContentWidth.form(
                     child: DymTextField(
                       label: l10n.courierPhone,
@@ -200,6 +200,7 @@ class CourierOnboardingView extends StackedView<CourierOnboardingViewModel> {
                   DymContentWidth.form(
                     child: DymSectionHeader(title: l10n.courierVehicle),
                   ),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymContentWidth.form(
                     child: Wrap(
                       spacing: DymTokenSpace.s2,
@@ -231,7 +232,7 @@ class CourierOnboardingView extends StackedView<CourierOnboardingViewModel> {
                             const SizedBox(height: DymTokenSpace.s1),
                             Wrap(
                               spacing: DymTokenSpace.s2,
-                              runSpacing: DymTokenSpace.s2,
+                              runSpacing: DymTokenSpace.s3,
                               children: [
                                 for (final z in config.zonesOf(city.id))
                                   FilterChip(
@@ -1036,7 +1037,7 @@ class _CodeSheetState extends State<_CodeSheet> {
                   ? () => Navigator.pop(context, _code)
                   : null,
             ),
-            const SizedBox(height: DymTokenSpace.s2),
+            const SizedBox(height: DymTokenSpace.s3),
             DymButton(
               label: l10n.handoverCancel,
               variant: DymButtonVariant.secondary,

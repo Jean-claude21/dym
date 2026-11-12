@@ -303,11 +303,18 @@ class _ProductCard extends StatelessWidget {
                               size: 26,
                             ),
                           )
-                        : Image(
-                            image: photo,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, _, _) =>
-                                ColoredBox(color: c.tintVertTendre),
+                        // Fond menthe pendant le chargement : jamais de trou.
+                        : ColoredBox(
+                            color: c.tintVertTendre,
+                            child: Image(
+                              image: photo,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, _, _) => Icon(
+                                Icons.eco_outlined,
+                                color: c.brandDeep,
+                                size: 26,
+                              ),
+                            ),
                           ),
                   ),
                 ),

@@ -336,7 +336,7 @@ class _Profile extends StatelessWidget {
             const SizedBox(height: DymTokenSpace.s2),
             Wrap(
               spacing: DymTokenSpace.s2,
-              runSpacing: DymTokenSpace.s2,
+              runSpacing: DymTokenSpace.s3,
               children: [
                 DymButton(
                   label: l10n.adminViewAsVendor,
@@ -587,7 +587,7 @@ class _EditDialogState extends State<_EditDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   DymTextField(label: l10n.adminStoreName, controller: _name),
-                  const SizedBox(height: DymTokenSpace.s2),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymTextField(
                     label: l10n.adminStoreDescription,
                     controller: _description,
@@ -609,7 +609,7 @@ class _EditDialogState extends State<_EditDialog> {
                       ],
                       onChanged: (v) => setState(() => _zone = v),
                     ),
-                  const SizedBox(height: DymTokenSpace.s2),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymTextField(
                     label: l10n.adminPrepMinutes,
                     controller: _prep,
@@ -621,6 +621,7 @@ class _EditDialogState extends State<_EditDialog> {
                     title: Text(l10n.adminOffersPickup),
                     onChanged: (v) => setState(() => _pickup = v),
                   ),
+                  const SizedBox(height: DymTokenSpace.s4),
                   DymTextField(
                     label: l10n.adminReasonLabel,
                     controller: _reason,
@@ -635,6 +636,7 @@ class _EditDialogState extends State<_EditDialog> {
               onPressed: () => Navigator.pop(context),
               child: Text(l10n.cancel),
             ),
+            const SizedBox(height: DymTokenSpace.s3),
             DymButton(
               label: l10n.adminSave,
               expanded: false,

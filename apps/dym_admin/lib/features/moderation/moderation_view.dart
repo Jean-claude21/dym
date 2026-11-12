@@ -313,7 +313,7 @@ class _PreviewState extends State<_Preview> {
                   final ready = !vm.acting && _reason.text.trim().isNotEmpty;
                   return Wrap(
                     spacing: DymTokenSpace.s2,
-                    runSpacing: DymTokenSpace.s2,
+                    runSpacing: DymTokenSpace.s3,
                     children: [
                       DymButton(
                         label: l10n.moderationKeep,

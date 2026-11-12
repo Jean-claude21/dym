@@ -175,9 +175,8 @@ class _FormState extends State<_Form> {
         ),
       if (vm.showErrors && vm.zoneId == null)
         CartIssue(label: l10n.authZoneRequired),
+      // Le libellé du champ suffit : pas de titre qui le répète.
       const SizedBox(height: DymTokenSpace.s4),
-      Text(l10n.addressLandmark, style: t.title),
-      const SizedBox(height: DymTokenSpace.s2),
       DymTextField(
         label: l10n.addressLandmark,
         hint: l10n.addressLandmarkHint,
@@ -194,9 +193,7 @@ class _FormState extends State<_Form> {
             ? l10n.addressLandmarkInvalid
             : null,
       ),
-      const SizedBox(height: DymTokenSpace.s3),
-      Text(l10n.addressPhone, style: t.title),
-      const SizedBox(height: DymTokenSpace.s2),
+      const SizedBox(height: DymTokenSpace.s4),
       DymTextField(
         label: l10n.addressPhone,
         controller: _phone,
@@ -211,7 +208,7 @@ class _FormState extends State<_Form> {
             ? l10n.addressPhoneInvalid
             : null,
       ),
-      const SizedBox(height: DymTokenSpace.s3),
+      const SizedBox(height: DymTokenSpace.s4),
       DymSwitchTile(
         title: l10n.addressMakeDefault,
         value: vm.isDefault,

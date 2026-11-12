@@ -73,11 +73,18 @@ class DymSelectableCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(
                           DymTokenRadius.button,
                         ),
-                        child: Image(
-                          image: image,
-                          width: 104,
-                          height: 104,
-                          fit: BoxFit.cover,
+                        // Fond menthe : la vignette reste visible pendant le
+                        // chargement ou si l'illustration manque.
+                        child: ColoredBox(
+                          color: c.tintVertTendre,
+                          child: Image(
+                            image: image,
+                            width: 104,
+                            height: 104,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) =>
+                                const SizedBox.square(dimension: 104),
+                          ),
                         ),
                       ),
                       const SizedBox(width: DymTokenSpace.s3),

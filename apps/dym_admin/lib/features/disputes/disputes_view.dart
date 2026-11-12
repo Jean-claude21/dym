@@ -360,7 +360,7 @@ class _Decision extends StatelessWidget {
             maxLength: 1000,
             onChanged: (v) => vm.note = v,
           ),
-          const SizedBox(height: DymTokenSpace.s2),
+          const SizedBox(height: DymTokenSpace.s4),
           DymButton(
             label: l10n.adminResolve,
             icon: Icons.gavel_rounded,

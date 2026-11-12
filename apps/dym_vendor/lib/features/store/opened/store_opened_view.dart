@@ -145,12 +145,14 @@ class StoreOpenedView extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    // Moment fort : le premier produit, en jaune soleil.
                     DymButton(
                       label: l10n.storeAddFirstProduct,
                       icon: Icons.add_rounded,
+                      variant: DymButtonVariant.plantain,
                       onPressed: onAddProduct,
                     ),
-                    const SizedBox(height: DymTokenSpace.s2),
+                    const SizedBox(height: DymTokenSpace.s3),
                     DymButton(
                       label: l10n.storeSeeMine,
                       icon: Icons.storefront_outlined,

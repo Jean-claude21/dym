@@ -484,7 +484,7 @@ class PublishContentView extends StackedView<PublishContentViewModel> {
               if (!vm.textMode)
                 Wrap(
                   spacing: DymTokenSpace.s2,
-                  runSpacing: DymTokenSpace.s2,
+                  runSpacing: DymTokenSpace.s3,
                   children: [
                     DymButton(
                       label: l10n.contentFilm,
@@ -557,7 +557,7 @@ class PublishContentView extends StackedView<PublishContentViewModel> {
                     style: t.body.copyWith(color: c.pimentStrong),
                   ),
                 ),
-              const SizedBox(height: DymTokenSpace.s3),
+              const SizedBox(height: DymTokenSpace.s4),
               DymButton(
                 label: story
                     ? l10n.contentPublishStory

@@ -380,7 +380,7 @@ class _ReplySheetState extends State<_ReplySheet> {
                 maxLength: 500,
                 textCapitalization: TextCapitalization.sentences,
               ),
-              const SizedBox(height: DymTokenSpace.s2),
+              const SizedBox(height: DymTokenSpace.s4),
               ListenableBuilder(
                 listenable: _text,
                 builder: (context, _) => DymButton(

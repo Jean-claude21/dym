@@ -353,6 +353,7 @@ class OpsCenterView extends StackedView<OpsCenterViewModel> {
         subtitle: '$today · ${l10n.opsSubtitle}',
         actions: [
           Wrap(
+            runSpacing: DymTokenSpace.s2,
             spacing: DymTokenSpace.s2,
             children: [
               for (final code in vm.countries)
