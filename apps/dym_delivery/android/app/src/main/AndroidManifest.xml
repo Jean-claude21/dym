@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Neon (Auth, Data API, Functions, photos) : absente du gabarit en release. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Quartier proposé à partir de la position à l'inscription (dym_auth), précision réduite. -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <application
         android:label="DYM Livreur"
         android:name="${applicationName}"
