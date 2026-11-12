@@ -17,7 +17,11 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
   Failure? _failure;
   CountryConfig? _config;
   Timer? _timer;
+  StreamSubscription<LiveSignal>? _live;
   bool _offline = false;
+
+  /// Signaux temps réel qui concernent l'écran (spec 067) ; aucun par défaut.
+  bool liveWhen(LiveSignal signal) => false;
 
   Failure? get failure => _failure;
   bool get failed => _failure != null;
@@ -46,6 +50,11 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
     final every = refreshEvery;
     if (every != null) {
       _timer ??= Timer.periodic(every, (_) => unawaited(refresh()));
+      _live ??= watchLive(
+        service.live,
+        when: liveWhen,
+        reload: () => unawaited(refresh()),
+      );
     }
   }
 
@@ -59,6 +68,7 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_live?.cancel());
     super.dispose();
   }
 }
@@ -67,8 +77,12 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
 class MyOrdersViewModel extends _OrdersLoadingViewModel {
   new({
     required OrdersService service,
-    super.refreshEvery = const Duration(seconds: 20),
+    super.refreshEvery = const Duration(seconds: 60),
   }) : super(service);
+
+  @override
+  bool liveWhen(LiveSignal signal) =>
+      signal.kind == 'order_status' || signal.kind == 'notification';
 
   List<CustomerOrder> _orders = const [];
 
@@ -93,8 +107,11 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   new({
     required OrdersService service,
     required this.orderId,
-    super.refreshEvery = const Duration(seconds: 20),
+    super.refreshEvery = const Duration(seconds: 60),
   }) : super(service);
+
+  @override
+  bool liveWhen(LiveSignal signal) => signal.entityId == orderId;
 
   final String orderId;
   CustomerOrder? _order;
@@ -332,6 +349,7 @@ class DisputeViewModel extends _OrdersLoadingViewModel {
   new({
     required OrdersService service,
     required this.orderId,
+    // Pas d'événement en direct pour le fil du litige : relecture rapprochée.
     super.refreshEvery = const Duration(seconds: 20),
   }) : super(service);
 

@@ -9,14 +9,17 @@ import 'package:stacked/stacked.dart';
 /// Conversations (écran 61 ; « Mes messages » côté cliente), relues toutes
 /// les [refreshEvery] ; la liste déjà chargée reste affichée hors ligne.
 class ConversationsViewModel extends BaseViewModel {
-  new({required this.service, this.refreshEvery = const Duration(seconds: 20)});
+  new({required this.service, this.refreshEvery = const Duration(seconds: 60)});
 
   final ChatService service;
+
+  /// Relecture en filet ; le temps réel (spec 067) prévient d'abord.
   final Duration? refreshEvery;
 
   List<Conversation>? _conversations;
   Failure? _failure;
   Timer? _timer;
+  StreamSubscription<LiveSignal>? _live;
 
   List<Conversation> get conversations => _conversations ?? const [];
   Failure? get failure => _failure;
@@ -38,12 +41,18 @@ class ConversationsViewModel extends BaseViewModel {
     final every = refreshEvery;
     if (every != null) {
       _timer ??= Timer.periodic(every, (_) => unawaited(load()));
+      _live ??= watchLive(
+        service.live,
+        when: (s) => s.kind == 'message',
+        reload: () => unawaited(load()),
+      );
     }
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_live?.cancel());
     super.dispose();
   }
 }
@@ -54,7 +63,7 @@ class ChatViewModel extends BaseViewModel {
   new({
     required this.service,
     required this.conversationId,
-    this.refreshEvery = const Duration(seconds: 8),
+    this.refreshEvery = const Duration(seconds: 30),
     String? initialProductId,
   }) : _pendingProductId = initialProductId;
 
@@ -70,6 +79,7 @@ class ChatViewModel extends BaseViewModel {
   String? _pendingProductId;
   String? _textKey;
   Timer? _timer;
+  StreamSubscription<LiveSignal>? _live;
   final _media = <String, String>{};
 
   /// Vocal en cours d'enregistrement (spec 035).
@@ -126,6 +136,13 @@ class ChatViewModel extends BaseViewModel {
     final every = refreshEvery;
     if (every != null) {
       _timer ??= Timer.periodic(every, (_) => unawaited(load()));
+      // Message reçu dans cette conversation : fil relu aussitôt (spec 067).
+      _live ??= watchLive(
+        service.live,
+        when: (s) => s.kind == 'message' && s.entityId == conversationId,
+        reload: () => unawaited(load()),
+        debounce: const Duration(milliseconds: 150),
+      );
     }
   }
 
@@ -300,6 +317,7 @@ class ChatViewModel extends BaseViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_live?.cancel());
     unawaited(_playing?.cancel());
     if (recording) unawaited(service.recorder?.cancel());
     super.dispose();

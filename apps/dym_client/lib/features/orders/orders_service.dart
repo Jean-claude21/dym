@@ -7,6 +7,9 @@ import 'package:flutter/foundation.dart';
 /// Commandes de la cliente, centre de notifications et réglages. Le nombre
 /// de non-lues est partagé (pastille de l'onglet). Remplaçable en test.
 abstract interface class OrdersService {
+  /// Changements en direct (statut, notification…, spec 067).
+  Stream<LiveSignal> get live;
+
   /// Non-lues (relu à chaque lecture du centre ou de la liste).
   ValueListenable<int> get unread;
 
@@ -71,7 +74,13 @@ class NeonOrdersService implements OrdersService {
     required this._reorders,
     required this._reference,
     required this._auth,
+    this._live = LiveFeed.none,
   });
+
+  final LiveFeed _live;
+
+  @override
+  Stream<LiveSignal> get live => _live.signals;
 
   final OrderTrackingRepository _orders;
   final NotificationRepository _notifications;

@@ -26,6 +26,9 @@ VendorDashboard _summary(DashboardPeriod period, {int revenue = 12500}) =>
     );
 
 class _Service implements DashboardService {
+  @override
+  Stream<LiveSignal> get live => const Stream.empty();
+
   Result<VendorDashboard>? result;
   Future<Result<VendorDashboard>> Function(DashboardPeriod)? handler;
 

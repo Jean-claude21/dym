@@ -51,7 +51,7 @@ dym/
 |---|---|---|---|---|
 | `dym_core` | Fondation | — | Tous | `foundation` |
 | `dym_l10n` | Fondation | `intl` | Apps, features, ui | `foundation` |
-| `neon_kit` | Infra (générique) | `dym_core` (`Result`, `Failure` seulement), `dio`, `postgrest` | `dym_data`, `dym_platform` | `foundation` (spec 003) |
+| `neon_kit` | Infra (générique) | `dym_core` (`Result`, `Failure`, `LiveFeed` seulement), `dio`, `postgrest`, `web_socket_channel` | `dym_data`, `dym_platform` | `foundation` (spec 003) |
 | `dym_platform` | Infra | `neon_kit`, plugins Flutter | Apps, features | `foundation` (spec 003 : session sécurisée, client Neon) |
 | `dym_models` | Domaine | `dym_core`, `json_annotation` (freezed : no-go, décision 0013) | `dym_data`, features, apps | `reference-data` (spec 004) |
 | `dym_data` | Données | `neon_kit`, `dym_models` | Features, apps | `reference-data` (spec 004) |
@@ -72,6 +72,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Modèles | `json_serializable`, `json_annotation` (freezed différé, décision 0013) | `dym_models` |
 | Data API | `postgrest` (client PostgREST autonome) | `neon_kit` |
 | HTTP (Auth, Functions) | `dio` | `neon_kit` |
+| Temps réel (passerelle des Functions) | `web_socket_channel` | `neon_kit` |
 | Jetons | `flutter_secure_storage` | `dym_platform` |
 | Connexion Google | `google_sign_in` | `dym_platform` |
 | Push | `firebase_core`, `firebase_messaging`, `flutter_local_notifications` | `dym_platform` |

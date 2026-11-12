@@ -5,6 +5,9 @@ import 'package:dym_vendor/features/store/store_service.dart';
 
 /// Chiffres serveur et devise ; remplaçable dans les tests et la galerie.
 abstract interface class DashboardService {
+  /// Changements en direct (nouvelle commande, message…, spec 067).
+  Stream<LiveSignal> get live;
+
   Future<Result<CountryConfig>> countryConfig();
   Future<Result<VendorDashboard>> summary(DashboardPeriod period);
 
@@ -13,7 +16,17 @@ abstract interface class DashboardService {
 }
 
 class NeonDashboardService implements DashboardService {
-  new({required this.repository, required this.stores, required this.messages});
+  new({
+    required this.repository,
+    required this.stores,
+    required this.messages,
+    this.liveFeed = LiveFeed.none,
+  });
+
+  final LiveFeed liveFeed;
+
+  @override
+  Stream<LiveSignal> get live => liveFeed.signals;
 
   final VendorDashboardRepository repository;
   final StoreService stores;

@@ -12,6 +12,7 @@ import { httpErrors, toHttpError } from "./lib/errors.js";
 import type { ErrorReporter } from "./lib/report.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
 import { type DispatchWatch, registerDispatchWatch } from "./orders/dispatch.js";
+import { type LiveHub, registerLiveGateway } from "./live/gateway.js";
 import { registerShoppingReminders, type ShoppingReminders } from "./shopping/reminders.js";
 import { registerAffiliateSettlement, type AffiliateSettlement } from "./content/affiliation.js";
 import { type OpsAssistDeps, registerOpsAssist } from "./ops/assist.js";
@@ -46,6 +47,8 @@ export interface AppDeps {
   recaps?: VendorRecaps;
   /** Refus automatiques et relances de livreurs (spec 066). */
   dispatchWatch?: DispatchWatch;
+  /** Passerelle temps réel (spec 067). */
+  live?: LiveHub;
   /** Contenus des créatrices (spec 036). */
   creatorContent?: CreatorContentDeps;
   /** Pont TikTok et liens de partage (spec 040). */
@@ -78,14 +81,13 @@ export interface AppDeps {
 export function createApp(deps: AppDeps) {
   const app = new Hono<{ Variables: AuthVariables }>();
 
-  app.use(
-    "*",
-    cors({
-      origin: deps.allowedOrigins ?? [],
-      allowHeaders: ["Authorization", "Content-Type", "Idempotency-Key"],
-      allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    }),
-  );
+  const corsMiddleware = cors({
+    origin: deps.allowedOrigins ?? [],
+    allowHeaders: ["Authorization", "Content-Type", "Idempotency-Key"],
+    allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  });
+  // CORS casse la poignée de main WebSocket (doc Neon) : pas sur /v1/live.
+  app.use("*", (c, next) => (c.req.path === "/v1/live" ? next() : corsMiddleware(c, next)));
 
   // Après tout geste réussi qui peut créer des notifications : envoi des push
   // en attente (un échec d'envoi ne fait jamais échouer le geste).
@@ -129,6 +131,7 @@ export function createApp(deps: AppDeps) {
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
   registerDispatchWatch(app, deps.dispatchWatch);
+  registerLiveGateway(app, deps.verifyToken, deps.live);
   registerShoppingReminders(app, deps.shoppingReminders);
   registerAffiliateSettlement(app, deps.affiliateSettlement);
   registerOpsAssist(app, deps.verifyToken, deps.opsAssist);

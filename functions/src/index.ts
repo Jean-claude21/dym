@@ -22,6 +22,7 @@ import { availableProviders } from "./payments/simulator.js";
 import { walletProvider } from "./payments/wallet.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
 import { pgDispatchWatch } from "./orders/dispatch.js";
+import { LiveHub, pgLiveStore } from "./live/gateway.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
 import {
@@ -78,6 +79,7 @@ export default createApp({
   admin: pgAdminStore(pool),
   recaps: pgVendorRecaps(pool),
   dispatchWatch: pgDispatchWatch(pool),
+  live: new LiveHub(pgLiveStore(pool)),
   shoppingReminders: pgShoppingReminders(pool),
   affiliateSettlement: pgAffiliateSettlement(pool),
   opsAssist: {

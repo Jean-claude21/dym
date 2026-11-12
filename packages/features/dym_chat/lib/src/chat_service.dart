@@ -7,6 +7,9 @@ import 'package:flutter/widgets.dart';
 
 /// Messagerie d'une app (cliente ou vendeuse). Remplaçable en test.
 abstract interface class ChatService {
+  /// Nouveaux messages en direct (spec 067).
+  Stream<LiveSignal> get live;
+
   /// Rôle de l'app dans les conversations.
   ChatRole get role;
 
@@ -81,7 +84,14 @@ class NeonChatService implements ChatService {
     this.recorder,
     this.playback,
     this.calls,
+    this.liveFeed = LiveFeed.none,
   });
+
+  /// Source temps réel de l'app (spec 067).
+  final LiveFeed liveFeed;
+
+  @override
+  Stream<LiveSignal> get live => liveFeed.signals;
 
   @override
   final VoiceRecorder? recorder;

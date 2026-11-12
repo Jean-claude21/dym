@@ -64,6 +64,36 @@ Widget _app(Widget child) => MaterialApp(
 );
 
 void main() {
+  testWidgets('temps réel : une course proposée apparaît sans attendre', (
+    tester,
+  ) async {
+    final service = MemoryMissionsService(
+      config: _togo(),
+      current: const CourierProfile(
+        displayName: 'Kofi',
+        phone: '+228 90 11 22 33',
+        vehicle: CourierVehicle.moto,
+        zoneIds: ['be'],
+        isOnline: true,
+      ),
+    );
+    final vm = MissionsViewModel(service: service);
+    await tester.runAsync(vm.start);
+    expect(vm.missions, isEmpty);
+    service.open.add(_mission('o1', status: 'accepted'));
+    service.liveSignals.add(
+      const LiveSignal.event(
+        kind: 'notification',
+        payload: {'kind': 'mission_available'},
+      ),
+    );
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 500)),
+    );
+    expect(vm.missions?.map((m) => m.orderId), ['o1']);
+    vm.dispose();
+  });
+
   group('inscription (spec 041)', () {
     test('nom, téléphone, moyen et zones exigés', () async {
       final service = MemoryMissionsService(config: _togo());
@@ -131,7 +161,16 @@ void main() {
     });
 
     test('déjà prise : message', () async {
-      final service = MemoryMissionsService(config: _togo(), current: _kofi);
+      final service = MemoryMissionsService(
+      config: _togo(),
+      current: const CourierProfile(
+        displayName: 'Kofi',
+        phone: '+228 90 11 22 33',
+        vehicle: CourierVehicle.moto,
+        zoneIds: ['be'],
+        isOnline: true,
+      ),
+    );
       final vm = MissionsViewModel(service: service);
       await vm.load();
       expect(await vm.accept(_mission('o9')), isFalse);

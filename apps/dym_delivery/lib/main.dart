@@ -45,9 +45,12 @@ Future<void> configureServices(DymEnvironment environment) async {
     app: AccountApp.delivery,
     locale: locale,
   );
+  // Temps réel (spec 067) : ouvert tant qu'un écran écoute, au premier plan.
+  final live = LiveConnection(neon.live)..attach();
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    ..registerSingleton<LiveFeed>(live)
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
     ..registerSingleton<MissionsService>(
@@ -56,6 +59,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         reference: reference,
         auth: auth,
         wallet: WalletRepository(neon.data),
+        live: live,
       ),
     );
 }

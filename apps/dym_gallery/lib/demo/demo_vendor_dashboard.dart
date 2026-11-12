@@ -11,6 +11,9 @@ class DemoDashboardService implements DashboardService {
   final DemoCountry country;
 
   @override
+  Stream<LiveSignal> get live => const Stream.empty();
+
+  @override
   Future<Result<CountryConfig>> countryConfig() async =>
       Ok(DemoStore.config(country));
 

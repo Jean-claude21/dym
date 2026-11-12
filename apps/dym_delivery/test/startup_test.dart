@@ -24,6 +24,9 @@ class _Missions implements MissionsService {
   final Result<CourierProfile?> result;
 
   @override
+  Stream<LiveSignal> get live => const Stream.empty();
+
+  @override
   Future<Result<CourierProfile?>> profile() async => result;
 
   @override

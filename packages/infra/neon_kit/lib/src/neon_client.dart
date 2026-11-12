@@ -6,6 +6,7 @@ import 'package:neon_kit/src/auth/neon_auth_client.dart';
 import 'package:neon_kit/src/config.dart';
 import 'package:neon_kit/src/data/neon_data_client.dart';
 import 'package:neon_kit/src/functions/neon_functions_client.dart';
+import 'package:neon_kit/src/live/neon_live_client.dart';
 import 'package:neon_kit/src/retry.dart';
 import 'package:neon_kit/src/session.dart';
 import 'package:neon_kit/src/storage/object_uploader.dart';
@@ -79,6 +80,10 @@ class NeonClient {
       data: NeonDataClient(config: config, auth: auth, httpClient: httpClient),
       functions: NeonFunctionsClient(dio: functionsDio),
       uploads: NeonObjectUploader(dio: uploadDio),
+      live: NeonLiveClient(
+        functionsUrl: config.functionsUrl,
+        token: auth.validAccessToken,
+      ),
     );
   }
 
@@ -87,7 +92,11 @@ class NeonClient {
     required this.data,
     required this.functions,
     required this.uploads,
+    required this.live,
   });
+
+  /// Passerelle temps réel des Functions (spec 067).
+  final NeonLiveClient live;
 
   /// Authentification et session.
   final NeonAuthClient auth;

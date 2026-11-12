@@ -43,10 +43,12 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
 class OrdersViewModel extends _OrdersLoadingViewModel {
   new({
     required OrdersService service,
-    this.refreshEvery = const Duration(seconds: 20),
+    this.refreshEvery = const Duration(seconds: 60),
   }) : super(service);
 
+  /// Relecture en filet ; le temps réel (spec 067) prévient d'abord.
   final Duration refreshEvery;
+  StreamSubscription<LiveSignal>? _live;
   VendorOrderScope _scope = VendorOrderScope.newOrders;
   List<VendorOrder> _all = const [];
   Set<String>? _seenNew;
@@ -79,6 +81,11 @@ class OrdersViewModel extends _OrdersLoadingViewModel {
       return result.failureOrNull;
     });
     _timer ??= Timer.periodic(refreshEvery, (_) => unawaited(refresh()));
+    _live ??= watchLive(
+      service.live,
+      when: (s) => s.kind == 'order_status' || s.kind == 'notification',
+      reload: () => unawaited(refresh()),
+    );
   }
 
   void _apply(List<VendorOrder> value) {
@@ -113,6 +120,7 @@ class OrdersViewModel extends _OrdersLoadingViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_live?.cancel());
     super.dispose();
   }
 }
@@ -123,10 +131,11 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
   new({
     required OrdersService service,
     required this.orderId,
-    this.refreshEvery = const Duration(seconds: 20),
+    this.refreshEvery = const Duration(seconds: 60),
   }) : super(service);
 
   final String orderId;
+  StreamSubscription<LiveSignal>? _live;
 
   /// Relecture silencieuse : le livreur ou la cliente font avancer la
   /// commande pendant que la fiche est ouverte.
@@ -168,6 +177,11 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
       return result.failureOrNull;
     });
     _timer ??= Timer.periodic(refreshEvery, (_) => unawaited(refresh()));
+    _live ??= watchLive(
+      service.live,
+      when: (s) => s.entityId == orderId,
+      reload: () => unawaited(refresh()),
+    );
   }
 
   /// Relecture sans état de chargement ; jamais pendant un geste.
@@ -182,6 +196,7 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
   @override
   void dispose() {
     _timer?.cancel();
+    unawaited(_live?.cancel());
     super.dispose();
   }
 
