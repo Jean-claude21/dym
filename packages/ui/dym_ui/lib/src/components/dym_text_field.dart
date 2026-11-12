@@ -69,7 +69,7 @@ class DymTextField extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     OutlineInputBorder border(Color color, double width) => OutlineInputBorder(
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      borderRadius: BorderRadius.circular(DymTokenRadius.field),
       borderSide: BorderSide(color: color, width: width),
     );
     final errorColor = c.pimentStrong;
@@ -92,7 +92,7 @@ class DymTextField extends StatelessWidget {
           textCapitalization: textCapitalization,
           minLines: minLines,
           maxLines: maxLines,
-          style: t.body.copyWith(fontSize: 18, color: c.textPrimary),
+          style: t.body.copyWith(fontSize: 16, color: c.textPrimary),
           cursorColor: c.brand,
           decoration: InputDecoration(
             labelText: label,
@@ -100,28 +100,26 @@ class DymTextField extends StatelessWidget {
             floatingLabelBehavior: FloatingLabelBehavior.auto,
             hintText: hint,
             suffixText: suffixText,
-            suffixStyle: t.title.copyWith(fontSize: 17, color: c.textPrimary),
+            suffixStyle: t.price.copyWith(fontSize: 16, color: c.textPrimary),
             counterText: '',
             filled: true,
             fillColor: c.card,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: DymTokenSpace.s4,
-              vertical: 18,
+              vertical: 16,
             ),
             prefixIcon: icon == null
                 ? null
-                : Icon(icon, color: c.textSecondary, size: 24),
+                : Icon(icon, color: c.textSecondary, size: 22),
             enabledBorder: border(
-              status == DymFieldStatus.error
-                  ? errorColor
-                  : c.textSecondary.withValues(alpha: 0.18),
-              1.2,
+              status == DymFieldStatus.error ? errorColor : c.lineStrong,
+              1,
             ),
             focusedBorder: border(
               status == DymFieldStatus.error ? errorColor : c.brand,
               2,
             ),
-            disabledBorder: border(c.textSecondary.withValues(alpha: 0.1), 1),
+            disabledBorder: border(c.hairline, 1),
           ),
         ),
         if (message != null && status != DymFieldStatus.none) ...[

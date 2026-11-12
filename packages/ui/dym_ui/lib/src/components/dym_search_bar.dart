@@ -37,11 +37,11 @@ class DymSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     return Container(
-      height: 56,
+      height: DymTokenSize.fieldHeight,
       decoration: BoxDecoration(
         color: c.card,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: const [DymTokenShadows.card],
+        borderRadius: BorderRadius.circular(DymTokenRadius.field),
+        border: Border.all(color: c.lineStrong),
       ),
       child: Row(
         children: [
@@ -55,7 +55,7 @@ class DymSearchBar extends StatelessWidget {
               child: InkWell(
                 onTap: onTap,
                 borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(18),
+                  left: Radius.circular(DymTokenRadius.field),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
@@ -65,8 +65,8 @@ class DymSearchBar extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.search_rounded,
-                        color: c.textPrimary,
-                        size: 26,
+                        color: c.textSecondary,
+                        size: 22,
                       ),
                       const SizedBox(width: DymTokenSpace.s3),
                       Expanded(
@@ -76,7 +76,6 @@ class DymSearchBar extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                           style: context.dym.text.body.copyWith(
                             color: c.textSecondary,
-                            fontSize: 16,
                           ),
                         ),
                       ),
@@ -90,19 +89,15 @@ class DymSearchBar extends StatelessWidget {
             IconButton(
               tooltip: micLabel,
               onPressed: onMic,
-              icon: Icon(Icons.mic_rounded, color: c.textPrimary),
+              icon: Icon(Icons.mic_none_rounded, color: c.brand),
             ),
           if (onMic != null && onCamera != null)
-            Container(
-              width: 1,
-              height: 28,
-              color: c.textSecondary.withValues(alpha: 0.2),
-            ),
+            Container(width: 1, height: 24, color: c.hairline),
           if (onCamera != null)
             IconButton(
               tooltip: cameraLabel,
               onPressed: onCamera,
-              icon: Icon(Icons.photo_camera_rounded, color: c.textPrimary),
+              icon: Icon(Icons.photo_camera_outlined, color: c.textSecondary),
             ),
           const SizedBox(width: DymTokenSpace.s1),
         ],

@@ -1,6 +1,8 @@
 # DYM — Direction de design
 
-> **Statut : validée le 2026-10-01.** Décisions : [0009](../architecture/decisions/0009-design-direction.md), couleur de marque [0011](../architecture/decisions/0011-brand-green.md) (vert profond, 2026-10-02).
+> **Statut : remplacée le 2026-11-11 par le design « Épuré » ([décision 0016](../architecture/decisions/0016-design-epure.md), [PARCOURS.md](PARCOURS.md)).** Gardée pour l'historique.
+>
+> Ancien statut : validée le 2026-10-01. Décisions : [0009](../architecture/decisions/0009-design-direction.md), couleur de marque [0011](../architecture/decisions/0011-brand-green.md) (vert profond, 2026-10-02).
 > Tokens : [`tokens/dym.tokens.json`](tokens/dym.tokens.json) · Écrans : [`screens/`](screens/).
 
 ![Écrans validés](screens/00-apercu.webp)

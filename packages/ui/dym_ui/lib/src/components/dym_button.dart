@@ -8,10 +8,10 @@ enum DymButtonVariant {
   /// Vert profond : l'action principale unique de l'écran.
   primary,
 
-  /// Contour vert : action secondaire.
+  /// Contour fin, texte encre : action secondaire.
   secondary,
 
-  /// Jaune plantain : action sur fond vert (mini-panier, app vendeuse).
+  /// Soleil : action sur fond vert (rare).
   plantain,
 
   /// Contour blanc : action secondaire sur fond vert.
@@ -24,7 +24,8 @@ enum DymButtonVariant {
   destructive,
 }
 
-/// Bouton DYM. Hauteur 56, coins 16, libellé en Nunito extra-gras.
+/// Bouton DYM « Épuré ». Hauteur 52 (48 en compact), coins 12, libellé Inter
+/// SemiBold 16. Une seule variante [DymButtonVariant.primary] par écran.
 class DymButton extends StatefulWidget {
   /// Crée un bouton. [onPressed] nul : bouton désactivé.
   const new({
@@ -80,24 +81,29 @@ class _DymButtonState extends State<DymButton> {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final enabled = widget.onPressed != null && !widget.loading;
-    final (bg, fg, border) = switch (widget.variant) {
+    final (bg0, fg0, border0) = switch (widget.variant) {
       DymButtonVariant.primary => (c.brand, c.onBrand, null),
-      DymButtonVariant.secondary => (c.card, c.brandDeep, c.brand),
+      DymButtonVariant.secondary => (c.card, c.textPrimary, c.lineStrong),
       DymButtonVariant.plantain => (c.plantain, c.textPrimary, null),
       DymButtonVariant.onBrand => (Colors.transparent, c.onBrand, c.onBrand),
-      DymButtonVariant.surface => (
-        c.card,
-        c.textPrimary,
-        c.textSecondary.withValues(alpha: 0.25),
-      ),
+      DymButtonVariant.surface => (c.card, c.textPrimary, c.lineStrong),
       DymButtonVariant.destructive => (c.pimentStrong, c.onBrand, null),
     };
+    // Désactivé : fond discret et texte gris, lisible au soleil (pas de
+    // couleur délavée).
+    final filled = border0 == null && bg0 != Colors.transparent;
+    final disabled = !enabled && !widget.loading;
+    final bg = disabled && filled ? c.muted : bg0;
+    final fg = disabled ? c.textSecondary : fg0;
+    final border = disabled && !filled ? c.hairline : border0;
     final label = Text(
       widget.label,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: context.dym.text.title.copyWith(
-        fontSize: widget.compact ? 16 : 17,
+      style: context.dym.text.body.copyWith(
+        fontSize: widget.compact ? 15 : 16,
+        fontWeight: FontWeight.w600,
+        height: 1.2,
         color: fg,
       ),
     );
@@ -114,7 +120,7 @@ class _DymButtonState extends State<DymButton> {
                 widget.leading!,
                 const SizedBox(width: DymTokenSpace.s3),
               ] else if (widget.icon != null) ...[
-                Icon(widget.icon, color: fg, size: 22),
+                Icon(widget.icon, color: fg, size: 20),
                 const SizedBox(width: DymTokenSpace.s2),
               ],
               Flexible(child: label),
@@ -139,7 +145,7 @@ class _DymButtonState extends State<DymButton> {
         duration: DymMotion.of(context, DymMotion.fast),
         curve: DymMotion.standard,
         child: AnimatedOpacity(
-          opacity: enabled || widget.loading ? 1 : 0.45,
+          opacity: enabled || widget.loading || filled ? 1 : 0.7,
           duration: DymMotion.of(context, DymMotion.fast),
           child: Material(
             color: bg,
@@ -147,7 +153,7 @@ class _DymButtonState extends State<DymButton> {
               borderRadius: BorderRadius.circular(DymTokenRadius.button),
               side: border == null
                   ? BorderSide.none
-                  : BorderSide(color: border, width: 1.5),
+                  : BorderSide(color: border),
             ),
             clipBehavior: Clip.antiAlias,
             child: InkWell(
@@ -155,13 +161,15 @@ class _DymButtonState extends State<DymButton> {
               onHighlightChanged: (v) => setState(() => _pressed = v),
               child: ConstrainedBox(
                 constraints: BoxConstraints(
-                  minHeight: widget.compact ? DymTokenSize.touchMin : 56,
+                  minHeight: widget.compact
+                      ? DymTokenSize.touchMin
+                      : DymTokenSize.buttonHeight,
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: widget.compact
                         ? DymTokenSpace.s3
-                        : DymTokenSpace.s5,
+                        : DymTokenSpace.s4 + DymTokenSpace.s1,
                   ),
                   child: Center(widthFactor: 1, child: content),
                 ),

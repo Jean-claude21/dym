@@ -8,54 +8,75 @@ import 'dart:ui' show Color, FontFeature, FontWeight, Offset;
 import 'package:flutter/painting.dart' show BoxShadow, TextStyle;
 
 abstract final class DymTokenColors {
-  /// Vert profond : marque et action principale unique (boutons, navigation active, logo). Blanc dessus : 7.92:1 ; sur crème : 7.35:1.
-  static const brandPrimary = Color(0xFF0B5D3F);
+  /// Vert DYM : action principale unique, onglet actif, une carte forte au plus par écran. Blanc dessus : 7.69:1 ; sur fond : 7.36:1.
+  static const brandPrimary = Color(0xFF145C43);
 
-  /// Vert très profond : fond de l'app vendeuse, texte vert sur fonds clairs. Blanc dessus : 11.04:1.
-  static const brandPrimaryDeep = Color(0xFF08452F);
+  /// Vert très profond : texte vert sur fonds clairs et menthe. Blanc dessus : 10.6:1 ; sur menthe : 9.5:1.
+  static const brandPrimaryDeep = Color(0xFF0E4632);
 
-  /// Mises en avant : pastille de délai, jauges, bouton sur fond vert (4.72:1 sur primary). Texte encre dessus : 10.29:1.
-  static const accentPlantain = Color(0xFFF2C14E);
+  /// Soleil : cash à encaisser, notes, mises en avant ponctuelles. Texte encre dessus : 11.2:1.
+  static const accentPlantain = Color(0xFFF6C343);
 
-  /// Aplats et grands textes uniquement (blanc dessus : 4.36:1, insuffisant pour le petit texte).
-  static const accentPiment = Color(0xFFD9442B);
+  /// Tomate : promo, rupture, erreur ; aplats et grands textes (blanc dessus : 4.5:1).
+  static const accentPiment = Color(0xFFD93F33);
 
-  /// Badges promo et pastilles de compteur avec texte blanc : 5.92:1.
-  static const accentPimentStrong = Color(0xFFB8341E);
+  /// Tomate foncée : petit texte blanc sur badge, texte d'erreur. Blanc dessus : 6.0:1.
+  static const accentPimentStrong = Color(0xFFB83229);
 
-  /// Touche secondaire décorative (motifs, illustrations). Pas de texte dessus.
+  /// Touche décorative. Pas de texte dessus.
   static const accentHuile = Color(0xFFE8892B);
 
-  /// Touche secondaire, liens, badge « Boutique ».
-  static const accentIndigo = Color(0xFF2B3A8F);
+  /// Liens et badge « Boutique ».
+  static const accentIndigo = Color(0xFF2E3A8C);
 
-  /// Fond crème chaud, lisible en plein soleil.
-  static const surfaceBackground = Color(0xFFFBF6EC);
+  /// Fond blanc cassé, lisible en plein soleil.
+  static const surfaceBackground = Color(0xFFFAFAF7);
+
+  /// Carte et champ ; réservés aux éléments qui doivent ressortir.
   static const surfaceCard = Color(0xFFFFFFFF);
 
-  /// Encre chaude. Sur crème : 16.03:1.
-  static const textPrimary = Color(0xFF1F1A14);
+  /// Fond discret : squelettes de chargement, champs désactivés, étiquettes neutres.
+  static const surfaceMuted = Color(0xFFF1F2EE);
 
-  /// Sur crème : 5.38:1 ; sur blanc : 5.79:1.
-  static const textSecondary = Color(0xFF6E6458);
+  /// Filet de séparation et bordure de carte (1 px).
+  static const lineHairline = Color(0xFFE6E7E2);
+
+  /// Bordure des contrôles (champs, boutons secondaires, puces non choisies).
+  static const lineStrong = Color(0xFFC9CCC4);
+
+  /// Encre. Sur fond : 16.3:1.
+  static const textPrimary = Color(0xFF16201B);
+
+  /// Texte secondaire, jamais plus clair. Sur fond : 7.0:1 ; sur blanc : 7.3:1.
+  static const textSecondary = Color(0xFF4E5852);
   static const textOnBrand = Color(0xFFFFFFFF);
+
+  /// Pastille « Fait maison ».
   static const tintPeche = Color(0xFFF8E3D3);
-  static const tintVertTendre = Color(0xFFE9F1DC);
-  static const tintPlantainClair = Color(0xFFFBEFC9);
-  static const tintPimentClair = Color(0xFFF6DAD3);
-  static const tintIndigoClair = Color(0xFFE1E5F3);
-  static const originMarcheBg = Color(0xFFE9F1DC);
+
+  /// Menthe : fond des photos produits, cercles des rayons, pastille « Au marché ».
+  static const tintVertTendre = Color(0xFFE8F2EC);
+
+  /// Fond du cash à encaisser.
+  static const tintPlantainClair = Color(0xFFFBF1D3);
+
+  /// Fond des alertes et erreurs.
+  static const tintPimentClair = Color(0xFFF8DEDA);
+
+  /// Pastille « Boutique ».
+  static const tintIndigoClair = Color(0xFFE3E6F4);
+  static const originMarcheBg = Color(0xFFE8F2EC);
 
   /// 9.5:1
-  static const originMarcheFg = Color(0xFF08452F);
+  static const originMarcheFg = Color(0xFF0E4632);
   static const originMaisonBg = Color(0xFFF8E3D3);
 
   /// 5.69:1
   static const originMaisonFg = Color(0xFF8C4513);
-  static const originBoutiqueBg = Color(0xFFE1E5F3);
+  static const originBoutiqueBg = Color(0xFFE3E6F4);
 
-  /// 7.94:1
-  static const originBoutiqueFg = Color(0xFF2B3A8F);
+  /// 8.1:1
+  static const originBoutiqueFg = Color(0xFF2E3A8C);
 }
 
 abstract final class DymTokenSpace {
@@ -70,17 +91,38 @@ abstract final class DymTokenSpace {
 }
 
 abstract final class DymTokenRadius {
-  static const double chip = 999.0;
-  static const double tile = 20.0;
-  static const double card = 24.0;
-  static const double button = 16.0;
+  /// Puces et filtres : même rayon que les boutons.
+  static const double chip = 12.0;
+
+  /// Tuiles et photos produits dans une grille.
+  static const double tile = 12.0;
+
+  /// Cartes et feuilles du bas.
+  static const double card = 12.0;
+
+  /// Boutons, mini-panier, stepper.
+  static const double button = 12.0;
+
+  /// Champs de saisie et recherche.
+  static const double field = 10.0;
+
+  /// Images dans une liste.
+  static const double image = 10.0;
 }
 
 abstract final class DymTokenSize {
-  /// Cible tactile minimale.
+  /// Cible tactile minimale, même quand le visuel est plus petit.
   static const double touchMin = 48.0;
-  static const double addButton = 40.0;
-  static const double avatarBoutique = 56.0;
+
+  /// Petit bouton rond « + » (zone de toucher 48 px).
+  static const double addButton = 36.0;
+  static const double avatarBoutique = 48.0;
+
+  /// Hauteur des boutons principaux.
+  static const double buttonHeight = 52.0;
+
+  /// Hauteur des champs.
+  static const double fieldHeight = 52.0;
 }
 
 abstract final class DymTokenBreakpoints {
@@ -126,65 +168,76 @@ abstract final class DymTokenLayout {
 abstract final class DymTokenFonts {
   static const package = 'dym_ui';
 
-  /// Titres et prix : grotesque arrondie chaleureuse. À valider sur appareil.
-  static const display = 'Nunito';
+  /// Titres et prix : Inter SemiBold, chiffres tabulaires.
+  static const display = 'Inter';
 
-  /// Texte courant. À valider sur appareil.
-  static const body = 'NunitoSans';
+  /// Texte courant : Inter Regular.
+  static const body = 'Inter';
 }
 
 abstract final class DymTokenTypography {
   /// Titre d'écran.
   static const display = TextStyle(
-    fontFamily: 'Nunito',
+    fontFamily: 'Inter',
     package: 'dym_ui',
-    fontWeight: FontWeight.w800,
+    fontWeight: FontWeight.w700,
     fontSize: 28.0,
-    height: 1.15,
+    height: 1.18,
+    letterSpacing: -0.6,
   );
 
-  /// Titre de section.
+  /// Titre de section et de carte.
   static const title = TextStyle(
-    fontFamily: 'Nunito',
+    fontFamily: 'Inter',
     package: 'dym_ui',
-    fontWeight: FontWeight.w800,
-    fontSize: 20.0,
-    height: 1.2,
+    fontWeight: FontWeight.w600,
+    fontSize: 19.0,
+    height: 1.25,
+    letterSpacing: -0.3,
   );
 
   /// Prix, chiffres tabulaires.
   static const price = TextStyle(
-    fontFamily: 'Nunito',
+    fontFamily: 'Inter',
     package: 'dym_ui',
-    fontWeight: FontWeight.w800,
-    fontSize: 18.0,
+    fontWeight: FontWeight.w600,
+    fontSize: 17.0,
     height: 1.2,
+    letterSpacing: -0.2,
     fontFeatures: [FontFeature.tabularFigures()],
   );
   static const body = TextStyle(
-    fontFamily: 'NunitoSans',
+    fontFamily: 'Inter',
     package: 'dym_ui',
     fontWeight: FontWeight.w400,
     fontSize: 15.0,
-    height: 1.4,
+    height: 1.45,
   );
 
-  /// Badges, unités, boutique d'origine. Jamais en dessous de 12px.
+  /// Pastilles, unités, boutique d'origine, libellés de navigation. 14 px minimum (12 px toléré sous une icône de navigation).
   static const label = TextStyle(
-    fontFamily: 'NunitoSans',
+    fontFamily: 'Inter',
     package: 'dym_ui',
-    fontWeight: FontWeight.w600,
-    fontSize: 13.0,
+    fontWeight: FontWeight.w500,
+    fontSize: 14.0,
     height: 1.3,
   );
 }
 
 abstract final class DymTokenShadows {
-  /// Ombre très douce.
+  /// Aucune ombre (design épuré) : les cartes se distinguent par un filet.
   static const card = BoxShadow(
-    color: Color(0x141F1A14),
-    offset: Offset(0.0, 4.0),
-    blurRadius: 16.0,
+    color: Color(0x0016201B),
+    offset: Offset(0.0, 0.0),
+    blurRadius: 0.0,
     spreadRadius: 0.0,
+  );
+
+  /// Seule ombre permise : éléments flottants au-dessus du contenu (mini-panier, feuille du bas).
+  static const floating = BoxShadow(
+    color: Color(0x1F16201B),
+    offset: Offset(0.0, 6.0),
+    blurRadius: 20.0,
+    spreadRadius: -6.0,
   );
 }

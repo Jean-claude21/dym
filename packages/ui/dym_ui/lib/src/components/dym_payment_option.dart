@@ -47,7 +47,7 @@ class DymPaymentOption extends StatelessWidget {
           color: selected ? c.tintVertTendre : c.card,
           borderRadius: BorderRadius.circular(DymTokenRadius.button),
           border: Border.all(
-            color: selected ? c.brand : c.textSecondary.withValues(alpha: 0.25),
+            color: selected ? c.brand : c.lineStrong,
             width: selected ? 2 : 1,
           ),
         ),
@@ -83,7 +83,7 @@ class DymPaymentOption extends StatelessWidget {
                           title,
                           style: context.dym.text.label.copyWith(
                             fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                         if (subtitle != null)

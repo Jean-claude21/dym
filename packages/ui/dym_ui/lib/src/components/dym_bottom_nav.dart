@@ -43,9 +43,7 @@ class DymBottomNav extends StatelessWidget {
     return DecoratedBox(
       decoration: BoxDecoration(
         color: c.card,
-        border: Border(
-          top: BorderSide(color: c.textSecondary.withValues(alpha: 0.12)),
-        ),
+        border: Border(top: BorderSide(color: c.hairline)),
       ),
       child: SafeArea(
         top: false,
@@ -59,7 +57,7 @@ class DymBottomNav extends StatelessWidget {
                   text: item.label,
                   style: context.dym.text.label.copyWith(
                     fontSize: 12,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 textDirection: Directionality.of(context),
@@ -70,7 +68,7 @@ class DymBottomNav extends StatelessWidget {
             }
             return SizedBox(
               // Les libellés peuvent occuper deux lignes à cinq destinations.
-              height: 50 + labelHeight,
+              height: 54 + labelHeight,
               child: Row(
                 children: [
                   for (var i = 0; i < items.length; i++)

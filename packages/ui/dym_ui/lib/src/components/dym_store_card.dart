@@ -53,7 +53,10 @@ class DymStoreCard extends StatelessWidget {
       width: width,
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.card),
+          side: BorderSide(color: c.hairline),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
@@ -102,7 +105,9 @@ class DymStoreCard extends StatelessWidget {
                       name,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: context.dym.text.title.copyWith(fontSize: 15),
+                      style: context.dym.text.body.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: DymTokenSpace.s1),
                     DymOriginBadge(origin: origin, label: originLabel),
@@ -113,7 +118,7 @@ class DymStoreCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: context.dym.text.label.copyWith(
                         color: c.textSecondary,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],

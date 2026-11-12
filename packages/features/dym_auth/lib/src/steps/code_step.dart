@@ -66,14 +66,30 @@ class CodeStep extends StatelessWidget {
         AuthErrorBanner(error: vm.authError),
         const SizedBox(height: DymTokenSpace.s5),
         Container(
-          padding: const EdgeInsets.all(DymTokenSpace.s4),
+          padding: const EdgeInsets.all(DymTokenSpace.s3 + 2),
           decoration: BoxDecoration(
-            color: c.plantain,
-            borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+            color: c.muted,
+            borderRadius: BorderRadius.circular(DymTokenRadius.field),
           ),
-          child: Text(
-            l10n.authCodeTip,
-            style: t.body.copyWith(fontSize: 16, color: c.textPrimary),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                color: c.textSecondary,
+                size: 20,
+              ),
+              const SizedBox(width: DymTokenSpace.s2 + 2),
+              Expanded(
+                child: Text(
+                  l10n.authCodeTip,
+                  style: t.label.copyWith(
+                    fontWeight: FontWeight.w400,
+                    color: c.textPrimary,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],

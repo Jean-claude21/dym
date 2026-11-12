@@ -73,7 +73,7 @@ class DymTimeline extends StatelessWidget {
                   style: context.dym.text.label.copyWith(
                     fontSize: 12,
                     fontWeight: steps[i].state == DymStepState.current
-                        ? FontWeight.w800
+                        ? FontWeight.w600
                         : FontWeight.w600,
                     color: steps[i].state == DymStepState.todo
                         ? c.textSecondary
@@ -96,10 +96,7 @@ class _Line extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
-    return Container(
-      height: 3,
-      color: done ? c.brand : c.textSecondary.withValues(alpha: 0.2),
-    );
+    return Container(height: 3, color: done ? c.brand : c.lineStrong);
   }
 }
 
@@ -125,10 +122,7 @@ class _Dot extends StatelessWidget {
         decoration: BoxDecoration(
           color: c.card,
           shape: BoxShape.circle,
-          border: Border.all(
-            color: c.textSecondary.withValues(alpha: 0.3),
-            width: 3,
-          ),
+          border: Border.all(color: c.lineStrong, width: 3),
         ),
       ),
     };

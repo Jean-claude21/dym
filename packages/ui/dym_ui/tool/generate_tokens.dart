@@ -168,6 +168,7 @@ void _writeTypography(StringBuffer out, Map<String, _Token> tokens) {
     final size = _px(v['fontSize']);
     final height = (v['lineHeight'] as num).toDouble();
     final tabular = v['fontFeatureSettings'] == 'tnum';
+    final spacing = v['letterSpacing'];
     _doc(out, t);
     out
       ..writeln('  static const ${_camel(t.path.substring(11))} = TextStyle(')
@@ -176,6 +177,9 @@ void _writeTypography(StringBuffer out, Map<String, _Token> tokens) {
       ..writeln('    fontWeight: FontWeight.w$weight,')
       ..writeln('    fontSize: $size,')
       ..writeln('    height: $height,');
+    if (spacing != null) {
+      out.writeln('    letterSpacing: ${_px(spacing)},');
+    }
     if (tabular) {
       out.writeln('    fontFeatures: [FontFeature.tabularFigures()],');
     }

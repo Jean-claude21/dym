@@ -51,27 +51,19 @@ class DymStateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
-    final tint = switch (kind) {
-      DymStateKind.empty => c.tintVertTendre,
-      DymStateKind.error => c.tintPimentClair,
-      DymStateKind.offline => c.tintPlantainClair,
-    };
+    // Design « Épuré » : une icône au trait, sans pastille de couleur.
+    final iconColor = kind == DymStateKind.error ? c.piment : c.textSecondary;
     return Padding(
       padding: const EdgeInsets.all(DymTokenSpace.s5),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 88,
-            height: 88,
-            decoration: BoxDecoration(color: tint, shape: BoxShape.circle),
-            child: Icon(kind.icon, size: 40, color: c.textPrimary),
-          ),
+          Icon(kind.icon, size: 52, color: iconColor),
           const SizedBox(height: DymTokenSpace.s4),
           Text(
             title,
             textAlign: TextAlign.center,
-            style: context.dym.text.title,
+            style: context.dym.text.title.copyWith(fontSize: 18),
           ),
           const SizedBox(height: DymTokenSpace.s2),
           Text(

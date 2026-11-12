@@ -1,5 +1,5 @@
 name: dym_ui
-description: Design system DYM « Le marché de Lomé, livré chez toi » (thème, polices, composants).
+description: Design system DYM « Épuré » (thème, police Inter, composants).
 version: 0.1.0
 publish_to: none
 resolution: workspace
@@ -27,9 +27,6 @@ flutter:
     - assets/origins/
     - assets/scenes/
   fonts:
-    - family: Nunito
+    - family: Inter
       fonts:
-        - asset: fonts/Nunito[wght].ttf
-    - family: NunitoSans
-      fonts:
-        - asset: fonts/NunitoSans[YTLC,opsz,wdth,wght].ttf
+        - asset: fonts/Inter[opsz,wght].ttf

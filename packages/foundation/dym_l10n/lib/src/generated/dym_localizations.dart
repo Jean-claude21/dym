@@ -209,7 +209,7 @@ abstract class DymLocalizations {
   /// Bienvenue, écran 2
   ///
   /// In fr, this message translates to:
-  /// **'Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.'**
+  /// **'Les tomates du marché, le poisson fumé, les épices : tu commandes tout en une fois.'**
   String get welcomeSlide2Body;
 
   /// Bienvenue, écran 3

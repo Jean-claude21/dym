@@ -98,14 +98,14 @@ class DymFormScaffold extends StatelessWidget {
                       Text(
                         title,
                         textAlign: align,
-                        style: t.display.copyWith(fontSize: 40, height: 1.1),
+                        style: t.display.copyWith(fontSize: 30, height: 1.15),
                       ),
                       if (subtitle != null) ...[
                         const SizedBox(height: DymTokenSpace.s2),
                         DefaultTextStyle.merge(
                           textAlign: align,
                           style: t.body.copyWith(
-                            fontSize: 17,
+                            fontSize: 16,
                             color: c.textSecondary,
                           ),
                           child: subtitle!,
@@ -152,10 +152,7 @@ class _Progress extends StatelessWidget {
           Text(
             step.label,
             textAlign: TextAlign.center,
-            style: context.dym.text.label.copyWith(
-              fontSize: 15,
-              color: c.textSecondary,
-            ),
+            style: context.dym.text.label.copyWith(color: c.textSecondary),
           ),
           const SizedBox(height: 6),
           Row(
@@ -164,13 +161,11 @@ class _Progress extends StatelessWidget {
                 Expanded(
                   child: AnimatedContainer(
                     duration: DymMotion.of(context, DymMotion.fast),
-                    height: 8,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    height: 4,
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
                     decoration: BoxDecoration(
-                      color: i < step.current
-                          ? c.brand
-                          : c.textSecondary.withValues(alpha: 0.18),
-                      borderRadius: BorderRadius.circular(4),
+                      color: i < step.current ? c.brand : c.lineStrong,
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
@@ -193,12 +188,11 @@ class _BackButton extends StatelessWidget {
     final c = context.dym.colors;
     return Material(
       color: c.card,
-      shape: const CircleBorder(),
-      elevation: 0.5,
+      shape: CircleBorder(side: BorderSide(color: c.hairline)),
       child: IconButton(
         tooltip: label,
         onPressed: onTap,
-        icon: Icon(Icons.arrow_back_rounded, color: c.brandDeep),
+        icon: Icon(Icons.arrow_back_rounded, color: c.textPrimary),
       ),
     );
   }

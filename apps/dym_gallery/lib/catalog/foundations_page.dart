@@ -10,11 +10,11 @@ class FoundationsPage extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     final styles = <(String, TextStyle, String)>[
-      ('display · Nunito 800 · 28', t.display, 'Ton panier'),
-      ('title · Nunito 800 · 20', t.title, 'Boutiques ouvertes près de toi'),
-      ('price · Nunito 800 · 18 · tabulaires', t.price, '1 500 F CFA'),
-      ('body · Nunito Sans 400 · 15', t.body, "Les jus d'Esi, fait maison."),
-      ('label · Nunito Sans 600 · 13', t.label, 'le tas · Au marché'),
+      ('display · Inter 700 · 28', t.display, 'Ton panier'),
+      ('title · Inter 600 · 19', t.title, 'Boutiques ouvertes près de toi'),
+      ('price · Inter 600 · 17 · tabulaires', t.price, '1 500 F CFA'),
+      ('body · Inter 400 · 15', t.body, "Les jus d'Esi, fait maison."),
+      ('label · Inter 500 · 14', t.label, 'le tas · Au marché'),
     ];
     const spaces = <(String, double)>[
       ('s1', DymTokenSpace.s1),

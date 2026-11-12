@@ -7,8 +7,8 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Connexion de l'équipe (maquette 15) : carte centrée, photo du marché à
-/// gauche sur grand écran.
+/// Connexion de l'équipe (design « Épuré ») : formulaire posé sur le fond,
+/// photo du marché en pleine hauteur à gauche sur grand écran.
 class AdminSignInView extends StackedView<AdminSignInViewModel> {
   const new({super.key, this.notice, this.viewModelFactory});
 
@@ -127,32 +127,33 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
           );
 
     final notice = viewModel.notice;
-    final card = Container(
-      constraints: const BoxConstraints(maxWidth: 480),
-      padding: const EdgeInsets.all(DymTokenSpace.s6),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
-        boxShadow: const [DymTokenShadows.card],
-      ),
+    final card = ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 420),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(
-            l10n.appNameAdmin,
-            style: t.title.copyWith(fontSize: 22, color: c.brandDeep),
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: c.brand,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.field),
+                ),
+                child: Icon(Icons.eco_rounded, color: c.onBrand, size: 18),
+              ),
+              const SizedBox(width: DymTokenSpace.s2),
+              Text(l10n.appNameAdmin, style: t.title.copyWith(fontSize: 17)),
+            ],
           ),
-          const SizedBox(height: DymTokenSpace.s4),
-          Text(
-            l10n.adminSignInTitle,
-            textAlign: TextAlign.center,
-            style: t.display.copyWith(fontSize: 32),
-          ),
+          const SizedBox(height: DymTokenSpace.s6),
+          Text(l10n.adminSignInTitle, style: t.display.copyWith(fontSize: 30)),
           const SizedBox(height: DymTokenSpace.s2),
           Text(
             l10n.adminSignInBody,
-            textAlign: TextAlign.center,
-            style: t.body.copyWith(color: c.textSecondary),
+            style: t.body.copyWith(fontSize: 16, color: c.textSecondary),
           ),
           const SizedBox(height: DymTokenSpace.s5),
           emailAction,
@@ -168,29 +169,24 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
                 padding: const EdgeInsets.all(DymTokenSpace.s3),
                 decoration: BoxDecoration(
                   color: c.tintPimentClair,
-                  borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                  borderRadius: BorderRadius.circular(DymTokenRadius.field),
                 ),
-                child: Text(
-                  switch (notice) {
-                    AdminNotice.accessDenied => l10n.adminAccessDenied,
-                    AdminNotice.inactive => l10n.adminSignedOutInactive,
-                    AdminNotice.offline => l10n.errorOffline,
-                    AdminNotice.generic => l10n.errorGeneric,
-                    AdminNotice.codeWrong => l10n.authCodeWrong,
-                    AdminNotice.emailInvalid => l10n.authEmailInvalid,
-                    AdminNotice.passwordWrong => l10n.authPasswordWrong,
-                  },
-                  textAlign: TextAlign.center,
-                  style: t.label.copyWith(fontSize: 15, color: c.textPrimary),
-                ),
+                child: Text(switch (notice) {
+                  AdminNotice.accessDenied => l10n.adminAccessDenied,
+                  AdminNotice.inactive => l10n.adminSignedOutInactive,
+                  AdminNotice.offline => l10n.errorOffline,
+                  AdminNotice.generic => l10n.errorGeneric,
+                  AdminNotice.codeWrong => l10n.authCodeWrong,
+                  AdminNotice.emailInvalid => l10n.authEmailInvalid,
+                  AdminNotice.passwordWrong => l10n.authPasswordWrong,
+                }, style: t.label.copyWith(color: c.textPrimary)),
               ),
             ),
           ],
           const SizedBox(height: DymTokenSpace.s5),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.shield_rounded, color: c.brandDeep, size: 22),
+              Icon(Icons.shield_outlined, color: c.textSecondary, size: 20),
               const SizedBox(width: DymTokenSpace.s2),
               Flexible(
                 child: Text(
@@ -211,11 +207,16 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
           mainAxisSize: MainAxisSize.min,
           children: [
             card,
-            const SizedBox(height: DymTokenSpace.s5),
-            Text(
-              l10n.adminAuditNote,
-              textAlign: TextAlign.center,
-              style: t.label.copyWith(color: c.textSecondary),
+            const SizedBox(height: DymTokenSpace.s4),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 420),
+              child: Text(
+                l10n.adminAuditNote,
+                style: t.label.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: c.textSecondary,
+                ),
+              ),
             ),
           ],
         ),
@@ -228,28 +229,17 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
         child: wide
             ? Row(
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: ShaderMask(
-                      shaderCallback: (rect) => LinearGradient(
-                        colors: [
-                          Colors.white,
-                          Colors.white.withValues(alpha: 0),
-                        ],
-                        stops: const [0.7, 1],
-                      ).createShader(rect),
-                      blendMode: BlendMode.dstIn,
-                      child: const Image(
-                        image: AssetImage(
-                          'assets/admin_market.webp',
-                          package: 'dym_auth',
-                        ),
-                        fit: BoxFit.cover,
-                        height: double.infinity,
+                  const Expanded(
+                    child: Image(
+                      image: AssetImage(
+                        'assets/admin_hero.webp',
+                        package: 'dym_auth',
                       ),
+                      fit: BoxFit.cover,
+                      height: double.infinity,
                     ),
                   ),
-                  Expanded(flex: 3, child: page),
+                  Expanded(child: page),
                 ],
               )
             : page,

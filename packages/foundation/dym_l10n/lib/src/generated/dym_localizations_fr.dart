@@ -69,7 +69,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get welcomeSlide2Body =>
-      'Les tomates du marché, le bissap fait maison : tu commandes tout en une fois.';
+      'Les tomates du marché, le poisson fumé, les épices : tu commandes tout en une fois.';
 
   @override
   String get welcomeSlide3Title => 'Cash ou Mobile Money';

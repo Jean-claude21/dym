@@ -1,65 +1,70 @@
 {
-  "$description": "DYM design tokens — direction « Le marché de Lomé, livré chez toi » (validée le 2026-10-01 ; vert profond adopté le 2026-10-02, décision 0011). Format W3C Design Tokens (DTCG). Source de vérité pour packages/ui/dym_ui.",
+  "$description": "DYM design tokens — direction « Épuré, formes tenues » (validée le 2026-11-11, décision 0016 ; remplace 0009 et 0011). Format W3C Design Tokens (DTCG). Source de vérité pour packages/ui/dym_ui.",
   "color": {
     "$type": "color",
     "brand": {
-      "primary": { "$value": "#0B5D3F", "$description": "Vert profond : marque et action principale unique (boutons, navigation active, logo). Blanc dessus : 7.92:1 ; sur crème : 7.35:1." },
-      "primary-deep": { "$value": "#08452F", "$description": "Vert très profond : fond de l'app vendeuse, texte vert sur fonds clairs. Blanc dessus : 11.04:1." }
+      "primary": { "$value": "#145C43", "$description": "Vert DYM : action principale unique, onglet actif, une carte forte au plus par écran. Blanc dessus : 7.69:1 ; sur fond : 7.36:1." },
+      "primary-deep": { "$value": "#0E4632", "$description": "Vert très profond : texte vert sur fonds clairs et menthe. Blanc dessus : 10.6:1 ; sur menthe : 9.5:1." }
     },
     "accent": {
-      "plantain": { "$value": "#F2C14E", "$description": "Mises en avant : pastille de délai, jauges, bouton sur fond vert (4.72:1 sur primary). Texte encre dessus : 10.29:1." },
-      "piment": { "$value": "#D9442B", "$description": "Aplats et grands textes uniquement (blanc dessus : 4.36:1, insuffisant pour le petit texte)." },
-      "piment-strong": { "$value": "#B8341E", "$description": "Badges promo et pastilles de compteur avec texte blanc : 5.92:1." },
-      "huile": { "$value": "#E8892B", "$description": "Touche secondaire décorative (motifs, illustrations). Pas de texte dessus." },
-      "indigo": { "$value": "#2B3A8F", "$description": "Touche secondaire, liens, badge « Boutique »." }
+      "plantain": { "$value": "#F6C343", "$description": "Soleil : cash à encaisser, notes, mises en avant ponctuelles. Texte encre dessus : 11.2:1." },
+      "piment": { "$value": "#D93F33", "$description": "Tomate : promo, rupture, erreur ; aplats et grands textes (blanc dessus : 4.5:1)." },
+      "piment-strong": { "$value": "#B83229", "$description": "Tomate foncée : petit texte blanc sur badge, texte d'erreur. Blanc dessus : 6.0:1." },
+      "huile": { "$value": "#E8892B", "$description": "Touche décorative. Pas de texte dessus." },
+      "indigo": { "$value": "#2E3A8C", "$description": "Liens et badge « Boutique »." }
     },
     "surface": {
-      "background": { "$value": "#FBF6EC", "$description": "Fond crème chaud, lisible en plein soleil." },
-      "card": { "$value": "#FFFFFF" }
+      "background": { "$value": "#FAFAF7", "$description": "Fond blanc cassé, lisible en plein soleil." },
+      "card": { "$value": "#FFFFFF", "$description": "Carte et champ ; réservés aux éléments qui doivent ressortir." },
+      "muted": { "$value": "#F1F2EE", "$description": "Fond discret : squelettes de chargement, champs désactivés, étiquettes neutres." }
+    },
+    "line": {
+      "hairline": { "$value": "#E6E7E2", "$description": "Filet de séparation et bordure de carte (1 px)." },
+      "strong": { "$value": "#C9CCC4", "$description": "Bordure des contrôles (champs, boutons secondaires, puces non choisies)." }
     },
     "text": {
-      "primary": { "$value": "#1F1A14", "$description": "Encre chaude. Sur crème : 16.03:1." },
-      "secondary": { "$value": "#6E6458", "$description": "Sur crème : 5.38:1 ; sur blanc : 5.79:1." },
+      "primary": { "$value": "#16201B", "$description": "Encre. Sur fond : 16.3:1." },
+      "secondary": { "$value": "#4E5852", "$description": "Texte secondaire, jamais plus clair. Sur fond : 7.0:1 ; sur blanc : 7.3:1." },
       "on-brand": { "$value": "#FFFFFF" }
     },
     "tint": {
-      "peche": { "$value": "#F8E3D3" },
-      "vert-tendre": { "$value": "#E9F1DC" },
-      "plantain-clair": { "$value": "#FBEFC9" },
-      "piment-clair": { "$value": "#F6DAD3" },
-      "indigo-clair": { "$value": "#E1E5F3" }
+      "peche": { "$value": "#F8E3D3", "$description": "Pastille « Fait maison »." },
+      "vert-tendre": { "$value": "#E8F2EC", "$description": "Menthe : fond des photos produits, cercles des rayons, pastille « Au marché »." },
+      "plantain-clair": { "$value": "#FBF1D3", "$description": "Fond du cash à encaisser." },
+      "piment-clair": { "$value": "#F8DEDA", "$description": "Fond des alertes et erreurs." },
+      "indigo-clair": { "$value": "#E3E6F4", "$description": "Pastille « Boutique »." }
     },
     "origin": {
-      "$description": "Badges d'origine de boutique (fond + texte, contraste AA).",
+      "$description": "Pastilles d'origine de boutique (fond + texte, contraste AA).",
       "marche-bg": { "$value": "{color.tint.vert-tendre}" },
       "marche-fg": { "$value": "{color.brand.primary-deep}", "$description": "9.5:1" },
       "maison-bg": { "$value": "{color.tint.peche}" },
       "maison-fg": { "$value": "#8C4513", "$description": "5.69:1" },
       "boutique-bg": { "$value": "{color.tint.indigo-clair}" },
-      "boutique-fg": { "$value": "{color.accent.indigo}", "$description": "7.94:1" }
+      "boutique-fg": { "$value": "{color.accent.indigo}", "$description": "8.1:1" }
     }
   },
   "font": {
     "family": {
       "$type": "fontFamily",
-      "display": { "$value": ["Nunito", "sans-serif"], "$description": "Titres et prix : grotesque arrondie chaleureuse. À valider sur appareil." },
-      "body": { "$value": ["Nunito Sans", "sans-serif"], "$description": "Texte courant. À valider sur appareil." }
+      "display": { "$value": ["Inter", "sans-serif"], "$description": "Titres et prix : Inter SemiBold, chiffres tabulaires." },
+      "body": { "$value": ["Inter", "sans-serif"], "$description": "Texte courant : Inter Regular." }
     },
     "weight": {
       "$type": "fontWeight",
       "regular": { "$value": 400 },
+      "medium": { "$value": 500 },
       "semibold": { "$value": 600 },
-      "bold": { "$value": 700 },
-      "extrabold": { "$value": 800 }
+      "bold": { "$value": 700 }
     }
   },
   "typography": {
     "$type": "typography",
-    "display": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 800, "fontSize": "28px", "lineHeight": 1.15 }, "$description": "Titre d'écran." },
-    "title": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 800, "fontSize": "20px", "lineHeight": 1.2 }, "$description": "Titre de section." },
-    "price": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 800, "fontSize": "18px", "lineHeight": 1.2, "fontFeatureSettings": "tnum" }, "$description": "Prix, chiffres tabulaires." },
-    "body": { "$value": { "fontFamily": "{font.family.body}", "fontWeight": 400, "fontSize": "15px", "lineHeight": 1.4 } },
-    "label": { "$value": { "fontFamily": "{font.family.body}", "fontWeight": 600, "fontSize": "13px", "lineHeight": 1.3 }, "$description": "Badges, unités, boutique d'origine. Jamais en dessous de 12px." }
+    "display": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 700, "fontSize": "28px", "lineHeight": 1.18, "letterSpacing": "-0.6px" }, "$description": "Titre d'écran." },
+    "title": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 600, "fontSize": "19px", "lineHeight": 1.25, "letterSpacing": "-0.3px" }, "$description": "Titre de section et de carte." },
+    "price": { "$value": { "fontFamily": "{font.family.display}", "fontWeight": 600, "fontSize": "17px", "lineHeight": 1.2, "fontFeatureSettings": "tnum", "letterSpacing": "-0.2px" }, "$description": "Prix, chiffres tabulaires." },
+    "body": { "$value": { "fontFamily": "{font.family.body}", "fontWeight": 400, "fontSize": "15px", "lineHeight": 1.45 } },
+    "label": { "$value": { "fontFamily": "{font.family.body}", "fontWeight": 500, "fontSize": "14px", "lineHeight": 1.3 }, "$description": "Pastilles, unités, boutique d'origine, libellés de navigation. 14 px minimum (12 px toléré sous une icône de navigation)." }
   },
   "space": {
     "$type": "dimension",
@@ -72,16 +77,20 @@
   },
   "radius": {
     "$type": "dimension",
-    "chip": { "$value": "999px" },
-    "tile": { "$value": "20px" },
-    "card": { "$value": "24px" },
-    "button": { "$value": "16px" }
+    "chip": { "$value": "12px", "$description": "Puces et filtres : même rayon que les boutons." },
+    "tile": { "$value": "12px", "$description": "Tuiles et photos produits dans une grille." },
+    "card": { "$value": "12px", "$description": "Cartes et feuilles du bas." },
+    "button": { "$value": "12px", "$description": "Boutons, mini-panier, stepper." },
+    "field": { "$value": "10px", "$description": "Champs de saisie et recherche." },
+    "image": { "$value": "10px", "$description": "Images dans une liste." }
   },
   "size": {
     "$type": "dimension",
-    "touch-min": { "$value": "48px", "$description": "Cible tactile minimale." },
-    "add-button": { "$value": "40px" },
-    "avatar-boutique": { "$value": "56px" }
+    "touch-min": { "$value": "48px", "$description": "Cible tactile minimale, même quand le visuel est plus petit." },
+    "add-button": { "$value": "36px", "$description": "Petit bouton rond « + » (zone de toucher 48 px)." },
+    "avatar-boutique": { "$value": "48px" },
+    "button-height": { "$value": "52px", "$description": "Hauteur des boutons principaux." },
+    "field-height": { "$value": "52px", "$description": "Hauteur des champs." }
   },
   "breakpoint": {
     "$type": "dimension",
@@ -104,6 +113,7 @@
   },
   "shadow": {
     "$type": "shadow",
-    "card": { "$value": { "color": "#1F1A1414", "offsetX": "0px", "offsetY": "4px", "blur": "16px", "spread": "0px" }, "$description": "Ombre très douce." }
+    "card": { "$value": { "color": "#16201B00", "offsetX": "0px", "offsetY": "0px", "blur": "0px", "spread": "0px" }, "$description": "Aucune ombre (design épuré) : les cartes se distinguent par un filet." },
+    "floating": { "$value": { "color": "#16201B1F", "offsetX": "0px", "offsetY": "6px", "blur": "20px", "spread": "-6px" }, "$description": "Seule ombre permise : éléments flottants au-dessus du contenu (mini-panier, feuille du bas)." }
   }
 }

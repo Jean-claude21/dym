@@ -1,5 +1,4 @@
 import 'package:dym_core/dym_core.dart';
-import 'package:dym_ui/src/components/dym_badges.dart';
 import 'package:dym_ui/src/components/dym_quantity_stepper.dart';
 import 'package:dym_ui/src/foundation/money_text.dart';
 import 'package:dym_ui/src/foundation/store_origin.dart';
@@ -80,7 +79,8 @@ class DymProductCard extends StatelessWidget {
   /// au panier sur la carte (consultation seule).
   final ValueChanged<int>? onQuantityChanged;
 
-  /// Teinte de la tuile image (par défaut : pêche).
+  /// Ignorée depuis le design « Épuré » : les photos produits reposent
+  /// toujours sur la menthe. Gardée pour la compatibilité des appels.
   final Color? tint;
 
   /// Boutique d'origine.
@@ -125,8 +125,8 @@ class DymProductCard extends StatelessWidget {
               customBorder: const CircleBorder(),
               onTap: () => change(1),
               child: SizedBox.square(
-                dimension: compact ? 34 : DymTokenSize.addButton,
-                child: Icon(Icons.add_rounded, color: c.onBrand, size: 24),
+                dimension: compact ? 32 : DymTokenSize.addButton,
+                child: Icon(Icons.add_rounded, color: c.onBrand, size: 22),
               ),
             ),
           ),
@@ -160,10 +160,10 @@ class DymProductCard extends StatelessWidget {
     return Container(
       height: height,
       decoration: BoxDecoration(
-        color: tint ?? c.tintPeche,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile - 4),
+        color: c.tintVertTendre,
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
       ),
-      padding: const EdgeInsets.all(DymTokenSpace.s2),
+      padding: const EdgeInsets.all(DymTokenSpace.s2 + 2),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -182,74 +182,70 @@ class DymProductCard extends StatelessWidget {
   Widget _buildGrid(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
+    final meta = [unit, ?store?.name].join(' · ');
+    // Pas de cadre : la photo sur menthe porte la carte (design « Épuré »).
     return Material(
-      color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-      shadowColor: DymTokenShadows.card.color,
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-        child: Padding(
-          padding: const EdgeInsets.all(DymTokenSpace.s2),
-          child: LayoutBuilder(
-            builder: (context, box) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (box.hasBoundedHeight)
-                  Expanded(child: _image(context, null))
-                else
-                  _image(context, 118),
-                const SizedBox(height: DymTokenSpace.s2),
-                Text(
-                  name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: t.title.copyWith(fontSize: 16),
+        child: LayoutBuilder(
+          builder: (context, box) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (box.hasBoundedHeight)
+                Expanded(child: _image(context, null))
+              else
+                AspectRatio(aspectRatio: 1.1, child: _image(context, null)),
+              const SizedBox(height: DymTokenSpace.s2),
+              Text(
+                name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: t.body.copyWith(
+                  fontWeight: FontWeight.w600,
+                  height: 1.25,
                 ),
-                Text(
-                  unit,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: t.label.copyWith(
-                    color: c.textSecondary,
-                    fontWeight: FontWeight.w600,
-                  ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                meta,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: t.label.copyWith(
+                  color: c.textSecondary,
+                  fontWeight: FontWeight.w400,
                 ),
-                if (store != null) ...[
-                  const SizedBox(height: DymTokenSpace.s1),
-                  _StoreLine(store: store!),
-                ],
-                const SizedBox(height: DymTokenSpace.s1),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FittedBox(
-                        alignment: Alignment.centerLeft,
-                        fit: BoxFit.scaleDown,
-                        child: MoneyText(price, color: c.brandDeep, size: 18),
-                      ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: FittedBox(
+                      alignment: Alignment.centerLeft,
+                      fit: BoxFit.scaleDown,
+                      child: MoneyText(price, color: c.textPrimary, size: 16),
                     ),
-                    _addOrStepper(context, compact: false),
-                  ],
-                ),
-                AnimatedSize(
-                  duration: DymMotion.of(context, DymMotion.medium),
-                  curve: DymMotion.standard,
-                  child: quantity == 0 || onQuantityChanged == null
-                      ? const SizedBox(width: double.infinity)
-                      : Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Center(
-                            child: DymQuantityStepper(
-                              quantity: quantity,
-                              onChanged: onQuantityChanged!,
-                              dense: true,
-                            ),
+                  ),
+                  _addOrStepper(context, compact: false),
+                ],
+              ),
+              AnimatedSize(
+                duration: DymMotion.of(context, DymMotion.medium),
+                curve: DymMotion.standard,
+                child: quantity == 0 || onQuantityChanged == null
+                    ? const SizedBox(width: double.infinity)
+                    : Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Center(
+                          child: DymQuantityStepper(
+                            quantity: quantity,
+                            onChanged: onQuantityChanged!,
+                            dense: true,
                           ),
                         ),
-                ),
-              ],
-            ),
+                      ),
+              ),
+            ],
           ),
         ),
       ),
@@ -259,64 +255,60 @@ class DymProductCard extends StatelessWidget {
   Widget _buildCompact(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
+    // Le « + » se pose sur le coin de la photo : nom et prix gardent toute
+    // la largeur de la carte.
     return Material(
-      color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile - 4),
+      color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile - 4),
-        child: Stack(
-          clipBehavior: Clip.none,
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(6),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _image(context, 72),
-                  const SizedBox(height: DymTokenSpace.s1),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 28),
-                    child: Text(
-                      name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.label.copyWith(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 28),
-                    child: Text(
-                      '$unit · ${price.format()}',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: t.label.copyWith(
-                        fontSize: 11,
-                        height: 1.2,
-                        color: c.textSecondary,
-                      ),
-                    ),
-                  ),
-                ],
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                _image(context, 84),
+                Positioned(
+                  right: -6,
+                  bottom: -6,
+                  child: onQuantityChanged == null
+                      ? const SizedBox.shrink()
+                      : quantity == 0
+                      ? _CompactAdd(
+                          label: '$addLabel $name',
+                          onTap: () => onQuantityChanged!(1),
+                        )
+                      : SizedBox.square(
+                          dimension: 44,
+                          child: Center(
+                            child: _QuantityDot(quantity: quantity),
+                          ),
+                        ),
+                ),
+              ],
+            ),
+            const SizedBox(height: DymTokenSpace.s2),
+            Text(
+              name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: t.label.copyWith(fontWeight: FontWeight.w600),
+            ),
+            Text(
+              unit,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: t.label.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: c.textSecondary,
               ),
             ),
-            Positioned(
-              right: -8,
-              bottom: -8,
-              child: onQuantityChanged == null
-                  ? const SizedBox.shrink()
-                  : quantity == 0
-                  ? _CompactAdd(
-                      label: '$addLabel $name',
-                      onTap: () => onQuantityChanged!(1),
-                    )
-                  : SizedBox.square(
-                      dimension: 44,
-                      child: Center(child: _QuantityDot(quantity: quantity)),
-                    ),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: MoneyText(price, size: 14, color: c.textPrimary),
             ),
           ],
         ),
@@ -357,47 +349,6 @@ class _CompactAdd extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _StoreLine extends StatelessWidget {
-  const new({required this.store});
-
-  final DymProductStore store;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    return Row(
-      children: [
-        if (store.avatar != null) ...[
-          CircleAvatar(radius: 13, backgroundImage: store.avatar),
-          const SizedBox(width: DymTokenSpace.s2),
-        ],
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                store.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: context.dym.text.label.copyWith(
-                  fontSize: 12,
-                  color: c.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 2),
-              DymOriginBadge(
-                origin: store.origin,
-                label: store.originLabel,
-                dense: true,
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }

@@ -2,7 +2,7 @@ import 'package:dym_ui/src/theme/dym_theme.dart';
 import 'package:dym_ui/src/tokens/dym_tokens.g.dart';
 import 'package:flutter/material.dart';
 
-/// Tuile de rayon : contenant vu de dessus sur une teinte, libellé dessous
+/// Tuile de rayon : photo dans un cercle menthe, libellé dessous
 /// (deux lignes au plus : « Céréales et farines »).
 class DymAisleTile extends StatelessWidget {
   /// Crée une tuile.
@@ -21,7 +21,8 @@ class DymAisleTile extends StatelessWidget {
   /// Libellé (« Légumes »).
   final String label;
 
-  /// Teinte de fond (tokens `color.tint.*`).
+  /// Ignorée depuis le design « Épuré » (toujours menthe) ; gardée pour la
+  /// compatibilité des appels.
   final Color tint;
 
   /// Badge en haut à droite (« Nouveau »).
@@ -32,46 +33,61 @@ class DymAisleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.dym.colors;
     return Semantics(
       container: true,
       onTap: onTap,
       button: true,
       label: label,
       excludeSemantics: true,
-      child: Material(
-        color: tint,
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Stack(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s1),
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(6, 6, 6, 4),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Image(
-                        image: image,
-                        fit: BoxFit.contain,
-                        errorBuilder: (_, _, _) => const SizedBox.shrink(),
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Positioned.fill(
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: c.tintVertTendre,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(DymTokenSpace.s2),
+                            child: Image(
+                              image: image,
+                              fit: BoxFit.contain,
+                              errorBuilder: (_, _, _) =>
+                                  const SizedBox.shrink(),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      label,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.center,
-                      style: context.dym.text.label.copyWith(
-                        fontWeight: FontWeight.w800,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
+                      if (badge != null)
+                        Positioned(top: -4, right: -4, child: badge!),
+                    ],
+                  ),
                 ),
               ),
-              if (badge != null) Positioned(top: 4, right: 4, child: badge!),
+              const SizedBox(height: DymTokenSpace.s1 + 2),
+              Text(
+                label,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: context.dym.text.label.copyWith(
+                  fontSize: 13,
+                  height: 1.2,
+                  color: c.textPrimary,
+                ),
+              ),
             ],
           ),
         ),
