@@ -284,6 +284,7 @@ class _PocketCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        border: Border.all(color: c.hairline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

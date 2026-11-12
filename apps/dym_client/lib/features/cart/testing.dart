@@ -431,6 +431,22 @@ class MemoryCartService implements CartService {
     }
     final address = _address;
     final online = view.paymentMethod?.isCash == false;
+    // Créneau rappelé à la confirmation (spec 056), comme `purchase_json`.
+    DateTime? at(DateTime day, String hhmm) {
+      final [h, m, ...] = hhmm.split(':');
+      return DateTime(day.year, day.month, day.day, int.parse(h), int.parse(m));
+    }
+
+    final slot = _selection.slot;
+    final window = slot == null
+        ? null
+        : deliverySlots.days
+              .where((d) => d.date == slot.date)
+              .expand((d) => d.windows)
+              .where((w) => w.id == slot.windowId)
+              .firstOrNull;
+    final start = window == null ? null : at(slot!.date, window.startsAt);
+    final end = window == null ? null : at(slot!.date, window.endsAt);
     final purchase = Purchase(
       paymentStatus: online
           ? PaymentStatus.awaitingPayment
@@ -465,6 +481,8 @@ class MemoryCartService implements CartService {
             deliveryFeeMinor: g.deliveryFeeMinor,
             totalMinor: g.subtotalMinor + g.deliveryFeeMinor,
             itemCount: g.itemCount,
+            scheduledStart: start,
+            scheduledEnd: end,
             items: [
               for (final l in g.lines)
                 OrderLine(

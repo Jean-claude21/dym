@@ -649,7 +649,10 @@ class _ProductResult extends StatelessWidget {
       opacity: item.available ? 1 : 0.6,
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.card),
+          side: BorderSide(color: c.hairline),
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(DymTokenRadius.card),
           onTap: onTap,
@@ -736,7 +739,10 @@ class _StoreResult extends StatelessWidget {
     final origin = originOf(store.origin);
     return Material(
       color: c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.card),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.card),
+        side: BorderSide(color: c.hairline),
+      ),
       child: InkWell(
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
         onTap: onTap,

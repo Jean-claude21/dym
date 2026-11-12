@@ -1,5 +1,6 @@
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:flutter/widgets.dart';
 
 /// Navigation inerte de la galerie (app cliente) : les écrans restent
 /// affichés.
@@ -33,6 +34,13 @@ class DemoClientNavigator implements AppNavigator {
 
   @override
   void toCart() {}
+
+  @override
+  Widget cartPage({required VoidCallback onBrowse, VoidCallback? onBack}) =>
+      const SizedBox.shrink();
+
+  @override
+  void toMyOrders() {}
 
   @override
   void toAddresses() {}

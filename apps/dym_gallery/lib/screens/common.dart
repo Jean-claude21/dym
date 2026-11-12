@@ -32,7 +32,7 @@ class LocationPill extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: context.dym.text.label.copyWith(
                 fontSize: 15,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),

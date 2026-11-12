@@ -84,6 +84,100 @@ class StoreTile extends StatelessWidget {
   }
 }
 
+/// Boutique en liste (design « Épuré ») : photo ronde, nom, origine,
+/// quartier et horaires, chevron. Posée sur le fond, séparée par des filets.
+class StoreRow extends StatelessWidget {
+  const new({
+    required this.store,
+    required this.service,
+    required this.config,
+    required this.onTap,
+    super.key,
+  });
+
+  final PublicStore store;
+  final DiscoveryService service;
+  final CountryConfig? config;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final locale = Localizations.localeOf(context).languageCode;
+    final origin = originOf(store.origin) ?? StoreOrigin.marche;
+    final fallback = storeFallback(store.origin);
+    final photo = store.coverKey == null
+        ? fallback
+        : service.photo(store.coverKey!);
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 72),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2 + 2),
+          child: Row(
+            children: [
+              ClipOval(
+                child: Image(
+                  image: photo,
+                  width: 52,
+                  height: 52,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => Container(
+                    width: 52,
+                    height: 52,
+                    color: c.tintVertTendre,
+                    child: Icon(Icons.storefront_outlined, color: c.brandDeep),
+                  ),
+                ),
+              ),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      store.name,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.body.copyWith(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 4),
+                    Wrap(
+                      spacing: DymTokenSpace.s2,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        DymOriginBadge(
+                          origin: origin,
+                          label: originLabel(config, store.origin, locale),
+                          dense: true,
+                        ),
+                        Text(
+                          storeMeta(context, store),
+                          style: t.label.copyWith(
+                            fontWeight: FontWeight.w400,
+                            color: store.openNow
+                                ? c.textSecondary
+                                : c.pimentStrong,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: c.textSecondary),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Carte produit d'une grille (rayon, page boutique).
 class ProductTile extends StatelessWidget {
   const new({

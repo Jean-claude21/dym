@@ -48,7 +48,7 @@ void main() {
     );
     await tester.runAsync(() async {
       await precacheImage(
-        const AssetImage('assets/admin_market.webp', package: 'dym_auth'),
+        const AssetImage('assets/admin_hero.webp', package: 'dym_auth'),
         tester.element(find.byType(MaterialApp)),
       );
     });

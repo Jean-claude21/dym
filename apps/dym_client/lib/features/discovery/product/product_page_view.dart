@@ -240,7 +240,10 @@ class ProductPageView extends StackedView<ProductPageViewModel> {
                   ),
                 Material(
                   color: c.card,
-                  borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                    side: BorderSide(color: c.hairline),
+                  ),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(DymTokenRadius.tile),
                     onTap: () => onOpenStore(store.id),

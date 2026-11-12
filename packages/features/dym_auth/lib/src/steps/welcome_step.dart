@@ -286,7 +286,10 @@ class _PhotoChip extends StatelessWidget {
       excludeSemantics: true,
       child: Material(
         color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+          side: BorderSide(color: c.hairline),
+        ),
         child: InkWell(
           onTap: onTap,
           borderRadius: BorderRadius.circular(DymTokenRadius.chip),

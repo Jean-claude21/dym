@@ -12,7 +12,10 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
     await loader.load();
   }
 
-  await load('packages/dym_ui/Inter', 'packages/dym_ui/fonts/Inter[opsz,wght].ttf');
+  await load(
+    'packages/dym_ui/Inter',
+    'packages/dym_ui/fonts/Inter[opsz,wght].ttf',
+  );
   await load('MaterialIcons', 'fonts/MaterialIcons-Regular.otf');
   await testMain();
 }

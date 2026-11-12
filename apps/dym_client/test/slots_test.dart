@@ -1,5 +1,6 @@
 import 'package:dym_client/features/cart/cart/cart_view.dart';
 import 'package:dym_client/features/cart/cart_viewmodels.dart';
+import 'package:dym_client/features/cart/sent/order_sent_view.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
@@ -94,6 +95,36 @@ void main() {
       await tester.tap(find.text('14:00–16:00'));
       await tester.pump();
       expect(service.selection.slot?.windowId, 'w2');
+    });
+
+    testWidgets('confirmation : le créneau est rappelé (spec 056)', (
+      tester,
+    ) async {
+      final service = memoryCart()
+        ..deliverySlots = slots()
+        ..selectSlot(SlotChoice(date: day, windowId: 'w2'));
+      final purchase = (await service.placeOrder()).valueOrNull!;
+      expect(purchase.orders.first.scheduledStart?.hour, 14);
+      tester.view
+        ..physicalSize = const Size(412, 2400)
+        ..devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: DymTheme.light(),
+          locale: const Locale('fr'),
+          localizationsDelegates: DymLocalizations.localizationsDelegates,
+          supportedLocales: DymLocalizations.supportedLocales,
+          home: OrderSentView(
+            service: service,
+            purchase: purchase,
+            onHome: () {},
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.textContaining('14:00'), findsWidgets);
+      expect(find.textContaining('16:00'), findsWidgets);
     });
   });
 }

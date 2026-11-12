@@ -1082,6 +1082,11 @@
   "@navAisles": {
     "description": "Onglet rayons"
   },
+  "navMarket": "Marché",
+  "navCuisine": "Cuisine",
+  "navCart": "Panier",
+  "homeDeliverTo": "Livraison à",
+  "homeActiveOrder": "Commande en cours",
   "homeDeliveredIn": "Livré en {minutes} min",
   "@homeDeliveredIn": {
     "description": "Estimation de livraison",

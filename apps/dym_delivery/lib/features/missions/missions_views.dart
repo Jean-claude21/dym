@@ -873,7 +873,7 @@ class _MissionFact extends StatelessWidget {
             child: Text(
               text,
               style: strong
-                  ? t.body.copyWith(fontWeight: FontWeight.w800)
+                  ? t.body.copyWith(fontWeight: FontWeight.w700)
                   : t.body,
             ),
           ),

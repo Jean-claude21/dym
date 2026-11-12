@@ -36,17 +36,18 @@ class DymFreeDeliveryGauge extends StatelessWidget {
       decoration: BoxDecoration(
         color: c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        border: Border.all(color: c.hairline),
       ),
       child: Row(
         children: [
           Container(
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: c.tintVertTendre,
-              borderRadius: BorderRadius.circular(DymTokenSpace.s3),
+              borderRadius: BorderRadius.circular(DymTokenRadius.field),
             ),
-            child: Icon(Icons.redeem_rounded, color: c.brand),
+            child: Icon(Icons.redeem_outlined, color: c.brandDeep, size: 22),
           ),
           const SizedBox(width: DymTokenSpace.s3),
           Expanded(
@@ -80,11 +81,9 @@ class DymFreeDeliveryGauge extends StatelessWidget {
                     ExcludeSemantics(
                       child: LinearProgressIndicator(
                         value: value,
-                        minHeight: 10,
-                        color: c.plantain,
-                        backgroundColor: c.textSecondary.withValues(
-                          alpha: 0.15,
-                        ),
+                        minHeight: 6,
+                        color: c.brand,
+                        backgroundColor: c.muted,
                       ),
                     ),
                   ),

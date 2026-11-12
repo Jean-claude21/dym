@@ -188,7 +188,7 @@ void main() {
   testWidgets('prénom : modifier et enregistrer', (tester) async {
     final service = _Service();
     await _pump(tester, AccountView(service: service, onSignedOut: () {}));
-    await tester.tap(find.text('Modifier mon prénom'));
+    await tester.tap(find.byIcon(Icons.edit_outlined));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), '  Awa Marie ');
     await tester.tap(find.text('Enregistrer'));
@@ -200,7 +200,7 @@ void main() {
     final service = _Service()
       ..updateResult = const Err(ValidationFailure('prénom'));
     await _pump(tester, AccountView(service: service, onSignedOut: () {}));
-    await tester.tap(find.text('Modifier mon prénom'));
+    await tester.tap(find.byIcon(Icons.edit_outlined));
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'x');
     await tester.tap(find.text('Enregistrer'));

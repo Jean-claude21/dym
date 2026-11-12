@@ -120,7 +120,7 @@ class _WindowClassCard extends StatelessWidget {
                 '${DymLayout.gutterFor(wc).toInt()}',
                 style: t.label.copyWith(
                   fontSize: 14,
-                  fontWeight: wc == current ? FontWeight.w800 : FontWeight.w600,
+                  fontWeight: wc == current ? FontWeight.w700 : FontWeight.w600,
                   color: wc == current ? c.brandDeep : c.textSecondary,
                 ),
               ),

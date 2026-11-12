@@ -16,17 +16,19 @@ import 'package:stacked/stacked.dart';
 class CartPageView extends StackedView<CartViewModel> {
   const new({
     required this.service,
-    required this.onBack,
     required this.onDelivery,
     required this.onOrdered,
     required this.onBrowse,
     super.key,
+    this.onBack,
     this.onSave,
     this.onSendToSpace,
   });
 
   final CartService service;
-  final VoidCallback onBack;
+
+  /// Retour ; nul dans l'onglet « Panier ».
+  final VoidCallback? onBack;
 
   /// Écran 34 (adresse, mode par boutique).
   final VoidCallback onDelivery;
@@ -157,7 +159,10 @@ class _SlotCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(l10n.slotTitle, style: t.title.copyWith(fontSize: 17)),
+          Text(
+            l10n.slotTitle,
+            style: t.body.copyWith(fontWeight: FontWeight.w600),
+          ),
           if (slots.required && slots.minDate != null)
             Text(
               l10n.slotRequiredFrom(material.formatMediumDate(slots.minDate!)),
@@ -293,11 +298,18 @@ class _CartContent extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 56),
             child: Row(
               children: [
-                const Image(
-                  image: DymIllustrations.zem,
-                  width: 44,
-                  height: 44,
-                  excludeFromSemantics: true,
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: c.tintVertTendre,
+                    borderRadius: BorderRadius.circular(DymTokenRadius.field),
+                  ),
+                  child: Icon(
+                    Icons.delivery_dining_outlined,
+                    color: c.brandDeep,
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: DymTokenSpace.s3),
                 Expanded(
@@ -306,7 +318,7 @@ class _CartContent extends StatelessWidget {
                     children: [
                       Text(
                         l10n.cartDelivery,
-                        style: t.title.copyWith(fontSize: 17),
+                        style: t.body.copyWith(fontWeight: FontWeight.w600),
                       ),
                       Text(
                         l10n.cartDeliveryMeta(
@@ -323,14 +335,14 @@ class _CartContent extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: t.label.copyWith(
                               color: c.textPrimary,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                           null => Text(
                             l10n.cartAddAddress,
                             style: t.label.copyWith(
                               color: c.pimentStrong,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         },
@@ -341,7 +353,7 @@ class _CartContent extends StatelessWidget {
                   l10n.cartChange,
                   style: t.label.copyWith(
                     fontSize: 15,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w600,
                     color: c.brandDeep,
                   ),
                 ),
@@ -361,25 +373,35 @@ class _CartContent extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.cartPayment, style: t.title.copyWith(fontSize: 17)),
+              Text(
+                l10n.cartPayment,
+                style: t.body.copyWith(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: DymTokenSpace.s2),
-              Wrap(
-                spacing: DymTokenSpace.s2,
-                runSpacing: DymTokenSpace.s2,
-                children: [
-                  for (final m in cart.paymentMethods)
-                    SizedBox(
-                      width: 220,
-                      child: DymPaymentOption(
-                        title: m.label.resolve(locale),
-                        icon: m.isCash
-                            ? Icons.payments_rounded
-                            : Icons.phone_android_rounded,
-                        selected: m.id == cart.paymentMethodId,
-                        onTap: () => vm.selectPayment(m.id),
-                      ),
-                    ),
-                ],
+              LayoutBuilder(
+                builder: (context, box) {
+                  const gap = DymTokenSpace.s2;
+                  final columns = box.maxWidth >= 320 ? 2 : 1;
+                  final width = (box.maxWidth - gap * (columns - 1)) / columns;
+                  return Wrap(
+                    spacing: gap,
+                    runSpacing: gap,
+                    children: [
+                      for (final m in cart.paymentMethods)
+                        SizedBox(
+                          width: width,
+                          child: DymPaymentOption(
+                            title: m.label.resolve(locale),
+                            icon: m.isCash
+                                ? Icons.payments_outlined
+                                : Icons.phone_android_outlined,
+                            selected: m.id == cart.paymentMethodId,
+                            onTap: () => vm.selectPayment(m.id),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
@@ -426,7 +448,7 @@ class _CartContent extends StatelessWidget {
           ),
         DymButton(
           label: l10n.cartOrder(vm.money(cart.totalMinor)?.format() ?? ''),
-          trailing: const Icon(Icons.chevron_right_rounded),
+          icon: Icons.shopping_bag_outlined,
           loading: vm.ordering,
           onPressed: vm.canOrder ? vm.order : null,
         ),
@@ -513,54 +535,40 @@ class _StoreGroup extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          Wrap(
+            spacing: DymTokenSpace.s2,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              DymAvatar(
-                image: storeFallback(store.origin),
-                size: 52,
-                ring: false,
+              Text(
+                store.name,
+                style: t.body.copyWith(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              const SizedBox(width: DymTokenSpace.s2),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(store.name, style: t.title.copyWith(fontSize: 19)),
-                    const SizedBox(height: 2),
-                    Wrap(
-                      spacing: DymTokenSpace.s2,
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      children: [
-                        if (origin != null)
-                          DymOriginBadge(
-                            origin: origin,
-                            label: originLabel(vm.config, store.origin, locale),
-                          ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.location_on_outlined,
-                              size: 16,
-                              color: c.textSecondary,
-                            ),
-                            Text(
-                              store.zoneName,
-                              style: t.label.copyWith(color: c.textSecondary),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+              if (origin != null)
+                DymOriginBadge(
+                  origin: origin,
+                  label: originLabel(vm.config, store.origin, locale),
+                  dense: true,
+                ),
+              Text(
+                store.zoneName,
+                style: t.label.copyWith(
+                  color: c.textSecondary,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
             ],
           ),
           for (final issue in store.issues)
             CartIssue(label: storeIssueLabel(l10n, issue)),
-          for (final line in store.lines) ...[
-            const SizedBox(height: DymTokenSpace.s2),
+          for (final (i, line) in store.lines.indexed) ...[
+            if (i > 0)
+              Divider(height: 1, color: c.hairline)
+            else
+              const SizedBox(height: DymTokenSpace.s1),
             _Line(vm: vm, line: line, locale: locale),
           ],
         ],
@@ -586,84 +594,87 @@ class _Line extends StatelessWidget {
       ?line.unitLabel?.resolve(locale),
     ].join(' · ');
     final amount = vm.money(line.amountMinor);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 56,
-              height: 56,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: c.tintPeche,
-                borderRadius: BorderRadius.circular(12),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              ProductThumb(
+                image: switch (line.photoKey) {
+                  final key? => vm.service.photo(key),
+                  null => null,
+                },
               ),
-              child: line.photoKey == null
-                  ? const Image(image: DymIllustrations.storeOpened)
-                  : Image(
-                      image: vm.service.photo(line.photoKey!),
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) =>
-                          const Image(image: DymIllustrations.storeOpened),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      line.name,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: t.body.copyWith(fontWeight: FontWeight.w600),
                     ),
-            ),
-            const SizedBox(width: DymTokenSpace.s2),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    line.name,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: t.label.copyWith(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  if (unit.isNotEmpty)
-                    Text(unit, style: t.label.copyWith(color: c.textSecondary)),
-                  if (amount != null)
-                    MoneyText(amount, size: 15, color: c.brandDeep),
-                  if (line.haggled || line.groupPriced)
+                    if (unit.isNotEmpty)
+                      Text(
+                        unit,
+                        style: t.label.copyWith(
+                          color: c.textSecondary,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    if (line.haggled || line.groupPriced)
+                      Row(
+                        children: [
+                          Icon(
+                            line.groupPriced
+                                ? Icons.groups_outlined
+                                : Icons.handshake_outlined,
+                            size: 16,
+                            color: c.brand,
+                          ),
+                          const SizedBox(width: DymTokenSpace.s1),
+                          Flexible(
+                            child: Text(
+                              line.groupPriced
+                                  ? l10n.groupBuyCartBadge
+                                  : l10n.haggleCartBadge,
+                              style: t.label.copyWith(color: c.brandDeep),
+                            ),
+                          ),
+                        ],
+                      ),
+                    const SizedBox(height: DymTokenSpace.s1),
                     Row(
                       children: [
-                        Icon(
-                          line.groupPriced
-                              ? Icons.groups_rounded
-                              : Icons.handshake_rounded,
-                          size: 16,
-                          color: c.brand,
+                        DymQuantityStepper(
+                          quantity: line.quantity,
+                          dense: true,
+                          max: line.stockQuantity ?? 99,
+                          decreaseLabel: l10n.productStockDecrease,
+                          increaseLabel: l10n.productStockIncrease,
+                          onChanged: (q) => vm.setQuantity(line.variantId, q),
                         ),
-                        const SizedBox(width: DymTokenSpace.s1),
-                        Text(
-                          line.groupPriced
-                              ? l10n.groupBuyCartBadge
-                              : l10n.haggleCartBadge,
-                          style: t.label.copyWith(color: c.brandDeep),
-                        ),
+                        const Spacer(),
+                        if (amount != null)
+                          MoneyText(amount, size: 15, color: c.textPrimary),
                       ],
                     ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            DymQuantityStepper(
-              quantity: line.quantity,
-              dense: true,
-              max: line.stockQuantity ?? 99,
-              decreaseLabel: l10n.productStockDecrease,
-              increaseLabel: l10n.productStockIncrease,
-              onChanged: (q) => vm.setQuantity(line.variantId, q),
-            ),
-          ],
-        ),
-        for (final issue in line.issues)
-          CartIssue(
-            label: lineIssueLabel(l10n, line, issue),
-            blocking: issue != CartLineIssue.priceChanged,
+            ],
           ),
-      ],
+          for (final issue in line.issues)
+            CartIssue(
+              label: lineIssueLabel(l10n, line, issue),
+              blocking: issue != CartLineIssue.priceChanged,
+            ),
+        ],
+      ),
     );
   }
 }

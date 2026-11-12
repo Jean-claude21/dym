@@ -160,7 +160,7 @@ class _SellerNewOrderScreenState extends State<SellerNewOrderScreen>
                           'Le zem passe récupérer à 10 h 20',
                           style: t.label.copyWith(
                             fontSize: 16,
-                            fontWeight: FontWeight.w800,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
                       ),
@@ -226,7 +226,7 @@ class _SellerNewOrderScreenState extends State<SellerNewOrderScreen>
                 p.name,
                 style: t.label.copyWith(
                   fontSize: 15,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               Text(
