@@ -95,8 +95,9 @@ abstract final class DymTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        titleSpacing: 16,
-        titleTextStyle: t.title,
+        // Titre de page à gauche, marqué (planche 03 : « ← Wallet »).
+        titleTextStyle: t.display.copyWith(fontSize: 24),
+        titleSpacing: 12,
         iconTheme: IconThemeData(color: c.textPrimary),
         shape: Border(bottom: BorderSide(color: c.background)),
       ),

@@ -58,6 +58,7 @@ class AddressesView extends StackedView<AddressesViewModel> {
             DymContentWidth.form(
               child: DymStateView(
                 kind: DymStateKind.empty,
+                icon: Icons.location_on_outlined,
                 title: l10n.addressesEmptyTitle,
                 message: l10n.addressesEmptyMessage,
               ),

@@ -51,7 +51,7 @@ class WalletView extends StackedView<WalletViewModel> {
                   label: walletErrorLabel(l10n, vm.walletError!),
                 ),
               ),
-            const SizedBox(height: DymTokenSpace.s4),
+            const SizedBox(height: DymTokenSpace.s5),
             DymContentWidth.form(
               child: DymSectionHeader(
                 title: l10n.walletPockets,
@@ -73,15 +73,17 @@ class WalletView extends StackedView<WalletViewModel> {
                   ),
                 ),
               ),
-            for (final pocket in wallet.pockets)
+            for (final (i, pocket) in wallet.pockets.indexed)
               DymContentWidth.form(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: DymTokenSpace.s3),
-                  child: _PocketCard(
-                    pocket: pocket,
-                    vm: vm,
-                    onArchive: vm.acting ? null : () => vm.archive(pocket.id),
-                  ),
+                child: Column(
+                  children: [
+                    if (i > 0) Divider(height: 1, color: c.hairline),
+                    _PocketCard(
+                      pocket: pocket,
+                      vm: vm,
+                      onArchive: vm.acting ? null : () => vm.archive(pocket.id),
+                    ),
+                  ],
                 ),
               ),
             const SizedBox(height: DymTokenSpace.s4),
@@ -90,15 +92,26 @@ class WalletView extends StackedView<WalletViewModel> {
             ),
             if (wallet.movements.isEmpty)
               DymContentWidth.form(
-                child: DymStateView(
-                  kind: DymStateKind.empty,
-                  title: l10n.walletMovements,
-                  message: l10n.walletMovementsEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: DymTokenSpace.s2,
+                  ),
+                  child: Text(
+                    l10n.walletMovementsEmpty,
+                    style: context.dym.text.body.copyWith(
+                      color: c.textSecondary,
+                    ),
+                  ),
                 ),
               ),
-            for (final m in wallet.movements)
+            for (final (i, m) in wallet.movements.indexed)
               DymContentWidth.form(
-                child: _MovementRow(movement: m, vm: vm),
+                child: Column(
+                  children: [
+                    if (i > 0) Divider(height: 1, color: c.hairline),
+                    _MovementRow(movement: m, vm: vm),
+                  ],
+                ),
               ),
           ],
         ),
@@ -146,110 +159,159 @@ class _BalanceCard extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    return Container(
-      padding: const EdgeInsets.all(DymTokenSpace.s5),
-      decoration: BoxDecoration(
-        color: c.brand,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(l10n.walletAvailable, style: t.body.copyWith(color: c.onBrand)),
-          const SizedBox(height: DymTokenSpace.s1),
-          Text(
-            vm.money(wallet.balanceMinor)?.format() ?? '',
-            style: t.display.copyWith(color: c.onBrand),
-          ),
-          if (wallet.pockets.isNotEmpty)
-            Text(
-              l10n.walletTotal(vm.money(wallet.totalMinor)?.format() ?? ''),
-              style: t.label.copyWith(color: c.onBrand),
+    final actions = <(IconData, String, VoidCallback?)>[
+      if (wallet.simulatedTopup)
+        (
+          Icons.add_rounded,
+          l10n.walletTopup,
+          vm.acting
+              ? null
+              : () => _amountSheet(
+                  context,
+                  title: l10n.walletTopup,
+                  note: l10n.walletTopupSimulated,
+                  onConfirm: vm.topup,
+                ),
+        ),
+      // Paiement chez une vendeuse par QR (spec 046).
+      (
+        Icons.qr_code_scanner_rounded,
+        l10n.walletQrPay,
+        () async {
+          await Navigator.of(context).push<void>(
+            MaterialPageRoute(
+              builder: (route) => QrPayView(
+                service: vm.service,
+                onDone: () => Navigator.of(route).pop(),
+              ),
             ),
-          const SizedBox(height: DymTokenSpace.s2),
-          // Paiement chez une vendeuse par QR (spec 046).
-          DymButton(
-            label: l10n.walletQrPay,
-            icon: Icons.qr_code_scanner_rounded,
-            variant: DymButtonVariant.surface,
-            onPressed: () async {
-              await Navigator.of(context).push<void>(
-                MaterialPageRoute(
-                  builder: (route) => QrPayView(
-                    service: vm.service,
-                    onDone: () => Navigator.of(route).pop(),
+          );
+          await vm.load();
+        },
+      ),
+      if (wallet.pockets.isNotEmpty)
+        (
+          Icons.swap_horiz_rounded,
+          l10n.walletMove,
+          vm.acting
+              ? null
+              : () => showModalBottomSheet<void>(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (_) => _TransferSheet(vm: vm),
+                ),
+        ),
+      // Recharge en cash auprès d'un livreur DYM (spec 043).
+      (
+        Icons.payments_outlined,
+        l10n.walletCashTopupShort,
+        () => _cashCodeSheet(context, vm),
+      ),
+      if (wallet.simulatedWithdrawal)
+        (
+          Icons.account_balance_outlined,
+          l10n.walletWithdraw,
+          vm.acting
+              ? null
+              : () => _amountSheet(
+                  context,
+                  title: l10n.walletWithdraw,
+                  note: l10n.walletWithdrawSimulated,
+                  onConfirm: vm.withdraw,
+                ),
+        ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          l10n.walletAvailable,
+          style: t.body.copyWith(color: c.textSecondary),
+        ),
+        Text(
+          vm.money(wallet.balanceMinor)?.format() ?? '',
+          style: t.display.copyWith(fontSize: 40, letterSpacing: -1),
+        ),
+        if (wallet.pockets.isNotEmpty)
+          Text(
+            l10n.walletTotal(vm.money(wallet.totalMinor)?.format() ?? ''),
+            style: t.label.copyWith(
+              color: c.textSecondary,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        const SizedBox(height: DymTokenSpace.s4),
+        LayoutBuilder(
+          builder: (context, box) {
+            const gap = DymTokenSpace.s2;
+            final columns = box.maxWidth >= 360 ? 3 : 2;
+            final width = (box.maxWidth - gap * (columns - 1)) / columns;
+            return Wrap(
+              spacing: gap,
+              runSpacing: gap,
+              children: [
+                for (final (icon, label, onTap) in actions)
+                  SizedBox(
+                    width: width,
+                    child: _ActionTile(icon: icon, label: label, onTap: onTap),
+                  ),
+              ],
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// Tuile d'action à filet : icône au-dessus, libellé dessous.
+class _ActionTile extends StatelessWidget {
+  const new({required this.icon, required this.label, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final enabled = onTap != null;
+    return Material(
+      color: c.card,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(DymTokenRadius.button),
+        side: BorderSide(color: c.hairline),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(DymTokenRadius.button),
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 92),
+          child: Padding(
+            padding: const EdgeInsets.all(DymTokenSpace.s2),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  size: 26,
+                  color: enabled ? c.textPrimary : c.textSecondary,
+                ),
+                const SizedBox(height: DymTokenSpace.s1),
+                Text(
+                  label,
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: context.dym.text.label.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: enabled ? c.textPrimary : c.textSecondary,
                   ),
                 ),
-              );
-              await vm.load();
-            },
-          ),
-          // Recharge en cash auprès d'un livreur DYM (spec 043).
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: () => _cashCodeSheet(context, vm),
-              style: TextButton.styleFrom(
-                foregroundColor: c.onBrand,
-                minimumSize: const Size(48, 48),
-              ),
-              icon: const Icon(Icons.payments_rounded),
-              label: Text(l10n.walletCashTopup),
+              ],
             ),
           ),
-          const SizedBox(height: DymTokenSpace.s4),
-          // Libellés visibles : les boutons passent à la ligne.
-          Wrap(
-            spacing: DymTokenSpace.s3,
-            runSpacing: DymTokenSpace.s3,
-            children: [
-              if (wallet.simulatedTopup)
-                DymButton(
-                  label: l10n.walletTopup,
-                  icon: Icons.add_card_rounded,
-                  variant: DymButtonVariant.secondary,
-                  expanded: false,
-                  onPressed: vm.acting
-                      ? null
-                      : () => _amountSheet(
-                          context,
-                          title: l10n.walletTopup,
-                          note: l10n.walletTopupSimulated,
-                          onConfirm: vm.topup,
-                        ),
-                ),
-              if (wallet.simulatedWithdrawal)
-                DymButton(
-                  label: l10n.walletWithdraw,
-                  icon: Icons.account_balance_rounded,
-                  variant: DymButtonVariant.secondary,
-                  expanded: false,
-                  onPressed: vm.acting
-                      ? null
-                      : () => _amountSheet(
-                          context,
-                          title: l10n.walletWithdraw,
-                          note: l10n.walletWithdrawSimulated,
-                          onConfirm: vm.withdraw,
-                        ),
-                ),
-              if (wallet.pockets.isNotEmpty)
-                DymButton(
-                  label: l10n.walletMove,
-                  icon: Icons.swap_horiz_rounded,
-                  variant: DymButtonVariant.secondary,
-                  expanded: false,
-                  onPressed: vm.acting
-                      ? null
-                      : () => showModalBottomSheet<void>(
-                          context: context,
-                          isScrollControlled: true,
-                          builder: (_) => _TransferSheet(vm: vm),
-                        ),
-                ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -279,62 +341,78 @@ class _PocketCard extends StatelessWidget {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final progress = pocket.progress;
-    return Container(
-      padding: const EdgeInsets.all(DymTokenSpace.s4),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-        border: Border.all(color: c.hairline),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final goal = vm.money(pocket.goalMinor)?.format();
+    final balance = vm.money(pocket.balanceMinor)?.format() ?? '';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+      child: Row(
         children: [
-          Row(
-            children: [
-              Icon(Icons.savings_rounded, color: c.brand),
-              const SizedBox(width: DymTokenSpace.s2),
-              Expanded(child: Text(pocket.name, style: t.title)),
-              Text(
-                vm.money(pocket.balanceMinor)?.format() ?? '',
-                style: t.title,
-              ),
-              PopupMenuButton<void>(
-                itemBuilder: (_) => [
-                  PopupMenuItem<void>(
-                    onTap: onArchive,
-                    child: Text(l10n.walletPocketArchive),
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: c.tintVertTendre,
+              borderRadius: BorderRadius.circular(DymTokenRadius.field),
+            ),
+            child: Icon(Icons.savings_outlined, color: c.brandDeep, size: 22),
+          ),
+          const SizedBox(width: DymTokenSpace.s3),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        pocket.name,
+                        style: t.body.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      goal == null ? balance : '$balance / $goal',
+                      style: t.label.copyWith(color: c.textPrimary),
+                    ),
+                  ],
+                ),
+                if (progress != null) ...[
+                  const SizedBox(height: 6),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: // Jauge déjà dite en texte.
+                    ExcludeSemantics(
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        minHeight: 6,
+                        color: c.brand,
+                        backgroundColor: c.muted,
+                      ),
+                    ),
                   ),
                 ],
+                if (pocket.roundUpMinor != null)
+                  Text(
+                    l10n.walletPocketRoundUp(
+                      vm.money(pocket.roundUpMinor)?.format() ?? '',
+                    ),
+                    style: t.label.copyWith(
+                      color: c.textSecondary,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          PopupMenuButton<void>(
+            tooltip: l10n.walletPocketArchive,
+            icon: Icon(Icons.more_vert_rounded, color: c.textSecondary),
+            itemBuilder: (_) => [
+              PopupMenuItem<void>(
+                onTap: onArchive,
+                child: Text(l10n.walletPocketArchive),
               ),
             ],
           ),
-          if (progress != null) ...[
-            const SizedBox(height: DymTokenSpace.s2),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-              child: // Jauge déjà dite en texte.
-              ExcludeSemantics(
-                child: LinearProgressIndicator(
-                  value: progress,
-                  minHeight: 6,
-                  color: c.brand,
-                  backgroundColor: c.tintVertTendre,
-                ),
-              ),
-            ),
-            const SizedBox(height: DymTokenSpace.s1),
-            Text(
-              l10n.walletPocketGoal(vm.money(pocket.goalMinor)?.format() ?? ''),
-              style: t.label.copyWith(color: c.textSecondary),
-            ),
-          ],
-          if (pocket.roundUpMinor != null)
-            Text(
-              l10n.walletPocketRoundUp(
-                vm.money(pocket.roundUpMinor)?.format() ?? '',
-              ),
-              style: t.label.copyWith(color: c.textSecondary),
-            ),
         ],
       ),
     );
@@ -418,7 +496,21 @@ class _MovementRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
       child: Row(
         children: [
-          Icon(icon, color: c.textSecondary),
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: positive
+                  ? c.tintVertTendre
+                  : c.pimentStrong.withValues(alpha: 0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color: positive ? c.brandDeep : c.pimentStrong,
+            ),
+          ),
           const SizedBox(width: DymTokenSpace.s3),
           Expanded(
             child: Column(
@@ -428,14 +520,20 @@ class _MovementRow extends StatelessWidget {
                 Text(
                   MaterialLocalizations.of(context)
                       .formatShortDate(movement.occurredAt.toLocal()),
-                  style: t.label.copyWith(color: c.textSecondary),
+                  style: t.label.copyWith(
+                    color: c.textSecondary,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             '${positive ? '+' : '−'} $amount',
-            style: t.title.copyWith(color: positive ? c.brand : c.textPrimary),
+            style: t.body.copyWith(
+              fontWeight: FontWeight.w600,
+              color: positive ? c.brandDeep : c.pimentStrong,
+            ),
           ),
         ],
       ),

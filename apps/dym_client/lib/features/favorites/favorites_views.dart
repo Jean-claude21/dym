@@ -133,6 +133,7 @@ class FavoritesView extends StackedView<FavoritesViewModel> {
     } else if (f.isEmpty) {
       body = DymStateView(
         kind: DymStateKind.empty,
+        icon: Icons.favorite_border_rounded,
         title: l10n.favoritesTitle,
         message: l10n.favoritesEmpty,
       );
@@ -144,28 +145,20 @@ class FavoritesView extends StackedView<FavoritesViewModel> {
           children: [
             if (f.stores.isNotEmpty) ...[
               DymSectionHeader(title: l10n.favoritesStores),
-              SizedBox(
-                height:
-                    252 *
-                    MediaQuery.textScalerOf(context).scale(1).clamp(1, 1.3),
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: f.stores.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(width: DymTokenSpace.s3),
-                  itemBuilder: (context, i) => StoreTile(
-                    store: f.stores[i],
-                    service: discovery,
-                    config: vm.config,
-                    onTap: () => onOpenStore(f.stores[i].id),
-                  ),
+              for (final (i, store) in f.stores.indexed) ...[
+                if (i > 0) Divider(height: 1, color: c.hairline),
+                StoreRow(
+                  store: store,
+                  service: discovery,
+                  config: vm.config,
+                  onTap: () => onOpenStore(store.id),
                 ),
-              ),
+              ],
               const SizedBox(height: DymTokenSpace.s4),
             ],
             if (f.products.isNotEmpty) ...[
               DymSectionHeader(title: l10n.favoritesProducts),
-              ProductGrid(
+              ProductList(
                 items: f.products,
                 service: discovery,
                 config: vm.config,
@@ -353,6 +346,7 @@ class BasketsView extends StackedView<BasketsViewModel> {
               DymContentWidth.form(
                 child: DymStateView(
                   kind: DymStateKind.empty,
+                  icon: Icons.shopping_basket_outlined,
                   title: l10n.basketsTitle,
                   message: l10n.basketsEmpty,
                 ),

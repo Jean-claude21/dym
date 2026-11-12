@@ -269,6 +269,9 @@ class ProductPageViewModel extends _LoadingViewModel {
   int photoIndex = 0;
   int _quantity = 1;
 
+  /// « De la même boutique » (planche 08) : jusqu'à 4 autres produits.
+  List<CatalogItem> related = const [];
+
   DiscoveryService get service => _service;
   CountryConfig? get config => _config;
   ProductPageData? get page => _page;
@@ -299,6 +302,12 @@ class ProductPageViewModel extends _LoadingViewModel {
                     value.variants.firstOrNull)
                 ?.id;
         _service.productViewed(productId);
+        // Facultatif : la fiche s'affiche même si la boutique ne répond pas.
+        final store = await _service.storePage(value.store.id);
+        related = [
+          for (final p in store.valueOrNull?.products ?? const <CatalogItem>[])
+            if (p.id != productId) p,
+        ].take(4).toList();
         return null;
       case Err(:final failure):
         return failure;
@@ -405,6 +414,9 @@ class SearchViewModel extends BaseViewModel {
   bool get hasMore => (_results?.products.length ?? 0) < (_results?.total ?? 0);
 
   int get activeFilters => _query(0).activeFilters;
+
+  /// Rayons proposés avant la saisie (design « Épuré »).
+  List<Category> get aisles => _config?.topCategories ?? const [];
 
   Future<void> init({String initialText = '', PhotoSource? photo}) async {
     final config = await _service.countryConfig();

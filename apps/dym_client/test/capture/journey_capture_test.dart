@@ -103,7 +103,7 @@ void main() {
       t,
       'rayon',
       AisleView(
-        service: memoryDiscovery(),
+        service: memoryDiscovery(photos: capturePhoto),
         categoryId: 'legumes',
         onBack: _noop,
         onSearch: _noop,
@@ -116,7 +116,7 @@ void main() {
       t,
       'boutique',
       StorePageView(
-        service: memoryDiscovery(),
+        service: memoryDiscovery(photos: capturePhoto),
         storeId: 'esi',
         onBack: _noop,
         onOpenProduct: (_) {},
@@ -128,7 +128,7 @@ void main() {
       t,
       'produit',
       ProductPageView(
-        service: memoryDiscovery(),
+        service: memoryDiscovery(photos: capturePhoto),
         productId: 'bissap',
         onBack: _noop,
         onOpenStore: (_) {},
@@ -140,7 +140,7 @@ void main() {
       t,
       'recherche',
       SearchView(
-        service: memoryDiscovery(),
+        service: memoryDiscovery(photos: capturePhoto),
         onBack: _noop,
         onOpenProduct: (_) {},
         onOpenStore: (_) {},
@@ -225,7 +225,7 @@ void main() {
       'favoris',
       FavoritesView(
         service: MemoryFavoritesService(),
-        discovery: memoryDiscovery(),
+        discovery: memoryDiscovery(photos: capturePhoto),
         onBack: _noop,
         onOpenStore: (_) {},
         onOpenProduct: (_) {},
@@ -237,7 +237,9 @@ void main() {
       t,
       'espaces',
       SpacesView(
-        service: MemorySpacesService(discovery: memoryDiscovery()),
+        service: MemorySpacesService(
+          discovery: memoryDiscovery(photos: capturePhoto),
+        ),
         onBack: _noop,
         onOpen: (_) async {},
       ),

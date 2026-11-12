@@ -1348,6 +1348,18 @@
   "@productChoose": {
     "description": "Choix de variante"
   },
+  "productAddPrice": "Ajouter · {price}",
+  "@productAddPrice": {"placeholders": {"price": {"type": "String"}}},
+  "productFormat": "Format",
+  "@productFormat": {"description": "Choix de la variante"},
+  "productSameStore": "De la même boutique",
+  "@productSameStore": {"description": "Autres produits de la boutique"},
+  "storeFactMinutes": "{count} min",
+  "@storeFactMinutes": {"placeholders": {"count": {"type": "int"}}},
+  "storeFactDelivery": "Livraison",
+  "@storeFactDelivery": {"description": "Fait de la boutique"},
+  "storeFactPickup": "Retrait possible",
+  "@storeFactPickup": {"description": "Fait de la boutique"},
   "productDeliveryEstimate": "Livré en {minutes} min environ à {zone}",
   "@productDeliveryEstimate": {
     "description": "Délai estimé",
@@ -6610,6 +6622,8 @@
   "walletKindCashTopup": "Recharge en cash",
   "walletKindWithdrawal": "Retrait",
   "walletCashTopup": "Recharger en cash auprès d'un livreur",
+  "walletCashTopupShort": "Recharge cash",
+  "@walletCashTopupShort": {"description": "Tuile : recharge en cash auprès d'un livreur"},
   "walletCashTopupHint": "Montre ce code au livreur DYM et donne-lui le cash : ton wallet est crédité aussitôt.",
   "walletCashTopupExpires": "Valable jusqu'à {time}",
   "@walletCashTopupExpires": {

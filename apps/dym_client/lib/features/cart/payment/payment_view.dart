@@ -135,7 +135,7 @@ class _Waiting extends StatelessWidget {
         const SizedBox(height: DymTokenSpace.s4),
         _Badge(
           icon: Icons.phone_android_rounded,
-          tint: c.tintPlantainClair,
+          tint: c.tintVertTendre,
           color: c.brandDeep,
         ),
         const SizedBox(height: DymTokenSpace.s3),

@@ -175,6 +175,7 @@ class MyOrdersView extends StackedView<MyOrdersViewModel> {
                             DymContentWidth.form(
                               child: DymStateView(
                                 kind: DymStateKind.empty,
+                                icon: Icons.receipt_long_outlined,
                                 title: l10n.ordersEmptyTitle,
                                 message: l10n.ordersMineEmptyMessage,
                               ),
@@ -466,27 +467,46 @@ class _Tracking extends StatelessWidget {
     final reached = order_.indexOf(order.status);
     final children = <Widget>[
       if (eta != null && order.status.isActive)
+        // Heure prévue en tête, sur menthe (design « Épuré »).
         CartCard(
-          child: Row(
-            children: [
-              Icon(Icons.schedule_rounded, color: c.brand, size: 36),
-              const SizedBox(width: DymTokenSpace.s3),
-              Expanded(
-                child: Text(
-                  pickup
-                      ? l10n.trackReadyAt(shortTime(context, eta))
-                      : l10n.trackArrives(shortTime(context, eta)),
-                  style: t.display.copyWith(fontSize: 26),
+          color: c.tintVertTendre,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
+            child: Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: c.card,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    pickup
+                        ? Icons.storefront_outlined
+                        : Icons.delivery_dining_outlined,
+                    color: c.brandDeep,
+                    size: 28,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: DymTokenSpace.s3),
+                Expanded(
+                  child: Text(
+                    pickup
+                        ? l10n.trackReadyAt(shortTime(context, eta))
+                        : l10n.trackArrives(shortTime(context, eta)),
+                    style: t.display.copyWith(fontSize: 26, color: c.brandDeep),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       if (vm.handoverCode case final code?)
         CartCard(
           child: Row(
             children: [
-              Icon(Icons.pin_rounded, color: c.brand, size: 36),
+              Icon(Icons.pin_outlined, color: c.brandDeep, size: 32),
               const SizedBox(width: DymTokenSpace.s3),
               Expanded(
                 child: Column(
@@ -861,19 +881,19 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                   : vm.items.isEmpty
                   ? DymStateView(
                       kind: DymStateKind.empty,
+                      icon: Icons.notifications_none_rounded,
                       title: l10n.notificationsEmptyTitle,
                       message: l10n.notificationsEmptyMessage,
                     )
                   : ListView(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                       children: [
-                        for (final n in vm.items)
+                        for (final (i, n) in vm.items.indexed)
                           DymContentWidth.form(
                             child: Padding(
-                              padding: const EdgeInsets.only(
-                                bottom: DymTokenSpace.s2,
-                              ),
+                              padding: EdgeInsets.zero,
                               child: _NotificationRow(
+                                first: i == 0,
                                 notification: n,
                                 ago: timeAgo(l10n, n.createdAt, now),
                                 onTap: () async {
@@ -909,11 +929,15 @@ class _NotificationRow extends StatelessWidget {
     required this.notification,
     required this.ago,
     required this.onTap,
+    this.first = false,
   });
 
   final AppNotification notification;
   final String ago;
   final VoidCallback onTap;
+
+  /// Pas de filet au-dessus de la première ligne.
+  final bool first;
 
   @override
   Widget build(BuildContext context) {
@@ -922,31 +946,59 @@ class _NotificationRow extends StatelessWidget {
     final l10n = DymLocalizations.of(context);
     final (title, body) = notificationText(l10n, notification);
     final unread = notification.unread;
-    return Material(
-      color: unread ? c.tintVertTendre : c.card,
-      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+    // Ligne à filet (design « Épuré ») ; non lue : titre plus marqué et point.
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: first ? null : Border(top: BorderSide(color: c.hairline)),
+      ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
         child: Padding(
-          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s3),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                notificationIcon(notification.kind),
-                color: c.brand,
-                size: 30,
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: unread ? c.tintVertTendre : c.muted,
+                  borderRadius: BorderRadius.circular(DymTokenRadius.field),
+                ),
+                child: Icon(
+                  notificationIcon(notification.kind),
+                  color: unread ? c.brandDeep : c.textSecondary,
+                  size: 22,
+                ),
               ),
               const SizedBox(width: DymTokenSpace.s3),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: t.title.copyWith(fontSize: 17)),
+                    Text(
+                      title,
+                      style: t.body.copyWith(
+                        fontWeight: unread ? FontWeight.w700 : FontWeight.w500,
+                      ),
+                    ),
                     if (body.isNotEmpty)
-                      Text(body, style: t.label.copyWith(fontSize: 15)),
-                    Text(ago, style: t.label.copyWith(color: c.textSecondary)),
+                      Text(
+                        body,
+                        style: t.label.copyWith(
+                          fontWeight: FontWeight.w400,
+                          color: c.textSecondary,
+                        ),
+                      ),
+                    const SizedBox(height: 2),
+                    Text(
+                      ago,
+                      style: t.label.copyWith(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: c.textSecondary,
+                      ),
+                    ),
                   ],
                 ),
               ),

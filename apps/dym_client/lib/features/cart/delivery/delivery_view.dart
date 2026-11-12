@@ -282,12 +282,6 @@ class _StoreMode extends StatelessWidget {
         children: [
           Row(
             children: [
-              DymAvatar(
-                image: storeFallback(store.origin),
-                size: 44,
-                ring: false,
-              ),
-              const SizedBox(width: DymTokenSpace.s2),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

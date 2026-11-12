@@ -280,7 +280,7 @@ class _ThreadState extends State<_Thread> {
                 vertical: 4,
               ),
               decoration: BoxDecoration(
-                color: d.isOpen ? c.tintPlantainClair : c.tintVertTendre,
+                color: d.isOpen ? c.tintVertTendre : c.muted,
                 borderRadius: BorderRadius.circular(DymTokenRadius.chip),
               ),
               child: Text(
@@ -316,7 +316,7 @@ class _ThreadState extends State<_Thread> {
             decoration: BoxDecoration(
               color: switch (m.authorRole) {
                 'vendor' => c.tintVertTendre,
-                'admin' => c.tintPlantainClair,
+                'admin' => c.muted,
                 _ => c.card,
               },
               borderRadius: BorderRadius.circular(DymTokenRadius.tile),
