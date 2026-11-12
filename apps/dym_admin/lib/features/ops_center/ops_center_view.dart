@@ -344,11 +344,13 @@ class OpsCenterView extends StackedView<OpsCenterViewModel> {
             : AdminEmpty(l10n.opsNoCountry),
       );
     }
+    final today = MaterialLocalizations.of(context)
+        .formatFullDate(DateTime.now());
     return DefaultTabController(
       length: 2,
       child: AdminPage(
-        title: l10n.opsTitle,
-        subtitle: l10n.opsSubtitle,
+        title: l10n.adminNavLive,
+        subtitle: '$today · ${l10n.opsSubtitle}',
         actions: [
           Wrap(
             spacing: DymTokenSpace.s2,
@@ -404,113 +406,117 @@ class _Live extends StatelessWidget {
     final l10n = DymLocalizations.of(context);
     final t = context.dym.text;
     final c = context.dym.colors;
-    Widget tile(
-      String label,
-      String value, {
-      AdminTone tone = AdminTone.neutral,
-    }) => SizedBox(
-      width: 168,
-      child: AdminCard(
-        padding: const EdgeInsets.all(DymTokenSpace.s3),
-        borderColor: tone == AdminTone.danger ? c.pimentStrong : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(value, style: t.display.copyWith(fontSize: 28)),
-            Text(label, style: t.label.copyWith(color: c.textSecondary)),
-          ],
-        ),
-      ),
-    );
-    final active = [
-      OrderStatus.pending,
-      OrderStatus.accepted,
-      OrderStatus.preparing,
-      OrderStatus.ready,
-      OrderStatus.outForDelivery,
-      OrderStatus.delivered,
-    ];
+    // Chiffres-clés en ligne, séparés par des filets (planche 06).
+    Widget stat(String value, String label, {bool alert = false}) =>
+        ConstrainedBox(
+          constraints: const BoxConstraints(minWidth: 112),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 4, DymTokenSpace.s4, 4),
+            margin: const EdgeInsets.only(right: DymTokenSpace.s4),
+            decoration: BoxDecoration(
+              border: Border(right: BorderSide(color: c.hairline)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  value,
+                  style: t.display.copyWith(
+                    fontSize: 26,
+                    color: alert ? c.pimentStrong : c.textPrimary,
+                  ),
+                ),
+                Text(
+                  label,
+                  style: t.label.copyWith(
+                    color: c.textSecondary,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+    int count(OrderStatus s) => live.ordersByStatus[s] ?? 0;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(l10n.opsLast24h, style: t.label.copyWith(color: c.textSecondary)),
+        Text(
+          l10n.opsLast24h,
+          style: t.label.copyWith(
+            color: c.textSecondary,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         const SizedBox(height: DymTokenSpace.s2),
+        Wrap(
+          runSpacing: DymTokenSpace.s3,
+          children: [
+            stat(
+              '${count(OrderStatus.pending)}',
+              orderStatusLabel(l10n, OrderStatus.pending),
+            ),
+            stat(
+              '${count(OrderStatus.accepted) + count(OrderStatus.preparing)}',
+              orderStatusLabel(l10n, OrderStatus.preparing),
+            ),
+            stat(
+              '${count(OrderStatus.ready)}',
+              orderStatusLabel(l10n, OrderStatus.ready),
+            ),
+            stat(
+              '${count(OrderStatus.outForDelivery)}',
+              orderStatusLabel(l10n, OrderStatus.outForDelivery),
+            ),
+            stat(
+              '${count(OrderStatus.delivered)}',
+              orderStatusLabel(l10n, OrderStatus.delivered),
+            ),
+            stat(
+              vm.money(live.deliveredMinor, live.currencyCode),
+              l10n.opsDelivered,
+            ),
+            stat('${live.couriersOnline}', l10n.opsCouriersOnline),
+          ],
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
+        // À surveiller : en rouge dès qu'il y a quelque chose.
         Wrap(
           spacing: DymTokenSpace.s2,
           runSpacing: DymTokenSpace.s2,
           children: [
-            for (final s in active)
-              tile(orderStatusLabel(l10n, s), '${live.ordersByStatus[s] ?? 0}'),
-            tile(
-              l10n.opsDelivered,
-              vm.money(live.deliveredMinor, live.currencyCode),
-            ),
-            tile(l10n.opsCouriersOnline, '${live.couriersOnline}'),
-            tile(
-              l10n.opsMissionsWaiting,
-              '${live.missionsWaiting}',
-              tone: live.missionsWaiting > 0 && live.couriersOnline == 0
-                  ? AdminTone.danger
-                  : AdminTone.neutral,
-            ),
-            tile(l10n.adminNavDisputes, '${live.openDisputes}'),
-            tile(l10n.adminNavSupport, '${live.openTickets}'),
-            tile(l10n.adminNavModeration, '${live.openReports}'),
-            tile(
-              l10n.opsFraud,
-              '${live.fraudOpen}',
-              tone: live.fraudOpen > 0 ? AdminTone.danger : AdminTone.neutral,
-            ),
+            for (final (label, n, danger) in [
+              (
+                l10n.opsMissionsWaiting,
+                live.missionsWaiting,
+                live.missionsWaiting > 0 && live.couriersOnline == 0,
+              ),
+              (l10n.adminNavDisputes, live.openDisputes, false),
+              (l10n.adminNavSupport, live.openTickets, false),
+              (l10n.adminNavModeration, live.openReports, false),
+              (l10n.opsFraud, live.fraudOpen, live.fraudOpen > 0),
+            ])
+              AdminPill(
+                '$label · $n',
+                tone: danger ? AdminTone.danger : AdminTone.neutral,
+              ),
           ],
         ),
         const SizedBox(height: DymTokenSpace.s4),
-        AdminCard(
-          title: l10n.opsFraud,
-          child: vm.signals.isEmpty
-              ? AdminEmpty(l10n.opsNoFraud)
-              : Column(
-                  children: [
-                    for (final f in vm.signals)
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: Icon(
-                          Icons.gpp_maybe_rounded,
-                          color: c.pimentStrong,
-                        ),
-                        title: Text(
-                          '${fraudKindLabel(l10n, f.kind)} · ${f.count}',
-                        ),
-                        subtitle: Text(f.subject ?? ''),
-                        trailing: Wrap(
-                          spacing: DymTokenSpace.s1,
-                          children: [
-                            TextButton(
-                              onPressed: () =>
-                                  vm.decideFraud(f, confirm: false),
-                              child: Text(l10n.opsFraudDismiss),
-                            ),
-                            FilledButton(
-                              onPressed: () => vm.decideFraud(f, confirm: true),
-                              child: Text(l10n.opsFraudConfirm),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-        ),
-        const SizedBox(height: DymTokenSpace.s4),
+        // Retards d'abord : ce qui demande une action maintenant.
         AdminCard(
           title: l10n.opsAlerts,
           child: live.alerts.isEmpty
               ? AdminEmpty(l10n.opsNoAlert)
               : Column(
                   children: [
-                    for (final a in live.alerts)
+                    for (final (i, a) in live.alerts.indexed) ...[
+                      if (i > 0) Divider(height: 1, color: c.hairline),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         leading: Icon(
-                          Icons.timer_rounded,
+                          Icons.timer_outlined,
                           color: c.pimentStrong,
                         ),
                         title: Text(a.storeName),
@@ -520,12 +526,56 @@ class _Live extends StatelessWidget {
                             if (a.delivery && !a.hasCourier) l10n.opsNoCourier,
                           ].join(' · '),
                         ),
-                        trailing: AdminPill(
+                        trailing: Text(
                           opsDelayLabel(l10n, a.minutes),
-                          tone: AdminTone.danger,
+                          style: t.body.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: c.pimentStrong,
+                          ),
                         ),
                         onTap: () => onOpenOrder(a.orderId),
                       ),
+                    ],
+                  ],
+                ),
+        ),
+        const SizedBox(height: DymTokenSpace.s4),
+        AdminCard(
+          title: l10n.opsFraud,
+          child: vm.signals.isEmpty
+              ? AdminEmpty(l10n.opsNoFraud)
+              : Column(
+                  children: [
+                    for (final (i, f) in vm.signals.indexed) ...[
+                      if (i > 0) Divider(height: 1, color: c.hairline),
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        leading: Icon(
+                          Icons.gpp_maybe_outlined,
+                          color: c.pimentStrong,
+                        ),
+                        title: Text(
+                          '${fraudKindLabel(l10n, f.kind)} · ${f.count}',
+                        ),
+                        subtitle: Text(f.subject ?? ''),
+                        trailing: Wrap(
+                          spacing: DymTokenSpace.s2,
+                          children: [
+                            OutlinedButton.icon(
+                              onPressed: () =>
+                                  vm.decideFraud(f, confirm: false),
+                              icon: const Icon(Icons.visibility_off_outlined),
+                              label: Text(l10n.opsFraudDismiss),
+                            ),
+                            FilledButton.icon(
+                              onPressed: () => vm.decideFraud(f, confirm: true),
+                              icon: const Icon(Icons.check_rounded),
+                              label: Text(l10n.opsFraudConfirm),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ],
                 ),
         ),
@@ -536,18 +586,20 @@ class _Live extends StatelessWidget {
               ? AdminEmpty(l10n.opsNoCourierCash)
               : Column(
                   children: [
-                    for (final d in live.courierCash)
+                    for (final (i, d) in live.courierCash.indexed) ...[
+                      if (i > 0) Divider(height: 1, color: c.hairline),
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.two_wheeler_rounded),
+                        leading: const Icon(Icons.two_wheeler_outlined),
                         title: Text('${d.name} · ${d.phone}'),
                         subtitle: Text(vm.money(d.amountMinor, d.currencyCode)),
                         trailing: FilledButton.icon(
                           onPressed: () => vm.confirmCash(d),
-                          icon: const Icon(Icons.payments_rounded),
+                          icon: const Icon(Icons.payments_outlined),
                           label: Text(l10n.opsCashReceived),
                         ),
                       ),
+                    ],
                   ],
                 ),
         ),

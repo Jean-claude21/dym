@@ -138,9 +138,7 @@ class AdminCard extends StatelessWidget {
       color: color ?? c.card,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-        side: borderColor == null
-            ? BorderSide.none
-            : BorderSide(color: borderColor!),
+        side: BorderSide(color: borderColor ?? c.hairline),
       ),
       child: Padding(
         padding: padding,
@@ -151,9 +149,7 @@ class AdminCard extends StatelessWidget {
             if (title != null) ...[
               Row(
                 children: [
-                  Expanded(
-                    child: Text(title!, style: t.title.copyWith(fontSize: 22)),
-                  ),
+                  Expanded(child: Text(title!, style: t.title)),
                   ?trailing,
                 ],
               ),

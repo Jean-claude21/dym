@@ -290,13 +290,16 @@ void main() {
       ),
       size: const Size(412, 915),
     );
+    // Sept domaines : les trois premiers dans la barre, le reste dans « Plus ».
     expect(find.text('Plus'), findsOneWidget);
-    expect(find.text('Support'), findsNothing);
+    expect(find.text('Journal'), findsNothing);
+    await tester.tap(find.text('Support').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Je n’ai pas reçu ma monnaie'), findsOneWidget);
     await tester.tap(find.text('Plus'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Support'));
+    await tester.tap(find.text('Journal'));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
-    expect(find.text('Je n’ai pas reçu ma monnaie'), findsOneWidget);
   });
 }

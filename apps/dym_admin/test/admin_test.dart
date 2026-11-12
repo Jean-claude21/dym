@@ -280,7 +280,7 @@ void main() {
       expect(nav.routes, ['signIn:inactive']);
     });
 
-    testWidgets('déconnexion depuis Réglages', (tester) async {
+    testWidgets('déconnexion depuis Configuration', (tester) async {
       final nav = _Navigator();
       final auth = _Auth();
       await _pump(
@@ -293,7 +293,7 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 50));
       expect(find.text('Commandes bloquées'), findsOneWidget);
-      await tester.tap(find.text('Réglages'));
+      await tester.tap(find.text('Configuration').last);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
       await tester.tap(find.text('Se déconnecter'));
