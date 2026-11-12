@@ -27,6 +27,15 @@ class QrChargeViewModel extends BaseViewModel {
 
   String money(int minor) => config?.money(minor).format() ?? '';
 
+  /// Montant tapé au clavier, lu dans la devise du pays (affichage seul).
+  String preview(String digits) {
+    final currency = config?.currency;
+    final minor = currency == null || digits.isEmpty
+        ? 0
+        : Money.parseMajor(digits, currency) ?? 0;
+    return money(minor);
+  }
+
   Future<void> create(String amountText, {String? label}) async {
     final currency = config?.currency;
     final amount = currency == null
@@ -198,18 +207,31 @@ class _AmountForm extends StatefulWidget {
 }
 
 class _AmountFormState extends State<_AmountForm> {
-  final _amount = TextEditingController();
   final _label = TextEditingController();
+
+  /// Chiffres tapés au clavier géant (planche 04).
+  String _digits = '';
+
+  void _key(String key) => setState(() {
+    if (key == '<') {
+      if (_digits.isNotEmpty) {
+        _digits = _digits.substring(0, _digits.length - 1);
+      }
+    } else if (_digits.length < 9 && !(_digits.isEmpty && key == '0')) {
+      _digits += key;
+    }
+  });
 
   @override
   void dispose() {
-    _amount.dispose();
     _label.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final vm = widget.vm;
     return DymContentWidth.form(
@@ -218,13 +240,60 @@ class _AmountFormState extends State<_AmountForm> {
         children: [
           Text(l10n.qrChargeHint),
           const SizedBox(height: DymTokenSpace.s3),
-          DymTextField(
+          // Montant en grand, puis clavier géant : une main, au comptoir.
+          Semantics(
             label: l10n.tillAmount,
-            controller: _amount,
-            keyboardType: TextInputType.number,
-            autofocus: true,
+            liveRegion: true,
+            child: Container(
+              height: 84,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: c.card,
+                borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                border: Border.all(color: c.hairline),
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    vm.preview(_digits),
+                    style: t.display.copyWith(
+                      fontSize: 38,
+                      color: _digits.isEmpty ? c.textSecondary : c.textPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
           const SizedBox(height: DymTokenSpace.s3),
+          for (final row in const [
+            ['1', '2', '3'],
+            ['4', '5', '6'],
+            ['7', '8', '9'],
+            ['', '0', '<'],
+          ])
+            Padding(
+              padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+              child: Row(
+                children: [
+                  for (final (i, key) in row.indexed) ...[
+                    if (i > 0) const SizedBox(width: DymTokenSpace.s2),
+                    Expanded(
+                      child: key.isEmpty
+                          ? const SizedBox(height: 56)
+                          : _Key(
+                              label: key,
+                              semantics: key == '<' ? l10n.tillErase : key,
+                              onTap: () => _key(key),
+                            ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          const SizedBox(height: DymTokenSpace.s2),
           DymTextField(label: l10n.qrChargeLabel, controller: _label),
           const SizedBox(height: DymTokenSpace.s3),
           DymButton(
@@ -232,7 +301,7 @@ class _AmountFormState extends State<_AmountForm> {
             icon: Icons.qr_code_rounded,
             loading: vm.isBusy,
             onPressed: () => vm.create(
-              _amount.text,
+              _digits,
               label: _label.text.trim().isEmpty ? null : _label.text.trim(),
             ),
           ),
@@ -248,6 +317,51 @@ class _AmountFormState extends State<_AmountForm> {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// Touche du clavier géant : 56 px de haut, filet, chiffre en grand.
+class _Key extends StatelessWidget {
+  const new({
+    required this.label,
+    required this.semantics,
+    required this.onTap,
+  });
+
+  final String label;
+  final String semantics;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    return Semantics(
+      button: true,
+      label: semantics,
+      excludeSemantics: true,
+      child: Material(
+        color: c.card,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(DymTokenRadius.button),
+          side: BorderSide(color: c.hairline),
+        ),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(DymTokenRadius.button),
+          child: SizedBox(
+            height: 56,
+            child: Center(
+              child: label == '<'
+                  ? Icon(Icons.backspace_outlined, color: c.textPrimary)
+                  : Text(
+                      label,
+                      style: context.dym.text.display.copyWith(fontSize: 24),
+                    ),
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -289,6 +289,35 @@ class DymLocalizationsFr extends DymLocalizations {
   String get navStore => 'Boutique';
 
   @override
+  String get navToday => 'Aujourd\'hui';
+
+  @override
+  String get navCatalog => 'Catalogue';
+
+  @override
+  String vendorGreeting(String name) {
+    return 'Bonjour $name';
+  }
+
+  @override
+  String get vendorCharge => 'Encaisser';
+
+  @override
+  String get vendorCashSale => 'Vente cash';
+
+  @override
+  String get storeMyAccount => 'Mon compte';
+
+  @override
+  String get storeGroupMoney => 'Argent';
+
+  @override
+  String get storeGroupSell => 'Vendre plus';
+
+  @override
+  String get storeGroupSettings => 'Réglages';
+
+  @override
   String storeStepLabel(int current, int total) {
     return 'Étape $current sur $total';
   }
@@ -2700,6 +2729,25 @@ class DymLocalizationsFr extends DymLocalizations {
       zero: 'paiement attendu',
     );
     return '$_temp0';
+  }
+
+  @override
+  String dashboardTotals(int orders, int payments) {
+    String _temp0 = intl.Intl.pluralLogic(
+      orders,
+      locale: localeName,
+      other: '$orders commandes',
+      one: '1 commande',
+      zero: 'Aucune commande',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      payments,
+      locale: localeName,
+      other: '$payments paiements attendus',
+      one: '1 paiement attendu',
+      zero: 'aucun paiement attendu',
+    );
+    return '$_temp0 · $_temp1';
   }
 
   @override
@@ -5598,6 +5646,9 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get qrChargeShow => 'Afficher le QR';
+
+  @override
+  String get tillErase => 'Effacer le dernier chiffre';
 
   @override
   String get qrChargeCode => 'Code à taper';

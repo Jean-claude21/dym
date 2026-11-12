@@ -407,10 +407,10 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
           ),
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   order == null ? l10n.navOrders : _title(l10n, order),
-                  textAlign: TextAlign.center,
                   style: t.display.copyWith(fontSize: 24),
                 ),
                 if (order != null)
@@ -489,7 +489,6 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
               child: DymButton(
                 label: l10n.vendorAccept,
                 icon: Icons.check_rounded,
-                variant: DymButtonVariant.plantain,
                 loading: vm.acting,
                 onPressed: vm.acting
                     ? null
@@ -573,29 +572,41 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
       if (pending) ...[
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.all(DymTokenSpace.s4),
+          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          // Nouvelle commande : menthe, sans aplat foncé (design « Épuré »).
           decoration: BoxDecoration(
-            color: c.brandDeep,
+            color: c.tintVertTendre,
             borderRadius: BorderRadius.circular(DymTokenRadius.tile),
           ),
-          child: Column(
+          child: Row(
             children: [
-              Text(
-                l10n.notifNewOrderTitle,
-                textAlign: TextAlign.center,
-                style: t.display.copyWith(fontSize: 30, color: c.onBrand),
+              Icon(
+                Icons.notifications_active_outlined,
+                color: c.brandDeep,
+                size: 28,
               ),
-              if (order.zoneName != null)
-                Text(
-                  '${order.customerFirstName ?? ''} · ${order.zoneName}',
-                  textAlign: TextAlign.center,
-                  style: t.title.copyWith(color: c.plantain),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.notifNewOrderTitle,
+                      style: t.body.copyWith(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: c.brandDeep,
+                      ),
+                    ),
+                    Text(
+                      l10n.vendorReplyQuickly,
+                      style: t.label.copyWith(
+                        color: c.brandDeep,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
-              const SizedBox(height: DymTokenSpace.s1),
-              Text(
-                l10n.vendorReplyQuickly,
-                textAlign: TextAlign.center,
-                style: t.label.copyWith(color: c.onBrand),
               ),
             ],
           ),

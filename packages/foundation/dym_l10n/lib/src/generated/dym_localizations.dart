@@ -590,6 +590,60 @@ abstract class DymLocalizations {
   /// **'Boutique'**
   String get navStore;
 
+  /// Onglet de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Aujourd\'hui'**
+  String get navToday;
+
+  /// Onglet de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Catalogue'**
+  String get navCatalog;
+
+  /// No description provided for @vendorGreeting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour {name}'**
+  String vendorGreeting(String name);
+
+  /// QR ou code pour la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Encaisser'**
+  String get vendorCharge;
+
+  /// Vente hors app, dans la caisse
+  ///
+  /// In fr, this message translates to:
+  /// **'Vente cash'**
+  String get vendorCashSale;
+
+  /// Compte, aide, langue, déconnexion
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon compte'**
+  String get storeMyAccount;
+
+  /// Groupe de Boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Argent'**
+  String get storeGroupMoney;
+
+  /// Groupe de Boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Vendre plus'**
+  String get storeGroupSell;
+
+  /// Groupe de Boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get storeGroupSettings;
+
   /// Progression de l'onboarding
   ///
   /// In fr, this message translates to:
@@ -4668,6 +4722,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{count, plural, =0{paiement attendu} =1{paiement attendu} other{paiements attendus}}'**
   String dashboardPendingPayments(int count);
+
+  /// No description provided for @dashboardTotals.
+  ///
+  /// In fr, this message translates to:
+  /// **'{orders, plural, =0{Aucune commande} =1{1 commande} other{{orders} commandes}} · {payments, plural, =0{aucun paiement attendu} =1{1 paiement attendu} other{{payments} paiements attendus}}'**
+  String dashboardTotals(int orders, int payments);
 
   /// No description provided for @dashboardNewOrders.
   ///
@@ -9348,6 +9408,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Afficher le QR'**
   String get qrChargeShow;
+
+  /// Touche retour du clavier
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer le dernier chiffre'**
+  String get tillErase;
 
   /// No description provided for @qrChargeCode.
   ///

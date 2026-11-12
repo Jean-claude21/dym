@@ -70,8 +70,7 @@ class ProductsView extends StackedView<ProductsViewModel> {
         ),
         child: DymButton(
           label: l10n.productsAdd,
-          icon: Icons.add_circle_rounded,
-          variant: DymButtonVariant.plantain,
+          icon: Icons.add_rounded,
           onPressed: viewModel.add,
         ),
       ),
@@ -115,31 +114,21 @@ class _Header extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: DymTokenSpace.s3),
+            const SizedBox(height: DymTokenSpace.s4),
             Row(
               children: [
-                const SizedBox(width: DymTokenSize.touchMin),
                 Expanded(
-                  child: Text(
-                    l10n.appNameVendor,
-                    textAlign: TextAlign.center,
-                    style: t.title.copyWith(color: c.brandDeep),
+                  child: Semantics(
+                    header: true,
+                    child: Text(l10n.navCatalog, style: t.display),
                   ),
                 ),
                 IconButton(
                   tooltip: l10n.categoriesTitle,
                   onPressed: viewModel.manageCategories,
-                  icon: Icon(Icons.sell_rounded, color: c.brandDeep),
+                  icon: Icon(Icons.sell_outlined, color: c.textPrimary),
                 ),
               ],
-            ),
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.productsTitle,
-                textAlign: TextAlign.center,
-                style: t.display.copyWith(fontSize: 40, color: c.brandDeep),
-              ),
             ),
           ],
         ),
@@ -162,6 +151,7 @@ class _List extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
     final products = viewModel.visible;
     return LayoutBuilder(
@@ -216,16 +206,23 @@ class _List extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   StoreErrorBanner(failure: viewModel.actionFailure),
+                  // Rupture en un geste (planche 04) : lignes à filets.
                   Wrap(
                     spacing: spacing,
-                    runSpacing: spacing,
                     children: [
-                      for (final product in products)
+                      for (final (i, product) in products.indexed)
                         SizedBox(
                           width: width,
-                          child: _ProductCard(
-                            viewModel: viewModel,
-                            product: product,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              border: i < columns
+                                  ? null
+                                  : Border(top: BorderSide(color: c.hairline)),
+                            ),
+                            child: _ProductCard(
+                              viewModel: viewModel,
+                              product: product,
+                            ),
                           ),
                         ),
                     ],
@@ -264,13 +261,12 @@ class _ProductCard extends StatelessWidget {
       Product(isArchived: true) => null,
       Product(status: ProductStatus.draft) => _Badge(
         label: l10n.productDraft,
-        background: c.tintPlantainClair,
-        foreground: c.textPrimary,
+        background: c.muted,
+        foreground: c.textSecondary,
       ),
-      Product(isAvailable: false) => _Badge(
-        label: l10n.productOutOfStock,
-        background: c.tintPimentClair,
-        foreground: c.pimentStrong,
+      Product(isAvailable: false) => Text(
+        l10n.productOutOfStock,
+        style: t.label.copyWith(color: c.pimentStrong),
       ),
       _ => Text(
         product.variants.length > 1
@@ -278,38 +274,41 @@ class _ProductCard extends StatelessWidget {
             : stock == null
             ? ''
             : l10n.productStockCount(stock),
-        style: t.body.copyWith(color: c.textSecondary),
+        style: t.label.copyWith(
+          color: c.brandDeep,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     };
     return Material(
-      color: c.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
-        side: BorderSide(color: c.hairline),
-      ),
+      color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(DymTokenRadius.card),
         onTap: () => viewModel.edit(product),
         child: Padding(
-          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s3),
           child: Row(
             children: [
               Opacity(
                 opacity: faded ? 0.55 : 1,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+                  borderRadius: BorderRadius.circular(DymTokenRadius.image),
                   child: SizedBox.square(
-                    dimension: 88,
+                    dimension: 64,
                     child: photo == null
                         ? ColoredBox(
                             color: c.tintVertTendre,
                             child: Icon(
-                              Icons.photo_camera_rounded,
+                              Icons.photo_camera_outlined,
                               color: c.brandDeep,
-                              size: 32,
+                              size: 26,
                             ),
                           )
-                        : Image(image: photo, fit: BoxFit.cover),
+                        : Image(
+                            image: photo,
+                            fit: BoxFit.cover,
+                            errorBuilder: (_, _, _) =>
+                                ColoredBox(color: c.tintVertTendre),
+                          ),
                   ),
                 ),
               ),
@@ -322,7 +321,7 @@ class _ProductCard extends StatelessWidget {
                       product.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: t.title.copyWith(fontSize: 19),
+                      style: t.body.copyWith(fontWeight: FontWeight.w600),
                     ),
                     if (product.arrivalOn case final arrival?)
                       Text(
@@ -336,16 +335,12 @@ class _ProductCard extends StatelessWidget {
                       Text.rich(
                         TextSpan(
                           text: price.format(),
-                          style: t.title.copyWith(
-                            fontSize: 17,
-                            color: c.brandDeep,
+                          style: t.label.copyWith(
+                            color: c.textSecondary,
+                            fontWeight: FontWeight.w400,
                           ),
                           children: [
-                            if (unit != null)
-                              TextSpan(
-                                text: ' · $unit',
-                                style: t.body.copyWith(color: c.textSecondary),
-                              ),
+                            if (unit != null) TextSpan(text: ' / $unit'),
                           ],
                         ),
                       ),
@@ -380,9 +375,9 @@ class _ProductCard extends StatelessWidget {
                         },
                   icon: Icon(
                     product.arrivalOn == null
-                        ? Icons.event_available_rounded
-                        : Icons.event_busy_rounded,
-                    color: c.brandDeep,
+                        ? Icons.event_available_outlined
+                        : Icons.event_busy_outlined,
+                    color: c.textSecondary,
                   ),
                 ),
               if (product.isArchived)

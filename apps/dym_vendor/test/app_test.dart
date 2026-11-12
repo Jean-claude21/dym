@@ -108,6 +108,12 @@ class _Navigator implements AppNavigator {
   void toTill() => routes.add('till');
 
   @override
+  void toCharge() => routes.add('charge');
+
+  @override
+  void toAccount() => routes.add('account');
+
+  @override
   void toCredit() => routes.add('credit');
 
   @override
@@ -290,7 +296,7 @@ void main() {
     });
   });
 
-  group('accueil : « Ma boutique » et « Moi »', () {
+  group('accueil : « Boutique » et « Catalogue »', () {
     for (final size in sizes) {
       for (final locale in const [Locale('fr'), Locale('en')]) {
         for (final tab in [0, 1, 2]) {
@@ -314,7 +320,7 @@ void main() {
               final fr = locale.languageCode == 'fr';
               final label = switch (tab) {
                 1 => fr ? 'Boutique' : 'Shop',
-                2 => fr ? 'Moi' : 'Me',
+                2 => 'Catalogue',
                 _ => null,
               };
               if (label != null) {
@@ -328,29 +334,36 @@ void main() {
       }
     }
 
-    testWidgets('déconnexion depuis « Moi » : retour à la connexion', (
+    testWidgets('compte rangé dans Boutique (design « Épuré »)', (
       tester,
     ) async {
-      final auth = _Auth(const Ok(AuthState.signedOut()));
       final nav = _Navigator();
       await _pump(
         tester,
         HomeView(
           initialTab: HomeTab.products,
-          service: auth,
+          service: _Auth(const Ok(AuthState.signedOut())),
           stores: memoryStores(initial: openStore()),
           catalog: memoryCatalog(),
           navigator: nav,
         ),
       );
       await tester.pump();
-      expect(find.text('Mes produits'), findsOneWidget);
-      await tester.tap(find.text('Moi').first);
+      expect(find.text('Catalogue'), findsWidgets);
+      expect(find.text('Moi'), findsNothing);
+      await tester.tap(find.text('Boutique').last);
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Mon compte'),
+        300,
+        scrollable: find.byType(Scrollable).last,
+      );
+      // Dernière ligne : on la sort de sous la barre de navigation.
+      await tester.drag(find.byType(Scrollable).last, const Offset(0, -300));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Mon compte'));
       await tester.pump();
-      await tester.tap(find.text('Se déconnecter'));
-      await tester.pump();
-      expect(auth.calls, ['signOut']);
-      expect(nav.routes, ['signIn']);
+      expect(nav.routes, ['account']);
     });
   });
 }
