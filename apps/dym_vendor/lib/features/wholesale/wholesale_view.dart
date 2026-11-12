@@ -322,7 +322,13 @@ class _OfferCard extends StatelessWidget {
             ),
             if (offer.note case final note?) Text(note),
             const SizedBox(height: DymTokenSpace.s2),
-            LinearProgressIndicator(value: offer.progress, minHeight: 8),
+            // Jauge déjà dite en texte.
+            ExcludeSemantics(
+              child: LinearProgressIndicator(
+                value: offer.progress,
+                minHeight: 8,
+              ),
+            ),
             const SizedBox(height: DymTokenSpace.s1),
             Text(
               l10n.wholesaleProgress(

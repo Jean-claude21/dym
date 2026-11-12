@@ -43,6 +43,7 @@ class CartLine {
     this.stockQuantity,
     this.issues = const [],
     this.listPriceMinor,
+    this.priceSource,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$CartLineFromJson(json);
@@ -73,7 +74,16 @@ class CartLine {
   @JsonKey(fromJson: nullableMinorFromJson)
   final int? listPriceMinor;
 
-  bool get haggled => (listPriceMinor ?? 0) > unitPriceMinor;
+  /// Source du prix réduit : `haggle` (marché conclu, spec 050) ou `group`
+  /// (achat groupé débloqué, spec 051) ; nulle sinon.
+  final String? priceSource;
+
+  bool get haggled =>
+      (listPriceMinor ?? 0) > unitPriceMinor && priceSource != 'group';
+
+  /// Prix de groupe appliqué (spec 051).
+  bool get groupPriced =>
+      (listPriceMinor ?? 0) > unitPriceMinor && priceSource == 'group';
 }
 
 /// Sous-panier d'une boutique.

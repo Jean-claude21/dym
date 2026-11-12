@@ -48,6 +48,7 @@ CartLine _$CartLineFromJson(Map<String, dynamic> json) => $checkedCreate(
         'list_price_minor',
         (v) => nullableMinorFromJson(v),
       ),
+      priceSource: $checkedConvert('price_source', (v) => v as String?),
     );
     return val;
   },
@@ -61,6 +62,7 @@ CartLine _$CartLineFromJson(Map<String, dynamic> json) => $checkedCreate(
     'photoKey': 'photo_key',
     'stockQuantity': 'stock_quantity',
     'listPriceMinor': 'list_price_minor',
+    'priceSource': 'price_source',
   },
 );
 

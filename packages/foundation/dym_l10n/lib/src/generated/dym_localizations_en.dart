@@ -115,7 +115,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get authEmailPrivacy =>
-      'Your email stays private: sellers never see it.';
+      'Your email stays private: it is never shown to anyone.';
 
   @override
   String get authSendCode => 'Get my code';
@@ -171,7 +171,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get authZoneHint =>
-      'Your neighbourhood lets us show nearby shops and the delivery time.';
+      'Your neighbourhood lets us show you what is near you.';
 
   @override
   String get authZoneRequired => 'Choose your neighbourhood';
@@ -561,11 +561,11 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get myStoreClosedByHoursHint =>
-      'Outside your hours: customers can order when you reopen';
+      'Outside your hours: customers can order for a slot when you are open';
 
   @override
   String get productStoreClosed =>
-      'This store is closed for now. You can order when it reopens.';
+      'This store is closed for now. You can order for a slot when it is open.';
 
   @override
   String get myStoreClosedHint => 'Customers can\'t order';
@@ -849,7 +849,7 @@ class DymLocalizationsEn extends DymLocalizations {
   String get homeSearchHint => 'Search tomatoes, gari, homemade juice…';
 
   @override
-  String get homeOpenStores => 'Shops open near you';
+  String get homeOpenStores => 'Shops near you';
 
   @override
   String get homeOtherStores => 'Other shops in your area';
@@ -1137,8 +1137,8 @@ class DymLocalizationsEn extends DymLocalizations {
     String _temp0 = intl.Intl.pluralLogic(
       pickups,
       locale: localeName,
-      other: '$pickups pickups',
-      one: '1 pickup',
+      other: '$pickups shops',
+      one: '1 shop',
       zero: 'Pickup in store',
     );
     return '$_temp0 · $minutes min';
@@ -1507,7 +1507,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String orderEtaAt(String time) {
-    return 'Delivered around $time';
+    return 'Expected around $time';
   }
 
   @override
@@ -4749,7 +4749,25 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String creatorPostStats(int views, int clicks, int tags) {
-    return '$views views · $clicks clicks · $tags products';
+    String _temp0 = intl.Intl.pluralLogic(
+      views,
+      locale: localeName,
+      other: '$views views',
+      one: '1 view',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      clicks,
+      locale: localeName,
+      other: '$clicks clicks',
+      one: '1 click',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      tags,
+      locale: localeName,
+      other: '$tags products',
+      one: '1 product',
+    );
+    return '$_temp0 · $_temp1 · $_temp2';
   }
 
   @override
@@ -5056,6 +5074,19 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get missionPickup => 'Pick up at';
+
+  @override
+  String get missionFeeLabel => 'Your fee';
+
+  @override
+  String missionSlot(String slot) {
+    return 'Slot: $slot';
+  }
+
+  @override
+  String missionCashToCollect(String amount) {
+    return 'Collect $amount in cash';
+  }
 
   @override
   String get missionDropoff => 'Deliver to';
@@ -5744,6 +5775,9 @@ class DymLocalizationsEn extends DymLocalizations {
   String get haggleCartBadge => 'Haggled price';
 
   @override
+  String get groupBuyCartBadge => 'Group price';
+
+  @override
   String get haggleErrorTooMany =>
       'You already haggled 3 times on this product today.';
 
@@ -5942,7 +5976,16 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get membershipWalletInsufficient =>
-      'Not enough in your wallet: top it up (or move your till to your wallet), then try again.';
+      'Not enough in your wallet: top it up, then try again.';
+
+  @override
+  String membershipStoreBalance(String store, String wallet) {
+    return 'Paid from your shop balance ($store), otherwise your wallet ($wallet)';
+  }
+
+  @override
+  String get membershipStoreInsufficient =>
+      'Neither your shop balance nor your wallet is enough: sell or top up your wallet, then try again.';
 
   @override
   String get membershipNone => 'No plan in your country yet.';
@@ -6040,6 +6083,16 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String opsMinutes(int minutes) {
     return '$minutes min';
+  }
+
+  @override
+  String opsDelayHours(int hours, int minutes) {
+    return '$hours h $minutes min';
+  }
+
+  @override
+  String opsDelayDays(int days, int hours) {
+    return '$days d $hours h';
   }
 
   @override

@@ -109,6 +109,7 @@ class DymProductCard extends StatelessWidget {
     final change = onQuantityChanged;
     if (change == null) return const SizedBox(height: DymTokenSize.touchMin);
     final add = Semantics(
+      onTap: () => change(1),
       key: const ValueKey('add'),
       container: true,
       button: true,
@@ -334,6 +335,8 @@ class _CompactAdd extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     return Semantics(
+      container: true,
+      onTap: onTap,
       button: true,
       label: label,
       excludeSemantics: true,

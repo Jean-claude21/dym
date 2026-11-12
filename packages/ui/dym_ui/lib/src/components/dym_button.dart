@@ -128,6 +128,8 @@ class _DymButtonState extends State<DymButton> {
             ],
           );
     return Semantics(
+      container: true,
+      onTap: enabled ? widget.onPressed : null,
       button: true,
       enabled: enabled,
       label: widget.label,

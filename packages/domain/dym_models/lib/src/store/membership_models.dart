@@ -57,7 +57,11 @@ class MembershipPlan {
 /// Formules proposées et solde du wallet (`membership_offer()`).
 @immutable
 class MembershipOffer {
-  const new({this.plans = const [], this.walletBalanceMinor = 0});
+  const new({
+    this.plans = const [],
+    this.walletBalanceMinor = 0,
+    this.storeBalanceMinor,
+  });
 
   factory fromJson(Map<String, dynamic> json) => MembershipOffer(
     plans: [
@@ -65,8 +69,12 @@ class MembershipOffer {
         MembershipPlan.fromJson((p as Map).cast<String, dynamic>()),
     ],
     walletBalanceMinor: minorFromJson(json['wallet_balance_minor'] ?? 0),
+    storeBalanceMinor: nullableMinorFromJson(json['store_balance_minor']),
   );
 
   final List<MembershipPlan> plans;
   final int walletBalanceMinor;
+
+  /// Formules vendeuse : solde de la boutique, utilisé en premier.
+  final int? storeBalanceMinor;
 }

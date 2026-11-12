@@ -626,13 +626,21 @@ class _Line extends StatelessWidget {
                     Text(unit, style: t.label.copyWith(color: c.textSecondary)),
                   if (amount != null)
                     MoneyText(amount, size: 15, color: c.brandDeep),
-                  if (line.haggled)
+                  if (line.haggled || line.groupPriced)
                     Row(
                       children: [
-                        Icon(Icons.handshake_rounded, size: 16, color: c.brand),
+                        Icon(
+                          line.groupPriced
+                              ? Icons.groups_rounded
+                              : Icons.handshake_rounded,
+                          size: 16,
+                          color: c.brand,
+                        ),
                         const SizedBox(width: DymTokenSpace.s1),
                         Text(
-                          l10n.haggleCartBadge,
+                          line.groupPriced
+                              ? l10n.groupBuyCartBadge
+                              : l10n.haggleCartBadge,
                           style: t.label.copyWith(color: c.brandDeep),
                         ),
                       ],

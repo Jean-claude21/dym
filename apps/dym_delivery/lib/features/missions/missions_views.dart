@@ -478,13 +478,37 @@ class MissionCard extends StatelessWidget {
                     style: t.title,
                   ),
                 ),
-                Text(money(mission.deliveryFeeMinor), style: t.title),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(money(mission.deliveryFeeMinor), style: t.title),
+                    Text(
+                      l10n.missionFeeLabel,
+                      style: t.label.copyWith(color: c.textSecondary),
+                    ),
+                  ],
+                ),
               ],
             ),
             Text(
               l10n.missionItems(mission.itemCount),
               style: t.label.copyWith(color: c.textSecondary),
             ),
+            if (mission.scheduledStart case final start?)
+              _MissionFact(
+                icon: Icons.event_rounded,
+                text: l10n.missionSlot(
+                  missionSlotLabel(context, start, mission.scheduledEnd),
+                ),
+              ),
+            if (mission.cashToCollectMinor > 0)
+              _MissionFact(
+                icon: Icons.payments_rounded,
+                text: l10n.missionCashToCollect(
+                  money(mission.cashToCollectMinor),
+                ),
+                strong: true,
+              ),
             if (mission.runSize > 1 || mission.storage.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: DymTokenSpace.s2),
@@ -810,6 +834,50 @@ class _CodeSheetState extends State<_CodeSheet> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Créneau lisible : « 12 nov., 08:00–10:00 », dans l'heure de l'appareil.
+String missionSlotLabel(BuildContext context, DateTime start, DateTime? end) {
+  final m = MaterialLocalizations.of(context);
+  String time(DateTime at) => m.formatTimeOfDay(
+    TimeOfDay.fromDateTime(at.toLocal()),
+    alwaysUse24HourFormat: true,
+  );
+  return [
+    m.formatShortMonthDay(start.toLocal()),
+    [time(start), if (end != null) time(end)].join('–'),
+  ].join(', ');
+}
+
+class _MissionFact extends StatelessWidget {
+  const new({required this.icon, required this.text, this.strong = false});
+
+  final IconData icon;
+  final String text;
+  final bool strong;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    return Padding(
+      padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: strong ? c.brandDeep : c.textSecondary),
+          const SizedBox(width: DymTokenSpace.s2),
+          Expanded(
+            child: Text(
+              text,
+              style: strong
+                  ? t.body.copyWith(fontWeight: FontWeight.w800)
+                  : t.body,
+            ),
+          ),
+        ],
       ),
     );
   }

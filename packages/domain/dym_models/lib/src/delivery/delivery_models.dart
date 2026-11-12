@@ -123,6 +123,9 @@ class Mission {
     this.purchaseId,
     this.runSize = 1,
     this.storage = const [],
+    this.scheduledStart,
+    this.scheduledEnd,
+    this.cashToCollectMinor = 0,
   });
 
   factory fromJson(Map<String, dynamic> json) => Mission(
@@ -153,6 +156,15 @@ class Mission {
       for (final s in json['storage'] as List? ?? const [])
         ?StorageHint.parse(s),
     ],
+    scheduledStart: switch (json['scheduled_start']) {
+      final String at => DateTime.parse(at),
+      _ => null,
+    },
+    scheduledEnd: switch (json['scheduled_end']) {
+      final String at => DateTime.parse(at),
+      _ => null,
+    },
+    cashToCollectMinor: minorFromJson(json['cash_to_collect_minor'] ?? 0),
   );
 
   final String orderId;
@@ -166,6 +178,13 @@ class Mission {
   final int deliveryFeeMinor;
   final String currencyCode;
   final int itemCount;
+
+  /// Créneau choisi par la cliente (commande programmée, spec 033).
+  final DateTime? scheduledStart;
+  final DateTime? scheduledEnd;
+
+  /// Cash à encaisser auprès de la cliente (paiement à la livraison).
+  final int cashToCollectMinor;
   final MissionPlace store;
   final MissionPlace customer;
 

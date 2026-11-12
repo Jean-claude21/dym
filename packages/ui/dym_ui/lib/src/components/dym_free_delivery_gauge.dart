@@ -76,11 +76,16 @@ class DymFreeDeliveryGauge extends StatelessWidget {
                   curve: DymMotion.standard,
                   builder: (context, value, _) => ClipRRect(
                     borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-                    child: LinearProgressIndicator(
-                      value: value,
-                      minHeight: 10,
-                      color: c.plantain,
-                      backgroundColor: c.textSecondary.withValues(alpha: 0.15),
+                    child: // Jauge déjà dite en texte.
+                    ExcludeSemantics(
+                      child: LinearProgressIndicator(
+                        value: value,
+                        minHeight: 10,
+                        color: c.plantain,
+                        backgroundColor: c.textSecondary.withValues(
+                          alpha: 0.15,
+                        ),
+                      ),
                     ),
                   ),
                 ),

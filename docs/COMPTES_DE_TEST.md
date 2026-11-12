@@ -1,51 +1,73 @@
 # Comptes de test (Neon staging)
 
-Données créées par `db/scripts/seed-demo.mjs` avec `DEMO_EMAIL=jeanclaude.messan@proton.me`.
-Deux façons de se connecter, sur les trois apps :
+Données créées par `db/scripts/seed-demo.mjs` avec `DEMO_EMAIL=jeanclaude.messan@proton.me`, puis
+déplacées au Togo (`db/scripts/demo-to-togo.sql`) : tout se passe à Lomé, en F CFA.
+Deux façons de se connecter, sur les quatre apps :
 
-- **Email + mot de passe** (le plus rapide) : lien « J'ai un mot de passe » sous le champ email.
-  Mot de passe commun des comptes de test : fichier hors dépôt
-  `C:\Users\Jean-Claude\dev-setup\demo-password.env` (posé par `db/scripts/demo-passwords.mjs`).
+- **Email + mot de passe** (le plus rapide) : « Continuer avec mon email » → « J'ai un mot de passe ».
+  Mot de passe commun des comptes ci-dessous : fichier hors dépôt `dev-setup\demo-password.env`
+  du poste du porteur produit (variable `DYM_TEST_PASSWORD`). Il a été changé le 2026-11-11.
 - **Code par email** : le code arrive dans la boîte **jeanclaude.messan@proton.me** (alias `+xxx` compris).
 
-Apps web locales : cliente http://localhost:5555 · vendeuse http://localhost:5556 ·
-admin http://localhost:5557 (`flutter run -d web-server --web-port <port>
+Apps web locales (une origine autorisée par app dans `ALLOWED_ORIGINS` des Functions) :
+
+| App | Adresse |
+|---|---|
+| Cliente | http://localhost:5555 |
+| Vendeuse | http://localhost:5556 |
+| Admin | http://localhost:5557 |
+| Livreur | http://localhost:5558 |
+
+Lancement : `fvm flutter build web --release --dart-define-from-file=../../config/staging.json` dans
+chaque app, puis servir `build/web` sur son port (ou `fvm flutter run -d web-server --web-port <port>
 --dart-define-from-file=../../config/staging.json`).
 
-## Admin (http://localhost:5557)
+## Admin (5557)
 
 | Email | Rôle |
 |---|---|
-| jeanclaude.messan@proton.me | Admin par défaut (`ADMIN_EMAILS`) |
-| jeanclaude.messan+admin2@proton.me | Invitation en attente (devient admin à sa 1re connexion) |
+| jeanclaude.messan@proton.me | Admin par défaut (`ADMIN_EMAILS`), connexion par code ou par ton mot de passe |
+| jeanclaude.messan+admin2@proton.me | Invitation : devient admin à sa première connexion à l'app admin (mot de passe commun) |
 
-## Clientes (http://localhost:5555)
+## Clientes (5555)
 
-| Email | Ville / quartier | Ce qu'il y a à voir |
+| Email | Quartier | Ce qu'il y a à voir |
 |---|---|---|
-| jeanclaude.messan+awa@proton.me | Paris 18e | Une commande à chaque statut (en attente, acceptée, en préparation, prête, en livraison, livrée cash / en ligne / retrait, refusée, annulée, paiement en attente, paiement échoué), commandes dans 7 boutiques, avis, 3 litiges (ouvert, répondu, remboursé), conversations, demande d'aide, recherches récentes |
-| jeanclaude.messan+moussa@proton.me | Paris 11e | Commandes en cours et livrées, litige clos, conversation |
-| jeanclaude.messan+lea@proton.me | Lyon, Croix-Rousse | Commandes à Lyon, demande d'aide |
-| jeanclaude.messan+kossi@proton.me | Lomé, Bè (Togo, F CFA) | Commandes au Togo, litige ouvert, conversation |
+| jeanclaude.messan+awa@proton.me | Bè | Commandes à chaque statut, avis, litiges, conversations, achat groupé de riz, marchandage |
+| jeanclaude.messan+kossi@proton.me | Bè | Commandes, litige ouvert, conversation |
+| jeanclaude.messan+moussa@proton.me | Tokoin | Commandes en cours et livrées, litige clos |
+| jeanclaude.messan+lea@proton.me | Agoè | Commandes, demande d'aide |
 
-## Vendeuses (http://localhost:5556)
+## Vendeuses (5556)
 
 | Email | Boutique | Ce qu'il y a à voir |
 |---|---|---|
-| jeanclaude.messan+fatou@proton.me | Chez Fatou — Épicerie africaine (Paris 18e) | ~30 produits (ruptures, stock bas, variantes), file de commandes à tous les statuts, avis, litiges, messages, ticket paiement |
-| jeanclaude.messan+aminata@proton.me | Les Saveurs d'Aminata (Paris 11e, fait maison) | Plats et jus, commandes, messages |
-| jeanclaude.messan+marie@proton.me | Primeur de la Croix-Rousse (Lyon) | Commandes à Lyon |
-| jeanclaude.messan+akossiwa@proton.me | Marché de Bè — Tantie Akossiwa (Lomé) | Boutique au Togo, en F CFA |
+| jeanclaude.messan+fatou@proton.me | Chez Fatou — Épicerie africaine (Bè) | ~30 produits, file de commandes, caisse et QR, marchandage à 20 %, offre groupée, « À la une » |
+| jeanclaude.messan+akossiwa@proton.me | Marché de Bè — Tantie Akossiwa (Bè) | Produits du marché |
+| jeanclaude.messan+aminata@proton.me | Les Saveurs d'Aminata (Tokoin) | Produits maison (akassa, bissap séché, kinkeliba…) |
+| jeanclaude.messan+marie@proton.me | Primeur d'Agoè (Agoè) | Fruits et légumes |
+
+## Livreur (5558)
+
+| Email | Profil |
+|---|---|
+| jeanclaude.messan+livreur@proton.me | Komlan, moto, livre à Bè ; se met « En ligne » pour voir les courses |
 
 ## Figuration
 
-10 autres boutiques (Paris, Lyon, Marseille, Lomé ; « Karité & Co » est fermée) et 18 clientes
-`clientN@example.test` qui ont passé ~80 commandes réparties sur 30 jours (tableaux de bord,
-revenus, avis). Ces adresses ne reçoivent pas d'email : elles ne servent pas à se connecter.
+Une dizaine d'autres boutiques de Lomé et des clientes `clientN@example.test` (commandes sur 30
+jours pour les tableaux de bord). Ces adresses ne reçoivent pas d'email.
+
+Nettoyage du 2026-11-11 : boutiques hors périmètre grocery suspendues (« Wax & Pagnes de Bè »,
+« Karité & Co ») ainsi que les boutiques de test (« Test automatique », « DYM Boutique ») ; repas et
+boissons préparés archivés ; commandes et demandes d'aide des comptes d'essai annulées ou fermées.
+Tout est réversible depuis l'admin et inscrit au journal.
 
 ## Limites connues
 
 - Photos produits : images de la galerie (`db/scripts/demo-photos.mjs`), une par produit ou par rayon.
-- Paiement en ligne = fournisseur **simulé** (carte simulée en France, T-Money / MTN simulés).
-- Stories (statuts 24 h) : 28, en haut de l'Accueil cliente (`db/scripts/demo-stories.mjs`) ; à republier après 24 h.
-- Vidéos : 22 clips verticaux dans l'onglet Vidéos (`db/scripts/make-demo-videos.ps1` puis `demo-videos.mjs`).
+- Paiement en ligne = fournisseur **simulé** (T-Money / Mobile Money simulés), wallet rechargé en simulation.
+- Stories (statuts 24 h) : à republier après 24 h (`db/scripts/demo-stories.mjs`).
+- Vidéos : clips verticaux dans l'onglet Vidéos (`db/scripts/make-demo-videos.ps1` puis `demo-videos.mjs`).
+- Créneau affiché dans le fuseau de l'appareil : un navigateur réglé sur Paris montre 1 h de plus
+  que l'heure de Lomé.

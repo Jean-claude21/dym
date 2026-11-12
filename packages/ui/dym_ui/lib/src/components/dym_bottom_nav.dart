@@ -76,6 +76,8 @@ class DymBottomNav extends StatelessWidget {
                   for (var i = 0; i < items.length; i++)
                     Expanded(
                       child: Semantics(
+                        container: true,
+                        onTap: () => onTap(i),
                         button: true,
                         selected: i == currentIndex,
                         label: items[i].label,

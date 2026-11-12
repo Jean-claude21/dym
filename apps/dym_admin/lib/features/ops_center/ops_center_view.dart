@@ -521,7 +521,7 @@ class _Live extends StatelessWidget {
                           ].join(' · '),
                         ),
                         trailing: AdminPill(
-                          l10n.opsMinutes(a.minutes),
+                          opsDelayLabel(l10n, a.minutes),
                           tone: AdminTone.danger,
                         ),
                         onTap: () => onOpenOrder(a.orderId),
@@ -769,3 +769,10 @@ class _SettingsState extends State<_Settings> {
     );
   }
 }
+
+/// Retard lisible : minutes, puis heures, puis jours.
+String opsDelayLabel(DymLocalizations l10n, int minutes) => switch (minutes) {
+  >= 1440 => l10n.opsDelayDays(minutes ~/ 1440, minutes % 1440 ~/ 60),
+  >= 60 => l10n.opsDelayHours(minutes ~/ 60, minutes % 60),
+  _ => l10n.opsMinutes(minutes),
+};

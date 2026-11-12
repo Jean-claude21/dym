@@ -33,6 +33,8 @@ class DymAisleTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
+      container: true,
+      onTap: onTap,
       button: true,
       label: label,
       excludeSemantics: true,

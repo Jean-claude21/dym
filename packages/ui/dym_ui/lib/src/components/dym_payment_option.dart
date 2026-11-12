@@ -34,6 +34,8 @@ class DymPaymentOption extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     return Semantics(
+      container: true,
+      onTap: onTap,
       button: true,
       selected: selected,
       label: [title, ?subtitle].join(', '),

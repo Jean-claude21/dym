@@ -287,7 +287,7 @@ abstract class DymLocalizations {
   /// Confidentialité de l'email
   ///
   /// In fr, this message translates to:
-  /// **'Ton email reste privé : les vendeuses ne le voient pas.'**
+  /// **'Ton email reste privé : il n\'est montré à personne.'**
   String get authEmailPrivacy;
 
   /// Bouton envoyer le code
@@ -383,7 +383,7 @@ abstract class DymLocalizations {
   /// Explication du quartier
   ///
   /// In fr, this message translates to:
-  /// **'Ton quartier sert à te montrer les boutiques proches et le délai de livraison.'**
+  /// **'Ton quartier sert à te proposer ce qui est près de toi.'**
   String get authZoneHint;
 
   /// Quartier manquant
@@ -1030,13 +1030,13 @@ abstract class DymLocalizations {
   /// Détail de la fermeture selon les horaires
   ///
   /// In fr, this message translates to:
-  /// **'Hors de tes horaires : les clientes commanderont à la réouverture'**
+  /// **'Hors de tes horaires : les clientes peuvent commander pour un créneau où tu es ouverte'**
   String get myStoreClosedByHoursHint;
 
   /// Fiche produit d'une boutique fermée
   ///
   /// In fr, this message translates to:
-  /// **'Cette boutique est fermée pour le moment. Tu pourras commander à sa réouverture.'**
+  /// **'Cette boutique est fermée pour le moment. Tu peux commander pour un créneau où elle est ouverte.'**
   String get productStoreClosed;
 
   /// Boutique fermée
@@ -1522,7 +1522,7 @@ abstract class DymLocalizations {
   /// Section accueil
   ///
   /// In fr, this message translates to:
-  /// **'Boutiques ouvertes près de toi'**
+  /// **'Boutiques près de toi'**
   String get homeOpenStores;
 
   /// Boutiques fermées qui livrent le quartier
@@ -1954,7 +1954,7 @@ abstract class DymLocalizations {
   /// Ramassages et délai
   ///
   /// In fr, this message translates to:
-  /// **'{pickups, plural, =0{Retrait sur place} =1{1 ramassage} other{{pickups} ramassages}} · {minutes} min'**
+  /// **'{pickups, plural, =0{Retrait sur place} =1{1 boutique} other{{pickups} boutiques}} · {minutes} min'**
   String cartDeliveryMeta(int pickups, int minutes);
 
   /// Modifier la livraison
@@ -2614,7 +2614,7 @@ abstract class DymLocalizations {
   /// Heure de livraison estimée
   ///
   /// In fr, this message translates to:
-  /// **'Livrée vers {time}'**
+  /// **'Prévue vers {time}'**
   String orderEtaAt(String time);
 
   /// Heure de retrait estimée
@@ -4648,7 +4648,7 @@ abstract class DymLocalizations {
   /// Accueil vendeuse : sous-titre des ruptures
   ///
   /// In fr, this message translates to:
-  /// **'Remets-le en stock pour continuer à vendre'**
+  /// **'À remettre en stock pour continuer à vendre'**
   String get dashboardStockHint;
 
   /// Titre des conversations
@@ -8074,7 +8074,7 @@ abstract class DymLocalizations {
   /// Stats
   ///
   /// In fr, this message translates to:
-  /// **'{views} vues · {clicks} clics · {tags} produits'**
+  /// **'{views, plural, =0{0 vue} =1{1 vue} other{{views} vues}} · {clicks, plural, =0{0 clic} =1{1 clic} other{{clicks} clics}} · {tags, plural, =1{1 produit} other{{tags} produits}}'**
   String creatorPostStats(int views, int clicks, int tags);
 
   /// Archiver
@@ -8628,6 +8628,24 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Récupérer chez'**
   String get missionPickup;
+
+  /// No description provided for @missionFeeLabel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta course'**
+  String get missionFeeLabel;
+
+  /// No description provided for @missionSlot.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créneau : {slot}'**
+  String missionSlot(String slot);
+
+  /// No description provided for @missionCashToCollect.
+  ///
+  /// In fr, this message translates to:
+  /// **'À encaisser : {amount} en cash'**
+  String missionCashToCollect(String amount);
 
   /// No description provided for @missionDropoff.
   ///
@@ -9721,6 +9739,12 @@ abstract class DymLocalizations {
   /// **'Prix marchandé'**
   String get haggleCartBadge;
 
+  /// No description provided for @groupBuyCartBadge.
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix de groupe'**
+  String get groupBuyCartBadge;
+
   /// No description provided for @haggleErrorTooMany.
   ///
   /// In fr, this message translates to:
@@ -10036,8 +10060,20 @@ abstract class DymLocalizations {
   /// No description provided for @membershipWalletInsufficient.
   ///
   /// In fr, this message translates to:
-  /// **'Solde du wallet insuffisant : recharge-le (ou verse ta caisse vers ton wallet), puis réessaie.'**
+  /// **'Solde du wallet insuffisant : recharge-le, puis réessaie.'**
   String get membershipWalletInsufficient;
+
+  /// No description provided for @membershipStoreBalance.
+  ///
+  /// In fr, this message translates to:
+  /// **'Payé depuis le solde de ta boutique ({store}), sinon ton wallet ({wallet})'**
+  String membershipStoreBalance(String store, String wallet);
+
+  /// No description provided for @membershipStoreInsufficient.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ni le solde de ta boutique ni ton wallet ne suffisent : vends ou recharge ton wallet, puis réessaie.'**
+  String get membershipStoreInsufficient;
 
   /// No description provided for @membershipNone.
   ///
@@ -10182,6 +10218,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{minutes} min'**
   String opsMinutes(int minutes);
+
+  /// No description provided for @opsDelayHours.
+  ///
+  /// In fr, this message translates to:
+  /// **'{hours} h {minutes} min'**
+  String opsDelayHours(int hours, int minutes);
+
+  /// No description provided for @opsDelayDays.
+  ///
+  /// In fr, this message translates to:
+  /// **'{days} j {hours} h'**
+  String opsDelayDays(int days, int hours);
 
   /// No description provided for @opsCourierCash.
   ///

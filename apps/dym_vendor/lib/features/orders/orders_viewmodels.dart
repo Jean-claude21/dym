@@ -120,9 +120,18 @@ class OrdersViewModel extends _OrdersLoadingViewModel {
 /// Détail d'une commande (écrans 08 et 42) : accepter, refuser (45), étapes,
 /// encaissement.
 class OrderDetailViewModel extends _OrdersLoadingViewModel {
-  new({required OrdersService service, required this.orderId}) : super(service);
+  new({
+    required OrdersService service,
+    required this.orderId,
+    this.refreshEvery = const Duration(seconds: 20),
+  }) : super(service);
 
   final String orderId;
+
+  /// Relecture silencieuse : le livreur ou la cliente font avancer la
+  /// commande pendant que la fiche est ouverte.
+  final Duration refreshEvery;
+  Timer? _timer;
   VendorOrder? _order;
   Dispute? _dispute;
   bool _acting = false;
@@ -149,12 +158,32 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
       _order?.nextStatuses.contains(OrderStatus.refused) ?? false;
 
   @override
-  Future<void> load() => run(() async {
-    final result = await service.order(orderId);
-    _order = result.valueOrNull;
-    if (await service.dispute(orderId) case Ok(:final value)) _dispute = value;
-    return result.failureOrNull;
-  });
+  Future<void> load() async {
+    await run(() async {
+      final result = await service.order(orderId);
+      _order = result.valueOrNull;
+      if (await service.dispute(orderId) case Ok(:final value)) {
+        _dispute = value;
+      }
+      return result.failureOrNull;
+    });
+    _timer ??= Timer.periodic(refreshEvery, (_) => unawaited(refresh()));
+  }
+
+  /// Relecture sans état de chargement ; jamais pendant un geste.
+  Future<void> refresh() async {
+    if (_acting) return;
+    if (await service.order(orderId) case Ok(:final value) when !_acting) {
+      _order = value;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   /// Réponse à la cliente (51) ; `true` si envoyée.
   Future<bool> replyDispute(String body) async {
