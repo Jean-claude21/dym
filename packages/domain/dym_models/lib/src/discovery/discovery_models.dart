@@ -385,6 +385,7 @@ class ZoneMatch {
     required this.cityName,
     required this.countryCode,
     required this.distanceM,
+    this.covered = true,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ZoneMatchFromJson(json);
@@ -395,6 +396,14 @@ class ZoneMatch {
   final String cityName;
   final String countryCode;
   final int distanceM;
+
+  /// La position tient dans le rayon de service de la ville (spec 065) :
+  /// sinon, le quartier n'est qu'une indication, jamais choisi d'office.
+  @JsonKey(defaultValue: true)
+  final bool covered;
+
+  /// Distance arrondie au kilomètre (événement « hors zone », sans position).
+  int get distanceKm => (distanceM / 1000).round();
 }
 
 /// Dernière commande livrée, proposée au réachat sur l'accueil (spec 027).

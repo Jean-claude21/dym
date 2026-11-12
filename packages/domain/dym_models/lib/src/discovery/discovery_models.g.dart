@@ -232,6 +232,7 @@ ZoneMatch _$ZoneMatchFromJson(Map<String, dynamic> json) => $checkedCreate(
       cityName: $checkedConvert('city_name', (v) => v as String),
       countryCode: $checkedConvert('country_code', (v) => v as String),
       distanceM: $checkedConvert('distance_m', (v) => (v as num).toInt()),
+      covered: $checkedConvert('covered', (v) => v as bool? ?? true),
     );
     return val;
   },

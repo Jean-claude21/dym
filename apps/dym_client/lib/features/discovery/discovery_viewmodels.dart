@@ -51,6 +51,10 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
   bool get ready => _config != null && !failed;
   bool get locating => _locating;
   bool get locationUnavailable => _locationUnavailable;
+
+  /// Position hors des zones desservies (spec 065).
+  bool get locationOutside => _locationOutside;
+  bool _locationOutside = false;
   ZoneMatch? get suggestion => _suggestion;
 
   String? get zoneId => _service.zone.value;
@@ -96,11 +100,14 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
   Future<void> locate() async {
     _locating = true;
     _locationUnavailable = false;
+    _locationOutside = false;
     _suggestion = null;
     notifyListeners();
     final result = await _service.locateZone();
     _locating = false;
     switch (result) {
+      case Ok(value: final match?) when !match.covered:
+        _locationOutside = true;
       case Ok(value: final match?):
         _suggestion = match;
       case Ok() || Err():
@@ -117,6 +124,7 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
   void dismissSuggestion() {
     _suggestion = null;
     _locationUnavailable = false;
+    _locationOutside = false;
     notifyListeners();
   }
 }

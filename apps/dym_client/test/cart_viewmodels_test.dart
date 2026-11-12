@@ -1,6 +1,8 @@
+import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_client/features/cart/cart_viewmodels.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/cart_fixtures.dart';
@@ -134,6 +136,30 @@ void main() {
       await vm.load();
       await vm.locate();
       vm.selectZone('tokoin');
+      expect(vm.hasPosition, isFalse);
+    });
+
+    test('position hors zone : quartier non choisi (spec 065)', () async {
+      final vm = AddressFormViewModel(
+        service: memoryCart(
+          located: const LocatedPlace(
+            GeoPoint(5.36, -4.01),
+            ZoneMatch(
+              zoneId: 'be',
+              zoneName: 'Bè',
+              cityId: 'lome',
+              cityName: 'Lomé',
+              countryCode: 'TG',
+              distanceM: 640000,
+              covered: false,
+            ),
+          ),
+        ),
+      );
+      await vm.load();
+      await vm.locate();
+      expect(vm.location, AddressLocation.outside);
+      expect(vm.zoneId, isNull);
       expect(vm.hasPosition, isFalse);
     });
 

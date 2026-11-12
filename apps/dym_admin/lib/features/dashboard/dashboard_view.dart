@@ -17,6 +17,9 @@ class AdminDashboardViewModel extends AdminViewModel {
   String period = 'day';
   AdminDashboard? data;
 
+  /// Positions hors zone (spec 065) ; absente si l'appel échoue.
+  AdminCoverage? coverage;
+
   /// Section affichée : vue générale ou IA et paiements (77).
   bool ai;
 
@@ -28,8 +31,12 @@ class AdminDashboardViewModel extends AdminViewModel {
   bool get ready => data != null && !failed;
 
   Future<void> load() => run(service.currencies, () async {
-    final result = await service.dashboard(period);
+    final (result, cover) = await (
+      service.dashboard(period),
+      service.coverage(period),
+    ).wait;
     if (result case Ok(:final value)) data = value;
+    coverage = cover.valueOrNull;
     return result.failureOrNull;
   });
 
@@ -328,6 +335,39 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
                       AdminField(l10n.adminNewSignups, '${d.newSignups}'),
                     ],
                   ),
+                ),
+              ),
+              if (vm.coverage case final cover?)
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  child: AdminCard(
+                    title: l10n.adminCoverageTitle,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          l10n.adminCoverageHelp,
+                          style: t.label.copyWith(
+                            color: c.textSecondary,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        const SizedBox(height: DymTokenSpace.s2),
+                        AdminField(
+                          l10n.adminCoverageTotal,
+                          '${cover.total}',
+                        ),
+                        for (final country in cover.countries)
+                          AdminField(
+                            country.countryCode,
+                            [
+                              l10n.adminCoverageMisses(country.misses),
+                              if (country.medianKm case final km?)
+                                l10n.adminCoverageMedianKm(km),
+                            ].join(' · '),
+                          ),
+                      ],
+                    ),
                 ),
               ),
             ],

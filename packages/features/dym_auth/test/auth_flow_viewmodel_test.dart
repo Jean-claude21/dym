@@ -184,4 +184,29 @@ void main() {
     await vm.locate();
     expect(vm.location, ZoneLocation.unavailable);
   });
+
+  test('position hors du rayon de service : rien imposé (spec 065)', () async {
+    final service = FakeAuthService()
+      ..locateResult = const Ok(
+        ZoneMatch(
+          zoneId: 'z-tokoin',
+          zoneName: 'Tokoin',
+          cityId: 'lome',
+          cityName: 'Lomé',
+          countryCode: 'TG',
+          distanceM: 640000,
+          covered: false,
+        ),
+      );
+    final vm = AuthFlowViewModel(service: service, onReady: (_) {});
+    await vm.startProfile();
+    expect(vm.location, ZoneLocation.outside);
+    expect(vm.zoneId, isNull, reason: 'aucun quartier choisi d’office');
+    vm.selectZone('z-tokoin');
+    expect(
+      vm.zoneId,
+      'z-tokoin',
+      reason: 'commander pour un proche reste possible',
+    );
+  });
 }

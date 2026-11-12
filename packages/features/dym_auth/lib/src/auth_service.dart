@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
@@ -104,7 +106,11 @@ class NeonAuthService implements AuthService {
     required this.app,
     this._location = const PluginLocationProvider(),
     this._locale,
-  }) : _discovery = DiscoveryRepository(_neon.data);
+  }) : _discovery = DiscoveryRepository(_neon.data),
+       _events = EventsRepository(
+         _neon.data,
+         app: EventApp.values.byName(app.name),
+       );
 
   /// Langue de l'app, alignée sur le profil.
   final LocalePreference? _locale;
@@ -112,6 +118,7 @@ class NeonAuthService implements AuthService {
   final NeonClient _neon;
   final LocationProvider _location;
   final DiscoveryRepository _discovery;
+  final EventsRepository _events;
   final AccountRepository _account;
   final ReferenceRepository _reference;
   final GoogleIdTokenProvider _google;
@@ -196,7 +203,14 @@ class NeonAuthService implements AuthService {
       case Ok(value: null):
         return const Ok(null);
       case Ok(value: final point?):
-        return await _discovery.nearestZone(point.latitude, point.longitude);
+        final match = await _discovery.nearestZone(
+          point.latitude,
+          point.longitude,
+        );
+        if (match case Ok(value: final m?) when !m.covered) {
+          unawaited(trackOutsideCoverage(_events, m));
+        }
+        return match;
     }
   }
 

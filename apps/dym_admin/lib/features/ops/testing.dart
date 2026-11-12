@@ -1127,6 +1127,9 @@ class MemoryAdminService implements AdminService {
       deliveryMinutes:
           city['delivery_minutes'] as int? ??
           (i < 0 ? 30 : list[i].deliveryMinutes),
+      serviceRadiusM:
+          city['service_radius_m'] as int? ??
+          (i < 0 ? 15000 : list[i].serviceRadiusM),
       zones: i < 0 ? const [] : list[i].zones,
     );
     if (i < 0) {
@@ -1169,6 +1172,7 @@ class MemoryAdminService implements AdminService {
         name: city.name,
         isActive: city.isActive,
         deliveryMinutes: city.deliveryMinutes,
+        serviceRadiusM: city.serviceRadiusM,
         zones: zones,
       );
       return Ok(_cities[e.key] = list);
@@ -1421,6 +1425,19 @@ class MemoryAdminService implements AdminService {
       ],
     ),
   ];
+
+  @override
+  Future<Result<AdminCoverage>> coverage(String period) async =>
+      _fail<AdminCoverage>() ??
+      const Ok(
+        AdminCoverage(
+          total: 7,
+          countries: [
+            AdminCoverageCountry(countryCode: 'TG', misses: 5, medianKm: 19),
+            AdminCoverageCountry(countryCode: 'GH', misses: 2, medianKm: 42),
+          ],
+        ),
+      );
 
   @override
   Future<Result<AdminDashboard>> dashboard(String period) async =>

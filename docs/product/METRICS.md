@@ -76,3 +76,4 @@ fiabilité (ops).
 | `group_offer_opened` (minimum, durée, livraison partagée), `group_joined` (quantité ; 0 : retrait), `group_unlocked` (membres, quantité totale) | Serveur | Achat groupé entre voisins (spec 051) |
 | `membership_started` (code de la formule, prolongation), `member_benefit_paid` (montant) | Serveur | DYM+, Pro, visibilité (spec 052) |
 | `fraud_signals_detected` (nombre), `report_triaged` (avis), `support_draft_requested` | Serveur | Antifraude, modération et support assistés (spec 054) |
+| `location_outside_coverage` (pays le plus proche, distance en km, app ; jamais la position) | App | Couverture : où ouvrir ensuite (spec 065) |

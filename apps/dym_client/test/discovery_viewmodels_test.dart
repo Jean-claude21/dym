@@ -44,6 +44,25 @@ void main() {
       expect(vm.suggestion, isNull);
     });
 
+    test('position hors zone : message, aucun quartier proposé', () async {
+      const far = ZoneMatch(
+        zoneId: 'tokoin',
+        zoneName: 'Tokoin',
+        cityId: 'lome',
+        cityName: 'Lomé',
+        countryCode: 'TG',
+        distanceM: 640000,
+        covered: false,
+      );
+      final service = memoryDiscovery(zoneMatch: far);
+      final vm = DiscoveryHomeViewModel(service: service);
+      await vm.load();
+      await vm.locate();
+      expect(vm.locationOutside, isTrue);
+      expect(vm.suggestion, isNull);
+      expect(service.zone.value, 'be', reason: 'le quartier courant reste');
+    });
+
     test('position refusée : la liste reste proposée', () async {
       final vm = DiscoveryHomeViewModel(service: memoryDiscovery());
       await vm.load();

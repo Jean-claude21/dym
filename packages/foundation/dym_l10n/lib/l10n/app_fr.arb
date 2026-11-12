@@ -1235,7 +1235,7 @@
   "@zoneNoResult": {
     "description": "Recherche de quartier vide"
   },
-  "zoneOutsideArea": "Ta position est hors des zones desservies : cherche ton quartier.",
+  "zoneOutsideArea": "DYM n'est pas encore chez toi. Tu peux choisir un quartier desservi, par exemple pour commander pour un proche.",
   "@zoneOutsideArea": {
     "description": "Position hors zone"
   },
@@ -2703,6 +2703,20 @@
       }
     }
   },
+  "adminCoverageTitle": "Hors zone desservie",
+  "@adminCoverageTitle": {"description": "Carte du tableau de bord : positions hors zone (spec 065)"},
+  "adminCoverageHelp": "Positions d'utilisatrices trop loin de tout quartier desservi, par pays le plus proche.",
+  "@adminCoverageHelp": {"description": "Aide de la carte couverture"},
+  "adminCoverageTotal": "Au total",
+  "@adminCoverageTotal": {"description": "Total des positions hors zone"},
+  "adminCoverageMisses": "{count, plural, =1{1 position} other{{count} positions}}",
+  "@adminCoverageMisses": {"description": "Positions hors zone d'un pays", "placeholders": {"count": {"type": "int"}}},
+  "adminCoverageMedianKm": "{km} km en médiane",
+  "@adminCoverageMedianKm": {"description": "Distance médiane au quartier desservi", "placeholders": {"km": {"type": "int"}}},
+  "adminServiceRadiusKm": "Rayon de service (km)",
+  "@adminServiceRadiusKm": {"description": "Champ : rayon de service de la ville"},
+  "adminServiceRadiusValue": "rayon de {km} km",
+  "@adminServiceRadiusValue": {"description": "Rayon de service affiché sous la ville", "placeholders": {"km": {"type": "int"}}},
   "adminEditCategory": "Modifier la catégorie",
   "@adminEditCategory": {
     "description": "Titre : catégorie"

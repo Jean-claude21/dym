@@ -753,6 +753,10 @@ AdminCity _$AdminCityFromJson(Map<String, dynamic> json) => $checkedCreate(
         'delivery_minutes',
         (v) => (v as num?)?.toInt() ?? 30,
       ),
+      serviceRadiusM: $checkedConvert(
+        'service_radius_m',
+        (v) => (v as num?)?.toInt() ?? 15000,
+      ),
       zones: $checkedConvert(
         'zones',
         (v) =>
@@ -767,8 +771,40 @@ AdminCity _$AdminCityFromJson(Map<String, dynamic> json) => $checkedCreate(
   fieldKeyMap: const {
     'isActive': 'is_active',
     'deliveryMinutes': 'delivery_minutes',
+    'serviceRadiusM': 'service_radius_m',
   },
 );
+
+AdminCoverage _$AdminCoverageFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AdminCoverage', json, ($checkedConvert) {
+      final val = AdminCoverage(
+        total: $checkedConvert('total', (v) => (v as num).toInt()),
+        countries: $checkedConvert(
+          'countries',
+          (v) =>
+              (v as List<dynamic>?)
+                  ?.map(
+                    (e) => AdminCoverageCountry.fromJson(
+                      e as Map<String, dynamic>,
+                    ),
+                  )
+                  .toList() ??
+              const [],
+        ),
+      );
+      return val;
+    });
+
+AdminCoverageCountry _$AdminCoverageCountryFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate('AdminCoverageCountry', json, ($checkedConvert) {
+  final val = AdminCoverageCountry(
+    countryCode: $checkedConvert('country_code', (v) => v as String),
+    misses: $checkedConvert('misses', (v) => (v as num).toInt()),
+    medianKm: $checkedConvert('median_km', (v) => (v as num?)?.toInt()),
+  );
+  return val;
+}, fieldKeyMap: const {'countryCode': 'country_code', 'medianKm': 'median_km'});
 
 AdminPaymentProvider _$AdminPaymentProviderFromJson(
   Map<String, dynamic> json,
