@@ -484,6 +484,7 @@ class _BecomeState extends State<_Become> {
             maxLength: 40,
           ),
         ),
+        const SizedBox(height: DymTokenSpace.s3),
         DymContentWidth.form(
           child: DymTextField(
             label: l10n.creatorBio,

@@ -69,7 +69,7 @@ class AdminAiHealthView extends StackedView<AdminAiHealthViewModel> {
     }) {
       final (bg, fg) = switch (tone) {
         AdminTone.danger => (c.tintPimentClair, c.pimentStrong),
-        AdminTone.warning => (c.tintPlantainClair, c.textPrimary),
+        AdminTone.warning => (c.tintPeche, c.originMaisonFg),
         AdminTone.success => (c.tintVertTendre, c.brandDeep),
         AdminTone.neutral => (c.card, c.textPrimary),
       };

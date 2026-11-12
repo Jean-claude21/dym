@@ -34,10 +34,8 @@ class _Membership implements MembershipService {
   );
 
   @override
-  Future<Result<MembershipOffer>> subscribe(
-    MembershipPlan plan,
-    String key,
-  ) => offer();
+  Future<Result<MembershipOffer>> subscribe(MembershipPlan plan, String key) =>
+      offer();
 }
 
 DateTime _clock() => DateTime.utc(2026, 11, 11, 11);

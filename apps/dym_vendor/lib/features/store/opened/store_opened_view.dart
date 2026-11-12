@@ -41,7 +41,7 @@ class StoreOpenedView extends StatelessWidget {
       hoursSummary(context, store.hours),
     ];
     return Scaffold(
-      backgroundColor: c.brand,
+      backgroundColor: c.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -56,51 +56,59 @@ class StoreOpenedView extends StatelessWidget {
                   return ListView(
                     padding: EdgeInsets.fromLTRB(inset, 12, inset, 16),
                     children: [
-                      Text(
-                        l10n.appNameVendor,
-                        textAlign: TextAlign.center,
-                        style: t.title.copyWith(color: c.onBrand),
-                      ),
-                      const SizedBox(height: DymTokenSpace.s3),
-                      Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 300),
-                          child: AspectRatio(
-                            aspectRatio: 1.1,
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: c.plantain,
-                                shape: BoxShape.circle,
-                              ),
-                              child: ClipOval(
+                      // La vendeuse à son étal, coche verte par-dessus.
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          DymTokenRadius.card,
+                        ),
+                        child: AspectRatio(
+                          aspectRatio: 16 / 10,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              ColoredBox(
+                                color: c.tintVertTendre,
                                 child: Image(
-                                  image: DymIllustrations.storeOpened,
+                                  image: const AssetImage(
+                                    'assets/vendor_hero.webp',
+                                    package: 'dym_auth',
+                                  ),
                                   fit: BoxFit.cover,
                                   semanticLabel: l10n.storeOpenedTitle,
+                                  errorBuilder: (_, _, _) =>
+                                      const SizedBox.shrink(),
                                 ),
                               ),
-                            ),
+                              Positioned(
+                                left: DymTokenSpace.s3,
+                                bottom: DymTokenSpace.s3,
+                                child: CircleAvatar(
+                                  radius: 26,
+                                  backgroundColor: c.brand,
+                                  child: Icon(
+                                    Icons.check_rounded,
+                                    color: c.onBrand,
+                                    size: 30,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                       const SizedBox(height: DymTokenSpace.s4),
                       Semantics(
                         header: true,
-                        child: Text(
-                          l10n.storeOpenedTitle,
-                          textAlign: TextAlign.center,
-                          style: t.display.copyWith(
-                            fontSize: 34,
-                            color: c.onBrand,
-                            height: 1.1,
-                          ),
-                        ),
+                        child: Text(l10n.storeOpenedTitle, style: t.display),
                       ),
-                      const SizedBox(height: DymTokenSpace.s2),
+                      const SizedBox(height: DymTokenSpace.s1),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.location_on_rounded, color: c.plantain),
+                          Icon(
+                            Icons.location_on_outlined,
+                            size: 20,
+                            color: c.textSecondary,
+                          ),
                           const SizedBox(width: DymTokenSpace.s1),
                           Flexible(
                             child: Text(
@@ -110,40 +118,16 @@ class StoreOpenedView extends StatelessWidget {
                                       store.name,
                                       summary.zoneName!,
                                     ),
-                              textAlign: TextAlign.center,
-                              style: t.title.copyWith(color: c.onBrand),
+                              style: t.body.copyWith(color: c.textSecondary),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: DymTokenSpace.s4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: DymTokenSpace.s4,
-                          vertical: DymTokenSpace.s2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: c.card,
-                          borderRadius: BorderRadius.circular(
-                            DymTokenRadius.card,
-                          ),
-                          border: Border.all(color: c.hairline),
-                        ),
-                        child: Column(
-                          children: [
-                            for (final (i, line) in lines.indexed) ...[
-                              if (i > 0)
-                                Divider(
-                                  height: 1,
-                                  color: c.textSecondary.withValues(
-                                    alpha: 0.12,
-                                  ),
-                                ),
-                              _CheckLine(text: line),
-                            ],
-                          ],
-                        ),
-                      ),
+                      const SizedBox(height: DymTokenSpace.s3),
+                      for (final (i, line) in lines.indexed) ...[
+                        if (i > 0) Divider(height: 1, color: c.hairline),
+                        _CheckLine(text: line),
+                      ],
                     ],
                   );
                 },
@@ -164,14 +148,13 @@ class StoreOpenedView extends StatelessWidget {
                     DymButton(
                       label: l10n.storeAddFirstProduct,
                       icon: Icons.add_rounded,
-                      variant: DymButtonVariant.plantain,
                       onPressed: onAddProduct,
                     ),
-                    const SizedBox(height: DymTokenSpace.s3),
+                    const SizedBox(height: DymTokenSpace.s2),
                     DymButton(
                       label: l10n.storeSeeMine,
-                      icon: Icons.storefront_rounded,
-                      variant: DymButtonVariant.onBrand,
+                      icon: Icons.storefront_outlined,
+                      variant: DymButtonVariant.secondary,
                       onPressed: onSeeStore,
                     ),
                   ],
@@ -198,18 +181,15 @@ class _CheckLine extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(
-            radius: 18,
+            radius: 14,
             backgroundColor: c.tintVertTendre,
-            child: Icon(Icons.check_rounded, color: c.brandDeep),
+            child: Icon(Icons.check_rounded, size: 18, color: c.brandDeep),
           ),
           const SizedBox(width: DymTokenSpace.s4),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
-              child: Text(
-                text,
-                style: context.dym.text.title.copyWith(fontSize: 17),
-              ),
+              child: Text(text, style: context.dym.text.body),
             ),
           ),
         ],

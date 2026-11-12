@@ -220,8 +220,7 @@ class BroadcastView extends StackedView<BroadcastViewModel> {
     return Scaffold(
       backgroundColor: c.background,
       appBar: AppBar(
-        backgroundColor: c.brandDeep,
-        foregroundColor: c.card,
+        backgroundColor: c.background,
         title: Text(l10n.broadcastTitle),
         leading: IconButton(
           tooltip: l10n.authBack,

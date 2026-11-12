@@ -184,13 +184,6 @@ class CreditView extends StackedView<CreditViewModel> {
             icon: const Icon(Icons.arrow_back_rounded),
           ),
         ),
-        floatingActionButton: open == null && credits != null
-            ? FloatingActionButton.extended(
-                onPressed: () => _sheet(context, _NewCredit(vm: vm)),
-                icon: const Icon(Icons.person_add_alt_1_rounded),
-                label: Text(l10n.creditNew),
-              )
-            : null,
         body: SafeArea(
           child: credits == null
               ? Center(
@@ -217,45 +210,111 @@ class CreditView extends StackedView<CreditViewModel> {
                   ),
                   children: [
                     if (open == null) ...[
+                      // Total dû en grand, puis une ligne par cliente.
                       DymContentWidth(
                         child: Text(
-                          l10n.creditTotal(vm.money(credits.totalMinor)),
-                          style: t.display,
+                          l10n.creditOwedLabel,
+                          style: t.body.copyWith(color: c.textSecondary),
+                        ),
+                      ),
+                      DymContentWidth(
+                        child: Text(
+                          vm.money(credits.totalMinor),
+                          style: t.display.copyWith(
+                            fontSize: 40,
+                            letterSpacing: -1,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: DymTokenSpace.s3),
+                      DymContentWidth(
+                        child: DymButton(
+                          label: l10n.creditNew,
+                          icon: Icons.person_add_alt_1_outlined,
+                          variant: DymButtonVariant.secondary,
+                          onPressed: () => _sheet(context, _NewCredit(vm: vm)),
                         ),
                       ),
                       const SizedBox(height: DymTokenSpace.s3),
                       if (credits.credits.isEmpty)
                         DymStateView(
                           kind: DymStateKind.empty,
+                          icon: Icons.menu_book_outlined,
                           title: l10n.creditNone,
                           message: l10n.creditNoneHint,
                         ),
-                      for (final cr in credits.credits)
+                      for (final (i, cr) in credits.credits.indexed)
                         DymContentWidth(
-                          child: Card(
-                            child: ListTile(
-                              minTileHeight: 64,
-                              onTap: () => vm.select(cr),
-                              title: Text(cr.customerName),
-                              subtitle: cr.limitMinor == null
-                                  ? null
-                                  : Text(
-                                      l10n.creditLimit(
-                                        vm.money(cr.limitMinor!),
+                          child: Column(
+                            children: [
+                              if (i > 0) Divider(height: 1, color: c.hairline),
+                              InkWell(
+                                onTap: () => vm.select(cr),
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                    minHeight: 68,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: c.tintVertTendre,
+                                        child: Text(
+                                          cr.customerName.characters.first
+                                              .toUpperCase(),
+                                          style: t.body.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: c.brandDeep,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                              trailing: Text(
-                                vm.money(cr.balanceMinor),
-                                style: t.title,
+                                      const SizedBox(width: DymTokenSpace.s3),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Text(
+                                              cr.customerName,
+                                              style: t.body,
+                                            ),
+                                            if (cr.limitMinor case final l?)
+                                              Text(
+                                                l10n.creditLimit(vm.money(l)),
+                                                style: t.label.copyWith(
+                                                  color: c.textSecondary,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        vm.money(cr.balanceMinor),
+                                        style: t.body.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: cr.balanceMinor > 0
+                                              ? c.pimentStrong
+                                              : c.textSecondary,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.chevron_right_rounded,
+                                        color: c.textSecondary,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                     ] else ...[
                       DymContentWidth(
                         child: Text(
                           l10n.creditOwes(vm.money(open.balanceMinor)),
-                          style: t.display,
+                          style: t.display.copyWith(fontSize: 30),
                         ),
                       ),
                       const SizedBox(height: DymTokenSpace.s3),
@@ -291,7 +350,7 @@ class CreditView extends StackedView<CreditViewModel> {
                       DymContentWidth(
                         child: DymButton(
                           label: l10n.creditRemind,
-                          icon: Icons.chat_rounded,
+                          icon: Icons.chat_outlined,
                           variant: DymButtonVariant.secondary,
                           onPressed: open.canRemind
                               ? () => vm.remind(

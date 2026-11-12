@@ -81,7 +81,6 @@ class StoreOnboardingView extends StackedView<StoreOnboardingViewModel> {
       key: ValueKey(step),
       title: title,
       subtitle: Text(subtitle),
-      centerTitle: true,
       backLabel: l10n.authBack,
       onBack: viewModel.canGoBack
           ? viewModel.back

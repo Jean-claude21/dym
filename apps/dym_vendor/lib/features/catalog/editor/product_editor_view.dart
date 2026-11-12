@@ -91,7 +91,6 @@ class ProductEditorView extends StackedView<ProductEditorViewModel> {
       subtitle: first && viewModel.isNew
           ? Text(l10n.productPhotoSubtitle)
           : null,
-      centerTitle: true,
       backLabel: l10n.authBack,
       onBack: viewModel.canGoBack ? viewModel.back : onCancel,
       progress: DymStepProgress(
@@ -437,12 +436,22 @@ class _Photos extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(DymTokenRadius.card),
-          child: AspectRatio(
-            aspectRatio: 16 / 10,
-            child: Image(
-              image: vm.service.photo(keys.first),
-              fit: BoxFit.cover,
-              semanticLabel: vm.name,
+          child: ColoredBox(
+            color: context.dym.colors.tintVertTendre,
+            child: AspectRatio(
+              aspectRatio: 16 / 10,
+              child: Image(
+                image: vm.service.photo(keys.first),
+                fit: BoxFit.cover,
+                semanticLabel: vm.name,
+                errorBuilder: (_, _, _) => Center(
+                  child: Icon(
+                    Icons.photo_outlined,
+                    size: 48,
+                    color: context.dym.colors.brandDeep,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
@@ -538,7 +547,12 @@ class _Thumb extends StatelessWidget {
               padding: const EdgeInsets.all(2),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(DymTokenRadius.tile - 2),
-                child: Image(image: image, fit: BoxFit.cover),
+                child: Image(
+                  image: image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) =>
+                      ColoredBox(color: context.dym.colors.tintVertTendre),
+                ),
               ),
             ),
           ),

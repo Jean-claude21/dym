@@ -295,7 +295,7 @@ class _Countries extends StatelessWidget {
       children: [
         if (pending.isNotEmpty)
           AdminCard(
-            color: c.tintPlantainClair,
+            color: c.tintPeche,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
