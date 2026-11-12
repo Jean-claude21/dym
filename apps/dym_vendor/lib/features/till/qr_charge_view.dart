@@ -268,31 +268,11 @@ class _AmountFormState extends State<_AmountForm> {
             ),
           ),
           const SizedBox(height: DymTokenSpace.s3),
-          for (final row in const [
-            ['1', '2', '3'],
-            ['4', '5', '6'],
-            ['7', '8', '9'],
-            ['', '0', '<'],
-          ])
-            Padding(
-              padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
-              child: Row(
-                children: [
-                  for (final (i, key) in row.indexed) ...[
-                    if (i > 0) const SizedBox(width: DymTokenSpace.s2),
-                    Expanded(
-                      child: key.isEmpty
-                          ? const SizedBox(height: 56)
-                          : _Key(
-                              label: key,
-                              semantics: key == '<' ? l10n.tillErase : key,
-                              onTap: () => _key(key),
-                            ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
+          DymKeypad(
+            onDigit: _key,
+            onErase: () => _key('<'),
+            eraseLabel: l10n.tillErase,
+          ),
           const SizedBox(height: DymTokenSpace.s2),
           DymTextField(label: l10n.qrChargeLabel, controller: _label),
           const SizedBox(height: DymTokenSpace.s3),
@@ -317,51 +297,6 @@ class _AmountFormState extends State<_AmountForm> {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-/// Touche du clavier géant : 56 px de haut, filet, chiffre en grand.
-class _Key extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.semantics,
-    required this.onTap,
-  });
-
-  final String label;
-  final String semantics;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    return Semantics(
-      button: true,
-      label: semantics,
-      excludeSemantics: true,
-      child: Material(
-        color: c.card,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(DymTokenRadius.button),
-          side: BorderSide(color: c.hairline),
-        ),
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(DymTokenRadius.button),
-          child: SizedBox(
-            height: 56,
-            child: Center(
-              child: label == '<'
-                  ? Icon(Icons.backspace_outlined, color: c.textPrimary)
-                  : Text(
-                      label,
-                      style: context.dym.text.display.copyWith(fontSize: 24),
-                    ),
-            ),
-          ),
-        ),
       ),
     );
   }

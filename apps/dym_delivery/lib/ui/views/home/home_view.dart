@@ -43,6 +43,9 @@ class _HomeViewState extends State<HomeView> {
   late final AppNavigator _navigator =
       widget.navigator ?? StackedAppNavigator();
 
+  /// Change à chaque mission acceptée : la course en cours se recharge.
+  int _runs = 0;
+
   @override
   Widget build(BuildContext context) {
     if (_onboarding) {
@@ -59,17 +62,22 @@ class _HomeViewState extends State<HomeView> {
       currentIndex: _tab.index,
       onDestinationSelected: (i) => setState(() => _tab = HomeTab.values[i]),
       destinations: [
-        DymNavItem(icon: Icons.near_me_rounded, label: l10n.missionsTitle),
-        DymNavItem(icon: Icons.route_rounded, label: l10n.myRunsTitle),
-        DymNavItem(icon: Icons.payments_rounded, label: l10n.earningsTitle),
-        DymNavItem(icon: Icons.person_rounded, label: l10n.accountTitle),
+        DymNavItem(icon: Icons.inventory_2_outlined, label: l10n.missionsTitle),
+        DymNavItem(icon: Icons.history_rounded, label: l10n.runsHistoryTitle),
+        DymNavItem(icon: Icons.payments_outlined, label: l10n.earningsTitle),
+        DymNavItem(
+          icon: Icons.person_outline_rounded,
+          label: l10n.accountTitle,
+        ),
       ],
       body: switch (_tab) {
+        // La course acceptée apparaît au-dessus des propositions (planche 05).
         HomeTab.missions => MissionsView(
           service: _missions,
-          onAccepted: () => setState(() => _tab = HomeTab.runs),
+          onAccepted: () => setState(() => _runs++),
+          active: MyRunsView(key: ValueKey(_runs), service: _missions),
         ),
-        HomeTab.runs => MyRunsView(service: _missions),
+        HomeTab.runs => MyRunsView(service: _missions, history: true),
         HomeTab.earnings => EarningsView(service: _missions),
         HomeTab.me => AccountView(
           service: _service,

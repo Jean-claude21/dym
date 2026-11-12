@@ -15,6 +15,7 @@ export 'src/components/dym_filter_chip.dart';
 export 'src/components/dym_form_scaffold.dart';
 export 'src/components/dym_free_delivery_gauge.dart';
 export 'src/components/dym_google_logo.dart';
+export 'src/components/dym_keypad.dart';
 export 'src/components/dym_menu_row.dart';
 export 'src/components/dym_mini_cart_bar.dart';
 export 'src/components/dym_nav_rail.dart';
