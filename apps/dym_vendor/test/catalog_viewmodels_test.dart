@@ -274,6 +274,15 @@ void main() {
       expect(vm.visible.first.isAvailable, isFalse);
     });
 
+    test('rupture optimiste (spec 062) : bascule avant la réponse', () async {
+      final vm = await loaded();
+      final product = vm.visible.first;
+      final pending = vm.setAvailable(product, available: false);
+      expect(vm.available(product), isFalse);
+      await pending;
+      expect(vm.available(vm.visible.first), isFalse);
+    });
+
     test('hors ligne : interrupteur inchangé, échec signalé', () async {
       final catalog = memoryCatalog();
       final vm = ProductsViewModel(
@@ -285,6 +294,8 @@ void main() {
       catalog.failNext = const NetworkFailure('hors ligne');
       await vm.setAvailable(vm.visible.first, available: false);
       expect(vm.visible.first.isAvailable, isTrue);
+      // Refus : l'interrupteur revient à l'état de la base.
+      expect(vm.available(vm.visible.first), isTrue);
       expect(vm.actionFailure, isA<NetworkFailure>());
     });
 

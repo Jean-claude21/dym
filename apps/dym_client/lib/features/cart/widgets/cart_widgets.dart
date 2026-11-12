@@ -262,8 +262,9 @@ class ProductThumb extends StatelessWidget {
         borderRadius: BorderRadius.circular(DymTokenRadius.image),
       ),
       child: switch (image) {
+        // Décodée à sa taille d'affichage (vignette ≤ 64 px).
         final img? => Image(
-          image: img,
+          image: DymSizedImage.sized(context, img, size),
           fit: BoxFit.cover,
           errorBuilder: (_, _, _) => placeholder,
         ),

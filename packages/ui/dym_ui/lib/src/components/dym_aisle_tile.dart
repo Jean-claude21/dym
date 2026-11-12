@@ -1,3 +1,4 @@
+import 'package:dym_ui/src/foundation/dym_sized_image.dart';
 import 'package:dym_ui/src/theme/dym_theme.dart';
 import 'package:dym_ui/src/tokens/dym_tokens.g.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,7 @@ class DymAisleTile extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(DymTokenSpace.s2),
-                            child: Image(
+                            child: DymSizedImage(
                               image: image,
                               fit: BoxFit.contain,
                               errorBuilder: (_, _, _) =>

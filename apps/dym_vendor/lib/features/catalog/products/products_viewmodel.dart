@@ -98,11 +98,24 @@ class ProductsViewModel extends BaseViewModel {
   }
 
   /// Rupture ou réactivation ; l'interrupteur suit l'état renvoyé.
-  Future<void> setAvailable(Product product, {required bool available}) =>
-      _apply(
-        product.id,
-        () => _service.setAvailable(product.id, available: available),
-      );
+  /// Rupture en un geste, optimiste (PARCOURS §8) : l'interrupteur bascule
+  /// tout de suite ; il revient si la base refuse.
+  final _optimistic = <String, bool>{};
+
+  /// Disponibilité affichée : le geste en cours, sinon celle de la base.
+  bool available(Product product) =>
+      _optimistic[product.id] ?? product.isAvailable;
+
+  Future<void> setAvailable(Product product, {required bool available}) async {
+    _optimistic[product.id] = available;
+    notifyListeners();
+    await _apply(
+      product.id,
+      () => _service.setAvailable(product.id, available: available),
+    );
+    _optimistic.remove(product.id);
+    notifyListeners();
+  }
 
   /// Date d'arrivage (spec 033) ; nulle : retirée.
   Future<void> setArrival(Product product, DateTime? arrivalOn) =>

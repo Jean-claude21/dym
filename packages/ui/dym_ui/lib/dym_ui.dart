@@ -33,6 +33,7 @@ export 'src/components/dym_switch_tile.dart';
 export 'src/components/dym_text_field.dart';
 export 'src/components/dym_timeline.dart';
 export 'src/foundation/dym_illustrations.dart';
+export 'src/foundation/dym_sized_image.dart';
 export 'src/foundation/money_text.dart';
 export 'src/foundation/store_origin.dart';
 export 'src/layout/dym_adaptive_scaffold.dart';
