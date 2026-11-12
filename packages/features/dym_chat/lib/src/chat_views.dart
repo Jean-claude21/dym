@@ -67,7 +67,7 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
     super.key,
     this.onBack,
     this.clock = DateTime.now,
-    this.refreshEvery = const Duration(seconds: 20),
+    this.refreshEvery = const Duration(seconds: 60),
   });
 
   final ChatService service;
@@ -321,7 +321,7 @@ class ChatView extends StackedView<ChatViewModel> {
     this.pickProduct,
     this.initialProductId,
     this.clock = DateTime.now,
-    this.refreshEvery = const Duration(seconds: 8),
+    this.refreshEvery = const Duration(seconds: 30),
   });
 
   final ChatService service;

@@ -19,6 +19,7 @@ class DashboardViewModel extends BaseViewModel {
   int unreadMessages = 0;
   int _request = 0;
   Timer? _timer;
+  StreamSubscription<LiveSignal>? _live;
   bool _disposed = false;
 
   bool get offline => failure is NetworkFailure;
@@ -55,9 +56,17 @@ class DashboardViewModel extends BaseViewModel {
         }
     }
     setBusy(false);
-    _timer ??= Timer.periodic(const Duration(seconds: 30), (_) {
+    // Relecture en filet ; le temps réel (spec 067) prévient d'abord.
+    _timer ??= Timer.periodic(const Duration(seconds: 60), (_) {
       if (!isBusy) unawaited(load());
     });
+    _live ??= watchLive(
+      service.live,
+      when: (s) => s.kind != '',
+      reload: () {
+        if (!isBusy && !_disposed) unawaited(load());
+      },
+    );
   }
 
   Future<void> selectPeriod(DashboardPeriod value) async {
@@ -71,6 +80,7 @@ class DashboardViewModel extends BaseViewModel {
   void dispose() {
     _disposed = true;
     _timer?.cancel();
+    unawaited(_live?.cancel());
     super.dispose();
   }
 }

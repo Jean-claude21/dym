@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'dart:typed_data';
 
 import 'package:dym_chat/src/call_service.dart';
@@ -146,6 +148,12 @@ class MemoryChatService implements ChatService {
       ],
     );
   }
+
+  /// Signaux en direct simulés (tests).
+  final liveSignals = StreamController<LiveSignal>.broadcast();
+
+  @override
+  Stream<LiveSignal> get live => liveSignals.stream;
 
   static int _unitOf(Currency c) => switch (c.minorUnits) {
     0 => 1,

@@ -63,9 +63,12 @@ Future<void> configureServices(DymEnvironment environment) async {
     app: AccountApp.client,
     locale: locale,
   );
+  // Temps réel (spec 067) : ouvert tant qu'un écran écoute, au premier plan.
+  final live = LiveConnection(neon.live)..attach();
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    ..registerSingleton<LiveFeed>(live)
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
     ..registerLazySingleton<DiscoveryService>(
@@ -141,6 +144,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         disputes: DisputeRepository(data: neon.data, functions: neon.functions),
         reviews: ReviewRepository(data: neon.data, functions: neon.functions),
         reorders: ReorderRepository(neon.data),
+        live: live,
         reference: reference,
         auth: auth,
       ),
@@ -160,6 +164,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         recorder: PluginVoiceRecorder(),
         playback: PluginAudioPlayback(),
         calls: NeonCallService(repository: CallRepository(neon.data)),
+        liveFeed: live,
       ),
     )
     ..registerLazySingleton<CreatorService>(

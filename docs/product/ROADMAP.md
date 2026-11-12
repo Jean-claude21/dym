@@ -204,6 +204,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `remaining-pages` | Pages restantes refaites ou revisitées (caisse, ardoise, éditeur, fiche commande admin, puis toutes les autres) | 3 h | ✅ Spec 063 |
 | `coverage-radius` | Rayon de service par ville (Configuration) ; position hors zone signalée sans imposer de quartier (commander pour un proche reste possible) ; positions hors zone comptées par pays dans le tableau de bord | 2 h | ✅ Spec 065 |
 | `courier-dispatch` | Relance des livreurs (mêmes quartiers, puis toute la ville), alerte « commande prête » au livreur assigné, refus automatique d'une commande sans réponse (remboursement dû si payée) ; délais réglés par pays ; carte « Livraisons » du tableau de bord | 3 h | ✅ Spec 066 |
+| `realtime-gateway` | Passerelle temps réel : événements adressés à une personne (messages, statuts, notifications) écrits en base dans la même transaction, poussés par WebSocket depuis les Functions ; reprise après coupure, connexion seulement quand un écran écoute et au premier plan ; livreur, vendeuse, cliente et chat branchés, relecture régulière gardée en filet | 4 h | ✅ Spec 067 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

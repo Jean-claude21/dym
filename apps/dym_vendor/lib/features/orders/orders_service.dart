@@ -6,6 +6,9 @@ import 'package:dym_vendor/features/store/store_service.dart';
 /// Commandes de la boutique (payées ou en cash) et leurs gestes. Remplaçable
 /// en test.
 abstract interface class OrdersService {
+  /// Changements en direct (nouvelle commande, statut…, spec 067).
+  Stream<LiveSignal> get live;
+
   /// Référentiel du pays de la boutique (devise).
   Future<Result<CountryConfig>> countryConfig();
 
@@ -33,7 +36,17 @@ abstract interface class OrdersService {
 
 /// Implémentation Neon.
 class NeonOrdersService implements OrdersService {
-  new({required this._orders, required this._disputes, required this._stores});
+  new({
+    required this._orders,
+    required this._disputes,
+    required this._stores,
+    this._live = LiveFeed.none,
+  });
+
+  final LiveFeed _live;
+
+  @override
+  Stream<LiveSignal> get live => _live.signals;
 
   final VendorOrderRepository _orders;
   final DisputeRepository _disputes;

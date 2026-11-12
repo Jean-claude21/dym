@@ -83,6 +83,9 @@ Future<void> _capture(WidgetTester tester, String name, Widget child) async {
 
 class _Dashboard implements DashboardService {
   @override
+  Stream<LiveSignal> get live => const Stream.empty();
+
+  @override
   Future<Result<CountryConfig>> countryConfig() async => Ok(togoConfig());
 
   @override

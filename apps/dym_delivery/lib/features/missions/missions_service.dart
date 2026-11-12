@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -5,6 +7,9 @@ import 'package:dym_models/dym_models.dart';
 
 /// Livreur (spec 041) : profil, missions proposées et en cours, gestes.
 abstract interface class MissionsService {
+  /// Changements en direct (course proposée, commande prête…, spec 067).
+  Stream<LiveSignal> get live;
+
   Future<Result<CountryConfig>> countryConfig();
 
   Future<Result<CourierProfile?>> profile();
@@ -49,7 +54,13 @@ class NeonMissionsService implements MissionsService {
     required this._reference,
     required this._auth,
     required this._wallet,
+    this._live = LiveFeed.none,
   });
+
+  final LiveFeed _live;
+
+  @override
+  Stream<LiveSignal> get live => _live.signals;
 
   final CourierRepository _couriers;
   final WalletRepository _wallet;
@@ -161,6 +172,12 @@ class MemoryMissionsService implements MissionsService {
   final List<Mission> open;
   final List<Mission> accepted;
   final gestures = <String>[];
+
+  /// Signaux en direct simulés (tests).
+  final liveSignals = StreamController<LiveSignal>.broadcast();
+
+  @override
+  Stream<LiveSignal> get live => liveSignals.stream;
 
   @override
   Future<Result<CountryConfig>> countryConfig() async => Ok(config);

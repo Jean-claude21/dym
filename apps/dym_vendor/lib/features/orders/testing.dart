@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
@@ -25,6 +27,12 @@ class MemoryOrdersService implements OrdersService {
   final CountryConfig config;
   final List<VendorOrder> _orders;
   final _disputes = <String, Dispute>{};
+
+  /// Signaux en direct simulés (tests).
+  final liveSignals = StreamController<LiveSignal>.broadcast();
+
+  @override
+  Stream<LiveSignal> get live => liveSignals.stream;
 
   /// Prochain appel en échec (une fois).
   Failure? failNext;

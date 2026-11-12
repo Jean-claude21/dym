@@ -14,6 +14,8 @@ export function pgDispatchWatch(pool: pg.Pool): DispatchWatch {
     async run(at) {
       try {
         const result = await pool.query("select app.run_dispatch_watch($1::timestamptz) as value", [at]);
+        // Ménage des événements en direct de plus de 24 h (spec 067).
+        await pool.query("select app.prune_live_events($1::timestamptz)", [at]);
         return result.rows[0].value as { refused: number; relaunched: number };
       } catch (error) {
         throw fromPgError(error);

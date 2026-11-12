@@ -1,5 +1,5 @@
 /// Client Dart générique pour Neon : Auth (Better Auth REST), Data API
-/// (PostgREST) et Functions. Aucune notion métier.
+/// (PostgREST), Functions et passerelle temps réel. Aucune notion métier.
 library;
 
 export 'package:postgrest/postgrest.dart'
@@ -11,6 +11,7 @@ export 'src/data/neon_data_client.dart';
 export 'src/errors.dart' show failureFrom;
 export 'src/functions/neon_functions_client.dart' show NeonFunctionsClient;
 export 'src/jwt.dart';
+export 'src/live/neon_live_client.dart';
 export 'src/neon_client.dart';
 export 'src/retry.dart' show RetryPolicy;
 export 'src/session.dart';

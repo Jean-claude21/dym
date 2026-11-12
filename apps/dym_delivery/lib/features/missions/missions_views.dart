@@ -315,17 +315,30 @@ class MissionsViewModel extends BaseViewModel {
   /// Courses proposées rechargées tant que le livreur est en ligne.
   FieldRefresher? _refresher;
 
-  /// Démarre le chargement et le rafraîchissement.
+  StreamSubscription<LiveSignal>? _live;
+
+  /// Démarre le chargement, le temps réel (spec 067) et, en filet, une
+  /// relecture régulière.
   Future<void> start() {
+    _live ??= watchLive(
+      service.live,
+      when: (s) =>
+          s.kind == 'order_status' ||
+          s.notificationKind == 'mission_available' ||
+          s.notificationKind == 'order_ready_pickup',
+      reload: () => unawaited(load()),
+    );
     _refresher ??= FieldRefresher(
       load,
       active: () => profile?.isOnline ?? false,
+      every: const Duration(seconds: 60),
     );
     return load();
   }
 
   @override
   void dispose() {
+    unawaited(_live?.cancel());
     _refresher?.dispose();
     super.dispose();
   }
@@ -740,12 +753,21 @@ class MyRunsViewModel extends BaseViewModel {
   /// n'en a pas besoin.
   FieldRefresher? _refresher;
 
-  /// Démarre le chargement ; [live] : rafraîchissement des courses en cours.
+  StreamSubscription<LiveSignal>? _live;
+
+  /// Démarre le chargement ; [live] : courses en cours suivies en direct
+  /// (spec 067), avec une relecture régulière en filet.
   Future<void> start({required bool live}) {
     if (live) {
+      _live ??= watchLive(
+        service.live,
+        when: (s) => s.kind == 'order_status' || s.kind == 'notification',
+        reload: () => unawaited(load()),
+      );
       _refresher ??= FieldRefresher(
         load,
         active: () => runs?.any((r) => r.status != 'delivered') ?? false,
+        every: const Duration(seconds: 60),
       );
     }
     return load();
@@ -753,6 +775,7 @@ class MyRunsViewModel extends BaseViewModel {
 
   @override
   void dispose() {
+    unawaited(_live?.cancel());
     _refresher?.dispose();
     super.dispose();
   }

@@ -72,9 +72,12 @@ Future<void> configureServices(DymEnvironment environment) async {
     functions: neon.functions,
     uploads: neon.uploads,
   );
+  // Temps réel (spec 067) : ouvert tant qu'un écran écoute, au premier plan.
+  final live = LiveConnection(neon.live)..attach();
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    ..registerSingleton<LiveFeed>(live)
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
     ..registerSingleton<StoreService>(stores)
@@ -83,6 +86,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         repository: VendorDashboardRepository(neon.data),
         stores: stores,
         messages: messaging,
+        liveFeed: live,
       ),
     )
     ..registerLazySingleton<VendorBroadcastService>(
@@ -193,6 +197,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         recorder: PluginVoiceRecorder(),
         playback: PluginAudioPlayback(),
         calls: NeonCallService(repository: CallRepository(neon.data)),
+        liveFeed: live,
       ),
     )
     ..registerLazySingleton<VendorAdjustmentsService>(
@@ -214,6 +219,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         ),
         disputes: DisputeRepository(data: neon.data, functions: neon.functions),
         stores: stores,
+        live: live,
       ),
     )
     ..registerSingleton<CatalogService>(
