@@ -1,6 +1,6 @@
 -- Précommande et créneaux (spec 033).
 
-select plan(13);
+select plan(17);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -30,8 +30,8 @@ grant execute on function pg_temp._publish(uuid, uuid, text) to authenticated;
 
 select tests.login_as((select kodjo from _t));
 select public.update_store('{"offers_pickup": true}');
-select public.set_store_hours((select jsonb_agg(jsonb_build_object('weekday', d, 'opens_at', '00:00',
-  'closes_at', '24:00')) from generate_series(1, 7) d));  -- ouvert toute la journée : le test passe à toute heure
+select public.set_store_hours((select jsonb_agg(jsonb_build_object('weekday', d, 'opens_at', '06:00',
+  'closes_at', '22:00')) from generate_series(1, 7) d));
 select pg_temp._publish((select tomate from _t), (select tomate_tas from _t), 'Tomates');
 select pg_temp._publish((select igname from _t), (select igname_tas from _t), 'Igname nouvelle');
 
@@ -53,10 +53,14 @@ select is((select jsonb_array_length(d -> 'windows') from jsonb_array_elements(p
 select ok(jsonb_array_length(public.delivery_slots() -> 'days') <= 8, 'horizon du pays respecté');
 select tests.logout();
 
-create function pg_temp._order(p_slot jsonb) returns jsonb language sql as $$
+-- Heure de commande fixe (aujourd'hui, 10 h ou 23 h 30 à Lomé) : le test ne dépend pas de l'heure.
+create function pg_temp._order_at(p_slot jsonb, p_at timestamptz) returns jsonb language sql as $$
   select app.place_order_scheduled((select awa from _t), gen_random_uuid(), jsonb_build_object(
     'payment_method_id', (select id from public.payment_methods where country_code = 'TG' and provider_code = 'cash'),
-    'modes', jsonb_build_object((select kodjo_store from _t), 'pickup'), 'slot', p_slot), now(), '{}')
+    'modes', jsonb_build_object((select kodjo_store from _t), 'pickup'), 'slot', p_slot), p_at, '{}')
+$$;
+create function pg_temp._order(p_slot jsonb) returns jsonb language sql as $$
+  select pg_temp._order_at(p_slot, (((select tomorrow from _t) - 1) + time '10:00') at time zone 'Africa/Lome')
 $$;
 
 -- Commande programmée demain 14 h : créneau enregistré, heure affichée = début du créneau.
@@ -79,6 +83,22 @@ select throws_ok($$select pg_temp._order(jsonb_build_object('date', (select tomo
   'window_id', gen_random_uuid()))$$, 'P0001', 'invalid_slot', 'créneau inconnu refusé');
 select is((select count(*)::int from public.purchases where user_id = (select awa from _t)), 1,
   'refus : aucune commande créée');
+
+-- Boutique fermée à l'heure de la commande (23 h 30) : « dès que possible » refusé ; un créneau
+-- de demain où elle est ouverte est accepté, et le panier ne bloque plus avec ce créneau.
+select tests.login_as((select awa from _t));
+select ok((public.my_cart(p_at => (((select tomorrow from _t) - 1) + time '23:30') at time zone 'Africa/Lome')
+  ->> 'blocking')::boolean, 'fermée maintenant : panier bloqué');
+select ok(not (public.my_cart(p_at => (((select tomorrow from _t) - 1) + time '23:30') at time zone 'Africa/Lome',
+  p_slot => jsonb_build_object('date', (select tomorrow from _t), 'window_id', (select afternoon from _t)))
+  ->> 'blocking')::boolean, 'créneau de demain : panier commandable');
+select tests.logout();
+select throws_ok($$select pg_temp._order_at(null,
+  (((select tomorrow from _t) - 1) + time '23:30') at time zone 'Africa/Lome')$$,
+  'P0001', 'cart_blocked', 'fermée : dès que possible refusé');
+select ok((pg_temp._order_at(jsonb_build_object('date', (select tomorrow from _t), 'window_id', (select afternoon from _t)),
+  (((select tomorrow from _t) - 1) + time '23:30') at time zone 'Africa/Lome') -> 'purchase' ->> 'id') is not null,
+  'fermée maintenant, ouverte au créneau : commande acceptée');
 
 -- Précommande : créneau obligatoire, à partir de l'arrivage ; prix figé.
 select tests.login_as((select awa from _t));

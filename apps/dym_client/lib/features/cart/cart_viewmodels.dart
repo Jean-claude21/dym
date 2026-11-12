@@ -136,6 +136,9 @@ class CartViewModel extends _CartLoadingViewModel {
       _orderError = null;
     }
     notifyListeners();
+    // Le devis dépend du créneau : une boutique fermée maintenant peut être
+    // ouverte au début du créneau (spec 033).
+    unawaited(service.refresh().then((_) => notifyListeners()));
   }
 
   bool get canOrder => !cart.isEmpty && !cart.blocking && !_ordering && !isBusy;

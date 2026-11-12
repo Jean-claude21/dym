@@ -11,14 +11,18 @@ class CartRepository {
   final NeonDataClient _data;
 
   /// Panier, avec l'adresse, les modes et le moyen de paiement choisis.
+  /// [slot] : créneau choisi ; l'ouverture des boutiques se vérifie à son
+  /// début (spec 033).
   Future<Result<CartView>> cart({
     String? addressId,
     Map<String, Fulfillment> modes = const {},
     String? paymentMethodId,
+    SlotChoice? slot,
   }) => _cart('my_cart', {
     'p_address': addressId,
     'p_modes': {for (final e in modes.entries) e.key: e.value.name},
     'p_payment_method': paymentMethodId,
+    'p_slot': ?slot?.toJson(),
   });
 
   Future<Result<CartView>> add(String variantId, {int quantity = 1}) =>

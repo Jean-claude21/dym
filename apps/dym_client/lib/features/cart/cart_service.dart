@@ -185,6 +185,7 @@ class NeonCartService implements CartService {
       addressId: _selection.addressId,
       modes: _selection.modes,
       paymentMethodId: _selection.paymentMethodId,
+      slot: _selection.slot,
     ),
   );
 
