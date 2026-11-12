@@ -385,13 +385,21 @@ class _Geography extends StatelessWidget {
             initial: '${current?.deliveryMinutes ?? 30}',
             keyboard: TextInputType.number,
           ),
+          SettingField(
+            'service_radius_km',
+            l10n.adminServiceRadiusKm,
+            initial: '${((current?.serviceRadiusM ?? 15000) / 1000).round()}',
+            keyboard: TextInputType.number,
+          ),
         ],
       );
       if (values == null) return;
+      final radiusKm = int.tryParse(values['service_radius_km'] ?? '');
       await vm.saveCity({
         'id': ?current?.id,
         'name': values['name'],
         'delivery_minutes': int.tryParse(values['delivery_minutes'] ?? ''),
+        'service_radius_m': ?(radiusKm == null ? null : radiusKm * 1000),
       });
     }
 
@@ -454,9 +462,12 @@ class _Geography extends StatelessWidget {
                 children: [
                   DymSwitchTile(
                     title: l10n.adminActive,
-                    subtitle: l10n.adminDeliveryMinutesValue(
-                      city.deliveryMinutes,
-                    ),
+                    subtitle: [
+                      l10n.adminDeliveryMinutesValue(city.deliveryMinutes),
+                      l10n.adminServiceRadiusValue(
+                        (city.serviceRadiusM / 1000).round(),
+                      ),
+                    ].join(' · '),
                     value: city.isActive,
                     onChanged: vm.acting
                         ? null

@@ -306,7 +306,7 @@ class AddressesViewModel extends _CartLoadingViewModel {
 }
 
 /// Résultat d'une demande de position pour une adresse.
-enum AddressLocation { found, unavailable }
+enum AddressLocation { found, unavailable, outside }
 
 /// Nouvelle adresse ou modification (écran 36). La position de l'appareil,
 /// si elle est donnée, est conservée avec l'adresse.
@@ -416,6 +416,9 @@ class AddressFormViewModel extends _CartLoadingViewModel {
     final result = await service.locate();
     _locating = false;
     switch (result) {
+      // Hors zone (spec 065) : le quartier n'est jamais choisi d'office.
+      case Ok(value: final place?) when place.match?.covered == false:
+        _location = AddressLocation.outside;
       case Ok(value: final place?) when place.match != null:
         _zoneId = place.match!.zoneId;
         _latitude = place.point.latitude;

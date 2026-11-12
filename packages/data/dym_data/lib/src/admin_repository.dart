@@ -280,6 +280,13 @@ class AdminRepository {
     (json) => AdminDashboard.fromJson(_map(json)),
   );
 
+  /// Positions hors des zones desservies (spec 065).
+  Future<Result<AdminCoverage>> coverage(String period) => _rpc(
+    'admin_coverage',
+    {'p_period': period},
+    (json) => AdminCoverage.fromJson(_map(json)),
+  );
+
   /// Revenus (écran 70). [period] : `month`, `last_month`, `30d`.
   Future<Result<AdminRevenue>> revenue(String period) => _rpc('admin_revenue', {
     'p_period': period,

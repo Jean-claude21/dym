@@ -124,11 +124,15 @@ class NeonDiscoveryService implements DiscoveryService {
       case Ok(value: null):
         return const Ok(null);
       case Ok(value: final point?):
-        return await _discovery.nearestZone(
+        final match = await _discovery.nearestZone(
           point.latitude,
           point.longitude,
           countryCode: _countryCode,
         );
+        if (match case Ok(value: final m?) when !m.covered) {
+          unawaited(trackOutsideCoverage(_events, m));
+        }
+        return match;
     }
   }
 

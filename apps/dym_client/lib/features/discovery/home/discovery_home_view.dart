@@ -414,7 +414,9 @@ Future<void> showZonePicker(
                   ? l10n.zoneLocating
                   : l10n.zoneUseLocation,
               locating: viewModel.locating,
-              message: viewModel.locationUnavailable
+              message: viewModel.locationOutside
+                  ? l10n.zoneOutsideArea
+                  : viewModel.locationUnavailable
                   ? l10n.zoneLocationUnavailable
                   : null,
             ),

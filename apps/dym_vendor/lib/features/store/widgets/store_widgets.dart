@@ -38,7 +38,7 @@ class StoreSection extends StatelessWidget {
                         ),
                 ),
                 // Action calée à droite, le titre prend le reste.
-                if (trailing != null) trailing!,
+                ?trailing,
               ],
             ),
             const SizedBox(height: DymTokenSpace.s3),

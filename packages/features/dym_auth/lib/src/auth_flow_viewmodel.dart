@@ -325,6 +325,10 @@ class AuthFlowViewModel extends BaseViewModel {
     final result = await _service.locateZone();
     _locating = false;
     switch (result) {
+      // Hors zone (spec 065) : ni pays ni quartier imposés ; la personne
+      // peut choisir un quartier desservi (commander pour un proche).
+      case Ok(value: final match?) when !match.covered:
+        _location = ZoneLocation.outside;
       case Ok(value: final match?):
         if (match.countryCode != _countryCode &&
             _countries.any((c) => c.code == match.countryCode)) {

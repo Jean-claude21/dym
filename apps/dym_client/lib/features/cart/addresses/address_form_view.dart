@@ -150,9 +150,11 @@ class _FormState extends State<_Form> {
         onLocate: vm.locate,
         locateLabel: vm.locating ? l10n.zoneLocating : l10n.zoneUseLocation,
         locating: vm.locating,
-        message: vm.location == AddressLocation.unavailable
-            ? l10n.zoneLocationUnavailable
-            : null,
+        message: switch (vm.location) {
+          AddressLocation.unavailable => l10n.zoneLocationUnavailable,
+          AddressLocation.outside => l10n.zoneOutsideArea,
+          AddressLocation.found || null => null,
+        },
       ),
       if (vm.hasPosition)
         Padding(

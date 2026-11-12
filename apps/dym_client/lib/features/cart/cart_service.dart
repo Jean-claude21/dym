@@ -280,6 +280,9 @@ class NeonCartService implements CartService {
           point.longitude,
           countryCode: _view.value.countryCode,
         );
+        if (match case Ok(value: final m?) when !m.covered) {
+          unawaited(trackOutsideCoverage(_events, m));
+        }
         return switch (match) {
           Ok(:final value) => Ok(LocatedPlace(point, value)),
           Err(:final failure) => Err(failure),

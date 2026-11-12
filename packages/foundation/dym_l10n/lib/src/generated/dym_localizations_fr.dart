@@ -976,7 +976,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get zoneOutsideArea =>
-      'Ta position est hors des zones desservies : cherche ton quartier.';
+      'DYM n\'est pas encore chez toi. Tu peux choisir un quartier desservi, par exemple pour commander pour un proche.';
 
   @override
   String get aisleAll => 'Tous';
@@ -2075,6 +2075,40 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String adminDeliveryMinutesValue(int n) {
     return 'Livraison en $n min environ';
+  }
+
+  @override
+  String get adminCoverageTitle => 'Hors zone desservie';
+
+  @override
+  String get adminCoverageHelp =>
+      'Positions d\'utilisatrices trop loin de tout quartier desservi, par pays le plus proche.';
+
+  @override
+  String get adminCoverageTotal => 'Au total';
+
+  @override
+  String adminCoverageMisses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count positions',
+      one: '1 position',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String adminCoverageMedianKm(int km) {
+    return '$km km en médiane';
+  }
+
+  @override
+  String get adminServiceRadiusKm => 'Rayon de service (km)';
+
+  @override
+  String adminServiceRadiusValue(int km) {
+    return 'rayon de $km km';
   }
 
   @override

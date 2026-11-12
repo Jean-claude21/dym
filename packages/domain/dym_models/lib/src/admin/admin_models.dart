@@ -594,6 +594,7 @@ class AdminCity {
     required this.name,
     required this.isActive,
     this.deliveryMinutes = 30,
+    this.serviceRadiusM = 15000,
     this.zones = const [],
   });
 
@@ -603,7 +604,37 @@ class AdminCity {
   final String name;
   final bool isActive;
   final int deliveryMinutes;
+
+  /// Distance maximale à un quartier pour être desservi (spec 065).
+  final int serviceRadiusM;
   final List<AdminZone> zones;
+}
+
+/// Positions hors zone sur une période, par pays le plus proche (spec 065).
+@immutable
+@JsonSerializable()
+class AdminCoverage {
+  const new({required this.total, this.countries = const []});
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminCoverageFromJson(json);
+
+  final int total;
+  final List<AdminCoverageCountry> countries;
+}
+
+/// Positions hors zone d'un pays et distance médiane au quartier desservi.
+@immutable
+@JsonSerializable()
+class AdminCoverageCountry {
+  const new({required this.countryCode, required this.misses, this.medianKm});
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminCoverageCountryFromJson(json);
+
+  final String countryCode;
+  final int misses;
+  final int? medianKm;
 }
 
 /// Fournisseur de paiement.

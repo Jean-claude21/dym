@@ -1,4 +1,5 @@
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:neon_kit/neon_kit.dart';
 
 /// App émettrice d'un événement.
@@ -39,3 +40,14 @@ class EventsRepository {
     },
   );
 }
+
+/// Position hors des zones desservies (spec 065) : pays du quartier le plus
+/// proche et distance au kilomètre, jamais la position elle-même.
+Future<Result<void>> trackOutsideCoverage(
+  EventsRepository events,
+  ZoneMatch match,
+) => events.track(
+  'location_outside_coverage',
+  countryCode: match.countryCode,
+  props: {'distance_km': match.distanceKm, 'app': events.app.name},
+);

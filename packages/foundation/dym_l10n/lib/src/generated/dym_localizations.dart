@@ -1732,7 +1732,7 @@ abstract class DymLocalizations {
   /// Position hors zone
   ///
   /// In fr, this message translates to:
-  /// **'Ta position est hors des zones desservies : cherche ton quartier.'**
+  /// **'DYM n\'est pas encore chez toi. Tu peux choisir un quartier desservi, par exemple pour commander pour un proche.'**
   String get zoneOutsideArea;
 
   /// Filtre de rayon
@@ -3582,6 +3582,48 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Livraison en {n} min environ'**
   String adminDeliveryMinutesValue(int n);
+
+  /// Carte du tableau de bord : positions hors zone (spec 065)
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors zone desservie'**
+  String get adminCoverageTitle;
+
+  /// Aide de la carte couverture
+  ///
+  /// In fr, this message translates to:
+  /// **'Positions d\'utilisatrices trop loin de tout quartier desservi, par pays le plus proche.'**
+  String get adminCoverageHelp;
+
+  /// Total des positions hors zone
+  ///
+  /// In fr, this message translates to:
+  /// **'Au total'**
+  String get adminCoverageTotal;
+
+  /// Positions hors zone d'un pays
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 position} other{{count} positions}}'**
+  String adminCoverageMisses(int count);
+
+  /// Distance médiane au quartier desservi
+  ///
+  /// In fr, this message translates to:
+  /// **'{km} km en médiane'**
+  String adminCoverageMedianKm(int km);
+
+  /// Champ : rayon de service de la ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon de service (km)'**
+  String get adminServiceRadiusKm;
+
+  /// Rayon de service affiché sous la ville
+  ///
+  /// In fr, this message translates to:
+  /// **'rayon de {km} km'**
+  String adminServiceRadiusValue(int km);
 
   /// Titre : catégorie
   ///
