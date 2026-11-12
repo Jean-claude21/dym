@@ -701,6 +701,27 @@ class _SettingsState extends State<_Settings> {
           ),
         ),
         const SizedBox(height: DymTokenSpace.s3),
+        // Mêmes réglages du pays, enregistrés avec les seuils (spec 066).
+        AdminCard(
+          title: l10n.opsAutoDispatch,
+          trailing: FilledButton(
+            onPressed: () => vm.setThresholds({
+              for (final e in _thresholds.entries) e.key: e.value.text,
+            }),
+            child: Text(l10n.opsSave),
+          ),
+          child: numbers(
+            _thresholds,
+            s.thresholds,
+            const ['auto_refuse', 'relaunch', 'relaunch_max'],
+            (k) => switch (k) {
+              'auto_refuse' => l10n.opsAutoRefuse,
+              'relaunch' => l10n.opsRelaunch,
+              _ => l10n.opsRelaunchMax,
+            },
+          ),
+        ),
+        const SizedBox(height: DymTokenSpace.s3),
         AdminCard(
           title: l10n.opsFeedWeights,
           trailing: FilledButton(

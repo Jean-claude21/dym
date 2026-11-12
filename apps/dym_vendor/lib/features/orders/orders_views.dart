@@ -135,6 +135,7 @@ String actorLabel(DymLocalizations l10n, String role) => switch (role) {
 String reasonLabel(DymLocalizations l10n, RefusalReason? r) => switch (r) {
   RefusalReason.outOfStock => l10n.reasonOutOfStock,
   RefusalReason.tooBusy => l10n.reasonTooBusy,
+  RefusalReason.noResponse => l10n.reasonNoResponse,
   RefusalReason.areaNotServed => l10n.reasonAreaNotServed,
   _ => l10n.reasonOther,
 };

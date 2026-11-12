@@ -228,6 +228,7 @@ const _$RefusalReasonEnumMap = {
   RefusalReason.tooBusy: 'too_busy',
   RefusalReason.areaNotServed: 'area_not_served',
   RefusalReason.other: 'other',
+  RefusalReason.noResponse: 'no_response',
   RefusalReason.unknown: 'unknown',
 };
 

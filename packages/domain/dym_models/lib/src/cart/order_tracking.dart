@@ -36,13 +36,23 @@ enum OrderStatus {
 
 /// Raison d'un refus.
 @JsonEnum(fieldRename: FieldRename.snake)
-enum RefusalReason { outOfStock, tooBusy, areaNotServed, other, unknown }
+enum RefusalReason {
+  outOfStock,
+  tooBusy,
+  areaNotServed,
+  other,
+
+  /// Refus automatique : la boutique n'a pas répondu à temps (spec 066).
+  noResponse,
+  unknown,
+}
 
 extension RefusalReasonCode on RefusalReason {
   String get code => switch (this) {
     RefusalReason.outOfStock => 'out_of_stock',
     RefusalReason.tooBusy => 'too_busy',
     RefusalReason.areaNotServed => 'area_not_served',
+    RefusalReason.noResponse => 'no_response',
     _ => 'other',
   };
 }

@@ -126,6 +126,9 @@ abstract interface class AdminService {
   /// Positions hors zone par pays (spec 065).
   Future<Result<AdminCoverage>> coverage(String period);
 
+  /// Livreurs, relances et refus automatiques (spec 066).
+  Future<Result<AdminDispatch>> dispatch(String period);
+
   Future<Result<AdminRevenue>> revenue(String period);
 
   Future<Result<List<AdminFeatureFlag>>> featureFlags();
@@ -384,6 +387,10 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<AdminCoverage>> coverage(String period) =>
       _admin.coverage(period);
+
+  @override
+  Future<Result<AdminDispatch>> dispatch(String period) =>
+      _admin.dispatch(period);
 
   @override
   Future<Result<AdminRevenue>> revenue(String period) => _admin.revenue(period);

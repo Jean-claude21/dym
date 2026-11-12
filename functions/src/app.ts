@@ -11,6 +11,7 @@ import { dispatchPushes, type PushQueue, type PushSender } from "./notifications
 import { httpErrors, toHttpError } from "./lib/errors.js";
 import type { ErrorReporter } from "./lib/report.js";
 import { registerVendorRecaps, type VendorRecaps } from "./dashboard/recaps.js";
+import { type DispatchWatch, registerDispatchWatch } from "./orders/dispatch.js";
 import { registerShoppingReminders, type ShoppingReminders } from "./shopping/reminders.js";
 import { registerAffiliateSettlement, type AffiliateSettlement } from "./content/affiliation.js";
 import { type OpsAssistDeps, registerOpsAssist } from "./ops/assist.js";
@@ -43,6 +44,8 @@ export interface AppDeps {
   /** Admin des opérations (spec 013). */
   admin?: AdminStore;
   recaps?: VendorRecaps;
+  /** Refus automatiques et relances de livreurs (spec 066). */
+  dispatchWatch?: DispatchWatch;
   /** Contenus des créatrices (spec 036). */
   creatorContent?: CreatorContentDeps;
   /** Pont TikTok et liens de partage (spec 040). */
@@ -125,6 +128,7 @@ export function createApp(deps: AppDeps) {
   registerDisputeRoutes(app, deps.verifyToken, deps.disputes);
   registerAdminRoutes(app, deps.verifyToken, deps.admin, deps.payments?.providers ?? []);
   registerVendorRecaps(app, deps.recaps);
+  registerDispatchWatch(app, deps.dispatchWatch);
   registerShoppingReminders(app, deps.shoppingReminders);
   registerAffiliateSettlement(app, deps.affiliateSettlement);
   registerOpsAssist(app, deps.verifyToken, deps.opsAssist);
