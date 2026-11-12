@@ -27,6 +27,7 @@ String refusalReasonLabel(DymLocalizations l10n, RefusalReason? reason) =>
       RefusalReason.outOfStock => l10n.reasonOutOfStock,
       RefusalReason.tooBusy => l10n.reasonTooBusy,
       RefusalReason.areaNotServed => l10n.reasonAreaNotServed,
+      RefusalReason.noResponse => l10n.reasonNoResponse,
       _ => l10n.reasonOther,
     };
 

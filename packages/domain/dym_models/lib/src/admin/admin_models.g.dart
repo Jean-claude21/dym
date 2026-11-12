@@ -775,6 +775,50 @@ AdminCity _$AdminCityFromJson(Map<String, dynamic> json) => $checkedCreate(
   },
 );
 
+AdminDispatch _$AdminDispatchFromJson(Map<String, dynamic> json) =>
+    $checkedCreate(
+      'AdminDispatch',
+      json,
+      ($checkedConvert) {
+        final val = AdminDispatch(
+          couriersActive: $checkedConvert(
+            'couriers_active',
+            (v) => (v as num?)?.toInt() ?? 0,
+          ),
+          couriersOnline: $checkedConvert(
+            'couriers_online',
+            (v) => (v as num?)?.toInt() ?? 0,
+          ),
+          waiting: $checkedConvert('waiting', (v) => (v as num?)?.toInt() ?? 0),
+          medianAcceptMinutes: $checkedConvert(
+            'median_accept_minutes',
+            (v) => (v as num?)?.toInt(),
+          ),
+          relaunches: $checkedConvert(
+            'relaunches',
+            (v) => (v as num?)?.toInt() ?? 0,
+          ),
+          widened: $checkedConvert('widened', (v) => (v as num?)?.toInt() ?? 0),
+          autoRefused: $checkedConvert(
+            'auto_refused',
+            (v) => (v as num?)?.toInt() ?? 0,
+          ),
+          readyAlerts: $checkedConvert(
+            'ready_alerts',
+            (v) => (v as num?)?.toInt() ?? 0,
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'couriersActive': 'couriers_active',
+        'couriersOnline': 'couriers_online',
+        'medianAcceptMinutes': 'median_accept_minutes',
+        'autoRefused': 'auto_refused',
+        'readyAlerts': 'ready_alerts',
+      },
+    );
+
 AdminCoverage _$AdminCoverageFromJson(Map<String, dynamic> json) =>
     $checkedCreate('AdminCoverage', json, ($checkedConvert) {
       final val = AdminCoverage(

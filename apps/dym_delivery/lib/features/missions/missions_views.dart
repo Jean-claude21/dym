@@ -275,10 +275,60 @@ class CourierOnboardingView extends StackedView<CourierOnboardingViewModel> {
 
 // ---------------------------------------------------------------- missions
 
+/// Rafraîchissement du terrain (spec 066) : le push n'est pas garanti et le
+/// réseau est instable ; la liste se recharge au retour dans l'app et à
+/// intervalle régulier tant que le livreur est actif et l'app au premier plan.
+class FieldRefresher {
+  new(this._reload, {required this._active, Duration? every}) {
+    _life = AppLifecycleListener(onResume: _tick);
+    _timer = Timer.periodic(every ?? const Duration(seconds: 30), (_) {
+      final state = WidgetsBinding.instance.lifecycleState;
+      if (_active() && (state == null || state == AppLifecycleState.resumed)) {
+        _tick();
+      }
+    });
+  }
+
+  final Future<void> Function() _reload;
+  final bool Function() _active;
+  late final AppLifecycleListener _life;
+  late final Timer _timer;
+  bool _running = false;
+
+  void _tick() {
+    if (_running) return;
+    _running = true;
+    unawaited(_reload().whenComplete(() => _running = false));
+  }
+
+  void dispose() {
+    _timer.cancel();
+    _life.dispose();
+  }
+}
+
 class MissionsViewModel extends BaseViewModel {
   new({required this.service});
 
   final MissionsService service;
+
+  /// Courses proposées rechargées tant que le livreur est en ligne.
+  FieldRefresher? _refresher;
+
+  /// Démarre le chargement et le rafraîchissement.
+  Future<void> start() {
+    _refresher ??= FieldRefresher(
+      load,
+      active: () => profile?.isOnline ?? false,
+    );
+    return load();
+  }
+
+  @override
+  void dispose() {
+    _refresher?.dispose();
+    super.dispose();
+  }
   CourierProfile? profile;
   CountryConfig? config;
   List<Mission>? missions;
@@ -355,7 +405,7 @@ class MissionsView extends StackedView<MissionsViewModel> {
 
   @override
   void onViewModelReady(MissionsViewModel viewModel) =>
-      unawaited(viewModel.load());
+      unawaited(viewModel.start());
 
   @override
   Widget builder(BuildContext context, MissionsViewModel vm, Widget? child) {
@@ -685,6 +735,27 @@ class MyRunsViewModel extends BaseViewModel {
   new({required this.service});
 
   final MissionsService service;
+
+  /// Courses en cours rechargées (commande prête, annulée) ; l'historique
+  /// n'en a pas besoin.
+  FieldRefresher? _refresher;
+
+  /// Démarre le chargement ; [live] : rafraîchissement des courses en cours.
+  Future<void> start({required bool live}) {
+    if (live) {
+      _refresher ??= FieldRefresher(
+        load,
+        active: () => runs?.any((r) => r.status != 'delivered') ?? false,
+      );
+    }
+    return load();
+  }
+
+  @override
+  void dispose() {
+    _refresher?.dispose();
+    super.dispose();
+  }
   CountryConfig? config;
   List<Mission>? runs;
   Failure? failure;
@@ -766,7 +837,7 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
 
   @override
   void onViewModelReady(MyRunsViewModel viewModel) =>
-      unawaited(viewModel.load());
+      unawaited(viewModel.start(live: embedded));
 
   @override
   Widget builder(BuildContext context, MyRunsViewModel vm, Widget? child) {

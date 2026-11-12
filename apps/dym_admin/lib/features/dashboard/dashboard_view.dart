@@ -20,6 +20,9 @@ class AdminDashboardViewModel extends AdminViewModel {
   /// Positions hors zone (spec 065) ; absente si l'appel échoue.
   AdminCoverage? coverage;
 
+  /// Livreurs et relances (spec 066) ; absente si l'appel échoue.
+  AdminDispatch? dispatch;
+
   /// Section affichée : vue générale ou IA et paiements (77).
   bool ai;
 
@@ -31,12 +34,14 @@ class AdminDashboardViewModel extends AdminViewModel {
   bool get ready => data != null && !failed;
 
   Future<void> load() => run(service.currencies, () async {
-    final (result, cover) = await (
+    final (result, cover, delivery) = await (
       service.dashboard(period),
       service.coverage(period),
+      service.dispatch(period),
     ).wait;
     if (result case Ok(:final value)) data = value;
     coverage = cover.valueOrNull;
+    dispatch = delivery.valueOrNull;
     return result.failureOrNull;
   });
 
@@ -337,6 +342,48 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
                   ),
                 ),
               ),
+              if (vm.dispatch case final x?)
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  child: AdminCard(
+                    title: l10n.adminDispatchTitle,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AdminField(
+                          l10n.adminCouriersOnline,
+                          l10n.adminCouriersOnlineValue(
+                            x.couriersOnline,
+                            x.couriersActive,
+                          ),
+                        ),
+                        AdminField(
+                          l10n.adminMissionsWaiting,
+                          '${x.waiting}',
+                        ),
+                        AdminField(
+                          l10n.adminMedianAccept,
+                          switch (x.medianAcceptMinutes) {
+                            final m? => l10n.adminMinutesValue(m),
+                            null => '—',
+                          },
+                        ),
+                        AdminField(
+                          l10n.adminRelaunches,
+                          l10n.adminRelaunchesValue(x.relaunches, x.widened),
+                        ),
+                        AdminField(
+                          l10n.adminAutoRefused,
+                          '${x.autoRefused}',
+                        ),
+                        AdminField(
+                          l10n.adminReadyAlerts,
+                          '${x.readyAlerts}',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               if (vm.coverage case final cover?)
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 440),

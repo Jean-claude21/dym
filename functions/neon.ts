@@ -36,6 +36,14 @@ export default defineConfig({
   },
   // `main` (production) et `staging` sont durables ; les branches de
   triggers: {
+    dispatchWatch: {
+      type: "schedule",
+      function: "api",
+      functionPath: "/v1/jobs/dispatch-watch",
+      // SQL refuse les commandes sans réponse et relance les livreurs selon les délais du pays (spec 066).
+      cron: "*/5 * * * *",
+      enabled: true,
+    },
     vendorRecaps: {
       type: "schedule",
       function: "api",

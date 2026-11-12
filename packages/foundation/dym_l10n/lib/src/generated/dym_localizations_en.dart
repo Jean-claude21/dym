@@ -1663,6 +1663,9 @@ class DymLocalizationsEn extends DymLocalizations {
   String get reasonOther => 'Other reason';
 
   @override
+  String get reasonNoResponse => 'The shop didn\'t answer in time';
+
+  @override
   String get notificationsTitle => 'Notifications';
 
   @override
@@ -2065,6 +2068,54 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminCoverageTitle => 'Outside served areas';
+
+  @override
+  String get opsAutoDispatch => 'Automatic delivery';
+
+  @override
+  String get opsAutoRefuse => 'Automatic refusal with no answer (minutes)';
+
+  @override
+  String get opsRelaunch => 'Courier relaunch (minutes)';
+
+  @override
+  String get opsRelaunchMax => 'Number of relaunches (0: none)';
+
+  @override
+  String get adminDispatchTitle => 'Deliveries';
+
+  @override
+  String get adminCouriersOnline => 'Couriers online';
+
+  @override
+  String adminCouriersOnlineValue(int online, int active) {
+    return '$online of $active';
+  }
+
+  @override
+  String get adminMissionsWaiting => 'No courier';
+
+  @override
+  String get adminMedianAccept => 'Median pickup';
+
+  @override
+  String adminMinutesValue(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get adminRelaunches => 'Relaunches';
+
+  @override
+  String adminRelaunchesValue(int count, int widened) {
+    return '$count, $widened to the whole city';
+  }
+
+  @override
+  String get adminAutoRefused => 'Auto-declined';
+
+  @override
+  String get adminReadyAlerts => '\"Ready\" alerts to couriers';
 
   @override
   String get adminCoverageHelp =>

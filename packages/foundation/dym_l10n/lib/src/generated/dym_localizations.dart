@@ -2881,6 +2881,12 @@ abstract class DymLocalizations {
   /// **'Autre raison'**
   String get reasonOther;
 
+  /// Motif de refus automatique (spec 066)
+  ///
+  /// In fr, this message translates to:
+  /// **'La boutique n\'a pas répondu à temps'**
+  String get reasonNoResponse;
+
   /// Titre du centre
   ///
   /// In fr, this message translates to:
@@ -3588,6 +3594,90 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Hors zone desservie'**
   String get adminCoverageTitle;
+
+  /// Carte des réglages : refus automatique et relances (spec 066)
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison automatique'**
+  String get opsAutoDispatch;
+
+  /// Délai avant refus automatique
+  ///
+  /// In fr, this message translates to:
+  /// **'Refus automatique sans réponse (minutes)'**
+  String get opsAutoRefuse;
+
+  /// Délai entre deux relances
+  ///
+  /// In fr, this message translates to:
+  /// **'Relance des livreurs (minutes)'**
+  String get opsRelaunch;
+
+  /// Relances maximum ; la ville entière dès la deuxième
+  ///
+  /// In fr, this message translates to:
+  /// **'Nombre de relances (0 : aucune)'**
+  String get opsRelaunchMax;
+
+  /// Carte du tableau de bord : livreurs et relances (spec 066)
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons'**
+  String get adminDispatchTitle;
+
+  /// Livreurs en ligne sur les actifs
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs en ligne'**
+  String get adminCouriersOnline;
+
+  /// Livreurs en ligne / actifs
+  ///
+  /// In fr, this message translates to:
+  /// **'{online} sur {active}'**
+  String adminCouriersOnlineValue(int online, int active);
+
+  /// Courses acceptées sans livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans livreur'**
+  String get adminMissionsWaiting;
+
+  /// Minutes entre la commande et la prise par un livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise médiane'**
+  String get adminMedianAccept;
+
+  /// Durée en minutes
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String adminMinutesValue(int minutes);
+
+  /// Relances de livreurs
+  ///
+  /// In fr, this message translates to:
+  /// **'Relances'**
+  String get adminRelaunches;
+
+  /// Relances et élargissements
+  ///
+  /// In fr, this message translates to:
+  /// **'{count} dont {widened} à toute la ville'**
+  String adminRelaunchesValue(int count, int widened);
+
+  /// Commandes refusées automatiquement
+  ///
+  /// In fr, this message translates to:
+  /// **'Refus auto'**
+  String get adminAutoRefused;
+
+  /// Livreurs prévenus que la commande est prête
+  ///
+  /// In fr, this message translates to:
+  /// **'Alertes « prête »'**
+  String get adminReadyAlerts;
 
   /// Aide de la carte couverture
   ///

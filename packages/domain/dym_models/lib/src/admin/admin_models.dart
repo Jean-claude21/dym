@@ -610,6 +610,35 @@ class AdminCity {
   final List<AdminZone> zones;
 }
 
+/// Livraisons sur une période (spec 066) : livreurs, courses sans livreur,
+/// délai de prise, relances, refus automatiques, alertes « prête ».
+@immutable
+@JsonSerializable()
+class AdminDispatch {
+  const new({
+    this.couriersActive = 0,
+    this.couriersOnline = 0,
+    this.waiting = 0,
+    this.medianAcceptMinutes,
+    this.relaunches = 0,
+    this.widened = 0,
+    this.autoRefused = 0,
+    this.readyAlerts = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminDispatchFromJson(json);
+
+  final int couriersActive;
+  final int couriersOnline;
+  final int waiting;
+  final int? medianAcceptMinutes;
+  final int relaunches;
+  final int widened;
+  final int autoRefused;
+  final int readyAlerts;
+}
+
 /// Positions hors zone sur une période, par pays le plus proche (spec 065).
 @immutable
 @JsonSerializable()

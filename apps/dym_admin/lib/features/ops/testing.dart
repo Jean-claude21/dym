@@ -1427,6 +1427,22 @@ class MemoryAdminService implements AdminService {
   ];
 
   @override
+  Future<Result<AdminDispatch>> dispatch(String period) async =>
+      _fail<AdminDispatch>() ??
+      const Ok(
+        AdminDispatch(
+          couriersActive: 18,
+          couriersOnline: 7,
+          waiting: 2,
+          medianAcceptMinutes: 6,
+          relaunches: 5,
+          widened: 2,
+          autoRefused: 1,
+          readyAlerts: 23,
+        ),
+      );
+
+  @override
   Future<Result<AdminCoverage>> coverage(String period) async =>
       _fail<AdminCoverage>() ??
       const Ok(

@@ -280,6 +280,13 @@ class AdminRepository {
     (json) => AdminDashboard.fromJson(_map(json)),
   );
 
+  /// Livreurs, relances et refus automatiques (spec 066).
+  Future<Result<AdminDispatch>> dispatch(String period) => _rpc(
+    'admin_dispatch',
+    {'p_period': period},
+    (json) => AdminDispatch.fromJson(_map(json)),
+  );
+
   /// Positions hors des zones desservies (spec 065).
   Future<Result<AdminCoverage>> coverage(String period) => _rpc(
     'admin_coverage',
