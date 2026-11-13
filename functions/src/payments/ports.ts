@@ -57,6 +57,11 @@ export interface PaymentProvider {
   verifyWebhook(rawBody: string, headers: Record<string, string | undefined>): boolean;
   /** `null` : corps illisible. */
   normalizeEvent(rawBody: string): NormalizedEvent | null;
+  /**
+   * Avis incomplet (Moneroo) : relit le paiement chez le fournisseur.
+   * `null` : rien à appliquer (paiement encore en cours).
+   */
+  resolveEvent?(rawBody: string): Promise<NormalizedEvent | null>;
 }
 
 /** Paiement à afficher sur la page du simulateur. */

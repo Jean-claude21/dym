@@ -1199,6 +1199,12 @@ class MemoryAdminService implements AdminService {
               kind: 'mobile_money',
               isActive: true,
             ),
+            AdminPaymentProvider(
+              code: 'moneroo',
+              label: LocalizedText({'fr': 'Moneroo'}),
+              kind: 'mobile_money',
+              isActive: true,
+            ),
           ],
         ),
       );
@@ -1218,12 +1224,16 @@ class MemoryAdminService implements AdminService {
       list[i] = AdminPaymentMethod(
         id: m.id,
         countryCode: m.countryCode,
-        providerCode: m.providerCode,
+        providerCode: method['provider_code'] as String? ?? m.providerCode,
         label: m.label,
         isActive: method['is_active'] as bool? ?? m.isActive,
         kind: m.kind,
       );
-      gestures.add('method:${m.id}:${list[i].isActive}');
+      gestures.add(
+        method.containsKey('provider_code')
+            ? 'method:${m.id}:${list[i].providerCode}'
+            : 'method:${m.id}:${list[i].isActive}',
+      );
       _methods[e.key] = list;
       return await paymentMethods(e.key);
     }

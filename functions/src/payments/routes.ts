@@ -65,7 +65,13 @@ async function handleWebhook(
   headers: Record<string, string | undefined>,
 ): Promise<string> {
   const signatureValid = provider.verifyWebhook(rawBody, headers);
-  const event = provider.normalizeEvent(rawBody);
+  const notice = provider.normalizeEvent(rawBody);
+  // Avis incomplet : le statut réel est relu chez le fournisseur (une erreur
+  // fait échouer la requête, le fournisseur renverra l'avis). Encore en
+  // cours : journalisé, rien d'appliqué.
+  const resolved =
+    signatureValid && notice && provider.resolveEvent ? await provider.resolveEvent(rawBody) : undefined;
+  const event = resolved === undefined ? notice : resolved;
   let payload: unknown;
   try {
     payload = JSON.parse(rawBody);
@@ -74,9 +80,9 @@ async function handleWebhook(
   }
   return deps.store.applyEvent({
     provider: provider.code,
-    eventId: event?.eventId ?? "",
+    eventId: event?.eventId ?? notice?.eventId ?? "",
     payload,
-    signatureValid: signatureValid && event !== null,
+    signatureValid: signatureValid && notice !== null,
     paymentId: event && uuid.safeParse(event.paymentId).success ? event.paymentId : null,
     outcome: event?.outcome ?? null,
     amountMinor: event ? event.amountMinor : null,
@@ -156,6 +162,18 @@ export function registerPaymentRoutes(
     if (!provider) throw httpErrors.notFound("simulateur indisponible");
     return { d, provider };
   };
+
+  // Retour depuis la page d'un fournisseur (Moneroo) : l'app suit le statut
+  // en direct ; cette page invite seulement à y revenir.
+  app.get("/v1/payments/return/:paymentId", (c) =>
+    c.html(`<!doctype html><html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>DYM</title>
+<style>body{margin:0;font-family:system-ui,sans-serif;background:#FAFAF7;color:#1B1F1C;display:flex;
+min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px}
+h1{color:#145C43;font-size:22px}p{color:#4E5852}</style></head><body><main>
+<h1>Paiement transmis</h1><p>Retourne dans l'app DYM : ta commande s'y met à jour.</p>
+<p lang="en">Payment sent. Go back to the DYM app: your order updates there.</p></main></body></html>`),
+  );
 
   app.get("/v1/payments/simulator/:paymentId", async (c) => {
     const { d } = simulator();
