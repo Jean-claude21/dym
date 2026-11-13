@@ -57,7 +57,7 @@
   "@welcomeSlide1Title": {
     "description": "Bienvenue, écran 1"
   },
-  "welcomeSlide1Body": "Les boutiques de ton quartier, un seul panier, livré en zem.",
+  "welcomeSlide1Body": "Les boutiques de ton quartier, un seul panier, livré chez toi.",
   "@welcomeSlide1Body": {
     "description": "Bienvenue, écran 1"
   },
@@ -73,7 +73,7 @@
   "@welcomeSlide3Title": {
     "description": "Bienvenue, écran 3"
   },
-  "welcomeSlide3Body": "Tu paies à la livraison ou par Mobile Money, et tu suis ton zem.",
+  "welcomeSlide3Body": "Tu paies à la livraison ou par Mobile Money, et tu suis ton livreur.",
   "@welcomeSlide3Body": {
     "description": "Bienvenue, écran 3"
   },
@@ -508,7 +508,7 @@
   "@storeDeliveryZonesTitle": {
     "description": "Titre de la liste des quartiers de livraison (inscription vendeuse)"
   },
-  "storeDeliverySubtitle": "Les quartiers où tu acceptes les commandes. DYM s'occupe du zem.",
+  "storeDeliverySubtitle": "Les quartiers où tu acceptes les commandes. DYM s'occupe du livreur.",
   "@storeDeliverySubtitle": {
     "description": "Étape 5"
   },

@@ -15,7 +15,7 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "tg.dym.dym_delivery"
+    namespace = "africa.dym.delivery"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -25,7 +25,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "tg.dym.dym_delivery"
+        applicationId = "africa.dym.delivery"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
