@@ -11826,6 +11826,54 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Son indisponible : vérifie ta connexion, puis rappelle.'**
   String get callMediaFailed;
+
+  /// Admin : libellé du choix du rôle d'un admin.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rôle'**
+  String get adminRoleLabel;
+
+  /// Rôle admin : tous les droits, gère les admins.
+  ///
+  /// In fr, this message translates to:
+  /// **'Super-admin'**
+  String get adminRoleSuperAdmin;
+
+  /// Rôle admin : commandes, litiges, boutiques, support.
+  ///
+  /// In fr, this message translates to:
+  /// **'Opérations'**
+  String get adminRoleOperations;
+
+  /// Rôle admin : demandes, litiges, lecture des commandes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Support'**
+  String get adminRoleSupport;
+
+  /// Rôle admin : paiements, remboursements, risques.
+  ///
+  /// In fr, this message translates to:
+  /// **'Finance'**
+  String get adminRoleFinance;
+
+  /// Rôle admin : catalogue, modération, recherche.
+  ///
+  /// In fr, this message translates to:
+  /// **'Contenu'**
+  String get adminRoleContent;
+
+  /// Rôle admin : tout lire, ne rien modifier.
+  ///
+  /// In fr, this message translates to:
+  /// **'Analyste'**
+  String get adminRoleAnalyst;
+
+  /// Admin, réglages : le rôle n'ouvre aucune section.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun réglage n\'est ouvert à ton rôle.'**
+  String get adminSettingsNoneForRole;
 }
 
 class _DymLocalizationsDelegate

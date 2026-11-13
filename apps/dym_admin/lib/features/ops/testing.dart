@@ -1701,11 +1701,74 @@ class MemoryAdminService implements AdminService {
   Future<Result<List<AdminMember>>> admins() async =>
       _fail<List<AdminMember>>() ?? Ok(List.of(_admins));
 
+  /// Accès de l'admin connecté (spec 085) ; super-admin par défaut.
+  AdminAccess access = AdminAccess(
+    role: AdminAccess.superAdmin,
+    permissions: {
+      for (final area in [
+        'dashboard',
+        'orders',
+        'disputes',
+        'stores',
+        'clients',
+        'finance',
+        'catalog',
+        'geography',
+        'content',
+        'support',
+        'risk',
+        'system',
+        'admins',
+      ])
+        for (final access in ['read', 'write']) '$area.$access',
+    },
+    roles: [
+      'super_admin',
+      'operations',
+      'support',
+      'finance',
+      'content',
+      'analyst',
+    ],
+  );
+
   @override
-  Future<Result<List<AdminMember>>> inviteAdmin(String email) async {
+  Future<Result<AdminAccess>> me() async => _fail<AdminAccess>() ?? Ok(access);
+
+  @override
+  Future<Result<List<AdminMember>>> inviteAdmin(
+    String email, {
+    String role = 'analyst',
+  }) async {
     final failed = _fail<List<AdminMember>>();
     if (failed != null) return failed;
-    _admins.add(AdminMember(email: email, isDefault: false, isActive: false));
+    _admins.add(
+      AdminMember(email: email, isDefault: false, isActive: false, role: role),
+    );
+    return Ok(List.of(_admins));
+  }
+
+  @override
+  Future<Result<List<AdminMember>>> setAdminRole(
+    String email,
+    String role,
+  ) async {
+    final failed = _fail<List<AdminMember>>();
+    if (failed != null) return failed;
+    final i = _admins.indexWhere((a) => a.email == email);
+    if (i >= 0) {
+      final a = _admins[i];
+      _admins[i] = AdminMember(
+        email: a.email,
+        isDefault: a.isDefault,
+        isActive: a.isActive,
+        userId: a.userId,
+        firstName: a.firstName,
+        since: a.since,
+        isMe: a.isMe,
+        role: role,
+      );
+    }
     return Ok(List.of(_admins));
   }
 

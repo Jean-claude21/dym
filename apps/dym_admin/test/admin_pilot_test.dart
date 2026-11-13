@@ -1,6 +1,7 @@
 import 'package:dym_admin/features/clients/clients_view.dart';
 import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/finance/finance_view.dart';
+import 'package:dym_admin/features/ops/admin_texts.dart';
 import 'package:dym_admin/features/ops/testing.dart';
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/settings/settings_viewmodel.dart';
@@ -301,5 +302,85 @@ void main() {
     await tester.tap(find.text('Journal'));
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
+  });
+
+  group('rôles des admins (spec 085)', () {
+    AdminAccess access(String role, List<String> permissions) => AdminAccess(
+      role: role,
+      permissions: permissions.toSet(),
+      roles: adminRoles,
+    );
+
+    testWidgets('support : ni finances ni journal dans le menu', (
+      tester,
+    ) async {
+      final admin = MemoryAdminService()
+        ..access = access('support', [
+          'dashboard.read',
+          'orders.read',
+          'disputes.read',
+          'disputes.write',
+          'stores.read',
+          'clients.read',
+          'support.read',
+          'support.write',
+        ]);
+      await _pump(
+        tester,
+        AdminHomeView(
+          service: _Auth(),
+          admin: admin,
+          navigator: _Navigator(),
+          clock: _clock,
+        ),
+      );
+      await _settle(tester);
+      expect(find.text('Finances'), findsNothing);
+      expect(find.text('Journal'), findsNothing);
+      expect(find.text('Support'), findsWidgets);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('analyste : réglages sans gestion des admins', (tester) async {
+      final admin = MemoryAdminService()
+        ..access = access('analyst', [
+          'dashboard.read',
+          'orders.read',
+          'stores.read',
+          'clients.read',
+          'finance.read',
+          'catalog.read',
+          'geography.read',
+          'content.read',
+          'support.read',
+          'risk.read',
+          'system.read',
+          'disputes.read',
+        ]);
+      await _pump(
+        tester,
+        AdminSettingsView(service: admin, access: admin.access),
+      );
+      await _settle(tester);
+      expect(find.text('Admins'), findsNothing);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('super-admin : invite avec un rôle', (tester) async {
+      final admin = MemoryAdminService();
+      await _pump(
+        tester,
+        AdminSettingsView(service: admin, access: admin.access),
+      );
+      await _settle(tester);
+      await tester.tap(find.text('Admins'));
+      await _settle(tester);
+      expect(find.text('Rôle'), findsWidgets);
+      await tester.enterText(find.byType(TextField).last, 'nouvelle@dym.test');
+      await tester.tap(find.text('Inviter'));
+      await _settle(tester);
+      expect(find.text('nouvelle@dym.test'), findsOneWidget);
+      expect(find.textContaining('Analyste'), findsWidgets);
+    });
   });
 }

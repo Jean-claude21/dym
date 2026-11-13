@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_admin/app/app.locator.dart';
 import 'package:dym_admin/features/audit/audit_view.dart';
 import 'package:dym_admin/features/clients/clients_view.dart';
@@ -15,7 +17,9 @@ import 'package:dym_admin/features/support/support_view.dart';
 import 'package:dym_admin/ui/inactivity_guard.dart';
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -82,6 +86,51 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           : null);
   late final AdminNavigator _navigator =
       widget.navigator ?? StackedAdminNavigator();
+
+  /// Rôle et permissions (spec 085) ; `null` tant qu'ils ne sont pas lus :
+  /// tout reste visible, la base refuse ce que le rôle ne permet pas.
+  AdminAccess? _access;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_loadAccess());
+  }
+
+  Future<void> _loadAccess() async {
+    if (await _admin.me() case Ok(:final value) when mounted) {
+      setState(() {
+        _access = value;
+        if (!_allowed(_tab)) {
+          _tab = _visibleDomains.map(_tabsOf).expand((t) => t).first;
+        }
+      });
+    }
+  }
+
+  /// Onglet ouvert au rôle : lecture du domaine concerné. Les réglages
+  /// restent toujours ouverts (déconnexion, sections filtrées).
+  bool _allowed(AdminTab tab) {
+    final access = _access;
+    if (access == null) return true;
+    return switch (tab) {
+      AdminTab.dashboard => access.reads('dashboard'),
+      AdminTab.ops || AdminTab.orders => access.reads('orders'),
+      AdminTab.disputes => access.reads('disputes'),
+      AdminTab.stores => access.reads('stores'),
+      AdminTab.clients => access.reads('clients'),
+      AdminTab.finance => access.reads('finance'),
+      AdminTab.support => access.reads('support'),
+      AdminTab.moderation => access.reads('content'),
+      AdminTab.settings => true,
+      AdminTab.audit => access.reads('system'),
+    };
+  }
+
+  List<AdminDomain> get _visibleDomains => [
+    for (final d in AdminDomain.values)
+      if (_tabsOf(d).isNotEmpty) d,
+  ];
 
   Future<void> _signOut({AdminNotice? notice}) async {
     await _service.signOut();
@@ -156,11 +205,13 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       AdminTab.settings => AdminSettingsView(
         service: _admin,
         onSignOut: _signOut,
+        access: _access,
       ),
       AdminTab.audit => AdminAuditView(service: _admin),
     };
     final domain = _domainOf(_tab);
     final tabs = _tabsOf(domain);
+    final domains = _visibleDomains;
     String tabLabel(AdminTab tab) => switch (tab) {
       AdminTab.ops => l10n.opsTitle,
       AdminTab.dashboard => l10n.adminNavDashboard,
@@ -179,11 +230,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       onTimeout: () => _signOut(notice: AdminNotice.inactive),
       child: DymAdaptiveScaffold(
         backgroundColor: c.background,
-        currentIndex: domain.index,
+        currentIndex: domains.indexOf(domain).clamp(0, domains.length - 1),
         maxBottomItems: 4,
         moreItem: DymNavItem(icon: Icons.menu_rounded, label: l10n.navMore),
         onDestinationSelected: (i) => setState(() {
-          _tab = _tabsOf(AdminDomain.values[i]).first;
+          _tab = _tabsOf(domains[i]).first;
           _orderId = null;
         }),
         railLeading: Padding(
@@ -195,22 +246,37 @@ class _AdminHomeViewState extends State<AdminHomeView> {
           ),
         ),
         destinations: [
-          DymNavItem(icon: Icons.show_chart_rounded, label: l10n.adminNavLive),
-          DymNavItem(icon: Icons.shopping_cart_outlined, label: l10n.navOrders),
-          DymNavItem(
-            icon: Icons.chat_bubble_outline_rounded,
-            label: l10n.adminNavSupport,
-          ),
-          DymNavItem(
-            icon: Icons.people_outline_rounded,
-            label: l10n.adminNavAccounts,
-          ),
-          DymNavItem(
-            icon: Icons.account_balance_outlined,
-            label: l10n.adminNavFinance,
-          ),
-          DymNavItem(icon: Icons.settings_outlined, label: l10n.adminNavConfig),
-          DymNavItem(icon: Icons.menu_book_outlined, label: l10n.adminNavAudit),
+          for (final d in domains)
+            switch (d) {
+              AdminDomain.live => DymNavItem(
+                icon: Icons.show_chart_rounded,
+                label: l10n.adminNavLive,
+              ),
+              AdminDomain.orders => DymNavItem(
+                icon: Icons.shopping_cart_outlined,
+                label: l10n.navOrders,
+              ),
+              AdminDomain.support => DymNavItem(
+                icon: Icons.chat_bubble_outline_rounded,
+                label: l10n.adminNavSupport,
+              ),
+              AdminDomain.accounts => DymNavItem(
+                icon: Icons.people_outline_rounded,
+                label: l10n.adminNavAccounts,
+              ),
+              AdminDomain.finance => DymNavItem(
+                icon: Icons.account_balance_outlined,
+                label: l10n.adminNavFinance,
+              ),
+              AdminDomain.settings => DymNavItem(
+                icon: Icons.settings_outlined,
+                label: l10n.adminNavConfig,
+              ),
+              AdminDomain.audit => DymNavItem(
+                icon: Icons.menu_book_outlined,
+                label: l10n.adminNavAudit,
+              ),
+            },
         ],
         body: SafeArea(
           child: Column(
@@ -264,7 +330,12 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     AdminTab.audit => AdminDomain.audit,
   };
 
-  List<AdminTab> _tabsOf(AdminDomain domain) => switch (domain) {
+  List<AdminTab> _tabsOf(AdminDomain domain) => [
+    for (final tab in _domainTabs(domain))
+      if (_allowed(tab)) tab,
+  ];
+
+  List<AdminTab> _domainTabs(AdminDomain domain) => switch (domain) {
     AdminDomain.live => [if (_ops != null) AdminTab.ops, AdminTab.dashboard],
     AdminDomain.orders => const [AdminTab.orders],
     AdminDomain.support => const [

@@ -350,8 +350,19 @@ class AdminRepository {
 
   /// L'email devient admin à sa première connexion (tout de suite s'il a un
   /// compte vérifié).
-  Future<Result<List<AdminMember>>> inviteAdmin(String email) =>
-      _rpc('admin_invite_admin', {'p_email': email}, _members);
+  Future<Result<List<AdminMember>>> inviteAdmin(
+    String email, {
+    String role = 'analyst',
+  }) =>
+      _rpc('admin_invite_admin', {'p_email': email, 'p_role': role}, _members);
+
+  /// Change le rôle d'un admin ou d'une invitation (super-admin, spec 085).
+  Future<Result<List<AdminMember>>> setAdminRole(String email, String role) =>
+      _rpc('admin_set_role', {'p_email': email, 'p_role': role}, _members);
+
+  /// Rôle et permissions de l'admin connecté (spec 085).
+  Future<Result<AdminAccess>> me() =>
+      _rpc('admin_me', const {}, (json) => AdminAccess.fromJson(_map(json)));
 
   Future<Result<List<AdminMember>>> removeAdmin(String email) =>
       _rpc('admin_remove_admin', {'p_email': email}, _members);

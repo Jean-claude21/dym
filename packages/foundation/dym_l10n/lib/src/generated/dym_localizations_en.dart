@@ -7110,4 +7110,28 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get callMediaFailed =>
       'No audio: check your connection, then call again.';
+
+  @override
+  String get adminRoleLabel => 'Role';
+
+  @override
+  String get adminRoleSuperAdmin => 'Super admin';
+
+  @override
+  String get adminRoleOperations => 'Operations';
+
+  @override
+  String get adminRoleSupport => 'Support';
+
+  @override
+  String get adminRoleFinance => 'Finance';
+
+  @override
+  String get adminRoleContent => 'Content';
+
+  @override
+  String get adminRoleAnalyst => 'Analyst';
+
+  @override
+  String get adminSettingsNoneForRole => 'No settings are open to your role.';
 }
