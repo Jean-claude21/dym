@@ -11,11 +11,12 @@ légères (Android 11, 2 Go de RAM) et désactivables.
 
 ## Décision
 
-- `lottie` (^3.8.2, pur Dart, rendu par `Canvas`) dans `dym_ui` seulement, derrière `DymSplash` et
-  `DymBrandSceneView`. Les apps ne dépendent pas de `lottie`.
-- Fichiers JSON dans `dym_ui/assets/brand/` : splash (150 Ko, légumes en WebP intégrés) et cinq
-  scènes vectorielles (11 à 35 Ko).
-- Animations réduites : dernière image (scène) ou pose finale du logo (splash), sans mouvement.
+- `lottie` (^3.8.2, pur Dart, rendu par `Canvas`) dans `dym_ui` seulement, derrière `DymSplash`.
+  Les apps ne dépendent pas de `lottie`.
+- Fichier JSON dans `dym_ui/assets/brand/` : splash (150 Ko, légumes en WebP intégrés), identique
+  à `docs/design/marque/splash-anime.gif` (4 s). Les accueils gardent des photos : le porteur les
+  juge plus parlantes que des scènes animées (2026-11-13).
+- Animations réduites : pose finale du logo, sans mouvement.
 - `rive` retiré de `PACKAGES.md`.
 
 ## Conséquences

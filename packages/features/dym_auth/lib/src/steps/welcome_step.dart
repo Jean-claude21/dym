@@ -4,9 +4,12 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Bienvenue de l'app cliente (design « Épuré ») : trois scènes animées de la
-/// marque, un message par écran, « Passer », puis Google ou email. Le texte
-/// n'est jamais posé sur l'illustration.
+ImageProvider _asset(String name) =>
+    AssetImage('assets/$name', package: 'dym_auth');
+
+/// Bienvenue de l'app cliente (design « Épuré ») : trois photos du quotidien
+/// en pleine largeur, un message par écran, « Passer », puis email ou
+/// Google. Le texte n'est jamais posé sur la photo.
 class WelcomeStep extends StatefulWidget {
   const new({required this.viewModel, super.key});
 
@@ -46,9 +49,21 @@ class _WelcomeStepState extends State<WelcomeStep> {
     final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
     final slides = [
-      (DymBrandScene.market, l10n.welcomeSlide1Title, l10n.welcomeSlide1Body),
-      (DymBrandScene.cart, l10n.welcomeSlide2Title, l10n.welcomeSlide2Body),
-      (DymBrandScene.delivery, l10n.welcomeSlide3Title, l10n.welcomeSlide3Body),
+      (
+        _asset('onb_market.webp'),
+        l10n.welcomeSlide1Title,
+        l10n.welcomeSlide1Body,
+      ),
+      (
+        _asset('onb_cook.webp'),
+        l10n.welcomeSlide2Title,
+        l10n.welcomeSlide2Body,
+      ),
+      (
+        _asset('onb_delivery.webp'),
+        l10n.welcomeSlide3Title,
+        l10n.welcomeSlide3Body,
+      ),
     ];
     final last = vm.welcomePage >= AuthFlowViewModel.welcomePages - 1;
     final skip = last
@@ -85,9 +100,9 @@ class _WelcomeStepState extends State<WelcomeStep> {
             controller: _pages,
             onPageChanged: vm.setWelcomePage,
             children: [
-              for (final (scene, title, body) in slides)
+              for (final (image, title, body) in slides)
                 _Slide(
-                  scene: scene,
+                  image: image,
                   title: title,
                   body: body,
                   landscape: landscape,
@@ -95,7 +110,7 @@ class _WelcomeStepState extends State<WelcomeStep> {
             ],
           );
           if (landscape) {
-            // Paysage : la scène à gauche, texte et boutons à droite.
+            // Paysage : la photo à gauche, texte et boutons à droite.
             return Stack(
               children: [
                 pages,
@@ -163,16 +178,16 @@ class _WelcomeStepState extends State<WelcomeStep> {
   }
 }
 
-/// Un écran du diaporama : scène animée, puis titre et texte.
+/// Un écran du diaporama : photo en pleine largeur, puis titre et texte.
 class _Slide extends StatelessWidget {
   const new({
-    required this.scene,
+    required this.image,
     required this.title,
     required this.body,
     required this.landscape,
   });
 
-  final DymBrandScene scene;
+  final ImageProvider image;
   final String title;
   final String body;
   final bool landscape;
@@ -181,13 +196,11 @@ class _Slide extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    final photo = SafeArea(
-      bottom: false,
-      right: !landscape,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 56, 16, 0),
-        child: DymBrandSceneView(scene),
-      ),
+    final photo = Image(
+      image: image,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      errorBuilder: (_, _, _) => ColoredBox(color: c.tintVertTendre),
     );
     final text = Column(
       mainAxisSize: MainAxisSize.min,
@@ -231,7 +244,7 @@ class _Slide extends StatelessWidget {
           gutter: DymLayout.gutter(context),
           maxWidth: DymTokenLayout.formMax,
         );
-        // La scène prend ce que le texte laisse ; le texte se réduit plutôt
+        // La photo prend ce que le texte laisse ; le texte se réduit plutôt
         // que de déborder (petit téléphone, texte agrandi).
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -255,7 +268,7 @@ class _Slide extends StatelessWidget {
   }
 }
 
-/// « Passer » en haut de l'écran : pastille blanche bordée.
+/// « Passer » posé sur la photo : pastille blanche, lisible sur toute image.
 class _PhotoChip extends StatelessWidget {
   const new({required this.label, required this.onTap});
 
@@ -365,14 +378,14 @@ class _Actions extends StatelessWidget {
   }
 }
 
-/// Bienvenue des apps vendeuse et livreur (design « Épuré ») : une scène
-/// animée du métier, le nom de l'app, trois promesses, puis Google ou email.
+/// Bienvenue des apps vendeuse et livreur (design « Épuré ») : une photo du
+/// métier, le nom de l'app, trois promesses, puis email ou Google.
 class VendorWelcomeStep extends StatelessWidget {
   const new({required this.viewModel, super.key, this.delivery = false});
 
   final AuthFlowViewModel viewModel;
 
-  /// Accueil de l'app livreur (mêmes gestes, autre scène et autres textes).
+  /// Accueil de l'app livreur (mêmes gestes, autre photo et autres textes).
   final bool delivery;
 
   @override
@@ -392,14 +405,11 @@ class VendorWelcomeStep extends StatelessWidget {
             (Icons.receipt_long_outlined, l10n.vendorPoint2),
             (Icons.payments_outlined, l10n.vendorPoint3),
           ];
-    final photo = SafeArea(
-      bottom: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        child: DymBrandSceneView(
-          delivery ? DymBrandScene.courier : DymBrandScene.vendor,
-        ),
-      ),
+    final photo = Image(
+      image: _asset(delivery ? 'courier_hero.webp' : 'vendor_hero.webp'),
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      errorBuilder: (_, _, _) => ColoredBox(color: c.tintVertTendre),
     );
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -463,7 +473,7 @@ class VendorWelcomeStep extends StatelessWidget {
             gutter: DymLayout.gutter(context),
             maxWidth: DymTokenLayout.formMax,
           );
-          // Petit écran : la scène garde 42 % de la hauteur, le reste
+          // Petit écran : la photo garde un tiers de la hauteur, le reste
           // défile sans jamais masquer les boutons.
           return SingleChildScrollView(
             child: Column(

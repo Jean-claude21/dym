@@ -87,9 +87,12 @@ MemoryContentService _service() => MemoryContentService(
   },
 );
 
-/// La vidéo est remplacée par une illustration du design system.
+/// La vidéo est remplacée par la photo de cuisine des pages d'entrée.
 Widget _video(BuildContext context, Uri url, {required bool active}) =>
-    const Image(image: DymIllustrations.storeOpened, fit: BoxFit.cover);
+    const Image(
+      image: AssetImage('assets/onb_cook.webp', package: 'dym_auth'),
+      fit: BoxFit.cover,
+    );
 
 Widget _shell(Widget feed) => Builder(
   builder: (context) {

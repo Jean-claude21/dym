@@ -50,23 +50,6 @@ void main() {
     });
   }
 
-  testWidgets('animations réduites : scène figée sur sa dernière image', (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      const SizedBox(
-        width: 360,
-        height: 300,
-        child: DymBrandSceneView(DymBrandScene.cart),
-      ),
-      reduce: true,
-    );
-    final lottie = tester.widget<Lottie>(find.byType(Lottie));
-    expect(lottie.controller!.value, 1);
-    expect(tester.hasRunningAnimations, isFalse);
-  });
-
   testWidgets('animations réduites : entrée du splash signalée aussitôt', (
     tester,
   ) async {
@@ -77,12 +60,5 @@ void main() {
       reduce: true,
     );
     expect(done, isTrue);
-  });
-
-  test('chaque scène a son fichier', () {
-    expect(
-      DymBrandScene.values.map((s) => s.file).toSet(),
-      hasLength(DymBrandScene.values.length),
-    );
   });
 }

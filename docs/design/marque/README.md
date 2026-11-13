@@ -18,9 +18,9 @@ Les fichiers servis aux apps sont dans `packages/ui/dym_ui/assets/brand/` (déci
 ```bash
 pip install fonttools pillow
 python sources/brand.py    # logo, icônes, splash (police Inter de dym_ui)
-python sources/scenes.py   # cinq scènes d'accueil (onb-*.json)
-python sources/icons.py    # icônes Android et iOS, image du splash natif (Edge sans tête)
+python sources/icons.py    # icônes Android et iOS (Edge sans tête)
 ```
 
-Les fichiers générés arrivent dans `sources/`. Copier ensuite `splash-dym.json` en `assets/brand/splash.json` et `onb-<scène>.json` en
-`assets/brand/onb_<scène>.json`.
+Les fichiers générés arrivent dans `sources/`. Copier ensuite `splash-dym.json` en
+`packages/ui/dym_ui/assets/brand/splash.json`. Le splash natif n'affiche que le fond `#FAFAF7` :
+le démarrage visible est uniquement `splash-anime.gif`.
