@@ -15,17 +15,19 @@ val keystoreProperties = Properties().apply {
 }
 
 android {
-    namespace = "africa.dym.client"
+    namespace = "africa.dym.dym_client"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Exigé par flutter_local_notifications (notifications, spec 069).
+        isCoreLibraryDesugaringEnabled = true
     }
 
     defaultConfig {
-        applicationId = "africa.dym.client"
+        applicationId = "africa.dym.dym_client"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -68,4 +70,14 @@ kotlin {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
+}
+
+// Notifications (FCM) : `google-services.json` (hors dépôt, console Firebase).
+// Absent (CI, autre poste) : l'app se construit sans push.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
 }

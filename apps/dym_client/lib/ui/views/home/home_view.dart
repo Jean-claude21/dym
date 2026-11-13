@@ -15,6 +15,7 @@ import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -77,6 +78,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
+    if (locator.isRegistered<PushNotifications>()) {
+      unawaited(locator<PushNotifications>().start());
+    }
     final content = _content;
     if (content != null) {
       unawaited(

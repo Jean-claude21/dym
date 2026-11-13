@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_delivery/app/app.locator.dart';
@@ -6,6 +8,7 @@ import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_delivery/features/missions/missions_views.dart';
 import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -45,6 +48,15 @@ class _HomeViewState extends State<HomeView> {
 
   /// Change à chaque mission acceptée : la course en cours se recharge.
   int _runs = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Notifications du téléphone (spec 069), une fois connecté.
+    if (locator.isRegistered<PushNotifications>()) {
+      unawaited(locator<PushNotifications>().start());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

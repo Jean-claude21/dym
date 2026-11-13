@@ -11,8 +11,11 @@ encore publiée ni enregistrée dans Firebase.
 
 ## Décision
 
-- Android (`applicationId`, `namespace`, paquet Kotlin) et iOS (`PRODUCT_BUNDLE_IDENTIFIER`) :
-  `africa.dym.client`, `africa.dym.vendor`, `africa.dym.delivery`.
+- Android (`applicationId`, `namespace`, paquet Kotlin) : `africa.dym.dym_client`,
+  `africa.dym.dym_vendor`, `africa.dym.dym_delivery` (noms enregistrés dans Firebase, projet
+  `do-your-market`).
+- iOS (`PRODUCT_BUNDLE_IDENTIFIER`, sans « _ » permis par Apple) : `africa.dym.client`,
+  `africa.dym.vendor`, `africa.dym.delivery`.
 - Aucun identifiant, texte visible ou mot régional propre à un pays dans le code (« zem » remplacé par
   « livreur ») ; pays, villes et termes locaux vivent dans les données de référence.
 
