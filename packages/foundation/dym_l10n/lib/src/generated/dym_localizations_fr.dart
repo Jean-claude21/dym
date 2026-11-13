@@ -7030,4 +7030,10 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get vendorPublishStatus => 'Publier un statut';
+
+  @override
+  String get missionCall => 'Appeler';
+
+  @override
+  String get missionRoute => 'Itinéraire';
 }

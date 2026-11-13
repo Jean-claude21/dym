@@ -6982,4 +6982,10 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get vendorPublishStatus => 'Post a status';
+
+  @override
+  String get missionCall => 'Call';
+
+  @override
+  String get missionRoute => 'Directions';
 }

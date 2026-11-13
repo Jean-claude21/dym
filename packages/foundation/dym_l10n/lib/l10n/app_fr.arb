@@ -7923,5 +7923,13 @@
   "vendorPublishStatus": "Publier un statut",
   "@vendorPublishStatus": {
     "description": "Accueil vendeuse : raccourci de publication"
+  },
+  "missionCall": "Appeler",
+  "@missionCall": {
+    "description": "Livreur : appeler la boutique ou la cliente"
+  },
+  "missionRoute": "Itinéraire",
+  "@missionRoute": {
+    "description": "Livreur : ouvrir l'itinéraire dans l'app de cartes"
   }
 }

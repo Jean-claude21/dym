@@ -11652,6 +11652,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Publier un statut'**
   String get vendorPublishStatus;
+
+  /// Livreur : appeler la boutique ou la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get missionCall;
+
+  /// Livreur : ouvrir l'itinéraire dans l'app de cartes
+  ///
+  /// In fr, this message translates to:
+  /// **'Itinéraire'**
+  String get missionRoute;
 }
 
 class _DymLocalizationsDelegate

@@ -533,6 +533,8 @@ class MissionCard extends StatelessWidget {
     required this.money,
     this.action,
     this.secondary,
+    this.onCall,
+    this.onRoute,
     super.key,
   });
 
@@ -540,6 +542,12 @@ class MissionCard extends StatelessWidget {
   final String Function(int minor) money;
   final Widget? action;
   final Widget? secondary;
+
+  /// Course acceptée : appeler la boutique ou la cliente (spec 078).
+  final ValueChanged<String>? onCall;
+
+  /// Course acceptée : itinéraire vers un lieu (latitude, longitude).
+  final void Function(double latitude, double longitude)? onRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -560,6 +568,42 @@ class MissionCard extends StatelessWidget {
           ),
           if (p.landmark case final landmark?) Text(landmark),
           if (p.phone case final phone?) SelectableText(phone),
+          // Gestes du terrain : appeler, ouvrir l'itinéraire (spec 078).
+          if ((onCall != null && p.phone != null) ||
+              (onRoute != null && p.latitude != null && p.longitude != null))
+            Padding(
+              padding: const EdgeInsets.only(top: DymTokenSpace.s1),
+              child: Wrap(
+                spacing: DymTokenSpace.s2,
+                runSpacing: DymTokenSpace.s1,
+                children: [
+                  if ((onCall, p.phone) case (final call?, final phone?))
+                    OutlinedButton.icon(
+                      onPressed: () => call(phone),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(48, DymTokenSize.touchMin),
+                        foregroundColor: c.brandDeep,
+                      ),
+                      icon: const Icon(Icons.call_rounded, size: 20),
+                      label: Text(l10n.missionCall),
+                    ),
+                  if ((onRoute, p.latitude, p.longitude) case (
+                    final route?,
+                    final lat?,
+                    final lng?,
+                  ))
+                    OutlinedButton.icon(
+                      onPressed: () => route(lat, lng),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(48, DymTokenSize.touchMin),
+                        foregroundColor: c.brandDeep,
+                      ),
+                      icon: const Icon(Icons.directions_rounded, size: 20),
+                      label: Text(l10n.missionRoute),
+                    ),
+                ],
+              ),
+            ),
         ],
       ),
     );
@@ -845,10 +889,21 @@ class MyRunsViewModel extends BaseViewModel {
 /// Courses du livreur : en cours (récupérer, livrer, rendre), posées dans
 /// « Missions » ([embedded]), ou terminées dans « Historique ».
 class MyRunsView extends StackedView<MyRunsViewModel> {
-  const new({required this.service, super.key, this.history = false})
-    : embedded = !history;
+  const new({
+    required this.service,
+    super.key,
+    this.history = false,
+    this.onCall,
+    this.onRoute,
+  }) : embedded = !history;
 
   final MissionsService service;
+
+  /// Appeler un lieu de la course (spec 078).
+  final ValueChanged<String>? onCall;
+
+  /// Itinéraire vers un lieu de la course (spec 078).
+  final void Function(double latitude, double longitude)? onRoute;
 
   /// Historique : courses livrées seulement, page à part entière.
   final bool history;
@@ -874,6 +929,8 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
     Widget card(Mission m) => MissionCard(
       mission: m,
       money: vm.money,
+      onCall: onCall,
+      onRoute: onRoute,
       action: switch (m.next.firstOrNull) {
         'out_for_delivery' => DymButton(
           label: l10n.missionPickedUp,

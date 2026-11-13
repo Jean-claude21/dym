@@ -2045,5 +2045,7 @@
   "vendorVsWeek": "vs last week",
   "vendorVsMonth": "vs last month",
   "productOutOfStockShort": "Out of stock",
-  "vendorPublishStatus": "Post a status"
+  "vendorPublishStatus": "Post a status",
+  "missionCall": "Call",
+  "missionRoute": "Directions"
 }

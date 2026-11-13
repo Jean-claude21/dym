@@ -48,11 +48,20 @@ Mission _mission(
   scheduledEnd: DateTime(2026, 11, 12, 10),
   storage: storage,
   next: const ['out_for_delivery'],
-  store: MissionPlace(name: store, zoneName: 'Bè'),
+  store: MissionPlace(
+    name: store,
+    zoneName: 'Bè',
+    phone: '+000 90 00 00 01',
+    latitude: 6.13,
+    longitude: 1.22,
+  ),
   customer: const MissionPlace(
     name: 'Awa',
     zoneName: 'Bè',
     landmark: 'Portail bleu après la pharmacie',
+    phone: '+000 90 00 00 02',
+    latitude: 6.14,
+    longitude: 1.23,
   ),
 );
 
@@ -152,7 +161,11 @@ void main() {
       MissionsView(
         service: service,
         onAccepted: () {},
-        active: MyRunsView(service: service),
+        active: MyRunsView(
+          service: service,
+          onCall: (_) {},
+          onRoute: (_, _) {},
+        ),
       ),
     );
   });
