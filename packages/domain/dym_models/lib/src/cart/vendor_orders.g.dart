@@ -199,6 +199,10 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) =>
             v == null ? null : OrderCourier.fromJson(v as Map<String, dynamic>),
       ),
+      respondBy: $checkedConvert(
+        'respond_by',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
     );
     return val;
   },
@@ -224,6 +228,7 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
     'statusNote': 'status_note',
     'refundDue': 'refund_due',
     'nextStatuses': 'next_statuses',
+    'respondBy': 'respond_by',
   },
 );
 

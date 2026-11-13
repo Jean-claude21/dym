@@ -94,9 +94,22 @@ class VendorOrder {
     this.history = const [],
     this.nextStatuses = const [],
     this.courier,
+    this.respondBy,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$VendorOrderFromJson(json);
+
+  /// Heure limite de réponse avant le refus automatique (spec 075) ; nulle
+  /// une fois la commande acceptée ou refusée.
+  final DateTime? respondBy;
+
+  /// Minutes restantes pour répondre (0 : délai dépassé ; nul : sans objet).
+  int? minutesToRespond(DateTime now) {
+    final by = respondBy;
+    if (by == null) return null;
+    final m = by.difference(now).inMinutes;
+    return m < 0 ? 0 : m;
+  }
 
   /// Livreur de la commande, une fois assigné (spec 068).
   final OrderCourier? courier;

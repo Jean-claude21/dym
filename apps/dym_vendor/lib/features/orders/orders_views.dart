@@ -9,7 +9,6 @@ import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_viewmodels.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 /// Chargement, échec ou hors ligne d'un écran de commandes.
@@ -169,19 +168,71 @@ String _title(DymLocalizations l10n, VendorOrder o) =>
 String _time(BuildContext context, DateTime at) =>
     TimeOfDay.fromDateTime(at.toLocal()).format(context);
 
+/// Pastille « Réponds avant 13:35 · 18 min restantes » (spec 075) ; rouge
+/// sous 5 minutes.
+class RespondCountdown extends StatelessWidget {
+  const new({required this.respondBy, required this.minutesLeft, super.key});
+
+  final DateTime respondBy;
+  final int? minutesLeft;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final left = minutesLeft;
+    final urgent = left != null && left <= 5;
+    final (bg, fg) = urgent
+        ? (c.tintPimentClair, c.pimentStrong)
+        : (c.tintPeche, c.originMaisonFg);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.timer_outlined, size: 16, color: fg),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              [
+                l10n.vendorRespondBefore(_time(context, respondBy)),
+                if (left != null) l10n.vendorMinutesLeft(left),
+              ].join(' · '),
+              style: t.label.copyWith(color: fg, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 // ------------------------------------------------------------------ 41
 
 /// Écran 41 : commandes de la boutique (payées ou en cash), les plus récentes
 /// d'abord ; relues toutes les 20 s.
 class OrdersView extends StackedView<OrdersViewModel> {
-  const new({required this.service, required this.onOpen, super.key});
+  const new({
+    required this.service,
+    required this.onOpen,
+    super.key,
+    this.clock = DateTime.now,
+  });
 
   final OrdersService service;
   final ValueChanged<String> onOpen;
 
+  /// Heure courante (compte à rebours) ; fixée en test.
+  final DateTime Function() clock;
+
   @override
   OrdersViewModel viewModelBuilder(BuildContext context) =>
-      OrdersViewModel(service: service);
+      OrdersViewModel(service: service)..clock = clock;
 
   @override
   void onViewModelReady(OrdersViewModel viewModel) => viewModel.load();
@@ -195,15 +246,9 @@ class OrdersView extends StackedView<OrdersViewModel> {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final vm = viewModel
-      // Nouvelle commande : son, vibration et message (avant le push FCM).
-      ..onArrival = () {
-        unawaited(SystemSound.play(SystemSoundType.alert));
-        unawaited(HapticFeedback.heavyImpact());
-        ScaffoldMessenger.maybeOf(context)
-          ?..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(l10n.vendorNewOrderAlert)));
-      };
+    // Nouvelle commande : alerte plein écran sur tous les onglets
+    // (`NewOrderAlertHost`, spec 075).
+    final vm = viewModel;
     if (!vm.ready) {
       return SafeArea(
         child: _State(failure: vm.isBusy ? null : vm.failure, onRetry: vm.load),
@@ -277,6 +322,7 @@ class OrdersView extends StackedView<OrdersViewModel> {
                   child: _OrderCard(
                     order: o,
                     total: vm.money(o.totalMinor),
+                    now: vm.clock(),
                     onTap: () => onOpen(o.id),
                   ),
                 ),
@@ -289,10 +335,16 @@ class OrdersView extends StackedView<OrdersViewModel> {
 }
 
 class _OrderCard extends StatelessWidget {
-  const new({required this.order, required this.total, required this.onTap});
+  const new({
+    required this.order,
+    required this.total,
+    required this.now,
+    required this.onTap,
+  });
 
   final VendorOrder order;
   final Money? total;
+  final DateTime now;
   final VoidCallback onTap;
 
   @override
@@ -352,7 +404,18 @@ class _OrderCard extends StatelessWidget {
                 style: t.label.copyWith(color: c.textSecondary),
               ),
               const SizedBox(height: DymTokenSpace.s2),
-              PaymentPill(paid: order.isPaid),
+              Wrap(
+                spacing: DymTokenSpace.s2,
+                runSpacing: DymTokenSpace.s1,
+                children: [
+                  PaymentPill(paid: order.isPaid),
+                  if (order.respondBy case final by?)
+                    RespondCountdown(
+                      respondBy: by,
+                      minutesLeft: order.minutesToRespond(now),
+                    ),
+                ],
+              ),
             ],
           ),
         ),
@@ -370,6 +433,7 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
     required this.orderId,
     required this.onBack,
     super.key,
+    this.clock = DateTime.now,
     this.adjustments,
   });
 
@@ -377,12 +441,15 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
   final VendorAdjustmentsService? adjustments;
 
   final OrdersService service;
+
+  /// Heure courante (compte à rebours) ; fixée en test.
+  final DateTime Function() clock;
   final String orderId;
   final VoidCallback onBack;
 
   @override
   OrderDetailViewModel viewModelBuilder(BuildContext context) =>
-      OrderDetailViewModel(service: service, orderId: orderId);
+      OrderDetailViewModel(service: service, orderId: orderId)..clock = clock;
 
   @override
   void onViewModelReady(OrderDetailViewModel viewModel) => viewModel.load();
@@ -607,6 +674,22 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
+                    if (order.respondBy case final by?) ...[
+                      const SizedBox(height: DymTokenSpace.s2),
+                      RespondCountdown(
+                        respondBy: by,
+                        minutesLeft: order.minutesToRespond(vm.clock()),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        l10n.vendorAutoRefuseAt(_time(context, by)),
+                        style: t.label.copyWith(
+                          fontSize: 12,
+                          color: c.brandDeep,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

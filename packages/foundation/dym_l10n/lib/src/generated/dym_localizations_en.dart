@@ -6911,4 +6911,46 @@ class DymLocalizationsEn extends DymLocalizations {
   String trackOrderedOn(String date, String time) {
     return 'Ordered on $date at $time';
   }
+
+  @override
+  String get vendorAlertTitle => 'New order!';
+
+  @override
+  String get vendorAlertOpen => 'View order';
+
+  @override
+  String get vendorAlertLater => 'Later';
+
+  @override
+  String vendorAlertMore(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count more orders are waiting',
+      one: '1 more order is waiting',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String vendorRespondBefore(String time) {
+    return 'Reply before $time';
+  }
+
+  @override
+  String vendorMinutesLeft(int minutes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      minutes,
+      locale: localeName,
+      other: '$minutes min left',
+      one: '1 min left',
+      zero: 'time is up',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String vendorAutoRefuseAt(String time) {
+    return 'Without a reply, the order will be refused at $time.';
+  }
 }

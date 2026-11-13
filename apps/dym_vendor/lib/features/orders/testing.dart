@@ -216,5 +216,9 @@ class MemoryOrdersService implements OrdersService {
           s,
     ],
     courier: o.courier,
+    // Miroir de `app.order_respond_by` (délai par défaut : 20 min).
+    respondBy: status == OrderStatus.pending
+        ? (o.respondBy ?? o.createdAt.add(const Duration(minutes: 20)))
+        : null,
   );
 }

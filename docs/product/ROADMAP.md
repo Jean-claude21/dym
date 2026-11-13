@@ -212,6 +212,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `notifications-utiles` | Notifications plus utiles : montant et articles dans les textes, quatre canaux Android (commandes, messages, courses, infos), notifications d'une même commande ou conversation remplacées, « Nuit calme » (22 h – 7 h) | 2 h | ✅ Spec 072 |
 | `admin-pilotage` | Tableau de bord admin refait : à traiter, six chiffres comparés à la période précédente avec mini-courbes, évolution avec axes et survol, parcours d'achat, issues des commandes, livraisons, types de boutiques, échanges, classements ; grand écran, tablette, téléphone | 4 h | ✅ Spec 073 |
 | `parcours-client` | Parcours d'achat : suivi « en direct » (phase en clair, minutes restantes, avancement, appeler le livreur, écrire à la boutique, récapitulatif complet), format épuisé dit en clair | 2 h | ✅ Spec 074 |
+| `nouvelle-commande` | Nouvelle commande chez la vendeuse : alerte plein écran sur tous les onglets (son répété, montant, « Voir la commande »), compte à rebours avant refus automatique sur la carte et le détail | 2 h | ✅ Spec 075 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au
