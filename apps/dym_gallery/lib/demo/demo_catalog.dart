@@ -56,6 +56,7 @@ String originLabel(StoreOrigin origin) => switch (origin) {
   StoreOrigin.marche => 'Au marché',
   StoreOrigin.maison => 'Fait maison',
   StoreOrigin.magasin => 'Boutique',
+  StoreOrigin.supermarche => 'Supermarché',
 };
 
 abstract final class DemoCatalog {

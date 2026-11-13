@@ -11,7 +11,10 @@ enum StoreOrigin {
   maison(Icons.home_rounded),
 
   /// Boutique ou épicerie de quartier.
-  magasin(Icons.storefront_rounded);
+  magasin(Icons.storefront_rounded),
+
+  /// Supermarché ou supérette (spec 071).
+  supermarche(Icons.local_grocery_store_rounded);
 
   new(this.icon);
 
@@ -23,6 +26,7 @@ enum StoreOrigin {
     StoreOrigin.marche => c.originMarcheBg,
     StoreOrigin.maison => c.originMaisonBg,
     StoreOrigin.magasin => c.originBoutiqueBg,
+    StoreOrigin.supermarche => c.tintVertTendre,
   };
 
   /// Couleur du texte et de l'icône du badge (contraste AA mesuré).
@@ -30,5 +34,6 @@ enum StoreOrigin {
     StoreOrigin.marche => c.originMarcheFg,
     StoreOrigin.maison => c.originMaisonFg,
     StoreOrigin.magasin => c.originBoutiqueFg,
+    StoreOrigin.supermarche => c.brandDeep,
   };
 }

@@ -51,6 +51,15 @@ abstract final class DemoStore {
       'Tu as un magasin ou un kiosque.',
       'You have a shop or a kiosk.',
     ),
+    (
+      'supermarche',
+      'Supermarché',
+      'Supermarket',
+      'Tu gères un supermarché ou une supérette : rayons, caisses, produits '
+          'frais emballés.',
+      'You run a supermarket or a mini-market: aisles, checkouts, packed '
+          'fresh produce.',
+    ),
   ];
 
   static const _units = {
