@@ -287,6 +287,13 @@ class AdminRepository {
     (json) => AdminDispatch.fromJson(_map(json)),
   );
 
+  /// Pilotage : période comparée, courbe, entonnoir, issues (spec 073).
+  Future<Result<AdminOverview>> overview(String period) => _rpc(
+    'admin_overview',
+    {'p_period': period},
+    (json) => AdminOverview.fromJson(_map(json)),
+  );
+
   /// Messages, boutiques par origine, notifications (specs 070 à 072).
   Future<Result<AdminExchanges>> exchanges(String period) => _rpc(
     'admin_exchanges',

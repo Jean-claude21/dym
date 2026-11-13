@@ -6745,4 +6745,139 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminStoresByOrigin => 'Boutiques actives par type';
+
+  @override
+  String get adminKpiSales => 'Ventes encaissées';
+
+  @override
+  String get adminKpiOrders => 'Commandes';
+
+  @override
+  String get adminKpiBasket => 'Panier moyen';
+
+  @override
+  String get adminKpiDeliveries => 'Livraisons réussies';
+
+  @override
+  String get adminKpiPayments => 'Paiements réussis';
+
+  @override
+  String get adminKpiSignups => 'Nouvelles inscriptions';
+
+  @override
+  String get adminVsDay => 'vs hier à la même heure';
+
+  @override
+  String get adminVsWeek => 'vs semaine dernière';
+
+  @override
+  String get adminVsMonth => 'vs mois dernier';
+
+  @override
+  String get adminDeltaNew => 'nouveau';
+
+  @override
+  String get adminTrendTitle => 'Évolution';
+
+  @override
+  String get adminTrendOrders => 'Commandes';
+
+  @override
+  String get adminTrendSales => 'Ventes';
+
+  @override
+  String get adminTrendDelivered => 'Livrées';
+
+  @override
+  String get adminFunnelTitle => 'Parcours d\'achat';
+
+  @override
+  String get adminFunnelActive => 'Clientes actives';
+
+  @override
+  String get adminFunnelViewed => 'Ont vu un produit';
+
+  @override
+  String get adminFunnelAdded => 'Ont rempli un panier';
+
+  @override
+  String get adminFunnelOrdered => 'Ont commandé';
+
+  @override
+  String get adminFunnelDelivered => 'Ont été livrées';
+
+  @override
+  String get adminFunnelHelp =>
+      'Personnes distinctes à chaque étape ; le pourcentage est le passage depuis l\'étape précédente.';
+
+  @override
+  String get adminTodoTitle => 'À traiter';
+
+  @override
+  String get adminTodoNone => 'Rien à traiter pour l\'instant.';
+
+  @override
+  String get adminOutcomesTitle => 'Issue des commandes';
+
+  @override
+  String get adminOutcomeDelivered => 'Livrées';
+
+  @override
+  String get adminOutcomeInProgress => 'En cours';
+
+  @override
+  String get adminOutcomeRefused => 'Refusées';
+
+  @override
+  String get adminOutcomeCancelled => 'Annulées';
+
+  @override
+  String get adminOutcomesCenter => 'commandes';
+
+  @override
+  String get adminStoresCenter => 'boutiques';
+
+  @override
+  String get adminSeeAll => 'Tout voir';
+
+  @override
+  String get adminColOrders => 'Commandes';
+
+  @override
+  String get adminColRating => 'Note';
+
+  @override
+  String get adminStatOnline => 'En ligne';
+
+  @override
+  String get adminStatWaiting => 'Sans livreur';
+
+  @override
+  String get adminStatMedian => 'Prise médiane';
+
+  @override
+  String get adminStatMessages => 'Messages';
+
+  @override
+  String get adminStatConversations => 'Conversations';
+
+  @override
+  String get adminPushLegendSent => 'Envoyées';
+
+  @override
+  String get adminPushLegendHeld => 'Retenues';
+
+  @override
+  String get adminPushLegendFailed => 'En échec';
+
+  @override
+  String get adminTopProducts => 'Produits les plus vendus';
+
+  @override
+  String get adminActiveUsersShort => 'Actives sur 7 jours';
+
+  @override
+  String adminPoints(int n) {
+    return '$n pt';
+  }
 }

@@ -4603,7 +4603,7 @@ abstract class DymLocalizations {
   /// **'N°'**
   String get adminColNumber;
 
-  /// Colonne : boutique
+  /// Pilotage : colonne
   ///
   /// In fr, this message translates to:
   /// **'Boutique'**
@@ -5767,7 +5767,7 @@ abstract class DymLocalizations {
   /// **'Commission calculée par la base au moment de la commande.'**
   String get adminCommissionNote;
 
-  /// Colonne
+  /// Pilotage : colonne
   ///
   /// In fr, this message translates to:
   /// **'Ventes'**
@@ -11178,6 +11178,270 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Boutiques actives par type'**
   String get adminStoresByOrigin;
+
+  /// Pilotage : chiffre
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes encaissées'**
+  String get adminKpiSales;
+
+  /// Pilotage : chiffre
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get adminKpiOrders;
+
+  /// Pilotage : chiffre
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier moyen'**
+  String get adminKpiBasket;
+
+  /// Pilotage : chiffre
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons réussies'**
+  String get adminKpiDeliveries;
+
+  /// Pilotage : chiffre
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiements réussis'**
+  String get adminKpiPayments;
+
+  /// Pilotage : chiffre
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelles inscriptions'**
+  String get adminKpiSignups;
+
+  /// Pilotage : comparaison
+  ///
+  /// In fr, this message translates to:
+  /// **'vs hier à la même heure'**
+  String get adminVsDay;
+
+  /// Pilotage : comparaison
+  ///
+  /// In fr, this message translates to:
+  /// **'vs semaine dernière'**
+  String get adminVsWeek;
+
+  /// Pilotage : comparaison
+  ///
+  /// In fr, this message translates to:
+  /// **'vs mois dernier'**
+  String get adminVsMonth;
+
+  /// Pilotage : rien sur la période précédente
+  ///
+  /// In fr, this message translates to:
+  /// **'nouveau'**
+  String get adminDeltaNew;
+
+  /// Pilotage : titre de la courbe
+  ///
+  /// In fr, this message translates to:
+  /// **'Évolution'**
+  String get adminTrendTitle;
+
+  /// Pilotage : série
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get adminTrendOrders;
+
+  /// Pilotage : série
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes'**
+  String get adminTrendSales;
+
+  /// Pilotage : série
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrées'**
+  String get adminTrendDelivered;
+
+  /// Pilotage : entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Parcours d\'achat'**
+  String get adminFunnelTitle;
+
+  /// Pilotage : entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Clientes actives'**
+  String get adminFunnelActive;
+
+  /// Pilotage : entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Ont vu un produit'**
+  String get adminFunnelViewed;
+
+  /// Pilotage : entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Ont rempli un panier'**
+  String get adminFunnelAdded;
+
+  /// Pilotage : entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Ont commandé'**
+  String get adminFunnelOrdered;
+
+  /// Pilotage : entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Ont été livrées'**
+  String get adminFunnelDelivered;
+
+  /// Pilotage : aide de l'entonnoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Personnes distinctes à chaque étape ; le pourcentage est le passage depuis l\'étape précédente.'**
+  String get adminFunnelHelp;
+
+  /// Pilotage : alertes
+  ///
+  /// In fr, this message translates to:
+  /// **'À traiter'**
+  String get adminTodoTitle;
+
+  /// Pilotage : aucune alerte
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien à traiter pour l\'instant.'**
+  String get adminTodoNone;
+
+  /// Pilotage : anneau
+  ///
+  /// In fr, this message translates to:
+  /// **'Issue des commandes'**
+  String get adminOutcomesTitle;
+
+  /// Pilotage : issue
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrées'**
+  String get adminOutcomeDelivered;
+
+  /// Pilotage : issue
+  ///
+  /// In fr, this message translates to:
+  /// **'En cours'**
+  String get adminOutcomeInProgress;
+
+  /// Pilotage : issue
+  ///
+  /// In fr, this message translates to:
+  /// **'Refusées'**
+  String get adminOutcomeRefused;
+
+  /// Pilotage : issue
+  ///
+  /// In fr, this message translates to:
+  /// **'Annulées'**
+  String get adminOutcomeCancelled;
+
+  /// Pilotage : centre de l'anneau
+  ///
+  /// In fr, this message translates to:
+  /// **'commandes'**
+  String get adminOutcomesCenter;
+
+  /// Pilotage : centre de l'anneau
+  ///
+  /// In fr, this message translates to:
+  /// **'boutiques'**
+  String get adminStoresCenter;
+
+  /// Pilotage : lien
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout voir'**
+  String get adminSeeAll;
+
+  /// Pilotage : colonne
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get adminColOrders;
+
+  /// Pilotage : colonne
+  ///
+  /// In fr, this message translates to:
+  /// **'Note'**
+  String get adminColRating;
+
+  /// Pilotage : livreurs
+  ///
+  /// In fr, this message translates to:
+  /// **'En ligne'**
+  String get adminStatOnline;
+
+  /// Pilotage : livreurs
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans livreur'**
+  String get adminStatWaiting;
+
+  /// Pilotage : livreurs
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise médiane'**
+  String get adminStatMedian;
+
+  /// Pilotage : échanges
+  ///
+  /// In fr, this message translates to:
+  /// **'Messages'**
+  String get adminStatMessages;
+
+  /// Pilotage : échanges
+  ///
+  /// In fr, this message translates to:
+  /// **'Conversations'**
+  String get adminStatConversations;
+
+  /// Pilotage : notifications
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyées'**
+  String get adminPushLegendSent;
+
+  /// Pilotage : notifications
+  ///
+  /// In fr, this message translates to:
+  /// **'Retenues'**
+  String get adminPushLegendHeld;
+
+  /// Pilotage : notifications
+  ///
+  /// In fr, this message translates to:
+  /// **'En échec'**
+  String get adminPushLegendFailed;
+
+  /// Pilotage : classement
+  ///
+  /// In fr, this message translates to:
+  /// **'Produits les plus vendus'**
+  String get adminTopProducts;
+
+  /// Pilotage : utilisatrices
+  ///
+  /// In fr, this message translates to:
+  /// **'Actives sur 7 jours'**
+  String get adminActiveUsersShort;
+
+  /// Pilotage : écart d'un taux en points
+  ///
+  /// In fr, this message translates to:
+  /// **'{n} pt'**
+  String adminPoints(int n);
 }
 
 class _DymLocalizationsDelegate
