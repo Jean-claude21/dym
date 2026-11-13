@@ -113,6 +113,12 @@ void main() {
     expect(service.calls, isEmpty);
   });
 
+  test('Google sans compte sur le téléphone : message dédié', () async {
+    service.googleResult = const Err(NotFoundFailure('google_no_account'));
+    await vm.chooseGoogle();
+    expect(vm.authError, AuthError.googleNoAccount);
+  });
+
   test('profil : prénom ou quartier manquant refusés sans requête', () async {
     await vm.startProfile();
     await vm.submitProfile();

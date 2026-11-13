@@ -337,6 +337,10 @@
   "@adminAccessDenied": {
     "description": "Accès refusé"
   },
+  "authGoogleNoAccount": "Aucun compte Google sur ce téléphone. Ajoute-en un dans les réglages, ou continue avec ton email.",
+  "@authGoogleNoAccount": {
+    "description": "Connexion Google : aucun compte sur l'appareil"
+  },
   "adminGoogleUnavailable": "La connexion Google n'est pas configurée pour cet environnement.",
   "@adminGoogleUnavailable": {
     "description": "Google non configuré"

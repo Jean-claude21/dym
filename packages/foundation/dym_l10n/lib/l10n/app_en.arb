@@ -79,6 +79,7 @@
   "adminSecurityNote": "Team access only · Signed out after 30 min of inactivity",
   "adminAuditNote": "Every action is recorded in the audit log.",
   "adminAccessDenied": "Restricted to the DYM team. This account has no admin rights.",
+  "authGoogleNoAccount": "No Google account on this phone. Add one in Settings, or continue with your email.",
   "adminGoogleUnavailable": "Google sign-in is not configured for this environment.",
   "adminSignedOutInactive": "You were signed out after 30 minutes of inactivity.",
   "navStore": "Shop",

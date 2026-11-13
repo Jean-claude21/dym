@@ -18,6 +18,9 @@ enum AuthError {
   firstNameInvalid,
   zoneRequired,
   googleUnavailable,
+
+  /// Aucun compte Google sur le téléphone.
+  googleNoAccount,
   passwordWrong,
 }
 
@@ -448,6 +451,7 @@ class AuthFlowViewModel extends BaseViewModel {
 
   AuthError _errorFor(Failure failure) => switch (failure) {
     NetworkFailure() || RateLimitedFailure() => AuthError.offline,
+    NotFoundFailure(message: 'google_no_account') => AuthError.googleNoAccount,
     UnauthenticatedFailure() => AuthError.sessionExpired,
     ValidationFailure() when _step == AuthStep.email => AuthError.emailInvalid,
     _ => AuthError.generic,
