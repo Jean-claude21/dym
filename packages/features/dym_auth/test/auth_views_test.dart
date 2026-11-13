@@ -54,9 +54,15 @@ Future<void> _pump(
 Future<void> _goTo(WidgetTester tester, AuthStep step) async {
   if (step == AuthStep.welcome || step == AuthStep.profile) return;
   Future<void> press(String label) async {
-    tester
-        .widget<DymButton>(find.widgetWithText(DymButton, label))
-        .onPressed!();
+    final dym = find.widgetWithText(DymButton, label);
+    if (dym.evaluate().isNotEmpty) {
+      tester.widget<DymButton>(dym).onPressed!();
+    } else {
+      // L'email passe en lien quand Google est proposé (Google d'abord).
+      tester
+          .widget<TextButton>(find.widgetWithText(TextButton, label))
+          .onPressed!();
+    }
     await tester.pump(const Duration(milliseconds: 400));
   }
 
