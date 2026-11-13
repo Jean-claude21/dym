@@ -11442,6 +11442,132 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{n} pt'**
   String adminPoints(int n);
+
+  /// Suivi : phase
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de la boutique'**
+  String get trackPhaseWaiting;
+
+  /// Suivi : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'{store} va confirmer ta commande.'**
+  String trackPhaseWaitingHint(String store);
+
+  /// Suivi : phase
+  ///
+  /// In fr, this message translates to:
+  /// **'En préparation'**
+  String get trackPhasePreparing;
+
+  /// Suivi : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'{store} prépare ta commande.'**
+  String trackPhasePreparingHint(String store);
+
+  /// Suivi : phase
+  ///
+  /// In fr, this message translates to:
+  /// **'Prête'**
+  String get trackPhaseReady;
+
+  /// Suivi : explication (livraison)
+  ///
+  /// In fr, this message translates to:
+  /// **'Un livreur va la récupérer.'**
+  String get trackPhaseReadyHint;
+
+  /// Suivi : explication (retrait)
+  ///
+  /// In fr, this message translates to:
+  /// **'Passe la récupérer chez {store}.'**
+  String trackPhaseReadyPickupHint(String store);
+
+  /// Suivi : phase
+  ///
+  /// In fr, this message translates to:
+  /// **'En route'**
+  String get trackPhaseOnTheWay;
+
+  /// Suivi : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta commande arrive, garde ton téléphone près de toi.'**
+  String get trackPhaseOnTheWayHint;
+
+  /// Suivi : phase
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée'**
+  String get trackPhaseDelivered;
+
+  /// Suivi : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon appétit ! Dis-nous si tout va bien.'**
+  String get trackPhaseDeliveredHint;
+
+  /// Suivi : phase (retrait)
+  ///
+  /// In fr, this message translates to:
+  /// **'Récupérée'**
+  String get trackPhaseCollected;
+
+  /// Suivi : temps restant
+  ///
+  /// In fr, this message translates to:
+  /// **'dans {minutes} min'**
+  String trackInMinutes(int minutes);
+
+  /// Suivi : première étape
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyée'**
+  String get trackSent;
+
+  /// Suivi : appeler le livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Appeler'**
+  String get trackCallCourier;
+
+  /// Suivi : détail de la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Récapitulatif'**
+  String get trackSummary;
+
+  /// Suivi : pas de frais de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Retrait en boutique'**
+  String get trackPickupFee;
+
+  /// Suivi : montant nul
+  ///
+  /// In fr, this message translates to:
+  /// **'Gratuit'**
+  String get trackFree;
+
+  /// Suivi : mode de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Payée · {method}'**
+  String trackPaidWith(String method);
+
+  /// Suivi : mode de paiement (à régler)
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement · {method}'**
+  String trackPayWith(String method);
+
+  /// Suivi : date de la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandée le {date} à {time}'**
+  String trackOrderedOn(String date, String time);
 }
 
 class _DymLocalizationsDelegate

@@ -296,12 +296,20 @@ class TrackingView extends StackedView<TrackingViewModel> {
     this.onDispute,
     this.onReview,
     this.onReordered,
+    this.onChat,
+    this.onCall,
     this.clock = DateTime.now,
     this.adjustments,
   });
 
   final OrdersService service;
   final String orderId;
+
+  /// Écrire à la boutique (identifiant de la boutique).
+  final ValueChanged<String>? onChat;
+
+  /// Appeler un numéro (livreur).
+  final ValueChanged<String>? onCall;
 
   /// Remplacements et garantie fraîcheur (spec 034) ; absents : masqués.
   final AdjustmentsService? adjustments;
@@ -346,7 +354,8 @@ class TrackingView extends StackedView<TrackingViewModel> {
           children: [
             CartHeader(
               title: order?.store.name ?? l10n.trackTitle,
-              subtitle: order == null
+              // Commande en cours : la phase est dite en grand juste dessous.
+              subtitle: order == null || vm.phase != TrackPhase.ended
                   ? null
                   : orderStatusLabel(
                       l10n,
@@ -368,6 +377,8 @@ class TrackingView extends StackedView<TrackingViewModel> {
                       onDispute: onDispute,
                       onReview: onReview,
                       onReordered: onReordered,
+                      onChat: onChat,
+                      onCall: onCall,
                       adjustments: adjustments,
                     ),
             ),
@@ -386,11 +397,15 @@ class _Tracking extends StatelessWidget {
     this.onDispute,
     this.onReview,
     this.onReordered,
+    this.onChat,
+    this.onCall,
     this.adjustments,
   });
 
   final TrackingViewModel vm;
   final CustomerOrder order;
+  final ValueChanged<String>? onChat;
+  final ValueChanged<String>? onCall;
   final AdjustmentsService? adjustments;
   final Future<bool> Function(String orderId, String storeName)? onReport;
   final ValueChanged<String>? onDispute;
@@ -445,15 +460,24 @@ class _Tracking extends StatelessWidget {
     final l10n = DymLocalizations.of(context);
     final pickup = order.fulfillment == Fulfillment.pickup;
     final eta = order.etaAt;
+    // Étape de préparation : « En préparation » tant qu'elle dure.
+    final preparing =
+        order.status == OrderStatus.accepted ||
+        order.status == OrderStatus.preparing;
     final steps = pickup
         ? [
+            (OrderStatus.pending, l10n.trackSent),
             (OrderStatus.accepted, l10n.trackConfirmed),
             (OrderStatus.ready, l10n.orderStatusReady),
             (OrderStatus.delivered, l10n.orderStatusCollected),
           ]
         : [
+            (OrderStatus.pending, l10n.trackSent),
             (OrderStatus.accepted, l10n.trackConfirmed),
-            (OrderStatus.ready, l10n.trackPrepared),
+            (
+              OrderStatus.ready,
+              preparing ? l10n.orderStatusPreparing : l10n.trackPrepared,
+            ),
             (OrderStatus.outForDelivery, l10n.orderStatusOutForDelivery),
             (OrderStatus.delivered, l10n.orderStatusDelivered),
           ];
@@ -467,42 +491,8 @@ class _Tracking extends StatelessWidget {
     ];
     final reached = order_.indexOf(order.status);
     final children = <Widget>[
-      if (eta != null && order.status.isActive)
-        // Heure prévue en tête, sur menthe (design « Épuré »).
-        CartCard(
-          color: c.tintVertTendre,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s2),
-            child: Row(
-              children: [
-                Container(
-                  width: 52,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: c.card,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    pickup
-                        ? Icons.storefront_outlined
-                        : Icons.delivery_dining_outlined,
-                    color: c.brandDeep,
-                    size: 28,
-                  ),
-                ),
-                const SizedBox(width: DymTokenSpace.s3),
-                Expanded(
-                  child: Text(
-                    pickup
-                        ? l10n.trackReadyAt(shortTime(context, eta))
-                        : l10n.trackArrives(shortTime(context, eta)),
-                    style: t.display.copyWith(fontSize: 26, color: c.brandDeep),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      if (vm.phase != TrackPhase.ended)
+        _PhaseCard(vm: vm, order: order, pickup: pickup, eta: eta),
       // Livreur assigné (spec 068) : nom et téléphone, pour se retrouver.
       if (order.courier case final courier?
           when order.status.isActive && !pickup)
@@ -526,6 +516,14 @@ class _Tracking extends StatelessWidget {
                   ],
                 ),
               ),
+              if (onCall case final call?)
+                DymButton(
+                  label: l10n.trackCallCourier,
+                  icon: Icons.call_rounded,
+                  compact: true,
+                  expanded: false,
+                  onPressed: () => call(courier.phone),
+                ),
             ],
           ),
         ),
@@ -576,42 +574,105 @@ class _Tracking extends StatelessWidget {
                   done: reached >= order_.indexOf(status),
                   current:
                       order.status == status ||
-                      (status == OrderStatus.ready &&
-                          order.status == OrderStatus.preparing &&
-                          i == 1),
-                  at: order.reachedAt(status),
+                      (status == OrderStatus.ready && preparing && !pickup),
+                  at: status == OrderStatus.pending
+                      ? order.createdAt
+                      : order.reachedAt(status),
                   last: i == steps.length - 1,
                 ),
             ],
           ),
         ),
+      if (onChat case final chat? when order.status.isActive) ...[
+        const SizedBox(height: DymTokenSpace.s3),
+        DymButton(
+          label: l10n.chatWriteToStore,
+          icon: Icons.chat_bubble_outline_rounded,
+          variant: DymButtonVariant.secondary,
+          onPressed: () => chat(order.store.id),
+        ),
+      ],
       const SizedBox(height: DymTokenSpace.s3),
       CartCard(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(l10n.trackSummary, style: t.title.copyWith(fontSize: 18)),
+            const SizedBox(height: DymTokenSpace.s2),
             for (final line in order.items)
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 2),
+                padding: const EdgeInsets.symmetric(vertical: 3),
                 child: Row(
                   children: [
+                    Container(
+                      constraints: const BoxConstraints(minWidth: 30),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: c.tintVertTendre,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        '${line.quantity}×',
+                        textAlign: TextAlign.center,
+                        style: t.label.copyWith(
+                          color: c.brandDeep,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: DymTokenSpace.s2),
                     Expanded(
                       child: Text(
-                        '${line.name} × ${line.quantity}',
-                        style: t.label.copyWith(fontSize: 15),
+                        line.name,
+                        style: t.body.copyWith(fontSize: 15),
                       ),
                     ),
                     if (vm.money(line.amountMinor) case final amount?)
-                      MoneyText(amount, size: 15, color: c.brandDeep),
+                      MoneyText(amount, size: 15),
                   ],
                 ),
               ),
             const Divider(height: 20),
             SumRow(
+              label: l10n.cartSubtotal,
+              amount: vm.money(order.subtotalMinor),
+            ),
+            if (pickup)
+              SumRow(label: l10n.trackPickupFee, text: l10n.trackFree)
+            else if (order.deliveryFeeMinor == 0)
+              SumRow(label: l10n.cartDelivery, text: l10n.trackFree)
+            else
+              SumRow(
+                label: l10n.cartDelivery,
+                amount: vm.money(order.deliveryFeeMinor),
+              ),
+            const SizedBox(height: 4),
+            SumRow(
               label: l10n.cartTotal,
               amount: vm.money(order.totalMinor),
               strong: true,
             ),
+            if (order.paymentMethod case final method?
+                when !order.payOnDelivery) ...[
+              const SizedBox(height: DymTokenSpace.s2),
+              Text(
+                order.paymentStatus == PaymentStatus.paid
+                    ? l10n.trackPaidWith(
+                        method.label.resolve(
+                          Localizations.localeOf(context).languageCode,
+                        ),
+                      )
+                    : l10n.trackPayWith(
+                        method.label.resolve(
+                          Localizations.localeOf(context).languageCode,
+                        ),
+                      ),
+                style: t.label.copyWith(color: c.textSecondary),
+              ),
+            ],
           ],
         ),
       ),
@@ -717,6 +778,16 @@ class _Tracking extends StatelessWidget {
       if (vm.statusChanged)
         CartIssue(label: l10n.orderStatusChanged, blocking: false),
       if (vm.offline) CartIssue(label: l10n.errorOffline, blocking: false),
+      const SizedBox(height: DymTokenSpace.s3),
+      Text(
+        l10n.trackOrderedOn(
+          MaterialLocalizations.of(context)
+              .formatShortMonthDay(order.createdAt.toLocal()),
+          shortTime(context, order.createdAt),
+        ),
+        textAlign: TextAlign.center,
+        style: t.label.copyWith(color: c.textSecondary),
+      ),
     ];
     return Column(
       children: [
@@ -742,6 +813,125 @@ class _Tracking extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+/// Phase en clair, heure prévue et avancement (spec 074).
+class _PhaseCard extends StatelessWidget {
+  const new({
+    required this.vm,
+    required this.order,
+    required this.pickup,
+    required this.eta,
+  });
+
+  final TrackingViewModel vm;
+  final CustomerOrder order;
+  final bool pickup;
+  final DateTime? eta;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final store = order.store.name;
+    final (title, hint, icon) = switch (vm.phase) {
+      TrackPhase.waiting => (
+        l10n.trackPhaseWaiting,
+        l10n.trackPhaseWaitingHint(store),
+        Icons.hourglass_top_rounded,
+      ),
+      TrackPhase.preparing => (
+        l10n.trackPhasePreparing,
+        l10n.trackPhasePreparingHint(store),
+        Icons.soup_kitchen_rounded,
+      ),
+      TrackPhase.ready => (
+        l10n.trackPhaseReady,
+        pickup
+            ? l10n.trackPhaseReadyPickupHint(store)
+            : l10n.trackPhaseReadyHint,
+        Icons.inventory_2_rounded,
+      ),
+      TrackPhase.onTheWay => (
+        l10n.trackPhaseOnTheWay,
+        l10n.trackPhaseOnTheWayHint,
+        Icons.delivery_dining_rounded,
+      ),
+      _ => (
+        pickup ? l10n.trackPhaseCollected : l10n.trackPhaseDelivered,
+        l10n.trackPhaseDeliveredHint,
+        Icons.check_circle_rounded,
+      ),
+    };
+    final at = eta;
+    final when = at == null || !order.status.isActive
+        ? null
+        : [
+            if (pickup)
+              l10n.trackReadyAt(shortTime(context, at))
+            else
+              l10n.trackArrives(shortTime(context, at)),
+            if (vm.minutesLeft case final m?) l10n.trackInMinutes(m),
+          ].join(' · ');
+    return CartCard(
+      color: c.tintVertTendre,
+      child: Semantics(
+        liveRegion: true,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 52,
+                  height: 52,
+                  decoration: BoxDecoration(
+                    color: c.card,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(icon, color: c.brandDeep, size: 28),
+                ),
+                const SizedBox(width: DymTokenSpace.s3),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: t.display.copyWith(
+                          fontSize: 26,
+                          color: c.brandDeep,
+                        ),
+                      ),
+                      Text(hint, style: t.body.copyWith(color: c.brandDeep)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (when != null) ...[
+              const SizedBox(height: DymTokenSpace.s2),
+              Text(
+                when,
+                style: t.title.copyWith(fontSize: 18, color: c.textPrimary),
+              ),
+            ],
+            const SizedBox(height: DymTokenSpace.s2),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: LinearProgressIndicator(
+                value: vm.progress,
+                minHeight: 8,
+                color: c.brand,
+                backgroundColor: c.card,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

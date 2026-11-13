@@ -46,6 +46,7 @@ import 'package:dym_client/ui/views/home/home_view.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -491,6 +492,13 @@ class StackedAppNavigator implements AppNavigator {
       onDispute: _toDispute,
       onReview: _toReview,
       onReordered: toCart,
+      onChat: toStoreChat,
+      // Appel du livreur : composeur du téléphone.
+      onCall: (phone) => unawaited(
+        const PluginExternalPageOpener().open(
+          Uri(scheme: 'tel', path: phone.replaceAll(' ', '')),
+        ),
+      ),
       adjustments: locator.isRegistered<AdjustmentsService>()
           ? locator<AdjustmentsService>()
           : null,

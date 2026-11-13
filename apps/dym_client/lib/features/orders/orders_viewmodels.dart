@@ -101,6 +101,9 @@ class MyOrdersViewModel extends _OrdersLoadingViewModel {
   }
 }
 
+/// Phase d'une commande, dite en clair en tête du suivi (spec 074).
+enum TrackPhase { waiting, preparing, ready, onTheWay, delivered, ended }
+
 /// Suivi d'une commande (écran 06, sans carte) : étapes, heure estimée,
 /// cash à payer, annulation avant préparation.
 class TrackingViewModel extends _OrdersLoadingViewModel {
@@ -183,6 +186,40 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   /// Horloge (tests).
   DateTime Function() clock = DateTime.now;
   Failure? get cancelFailure => _cancelFailure;
+
+  /// Phase en clair.
+  TrackPhase get phase => switch (_order?.status) {
+    OrderStatus.pending || null => TrackPhase.waiting,
+    OrderStatus.accepted || OrderStatus.preparing => TrackPhase.preparing,
+    OrderStatus.ready => TrackPhase.ready,
+    OrderStatus.outForDelivery => TrackPhase.onTheWay,
+    OrderStatus.delivered => TrackPhase.delivered,
+    _ => TrackPhase.ended,
+  };
+
+  /// Minutes avant l'heure prévue (nul : pas d'heure ou dépassée).
+  int? get minutesLeft {
+    final eta = _order?.etaAt;
+    if (eta == null || !(_order?.status.isActive ?? false)) return null;
+    final m = eta.difference(clock()).inMinutes;
+    return m > 0 ? m : null;
+  }
+
+  /// Avancement de 0 à 1 (barre sous la phase).
+  double get progress {
+    final o = _order;
+    if (o == null) return 0;
+    final pickup = o.fulfillment == Fulfillment.pickup;
+    return switch (o.status) {
+      OrderStatus.pending => 0.08,
+      OrderStatus.accepted => 0.25,
+      OrderStatus.preparing => 0.4,
+      OrderStatus.ready => pickup ? 0.8 : 0.6,
+      OrderStatus.outForDelivery => 0.8,
+      OrderStatus.delivered => 1,
+      _ => 0,
+    };
+  }
 
   /// La commande a changé entre la lecture et le geste.
   bool get statusChanged => switch (_cancelFailure) {

@@ -30,8 +30,14 @@ final _cash = PaymentMethod.fromJson(const {
   'label': {'fr': 'Cash à la livraison', 'en': 'Cash on delivery'},
 });
 
-CustomerOrder _order(String id, OrderStatus status, String store) => copyOrder(
+CustomerOrder _order(
+  String id,
+  OrderStatus status,
+  String store, {
+  OrderCourier? courier,
+}) => copyOrder(
   CustomerOrder(
+    courier: courier,
     id: id,
     purchaseId: 'pu-$id',
     status: OrderStatus.pending,
@@ -87,6 +93,17 @@ MemoryOrdersService _orders() => MemoryOrdersService(
     _order('o2', OrderStatus.accepted, "Étal d'Akossiwa"),
     _order('o3', OrderStatus.delivered, "Étal d'Akossiwa"),
     _order('o4', OrderStatus.cancelled, 'Chez Afi'),
+    _order(
+      'o5',
+      OrderStatus.outForDelivery,
+      "Les jus d'Esi",
+      courier: OrderCourier(
+        name: 'Kofi',
+        phone: '+000 90 11 22 33',
+        assignedAt: DateTime.utc(2026, 11, 10, 10, 40),
+        isDym: true,
+      ),
+    ),
   ],
   notifications: [
     _notif('n1', 'payment_succeeded'),
@@ -194,7 +211,29 @@ void main() {
     await capture(
       t,
       'suivi',
-      TrackingView(service: _orders(), orderId: 'o1', onBack: _noop),
+      TrackingView(
+        service: _orders(),
+        orderId: 'o1',
+        onBack: _noop,
+        onChat: (_) {},
+        onReport: (_, _) async => false,
+        clock: () => DateTime.utc(2026, 11, 10, 10, 50),
+      ),
+    );
+  });
+  testWidgets('suivi en route', (t) async {
+    await capture(
+      t,
+      'suivi_en_route',
+      TrackingView(
+        service: _orders(),
+        orderId: 'o5',
+        onBack: _noop,
+        onChat: (_) {},
+        onCall: (_) {},
+        onReport: (_, _) async => false,
+        clock: () => DateTime.utc(2026, 11, 10, 11, 10),
+      ),
     );
   });
   testWidgets('notifications', (t) async {

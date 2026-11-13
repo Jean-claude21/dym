@@ -7720,5 +7720,127 @@
         "type": "int"
       }
     }
+  },
+  "trackPhaseWaiting": "En attente de la boutique",
+  "@trackPhaseWaiting": {
+    "description": "Suivi : phase"
+  },
+  "trackPhaseWaitingHint": "{store} va confirmer ta commande.",
+  "@trackPhaseWaitingHint": {
+    "description": "Suivi : explication",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "trackPhasePreparing": "En préparation",
+  "@trackPhasePreparing": {
+    "description": "Suivi : phase"
+  },
+  "trackPhasePreparingHint": "{store} prépare ta commande.",
+  "@trackPhasePreparingHint": {
+    "description": "Suivi : explication",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "trackPhaseReady": "Prête",
+  "@trackPhaseReady": {
+    "description": "Suivi : phase"
+  },
+  "trackPhaseReadyHint": "Un livreur va la récupérer.",
+  "@trackPhaseReadyHint": {
+    "description": "Suivi : explication (livraison)"
+  },
+  "trackPhaseReadyPickupHint": "Passe la récupérer chez {store}.",
+  "@trackPhaseReadyPickupHint": {
+    "description": "Suivi : explication (retrait)",
+    "placeholders": {
+      "store": {
+        "type": "String"
+      }
+    }
+  },
+  "trackPhaseOnTheWay": "En route",
+  "@trackPhaseOnTheWay": {
+    "description": "Suivi : phase"
+  },
+  "trackPhaseOnTheWayHint": "Ta commande arrive, garde ton téléphone près de toi.",
+  "@trackPhaseOnTheWayHint": {
+    "description": "Suivi : explication"
+  },
+  "trackPhaseDelivered": "Livrée",
+  "@trackPhaseDelivered": {
+    "description": "Suivi : phase"
+  },
+  "trackPhaseDeliveredHint": "Bon appétit ! Dis-nous si tout va bien.",
+  "@trackPhaseDeliveredHint": {
+    "description": "Suivi : explication"
+  },
+  "trackPhaseCollected": "Récupérée",
+  "@trackPhaseCollected": {
+    "description": "Suivi : phase (retrait)"
+  },
+  "trackInMinutes": "dans {minutes} min",
+  "@trackInMinutes": {
+    "description": "Suivi : temps restant",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "trackSent": "Envoyée",
+  "@trackSent": {
+    "description": "Suivi : première étape"
+  },
+  "trackCallCourier": "Appeler",
+  "@trackCallCourier": {
+    "description": "Suivi : appeler le livreur"
+  },
+  "trackSummary": "Récapitulatif",
+  "@trackSummary": {
+    "description": "Suivi : détail de la commande"
+  },
+  "trackPickupFee": "Retrait en boutique",
+  "@trackPickupFee": {
+    "description": "Suivi : pas de frais de livraison"
+  },
+  "trackFree": "Gratuit",
+  "@trackFree": {
+    "description": "Suivi : montant nul"
+  },
+  "trackPaidWith": "Payée · {method}",
+  "@trackPaidWith": {
+    "description": "Suivi : mode de paiement",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "trackPayWith": "Paiement · {method}",
+  "@trackPayWith": {
+    "description": "Suivi : mode de paiement (à régler)",
+    "placeholders": {
+      "method": {
+        "type": "String"
+      }
+    }
+  },
+  "trackOrderedOn": "Commandée le {date} à {time}",
+  "@trackOrderedOn": {
+    "description": "Suivi : date de la commande",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
   }
 }

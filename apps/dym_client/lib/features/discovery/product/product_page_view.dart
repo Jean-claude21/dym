@@ -545,16 +545,29 @@ class _VariantTile extends StatelessWidget {
             constraints: const BoxConstraints(minHeight: 52),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Center(
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: context.dym.text.label.copyWith(
-                    fontWeight: FontWeight.w600,
-                    color: available ? c.textPrimary : c.textSecondary,
-                    decoration: available ? null : TextDecoration.lineThrough,
+              // Format épuisé : dit en clair sous le libellé (pas de texte
+              // seulement barré).
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    label,
+                    textAlign: TextAlign.center,
+                    style: context.dym.text.label.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: available ? c.textPrimary : c.textSecondary,
+                    ),
                   ),
-                ),
+                  if (!available)
+                    Text(
+                      DymLocalizations.of(context).productOutOfStock,
+                      style: context.dym.text.label.copyWith(
+                        fontSize: 12,
+                        color: c.pimentStrong,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
