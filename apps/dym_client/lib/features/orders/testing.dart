@@ -289,4 +289,5 @@ CustomerOrder copyOrder(CustomerOrder o, {required OrderStatus status}) =>
           ? const [OrderStatus.cancelled]
           : const [],
       address: o.address,
+      courier: o.courier,
     );

@@ -67,6 +67,9 @@ class DymFormScaffold extends StatelessWidget {
           )
         : _BackButton(label: backLabel, onTap: onBack!);
     final step = progress;
+    // Clavier ouvert : l'action quitte le bas de l'écran et suit le contenu,
+    // pour ne rien cacher de ce qu'on tape ni des résultats (spec 068).
+    final keyboard = MediaQuery.viewInsetsOf(context).bottom > 0;
     return Scaffold(
       backgroundColor: backgroundColor ?? c.background,
       body: SafeArea(
@@ -113,22 +116,27 @@ class DymFormScaffold extends StatelessWidget {
                       ],
                       const SizedBox(height: DymTokenSpace.s5),
                       ...children,
+                      if (keyboard) ...[
+                        const SizedBox(height: DymTokenSpace.s4),
+                        action,
+                      ],
                     ],
                   );
                 },
               ),
             ),
-            DymContentWidth.form(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  DymLayout.gutter(context),
-                  4,
-                  DymLayout.gutter(context),
-                  12,
+            if (!keyboard)
+              DymContentWidth.form(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    DymLayout.gutter(context),
+                    4,
+                    DymLayout.gutter(context),
+                    12,
+                  ),
+                  child: action,
                 ),
-                child: action,
               ),
-            ),
           ],
         ),
       ),

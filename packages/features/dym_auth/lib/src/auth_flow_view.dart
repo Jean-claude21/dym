@@ -6,6 +6,7 @@ import 'package:dym_auth/src/steps/code_step.dart';
 import 'package:dym_auth/src/steps/email_step.dart';
 import 'package:dym_auth/src/steps/profile_step.dart';
 import 'package:dym_auth/src/steps/welcome_step.dart';
+import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +46,9 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
     service: service,
     onReady: onReady,
     locale: Localizations.localeOf(context).languageCode,
+    supportedLocales: [
+      for (final l in DymLocalizations.supportedLocales) l.languageCode,
+    ],
     initialStep: startWithProfile ? AuthStep.profile : initialStep,
     initialEmail: initialEmail,
   );

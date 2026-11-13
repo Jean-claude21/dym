@@ -2617,6 +2617,24 @@ abstract class DymLocalizations {
   /// **'Encaisse {amount} à la remise de la commande.'**
   String vendorCashBody(String amount);
 
+  /// Cash encaissé par le livreur DYM (spec 068)
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livreur DYM encaisse {amount} et te remet {due}, le prix des articles.'**
+  String vendorCashBodyCourier(String amount, String due);
+
+  /// Livreur DYM assigné
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur DYM : {name}'**
+  String vendorCourierDym(String name);
+
+  /// Livreur externe assigné par l'équipe
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur : {name}'**
+  String vendorCourierExternal(String name);
+
   /// Section articles
   ///
   /// In fr, this message translates to:
@@ -9198,6 +9216,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Code de remise'**
   String get trackHandoverCode;
+
+  /// Livreur dans le suivi de la cliente (spec 068)
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} te livre'**
+  String trackCourier(String name);
 
   /// No description provided for @trackHandoverHint.
   ///

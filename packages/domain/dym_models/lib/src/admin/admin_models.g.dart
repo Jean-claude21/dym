@@ -275,19 +275,6 @@ const _$DisputeReasonEnumMap = {
   DisputeReason.unknown: 'unknown',
 };
 
-OrderCourier _$OrderCourierFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('OrderCourier', json, ($checkedConvert) {
-      final val = OrderCourier(
-        name: $checkedConvert('name', (v) => v as String),
-        phone: $checkedConvert('phone', (v) => v as String),
-        assignedAt: $checkedConvert(
-          'assigned_at',
-          (v) => v == null ? null : DateTime.parse(v as String),
-        ),
-      );
-      return val;
-    }, fieldKeyMap: const {'assignedAt': 'assigned_at'});
-
 AdminAuditEntry _$AdminAuditEntryFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
       'AdminAuditEntry',

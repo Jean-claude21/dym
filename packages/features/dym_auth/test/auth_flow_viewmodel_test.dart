@@ -209,4 +209,33 @@ void main() {
       reason: 'commander pour un proche reste possible',
     );
   });
+
+  test('langue du profil : celle du pays si l’app la parle', () async {
+    final service = FakeAuthService();
+    final vm = AuthFlowViewModel(
+      service: service,
+      onReady: (_) {},
+      locale: 'en',
+      supportedLocales: const ['fr', 'en'],
+    );
+    await vm.startProfile();
+    vm
+      ..setFirstName('Awa')
+      ..selectZone(vm.zones.first.id);
+    await vm.submitProfile();
+    expect(
+      service.calls.last,
+      endsWith(':fr'),
+      reason: 'téléphone en anglais',
+    );
+
+    final other = AuthFlowViewModel(
+      service: FakeAuthService(),
+      onReady: (_) {},
+      locale: 'en',
+      supportedLocales: const ['en'],
+    );
+    await other.startProfile();
+    expect(other.profileLocale, 'en', reason: 'langue du pays non traduite');
+  });
 }

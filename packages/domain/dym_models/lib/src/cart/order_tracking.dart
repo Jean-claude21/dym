@@ -34,6 +34,26 @@ enum OrderStatus {
   };
 }
 
+/// Livreur d'une commande : livreur DYM ([isDym]) ou livreur externe assigné
+/// par l'équipe (spec 068).
+@immutable
+@JsonSerializable()
+class OrderCourier {
+  const new({
+    required this.name,
+    required this.phone,
+    this.assignedAt,
+    this.isDym = false,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => _$OrderCourierFromJson(json);
+
+  final String name;
+  final String phone;
+  final DateTime? assignedAt;
+  final bool isDym;
+}
+
 /// Raison d'un refus.
 @JsonEnum(fieldRename: FieldRename.snake)
 enum RefusalReason {
@@ -110,9 +130,13 @@ class CustomerOrder {
     this.history = const [],
     this.nextStatuses = const [],
     this.address,
+    this.courier,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$CustomerOrderFromJson(json);
+
+  /// Livreur de la commande, une fois assigné (spec 068).
+  final OrderCourier? courier;
 
   final String id;
   final String purchaseId;
