@@ -592,7 +592,8 @@ class _Payments extends StatelessWidget {
             children: [
               if (settings == null || settings.methods.isEmpty)
                 AdminEmpty(l10n.adminNoPaymentMethods),
-              for (final m in settings?.methods ?? const <AdminPaymentMethod>[])
+              for (final m
+                  in settings?.methods ?? const <AdminPaymentMethod>[]) ...[
                 DymSwitchTile(
                   title: m.label.resolve(locale),
                   subtitle: [m.providerCode, ?m.operatorCode].join(' · '),
@@ -602,6 +603,39 @@ class _Payments extends StatelessWidget {
                       : (v) =>
                             vm.savePaymentMethod({'id': m.id, 'is_active': v}),
                 ),
+                // Fournisseur de la même famille (spec 088) : par exemple
+                // Mobile Money par simulation ou par Moneroo.
+                if (_alternatives(settings!, m).length > 1)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                    child: DropdownButtonFormField<String>(
+                      initialValue: m.providerCode,
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        labelText: l10n.adminProvider,
+                      ),
+                      items: [
+                        for (final p in _alternatives(settings, m))
+                          DropdownMenuItem(
+                            value: p.code,
+                            child: Text(p.label.resolve(locale)),
+                          ),
+                      ],
+                      onChanged: vm.acting
+                          ? null
+                          : (code) {
+                              if (code != null && code != m.providerCode) {
+                                unawaited(
+                                  vm.savePaymentMethod({
+                                    'id': m.id,
+                                    'provider_code': code,
+                                  }),
+                                );
+                              }
+                            },
+                    ),
+                  ),
+              ],
             ],
           ),
         ),
@@ -619,6 +653,15 @@ class _Payments extends StatelessWidget {
     );
   }
 }
+
+/// Fournisseurs actifs de la même famille qu'un moyen de paiement.
+List<AdminPaymentProvider> _alternatives(
+  AdminPaymentSettings settings,
+  AdminPaymentMethod method,
+) => [
+  for (final p in settings.providers)
+    if (p.isActive && p.kind == method.kind) p,
+];
 
 class _Commission extends StatelessWidget {
   const new({required this.vm});

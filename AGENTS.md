@@ -82,12 +82,16 @@ node db/scripts/dym-db.mjs test --url "<même URL>" && npx neonctl branches dele
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt> --no-env-pull
 # Le fichier DOIT contenir toutes les variables de neon.ts (ALLOWED_ORIGINS, OPENAI_API_KEY,
 # PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT, MEDIA_PUBLIC_URL, ERROR_REPORTING_DSN, LIVEKIT_URL,
-# LIVEKIT_API_KEY, LIVEKIT_API_SECRET) : une variable absente est
+# LIVEKIT_API_KEY, LIVEKIT_API_SECRET, MONEROO_SECRET_KEY, MONEROO_WEBHOOK_SECRET) : une variable absente est
 # remise à vide. MEDIA_PUBLIC_URL = DYM_MEDIA_URL de config/<env>.json (photos des push).
 # Une Function déjà créée ne reçoit PAS les nouvelles variables par `neon deploy` : les pousser ensuite
 # (toutes, celles absentes du fichier sont retirées) avec NEON_API_KEY dans l'environnement :
 cd functions && node scripts/deploy-env.mjs <fichier .env hors dépôt> staging <id du projet>
 ```
+
+Moneroo (spec 088) : clé secrète (bac à sable ou réelle) et secret du webhook dans le fichier
+d'environnement des Functions ; webhook à déclarer chez Moneroo : `<DYM_FUNCTIONS_URL>/v1/payments/webhooks/moneroo`.
+Bascule d'un moyen Mobile Money : admin → Configuration → Paiement → Fournisseur.
 
 MCP admin (spec 086) : clé créée dans l'admin (Configuration → MCP, super-admin), puis
 `claude mcp add --transport http dym <DYM_FUNCTIONS_URL>/mcp --header "Authorization: Bearer <clé>"`.

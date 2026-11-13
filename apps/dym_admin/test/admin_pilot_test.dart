@@ -366,6 +366,21 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('Moneroo : le Mobile Money passe de la simulation à Moneroo', (
+      tester,
+    ) async {
+      final admin = MemoryAdminService();
+      await _pump(tester, AdminSettingsView(service: admin));
+      await _settle(tester);
+      await tester.tap(find.text('Paiement'));
+      await _settle(tester);
+      await tester.tap(find.text('Mobile Money (simulé)').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Moneroo').last);
+      await tester.pumpAndSettle();
+      expect(admin.gestures, contains('method:sim:moneroo'));
+    });
+
     testWidgets('clé MCP : montrée une fois, puis révocable', (tester) async {
       final admin = MemoryAdminService();
       await _pump(

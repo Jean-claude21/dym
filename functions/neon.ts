@@ -39,6 +39,9 @@ export default defineConfig({
         LIVEKIT_URL: process.env.LIVEKIT_URL ?? "",
         LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY ?? "",
         LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET ?? "",
+        // Moneroo (spec 088) : clé secrète (bac à sable ou réelle) et secret des webhooks.
+        MONEROO_SECRET_KEY: process.env.MONEROO_SECRET_KEY ?? "",
+        MONEROO_WEBHOOK_SECRET: process.env.MONEROO_WEBHOOK_SECRET ?? "",
       },
     },
   },

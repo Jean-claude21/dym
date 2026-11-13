@@ -18,6 +18,7 @@ import { pgDisputeStore } from "./disputes/routes.js";
 import { pgAdminStore } from "./admin/routes.js";
 import { fcmPushSender, noPushSender, pgPushQueue } from "./notifications/push.js";
 import { pgPaymentStore } from "./payments/adapters.js";
+import { monerooProvider } from "./payments/moneroo.js";
 import { availableProviders } from "./payments/simulator.js";
 import { walletProvider } from "./payments/wallet.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
@@ -151,6 +152,15 @@ export default createApp({
       ...availableProviders({
         branch: process.env.NEON_BRANCH,
         simulatorSecret: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
+        // Moneroo (spec 088) : bac à sable ou réel selon la clé.
+        others: process.env.MONEROO_SECRET_KEY
+          ? [
+              monerooProvider({
+                secretKey: process.env.MONEROO_SECRET_KEY,
+                webhookSecret: process.env.MONEROO_WEBHOOK_SECRET ?? "",
+              }),
+            ]
+          : [],
       }),
     ],
   },
