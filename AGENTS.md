@@ -84,6 +84,9 @@ cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dé
 # PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT, MEDIA_PUBLIC_URL, ERROR_REPORTING_DSN, LIVEKIT_URL,
 # LIVEKIT_API_KEY, LIVEKIT_API_SECRET) : une variable absente est
 # remise à vide. MEDIA_PUBLIC_URL = DYM_MEDIA_URL de config/<env>.json (photos des push).
+# Une Function déjà créée ne reçoit PAS les nouvelles variables par `neon deploy` : les pousser ensuite
+# (toutes, celles absentes du fichier sont retirées) avec NEON_API_KEY dans l'environnement :
+cd functions && node scripts/deploy-env.mjs <fichier .env hors dépôt> staging <id du projet>
 ```
 
 Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-define=DYM_ERROR_DSN=https://<clé>@<hôte>/<projet>`
