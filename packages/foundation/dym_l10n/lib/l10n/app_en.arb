@@ -2082,5 +2082,19 @@
   "adminRoleFinance": "Finance",
   "adminRoleContent": "Content",
   "adminRoleAnalyst": "Analyst",
-  "adminSettingsNoneForRole": "No settings are open to your role."
+  "adminSettingsNoneForRole": "No settings are open to your role.",
+  "adminTabMcp": "MCP",
+  "adminMcpHelp": "An MCP key lets an assistant (Claude, for example) run the admin and query analytics with your rights. Every action is logged.",
+  "adminMcpName": "Key name",
+  "adminMcpCreate": "Create a key",
+  "adminMcpNewKeyTitle": "Copy your key now: it will never be shown again.",
+  "adminMcpKeyLabel": "Key",
+  "adminMcpEndpoint": "MCP server address",
+  "adminMcpCopy": "Copy",
+  "adminMcpCopied": "Copied",
+  "adminMcpDone": "I copied the key",
+  "adminMcpRevoke": "Revoke",
+  "adminMcpRevoked": "Revoked",
+  "adminMcpLastUsed": "Last used: {date}",
+  "adminMcpNeverUsed": "Never used"
 }

@@ -223,6 +223,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `suivi-erreurs` | Suivi des erreurs : cinq projets Sentry (quatre apps, Functions), DSN hors dépôt, `ERROR_REPORTING_DSN` enfin transmis au déploiement des Functions | 0,5 h | ✅ Spec 083 |
 | `appels-livekit` | Appels réels dans le chat (LiveKit) : fournisseur choisi par la base (flag `calls_livekit`), jeton émis par la Function aux deux personnes de l'appel, micro, haut-parleur, vidéo plein écran ; numéro jamais dévoilé | 3 h | ✅ Spec 084 |
 | `roles-admin` | Rôles des admins (super-admin, opérations, support, finance, contenu, analyste) : permission exigée par la base pour chaque fonction admin, menu et réglages filtrés, rôle choisi à l'invitation et modifiable, changements journalisés | 3 h | ✅ Spec 085 |
+| `analytics-mcp` | Analytics dans la base (vues sans donnée personnelle, lecteur en lecture seule pour Looker Studio ou Metabase) et serveur MCP de l'admin : clés personnelles, fonctions admin avec les droits de l'admin, requêtes d'analyse, écritures journalisées | 4 h | ✅ Spec 086 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

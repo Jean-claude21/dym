@@ -15,11 +15,12 @@ enum SettingsTab {
   flags,
   search,
   admins,
+  mcp,
 }
 
 /// Réglages : ouvrir un pays est une opération de configuration.
 class AdminSettingsViewModel extends AdminViewModel {
-  new({required this.service, this.access}) {
+  new({required this.service, this.access, this.mcpEndpoint}) {
     _tab = tabs.firstOrNull ?? SettingsTab.countries;
   }
 
@@ -27,6 +28,15 @@ class AdminSettingsViewModel extends AdminViewModel {
 
   /// Rôle de l'admin (spec 085) ; `null` : toutes les sections.
   final AdminAccess? access;
+
+  /// Adresse du serveur MCP (spec 086), montrée avec une nouvelle clé.
+  final String? mcpEndpoint;
+
+  List<AdminMcpKey> _mcpKeys = const [];
+  List<AdminMcpKey> get mcpKeys => _mcpKeys;
+
+  /// Clé tout juste créée, montrée une seule fois.
+  String? newMcpKey;
 
   /// Sections ouvertes au rôle (lecture du domaine).
   List<SettingsTab> get tabs => [
@@ -55,6 +65,7 @@ class AdminSettingsViewModel extends AdminViewModel {
       SettingsTab.flags => a.reads('system'),
       SettingsTab.search => a.reads('content'),
       SettingsTab.admins => a.reads('admins'),
+      SettingsTab.mcp => a.can('mcp.write'),
     };
   }
 
@@ -155,6 +166,10 @@ class AdminSettingsViewModel extends AdminViewModel {
         final r = await service.admins();
         if (r case Ok(:final value)) _admins = value;
         return r.failureOrNull;
+      case SettingsTab.mcp:
+        final r = await service.mcpKeys();
+        if (r case Ok(:final value)) _mcpKeys = value;
+        return r.failureOrNull;
     }
   }
 
@@ -245,6 +260,26 @@ class AdminSettingsViewModel extends AdminViewModel {
     if (r case Ok(:final value)) _search = value;
     return r.failureOrNull;
   });
+
+  Future<bool> createMcpKey(String name) => _act(() async {
+    final r = await service.createMcpKey(name.trim());
+    if (r case Ok(:final value)) {
+      newMcpKey = value.secret;
+      _mcpKeys = [value.key, ..._mcpKeys];
+    }
+    return r.failureOrNull;
+  });
+
+  Future<bool> revokeMcpKey(AdminMcpKey key) => _act(() async {
+    final r = await service.revokeMcpKey(key.id);
+    if (r case Ok(:final value)) _mcpKeys = value;
+    return r.failureOrNull;
+  });
+
+  void forgetNewMcpKey() {
+    newMcpKey = null;
+    notifyListeners();
+  }
 
   Future<bool> setAdminRole(AdminMember member, String role) => _act(() async {
     final r = await service.setAdminRole(member.email, role);

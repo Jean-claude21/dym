@@ -1719,6 +1719,8 @@ class MemoryAdminService implements AdminService {
         'risk',
         'system',
         'admins',
+        'analytics',
+        'mcp',
       ])
         for (final access in ['read', 'write']) '$area.$access',
     },
@@ -1734,6 +1736,46 @@ class MemoryAdminService implements AdminService {
 
   @override
   Future<Result<AdminAccess>> me() async => _fail<AdminAccess>() ?? Ok(access);
+
+  final List<AdminMcpKey> _mcpKeys = [];
+
+  @override
+  Future<Result<List<AdminMcpKey>>> mcpKeys() async =>
+      _fail<List<AdminMcpKey>>() ?? Ok(List.of(_mcpKeys));
+
+  @override
+  Future<Result<({AdminMcpKey key, String secret})>> createMcpKey(
+    String name,
+  ) async {
+    final failed = _fail<({AdminMcpKey key, String secret})>();
+    if (failed != null) return failed;
+    final key = AdminMcpKey(
+      id: 'k${_mcpKeys.length + 1}',
+      name: name,
+      hint: 'a1b2',
+      createdAt: DateTime.utc(2026, 11, 13),
+    );
+    _mcpKeys.insert(0, key);
+    return Ok((key: key, secret: 'dym_mcp_${'0' * 60}a1b2'));
+  }
+
+  @override
+  Future<Result<List<AdminMcpKey>>> revokeMcpKey(String id) async {
+    final failed = _fail<List<AdminMcpKey>>();
+    if (failed != null) return failed;
+    final i = _mcpKeys.indexWhere((k) => k.id == id);
+    if (i >= 0) {
+      final k = _mcpKeys[i];
+      _mcpKeys[i] = AdminMcpKey(
+        id: k.id,
+        name: k.name,
+        hint: k.hint,
+        createdAt: k.createdAt,
+        revoked: true,
+      );
+    }
+    return Ok(List.of(_mcpKeys));
+  }
 
   @override
   Future<Result<List<AdminMember>>> inviteAdmin(

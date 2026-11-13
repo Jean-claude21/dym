@@ -9,6 +9,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 /// « 10,5 » → 1 050 points de base (nul : invalide).
@@ -168,7 +169,13 @@ class _SettingDialogState extends State<_SettingDialog> {
 /// Écran 56 : pays, villes et quartiers, paiement, commission, frais,
 /// catégories.
 class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
-  const new({required this.service, super.key, this.onSignOut, this.access});
+  const new({
+    required this.service,
+    super.key,
+    this.onSignOut,
+    this.access,
+    this.mcpEndpoint,
+  });
 
   final AdminService service;
   final VoidCallback? onSignOut;
@@ -176,9 +183,16 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
   /// Rôle de l'admin (spec 085) : sections filtrées.
   final AdminAccess? access;
 
+  /// Adresse du serveur MCP (spec 086).
+  final String? mcpEndpoint;
+
   @override
   AdminSettingsViewModel viewModelBuilder(BuildContext context) =>
-      AdminSettingsViewModel(service: service, access: access);
+      AdminSettingsViewModel(
+        service: service,
+        access: access,
+        mcpEndpoint: mcpEndpoint,
+      );
 
   @override
   void onViewModelReady(AdminSettingsViewModel viewModel) {
@@ -248,6 +262,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
                     SettingsTab.flags => l10n.adminTabFlags,
                     SettingsTab.search => l10n.adminTabSearch,
                     SettingsTab.admins => l10n.adminTabAdmins,
+                    SettingsTab.mcp => l10n.adminTabMcp,
                   },
                   selected: vm.tab == t,
                   onTap: () => vm.selectTab(t),
@@ -272,6 +287,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
               SettingsTab.flags => _Flags(vm: vm),
               SettingsTab.search => _Search(vm: vm),
               SettingsTab.admins => _Admins(vm: vm),
+              SettingsTab.mcp => _McpKeys(vm: vm),
             },
         ],
       ),
@@ -1210,6 +1226,178 @@ class _RolePicker extends StatelessWidget {
       onChanged: (r) {
         if (r != null && r != value) onChanged(r);
       },
+    );
+  }
+}
+
+/// Clés MCP personnelles (spec 086) : un assistant (Claude…) pilote l'admin
+/// et interroge les analytics avec les droits de l'admin. La clé n'est
+/// montrée qu'une fois.
+class _McpKeys extends StatefulWidget {
+  const new({required this.vm});
+
+  final AdminSettingsViewModel vm;
+
+  @override
+  State<_McpKeys> createState() => _McpKeysState();
+}
+
+class _McpKeysState extends State<_McpKeys> {
+  final _name = TextEditingController();
+
+  @override
+  void dispose() {
+    _name.dispose();
+    super.dispose();
+  }
+
+  Future<void> _create() async {
+    final name = _name.text.trim();
+    if (name.isEmpty) return;
+    if (await widget.vm.createMcpKey(name)) _name.clear();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    final vm = widget.vm;
+    final secret = vm.newMcpKey;
+    final endpoint = vm.mcpEndpoint;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(l10n.adminMcpHelp, style: t.body.copyWith(color: c.textSecondary)),
+        const SizedBox(height: DymTokenSpace.s2),
+        if (secret != null)
+          AdminCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(l10n.adminMcpNewKeyTitle, style: t.title),
+                const SizedBox(height: DymTokenSpace.s2),
+                _CopyLine(label: l10n.adminMcpKeyLabel, value: secret),
+                if (endpoint != null)
+                  _CopyLine(label: l10n.adminMcpEndpoint, value: endpoint),
+                const SizedBox(height: DymTokenSpace.s2),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: DymButton(
+                    label: l10n.adminMcpDone,
+                    icon: Icons.check_rounded,
+                    expanded: false,
+                    onPressed: vm.forgetNewMcpKey,
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          AdminCard(
+            child: Wrap(
+              spacing: DymTokenSpace.s3,
+              runSpacing: DymTokenSpace.s3,
+              crossAxisAlignment: WrapCrossAlignment.end,
+              children: [
+                SizedBox(
+                  width: 320,
+                  child: DymTextField(
+                    label: l10n.adminMcpName,
+                    controller: _name,
+                    onSubmitted: (_) => _create(),
+                  ),
+                ),
+                DymButton(
+                  label: l10n.adminMcpCreate,
+                  icon: Icons.key_rounded,
+                  expanded: false,
+                  loading: vm.acting,
+                  onPressed: _create,
+                ),
+              ],
+            ),
+          ),
+        const SizedBox(height: DymTokenSpace.s3),
+        AdminCard(
+          child: Column(
+            children: [
+              if (vm.mcpKeys.isEmpty) AdminEmpty(l10n.adminNoData),
+              for (final k in vm.mcpKeys)
+                ListTile(
+                  leading: Icon(
+                    k.revoked ? Icons.key_off_rounded : Icons.key_rounded,
+                    color: k.revoked ? c.textSecondary : c.brandDeep,
+                  ),
+                  title: Text('${k.name} · …${k.hint}'),
+                  subtitle: Text(
+                    k.revoked
+                        ? l10n.adminMcpRevoked
+                        : switch (k.lastUsedAt) {
+                            final at? => l10n.adminMcpLastUsed(
+                              MaterialLocalizations.of(context)
+                                  .formatShortDate(at.toLocal()),
+                            ),
+                            null => l10n.adminMcpNeverUsed,
+                          },
+                  ),
+                  trailing: k.revoked
+                      ? null
+                      : TextButton.icon(
+                          onPressed: vm.acting
+                              ? null
+                              : () => vm.revokeMcpKey(k),
+                          icon: const Icon(Icons.block_rounded),
+                          label: Text(l10n.adminMcpRevoke),
+                        ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Valeur à copier (clé, adresse), sélectionnable.
+class _CopyLine extends StatelessWidget {
+  const new({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: t.label.copyWith(color: c.textSecondary)),
+                SelectableText(value, style: t.body),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: l10n.adminMcpCopy,
+            icon: const Icon(Icons.copy_rounded),
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: value));
+              if (context.mounted) {
+                ScaffoldMessenger.maybeOf(
+                  context,
+                )?.showSnackBar(SnackBar(content: Text(l10n.adminMcpCopied)));
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }

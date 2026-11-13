@@ -86,6 +86,11 @@ cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dé
 # remise à vide. MEDIA_PUBLIC_URL = DYM_MEDIA_URL de config/<env>.json (photos des push).
 ```
 
+MCP admin (spec 086) : clé créée dans l'admin (Configuration → MCP, super-admin), puis
+`claude mcp add --transport http dym <DYM_FUNCTIONS_URL>/mcp --header "Authorization: Bearer <clé>"`.
+Graphiques (Looker Studio, Metabase) : créer un utilisateur de connexion sur la branche (console ou
+`neonctl roles create`), puis `grant analytics_reader to <utilisateur>;` ; il ne lit que `analytics.*`.
+
 Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-define=DYM_ERROR_DSN=https://<clé>@<hôte>/<projet>`
 pour les apps (Sentry ou GlitchTip), variable `ERROR_REPORTING_DSN` pour les Functions. Sentry
 (organisation `dym-mq`, région Europe) : un projet par app (`dym-client`, `dym-vendor`,

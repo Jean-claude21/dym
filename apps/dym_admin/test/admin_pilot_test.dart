@@ -366,6 +366,33 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
+    testWidgets('clé MCP : montrée une fois, puis révocable', (tester) async {
+      final admin = MemoryAdminService();
+      await _pump(
+        tester,
+        AdminSettingsView(
+          service: admin,
+          access: admin.access,
+          mcpEndpoint: 'https://api.dym.test/mcp',
+        ),
+      );
+      await _settle(tester);
+      await tester.tap(find.text('MCP'));
+      await _settle(tester);
+      await tester.enterText(find.byType(TextField).last, 'Claude');
+      await tester.tap(find.text('Créer une clé'));
+      await _settle(tester);
+      expect(find.textContaining('dym_mcp_'), findsOneWidget);
+      expect(find.text('https://api.dym.test/mcp'), findsOneWidget);
+      await tester.tap(find.text("J'ai copié la clé"));
+      await _settle(tester);
+      expect(find.textContaining('dym_mcp_'), findsNothing);
+      expect(find.text('Claude · …a1b2'), findsOneWidget);
+      await tester.tap(find.text('Révoquer'));
+      await _settle(tester);
+      expect(find.text('Révoquée'), findsOneWidget);
+    });
+
     testWidgets('super-admin : invite avec un rôle', (tester) async {
       final admin = MemoryAdminService();
       await _pump(

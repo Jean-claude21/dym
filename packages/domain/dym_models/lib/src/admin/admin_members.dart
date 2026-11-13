@@ -79,3 +79,32 @@ class AdminAccess {
 
   bool writes(String area) => can('$area.write');
 }
+
+/// Clé MCP personnelle d'un admin (spec 086) ; la clé n'est jamais relue,
+/// seuls ses quatre derniers caractères sont montrés.
+class AdminMcpKey {
+  const new({
+    required this.id,
+    required this.name,
+    required this.hint,
+    this.createdAt,
+    this.lastUsedAt,
+    this.revoked = false,
+  });
+
+  factory fromJson(Map<String, Object?> json) => AdminMcpKey(
+    id: json['id']! as String,
+    name: json['name'] as String? ?? '',
+    hint: json['hint'] as String? ?? '',
+    createdAt: DateTime.tryParse(json['created_at'] as String? ?? ''),
+    lastUsedAt: DateTime.tryParse(json['last_used_at'] as String? ?? ''),
+    revoked: json['revoked'] == true,
+  );
+
+  final String id;
+  final String name;
+  final String hint;
+  final DateTime? createdAt;
+  final DateTime? lastUsedAt;
+  final bool revoked;
+}

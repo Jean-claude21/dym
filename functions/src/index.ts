@@ -23,6 +23,7 @@ import { walletProvider } from "./payments/wallet.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
 import { pgDispatchWatch } from "./orders/dispatch.js";
 import { LiveHub, pgLiveStore } from "./live/gateway.js";
+import { pgMcpStore } from "./mcp/server.js";
 import { pgCallMediaStore } from "./messaging/calls.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
@@ -119,6 +120,8 @@ export default createApp({
     store: pgMessagingStore(pool),
     signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),
   },
+  // Serveur MCP de l'admin (spec 086) : clés personnelles, droits de l'admin.
+  mcp: pgMcpStore(pool),
   // Appels réels (spec 084) : LiveKit dès que le projet est fourni ; sinon 503.
   calls: {
     store: pgCallMediaStore(pool),
