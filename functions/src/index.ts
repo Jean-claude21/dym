@@ -23,6 +23,7 @@ import { walletProvider } from "./payments/wallet.js";
 import { pgVendorRecaps } from "./dashboard/recaps.js";
 import { pgDispatchWatch } from "./orders/dispatch.js";
 import { LiveHub, pgLiveStore } from "./live/gateway.js";
+import { pgCallMediaStore } from "./messaging/calls.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
 import {
@@ -117,6 +118,19 @@ export default createApp({
   messaging: {
     store: pgMessagingStore(pool),
     signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),
+  },
+  // Appels réels (spec 084) : LiveKit dès que le projet est fourni ; sinon 503.
+  calls: {
+    store: pgCallMediaStore(pool),
+    ...(process.env.LIVEKIT_URL && process.env.LIVEKIT_API_KEY && process.env.LIVEKIT_API_SECRET
+      ? {
+          livekit: {
+            url: process.env.LIVEKIT_URL,
+            apiKey: process.env.LIVEKIT_API_KEY,
+            apiSecret: process.env.LIVEKIT_API_SECRET,
+          },
+        }
+      : {}),
   },
   // Push : FCM dès que le compte de service est fourni ; sinon ignorés.
   push: {

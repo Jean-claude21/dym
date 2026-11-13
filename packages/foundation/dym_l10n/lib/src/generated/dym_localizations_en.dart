@@ -7094,4 +7094,20 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get brandMakerName => 'Kete';
+
+  @override
+  String get callMicrophoneOn => 'Mic on';
+
+  @override
+  String get callMicrophoneOff => 'Mic off';
+
+  @override
+  String get callSpeakerOn => 'Speaker';
+
+  @override
+  String get callSpeakerOff => 'Earpiece';
+
+  @override
+  String get callMediaFailed =>
+      'No audio: check your connection, then call again.';
 }

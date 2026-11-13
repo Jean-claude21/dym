@@ -1,6 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Neon (Auth, Data API, Functions, photos) : absente du gabarit en release. -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Appels du chat (LiveKit, spec 084) : micro, caméra, sortie audio. -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
     <!-- Quartier proposé à partir de la position (spec 008), précision réduite. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Recherche à la voix (spec 018), seulement pendant l'écoute. -->

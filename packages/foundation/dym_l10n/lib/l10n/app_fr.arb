@@ -8055,5 +8055,25 @@
   "brandMakerName": "Kete",
   "@brandMakerName": {
     "description": "Nom du réalisateur de l'application, affiché en vert sur le splash."
+  },
+  "callMicrophoneOn": "Micro ouvert",
+  "@callMicrophoneOn": {
+    "description": "Écran d'appel : bascule du micro (ouvert)."
+  },
+  "callMicrophoneOff": "Micro coupé",
+  "@callMicrophoneOff": {
+    "description": "Écran d'appel : bascule du micro (coupé)."
+  },
+  "callSpeakerOn": "Haut-parleur",
+  "@callSpeakerOn": {
+    "description": "Écran d'appel : son sur le haut-parleur."
+  },
+  "callSpeakerOff": "Écouteur",
+  "@callSpeakerOff": {
+    "description": "Écran d'appel : son dans l'écouteur du téléphone."
+  },
+  "callMediaFailed": "Son indisponible : vérifie ta connexion, puis rappelle.",
+  "@callMediaFailed": {
+    "description": "Écran d'appel : le média (LiveKit) n'a pas pu se connecter."
   }
 }

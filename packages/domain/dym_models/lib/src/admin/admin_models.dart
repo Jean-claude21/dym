@@ -613,8 +613,7 @@ class AdminDispatch {
     this.readyAlerts = 0,
   });
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$AdminDispatchFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$AdminDispatchFromJson(json);
 
   final int couriersActive;
   final int couriersOnline;
@@ -642,8 +641,7 @@ class AdminExchanges {
     this.quietNightUsers = 0,
   });
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$AdminExchangesFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$AdminExchangesFromJson(json);
 
   final int messages;
   final int messagesWithOrder;
@@ -676,8 +674,7 @@ class AdminOriginCount {
 class AdminCoverage {
   const new({required this.total, this.countries = const []});
 
-  factory fromJson(Map<String, dynamic> json) =>
-      _$AdminCoverageFromJson(json);
+  factory fromJson(Map<String, dynamic> json) => _$AdminCoverageFromJson(json);
 
   final int total;
   final List<AdminCoverageCountry> countries;

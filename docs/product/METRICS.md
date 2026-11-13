@@ -61,7 +61,7 @@ fiabilité (ops).
 | `chat_message_sent` (type, rôle, commande en cours) | Serveur | Messagerie (spec 070) |
 | `cart_reminded` (articles) | Serveur | Rappel « Ton panier t'attend » (spec 080) |
 | `products_imported` (créés, lignes en erreur) | Serveur | Import du catalogue (spec 081) |
-| `voice_message_sent` (durée), `call_started` (type), `call_ended` (issue, durée) | Serveur | Vocaux et appels (spec 035) |
+| `voice_message_sent` (durée), `call_started` (type, fournisseur : spec 084), `call_ended` (issue, durée) | Serveur | Vocaux et appels (spec 035) |
 | `creator_joined`, `content_published` (+ catégorie, provenance, créatrice) | Serveur | Créateurs (spec 036) |
 | `follow_added` (cible), `comment_added` | Serveur | Fil classé (spec 037) |
 | `recipe_basket_built` (articles, manquants, portions) | Serveur | Tout pour la recette (specs 038, 057) |

@@ -4,11 +4,8 @@ import 'dart:async';
 /// connectée, ou une (re)connexion après laquelle tout écran se recharge.
 class LiveSignal {
   /// Événement adressé à la personne.
-  const new event({
-    required this.kind,
-    this.entityId,
-    this.payload = const {},
-  }) : resync = false;
+  const new event({required this.kind, this.entityId, this.payload = const {}})
+    : resync = false;
 
   /// Connexion (re)établie : des événements ont pu manquer.
   const new resync()

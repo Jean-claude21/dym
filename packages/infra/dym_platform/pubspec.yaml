@@ -21,6 +21,7 @@ dependencies:
   geolocator: ^14.0.0
   google_sign_in: ^7.2.0
   image_picker: ^1.2.0
+  livekit_client: ^2.13.2
   meta: ^1.17.0
   mobile_scanner: ^7.5.0
   neon_kit: ^0.1.0

@@ -11796,6 +11796,36 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Kete'**
   String get brandMakerName;
+
+  /// Écran d'appel : bascule du micro (ouvert).
+  ///
+  /// In fr, this message translates to:
+  /// **'Micro ouvert'**
+  String get callMicrophoneOn;
+
+  /// Écran d'appel : bascule du micro (coupé).
+  ///
+  /// In fr, this message translates to:
+  /// **'Micro coupé'**
+  String get callMicrophoneOff;
+
+  /// Écran d'appel : son sur le haut-parleur.
+  ///
+  /// In fr, this message translates to:
+  /// **'Haut-parleur'**
+  String get callSpeakerOn;
+
+  /// Écran d'appel : son dans l'écouteur du téléphone.
+  ///
+  /// In fr, this message translates to:
+  /// **'Écouteur'**
+  String get callSpeakerOff;
+
+  /// Écran d'appel : le média (LiveKit) n'a pas pu se connecter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Son indisponible : vérifie ta connexion, puis rappelle.'**
+  String get callMediaFailed;
 }
 
 class _DymLocalizationsDelegate

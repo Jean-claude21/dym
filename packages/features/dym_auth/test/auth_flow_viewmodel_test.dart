@@ -229,11 +229,7 @@ void main() {
       ..setFirstName('Awa')
       ..selectZone(vm.zones.first.id);
     await vm.submitProfile();
-    expect(
-      service.calls.last,
-      endsWith(':fr'),
-      reason: 'téléphone en anglais',
-    );
+    expect(service.calls.last, endsWith(':fr'), reason: 'téléphone en anglais');
 
     final other = AuthFlowViewModel(
       service: FakeAuthService(),

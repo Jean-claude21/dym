@@ -17,6 +17,7 @@ import { registerShoppingReminders, type ShoppingReminders } from "./shopping/re
 import { registerAffiliateSettlement, type AffiliateSettlement } from "./content/affiliation.js";
 import { type OpsAssistDeps, registerOpsAssist } from "./ops/assist.js";
 import { type OrderPhotoDeps, registerOrderPhotoRoutes } from "./orders/photos.js";
+import { type CallDeps, registerCallRoutes } from "./messaging/calls.js";
 import { type MessagingDeps, registerMessagingRoutes } from "./messaging/routes.js";
 import { registerReviewRoutes, type ReviewStore } from "./reviews/routes.js";
 import { registerSearchAiRoutes, type SearchAiDeps } from "./search/routes.js";
@@ -63,6 +64,8 @@ export interface AppDeps {
   opsAssist?: OpsAssistDeps;
   /** Messagerie (spec 015). */
   messaging?: MessagingDeps;
+  /** Appels réels (spec 084). */
+  calls?: CallDeps;
   /** Avis (spec 016). */
   reviews?: ReviewStore;
   /** Recherche vocale et par photo (spec 018). */
@@ -137,6 +140,7 @@ export function createApp(deps: AppDeps) {
   registerOpsAssist(app, deps.verifyToken, deps.opsAssist);
   registerOrderPhotoRoutes(app, deps.verifyToken, deps.orderPhotos);
   registerMessagingRoutes(app, deps.verifyToken, deps.messaging);
+  registerCallRoutes(app, deps.verifyToken, deps.calls);
   registerReviewRoutes(app, deps.verifyToken, deps.reviews);
   registerSearchAiRoutes(app, deps.verifyToken, deps.searchAi);
   registerCopilotRoutes(app, deps.verifyToken, deps.copilot);

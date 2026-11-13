@@ -4,9 +4,29 @@ import 'package:neon_kit/neon_kit.dart';
 
 /// Appels d'une conversation (spec 035) : états tenus en base.
 class CallRepository {
-  new(this._data);
+  new(this._data, {this._functions});
 
   final NeonDataClient _data;
+  final NeonFunctionsClient? _functions;
+
+  /// Accès au média d'un appel décroché (LiveKit, spec 084) : adresse du
+  /// serveur et jeton de la salle, émis par la Function.
+  Future<Result<({String url, String token})>> mediaCredentials(
+    String callId,
+  ) async {
+    final functions = _functions;
+    if (functions == null) {
+      return const Err(ServerFailure('appels non configurés', statusCode: 503));
+    }
+    return await functions.post<({String url, String token})>(
+      '/v1/calls/$callId/media',
+      body: const <String, Object?>{},
+      decode: (json) {
+        final map = json! as Map<String, dynamic>;
+        return (url: map['url'] as String, token: map['token'] as String);
+      },
+    );
+  }
 
   /// Refus : `call_in_progress`, `feature_disabled`.
   Future<Result<CallSession>> start(String conversationId, CallKind kind) =>

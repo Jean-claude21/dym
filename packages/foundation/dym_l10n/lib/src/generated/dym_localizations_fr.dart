@@ -7143,4 +7143,20 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get brandMakerName => 'Kete';
+
+  @override
+  String get callMicrophoneOn => 'Micro ouvert';
+
+  @override
+  String get callMicrophoneOff => 'Micro coupé';
+
+  @override
+  String get callSpeakerOn => 'Haut-parleur';
+
+  @override
+  String get callSpeakerOff => 'Écouteur';
+
+  @override
+  String get callMediaFailed =>
+      'Son indisponible : vérifie ta connexion, puis rappelle.';
 }
