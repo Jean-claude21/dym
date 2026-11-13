@@ -6833,4 +6833,82 @@ class DymLocalizationsEn extends DymLocalizations {
   String adminPoints(int n) {
     return '$n pt';
   }
+
+  @override
+  String get trackPhaseWaiting => 'Waiting for the shop';
+
+  @override
+  String trackPhaseWaitingHint(String store) {
+    return '$store will confirm your order.';
+  }
+
+  @override
+  String get trackPhasePreparing => 'Being prepared';
+
+  @override
+  String trackPhasePreparingHint(String store) {
+    return '$store is preparing your order.';
+  }
+
+  @override
+  String get trackPhaseReady => 'Ready';
+
+  @override
+  String get trackPhaseReadyHint => 'A courier will pick it up.';
+
+  @override
+  String trackPhaseReadyPickupHint(String store) {
+    return 'Pick it up at $store.';
+  }
+
+  @override
+  String get trackPhaseOnTheWay => 'On the way';
+
+  @override
+  String get trackPhaseOnTheWayHint =>
+      'Your order is arriving, keep your phone nearby.';
+
+  @override
+  String get trackPhaseDelivered => 'Delivered';
+
+  @override
+  String get trackPhaseDeliveredHint => 'Enjoy! Tell us if everything is fine.';
+
+  @override
+  String get trackPhaseCollected => 'Collected';
+
+  @override
+  String trackInMinutes(int minutes) {
+    return 'in $minutes min';
+  }
+
+  @override
+  String get trackSent => 'Sent';
+
+  @override
+  String get trackCallCourier => 'Call';
+
+  @override
+  String get trackSummary => 'Summary';
+
+  @override
+  String get trackPickupFee => 'Pickup at the shop';
+
+  @override
+  String get trackFree => 'Free';
+
+  @override
+  String trackPaidWith(String method) {
+    return 'Paid · $method';
+  }
+
+  @override
+  String trackPayWith(String method) {
+    return 'Payment · $method';
+  }
+
+  @override
+  String trackOrderedOn(String date, String time) {
+    return 'Ordered on $date at $time';
+  }
 }

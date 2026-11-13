@@ -155,6 +155,30 @@ void main() {
     },
   );
 
+  test('suivi : phase en clair, minutes restantes, avancement', () async {
+    final service = _service();
+    final vm = TrackingViewModel(
+      service: service,
+      orderId: 'o1',
+      refreshEvery: null,
+    );
+    await vm.load();
+    expect(vm.phase, TrackPhase.preparing);
+    final eta = vm.order!.etaAt;
+    if (eta != null) {
+      vm.clock = () => eta.subtract(const Duration(minutes: 25));
+      expect(vm.minutesLeft, inInclusiveRange(24, 25));
+      vm.clock = () => eta.add(const Duration(minutes: 5));
+      expect(vm.minutesLeft, isNull, reason: 'heure dépassée : rien');
+    }
+    final before = vm.progress;
+    service.advance('o1', OrderStatus.outForDelivery);
+    await vm.refresh();
+    expect(vm.phase, TrackPhase.onTheWay);
+    expect(vm.progress, greaterThan(before));
+    vm.dispose();
+  });
+
   test('annulation avant préparation ; conflit signalé', () async {
     final service = _service();
     final vm = TrackingViewModel(

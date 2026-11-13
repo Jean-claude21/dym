@@ -367,14 +367,18 @@ IconData addressIcon(AddressKind kind) => switch (kind) {
 class SumRow extends StatelessWidget {
   const new({
     required this.label,
-    required this.amount,
+    this.amount,
     super.key,
     this.strong = false,
+    this.text,
   });
 
   final String label;
   final Money? amount;
   final bool strong;
+
+  /// Valeur en toutes lettres (« Gratuit ») à la place d'un montant.
+  final String? text;
 
   @override
   Widget build(BuildContext context) {
@@ -397,6 +401,15 @@ class SumRow extends StatelessWidget {
               amount!,
               size: strong ? 22 : 15,
               color: strong ? c.brandDeep : c.textPrimary,
+            )
+          else if (text case final value?)
+            Text(
+              value,
+              style: t.label.copyWith(
+                fontSize: 15,
+                color: c.brandDeep,
+                fontWeight: FontWeight.w600,
+              ),
             ),
         ],
       ),
