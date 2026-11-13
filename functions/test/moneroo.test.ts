@@ -42,11 +42,12 @@ describe("Moneroo", () => {
     expect(() => monerooAmount(150050, "NGN")).toThrow();
   });
 
-  it("initialisation : page Moneroo, référence DYM en métadonnées, aucune donnée personnelle", async () => {
+  it("initialisation : page Moneroo, référence DYM en métadonnées, email et prénom seulement", async () => {
     const mo = fakeMoneroo();
     const provider = monerooProvider({ secretKey: "sk_test", webhookSecret, fetchImpl: mo.fetchImpl });
     const started = await provider.initiate({
       paymentId: payId, amountMinor: 3600, currencyCode: "XOF", reference: "PA-ABC123", selfOrigin: "https://fn.test",
+      customer: { email: "awa@example.com", firstName: "Awa" },
     });
     expect(started).toEqual({ providerReference: "mo_123", checkoutUrl: "https://checkout.moneroo.io/mo_123" });
     expect(mo.calls[0]!.auth).toBe("Bearer sk_test");
@@ -56,7 +57,11 @@ describe("Moneroo", () => {
       description: "DYM PA-ABC123",
       return_url: `https://fn.test/v1/payments/return/${payId}`,
       metadata: { payment_id: payId, reference: "PA-ABC123" },
+      customer: { email: "awa@example.com", first_name: "Awa", last_name: "Awa" },
     });
+    await expect(provider.initiate({
+      paymentId: payId, amountMinor: 3600, currencyCode: "XOF", reference: "PA-ABC123", selfOrigin: "https://fn.test",
+    })).rejects.toThrow(/cliente absente/);
   });
 
   it("webhook : signature, statut relu chez Moneroo", async () => {

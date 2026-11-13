@@ -43,7 +43,10 @@ export async function initiatePending(
   const provider = deps.providers.find((p) => p.code === payment.provider_code);
   if (!provider) return deps.store.initiationFailed(payment.id, "fournisseur indisponible");
   try {
+    const customer =
+      provider.needsCustomer && deps.store.customer ? await deps.store.customer(payment.id) : undefined;
     const started = await provider.initiate({
+      ...(customer ? { customer } : {}),
       paymentId: payment.id,
       amountMinor: Number(payment.amount_minor),
       currencyCode: String(purchase.currency_code),

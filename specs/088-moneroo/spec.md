@@ -35,7 +35,7 @@ montant et devise vérifiés en base).
 ## Requirements *(mandatory)*
 
 - **FR-001**: `monerooProvider` derrière `PaymentProvider` (initialisation, signature HMAC-SHA256
-  du corps brut, statut relu par `/payments/:id/verify`) ; aucune donnée personnelle envoyée.
+  du corps brut, statut relu par `/payments/:id/verify`) ; seuls l'email et le prénom de la cliente sont transmis (exigés par Moneroo).
 - **FR-002**: `admin_save_payment_method` change le fournisseur dans la même famille, journalisé.
 - **FR-003**: `MONEROO_SECRET_KEY`, `MONEROO_WEBHOOK_SECRET` dans les variables des Functions.
 

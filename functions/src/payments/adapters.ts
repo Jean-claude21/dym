@@ -38,6 +38,13 @@ export function pgPaymentStore(pool: pg.Pool): PaymentStore {
     },
     switchToCash: (userId, purchaseId) =>
       one<Purchase>("select app.switch_to_cash($1, $2) as value", [userId, purchaseId]),
+    async customer(paymentId) {
+      const value = await one<{ email: string; first_name: string } | null>(
+        "select app.payment_customer($1) as value",
+        [paymentId],
+      );
+      return value ? { email: value.email, firstName: value.first_name } : null;
+    },
     async summary(paymentId) {
       try {
         const { rows } = await pool.query(

@@ -13,6 +13,8 @@ export interface InitiateInput {
   reference: string;
   /** Origine publique de la Function (pages servies par DYM). */
   selfOrigin: string;
+  /** Cliente, pour les fournisseurs qui l'exigent (Moneroo) ; jamais journalisée. */
+  customer?: { email: string; firstName: string };
 }
 
 export interface InitiateResult {
@@ -50,6 +52,8 @@ export interface RefundResult {
 export interface PaymentProvider {
   /** `payment_providers.code`. */
   readonly code: string;
+  /** Le fournisseur exige la cliente (email, prénom) à l'initiation. */
+  readonly needsCustomer?: boolean;
   initiate(input: InitiateInput): Promise<InitiateResult>;
   /** Absent : le fournisseur ne sait pas rembourser (refus enregistré). */
   refund?(input: RefundInput): Promise<RefundResult>;
@@ -100,4 +104,6 @@ export interface PaymentStore {
   }): Promise<{ replayed: boolean; purchase: Purchase }>;
   switchToCash(userId: string, purchaseId: string): Promise<Purchase>;
   summary(paymentId: string): Promise<PaymentSummary | null>;
+  /** Email et prénom de la cliente d'un paiement (fournisseurs qui l'exigent). */
+  customer?(paymentId: string): Promise<{ email: string; firstName: string } | null>;
 }
