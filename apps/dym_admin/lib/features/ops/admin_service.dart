@@ -132,6 +132,9 @@ abstract interface class AdminService {
   /// Messages, boutiques par origine, notifications (specs 070 à 072).
   Future<Result<AdminExchanges>> exchanges(String period);
 
+  /// Pilotage : période comparée, courbe, entonnoir, issues (spec 073).
+  Future<Result<AdminOverview>> overview(String period);
+
   Future<Result<AdminRevenue>> revenue(String period);
 
   Future<Result<List<AdminFeatureFlag>>> featureFlags();
@@ -398,6 +401,10 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<AdminExchanges>> exchanges(String period) =>
       _admin.exchanges(period);
+
+  @override
+  Future<Result<AdminOverview>> overview(String period) =>
+      _admin.overview(period);
 
   @override
   Future<Result<AdminRevenue>> revenue(String period) => _admin.revenue(period);

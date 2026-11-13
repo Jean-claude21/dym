@@ -362,12 +362,14 @@ class AdminField extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Étiquette à gauche, valeur alignée sur le bord droit.
           Expanded(
+            flex: 3,
             child: Text(label, style: t.label.copyWith(color: c.textSecondary)),
           ),
-          const SizedBox(width: DymTokenSpace.s2),
-          Flexible(
-            flex: 2,
+          const SizedBox(width: DymTokenSpace.s3),
+          Expanded(
+            flex: 4,
             child: Text(
               value,
               textAlign: TextAlign.end,

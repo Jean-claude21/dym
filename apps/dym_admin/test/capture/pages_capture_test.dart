@@ -20,8 +20,12 @@ import 'package:flutter_test/flutter_test.dart';
 /// Captures de contrôle des pages de l'admin (bilan avant refonte).
 final _now = DateTime(2026, 10, 5, 12);
 
-Future<void> _capture(WidgetTester tester, String name, Widget child) async {
-  const size = Size(1280, 800);
+Future<void> _capture(
+  WidgetTester tester,
+  String name,
+  Widget child, {
+  Size size = const Size(1280, 800),
+}) async {
   tester.view
     ..physicalSize = size
     ..devicePixelRatio = 1;
@@ -131,6 +135,21 @@ void main() {
       AdminDashboardView(service: MemoryAdminService(), onOpen: (_) {}),
     );
   });
+  // Page entière (relecture) : grand écran, tablette, téléphone.
+  for (final (name, size) in const [
+    ('admin_tableau_complet', Size(1440, 2000)),
+    ('admin_tableau_tablette', Size(800, 2600)),
+    ('admin_tableau_telephone', Size(412, 4200)),
+  ]) {
+    testWidgets('tableau de bord $name', (t) async {
+      await _capture(
+        t,
+        name,
+        AdminDashboardView(service: MemoryAdminService(), onOpen: (_) {}),
+        size: size,
+      );
+    });
+  }
   for (final section in [FinanceSection.refunds, FinanceSection.payments]) {
     testWidgets('finances ${section.name}', (t) async {
       await _capture(

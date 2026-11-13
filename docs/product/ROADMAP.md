@@ -210,6 +210,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `chat-ergonomie` | Messagerie claire et fiable : jours, heures, « vu », envois immédiats renvoyés seuls au retour du réseau, réponses rapides, « Joindre » (produits, photo), panier proposé par la vendeuse, commande en cours en tête du fil, boutique depuis l'en-tête, notification qui ouvre la conversation | 3 h | ✅ Spec 070 |
 | `supermarches` | Origine « Supermarché » (supermarchés et supérettes) : choisie à l'ouverture de la boutique, badge, filtre de recherche ; photo dédiée à fournir | 0,5 h | ✅ Spec 071 |
 | `notifications-utiles` | Notifications plus utiles : montant et articles dans les textes, quatre canaux Android (commandes, messages, courses, infos), notifications d'une même commande ou conversation remplacées, « Nuit calme » (22 h – 7 h) | 2 h | ✅ Spec 072 |
+| `admin-pilotage` | Tableau de bord admin refait : à traiter, six chiffres comparés à la période précédente avec mini-courbes, évolution avec axes et survol, parcours d'achat, issues des commandes, livraisons, types de boutiques, échanges, classements ; grand écran, tablette, téléphone | 4 h | ✅ Spec 073 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

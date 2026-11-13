@@ -912,6 +912,192 @@ class SuccessRate {
       : (succeeded * 100 / (succeeded + failed)).round();
 }
 
+/// Chiffres d'un intervalle (spec 073).
+@immutable
+class AdminKpis {
+  const new({
+    this.orders = 0,
+    this.sales = const [],
+    this.delivered = 0,
+    this.failed = 0,
+    this.signups = 0,
+    this.activeClients = 0,
+    this.payments = const SuccessRate(succeeded: 0, failed: 0),
+  });
+
+  factory fromJson(Map<String, dynamic> json) {
+    int n(String k) => (json[k] as num?)?.toInt() ?? 0;
+    return AdminKpis(
+      orders: n('orders'),
+      sales: [
+        for (final s in (json['sales'] as List? ?? const []))
+          CurrencyAmount.fromJson(s as Map<String, dynamic>),
+      ],
+      delivered: n('delivered'),
+      failed: n('failed'),
+      signups: n('signups'),
+      activeClients: n('active_clients'),
+      payments: SuccessRate.fromJson(json, 'payments_ok', 'payments_failed'),
+    );
+  }
+
+  final int orders;
+
+  /// Ventes encaissées (commandes livrées), par devise.
+  final List<CurrencyAmount> sales;
+  final int delivered;
+  final int failed;
+  final int signups;
+  final int activeClients;
+  final SuccessRate payments;
+
+  /// Livraisons réussies sur l'ensemble des issues.
+  SuccessRate get deliveries =>
+      SuccessRate(succeeded: delivered, failed: failed);
+
+  /// Ventes dans [currency] (0 sans vente).
+  int salesIn(String currency) =>
+      sales.where((s) => s.currencyCode == currency).firstOrNull?.minor ?? 0;
+
+  /// Panier moyen dans [currency] (nul sans commande livrée).
+  int? basketIn(String currency) {
+    final s = sales.where((x) => x.currencyCode == currency).firstOrNull;
+    return s == null || s.orders == 0 ? null : (s.minor / s.orders).round();
+  }
+}
+
+/// Point de la courbe (heure ou jour).
+@immutable
+class AdminPoint {
+  const new({
+    required this.at,
+    this.orders = 0,
+    this.delivered = 0,
+    this.sales = const [],
+  });
+
+  factory fromJson(Map<String, dynamic> json) => AdminPoint(
+    at: DateTime.parse(json['at'] as String),
+    orders: (json['orders'] as num?)?.toInt() ?? 0,
+    delivered: (json['delivered'] as num?)?.toInt() ?? 0,
+    sales: [
+      for (final s in (json['sales'] as List? ?? const []))
+        CurrencyAmount.fromJson(s as Map<String, dynamic>),
+    ],
+  );
+
+  final DateTime at;
+  final int orders;
+  final int delivered;
+  final List<CurrencyAmount> sales;
+
+  int salesIn(String currency) =>
+      sales.where((s) => s.currencyCode == currency).firstOrNull?.minor ?? 0;
+}
+
+/// Pilotage (spec 073) : période comparée à la précédente au même moment,
+/// courbe, entonnoir d'achat, issues des commandes.
+@immutable
+class AdminOverview {
+  const new({
+    required this.period,
+    this.current = const AdminKpis(),
+    this.previous = const AdminKpis(),
+    this.series = const [],
+    this.funnel = const AdminFunnel(),
+    this.outcomes = const AdminOutcomes(),
+  });
+
+  factory fromJson(Map<String, dynamic> json) {
+    Map<String, dynamic> m(String k) =>
+        (json[k] as Map?)?.cast<String, dynamic>() ?? const {};
+    return AdminOverview(
+      period: json['period'] as String? ?? 'day',
+      current: AdminKpis.fromJson(m('current')),
+      previous: AdminKpis.fromJson(m('previous')),
+      series: [
+        for (final p in (json['series'] as List? ?? const []))
+          AdminPoint.fromJson(p as Map<String, dynamic>),
+      ],
+      funnel: AdminFunnel.fromJson(m('funnel')),
+      outcomes: AdminOutcomes.fromJson(m('outcomes')),
+    );
+  }
+
+  final String period;
+  final AdminKpis current;
+  final AdminKpis previous;
+  final List<AdminPoint> series;
+  final AdminFunnel funnel;
+  final AdminOutcomes outcomes;
+
+  /// Devise principale : celle qui pèse le plus dans les ventes (ou la
+  /// première connue).
+  String? get mainCurrency {
+    final all = [...current.sales, ...previous.sales];
+    if (all.isEmpty) return null;
+    all.sort((a, b) => b.minor.compareTo(a.minor));
+    return all.first.currencyCode;
+  }
+}
+
+/// Entonnoir d'achat : personnes distinctes à chaque étape.
+@immutable
+class AdminFunnel {
+  const new({
+    this.active = 0,
+    this.viewed = 0,
+    this.added = 0,
+    this.ordered = 0,
+    this.delivered = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) {
+    int n(String k) => (json[k] as num?)?.toInt() ?? 0;
+    return AdminFunnel(
+      active: n('active'),
+      viewed: n('viewed'),
+      added: n('added'),
+      ordered: n('ordered'),
+      delivered: n('delivered'),
+    );
+  }
+
+  final int active;
+  final int viewed;
+  final int added;
+  final int ordered;
+  final int delivered;
+}
+
+/// Issue des commandes créées sur la période.
+@immutable
+class AdminOutcomes {
+  const new({
+    this.delivered = 0,
+    this.inProgress = 0,
+    this.refused = 0,
+    this.cancelled = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) {
+    int n(String k) => (json[k] as num?)?.toInt() ?? 0;
+    return AdminOutcomes(
+      delivered: n('delivered'),
+      inProgress: n('in_progress'),
+      refused: n('refused'),
+      cancelled: n('cancelled'),
+    );
+  }
+
+  final int delivered;
+  final int inProgress;
+  final int refused;
+  final int cancelled;
+
+  int get total => delivered + inProgress + refused + cancelled;
+}
+
 /// Jour de la série sur 30 jours.
 @immutable
 class DashboardDay {

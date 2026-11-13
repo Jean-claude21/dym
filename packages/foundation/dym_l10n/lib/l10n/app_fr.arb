@@ -7531,5 +7531,194 @@
   "adminStoresByOrigin": "Boutiques actives par type",
   "@adminStoresByOrigin": {
     "description": "Statistique admin"
+  },
+  "adminKpiSales": "Ventes encaissées",
+  "@adminKpiSales": {
+    "description": "Pilotage : chiffre"
+  },
+  "adminKpiOrders": "Commandes",
+  "@adminKpiOrders": {
+    "description": "Pilotage : chiffre"
+  },
+  "adminKpiBasket": "Panier moyen",
+  "@adminKpiBasket": {
+    "description": "Pilotage : chiffre"
+  },
+  "adminKpiDeliveries": "Livraisons réussies",
+  "@adminKpiDeliveries": {
+    "description": "Pilotage : chiffre"
+  },
+  "adminKpiPayments": "Paiements réussis",
+  "@adminKpiPayments": {
+    "description": "Pilotage : chiffre"
+  },
+  "adminKpiSignups": "Nouvelles inscriptions",
+  "@adminKpiSignups": {
+    "description": "Pilotage : chiffre"
+  },
+  "adminVsDay": "vs hier à la même heure",
+  "@adminVsDay": {
+    "description": "Pilotage : comparaison"
+  },
+  "adminVsWeek": "vs semaine dernière",
+  "@adminVsWeek": {
+    "description": "Pilotage : comparaison"
+  },
+  "adminVsMonth": "vs mois dernier",
+  "@adminVsMonth": {
+    "description": "Pilotage : comparaison"
+  },
+  "adminDeltaNew": "nouveau",
+  "@adminDeltaNew": {
+    "description": "Pilotage : rien sur la période précédente"
+  },
+  "adminTrendTitle": "Évolution",
+  "@adminTrendTitle": {
+    "description": "Pilotage : titre de la courbe"
+  },
+  "adminTrendOrders": "Commandes",
+  "@adminTrendOrders": {
+    "description": "Pilotage : série"
+  },
+  "adminTrendSales": "Ventes",
+  "@adminTrendSales": {
+    "description": "Pilotage : série"
+  },
+  "adminTrendDelivered": "Livrées",
+  "@adminTrendDelivered": {
+    "description": "Pilotage : série"
+  },
+  "adminFunnelTitle": "Parcours d'achat",
+  "@adminFunnelTitle": {
+    "description": "Pilotage : entonnoir"
+  },
+  "adminFunnelActive": "Clientes actives",
+  "@adminFunnelActive": {
+    "description": "Pilotage : entonnoir"
+  },
+  "adminFunnelViewed": "Ont vu un produit",
+  "@adminFunnelViewed": {
+    "description": "Pilotage : entonnoir"
+  },
+  "adminFunnelAdded": "Ont rempli un panier",
+  "@adminFunnelAdded": {
+    "description": "Pilotage : entonnoir"
+  },
+  "adminFunnelOrdered": "Ont commandé",
+  "@adminFunnelOrdered": {
+    "description": "Pilotage : entonnoir"
+  },
+  "adminFunnelDelivered": "Ont été livrées",
+  "@adminFunnelDelivered": {
+    "description": "Pilotage : entonnoir"
+  },
+  "adminFunnelHelp": "Personnes distinctes à chaque étape ; le pourcentage est le passage depuis l'étape précédente.",
+  "@adminFunnelHelp": {
+    "description": "Pilotage : aide de l'entonnoir"
+  },
+  "adminTodoTitle": "À traiter",
+  "@adminTodoTitle": {
+    "description": "Pilotage : alertes"
+  },
+  "adminTodoNone": "Rien à traiter pour l'instant.",
+  "@adminTodoNone": {
+    "description": "Pilotage : aucune alerte"
+  },
+  "adminOutcomesTitle": "Issue des commandes",
+  "@adminOutcomesTitle": {
+    "description": "Pilotage : anneau"
+  },
+  "adminOutcomeDelivered": "Livrées",
+  "@adminOutcomeDelivered": {
+    "description": "Pilotage : issue"
+  },
+  "adminOutcomeInProgress": "En cours",
+  "@adminOutcomeInProgress": {
+    "description": "Pilotage : issue"
+  },
+  "adminOutcomeRefused": "Refusées",
+  "@adminOutcomeRefused": {
+    "description": "Pilotage : issue"
+  },
+  "adminOutcomeCancelled": "Annulées",
+  "@adminOutcomeCancelled": {
+    "description": "Pilotage : issue"
+  },
+  "adminOutcomesCenter": "commandes",
+  "@adminOutcomesCenter": {
+    "description": "Pilotage : centre de l'anneau"
+  },
+  "adminStoresCenter": "boutiques",
+  "@adminStoresCenter": {
+    "description": "Pilotage : centre de l'anneau"
+  },
+  "adminSeeAll": "Tout voir",
+  "@adminSeeAll": {
+    "description": "Pilotage : lien"
+  },
+  "adminColStore": "Boutique",
+  "@adminColStore": {
+    "description": "Pilotage : colonne"
+  },
+  "adminColOrders": "Commandes",
+  "@adminColOrders": {
+    "description": "Pilotage : colonne"
+  },
+  "adminColSales": "Ventes",
+  "@adminColSales": {
+    "description": "Pilotage : colonne"
+  },
+  "adminColRating": "Note",
+  "@adminColRating": {
+    "description": "Pilotage : colonne"
+  },
+  "adminStatOnline": "En ligne",
+  "@adminStatOnline": {
+    "description": "Pilotage : livreurs"
+  },
+  "adminStatWaiting": "Sans livreur",
+  "@adminStatWaiting": {
+    "description": "Pilotage : livreurs"
+  },
+  "adminStatMedian": "Prise médiane",
+  "@adminStatMedian": {
+    "description": "Pilotage : livreurs"
+  },
+  "adminStatMessages": "Messages",
+  "@adminStatMessages": {
+    "description": "Pilotage : échanges"
+  },
+  "adminStatConversations": "Conversations",
+  "@adminStatConversations": {
+    "description": "Pilotage : échanges"
+  },
+  "adminPushLegendSent": "Envoyées",
+  "@adminPushLegendSent": {
+    "description": "Pilotage : notifications"
+  },
+  "adminPushLegendHeld": "Retenues",
+  "@adminPushLegendHeld": {
+    "description": "Pilotage : notifications"
+  },
+  "adminPushLegendFailed": "En échec",
+  "@adminPushLegendFailed": {
+    "description": "Pilotage : notifications"
+  },
+  "adminTopProducts": "Produits les plus vendus",
+  "@adminTopProducts": {
+    "description": "Pilotage : classement"
+  },
+  "adminActiveUsersShort": "Actives sur 7 jours",
+  "@adminActiveUsersShort": {
+    "description": "Pilotage : utilisatrices"
+  },
+  "adminPoints": "{n} pt",
+  "@adminPoints": {
+    "description": "Pilotage : écart d'un taux en points",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
   }
 }

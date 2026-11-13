@@ -1493,6 +1493,87 @@ class MemoryAdminService implements AdminService {
       );
 
   @override
+  Future<Result<AdminOverview>> overview(String period) async {
+    final failed = _fail<AdminOverview>();
+    if (failed != null) return failed;
+    // Courbe : par heure aujourd'hui, par jour sur la semaine ou le mois.
+    final day = DateTime.utc(now.year, now.month, now.day);
+    final points = switch (period) {
+      'week' => [
+        for (var i = 0; i < now.weekday; i++)
+          day.subtract(Duration(days: now.weekday - 1 - i)),
+      ],
+      'month' => [
+        for (var d = 1; d <= now.day; d++) DateTime.utc(now.year, now.month, d),
+      ],
+      _ => [for (var h = 0; h <= now.hour; h++) day.add(Duration(hours: h))],
+    };
+    final hourly = period == 'day';
+    final scale = switch (period) {
+      'week' => 7,
+      'month' => 30,
+      _ => 1,
+    };
+    AdminKpis kpis(int orders, int sales, int delivered) => AdminKpis(
+      orders: orders,
+      sales: [
+        CurrencyAmount(
+          currencyCode: currency.code,
+          minor: _minor(sales),
+          orders: delivered,
+        ),
+      ],
+      delivered: delivered,
+      failed: (delivered / 12).round(),
+      signups: 9 * scale,
+      activeClients: 312 * (scale == 1 ? 1 : 3),
+      payments: SuccessRate(succeeded: 240 * scale, failed: 10 * scale),
+    );
+    return Ok(
+      AdminOverview(
+        period: period,
+        current: kpis(58 * scale, 186500 * scale, 46 * scale),
+        previous: kpis(51 * scale, 171000 * scale, 44 * scale),
+        series: [
+          for (final (i, at) in points.indexed)
+            AdminPoint(
+              at: at,
+              orders: hourly
+                  ? (i < 7 ? i ~/ 3 : 3 + (i * 5) % 7)
+                  : 40 + (i * 13) % 27,
+              delivered: hourly
+                  ? (i < 8 ? 0 : 2 + (i * 3) % 5)
+                  : 33 + (i * 11) % 21,
+              sales: [
+                CurrencyAmount(
+                  currencyCode: currency.code,
+                  minor: _minor(
+                    hourly
+                        ? (i < 8 ? 0 : 9000 + (i * 4300) % 14000)
+                        : 120000 + (i * 37000) % 90000,
+                  ),
+                ),
+              ],
+            ),
+        ],
+        funnel: AdminFunnel(
+          active: 312 * scale,
+          viewed: 201 * scale,
+          added: 96 * scale,
+          ordered: 58 * scale,
+          delivered: 46 * scale,
+        ),
+        outcomes: AdminOutcomes(
+          delivered: 46 * scale,
+          inProgress: 8 * scale,
+          refused: 3 * scale,
+          cancelled: scale,
+        ),
+      ),
+    );
+  }
+
+  @override
   Future<Result<AdminDashboard>> dashboard(String period) async =>
       _fail<AdminDashboard>() ??
       Ok(

@@ -102,7 +102,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
             DashboardLink.stuckOrders => AdminTab.orders,
             DashboardLink.disputes => AdminTab.disputes,
             DashboardLink.tickets => AdminTab.support,
-            DashboardLink.drafts => AdminTab.stores,
+            DashboardLink.drafts || DashboardLink.stores => AdminTab.stores,
+            DashboardLink.orders => AdminTab.orders,
+            DashboardLink.finance => AdminTab.finance,
+            DashboardLink.clients => AdminTab.clients,
+            DashboardLink.live => AdminTab.ops,
           };
         }),
       ),
