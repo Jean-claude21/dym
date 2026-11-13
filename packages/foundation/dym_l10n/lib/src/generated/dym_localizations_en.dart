@@ -6979,4 +6979,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get productOutOfStockShort => 'Out of stock';
+
+  @override
+  String get vendorPublishStatus => 'Post a status';
 }

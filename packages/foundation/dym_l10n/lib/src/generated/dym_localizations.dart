@@ -6088,7 +6088,7 @@ abstract class DymLocalizations {
   /// Rangée de stories (accueil)
   ///
   /// In fr, this message translates to:
-  /// **'Stories des boutiques'**
+  /// **'Statuts des boutiques'**
   String get storiesTitle;
 
   /// Ajouter le produit d'une story
@@ -6148,7 +6148,7 @@ abstract class DymLocalizations {
   /// Contenus de la vendeuse
   ///
   /// In fr, this message translates to:
-  /// **'Mes stories et vidéos'**
+  /// **'Mes statuts et vidéos'**
   String get contentMine;
 
   /// Titre de la publication (75)
@@ -6160,7 +6160,7 @@ abstract class DymLocalizations {
   /// Type de contenu
   ///
   /// In fr, this message translates to:
-  /// **'Story 24 h'**
+  /// **'Statut 24 h'**
   String get contentStory;
 
   /// Type de contenu
@@ -6226,7 +6226,7 @@ abstract class DymLocalizations {
   /// Publier une story
   ///
   /// In fr, this message translates to:
-  /// **'Publier la story'**
+  /// **'Publier le statut'**
   String get contentPublishStory;
 
   /// Publier une vidéo
@@ -6250,7 +6250,7 @@ abstract class DymLocalizations {
   /// Aucun contenu
   ///
   /// In fr, this message translates to:
-  /// **'Pas encore de story ni de vidéo.'**
+  /// **'Pas encore de statut ni de vidéo.'**
   String get contentNone;
 
   /// Contenu archivé
@@ -6328,7 +6328,7 @@ abstract class DymLocalizations {
   /// Type de cible
   ///
   /// In fr, this message translates to:
-  /// **'Story'**
+  /// **'Statut'**
   String get moderationStory;
 
   /// Type de cible
@@ -11646,6 +11646,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Rupture'**
   String get productOutOfStockShort;
+
+  /// Accueil vendeuse : raccourci de publication
+  ///
+  /// In fr, this message translates to:
+  /// **'Publier un statut'**
+  String get vendorPublishStatus;
 }
 
 class _DymLocalizationsDelegate

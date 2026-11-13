@@ -183,6 +183,7 @@ class _HomeViewState extends State<HomeView> {
           onMessages: () => _select(HomeTab.messages),
           onCharge: _navigator.toCharge,
           onTill: _navigator.toTill,
+          onPublish: _contents ? _navigator.toPublishStatus : null,
         ),
         HomeTab.messages => ConversationsView(
           service: _chat,

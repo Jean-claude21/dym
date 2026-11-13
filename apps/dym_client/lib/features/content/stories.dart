@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/content/feed_view.dart';
+import 'package:dym_client/features/content/share_content.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -330,6 +331,21 @@ class _StoryViewerState extends State<StoryViewer>
                         ),
                         if (_paused)
                           const Icon(Icons.pause_rounded, color: Colors.white),
+                        if (_stories.isNotEmpty)
+                          IconButton(
+                            tooltip: l10n.shareAction,
+                            onPressed: () => shareContent(
+                              context,
+                              (c) async =>
+                                  (await widget.service.shareLink(c))
+                                      .valueOrNull,
+                              _stories[_index],
+                            ),
+                            icon: const Icon(
+                              Icons.share_rounded,
+                              color: Colors.white,
+                            ),
+                          ),
                         IconButton(
                           tooltip: l10n.actionClose,
                           onPressed: _close,

@@ -3607,7 +3607,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get feedLike => 'J\'aime';
 
   @override
-  String get storiesTitle => 'Stories des boutiques';
+  String get storiesTitle => 'Statuts des boutiques';
 
   @override
   String storyAddProduct(String name) {
@@ -3647,13 +3647,13 @@ class DymLocalizationsFr extends DymLocalizations {
   String get reportOther => 'Autre';
 
   @override
-  String get contentMine => 'Mes stories et vidéos';
+  String get contentMine => 'Mes statuts et vidéos';
 
   @override
   String get contentPublishTitle => 'Publier';
 
   @override
-  String get contentStory => 'Story 24 h';
+  String get contentStory => 'Statut 24 h';
 
   @override
   String get contentVideo => 'Vidéo';
@@ -3689,7 +3689,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get contentCaption => 'Légende (facultatif)';
 
   @override
-  String get contentPublishStory => 'Publier la story';
+  String get contentPublishStory => 'Publier le statut';
 
   @override
   String get contentPublishVideo => 'Publier la vidéo';
@@ -3701,7 +3701,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get contentVideoHint => 'Visible dans le fil des clientes de ta zone.';
 
   @override
-  String get contentNone => 'Pas encore de story ni de vidéo.';
+  String get contentNone => 'Pas encore de statut ni de vidéo.';
 
   @override
   String get contentArchived => 'Archivé';
@@ -3750,7 +3750,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get moderationVideo => 'Vidéo';
 
   @override
-  String get moderationStory => 'Story';
+  String get moderationStory => 'Statut';
 
   @override
   String get moderationProduct => 'Produit';
@@ -7027,4 +7027,7 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get productOutOfStockShort => 'Rupture';
+
+  @override
+  String get vendorPublishStatus => 'Publier un statut';
 }

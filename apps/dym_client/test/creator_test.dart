@@ -1,3 +1,4 @@
+import 'package:dym_client/features/content/share_content.dart';
 import 'package:dym_client/features/creator/creator_service.dart';
 import 'package:dym_client/features/creator/creator_views.dart';
 import 'package:dym_client/features/creator/tiktok_views.dart';
@@ -365,6 +366,10 @@ void main() {
     testWidgets('studio : compte relié, import proposé, partage copié', (
       tester,
     ) async {
+      // Sans WhatsApp : le lien est copié (spec 077).
+      final opened = <Uri>[];
+      shareOpener = _Opener(opened, ok: false);
+      addTearDown(() => shareOpener = const PluginExternalPageOpener());
       final copied = <String>[];
       tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
         SystemChannels.platform,
@@ -419,8 +424,22 @@ void main() {
       await tester.tap(find.byTooltip('Partager'));
       await tester.pumpAndSettle();
       expect(service.shared, ['p1']);
+      expect(opened.single.host, 'wa.me', reason: 'WhatsApp essayé d’abord');
       expect(copied.single, contains('https://fn.test/s/ab12cd34'));
       expect(find.textContaining('Lien copié'), findsOneWidget);
     });
   });
+}
+
+class _Opener implements ExternalPageOpener {
+  new(this.opened, {required this.ok});
+
+  final List<Uri> opened;
+  final bool ok;
+
+  @override
+  Future<Result<bool>> open(Uri url) async {
+    opened.add(url);
+    return Ok(ok);
+  }
 }
