@@ -109,7 +109,7 @@ class _CartScreenState extends State<CartScreen> {
       WhiteCard(
         child: Row(
           children: [
-            Image(image: DemoImages.zem, width: 44, height: 44),
+            Image(image: DemoImages.rider, width: 44, height: 44),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

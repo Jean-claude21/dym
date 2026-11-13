@@ -2,16 +2,16 @@ import 'package:dym_ui/src/theme/dym_theme.dart';
 import 'package:dym_ui/src/tokens/dym_tokens.g.dart';
 import 'package:flutter/material.dart';
 
-/// Pastille jaune plantain de délai de livraison, avec l'illustration du zem.
+/// Pastille jaune plantain de délai de livraison, avec le livreur.
 class DymDeliveryPill extends StatelessWidget {
-  /// Crée la pastille. [zem] : illustration du zem fournie par l'app.
-  const new({required this.label, required this.zem, super.key});
+  /// Crée la pastille. [rider] : illustration du livreur fournie par l'app.
+  const new({required this.label, required this.rider, super.key});
 
   /// Libellé (« Livré en 35 min »).
   final String label;
 
-  /// Illustration du zem (image).
-  final ImageProvider zem;
+  /// Illustration du livreur (image).
+  final ImageProvider rider;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class DymDeliveryPill extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image(image: zem, width: 36, height: 36, fit: BoxFit.contain),
+            Image(image: rider, width: 36, height: 36, fit: BoxFit.contain),
             const SizedBox(width: DymTokenSpace.s1),
             Flexible(
               child: Text(

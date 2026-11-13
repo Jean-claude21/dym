@@ -92,7 +92,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
           const DymPromoBadge(label: 'Nouveau', tone: DymPromoTone.fresh),
         ]),
         section('DymDeliveryPill · DymAvatar', [
-          DymDeliveryPill(label: 'Livré en 35 min', zem: DemoImages.zem),
+          DymDeliveryPill(label: 'Livré en 35 min', rider: DemoImages.rider),
           DymAvatar(image: DemoImages.person('esi'), presenceDot: true),
         ]),
         section('DymSearchBar', [

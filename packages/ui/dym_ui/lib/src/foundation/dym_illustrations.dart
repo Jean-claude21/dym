@@ -33,9 +33,9 @@ abstract final class DymIllustrations {
     package: 'dym_ui',
   );
 
-  /// Zem (moto-taxi) de la pastille de livraison.
-  static const ImageProvider zem = AssetImage(
-    'assets/scenes/zem.webp',
+  /// Livreur à moto de la pastille de livraison.
+  static const ImageProvider deliveryRider = AssetImage(
+    'assets/scenes/delivery_rider.webp',
     package: 'dym_ui',
   );
 

@@ -32,7 +32,7 @@ jamais retirer de vitesse ni de lisibilité.
 | Touche | Où | Rôle |
 |---|---|---|
 | Boutiques avec badge d'origine | Accueil, rayon, panier, page boutique | Confiance : on sait de qui on achète |
-| Le zem | Pastille de délai, suivi, ramassage côté vendeuse | Réalité de la livraison à Lomé |
+| Le livreur à moto | Pastille de délai, suivi, ramassage côté vendeuse | Réalité de la livraison en ville |
 | Le motif kente éwé | **Splash uniquement** | Signature de marque |
 
 ### Interdits
