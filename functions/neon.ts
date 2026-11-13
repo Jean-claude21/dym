@@ -33,6 +33,8 @@ export default defineConfig({
         FCM_SERVICE_ACCOUNT: process.env.FCM_SERVICE_ACCOUNT ?? "",
         // Adresse publique des photos du catalogue (grande photo des push, spec 080).
         MEDIA_PUBLIC_URL: process.env.MEDIA_PUBLIC_URL ?? "",
+        // Suivi des erreurs (Sentry, projet « dym-functions ») ; vide : rien n'est envoyé.
+        ERROR_REPORTING_DSN: process.env.ERROR_REPORTING_DSN ?? "",
       },
     },
   },

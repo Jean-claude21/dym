@@ -81,12 +81,15 @@ node db/scripts/dym-db.mjs test --url "<même URL>" && npx neonctl branches dele
 # Déploiement : clés lues dans un fichier hors dépôt.
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt> --no-env-pull
 # Le fichier DOIT contenir toutes les variables de neon.ts (ALLOWED_ORIGINS, OPENAI_API_KEY,
-# PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT, MEDIA_PUBLIC_URL) : une variable absente est
+# PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT, MEDIA_PUBLIC_URL, ERROR_REPORTING_DSN) : une variable absente est
 # remise à vide. MEDIA_PUBLIC_URL = DYM_MEDIA_URL de config/<env>.json (photos des push).
 ```
 
 Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-define=DYM_ERROR_DSN=https://<clé>@<hôte>/<projet>`
-pour les apps (Sentry ou GlitchTip), variable `ERROR_REPORTING_DSN` pour les Functions. Aucune donnée
+pour les apps (Sentry ou GlitchTip), variable `ERROR_REPORTING_DSN` pour les Functions. Sentry
+(organisation `dym-mq`, région Europe) : un projet par app (`dym-client`, `dym-vendor`,
+`dym-delivery`, `dym-admin`) et `dym-functions` ; DSN hors dépôt (`.secrets/dym-sentry-apps.env`,
+`DYM_ERROR_DSN_<APP>`, et le fichier d'environnement des Functions). Aucune donnée
 personnelle n'est envoyée.
 
 Notifications (FCM) : `google-services.json` (console Firebase, projet `do-your-market-79ff7`) dans
