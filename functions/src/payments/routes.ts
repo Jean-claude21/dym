@@ -174,8 +174,8 @@ export function registerPaymentRoutes(
 <style>body{margin:0;font-family:system-ui,sans-serif;background:#FAFAF7;color:#1B1F1C;display:flex;
 min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px}
 h1{color:#145C43;font-size:22px}p{color:#4E5852}</style></head><body><main>
-<h1>Paiement transmis</h1><p>Retourne dans l'app DYM : ta commande s'y met à jour.</p>
-<p lang="en">Payment sent. Go back to the DYM app: your order updates there.</p></main></body></html>`),
+<h1>Paiement transmis</h1><p>Ferme cette page (✕ en haut) : ta commande est à jour dans DYM.</p>
+<p lang="en">Payment sent. Close this page (✕ at the top): your order is up to date in DYM.</p></main></body></html>`),
   );
 
   app.get("/v1/payments/simulator/:paymentId", async (c) => {

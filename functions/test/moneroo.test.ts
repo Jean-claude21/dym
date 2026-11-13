@@ -111,6 +111,6 @@ describe("Moneroo", () => {
     const app = createApp({ verifyToken: (async () => { throw new Error(); }) as TokenVerifier, payments: { store: {} as PaymentStore, providers: [] } });
     const res = await app.request(`http://fn.test/v1/payments/return/${payId}`);
     expect(res.status).toBe(200);
-    expect(await res.text()).toContain("Retourne dans l'app DYM");
+    expect(await res.text()).toContain("Ferme cette page");
   });
 });
