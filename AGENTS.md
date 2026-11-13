@@ -73,10 +73,10 @@ npx neonctl data-api refresh-schema --project-id <id> --branch staging --databas
 # NEON_LIVE_AUTH_URL, NEON_LIVE_DATA_API_URL, NEON_LIVE_FUNCTIONS_URL = URL de config/staging.json ;
 # NEON_LIVE_DATABASE_URL (hors dépôt) active le scénario de l'admin (rôle accordé par grant-admin).
 cd packages/data/dym_data && fvm dart test test/order_flow_live_test.dart
-# pgTAP complet sur une branche Neon propre (jetable, créée depuis `main` vide). Neon Auth est
-# actif sur `main` : le schéma `neon_auth` existe, pas de `--neon-shims` (refusé : permission).
+# pgTAP complet sur une branche Neon propre (jetable, créée depuis `main` vide). `main` a Neon Auth
+# mais pas les rôles de la Data API : `--neon-shims` crée les rôles et laisse `neon_auth` intact.
 npx neonctl branches create --project-id <id> --name test-spec-NNN --parent main
-node db/scripts/dym-db.mjs migrate --url "$(npx neonctl connection-string test-spec-NNN --project-id <id>)"
+node db/scripts/dym-db.mjs migrate --neon-shims --url "$(npx neonctl connection-string test-spec-NNN --project-id <id>)"
 node db/scripts/dym-db.mjs test --url "<même URL>" && npx neonctl branches delete test-spec-NNN --project-id <id>
 # Déploiement : clés lues dans un fichier hors dépôt.
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt> --no-env-pull
