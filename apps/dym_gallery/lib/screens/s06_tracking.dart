@@ -8,7 +8,7 @@ import 'package:dym_gallery/screens/s05_cart.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
-/// Écran 06 — Suivi : le zem avance sur l'itinéraire entre les deux boutiques
+/// Écran 06 — Suivi : le livreur avance sur l'itinéraire entre les boutiques
 /// et la maison de la cliente.
 class TrackingScreen extends StatefulWidget {
   const new({required this.country, super.key});
@@ -21,7 +21,7 @@ class TrackingScreen extends StatefulWidget {
 
 class _TrackingScreenState extends State<TrackingScreen>
     with SingleTickerProviderStateMixin {
-  /// Position courante du zem sur l'itinéraire (0 = départ, 1 = arrivée).
+  /// Position courante du livreur sur l'itinéraire (0 = départ, 1 = arrivée).
   static const _current = 0.68;
 
   late final AnimationController _ride = AnimationController(
@@ -87,7 +87,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Ton zem arrive dans',
+                            'Ton livreur arrive dans',
                             style: t.title.copyWith(fontSize: 17),
                           ),
                           Text(
@@ -127,7 +127,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                                   style: t.title.copyWith(fontSize: 22),
                                 ),
                                 TextSpan(
-                                  text: 'arrive en zem',
+                                  text: 'arrive à moto',
                                   style: t.body.copyWith(
                                     color: c.textSecondary,
                                   ),
@@ -283,7 +283,7 @@ class _Substitution extends StatelessWidget {
   }
 }
 
-/// Carte stylisée + itinéraire + zem animé.
+/// Carte stylisée + itinéraire + livreur animé.
 class _Map extends StatelessWidget {
   const new({
     required this.size,
@@ -344,7 +344,7 @@ class _Map extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: c.card, width: 3),
             ),
-            child: Image(image: DemoImages.zem),
+            child: Image(image: DemoImages.rider),
           ),
         ),
       ],

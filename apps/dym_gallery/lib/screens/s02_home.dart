@@ -80,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           flex: 3,
                           child: DymDeliveryPill(
                             label: 'Livré en 35 min',
-                            zem: DemoImages.zem,
+                            rider: DemoImages.rider,
                           ),
                         ),
                         const SizedBox(width: 6),

@@ -60,7 +60,7 @@ Les trois parcours qui portent les hypothèses les plus risquées passent en pre
 | 4 | Cliente | **Panier multi-boutiques** : sous-paniers par boutique, frais de chacune | C-CART-01..09 | « Ajoute un article d'une 2e boutique et dis combien tu paies au total. » | Combinaison spontanée (H2), total compris |
 | 5 | Cliente | Checkout : adresse, livraison par boutique, cash ou MoMo, récapitulatif | C-CHECK-01..05, C-ADDR | « Commande, paiement à la livraison. » | < 90 s |
 | 6 | Cliente | Paiement MoMo : redirection, attente, échec, succès | C-PAY-01/02 | « Paie par MoMo. Que se passe-t-il si ça échoue ? » | État compris à chaque étape |
-| 7 | Cliente | Mes commandes : course du zem, statuts, annuler, signaler un problème | C-ORD-01..04/07/08 | « Où est ta commande ? Signale qu'il manque un article. » | Réponse sans DM |
+| 7 | Cliente | Mes commandes : course du livreur, statuts, annuler, signaler un problème | C-ORD-01..04/07/08 | « Où est ta commande ? Signale qu'il manque un article. » | Réponse sans DM |
 | 8 | Cliente | Centre de notifications, profil, adresses | C-NOTIF-09, C-PROF | « Ajoute l'adresse de ton bureau. » | Sans aide |
 | 9 | Vendeuse | Onboarding boutique en 7 étapes, dont **« Où vends-tu ? »** (au marché, fait maison, boutique) | V-AUTH-03/04 | « Ouvre ta boutique. » | < 10 min, origine choisie sans hésiter |
 | 10 | Vendeuse | **Publier un produit par photo** : nom, catégorie, description proposés ; variantes, stock | V-PROD-01..09 | « Mets en vente ce pagne. » | < 60 s (H1, H8) |

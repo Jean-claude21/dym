@@ -13,11 +13,11 @@ abstract final class DemoImages {
   static AssetImage illustration(String name) =>
       AssetImage('assets/demo/illustrations/$name.webp');
 
-  static final AssetImage zem = illustration('zem');
+  static final AssetImage rider = illustration('livreur');
   static final AssetImage basket = illustration('panier');
   static final AssetImage splashBasin = illustration('splash-bassine');
   static final AssetImage kente = illustration('kente');
-  static final AssetImage map = illustration('carte-lome');
+  static final AssetImage map = illustration('carte-ville');
 }
 
 /// Écrans validés (docs/design/screens) copiés pour le mode « Comparer ».

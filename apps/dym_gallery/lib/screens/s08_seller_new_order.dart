@@ -153,11 +153,11 @@ class _SellerNewOrderScreenState extends State<SellerNewOrderScreen>
                   const SizedBox(height: 10),
                   Row(
                     children: [
-                      Image(image: DemoImages.zem, width: 64, height: 56),
+                      Image(image: DemoImages.rider, width: 64, height: 56),
                       const SizedBox(width: 10),
                       Expanded(
                         child: Text(
-                          'Le zem passe récupérer à 10 h 20',
+                          'Le livreur passe récupérer à 10 h 20',
                           style: t.label.copyWith(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
