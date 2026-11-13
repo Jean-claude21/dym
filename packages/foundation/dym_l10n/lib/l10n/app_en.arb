@@ -2047,5 +2047,6 @@
   "productOutOfStockShort": "Out of stock",
   "vendorPublishStatus": "Post a status",
   "missionCall": "Call",
-  "missionRoute": "Directions"
+  "missionRoute": "Directions",
+  "searchFuzzy": "Results close to “{query}”"
 }

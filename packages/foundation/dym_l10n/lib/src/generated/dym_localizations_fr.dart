@@ -7036,4 +7036,9 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get missionRoute => 'Itinéraire';
+
+  @override
+  String searchFuzzy(String query) {
+    return 'Résultats proches de « $query »';
+  }
 }

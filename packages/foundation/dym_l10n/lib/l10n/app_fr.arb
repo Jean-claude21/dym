@@ -7931,5 +7931,14 @@
   "missionRoute": "Itinéraire",
   "@missionRoute": {
     "description": "Livreur : ouvrir l'itinéraire dans l'app de cartes"
+  },
+  "searchFuzzy": "Résultats proches de « {query} »",
+  "@searchFuzzy": {
+    "description": "Recherche : résultats trouvés malgré une faute",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
   }
 }

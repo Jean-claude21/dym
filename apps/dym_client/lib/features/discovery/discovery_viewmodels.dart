@@ -589,6 +589,7 @@ class SearchViewModel extends BaseViewModel {
         total: value.total,
         products: [...current.products, ...value.products],
         stores: current.stores,
+        fuzzy: current.fuzzy,
       );
     }
     _loadingMore = false;

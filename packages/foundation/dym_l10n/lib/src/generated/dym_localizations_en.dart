@@ -6988,4 +6988,9 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get missionRoute => 'Directions';
+
+  @override
+  String searchFuzzy(String query) {
+    return 'Results close to “$query”';
+  }
 }

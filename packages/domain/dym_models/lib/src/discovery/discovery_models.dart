@@ -167,13 +167,21 @@ class DiscoverResult {
 @immutable
 @JsonSerializable()
 class SearchResults {
-  const new({this.total = 0, this.products = const [], this.stores = const []});
+  const new({
+    this.total = 0,
+    this.products = const [],
+    this.stores = const [],
+    this.fuzzy = false,
+  });
 
   factory fromJson(Map<String, dynamic> json) => _$SearchResultsFromJson(json);
 
   final int total;
   final List<CatalogItem> products;
   final List<PublicStore> stores;
+
+  /// Résultats approchés : la recherche exacte n'a rien trouvé (spec 079).
+  final bool fuzzy;
 
   bool get isEmpty => products.isEmpty && stores.isEmpty;
 }

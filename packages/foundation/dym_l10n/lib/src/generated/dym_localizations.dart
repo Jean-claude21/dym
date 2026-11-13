@@ -11664,6 +11664,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Itinéraire'**
   String get missionRoute;
+
+  /// Recherche : résultats trouvés malgré une faute
+  ///
+  /// In fr, this message translates to:
+  /// **'Résultats proches de « {query} »'**
+  String searchFuzzy(String query);
 }
 
 class _DymLocalizationsDelegate
