@@ -4,6 +4,7 @@ library;
 import 'package:dym_client/features/cart/addresses/address_form_view.dart';
 import 'package:dym_client/features/cart/payment/payment_view.dart';
 import 'package:dym_client/features/group_buy/group_buy_view.dart';
+import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/features/orders/testing.dart';
 import 'package:dym_client/features/reviews/review_views.dart';
 import 'package:dym_core/dym_core.dart';
@@ -60,6 +61,16 @@ void main() {
       t,
       'adresse',
       AddressFormView(service: memoryCart(), onDone: (_) {}),
+    );
+  });
+  testWidgets('reglages notifications', (t) async {
+    await capture(
+      t,
+      'reglages_notifications',
+      NotificationSettingsView(
+        service: MemoryOrdersService(config: togoConfig()),
+        onBack: () {},
+      ),
     );
   });
   testWidgets('avis', (t) async {

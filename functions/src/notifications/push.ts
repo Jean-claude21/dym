@@ -8,6 +8,30 @@ export interface PushMessage {
   title: string;
   body: string;
   data: Record<string, string>;
+  /** Canal Android (importance et son propres), créé par l'app. */
+  channel?: string;
+  /** Regroupement : une nouvelle notification du même sujet remplace l'ancienne. */
+  tag?: string;
+}
+
+/** Courses du livreur : canal à part, pour un son et une importance dédiés. */
+const missionKinds = new Set([
+  "mission_available",
+  "order_ready_pickup",
+  "delivery_assigned",
+  "courier_cash_confirmed",
+]);
+
+/**
+ * Canal Android d'une notification (spec 072) : commandes et paiements,
+ * messages, courses du livreur, le reste. Les identifiants sont créés par
+ * `PushNotifications` dans les apps.
+ */
+export function pushChannel(kind: string, category: string): string {
+  if (missionKinds.has(kind)) return "dym_missions";
+  if (category === "messages") return "dym_messages";
+  if (category === "orders" || category === "payments") return "dym_orders";
+  return "dym_general";
 }
 
 export interface PushSendResult {
@@ -109,7 +133,14 @@ export function fcmPushSender(
                 token: device,
                 notification: { title: message.title, body: message.body },
                 data: message.data,
-                android: { priority: "high", notification: { sound: "default" } },
+                android: {
+                  priority: "high",
+                  notification: {
+                    sound: "default",
+                    ...(message.channel ? { channel_id: message.channel } : {}),
+                    ...(message.tag ? { tag: message.tag } : {}),
+                  },
+                },
               },
             }),
           },
@@ -160,18 +191,20 @@ export async function dispatchPushes(queue: PushQueue, sender: PushSender, limit
       continue;
     }
     try {
+      const conversation =
+        typeof push.params?.conversation_id === "string" ? push.params.conversation_id : null;
       const result = await sender.send({
         tokens: push.tokens,
         title: push.text.title,
         body: push.text.body,
+        channel: pushChannel(push.kind, push.category),
+        ...(conversation ?? push.order_id ? { tag: (conversation ?? push.order_id) as string } : {}),
         data: {
           kind: push.kind,
           ...(push.order_id ? { order_id: push.order_id } : {}),
           ...(push.purchase_id ? { purchase_id: push.purchase_id } : {}),
           // Message : le toucher ouvre la conversation.
-          ...(typeof push.params?.conversation_id === "string"
-            ? { conversation_id: push.params.conversation_id }
-            : {}),
+          ...(conversation ? { conversation_id: conversation } : {}),
         },
       });
       invalid.push(...result.invalidTokens);

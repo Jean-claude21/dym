@@ -7471,5 +7471,65 @@
   "chatSearchStoreProducts": "Chercher dans la boutique",
   "@chatSearchStoreProducts": {
     "description": "Recherche des produits de la boutique (cliente)"
+  },
+  "prefQuietNightTitle": "Nuit calme",
+  "@prefQuietNightTitle": {
+    "description": "Réglage : pas de messages ni d'offres la nuit"
+  },
+  "prefQuietNightBody": "De 22 h à 7 h, pas de messages ni d'offres sur le téléphone. Les commandes et les paiements passent toujours.",
+  "@prefQuietNightBody": {
+    "description": "Explication de la nuit calme"
+  },
+  "pushChannelOrders": "Commandes et paiements",
+  "@pushChannelOrders": {
+    "description": "Canal Android des commandes"
+  },
+  "pushChannelMessages": "Messages",
+  "@pushChannelMessages": {
+    "description": "Canal Android des messages"
+  },
+  "pushChannelMissions": "Courses à livrer",
+  "@pushChannelMissions": {
+    "description": "Canal Android des courses du livreur"
+  },
+  "pushChannelGeneral": "Infos et offres",
+  "@pushChannelGeneral": {
+    "description": "Canal Android du reste"
+  },
+  "adminExchangesTitle": "Échanges",
+  "@adminExchangesTitle": {
+    "description": "Carte du tableau de bord admin : messages et notifications"
+  },
+  "adminMessagesSent": "Messages envoyés",
+  "@adminMessagesSent": {
+    "description": "Statistique admin"
+  },
+  "adminMessagesWithOrder": "Sur commande",
+  "@adminMessagesWithOrder": {
+    "description": "Statistique admin"
+  },
+  "adminConversationsActive": "Conversations actives",
+  "@adminConversationsActive": {
+    "description": "Statistique admin"
+  },
+  "adminPushSent": "Notifications",
+  "@adminPushSent": {
+    "description": "Statistique admin"
+  },
+  "adminPushSkipped": "Retenues",
+  "@adminPushSkipped": {
+    "description": "Statistique admin"
+  },
+  "adminPushFailed": "Échecs d'envoi",
+  "@adminPushFailed": {
+    "description": "Statistique admin"
+  },
+  "adminQuietNightUsers": "Nuit calme activée",
+  "@adminQuietNightUsers": {
+    "description": "Statistique admin"
+  },
+  "adminStoresByOrigin": "Boutiques actives par type",
+  "@adminStoresByOrigin": {
+    "description": "Statistique admin"
   }
 }

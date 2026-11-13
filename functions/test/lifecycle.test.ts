@@ -8,6 +8,7 @@ import {
   dispatchPushes,
   fcmPushSender,
   noPushSender,
+  pushChannel,
   type PushMessage,
   type PushQueue,
   type PushSender,
@@ -124,12 +125,43 @@ describe("transitions", () => {
 
   it("push d'un message : identifiant de conversation dans les données", async () => {
     const queue = new FakeQueue([
-      push("n9", { kind: "new_message_vendor", order_id: null, params: { sender_name: "Awa", conversation_id: "c-1" } }),
+      push("n9", { kind: "new_message_vendor", category: "messages", order_id: null, params: { sender_name: "Awa", conversation_id: "c-1" } }),
     ]);
     const sent: PushMessage[] = [];
     const sender: PushSender = { enabled: true, async send(m) { sent.push(m); return { sent: 1, invalidTokens: [] }; } };
     await dispatchPushes(queue, sender);
     expect(sent[0]?.data).toEqual({ kind: "new_message_vendor", conversation_id: "c-1" });
+    expect(sent[0]).toMatchObject({ channel: "dym_messages", tag: "c-1" });
+  });
+
+  it("canaux : commandes, messages, courses, le reste", () => {
+    expect(pushChannel("new_order", "orders")).toBe("dym_orders");
+    expect(pushChannel("payment_succeeded", "payments")).toBe("dym_orders");
+    expect(pushChannel("new_message", "messages")).toBe("dym_messages");
+    expect(pushChannel("mission_available", "orders")).toBe("dym_missions");
+    expect(pushChannel("store_broadcast", "promotions")).toBe("dym_general");
+  });
+
+  it("FCM : canal et regroupement transmis à Android", async () => {
+    const { privateKey } = await generateKeyPair("RS256", { extractable: true });
+    const serviceAccount = JSON.stringify({
+      project_id: "dym-test",
+      client_email: "push@dym-test.iam.gserviceaccount.com",
+      private_key: await exportPKCS8(privateKey),
+    });
+    const bodies: unknown[] = [];
+    const fetchImpl = (async (url: string, init?: RequestInit) => {
+      if (String(url).includes("oauth2")) {
+        return new Response(JSON.stringify({ access_token: "t", expires_in: 3600 }), { status: 200 });
+      }
+      bodies.push(JSON.parse(String(init?.body)));
+      return new Response("{}", { status: 200 });
+    }) as typeof fetch;
+    const sender = fcmPushSender(serviceAccount, fetchImpl);
+    await sender.send({ tokens: ["tel"], title: "T", body: "B", data: {}, channel: "dym_orders", tag: "o-1" });
+    expect(bodies[0]).toMatchObject({
+      message: { android: { notification: { channel_id: "dym_orders", tag: "o-1" } } },
+    });
   });
 
   it("encaissement", async () => {

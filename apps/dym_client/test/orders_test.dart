@@ -191,6 +191,18 @@ void main() {
     expect(vm.hasUnread, isFalse);
   });
 
+  test('réglages : nuit calme activée', () async {
+    final vm = NotificationSettingsViewModel(service: _service());
+    await vm.load();
+    await vm.toggle(NotificationCategory.quietNight, on: true);
+    expect(
+      vm.preferences
+          .firstWhere((p) => p.category == NotificationCategory.quietNight)
+          .pushEnabled,
+      isTrue,
+    );
+  });
+
   test('réglages : couper une catégorie', () async {
     final vm = NotificationSettingsViewModel(service: _service());
     await vm.load();

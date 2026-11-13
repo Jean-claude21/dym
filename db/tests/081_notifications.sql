@@ -108,6 +108,6 @@ select is(jsonb_array_length(app.claim_pushes(100)), 0, 'jamais réservées deux
 select is((select r -> 'text' ->> 'title' from _c, jsonb_array_elements(rows) r where r ->> 'kind' = 'order_preparing'),
   'En préparation', 'texte du push : modèle de la langue');
 select is((select r -> 'text' ->> 'body' from _c, jsonb_array_elements(rows) r where r ->> 'kind' = 'order_preparing'),
-  'Étal de Kodjo prépare ta commande.', 'variables remplacées');
+  'Étal de Kodjo prépare ta commande : Tomates.', 'variables remplacées');
 
 select * from finish();

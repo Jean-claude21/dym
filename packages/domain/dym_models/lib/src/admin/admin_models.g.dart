@@ -806,6 +806,72 @@ AdminDispatch _$AdminDispatchFromJson(Map<String, dynamic> json) =>
       },
     );
 
+AdminExchanges _$AdminExchangesFromJson(
+  Map<String, dynamic> json,
+) => $checkedCreate(
+  'AdminExchanges',
+  json,
+  ($checkedConvert) {
+    final val = AdminExchanges(
+      messages: $checkedConvert('messages', (v) => (v as num?)?.toInt() ?? 0),
+      messagesWithOrder: $checkedConvert(
+        'messages_with_order',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
+      conversationsActive: $checkedConvert(
+        'conversations_active',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
+      storesByOrigin: $checkedConvert(
+        'stores_by_origin',
+        (v) =>
+            (v as List<dynamic>?)
+                ?.map(
+                  (e) => AdminOriginCount.fromJson(e as Map<String, dynamic>),
+                )
+                .toList() ??
+            const [],
+      ),
+      pushSent: $checkedConvert('push_sent', (v) => (v as num?)?.toInt() ?? 0),
+      pushSkipped: $checkedConvert(
+        'push_skipped',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
+      pushFailed: $checkedConvert(
+        'push_failed',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
+      quietNightUsers: $checkedConvert(
+        'quiet_night_users',
+        (v) => (v as num?)?.toInt() ?? 0,
+      ),
+    );
+    return val;
+  },
+  fieldKeyMap: const {
+    'messagesWithOrder': 'messages_with_order',
+    'conversationsActive': 'conversations_active',
+    'storesByOrigin': 'stores_by_origin',
+    'pushSent': 'push_sent',
+    'pushSkipped': 'push_skipped',
+    'pushFailed': 'push_failed',
+    'quietNightUsers': 'quiet_night_users',
+  },
+);
+
+AdminOriginCount _$AdminOriginCountFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('AdminOriginCount', json, ($checkedConvert) {
+      final val = AdminOriginCount(
+        code: $checkedConvert('code', (v) => v as String),
+        label: $checkedConvert(
+          'label',
+          (v) => const LocalizedTextConverter().fromJson(v),
+        ),
+        stores: $checkedConvert('stores', (v) => (v as num?)?.toInt() ?? 0),
+      );
+      return val;
+    });
+
 AdminCoverage _$AdminCoverageFromJson(Map<String, dynamic> json) =>
     $checkedCreate('AdminCoverage', json, ($checkedConvert) {
       final val = AdminCoverage(

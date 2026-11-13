@@ -13,6 +13,35 @@ typedef PushOpened = void Function(Map<String, String> data);
 /// Enregistre le jeton du téléphone (sous la session de la personne).
 typedef PushRegister = Future<bool> Function(String token, String platform);
 
+/// Noms des canaux Android (visibles dans les réglages du téléphone),
+/// traduits par l'app (spec 072).
+class PushChannels {
+  const new({
+    this.orders = 'DYM',
+    this.messages = 'DYM',
+    this.missions = 'DYM',
+    this.general = 'DYM',
+  });
+
+  final String orders;
+  final String messages;
+  final String missions;
+  final String general;
+
+  /// Identifiants partagés avec la Function (`pushChannel`).
+  static const ordersId = 'dym_orders';
+  static const messagesId = 'dym_messages';
+  static const missionsId = 'dym_missions';
+  static const generalId = 'dym_general';
+
+  String nameOf(String id) => switch (id) {
+    messagesId => messages,
+    missionsId => missions,
+    generalId => general,
+    _ => orders,
+  };
+}
+
 /// Notifications du téléphone (FCM, spec 069).
 ///
 /// - [start] après la connexion : autorisation (Android 13+), jeton
@@ -23,22 +52,21 @@ typedef PushRegister = Future<bool> Function(String token, String platform);
 /// Sans configuration Firebase (web, tests), rien ne se passe : l'app
 /// fonctionne, le temps réel et la relecture prennent le relais.
 class PushNotifications {
-  new({required this._register, required this.onOpened, this.channelName});
+  new({required this._register, required this.onOpened, this.channels});
 
   final PushRegister _register;
 
   /// Ouverture d'une notification touchée.
   final PushOpened onOpened;
 
-  /// Nom du canal Android (traduit par l'app).
-  final String? channelName;
+  /// Noms des canaux Android, demandés au démarrage (langue du moment).
+  final PushChannels Function()? channels;
+  PushChannels _names = const PushChannels();
 
   final _local = FlutterLocalNotificationsPlugin();
   final _subs = <StreamSubscription<Object?>>[];
   bool _ready = false;
   int _shown = 0;
-
-  static const _channelId = 'dym_orders';
 
   /// Plateforme reconnue par `register_push_token`.
   static String get platform => switch (defaultTargetPlatform) {
@@ -72,17 +100,27 @@ class PushNotifications {
         onOpened(data);
       },
     );
-    await _local
+    // Un canal par type (spec 072) : commandes et paiements, messages,
+    // courses du livreur (importance haute), le reste (normale).
+    _names = channels?.call() ?? const PushChannels();
+    final android = _local
         .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin
-        >()
-        ?.createNotificationChannel(
-          AndroidNotificationChannel(
-            _channelId,
-            channelName ?? 'DYM',
-            importance: Importance.high,
-          ),
-        );
+        >();
+    for (final (id, importance) in const [
+      (PushChannels.ordersId, Importance.high),
+      (PushChannels.messagesId, Importance.high),
+      (PushChannels.missionsId, Importance.max),
+      (PushChannels.generalId, Importance.defaultImportance),
+    ]) {
+      await android?.createNotificationChannel(
+        AndroidNotificationChannel(
+          id,
+          _names.nameOf(id),
+          importance: importance,
+        ),
+      );
+    }
 
     // Jeton d'enregistrement classique : c'est la cible attendue par l'envoi
     // FCM v1 de la Function (`message.token`). L'identifiant d'installation
@@ -115,16 +153,24 @@ class PushNotifications {
   Future<void> _showForeground(RemoteMessage message) async {
     final n = message.notification;
     if (n == null) return;
+    final channel = n.android?.channelId ?? PushChannels.ordersId;
+    // Même sujet (commande, conversation) : la notification est remplacée.
+    final tag = n.android?.tag;
     await _local.show(
-      _shown++,
+      tag?.hashCode ?? _shown++,
       n.title,
       n.body,
       NotificationDetails(
         android: AndroidNotificationDetails(
-          _channelId,
-          channelName ?? 'DYM',
-          importance: Importance.high,
-          priority: Priority.high,
+          channel,
+          _names.nameOf(channel),
+          importance: channel == PushChannels.generalId
+              ? Importance.defaultImportance
+              : Importance.high,
+          priority: channel == PushChannels.generalId
+              ? Priority.defaultPriority
+              : Priority.high,
+          tag: tag,
         ),
       ),
       payload: jsonEncode(message.data),

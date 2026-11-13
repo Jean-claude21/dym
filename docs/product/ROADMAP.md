@@ -209,6 +209,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `push-notifications` | Notifications du téléphone (FCM) dans les apps cliente, vendeuse et livreur : autorisation, jeton enregistré et renouvelé, affichage app ouverte, toucher qui ouvre la commande ou les courses ; clé d'envoi sur staging ; essai réel : « Nouveau message » reçu par la vendeuse, app en arrière-plan | 2 h | ✅ Spec 069 |
 | `chat-ergonomie` | Messagerie claire et fiable : jours, heures, « vu », envois immédiats renvoyés seuls au retour du réseau, réponses rapides, « Joindre » (produits, photo), panier proposé par la vendeuse, commande en cours en tête du fil, boutique depuis l'en-tête, notification qui ouvre la conversation | 3 h | ✅ Spec 070 |
 | `supermarches` | Origine « Supermarché » (supermarchés et supérettes) : choisie à l'ouverture de la boutique, badge, filtre de recherche ; photo dédiée à fournir | 0,5 h | ✅ Spec 071 |
+| `notifications-utiles` | Notifications plus utiles : montant et articles dans les textes, quatre canaux Android (commandes, messages, courses, infos), notifications d'une même commande ou conversation remplacées, « Nuit calme » (22 h – 7 h) | 2 h | ✅ Spec 072 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

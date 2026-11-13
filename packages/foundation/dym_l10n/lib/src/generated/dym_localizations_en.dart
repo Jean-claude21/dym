@@ -6652,4 +6652,50 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get chatSearchStoreProducts => 'Search the shop';
+
+  @override
+  String get prefQuietNightTitle => 'Quiet night';
+
+  @override
+  String get prefQuietNightBody =>
+      'From 10 pm to 7 am, no messages or offers on your phone. Orders and payments always come through.';
+
+  @override
+  String get pushChannelOrders => 'Orders and payments';
+
+  @override
+  String get pushChannelMessages => 'Messages';
+
+  @override
+  String get pushChannelMissions => 'Deliveries';
+
+  @override
+  String get pushChannelGeneral => 'News and offers';
+
+  @override
+  String get adminExchangesTitle => 'Exchanges';
+
+  @override
+  String get adminMessagesSent => 'Messages sent';
+
+  @override
+  String get adminMessagesWithOrder => 'About an order';
+
+  @override
+  String get adminConversationsActive => 'Active conversations';
+
+  @override
+  String get adminPushSent => 'Notifications';
+
+  @override
+  String get adminPushSkipped => 'Held back';
+
+  @override
+  String get adminPushFailed => 'Failed';
+
+  @override
+  String get adminQuietNightUsers => 'Quiet night on';
+
+  @override
+  String get adminStoresByOrigin => 'Active shops by type';
 }

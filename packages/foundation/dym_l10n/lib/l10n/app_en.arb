@@ -1949,5 +1949,20 @@
   "chatEmptyThreadStore": "Ask {name} your question: availability, price, delivery.",
   "chatEmptyThreadClient": "{name} opened a conversation with you. Reply here.",
   "chatShareSelected": "{n, plural, =1{Send 1 product} other{Send {n} products}}",
-  "chatSearchStoreProducts": "Search the shop"
+  "chatSearchStoreProducts": "Search the shop",
+  "prefQuietNightTitle": "Quiet night",
+  "prefQuietNightBody": "From 10 pm to 7 am, no messages or offers on your phone. Orders and payments always come through.",
+  "pushChannelOrders": "Orders and payments",
+  "pushChannelMessages": "Messages",
+  "pushChannelMissions": "Deliveries",
+  "pushChannelGeneral": "News and offers",
+  "adminExchangesTitle": "Exchanges",
+  "adminMessagesSent": "Messages sent",
+  "adminMessagesWithOrder": "About an order",
+  "adminConversationsActive": "Active conversations",
+  "adminPushSent": "Notifications",
+  "adminPushSkipped": "Held back",
+  "adminPushFailed": "Failed",
+  "adminQuietNightUsers": "Quiet night on",
+  "adminStoresByOrigin": "Active shops by type"
 }

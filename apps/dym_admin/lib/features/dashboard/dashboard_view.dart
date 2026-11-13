@@ -23,6 +23,9 @@ class AdminDashboardViewModel extends AdminViewModel {
   /// Livreurs et relances (spec 066) ; absente si l'appel échoue.
   AdminDispatch? dispatch;
 
+  /// Messages, boutiques par origine, notifications (specs 070 à 072).
+  AdminExchanges? exchanges;
+
   /// Section affichée : vue générale ou IA et paiements (77).
   bool ai;
 
@@ -34,14 +37,16 @@ class AdminDashboardViewModel extends AdminViewModel {
   bool get ready => data != null && !failed;
 
   Future<void> load() => run(service.currencies, () async {
-    final (result, cover, delivery) = await (
+    final (result, cover, delivery, talk) = await (
       service.dashboard(period),
       service.coverage(period),
       service.dispatch(period),
+      service.exchanges(period),
     ).wait;
     if (result case Ok(:final value)) data = value;
     coverage = cover.valueOrNull;
     dispatch = delivery.valueOrNull;
+    exchanges = talk.valueOrNull;
     return result.failureOrNull;
   });
 
@@ -357,10 +362,7 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
                             x.couriersActive,
                           ),
                         ),
-                        AdminField(
-                          l10n.adminMissionsWaiting,
-                          '${x.waiting}',
-                        ),
+                        AdminField(l10n.adminMissionsWaiting, '${x.waiting}'),
                         AdminField(
                           l10n.adminMedianAccept,
                           switch (x.medianAcceptMinutes) {
@@ -372,14 +374,51 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
                           l10n.adminRelaunches,
                           l10n.adminRelaunchesValue(x.relaunches, x.widened),
                         ),
+                        AdminField(l10n.adminAutoRefused, '${x.autoRefused}'),
+                        AdminField(l10n.adminReadyAlerts, '${x.readyAlerts}'),
+                      ],
+                    ),
+                  ),
+                ),
+              if (vm.exchanges case final x?)
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 440),
+                  child: AdminCard(
+                    title: l10n.adminExchangesTitle,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        AdminField(l10n.adminMessagesSent, '${x.messages}'),
                         AdminField(
-                          l10n.adminAutoRefused,
-                          '${x.autoRefused}',
+                          l10n.adminMessagesWithOrder,
+                          '${x.messagesWithOrder}',
                         ),
                         AdminField(
-                          l10n.adminReadyAlerts,
-                          '${x.readyAlerts}',
+                          l10n.adminConversationsActive,
+                          '${x.conversationsActive}',
                         ),
+                        AdminField(l10n.adminPushSent, '${x.pushSent}'),
+                        AdminField(l10n.adminPushSkipped, '${x.pushSkipped}'),
+                        AdminField(l10n.adminPushFailed, '${x.pushFailed}'),
+                        AdminField(
+                          l10n.adminQuietNightUsers,
+                          '${x.quietNightUsers}',
+                        ),
+                        const SizedBox(height: DymTokenSpace.s2),
+                        Text(
+                          l10n.adminStoresByOrigin,
+                          style: t.label.copyWith(
+                            color: c.textSecondary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        for (final o in x.storesByOrigin)
+                          AdminField(
+                            o.label.resolve(
+                              Localizations.localeOf(context).languageCode,
+                            ),
+                            '${o.stores}',
+                          ),
                       ],
                     ),
                   ),
@@ -400,10 +439,7 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
                           ),
                         ),
                         const SizedBox(height: DymTokenSpace.s2),
-                        AdminField(
-                          l10n.adminCoverageTotal,
-                          '${cover.total}',
-                        ),
+                        AdminField(l10n.adminCoverageTotal, '${cover.total}'),
                         for (final country in cover.countries)
                           AdminField(
                             country.countryCode,
@@ -415,8 +451,8 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
                           ),
                       ],
                     ),
+                  ),
                 ),
-              ),
             ],
           ),
           const SizedBox(height: DymTokenSpace.s3),

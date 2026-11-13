@@ -11088,6 +11088,96 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Chercher dans la boutique'**
   String get chatSearchStoreProducts;
+
+  /// Réglage : pas de messages ni d'offres la nuit
+  ///
+  /// In fr, this message translates to:
+  /// **'Nuit calme'**
+  String get prefQuietNightTitle;
+
+  /// Explication de la nuit calme
+  ///
+  /// In fr, this message translates to:
+  /// **'De 22 h à 7 h, pas de messages ni d\'offres sur le téléphone. Les commandes et les paiements passent toujours.'**
+  String get prefQuietNightBody;
+
+  /// Canal Android des commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes et paiements'**
+  String get pushChannelOrders;
+
+  /// Canal Android des messages
+  ///
+  /// In fr, this message translates to:
+  /// **'Messages'**
+  String get pushChannelMessages;
+
+  /// Canal Android des courses du livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Courses à livrer'**
+  String get pushChannelMissions;
+
+  /// Canal Android du reste
+  ///
+  /// In fr, this message translates to:
+  /// **'Infos et offres'**
+  String get pushChannelGeneral;
+
+  /// Carte du tableau de bord admin : messages et notifications
+  ///
+  /// In fr, this message translates to:
+  /// **'Échanges'**
+  String get adminExchangesTitle;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Messages envoyés'**
+  String get adminMessagesSent;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Sur commande'**
+  String get adminMessagesWithOrder;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Conversations actives'**
+  String get adminConversationsActive;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Notifications'**
+  String get adminPushSent;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Retenues'**
+  String get adminPushSkipped;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Échecs d\'envoi'**
+  String get adminPushFailed;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Nuit calme activée'**
+  String get adminQuietNightUsers;
+
+  /// Statistique admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques actives par type'**
+  String get adminStoresByOrigin;
 }
 
 class _DymLocalizationsDelegate
