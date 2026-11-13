@@ -1,4 +1,5 @@
 import 'package:dym_admin/features/ops/admin_service.dart';
+import 'package:dym_admin/features/ops/admin_texts.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
@@ -18,11 +19,46 @@ enum SettingsTab {
 
 /// Réglages : ouvrir un pays est une opération de configuration.
 class AdminSettingsViewModel extends AdminViewModel {
-  new({required this.service});
+  new({required this.service, this.access}) {
+    _tab = tabs.firstOrNull ?? SettingsTab.countries;
+  }
 
   final AdminService service;
 
-  SettingsTab _tab = SettingsTab.countries;
+  /// Rôle de l'admin (spec 085) ; `null` : toutes les sections.
+  final AdminAccess? access;
+
+  /// Sections ouvertes au rôle (lecture du domaine).
+  List<SettingsTab> get tabs => [
+    for (final t in SettingsTab.values)
+      if (_opens(t)) t,
+  ];
+
+  /// Rôles proposés, du plus large au plus restreint.
+  List<String> get roles {
+    final known = access?.roles ?? const <String>[];
+    return known.isNotEmpty ? known : adminRoles;
+  }
+
+  /// Gérer les admins et leurs rôles (super-admin).
+  bool get managesAdmins => access?.writes('admins') ?? true;
+
+  bool _opens(SettingsTab t) {
+    final a = access;
+    if (a == null) return true;
+    return switch (t) {
+      SettingsTab.countries || SettingsTab.geography => a.reads('geography'),
+      SettingsTab.payments ||
+      SettingsTab.commission ||
+      SettingsTab.fees ||
+      SettingsTab.categories => a.reads('catalog'),
+      SettingsTab.flags => a.reads('system'),
+      SettingsTab.search => a.reads('content'),
+      SettingsTab.admins => a.reads('admins'),
+    };
+  }
+
+  late SettingsTab _tab;
   List<AdminCountry> _countries = const [];
   String? _country;
   List<AdminCity> _cities = const [];
@@ -210,11 +246,21 @@ class AdminSettingsViewModel extends AdminViewModel {
     return r.failureOrNull;
   });
 
-  Future<bool> inviteAdmin(String email) => _act(() async {
-    final r = await service.inviteAdmin(email.trim().toLowerCase());
+  Future<bool> setAdminRole(AdminMember member, String role) => _act(() async {
+    final r = await service.setAdminRole(member.email, role);
     if (r case Ok(:final value)) _admins = value;
     return r.failureOrNull;
   });
+
+  Future<bool> inviteAdmin(String email, {String role = 'analyst'}) =>
+      _act(() async {
+        final r = await service.inviteAdmin(
+          email.trim().toLowerCase(),
+          role: role,
+        );
+        if (r case Ok(:final value)) _admins = value;
+        return r.failureOrNull;
+      });
 
   Future<bool> removeAdmin(AdminMember member) => _act(() async {
     final r = await service.removeAdmin(member.email);

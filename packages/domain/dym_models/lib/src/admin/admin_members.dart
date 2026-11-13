@@ -11,6 +11,7 @@ class AdminMember {
     this.firstName,
     this.since,
     this.isMe = false,
+    this.role = AdminAccess.superAdmin,
   });
 
   factory fromJson(Map<String, Object?> json) => AdminMember(
@@ -20,6 +21,7 @@ class AdminMember {
     isDefault: json['source'] == 'env',
     isActive: json['status'] == 'active',
     isMe: json['is_me'] == true,
+    role: json['role'] as String? ?? AdminAccess.superAdmin,
     since: switch (json['since']) {
       final String s => DateTime.tryParse(s),
       _ => null,
@@ -39,4 +41,41 @@ class AdminMember {
 
   /// Admin connecté : il ne peut pas retirer son propre accès.
   final bool isMe;
+
+  /// Rôle (spec 085) : `super_admin`, `operations`, `support`, `finance`,
+  /// `content`, `analyst`.
+  final String role;
+}
+
+/// Ce que l'admin connecté peut faire (spec 085), décidé en SQL : rôle et
+/// permissions « domaine.read » ou « domaine.write ».
+class AdminAccess {
+  const new({
+    required this.role,
+    required this.permissions,
+    this.roles = const [],
+  });
+
+  factory fromJson(Map<String, Object?> json) => AdminAccess(
+    role: json['role'] as String? ?? superAdmin,
+    permissions: {
+      for (final p in json['permissions'] as List? ?? const []) p as String,
+    },
+    roles: [for (final r in json['roles'] as List? ?? const []) r as String],
+  );
+
+  static const superAdmin = 'super_admin';
+
+  final String role;
+  final Set<String> permissions;
+
+  /// Rôles proposés à l'invitation, du plus large au plus restreint.
+  final List<String> roles;
+
+  bool can(String permission) => permissions.contains(permission);
+
+  /// Lecture d'un domaine (`orders`, `finance`…).
+  bool reads(String area) => can('$area.read');
+
+  bool writes(String area) => can('$area.write');
 }

@@ -171,3 +171,24 @@ String moderationReasonLabel(DymLocalizations l10n, ReportReason r) =>
       ReportReason.spam => l10n.reportSpam,
       ReportReason.other => l10n.reportOther,
     };
+
+/// Rôles d'admin connus (spec 085), du plus large au plus restreint.
+const adminRoles = [
+  'super_admin',
+  'operations',
+  'support',
+  'finance',
+  'content',
+  'analyst',
+];
+
+/// Libellé d'un rôle d'admin ; un rôle inconnu garde son code.
+String adminRoleLabel(DymLocalizations l10n, String role) => switch (role) {
+  'super_admin' => l10n.adminRoleSuperAdmin,
+  'operations' => l10n.adminRoleOperations,
+  'support' => l10n.adminRoleSupport,
+  'finance' => l10n.adminRoleFinance,
+  'content' => l10n.adminRoleContent,
+  'analyst' => l10n.adminRoleAnalyst,
+  _ => role,
+};

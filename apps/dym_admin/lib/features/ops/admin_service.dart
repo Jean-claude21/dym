@@ -153,7 +153,15 @@ abstract interface class AdminService {
 
   Future<Result<List<AdminMember>>> admins();
 
-  Future<Result<List<AdminMember>>> inviteAdmin(String email);
+  Future<Result<List<AdminMember>>> inviteAdmin(
+    String email, {
+    String role = 'analyst',
+  });
+
+  Future<Result<List<AdminMember>>> setAdminRole(String email, String role);
+
+  /// Rôle et permissions de l'admin connecté (spec 085).
+  Future<Result<AdminAccess>> me();
 
   Future<Result<List<AdminMember>>> removeAdmin(String email);
 
@@ -434,8 +442,17 @@ class NeonAdminService implements AdminService {
   Future<Result<List<AdminMember>>> admins() => _admin.admins();
 
   @override
-  Future<Result<List<AdminMember>>> inviteAdmin(String email) =>
-      _admin.inviteAdmin(email);
+  Future<Result<List<AdminMember>>> inviteAdmin(
+    String email, {
+    String role = 'analyst',
+  }) => _admin.inviteAdmin(email, role: role);
+
+  @override
+  Future<Result<List<AdminMember>>> setAdminRole(String email, String role) =>
+      _admin.setAdminRole(email, role);
+
+  @override
+  Future<Result<AdminAccess>> me() => _admin.me();
 
   @override
   Future<Result<List<AdminMember>>> removeAdmin(String email) =>

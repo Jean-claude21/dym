@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/ops/admin_texts.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
@@ -166,17 +168,22 @@ class _SettingDialogState extends State<_SettingDialog> {
 /// Écran 56 : pays, villes et quartiers, paiement, commission, frais,
 /// catégories.
 class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
-  const new({required this.service, super.key, this.onSignOut});
+  const new({required this.service, super.key, this.onSignOut, this.access});
 
   final AdminService service;
   final VoidCallback? onSignOut;
 
-  @override
-  AdminSettingsViewModel viewModelBuilder(BuildContext context) =>
-      AdminSettingsViewModel(service: service);
+  /// Rôle de l'admin (spec 085) : sections filtrées.
+  final AdminAccess? access;
 
   @override
-  void onViewModelReady(AdminSettingsViewModel viewModel) => viewModel.load();
+  AdminSettingsViewModel viewModelBuilder(BuildContext context) =>
+      AdminSettingsViewModel(service: service, access: access);
+
+  @override
+  void onViewModelReady(AdminSettingsViewModel viewModel) {
+    if (viewModel.tabs.isNotEmpty) unawaited(viewModel.load());
+  }
 
   @override
   Widget builder(
@@ -229,7 +236,7 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
             spacing: DymTokenSpace.s2,
             runSpacing: DymTokenSpace.s2,
             children: [
-              for (final t in SettingsTab.values)
+              for (final t in vm.tabs)
                 DymFilterChip(
                   label: switch (t) {
                     SettingsTab.countries => l10n.adminTabCountries,
@@ -250,7 +257,9 @@ class AdminSettingsView extends StackedView<AdminSettingsViewModel> {
           const SizedBox(height: DymTokenSpace.s3),
           if (vm.actionFailure case final failure?)
             AdminAlert(adminFailureLabel(l10n, failure)),
-          if (!vm.ready || vm.isBusy)
+          if (vm.tabs.isEmpty)
+            AdminEmpty(l10n.adminSettingsNoneForRole)
+          else if (!vm.ready || vm.isBusy)
             AdminState(failure: vm.isBusy ? null : vm.failure, onRetry: vm.load)
           else
             switch (vm.tab) {
@@ -1057,6 +1066,7 @@ class _Admins extends StatefulWidget {
 
 class _AdminsState extends State<_Admins> {
   final _email = TextEditingController();
+  String _role = 'analyst';
 
   @override
   void dispose() {
@@ -1067,7 +1077,7 @@ class _AdminsState extends State<_Admins> {
   Future<void> _invite() async {
     final email = _email.text.trim();
     if (!email.contains('@')) return;
-    if (await widget.vm.inviteAdmin(email)) _email.clear();
+    if (await widget.vm.inviteAdmin(email, role: _role)) _email.clear();
   }
 
   @override
@@ -1084,29 +1094,40 @@ class _AdminsState extends State<_Admins> {
           style: t.body.copyWith(color: c.textSecondary),
         ),
         const SizedBox(height: DymTokenSpace.s2),
-        AdminCard(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: DymTextField(
-                  label: l10n.authEmailLabel,
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  onSubmitted: (_) => _invite(),
+        if (vm.managesAdmins)
+          AdminCard(
+            child: Wrap(
+              spacing: DymTokenSpace.s3,
+              runSpacing: DymTokenSpace.s3,
+              crossAxisAlignment: WrapCrossAlignment.end,
+              children: [
+                SizedBox(
+                  width: 320,
+                  child: DymTextField(
+                    label: l10n.authEmailLabel,
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    onSubmitted: (_) => _invite(),
+                  ),
                 ),
-              ),
-              const SizedBox(width: DymTokenSpace.s3),
-              DymButton(
-                label: l10n.adminAdminsInvite,
-                icon: Icons.person_add_alt_1_rounded,
-                expanded: false,
-                loading: vm.acting,
-                onPressed: _invite,
-              ),
-            ],
+                SizedBox(
+                  width: 220,
+                  child: _RolePicker(
+                    value: _role,
+                    roles: vm.roles,
+                    onChanged: (r) => setState(() => _role = r),
+                  ),
+                ),
+                DymButton(
+                  label: l10n.adminAdminsInvite,
+                  icon: Icons.person_add_alt_1_rounded,
+                  expanded: false,
+                  loading: vm.acting,
+                  onPressed: _invite,
+                ),
+              ],
+            ),
           ),
-        ),
         const SizedBox(height: DymTokenSpace.s3),
         AdminCard(
           child: Column(
@@ -1123,6 +1144,7 @@ class _AdminsState extends State<_Admins> {
                   title: Text(a.email),
                   subtitle: Text(
                     [
+                      adminRoleLabel(l10n, a.role),
                       if (a.firstName != null) a.firstName!,
                       if (a.isDefault) l10n.adminAdminsDefault,
                       if (a.isActive)
@@ -1131,18 +1153,63 @@ class _AdminsState extends State<_Admins> {
                         l10n.adminAdminsPending,
                     ].join(' · '),
                   ),
-                  trailing: a.isDefault || a.isMe
+                  trailing: a.isDefault || a.isMe || !vm.managesAdmins
                       ? null
-                      : IconButton(
-                          tooltip: l10n.adminAdminsRemove,
-                          icon: const Icon(Icons.person_remove_rounded),
-                          onPressed: vm.acting ? null : () => vm.removeAdmin(a),
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: 180,
+                              child: _RolePicker(
+                                value: a.role,
+                                roles: vm.roles,
+                                onChanged: (r) => vm.setAdminRole(a, r),
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: l10n.adminAdminsRemove,
+                              icon: const Icon(Icons.person_remove_rounded),
+                              onPressed: vm.acting
+                                  ? null
+                                  : () => vm.removeAdmin(a),
+                            ),
+                          ],
                         ),
                 ),
             ],
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Choix du rôle d'un admin (spec 085).
+class _RolePicker extends StatelessWidget {
+  const new({
+    required this.value,
+    required this.roles,
+    required this.onChanged,
+  });
+
+  final String value;
+  final List<String> roles;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    return DropdownButtonFormField<String>(
+      initialValue: roles.contains(value) ? value : null,
+      isExpanded: true,
+      decoration: InputDecoration(labelText: l10n.adminRoleLabel),
+      items: [
+        for (final r in roles)
+          DropdownMenuItem(value: r, child: Text(adminRoleLabel(l10n, r))),
+      ],
+      onChanged: (r) {
+        if (r != null && r != value) onChanged(r);
+      },
     );
   }
 }

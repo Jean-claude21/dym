@@ -7159,4 +7159,29 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get callMediaFailed =>
       'Son indisponible : vérifie ta connexion, puis rappelle.';
+
+  @override
+  String get adminRoleLabel => 'Rôle';
+
+  @override
+  String get adminRoleSuperAdmin => 'Super-admin';
+
+  @override
+  String get adminRoleOperations => 'Opérations';
+
+  @override
+  String get adminRoleSupport => 'Support';
+
+  @override
+  String get adminRoleFinance => 'Finance';
+
+  @override
+  String get adminRoleContent => 'Contenu';
+
+  @override
+  String get adminRoleAnalyst => 'Analyste';
+
+  @override
+  String get adminSettingsNoneForRole =>
+      'Aucun réglage n\'est ouvert à ton rôle.';
 }

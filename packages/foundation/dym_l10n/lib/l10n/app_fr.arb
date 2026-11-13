@@ -8075,5 +8075,37 @@
   "callMediaFailed": "Son indisponible : vérifie ta connexion, puis rappelle.",
   "@callMediaFailed": {
     "description": "Écran d'appel : le média (LiveKit) n'a pas pu se connecter."
+  },
+  "adminRoleLabel": "Rôle",
+  "@adminRoleLabel": {
+    "description": "Admin : libellé du choix du rôle d'un admin."
+  },
+  "adminRoleSuperAdmin": "Super-admin",
+  "@adminRoleSuperAdmin": {
+    "description": "Rôle admin : tous les droits, gère les admins."
+  },
+  "adminRoleOperations": "Opérations",
+  "@adminRoleOperations": {
+    "description": "Rôle admin : commandes, litiges, boutiques, support."
+  },
+  "adminRoleSupport": "Support",
+  "@adminRoleSupport": {
+    "description": "Rôle admin : demandes, litiges, lecture des commandes."
+  },
+  "adminRoleFinance": "Finance",
+  "@adminRoleFinance": {
+    "description": "Rôle admin : paiements, remboursements, risques."
+  },
+  "adminRoleContent": "Contenu",
+  "@adminRoleContent": {
+    "description": "Rôle admin : catalogue, modération, recherche."
+  },
+  "adminRoleAnalyst": "Analyste",
+  "@adminRoleAnalyst": {
+    "description": "Rôle admin : tout lire, ne rien modifier."
+  },
+  "adminSettingsNoneForRole": "Aucun réglage n'est ouvert à ton rôle.",
+  "@adminSettingsNoneForRole": {
+    "description": "Admin, réglages : le rôle n'ouvre aucune section."
   }
 }

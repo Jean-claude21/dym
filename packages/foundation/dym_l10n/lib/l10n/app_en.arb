@@ -2074,5 +2074,13 @@
   "callMicrophoneOff": "Mic off",
   "callSpeakerOn": "Speaker",
   "callSpeakerOff": "Earpiece",
-  "callMediaFailed": "No audio: check your connection, then call again."
+  "callMediaFailed": "No audio: check your connection, then call again.",
+  "adminRoleLabel": "Role",
+  "adminRoleSuperAdmin": "Super admin",
+  "adminRoleOperations": "Operations",
+  "adminRoleSupport": "Support",
+  "adminRoleFinance": "Finance",
+  "adminRoleContent": "Content",
+  "adminRoleAnalyst": "Analyst",
+  "adminSettingsNoneForRole": "No settings are open to your role."
 }
