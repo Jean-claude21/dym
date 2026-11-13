@@ -209,6 +209,9 @@ class ChatViewModel extends BaseViewModel {
   ConversationThread? get thread => _thread;
   List<ChatMessage> get messages => _thread?.messages ?? const [];
   CountryConfig? get config => _config;
+
+  /// Appels vidéo ouverts dans le pays (flag `calls_video`, spec 089).
+  bool get videoCalls => _config?.isEnabled('calls_video') ?? false;
   Failure? get failure => _failure;
 
   /// Dernier échec d'un geste (photo, micro) ; les messages en échec
