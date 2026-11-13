@@ -149,7 +149,7 @@ class NeonCartService implements CartService {
     required this._auth,
     required this._location,
     required this._environment,
-    this._pages = const PluginExternalPageOpener(),
+    this._pages = const PluginPaymentPageOpener(),
     this._live = LiveFeed.none,
   });
 

@@ -21,3 +21,27 @@ class PluginExternalPageOpener implements ExternalPageOpener {
     }
   }
 }
+
+/// Page de paiement ouverte dans l'app : onglet intégré (Custom Tab sur
+/// Android, Safari intégré sur iOS), plus sûr qu'une WebView et compatible
+/// avec les renvois vers les apps Mobile Money. À défaut, navigateur externe.
+class PluginPaymentPageOpener implements ExternalPageOpener {
+  const new();
+
+  @override
+  Future<Result<bool>> open(Uri url) async {
+    try {
+      if (await supportsLaunchMode(LaunchMode.inAppBrowserView) &&
+          await launchUrl(
+            url,
+            mode: LaunchMode.inAppBrowserView,
+            browserConfiguration: const BrowserConfiguration(showTitle: true),
+          )) {
+        return const Ok(true);
+      }
+      return Ok(await launchUrl(url, mode: LaunchMode.externalApplication));
+    } on Object catch (error) {
+      return Err(UnknownFailure('ouverture impossible : $error'));
+    }
+  }
+}
