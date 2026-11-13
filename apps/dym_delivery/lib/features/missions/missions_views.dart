@@ -342,6 +342,7 @@ class MissionsViewModel extends BaseViewModel {
     _refresher?.dispose();
     super.dispose();
   }
+
   CourierProfile? profile;
   CountryConfig? config;
   List<Mission>? missions;
@@ -779,6 +780,7 @@ class MyRunsViewModel extends BaseViewModel {
     _refresher?.dispose();
     super.dispose();
   }
+
   CountryConfig? config;
   List<Mission>? runs;
   Failure? failure;

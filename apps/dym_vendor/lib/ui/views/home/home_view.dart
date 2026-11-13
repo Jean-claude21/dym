@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
@@ -89,6 +90,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
+    if (locator.isRegistered<PushNotifications>()) {
+      unawaited(locator<PushNotifications>().start());
+    }
     final contents =
         widget.contents ??
         (locator.isRegistered<VendorContentService>()

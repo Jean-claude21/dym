@@ -87,6 +87,11 @@ Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-defin
 pour les apps (Sentry ou GlitchTip), variable `ERROR_REPORTING_DSN` pour les Functions. Aucune donnée
 personnelle n'est envoyée.
 
+Notifications (FCM) : `google-services.json` (console Firebase, projet `do-your-market-79ff7`) dans
+`apps/dym_client`, `apps/dym_vendor`, `apps/dym_delivery` sous `android/app/` (hors dépôt). Absent :
+l'app se construit sans push. Côté serveur, `FCM_SERVICE_ACCOUNT` (clé de compte de service, JSON sur
+une ligne) dans le fichier d'environnement des Functions.
+
 Builds de release Android : `apps/dym_client/android/key.properties` (et `dym_vendor`), hors dépôt,
 avec `storeFile`, `storePassword`, `keyAlias`, `keyPassword`. Sans ce fichier, la release est signée
 avec les clés de debug (essais seulement).

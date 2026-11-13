@@ -5,6 +5,7 @@ import 'package:dym_delivery/app/app.locator.dart';
 import 'package:dym_delivery/app/config_error_app.dart';
 import 'package:dym_delivery/app/delivery_app.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
+import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +52,19 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton(environment)
     ..registerSingleton(neon)
     ..registerSingleton<LiveFeed>(live)
+    // Notifications du téléphone (spec 069) : démarrées à l'accueil, une fois
+    // la personne connectée ; le toucher ouvre l'écran concerné.
+    ..registerSingleton(
+      PushNotifications(
+        register: (token, platform) async =>
+            (await NotificationRepository(neon.data).registerDevice(
+              token: token,
+              platform: platform,
+              app: 'delivery',
+            )).isOk,
+        onOpened: (_) => StackedAppNavigator().toHome(),
+      ),
+    )
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
     ..registerSingleton<MissionsService>(

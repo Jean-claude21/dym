@@ -9,6 +9,10 @@
         android:label="DYM"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <!-- Notifications (spec 069) : canal prioritaire de l'app, même app fermée. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="dym_orders" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

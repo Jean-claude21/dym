@@ -480,10 +480,7 @@ class _Shortcut extends StatelessWidget {
                 ),
                 child: Icon(icon, color: c.brandDeep, size: 20),
               ),
-              const SizedBox(
-                height: DymTokenSpace.s2,
-                width: DymTokenSpace.s3,
-              ),
+              const SizedBox(height: DymTokenSpace.s2, width: DymTokenSpace.s3),
               Flexible(
                 fit: row ? FlexFit.tight : FlexFit.loose,
                 child: Column(

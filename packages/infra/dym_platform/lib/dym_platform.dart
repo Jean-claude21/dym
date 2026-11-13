@@ -12,6 +12,7 @@ export 'src/location_provider.dart';
 export 'src/neon_bootstrap.dart';
 export 'src/network_image.dart';
 export 'src/photo_picker.dart';
+export 'src/push_notifications.dart';
 export 'src/qr.dart';
 export 'src/secure_session_store.dart';
 export 'src/voice_recorder.dart';
