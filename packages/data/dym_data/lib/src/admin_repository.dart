@@ -360,6 +360,25 @@ class AdminRepository {
   Future<Result<List<AdminMember>>> setAdminRole(String email, String role) =>
       _rpc('admin_set_role', {'p_email': email, 'p_role': role}, _members);
 
+  /// Mes clés MCP (spec 086).
+  Future<Result<List<AdminMcpKey>>> mcpKeys() =>
+      _rpc('admin_mcp_keys', const {}, _mcpKeys);
+
+  /// Nouvelle clé MCP : la clé en clair n'est renvoyée qu'ici, une fois.
+  Future<Result<({AdminMcpKey key, String secret})>> createMcpKey(
+    String name,
+  ) => _rpc('admin_create_mcp_key', {'p_name': name}, (json) {
+    final map = _map(json);
+    return (key: AdminMcpKey.fromJson(map), secret: map['key']! as String);
+  });
+
+  Future<Result<List<AdminMcpKey>>> revokeMcpKey(String id) =>
+      _rpc('admin_revoke_mcp_key', {'p_id': id}, _mcpKeys);
+
+  static List<AdminMcpKey> _mcpKeys(Object? json) => [
+    for (final k in json! as List) AdminMcpKey.fromJson(_map(k)),
+  ];
+
   /// Rôle et permissions de l'admin connecté (spec 085).
   Future<Result<AdminAccess>> me() =>
       _rpc('admin_me', const {}, (json) => AdminAccess.fromJson(_map(json)));

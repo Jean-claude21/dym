@@ -7184,4 +7184,50 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get adminSettingsNoneForRole =>
       'Aucun réglage n\'est ouvert à ton rôle.';
+
+  @override
+  String get adminTabMcp => 'MCP';
+
+  @override
+  String get adminMcpHelp =>
+      'Une clé MCP permet à un assistant (Claude, par exemple) de piloter l\'admin et d\'interroger les analytics avec tes droits. Chaque action est journalisée.';
+
+  @override
+  String get adminMcpName => 'Nom de la clé';
+
+  @override
+  String get adminMcpCreate => 'Créer une clé';
+
+  @override
+  String get adminMcpNewKeyTitle =>
+      'Copie ta clé maintenant : elle ne sera plus jamais montrée.';
+
+  @override
+  String get adminMcpKeyLabel => 'Clé';
+
+  @override
+  String get adminMcpEndpoint => 'Adresse du serveur MCP';
+
+  @override
+  String get adminMcpCopy => 'Copier';
+
+  @override
+  String get adminMcpCopied => 'Copié';
+
+  @override
+  String get adminMcpDone => 'J\'ai copié la clé';
+
+  @override
+  String get adminMcpRevoke => 'Révoquer';
+
+  @override
+  String get adminMcpRevoked => 'Révoquée';
+
+  @override
+  String adminMcpLastUsed(String date) {
+    return 'Dernière utilisation : $date';
+  }
+
+  @override
+  String get adminMcpNeverUsed => 'Jamais utilisée';
 }

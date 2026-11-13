@@ -11874,6 +11874,90 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Aucun réglage n\'est ouvert à ton rôle.'**
   String get adminSettingsNoneForRole;
+
+  /// Admin, réglages : onglet des clés MCP.
+  ///
+  /// In fr, this message translates to:
+  /// **'MCP'**
+  String get adminTabMcp;
+
+  /// Admin, clés MCP : explication.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une clé MCP permet à un assistant (Claude, par exemple) de piloter l\'admin et d\'interroger les analytics avec tes droits. Chaque action est journalisée.'**
+  String get adminMcpHelp;
+
+  /// Admin, clés MCP : champ du nom (ex. Claude du bureau).
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom de la clé'**
+  String get adminMcpName;
+
+  /// Admin, clés MCP : bouton.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer une clé'**
+  String get adminMcpCreate;
+
+  /// Admin, clés MCP : clé tout juste créée.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copie ta clé maintenant : elle ne sera plus jamais montrée.'**
+  String get adminMcpNewKeyTitle;
+
+  /// Admin, clés MCP : libellé de la clé.
+  ///
+  /// In fr, this message translates to:
+  /// **'Clé'**
+  String get adminMcpKeyLabel;
+
+  /// Admin, clés MCP : adresse à donner à l'assistant.
+  ///
+  /// In fr, this message translates to:
+  /// **'Adresse du serveur MCP'**
+  String get adminMcpEndpoint;
+
+  /// Admin, clés MCP : copier une valeur.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get adminMcpCopy;
+
+  /// Admin, clés MCP : confirmation de copie.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copié'**
+  String get adminMcpCopied;
+
+  /// Admin, clés MCP : fermer l'encadré de la nouvelle clé.
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai copié la clé'**
+  String get adminMcpDone;
+
+  /// Admin, clés MCP : révoquer une clé.
+  ///
+  /// In fr, this message translates to:
+  /// **'Révoquer'**
+  String get adminMcpRevoke;
+
+  /// Admin, clés MCP : clé révoquée.
+  ///
+  /// In fr, this message translates to:
+  /// **'Révoquée'**
+  String get adminMcpRevoked;
+
+  /// Admin, clés MCP : date de dernière utilisation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dernière utilisation : {date}'**
+  String adminMcpLastUsed(String date);
+
+  /// Admin, clés MCP : clé jamais utilisée.
+  ///
+  /// In fr, this message translates to:
+  /// **'Jamais utilisée'**
+  String get adminMcpNeverUsed;
 }
 
 class _DymLocalizationsDelegate

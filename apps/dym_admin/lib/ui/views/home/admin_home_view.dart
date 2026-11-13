@@ -127,6 +127,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     };
   }
 
+  /// Adresse du serveur MCP (Functions + `/mcp`), si l'environnement est connu.
+  String? get _mcpEndpoint => locator.isRegistered<DymEnvironment>()
+      ? '${locator<DymEnvironment>().functionsUrl.toString().replaceAll(RegExp(r'/$'), '')}/mcp'
+      : null;
+
   List<AdminDomain> get _visibleDomains => [
     for (final d in AdminDomain.values)
       if (_tabsOf(d).isNotEmpty) d,
@@ -206,6 +211,7 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         service: _admin,
         onSignOut: _signOut,
         access: _access,
+        mcpEndpoint: _mcpEndpoint,
       ),
       AdminTab.audit => AdminAuditView(service: _admin),
     };

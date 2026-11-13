@@ -8107,5 +8107,66 @@
   "adminSettingsNoneForRole": "Aucun réglage n'est ouvert à ton rôle.",
   "@adminSettingsNoneForRole": {
     "description": "Admin, réglages : le rôle n'ouvre aucune section."
+  },
+  "adminTabMcp": "MCP",
+  "@adminTabMcp": {
+    "description": "Admin, réglages : onglet des clés MCP."
+  },
+  "adminMcpHelp": "Une clé MCP permet à un assistant (Claude, par exemple) de piloter l'admin et d'interroger les analytics avec tes droits. Chaque action est journalisée.",
+  "@adminMcpHelp": {
+    "description": "Admin, clés MCP : explication."
+  },
+  "adminMcpName": "Nom de la clé",
+  "@adminMcpName": {
+    "description": "Admin, clés MCP : champ du nom (ex. Claude du bureau)."
+  },
+  "adminMcpCreate": "Créer une clé",
+  "@adminMcpCreate": {
+    "description": "Admin, clés MCP : bouton."
+  },
+  "adminMcpNewKeyTitle": "Copie ta clé maintenant : elle ne sera plus jamais montrée.",
+  "@adminMcpNewKeyTitle": {
+    "description": "Admin, clés MCP : clé tout juste créée."
+  },
+  "adminMcpKeyLabel": "Clé",
+  "@adminMcpKeyLabel": {
+    "description": "Admin, clés MCP : libellé de la clé."
+  },
+  "adminMcpEndpoint": "Adresse du serveur MCP",
+  "@adminMcpEndpoint": {
+    "description": "Admin, clés MCP : adresse à donner à l'assistant."
+  },
+  "adminMcpCopy": "Copier",
+  "@adminMcpCopy": {
+    "description": "Admin, clés MCP : copier une valeur."
+  },
+  "adminMcpCopied": "Copié",
+  "@adminMcpCopied": {
+    "description": "Admin, clés MCP : confirmation de copie."
+  },
+  "adminMcpDone": "J'ai copié la clé",
+  "@adminMcpDone": {
+    "description": "Admin, clés MCP : fermer l'encadré de la nouvelle clé."
+  },
+  "adminMcpRevoke": "Révoquer",
+  "@adminMcpRevoke": {
+    "description": "Admin, clés MCP : révoquer une clé."
+  },
+  "adminMcpRevoked": "Révoquée",
+  "@adminMcpRevoked": {
+    "description": "Admin, clés MCP : clé révoquée."
+  },
+  "adminMcpLastUsed": "Dernière utilisation : {date}",
+  "@adminMcpLastUsed": {
+    "description": "Admin, clés MCP : date de dernière utilisation.",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "adminMcpNeverUsed": "Jamais utilisée",
+  "@adminMcpNeverUsed": {
+    "description": "Admin, clés MCP : clé jamais utilisée."
   }
 }

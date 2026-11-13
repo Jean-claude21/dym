@@ -163,6 +163,13 @@ abstract interface class AdminService {
   /// Rôle et permissions de l'admin connecté (spec 085).
   Future<Result<AdminAccess>> me();
 
+  /// Clés MCP personnelles (spec 086).
+  Future<Result<List<AdminMcpKey>>> mcpKeys();
+
+  Future<Result<({AdminMcpKey key, String secret})>> createMcpKey(String name);
+
+  Future<Result<List<AdminMcpKey>>> revokeMcpKey(String id);
+
   Future<Result<List<AdminMember>>> removeAdmin(String email);
 
   Future<Result<List<AdminFeatureFlag>>> setFeatureFlag(
@@ -453,6 +460,18 @@ class NeonAdminService implements AdminService {
 
   @override
   Future<Result<AdminAccess>> me() => _admin.me();
+
+  @override
+  Future<Result<List<AdminMcpKey>>> mcpKeys() => _admin.mcpKeys();
+
+  @override
+  Future<Result<({AdminMcpKey key, String secret})>> createMcpKey(
+    String name,
+  ) => _admin.createMcpKey(name);
+
+  @override
+  Future<Result<List<AdminMcpKey>>> revokeMcpKey(String id) =>
+      _admin.revokeMcpKey(id);
 
   @override
   Future<Result<List<AdminMember>>> removeAdmin(String email) =>
