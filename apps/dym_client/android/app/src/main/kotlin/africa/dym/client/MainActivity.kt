@@ -1,4 +1,4 @@
-package tg.dym.dym_vendor
+package africa.dym.client
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -16,11 +16,11 @@
   "navSettings": "Settings",
   "welcomeSkip": "Skip",
   "welcomeSlide1Title": "Your neighbourhood market, delivered to you",
-  "welcomeSlide1Body": "Your neighbourhood shops, one basket, delivered by zem.",
+  "welcomeSlide1Body": "Your neighbourhood shops, one basket, delivered to your door.",
   "welcomeSlide2Title": "Many shops, one basket",
   "welcomeSlide2Body": "Market tomatoes, smoked fish, spices: you order everything at once.",
   "welcomeSlide3Title": "Cash or Mobile Money",
-  "welcomeSlide3Body": "Pay on delivery or by Mobile Money, and follow your zem.",
+  "welcomeSlide3Body": "Pay on delivery or with Mobile Money, and follow your courier.",
   "welcomePage": "Screen {current} of {total}",
   "authContinueGoogle": "Continue with Google",
   "authContinueEmail": "Continue with my email",
@@ -133,7 +133,7 @@
   "@storeDeliveryZonesTitle": {
     "description": "Title of the delivery areas list (vendor onboarding)"
   },
-  "storeDeliverySubtitle": "The neighbourhoods you take orders from. DYM handles the moto-taxi.",
+  "storeDeliverySubtitle": "The areas where you accept orders. DYM takes care of the courier.",
   "storeSelectAll": "Select all",
   "storePrepTitle": "Preparation time",
   "storePrepMinutes": "{minutes} min",

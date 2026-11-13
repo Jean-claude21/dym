@@ -21,3 +21,4 @@ Format : **Statut** · **Contexte** · **Décision** · **Conséquences** · **A
 | 0012 | [Mise en page adaptative](0012-mise-en-page-adaptative.md) | Acceptée |
 | 0015 | [Écosystème grocery multi-pays, simulation des services indisponibles](0015-ecosysteme-grocery.md) | Acceptée |
 | 0016 | [Design « Épuré, formes tenues »](0016-design-epure.md) | Acceptée |
+| 0017 | [Identifiants d'application panafricains](0017-identifiants-panafricains.md) | Acceptée |

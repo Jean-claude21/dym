@@ -1,4 +1,4 @@
-/// Design system DYM « Le marché de Lomé, livré chez toi ».
+/// Design system DYM « Le marché de ton quartier, livré chez toi ».
 ///
 /// Thème « Épuré » généré depuis `docs/design/tokens/dym.tokens.json`, police
 /// Inter embarquée, composants conformes aux planches de `docs/design/screens/epure/`.

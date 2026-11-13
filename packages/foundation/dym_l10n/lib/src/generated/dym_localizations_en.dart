@@ -63,7 +63,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get welcomeSlide1Body =>
-      'Your neighbourhood shops, one basket, delivered by zem.';
+      'Your neighbourhood shops, one basket, delivered to your door.';
 
   @override
   String get welcomeSlide2Title => 'Many shops, one basket';
@@ -77,7 +77,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get welcomeSlide3Body =>
-      'Pay on delivery or by Mobile Money, and follow your zem.';
+      'Pay on delivery or with Mobile Money, and follow your courier.';
 
   @override
   String welcomePage(int current, int total) {
@@ -419,7 +419,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get storeDeliverySubtitle =>
-      'The neighbourhoods you take orders from. DYM handles the moto-taxi.';
+      'The areas where you accept orders. DYM takes care of the courier.';
 
   @override
   String get storeSelectAll => 'Select all';

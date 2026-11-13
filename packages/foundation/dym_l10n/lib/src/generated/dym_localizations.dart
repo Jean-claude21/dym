@@ -197,7 +197,7 @@ abstract class DymLocalizations {
   /// Bienvenue, écran 1
   ///
   /// In fr, this message translates to:
-  /// **'Les boutiques de ton quartier, un seul panier, livré en zem.'**
+  /// **'Les boutiques de ton quartier, un seul panier, livré chez toi.'**
   String get welcomeSlide1Body;
 
   /// Bienvenue, écran 2
@@ -221,7 +221,7 @@ abstract class DymLocalizations {
   /// Bienvenue, écran 3
   ///
   /// In fr, this message translates to:
-  /// **'Tu paies à la livraison ou par Mobile Money, et tu suis ton zem.'**
+  /// **'Tu paies à la livraison ou par Mobile Money, et tu suis ton livreur.'**
   String get welcomeSlide3Body;
 
   /// Indicateur de page (lecteur d'écran)
@@ -827,7 +827,7 @@ abstract class DymLocalizations {
   /// Étape 5
   ///
   /// In fr, this message translates to:
-  /// **'Les quartiers où tu acceptes les commandes. DYM s\'occupe du zem.'**
+  /// **'Les quartiers où tu acceptes les commandes. DYM s\'occupe du livreur.'**
   String get storeDeliverySubtitle;
 
   /// Tous les quartiers
