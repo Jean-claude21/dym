@@ -572,6 +572,12 @@ abstract class DymLocalizations {
   /// **'Accès réservé à l\'équipe DYM. Ce compte n\'a pas les droits d\'administration.'**
   String get adminAccessDenied;
 
+  /// Connexion Google : aucun compte sur l'appareil
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte Google sur ce téléphone. Ajoute-en un dans les réglages, ou continue avec ton email.'**
+  String get authGoogleNoAccount;
+
   /// Google non configuré
   ///
   /// In fr, this message translates to:

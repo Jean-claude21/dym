@@ -278,6 +278,10 @@ class DymLocalizationsFr extends DymLocalizations {
       'Accès réservé à l\'équipe DYM. Ce compte n\'a pas les droits d\'administration.';
 
   @override
+  String get authGoogleNoAccount =>
+      'Aucun compte Google sur ce téléphone. Ajoute-en un dans les réglages, ou continue avec ton email.';
+
+  @override
   String get adminGoogleUnavailable =>
       'La connexion Google n\'est pas configurée pour cet environnement.';
 

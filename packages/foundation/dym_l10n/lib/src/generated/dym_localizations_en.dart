@@ -277,6 +277,10 @@ class DymLocalizationsEn extends DymLocalizations {
       'Restricted to the DYM team. This account has no admin rights.';
 
   @override
+  String get authGoogleNoAccount =>
+      'No Google account on this phone. Add one in Settings, or continue with your email.';
+
+  @override
   String get adminGoogleUnavailable =>
       'Google sign-in is not configured for this environment.';
 

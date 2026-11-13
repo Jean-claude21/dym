@@ -27,6 +27,9 @@ class UnavailableGoogleIdTokenProvider implements GoogleIdTokenProvider {
   Future<void> signOut() async {}
 }
 
+/// Aucun compte Google sur l'appareil : message dédié côté écran.
+const googleNoAccount = 'google_no_account';
+
 /// Implémentation `google_sign_in` 7. Les identifiants OAuth viennent de la
 /// compilation (`DYM_GOOGLE_SERVER_CLIENT_ID`, `DYM_GOOGLE_CLIENT_ID`), jamais
 /// du dépôt.
@@ -74,6 +77,11 @@ class PluginGoogleIdTokenProvider implements GoogleIdTokenProvider {
         GoogleSignInExceptionCode.providerConfigurationError => const Err(
           ValidationFailure('connexion Google mal configurée'),
         ),
+        // Android sans compte Google : le gestionnaire d'identifiants n'a
+        // rien à proposer (« No credential available »).
+        GoogleSignInExceptionCode.unknownError
+            when (error.description ?? '').contains('No credential') =>
+          const Err(NotFoundFailure(googleNoAccount)),
         _ => Err(UnknownFailure('Google : ${error.code.name}')),
       };
     } on Object {
