@@ -7137,4 +7137,10 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get importBackToCatalog => 'Voir le catalogue';
+
+  @override
+  String get brandMadeByPrefix => 'Réalisé par';
+
+  @override
+  String get brandMakerName => 'Kete';
 }

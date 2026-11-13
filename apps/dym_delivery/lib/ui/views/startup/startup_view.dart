@@ -4,7 +4,7 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Démarrage : marque et accroche le temps de restaurer la session.
+/// Démarrage : splash animé de la marque le temps de restaurer la session.
 class StartupView extends StackedView<StartupViewModel> {
   const new({super.key, this.viewModelFactory});
 
@@ -30,10 +30,12 @@ class StartupView extends StackedView<StartupViewModel> {
     final l10n = DymLocalizations.of(context);
     final environment = viewModel.environmentName;
     return Scaffold(
-      backgroundColor: c.brandDeep,
-      body: SafeArea(
-        child: viewModel.failed
-            ? DymStateView(
+      backgroundColor: c.background,
+      // Le splash couvre tout l'écran (légumes jusque sous la barre d'état) ;
+      // seul l'écran de reprise reste dans la zone sûre.
+      body: viewModel.failed
+          ? SafeArea(
+              child: DymStateView(
                 kind: viewModel.offline
                     ? DymStateKind.offline
                     : DymStateKind.error,
@@ -43,48 +45,25 @@ class StartupView extends StackedView<StartupViewModel> {
                 message: l10n.deliveryTagline,
                 actionLabel: l10n.retry,
                 onAction: viewModel.runStartupLogic,
-              )
-            : Center(
-                child: SingleChildScrollView(
-                  padding: EdgeInsets.all(DymLayout.gutter(context)),
-                  child: DymContentWidth.form(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          l10n.appNameDelivery,
-                          textAlign: TextAlign.center,
-                          style: t.display.copyWith(
-                            fontSize: 48,
-                            letterSpacing: -1.5,
-                            color: c.onBrand,
-                          ),
-                        ),
-                        const SizedBox(height: DymTokenSpace.s2),
-                        Text(
-                          l10n.deliveryTagline,
-                          textAlign: TextAlign.center,
-                          style: t.title.copyWith(color: c.onBrand),
-                        ),
-                        const SizedBox(height: DymTokenSpace.s5),
-                        if (viewModel.isBusy)
-                          Semantics(
-                            label: l10n.startupPreparing,
-                            child: CircularProgressIndicator(color: c.onBrand),
-                          ),
-                        if (environment != null) ...[
-                          const SizedBox(height: DymTokenSpace.s4),
-                          Text(
-                            l10n.environmentLabel(environment),
-                            style: t.label.copyWith(color: c.onBrand),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
               ),
-      ),
+            )
+          : DymSplash(
+              tagline: l10n.deliveryTagline,
+              footer: DymMadeBy(
+                prefix: l10n.brandMadeByPrefix,
+                maker: l10n.brandMakerName,
+              ),
+              below: Semantics(
+                label: l10n.startupPreparing,
+                liveRegion: true,
+                child: environment == null
+                    ? const SizedBox.shrink()
+                    : Text(
+                        l10n.environmentLabel(environment),
+                        style: t.label.copyWith(color: c.textSecondary),
+                      ),
+              ),
+            ),
     );
   }
 }

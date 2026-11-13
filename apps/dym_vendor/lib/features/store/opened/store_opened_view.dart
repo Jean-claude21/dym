@@ -68,15 +68,12 @@ class StoreOpenedView extends StatelessWidget {
                             children: [
                               ColoredBox(
                                 color: c.tintVertTendre,
-                                child: Image(
-                                  image: const AssetImage(
-                                    'assets/vendor_hero.webp',
-                                    package: 'dym_auth',
+                                child: Semantics(
+                                  image: true,
+                                  label: l10n.storeOpenedTitle,
+                                  child: const DymBrandSceneView(
+                                    DymBrandScene.vendor,
                                   ),
-                                  fit: BoxFit.cover,
-                                  semanticLabel: l10n.storeOpenedTitle,
-                                  errorBuilder: (_, _, _) =>
-                                      const SizedBox.shrink(),
                                 ),
                               ),
                               Positioned(

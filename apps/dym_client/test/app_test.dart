@@ -223,6 +223,7 @@ void main() {
         tester,
         StartupView(
           viewModelFactory: () => StartupViewModel(
+            introDelay: Duration.zero,
             auth: _Auth(result),
             environment: _env(env),
             navigator: navigator,

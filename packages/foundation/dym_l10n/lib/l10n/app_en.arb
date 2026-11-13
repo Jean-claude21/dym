@@ -2067,5 +2067,7 @@
   "importRun": "{count, plural, =1{Import 1 product} other{Import {count} products}}",
   "importDone": "{count, plural, =1{1 draft created} other{{count} drafts created}}",
   "importDoneHint": "Add photos, then publish from the catalogue.",
-  "importBackToCatalog": "See the catalogue"
+  "importBackToCatalog": "See the catalogue",
+  "brandMadeByPrefix": "Made by",
+  "brandMakerName": "Kete"
 }

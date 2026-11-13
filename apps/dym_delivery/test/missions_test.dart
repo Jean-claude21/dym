@@ -162,15 +162,15 @@ void main() {
 
     test('déjà prise : message', () async {
       final service = MemoryMissionsService(
-      config: _togo(),
-      current: const CourierProfile(
-        displayName: 'Kofi',
-        phone: '+228 90 11 22 33',
-        vehicle: CourierVehicle.moto,
-        zoneIds: ['be'],
-        isOnline: true,
-      ),
-    );
+        config: _togo(),
+        current: const CourierProfile(
+          displayName: 'Kofi',
+          phone: '+228 90 11 22 33',
+          vehicle: CourierVehicle.moto,
+          zoneIds: ['be'],
+          isOnline: true,
+        ),
+      );
       final vm = MissionsViewModel(service: service);
       await vm.load();
       expect(await vm.accept(_mission('o9')), isFalse);

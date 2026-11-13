@@ -56,6 +56,7 @@ Future<List<String>> _route(
 ]) async {
   final navigator = _Navigator();
   await StartupViewModel(
+    introDelay: Duration.zero,
     auth: _Auth(auth),
     missions: _Missions(courier),
     environment: _env,
@@ -100,6 +101,7 @@ void main() {
   test('hors ligne : reprise proposée', () async {
     final navigator = _Navigator();
     final vm = StartupViewModel(
+      introDelay: Duration.zero,
       auth: _Auth(const Err(NetworkFailure('hors ligne'))),
       missions: _Missions(const Ok(null)),
       environment: _env,

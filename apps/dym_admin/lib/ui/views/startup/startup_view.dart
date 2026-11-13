@@ -31,27 +31,21 @@ class StartupView extends StackedView<StartupViewModel> {
     final environment = viewModel.environmentName;
     return Scaffold(
       backgroundColor: c.background,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              l10n.appNameAdmin,
-              style: t.display.copyWith(fontSize: 40, color: c.brandDeep),
-            ),
-            const SizedBox(height: DymTokenSpace.s4),
-            Semantics(
-              label: l10n.startupPreparing,
-              child: CircularProgressIndicator(color: c.brand),
-            ),
-            if (environment != null) ...[
-              const SizedBox(height: DymTokenSpace.s4),
-              Text(
-                l10n.environmentLabel(environment),
-                style: t.label.copyWith(color: c.textSecondary),
-              ),
-            ],
-          ],
+      body: DymSplash(
+        tagline: l10n.appNameAdmin,
+        footer: DymMadeBy(
+          prefix: l10n.brandMadeByPrefix,
+          maker: l10n.brandMakerName,
+        ),
+        below: Semantics(
+          label: l10n.startupPreparing,
+          liveRegion: true,
+          child: environment == null
+              ? const SizedBox.shrink()
+              : Text(
+                  l10n.environmentLabel(environment),
+                  style: t.label.copyWith(color: c.textSecondary),
+                ),
         ),
       ),
     );

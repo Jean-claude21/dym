@@ -15,11 +15,17 @@ class StartupViewModel extends BaseViewModel {
     StoreService? stores,
     DymEnvironment? environment,
     AppNavigator? navigator,
+    this._introDelay = defaultIntro,
   }) : _auth = auth ?? locator<AuthService>(),
        _stores = stores ?? locator<StoreService>(),
        _environment = environment ?? locator<DymEnvironment>(),
        _navigator = navigator ?? StackedAppNavigator();
 
+  /// Durée minimale du splash au premier lancement : l'entrée animée de la
+  /// marque se joue en entier avant de changer d'écran.
+  static const defaultIntro = Duration(seconds: 2);
+
+  Duration _introDelay;
   final AuthService _auth;
   final StoreService _stores;
   final DymEnvironment _environment;
@@ -36,7 +42,12 @@ class StartupViewModel extends BaseViewModel {
 
   Future<void> runStartupLogic() async {
     _failure = null;
+    final intro = _introDelay == Duration.zero
+        ? null
+        : Future<void>.delayed(_introDelay);
+    _introDelay = Duration.zero;
     final result = await runBusyFuture(_auth.bootstrap());
+    await intro;
     switch (result) {
       case Ok(value: AuthState(status: AuthStatus.ready)):
         await _routeByStore();

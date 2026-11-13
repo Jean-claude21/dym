@@ -16,12 +16,23 @@ void main() {
           .toList();
 
   test('images de dym_ui en WebP et dans leur budget', () {
-    for (final f in images('assets')) {
+    for (final f in images('assets').where((f) => !f.path.endsWith('.json'))) {
       expect(f.path, endsWith('.webp'), reason: f.path);
       final budget = f.path.contains('aisles') ? thumb : full;
       expect(f.lengthSync(), lessThanOrEqualTo(budget), reason: f.path);
     }
   });
+
+  test(
+    'animations de la marque (Lottie) légères, images intégrées en WebP',
+    () {
+      for (final f in images('assets').where((f) => f.path.endsWith('.json'))) {
+        final splash = f.path.endsWith('splash.json');
+        expect(f.lengthSync(), lessThanOrEqualTo((splash ? 160 : 40) * 1024));
+        expect(f.readAsStringSync(), isNot(contains('data:image/png')));
+      }
+    },
+  );
 
   test('photos des pages d’entrée dans le budget plein écran', () {
     for (final f in images('../../features/dym_auth/assets')) {

@@ -11784,6 +11784,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Voir le catalogue'**
   String get importBackToCatalog;
+
+  /// Signature du splash : début de « Réalisé par Kete » (Kete a réalisé l'application).
+  ///
+  /// In fr, this message translates to:
+  /// **'Réalisé par'**
+  String get brandMadeByPrefix;
+
+  /// Nom du réalisateur de l'application, affiché en vert sur le splash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Kete'**
+  String get brandMakerName;
 }
 
 class _DymLocalizationsDelegate
