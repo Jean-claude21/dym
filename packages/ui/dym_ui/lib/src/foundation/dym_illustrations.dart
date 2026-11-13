@@ -20,7 +20,7 @@ abstract final class DymIllustrations {
     'beaute',
   };
 
-  static const _origins = {'marche', 'maison', 'magasin'};
+  static const _origins = {'marche', 'maison', 'magasin', 'supermarche'};
 
   /// Illustration d'un rayon (`categories.icon`).
   static ImageProvider? aisle(String? key) => _aisles.contains(key)
@@ -39,12 +39,8 @@ abstract final class DymIllustrations {
     package: 'dym_ui',
   );
 
-  /// Illustration d'une origine de boutique (`store_origins.code`). Le
-  /// supermarché reprend les rayons du magasin en attendant sa photo.
-  static ImageProvider? origin(String? code) {
-    final key = code == 'supermarche' ? 'magasin' : code;
-    return _origins.contains(key)
-        ? AssetImage('assets/origins/$key.webp', package: 'dym_ui')
-        : null;
-  }
+  /// Illustration d'une origine de boutique (`store_origins.code`).
+  static ImageProvider? origin(String? code) => _origins.contains(code)
+      ? AssetImage('assets/origins/$code.webp', package: 'dym_ui')
+      : null;
 }
