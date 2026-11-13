@@ -5,4 +5,5 @@
 - [x] T003 Function : canal par type, regroupement par commande ou conversation
 - [x] T004 Apps : quatre canaux nommés, notification remplacée au premier plan
 - [x] T005 Réglage « Nuit calme » (cliente), textes fr/en, capture
-- [ ] T006 Boutons d'action et grande photo (spec suivante)
+- [x] T006 Admin : carte « Échanges » (messages, conversations, notifications envoyées/retenues/en échec, nuit calme, boutiques par type) — migration 0072, pgTAP 610
+- [ ] T007 Boutons d'action et grande photo (spec suivante)

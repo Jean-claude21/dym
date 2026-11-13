@@ -7495,5 +7495,41 @@
   "pushChannelGeneral": "Infos et offres",
   "@pushChannelGeneral": {
     "description": "Canal Android du reste"
+  },
+  "adminExchangesTitle": "Échanges",
+  "@adminExchangesTitle": {
+    "description": "Carte du tableau de bord admin : messages et notifications"
+  },
+  "adminMessagesSent": "Messages envoyés",
+  "@adminMessagesSent": {
+    "description": "Statistique admin"
+  },
+  "adminMessagesWithOrder": "Sur commande",
+  "@adminMessagesWithOrder": {
+    "description": "Statistique admin"
+  },
+  "adminConversationsActive": "Conversations actives",
+  "@adminConversationsActive": {
+    "description": "Statistique admin"
+  },
+  "adminPushSent": "Notifications",
+  "@adminPushSent": {
+    "description": "Statistique admin"
+  },
+  "adminPushSkipped": "Retenues",
+  "@adminPushSkipped": {
+    "description": "Statistique admin"
+  },
+  "adminPushFailed": "Échecs d'envoi",
+  "@adminPushFailed": {
+    "description": "Statistique admin"
+  },
+  "adminQuietNightUsers": "Nuit calme activée",
+  "@adminQuietNightUsers": {
+    "description": "Statistique admin"
+  },
+  "adminStoresByOrigin": "Boutiques actives par type",
+  "@adminStoresByOrigin": {
+    "description": "Statistique admin"
   }
 }

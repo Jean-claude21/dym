@@ -6718,4 +6718,31 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get pushChannelGeneral => 'Infos et offres';
+
+  @override
+  String get adminExchangesTitle => 'Échanges';
+
+  @override
+  String get adminMessagesSent => 'Messages envoyés';
+
+  @override
+  String get adminMessagesWithOrder => 'Sur commande';
+
+  @override
+  String get adminConversationsActive => 'Conversations actives';
+
+  @override
+  String get adminPushSent => 'Notifications';
+
+  @override
+  String get adminPushSkipped => 'Retenues';
+
+  @override
+  String get adminPushFailed => 'Échecs d\'envoi';
+
+  @override
+  String get adminQuietNightUsers => 'Nuit calme activée';
+
+  @override
+  String get adminStoresByOrigin => 'Boutiques actives par type';
 }

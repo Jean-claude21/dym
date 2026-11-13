@@ -1955,5 +1955,14 @@
   "pushChannelOrders": "Orders and payments",
   "pushChannelMessages": "Messages",
   "pushChannelMissions": "Deliveries",
-  "pushChannelGeneral": "News and offers"
+  "pushChannelGeneral": "News and offers",
+  "adminExchangesTitle": "Exchanges",
+  "adminMessagesSent": "Messages sent",
+  "adminMessagesWithOrder": "About an order",
+  "adminConversationsActive": "Active conversations",
+  "adminPushSent": "Notifications",
+  "adminPushSkipped": "Held back",
+  "adminPushFailed": "Failed",
+  "adminQuietNightUsers": "Quiet night on",
+  "adminStoresByOrigin": "Active shops by type"
 }

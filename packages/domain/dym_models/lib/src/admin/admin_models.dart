@@ -626,6 +626,50 @@ class AdminDispatch {
   final int readyAlerts;
 }
 
+/// Échanges sur une période (specs 070 à 072) : messages, conversations,
+/// boutiques actives par origine, notifications envoyées ou retenues.
+@immutable
+@JsonSerializable()
+class AdminExchanges {
+  const new({
+    this.messages = 0,
+    this.messagesWithOrder = 0,
+    this.conversationsActive = 0,
+    this.storesByOrigin = const [],
+    this.pushSent = 0,
+    this.pushSkipped = 0,
+    this.pushFailed = 0,
+    this.quietNightUsers = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminExchangesFromJson(json);
+
+  final int messages;
+  final int messagesWithOrder;
+  final int conversationsActive;
+  final List<AdminOriginCount> storesByOrigin;
+  final int pushSent;
+  final int pushSkipped;
+  final int pushFailed;
+  final int quietNightUsers;
+}
+
+/// Boutiques actives d'une origine (marché, maison, boutique, supermarché…).
+@immutable
+@JsonSerializable()
+class AdminOriginCount {
+  const new({required this.code, required this.label, this.stores = 0});
+
+  factory fromJson(Map<String, dynamic> json) =>
+      _$AdminOriginCountFromJson(json);
+
+  final String code;
+  @LocalizedTextConverter()
+  final LocalizedText label;
+  final int stores;
+}
+
 /// Positions hors zone sur une période, par pays le plus proche (spec 065).
 @immutable
 @JsonSerializable()

@@ -1427,6 +1427,43 @@ class MemoryAdminService implements AdminService {
   ];
 
   @override
+  Future<Result<AdminExchanges>> exchanges(String period) async =>
+      _fail<AdminExchanges>() ??
+      const Ok(
+        AdminExchanges(
+          messages: 342,
+          messagesWithOrder: 118,
+          conversationsActive: 57,
+          storesByOrigin: [
+            AdminOriginCount(
+              code: 'marche',
+              label: LocalizedText({'fr': 'Au marché', 'en': 'At the market'}),
+              stores: 24,
+            ),
+            AdminOriginCount(
+              code: 'maison',
+              label: LocalizedText({'fr': 'Fait maison', 'en': 'Homemade'}),
+              stores: 11,
+            ),
+            AdminOriginCount(
+              code: 'magasin',
+              label: LocalizedText({'fr': 'Boutique', 'en': 'Shop'}),
+              stores: 9,
+            ),
+            AdminOriginCount(
+              code: 'supermarche',
+              label: LocalizedText({'fr': 'Supermarché', 'en': 'Supermarket'}),
+              stores: 2,
+            ),
+          ],
+          pushSent: 1260,
+          pushSkipped: 84,
+          pushFailed: 3,
+          quietNightUsers: 31,
+        ),
+      );
+
+  @override
   Future<Result<AdminDispatch>> dispatch(String period) async =>
       _fail<AdminDispatch>() ??
       const Ok(

@@ -287,6 +287,13 @@ class AdminRepository {
     (json) => AdminDispatch.fromJson(_map(json)),
   );
 
+  /// Messages, boutiques par origine, notifications (specs 070 à 072).
+  Future<Result<AdminExchanges>> exchanges(String period) => _rpc(
+    'admin_exchanges',
+    {'p_period': period},
+    (json) => AdminExchanges.fromJson(_map(json)),
+  );
+
   /// Positions hors des zones desservies (spec 065).
   Future<Result<AdminCoverage>> coverage(String period) => _rpc(
     'admin_coverage',

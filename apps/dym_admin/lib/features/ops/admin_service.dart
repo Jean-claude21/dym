@@ -129,6 +129,9 @@ abstract interface class AdminService {
   /// Livreurs, relances et refus automatiques (spec 066).
   Future<Result<AdminDispatch>> dispatch(String period);
 
+  /// Messages, boutiques par origine, notifications (specs 070 à 072).
+  Future<Result<AdminExchanges>> exchanges(String period);
+
   Future<Result<AdminRevenue>> revenue(String period);
 
   Future<Result<List<AdminFeatureFlag>>> featureFlags();
@@ -391,6 +394,10 @@ class NeonAdminService implements AdminService {
   @override
   Future<Result<AdminDispatch>> dispatch(String period) =>
       _admin.dispatch(period);
+
+  @override
+  Future<Result<AdminExchanges>> exchanges(String period) =>
+      _admin.exchanges(period);
 
   @override
   Future<Result<AdminRevenue>> revenue(String period) => _admin.revenue(period);
