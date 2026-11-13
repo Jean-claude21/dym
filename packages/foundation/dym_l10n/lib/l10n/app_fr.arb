@@ -7842,5 +7842,53 @@
         "type": "String"
       }
     }
+  },
+  "vendorAlertTitle": "Nouvelle commande !",
+  "@vendorAlertTitle": {
+    "description": "Alerte plein écran d'une nouvelle commande"
+  },
+  "vendorAlertOpen": "Voir la commande",
+  "@vendorAlertOpen": {
+    "description": "Alerte : ouvrir la commande"
+  },
+  "vendorAlertLater": "Plus tard",
+  "@vendorAlertLater": {
+    "description": "Alerte : fermer"
+  },
+  "vendorAlertMore": "{count, plural, =1{1 autre commande attend} other{{count} autres commandes attendent}}",
+  "@vendorAlertMore": {
+    "description": "Alerte : autres commandes en attente",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vendorRespondBefore": "Réponds avant {time}",
+  "@vendorRespondBefore": {
+    "description": "Heure limite de réponse",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "vendorMinutesLeft": "{minutes, plural, =0{délai dépassé} =1{1 min restante} other{{minutes} min restantes}}",
+  "@vendorMinutesLeft": {
+    "description": "Temps restant pour répondre",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "vendorAutoRefuseAt": "Sans réponse, la commande sera refusée à {time}.",
+  "@vendorAutoRefuseAt": {
+    "description": "Explication du refus automatique",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
   }
 }

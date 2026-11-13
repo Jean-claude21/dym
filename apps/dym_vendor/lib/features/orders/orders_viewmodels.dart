@@ -11,6 +11,9 @@ abstract class _OrdersLoadingViewModel extends BaseViewModel {
   new(this.service);
 
   final OrdersService service;
+
+  /// Heure courante (compte à rebours de réponse, spec 075) ; fixée en test.
+  DateTime Function() clock = DateTime.now;
   Failure? _failure;
   CountryConfig? _config;
 

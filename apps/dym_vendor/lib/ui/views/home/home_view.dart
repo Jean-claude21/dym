@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -12,6 +13,7 @@ import 'package:dym_vendor/features/catalog/products/products_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
+import 'package:dym_vendor/features/orders/new_order_alert.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/store/my_store/my_store_view.dart';
@@ -87,11 +89,29 @@ class _HomeViewState extends State<HomeView> {
   bool _contents = false;
   bool _broadcast = false;
 
+  /// Nouvelles commandes annoncées sur tous les onglets (spec 075).
+  late final NewOrderWatcher? _watcher = switch (widget.orders ??
+      (locator.isRegistered<OrdersService>()
+          ? locator<OrdersService>()
+          : null)) {
+    final service? => NewOrderWatcher(service: service),
+    null => null,
+  };
+  CountryConfig? _config;
+
   @override
   void initState() {
     super.initState();
     if (locator.isRegistered<PushNotifications>()) {
       unawaited(locator<PushNotifications>().start());
+    }
+    if (_watcher case final watcher?) {
+      unawaited(
+        watcher.service.countryConfig().then((r) {
+          if (mounted) setState(() => _config = r.valueOrNull);
+        }),
+      );
+      unawaited(watcher.start());
     }
     final contents =
         widget.contents ??
@@ -122,11 +142,23 @@ class _HomeViewState extends State<HomeView> {
   void _select(HomeTab tab) => setState(() => _tab = tab);
 
   @override
+  void dispose() {
+    _watcher?.dispose();
+    super.dispose();
+  }
+
+  String? _amount(VendorOrder o) {
+    final config = _config;
+    if (config == null || config.currency.code != o.currencyCode) return null;
+    return config.money(o.totalMinor).format();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
     final name = _service.me?.profile?.firstName;
-    return DymAdaptiveScaffold(
+    final scaffold = DymAdaptiveScaffold(
       backgroundColor: c.background,
       currentIndex: _tab.index,
       onDestinationSelected: (i) => _select(HomeTab.values[i]),
@@ -183,5 +215,14 @@ class _HomeViewState extends State<HomeView> {
         ),
       },
     );
+    return switch (_watcher) {
+      final watcher? => NewOrderAlertHost(
+        watcher: watcher,
+        onOpen: _navigator.toOrder,
+        money: _amount,
+        child: scaffold,
+      ),
+      null => scaffold,
+    };
   }
 }

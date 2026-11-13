@@ -11568,6 +11568,48 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Commandée le {date} à {time}'**
   String trackOrderedOn(String date, String time);
+
+  /// Alerte plein écran d'une nouvelle commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouvelle commande !'**
+  String get vendorAlertTitle;
+
+  /// Alerte : ouvrir la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la commande'**
+  String get vendorAlertOpen;
+
+  /// Alerte : fermer
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus tard'**
+  String get vendorAlertLater;
+
+  /// Alerte : autres commandes en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 autre commande attend} other{{count} autres commandes attendent}}'**
+  String vendorAlertMore(int count);
+
+  /// Heure limite de réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponds avant {time}'**
+  String vendorRespondBefore(String time);
+
+  /// Temps restant pour répondre
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes, plural, =0{délai dépassé} =1{1 min restante} other{{minutes} min restantes}}'**
+  String vendorMinutesLeft(int minutes);
+
+  /// Explication du refus automatique
+  ///
+  /// In fr, this message translates to:
+  /// **'Sans réponse, la commande sera refusée à {time}.'**
+  String vendorAutoRefuseAt(String time);
 }
 
 class _DymLocalizationsDelegate

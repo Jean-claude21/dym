@@ -9,6 +9,7 @@ import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
 import 'package:dym_vendor/features/catalog/products/products_view.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
+import 'package:dym_vendor/features/orders/new_order_alert.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/orders/testing.dart';
 import 'package:dym_vendor/features/store/my_store/my_store_view.dart';
@@ -169,6 +170,9 @@ VendorOrder _order(
   ),
 );
 
+/// Six minutes après la commande : 14 min pour répondre.
+DateTime _respondClock() => DateTime.utc(2026, 11, 11, 12, 21);
+
 MemoryOrdersService _orders() => MemoryOrdersService(
   config: togoConfig(),
   orders: [_order('o1', 'Awa', 3450), _order('o2', 'Mariama', 2500)],
@@ -194,14 +198,33 @@ void main() {
     await _capture(
       t,
       'commandes',
-      OrdersView(service: _orders(), onOpen: (_) {}),
+      OrdersView(service: _orders(), onOpen: (_) {}, clock: _respondClock),
+    );
+  });
+  testWidgets('nouvelle commande', (t) async {
+    final order = (await _orders().order('o1')).valueOrNull!;
+    await _capture(
+      t,
+      'nouvelle_commande',
+      NewOrderAlert(
+        order: order,
+        amount: '3 450 F CFA',
+        othersWaiting: 1,
+        clock: _respondClock,
+        ring: false,
+      ),
     );
   });
   testWidgets('commande', (t) async {
     await _capture(
       t,
       'commande',
-      OrderDetailView(service: _orders(), orderId: 'o1', onBack: () {}),
+      OrderDetailView(
+        service: _orders(),
+        orderId: 'o1',
+        onBack: () {},
+        clock: _respondClock,
+      ),
     );
   });
   // Commande prête confiée à un livreur DYM (spec 068).
