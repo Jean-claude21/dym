@@ -101,6 +101,9 @@ class _Dashboard implements DashboardService {
       activeOrders: 2,
       outOfStock: 2,
       criticalNotifications: 0,
+      previousRevenueMinor: 16400,
+      previousOrderCount: 8,
+      respondBy: DateTime.utc(2026, 11, 11, 12, 35),
     ),
   );
 

@@ -44,6 +44,24 @@ class _Service implements DashboardService {
 }
 
 void main() {
+  test('évolution : ventes et commandes vs période précédente', () {
+    const d = VendorDashboard(
+      period: DashboardPeriod.day,
+      currencyCode: 'XOF',
+      revenueMinor: 18450,
+      orderCount: 9,
+      pendingPayments: 0,
+      pendingOrders: 0,
+      activeOrders: 0,
+      outOfStock: 0,
+      criticalNotifications: 0,
+      previousRevenueMinor: 16400,
+      previousOrderCount: 0,
+    );
+    expect(d.revenueChange, 13);
+    expect(d.ordersChange, isNull, reason: 'pas de base');
+  });
+
   test('montants serveur et échec réseau : dernier résumé conservé', () async {
     final service = _Service();
     final vm = DashboardViewModel(service: service);

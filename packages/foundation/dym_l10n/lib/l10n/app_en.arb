@@ -2038,5 +2038,11 @@
   "vendorAlertMore": "{count, plural, =1{1 more order is waiting} other{{count} more orders are waiting}}",
   "vendorRespondBefore": "Reply before {time}",
   "vendorMinutesLeft": "{minutes, plural, =0{time is up} =1{1 min left} other{{minutes} min left}}",
-  "vendorAutoRefuseAt": "Without a reply, the order will be refused at {time}."
+  "vendorAutoRefuseAt": "Without a reply, the order will be refused at {time}.",
+  "vendorUrgentTitle": "{count, plural, =1{1 order is waiting for your reply} other{{count} orders are waiting for your reply}}",
+  "vendorUrgentAction": "Reply",
+  "vendorVsDay": "vs yesterday at the same time",
+  "vendorVsWeek": "vs last week",
+  "vendorVsMonth": "vs last month",
+  "productOutOfStockShort": "Out of stock"
 }

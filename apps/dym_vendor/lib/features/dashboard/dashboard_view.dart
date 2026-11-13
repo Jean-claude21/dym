@@ -108,6 +108,15 @@ class DashboardView extends StackedView<DashboardViewModel> {
                     header: true,
                     child: Text(greeting ?? l.navToday, style: t.display),
                   ),
+                  // Commandes en attente : d'abord, et en couleur (spec 076).
+                  if (summary.pendingOrders > 0) ...[
+                    const SizedBox(height: DymTokenSpace.s3),
+                    _Urgent(
+                      count: summary.pendingOrders,
+                      respondBy: summary.respondBy,
+                      onTap: onOrders,
+                    ),
+                  ],
                   const SizedBox(height: DymTokenSpace.s4),
                   // Encaisser en premier (PARCOURS, Fatou).
                   Row(
@@ -163,6 +172,18 @@ class DashboardView extends StackedView<DashboardViewModel> {
                       ),
                     ),
                   ),
+                  if (summary.revenueChange case final change?) ...[
+                    const SizedBox(height: 4),
+                    _Delta(
+                      change: change,
+                      vs: switch (vm.period) {
+                        DashboardPeriod.week => l.vendorVsWeek,
+                        DashboardPeriod.month => l.vendorVsMonth,
+                        DashboardPeriod.day => l.vendorVsDay,
+                      },
+                    ),
+                    const SizedBox(height: 4),
+                  ],
                   Text(
                     l.dashboardTotals(
                       summary.orderCount,
@@ -208,6 +229,116 @@ class DashboardView extends StackedView<DashboardViewModel> {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Commandes qui attendent une réponse : carte pêche, heure limite, bouton.
+class _Urgent extends StatelessWidget {
+  const new({required this.count, required this.respondBy, this.onTap});
+
+  final int count;
+  final DateTime? respondBy;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l = DymLocalizations.of(context);
+    final by = respondBy;
+    return Material(
+      color: c.tintPeche,
+      borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          child: Row(
+            children: [
+              Icon(
+                Icons.notifications_active_rounded,
+                color: c.originMaisonFg,
+                size: 30,
+              ),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l.vendorUrgentTitle(count),
+                      style: t.title.copyWith(
+                        fontSize: 18,
+                        color: c.originMaisonFg,
+                      ),
+                    ),
+                    if (by != null)
+                      Text(
+                        l.vendorRespondBefore(
+                          TimeOfDay.fromDateTime(by.toLocal()).format(context),
+                        ),
+                        style: t.label.copyWith(color: c.originMaisonFg),
+                      ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: DymTokenSpace.s2),
+              Text(
+                l.vendorUrgentAction,
+                style: t.label.copyWith(
+                  color: c.originMaisonFg,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Icon(Icons.arrow_forward_rounded, color: c.originMaisonFg),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Évolution « ▲ 12 % vs hier à la même heure ».
+class _Delta extends StatelessWidget {
+  const new({required this.change, required this.vs});
+
+  final int change;
+  final String vs;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l = DymLocalizations.of(context);
+    final up = change > 0;
+    final (bg, fg) = change == 0
+        ? (c.muted, c.textSecondary)
+        : up
+        ? (c.tintVertTendre, c.brandDeep)
+        : (c.tintPimentClair, c.pimentStrong);
+    return Wrap(
+      spacing: 6,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            [
+              if (change > 0) '▲' else if (change < 0) '▼' else '=',
+              l.adminPercent(change.abs()),
+            ].join(' '),
+            style: t.label.copyWith(color: fg, fontWeight: FontWeight.w700),
+          ),
+        ),
+        Text(vs, style: t.label.copyWith(color: c.textSecondary)),
+      ],
     );
   }
 }

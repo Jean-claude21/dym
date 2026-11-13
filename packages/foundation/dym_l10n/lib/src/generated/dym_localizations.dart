@@ -11610,6 +11610,42 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Sans réponse, la commande sera refusée à {time}.'**
   String vendorAutoRefuseAt(String time);
+
+  /// Accueil vendeuse : commandes en attente
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 commande attend ta réponse} other{{count} commandes attendent ta réponse}}'**
+  String vendorUrgentTitle(int count);
+
+  /// Accueil vendeuse : ouvrir les commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Répondre'**
+  String get vendorUrgentAction;
+
+  /// Accueil vendeuse : comparaison
+  ///
+  /// In fr, this message translates to:
+  /// **'vs hier à la même heure'**
+  String get vendorVsDay;
+
+  /// Accueil vendeuse : comparaison
+  ///
+  /// In fr, this message translates to:
+  /// **'vs semaine dernière'**
+  String get vendorVsWeek;
+
+  /// Accueil vendeuse : comparaison
+  ///
+  /// In fr, this message translates to:
+  /// **'vs mois dernier'**
+  String get vendorVsMonth;
+
+  /// Catalogue : interrupteur coupé
+  ///
+  /// In fr, this message translates to:
+  /// **'Rupture'**
+  String get productOutOfStockShort;
 }
 
 class _DymLocalizationsDelegate

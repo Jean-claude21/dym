@@ -7001,4 +7001,30 @@ class DymLocalizationsFr extends DymLocalizations {
   String vendorAutoRefuseAt(String time) {
     return 'Sans réponse, la commande sera refusée à $time.';
   }
+
+  @override
+  String vendorUrgentTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count commandes attendent ta réponse',
+      one: '1 commande attend ta réponse',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get vendorUrgentAction => 'Répondre';
+
+  @override
+  String get vendorVsDay => 'vs hier à la même heure';
+
+  @override
+  String get vendorVsWeek => 'vs semaine dernière';
+
+  @override
+  String get vendorVsMonth => 'vs mois dernier';
+
+  @override
+  String get productOutOfStockShort => 'Rupture';
 }

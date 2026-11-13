@@ -7890,5 +7890,34 @@
         "type": "String"
       }
     }
+  },
+  "vendorUrgentTitle": "{count, plural, =1{1 commande attend ta réponse} other{{count} commandes attendent ta réponse}}",
+  "@vendorUrgentTitle": {
+    "description": "Accueil vendeuse : commandes en attente",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "vendorUrgentAction": "Répondre",
+  "@vendorUrgentAction": {
+    "description": "Accueil vendeuse : ouvrir les commandes"
+  },
+  "vendorVsDay": "vs hier à la même heure",
+  "@vendorVsDay": {
+    "description": "Accueil vendeuse : comparaison"
+  },
+  "vendorVsWeek": "vs semaine dernière",
+  "@vendorVsWeek": {
+    "description": "Accueil vendeuse : comparaison"
+  },
+  "vendorVsMonth": "vs mois dernier",
+  "@vendorVsMonth": {
+    "description": "Accueil vendeuse : comparaison"
+  },
+  "productOutOfStockShort": "Rupture",
+  "@productOutOfStockShort": {
+    "description": "Catalogue : interrupteur coupé"
   }
 }
