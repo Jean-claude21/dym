@@ -47,17 +47,17 @@ def save(name, d):
 # ---------------------------------------------------------------- 1. marché
 def scene_market():
     assets, layers = [], []
-    veg = [('brocoli', 104, -70), ('cebolla', 92, 70), ('rabanos', 112, -105), ('verde', 86, 110)]
-    for n, (nm, h, x0) in enumerate(veg):
+    veg = [('brocoli', 104, -70, -34), ('cebolla', 92, 70, 30), ('rabanos', 112, -105, -8), ('verde', 86, 110, 12)]
+    for n, (nm, h, x0, x1) in enumerate(veg):
         aid, w = image(assets, nm, h)
         t0 = 6 + n * 10
-        # Le légume arrive du bord, saute dans le sac, disparaît dedans.
+        # Le légume arrive du bord, saute dans le sac et y reste, la tête dépassant.
         layers.append(image_layer(
             30 + n, aid, w, h,
-            p=bounce_path(180 + x0 * 1.5, 60, 180, 150, t0, 18, 70),
-            s=anim((t0, [100, 100, 100]), (t0 + 14, [100, 100, 100]), (t0 + 20, [40, 40, 100])),
-            o=anim((t0 - 4, 0), (t0, 100), (t0 + 15, 100), (t0 + 19, 0)),
-            r=anim((t0, -25 if x0 < 0 else 25), (t0 + 18, 0))))
+            p=bounce_path(180 + x0 * 1.5, 60, 180 + x1, 150 - n * 2, t0, 18, 70),
+            s=anim((t0, [100, 100, 100]), (t0 + 18, [62, 62, 100])),
+            o=anim((t0 - 4, 0), (t0, 100)),
+            r=anim((t0, -25 if x0 < 0 else 25), (t0 + 18, -8 if x1 < 0 else 8))))
     # Sac (au-dessus des légumes qui « entrent ») et rebond à chaque arrivée.
     sc = []
     for n in range(4):

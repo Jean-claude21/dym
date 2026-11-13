@@ -32,6 +32,7 @@ class StartupView extends StackedView<StartupViewModel> {
     return Scaffold(
       backgroundColor: c.background,
       body: DymSplash(
+        onIntroComplete: viewModel.introFinished,
         tagline: l10n.appNameAdmin,
         footer: DymMadeBy(
           prefix: l10n.brandMadeByPrefix,

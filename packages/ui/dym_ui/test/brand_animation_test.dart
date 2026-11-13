@@ -67,6 +67,18 @@ void main() {
     expect(tester.hasRunningAnimations, isFalse);
   });
 
+  testWidgets('animations réduites : entrée du splash signalée aussitôt', (
+    tester,
+  ) async {
+    var done = false;
+    await _pump(
+      tester,
+      DymSplash(tagline: 'DYM', onIntroComplete: () => done = true),
+      reduce: true,
+    );
+    expect(done, isTrue);
+  });
+
   test('chaque scène a son fichier', () {
     expect(
       DymBrandScene.values.map((s) => s.file).toSet(),

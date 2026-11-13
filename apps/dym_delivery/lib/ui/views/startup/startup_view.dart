@@ -48,6 +48,7 @@ class StartupView extends StackedView<StartupViewModel> {
               ),
             )
           : DymSplash(
+              onIntroComplete: viewModel.introFinished,
               tagline: l10n.deliveryTagline,
               footer: DymMadeBy(
                 prefix: l10n.brandMadeByPrefix,

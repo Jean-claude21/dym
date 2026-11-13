@@ -82,14 +82,22 @@ class _DymBrandSceneViewState extends State<DymBrandSceneView>
 /// sous le nom, [footer] en bas (signature du réalisateur), [below] sous
 /// l'accroche (état de chargement, environnement).
 class DymSplash extends StatefulWidget {
-  const new({required this.tagline, super.key, this.footer, this.below});
+  const new({
+    required this.tagline,
+    super.key,
+    this.footer,
+    this.below,
+    this.onIntroComplete,
+  });
 
   final String tagline;
   final Widget? footer;
   final Widget? below;
 
-  /// Durée de l'entrée (images 0 à 60 à 30 i/s) avant la respiration.
-  static const intro = Duration(seconds: 2);
+  /// Appelé quand l'entrée est jouée (tout de suite si les animations sont
+  /// réduites ou si l'animation ne peut pas être lue) : l'app peut alors
+  /// changer d'écran sans couper le logo.
+  final VoidCallback? onIntroComplete;
 
   @override
   State<DymSplash> createState() => _DymSplashState();
@@ -114,6 +122,7 @@ class _DymSplashState extends State<DymSplash>
     _controller.duration = composition.duration;
     if (!DymMotion.enabled(context)) {
       _controller.value = _loopStart;
+      widget.onIntroComplete?.call();
       return;
     }
     await _controller.animateTo(
@@ -121,6 +130,7 @@ class _DymSplashState extends State<DymSplash>
       duration: composition.duration * _loopStart,
     );
     if (!mounted) return;
+    widget.onIntroComplete?.call();
     await _controller.repeat(
       min: _loopStart,
       max: 1,
@@ -156,7 +166,12 @@ class _DymSplashState extends State<DymSplash>
                     controller: _controller,
                     fit: BoxFit.fill,
                     onLoaded: _play,
-                    errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    errorBuilder: (_, _, _) {
+                      WidgetsBinding.instance.addPostFrameCallback(
+                        (_) => widget.onIntroComplete?.call(),
+                      );
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
               ),

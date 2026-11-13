@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_delivery/app/app.locator.dart';
@@ -19,11 +21,19 @@ class StartupViewModel extends BaseViewModel {
        _environment = environment ?? locator<DymEnvironment>(),
        _navigator = navigator ?? StackedAppNavigator();
 
-  /// Durée minimale du splash au premier lancement : l'entrée animée de la
-  /// marque se joue en entier avant de changer d'écran.
-  static const defaultIntro = Duration(seconds: 2);
+  /// Attente maximale de l'entrée animée du splash au premier lancement :
+  /// l'écran change quand elle est jouée ([introFinished]), au plus tard
+  /// après ce délai (téléphone lent, animation illisible).
+  static const defaultIntro = Duration(seconds: 5);
 
   Duration _introDelay;
+  final _intro = Completer<void>();
+
+  /// Entrée du splash jouée (appelé par la vue).
+  void introFinished() {
+    if (!_intro.isCompleted) _intro.complete();
+  }
+
   final AuthService _auth;
   final MissionsService _missions;
   final DymEnvironment _environment;
@@ -40,7 +50,7 @@ class StartupViewModel extends BaseViewModel {
     _failure = null;
     final intro = _introDelay == Duration.zero
         ? null
-        : Future<void>.delayed(_introDelay);
+        : Future.any([_intro.future, Future<void>.delayed(_introDelay)]);
     _introDelay = Duration.zero;
     final result = await runBusyFuture(_auth.bootstrap());
     await intro;
