@@ -332,13 +332,9 @@ class _Actions extends StatelessWidget {
       children: [
         AuthErrorBanner(error: vm.authError),
         if (vm.authError != null) const SizedBox(height: DymTokenSpace.s3),
-        DymButton(
-          label: l10n.authContinueEmail,
-          icon: Icons.mail_outline_rounded,
-          onPressed: vm.chooseEmail,
-        ),
+        // Google d'abord (choix du porteur, 2026-11-13) : bouton blanc avec
+        // son logo, comme Google l'exige ; l'email suit, plus discret.
         if (vm.googleAvailable) ...[
-          const SizedBox(height: DymTokenSpace.s2 + 2),
           DymButton(
             label: l10n.authContinueGoogle,
             variant: DymButtonVariant.surface,
@@ -346,7 +342,27 @@ class _Actions extends StatelessWidget {
             loading: vm.isBusy,
             onPressed: vm.chooseGoogle,
           ),
+          const SizedBox(height: DymTokenSpace.s1),
         ],
+        if (vm.googleAvailable)
+          TextButton.icon(
+            onPressed: vm.chooseEmail,
+            style: TextButton.styleFrom(
+              minimumSize: const Size.fromHeight(DymTokenSize.touchMin),
+              foregroundColor: c.brandDeep,
+              textStyle: context.dym.text.body.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            icon: const Icon(Icons.mail_outline_rounded, size: 20),
+            label: Text(l10n.authContinueEmail),
+          )
+        else
+          DymButton(
+            label: l10n.authContinueEmail,
+            icon: Icons.mail_outline_rounded,
+            onPressed: vm.chooseEmail,
+          ),
         const SizedBox(height: DymTokenSpace.s3),
         Text(
           l10n.authLegal,
