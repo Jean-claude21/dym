@@ -193,9 +193,20 @@ class CustomerOrder {
       history.where((e) => e.toStatus == s).firstOrNull?.occurredAt;
 }
 
-/// Catégorie de notification (préférences de push).
+/// Catégorie de notification (préférences de push). `quietNight` : réglage
+/// « nuit calme » (spec 072), activé quand `pushEnabled` est vrai.
 @JsonEnum(fieldRename: FieldRename.snake)
-enum NotificationCategory { orders, payments, messages, promotions, unknown }
+enum NotificationCategory {
+  orders,
+  payments,
+  messages,
+  promotions,
+  quietNight,
+  unknown;
+
+  /// Code attendu par la base.
+  String get code => this == quietNight ? 'quiet_night' : name;
+}
 
 /// Notification du centre (type + paramètres ; texte traduit par l'app).
 @immutable

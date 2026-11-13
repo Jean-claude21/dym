@@ -1090,6 +1090,10 @@ class NotificationSettingsView
         l10n.prefMessagesTitle,
         l10n.prefMessagesBody,
       ),
+      NotificationCategory.quietNight => (
+        l10n.prefQuietNightTitle,
+        l10n.prefQuietNightBody,
+      ),
       _ => (l10n.prefPromotionsTitle, l10n.prefPromotionsBody),
     };
     return Scaffold(
@@ -1117,7 +1121,13 @@ class NotificationSettingsView
                         for (final p in vm.preferences)
                           DymContentWidth.form(
                             child: Padding(
-                              padding: const EdgeInsets.only(
+                              // « Nuit calme » : un réglage à part, détaché.
+                              padding: EdgeInsets.only(
+                                top:
+                                    p.category ==
+                                        NotificationCategory.quietNight
+                                    ? DymTokenSpace.s3
+                                    : 0,
                                 bottom: DymTokenSpace.s2,
                               ),
                               child: DymSwitchTile(

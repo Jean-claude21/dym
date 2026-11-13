@@ -6699,4 +6699,23 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get chatSearchStoreProducts => 'Chercher dans la boutique';
+
+  @override
+  String get prefQuietNightTitle => 'Nuit calme';
+
+  @override
+  String get prefQuietNightBody =>
+      'De 22 h à 7 h, pas de messages ni d\'offres sur le téléphone. Les commandes et les paiements passent toujours.';
+
+  @override
+  String get pushChannelOrders => 'Commandes et paiements';
+
+  @override
+  String get pushChannelMessages => 'Messages';
+
+  @override
+  String get pushChannelMissions => 'Courses à livrer';
+
+  @override
+  String get pushChannelGeneral => 'Infos et offres';
 }

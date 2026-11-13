@@ -38,6 +38,7 @@ class MemoryOrdersService implements OrdersService {
     NotificationCategory.payments: true,
     NotificationCategory.messages: true,
     NotificationCategory.promotions: false,
+    NotificationCategory.quietNight: false,
   };
 
   /// Prochain appel en échec (une fois).

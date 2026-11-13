@@ -95,7 +95,7 @@ class NotificationRepository {
   }) async => _decode(
     await _data.rpc<Object?>(
       'set_notification_preference',
-      params: {'p_category': category.name, 'p_enabled': enabled},
+      params: {'p_category': category.code, 'p_enabled': enabled},
     ),
     _prefs,
   );

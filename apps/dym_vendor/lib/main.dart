@@ -3,6 +3,7 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
+import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -83,6 +84,7 @@ Future<void> configureServices(DymEnvironment environment) async {
     // la personne connectée ; le toucher ouvre l'écran concerné.
     ..registerSingleton(
       PushNotifications(
+        channels: _pushChannels,
         register: (token, platform) async => (await NotificationRepository(
           neon.data,
         ).registerDevice(token: token, platform: platform, app: 'vendor')).isOk,
@@ -255,4 +257,19 @@ Future<void> configureServices(DymEnvironment environment) async {
         environment: environment,
       ),
     );
+}
+
+/// Noms des canaux de notification (spec 072), dans la langue du téléphone.
+PushChannels _pushChannels() {
+  final device = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  final supported = DymLocalizations.supportedLocales.any(
+    (l) => l.languageCode == device,
+  );
+  final t = lookupDymLocalizations(Locale(supported ? device : 'fr'));
+  return PushChannels(
+    orders: t.pushChannelOrders,
+    messages: t.pushChannelMessages,
+    missions: t.pushChannelMissions,
+    general: t.pushChannelGeneral,
+  );
 }

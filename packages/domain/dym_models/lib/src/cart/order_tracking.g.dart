@@ -306,6 +306,7 @@ const _$NotificationCategoryEnumMap = {
   NotificationCategory.payments: 'payments',
   NotificationCategory.messages: 'messages',
   NotificationCategory.promotions: 'promotions',
+  NotificationCategory.quietNight: 'quiet_night',
   NotificationCategory.unknown: 'unknown',
 };
 
