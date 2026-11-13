@@ -150,3 +150,63 @@ class PhotoUpload {
   final String uploadUrl;
   final String publicUrl;
 }
+
+/// Ligne d'import du catalogue (spec 081), telle que saisie dans le tableur :
+/// le serveur lit le prix, cherche le rayon et l'unité.
+@immutable
+class ImportRow {
+  const new({
+    required this.name,
+    required this.price,
+    this.unit = '',
+    this.category = '',
+    this.stock = '',
+  });
+
+  final String name;
+  final String price;
+  final String unit;
+  final String category;
+  final String stock;
+
+  Map<String, String> toJson() => {
+    'name': name,
+    'price': price,
+    'unit': unit,
+    'category': category,
+    'stock': stock,
+  };
+}
+
+/// Ligne refusée : numéro (à partir de 1) et raison (`name_invalid`,
+/// `price_invalid`, `category_unknown`, `unit_unknown`, `stock_invalid`,
+/// `error`).
+@immutable
+class ImportError {
+  const new({required this.line, required this.reason});
+
+  final int line;
+  final String reason;
+}
+
+/// Résultat d'un import (aperçu ou création).
+@immutable
+class ImportReport {
+  const new({required this.valid, this.errors = const [], this.dry = true});
+
+  factory fromJson(Map<String, dynamic> json) => ImportReport(
+    valid: (json['valid'] as num?)?.toInt() ?? 0,
+    dry: json['dry'] as bool? ?? true,
+    errors: [
+      for (final e in (json['errors'] as List? ?? const []))
+        ImportError(
+          line: ((e as Map)['line'] as num).toInt(),
+          reason: e['reason'] as String? ?? 'error',
+        ),
+    ],
+  );
+
+  final int valid;
+  final List<ImportError> errors;
+  final bool dry;
+}

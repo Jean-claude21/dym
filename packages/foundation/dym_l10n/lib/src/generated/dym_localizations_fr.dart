@@ -7049,4 +7049,92 @@ class DymLocalizationsFr extends DymLocalizations {
   String notifCartReminderBody(String summary) {
     return '$summary : finalise ta commande en un geste.';
   }
+
+  @override
+  String get importTitle => 'Importer des produits';
+
+  @override
+  String get importAction => 'Importer';
+
+  @override
+  String get importHelp =>
+      'Colle tes lignes depuis un tableur : une ligne par produit, dans l\'ordre nom, prix, unité, rayon, stock. Les produits arrivent en brouillon : ajoute les photos, puis publie.';
+
+  @override
+  String get importExample =>
+      'Tomates ; 500 ; tas ; Légumes ; 40\nHuile rouge ; 1 200 ; ; Huiles et condiments ;';
+
+  @override
+  String get importPasteLabel => 'Tes lignes';
+
+  @override
+  String get importCheck => 'Vérifier';
+
+  @override
+  String importSummary(int count, int errors) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lignes prêtes',
+      one: '1 ligne prête',
+      zero: 'Aucune ligne prête',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      errors,
+      locale: localeName,
+      other: '$errors erreurs',
+      one: '1 erreur',
+      zero: 'aucune erreur',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String importLineError(int line, String reason) {
+    return 'Ligne $line : $reason';
+  }
+
+  @override
+  String get importNameInvalid => 'nom manquant ou trop long';
+
+  @override
+  String get importPriceInvalid => 'prix illisible';
+
+  @override
+  String get importCategoryUnknown => 'rayon inconnu';
+
+  @override
+  String get importUnitUnknown => 'unité inconnue';
+
+  @override
+  String get importStockInvalid => 'stock illisible';
+
+  @override
+  String importRun(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Importer $count produits',
+      one: 'Importer 1 produit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count brouillons créés',
+      one: '1 brouillon créé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importDoneHint =>
+      'Ajoute les photos, puis publie depuis le catalogue.';
+
+  @override
+  String get importBackToCatalog => 'Voir le catalogue';
 }

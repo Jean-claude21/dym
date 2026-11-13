@@ -10,7 +10,19 @@ class ProductsViewModel extends BaseViewModel {
     required this._service,
     required this._onEdit,
     required this._onCategories,
+    this._onImport,
   });
+
+  /// Import en masse (spec 081) ; nul : pas de bouton.
+  final Future<void> Function()? _onImport;
+  bool get canImport => _onImport != null;
+
+  Future<void> importProducts() async {
+    final open = _onImport;
+    if (open == null) return;
+    await open();
+    await load();
+  }
 
   final CatalogService _service;
 

@@ -48,6 +48,12 @@ abstract interface class CatalogService {
 
   Future<Result<Product>> publish(String id);
 
+  /// Import en masse (spec 081) : aperçu ou création en brouillon.
+  Future<Result<ImportReport>> importProducts(
+    List<ImportRow> rows, {
+    required bool dry,
+  });
+
   Future<Result<Product>> setAvailable(String id, {required bool available});
 
   /// Date d'arrivage (spec 033) ; nulle : produit normal.
@@ -129,6 +135,12 @@ class NeonCatalogService implements CatalogService {
 
   @override
   Future<Result<Product>> publish(String id) => _catalog.publish(id);
+
+  @override
+  Future<Result<ImportReport>> importProducts(
+    List<ImportRow> rows, {
+    required bool dry,
+  }) => _catalog.importProducts(rows, dry: dry);
 
   @override
   Future<Result<Product>> setAvailable(String id, {required bool available}) =>

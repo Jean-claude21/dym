@@ -11682,6 +11682,108 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{summary} : finalise ta commande en un geste.'**
   String notifCartReminderBody(String summary);
+
+  /// Import en masse : titre
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer des produits'**
+  String get importTitle;
+
+  /// Catalogue : ouvrir l'import en masse
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer'**
+  String get importAction;
+
+  /// Import en masse : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Colle tes lignes depuis un tableur : une ligne par produit, dans l\'ordre nom, prix, unité, rayon, stock. Les produits arrivent en brouillon : ajoute les photos, puis publie.'**
+  String get importHelp;
+
+  /// Import en masse : exemple
+  ///
+  /// In fr, this message translates to:
+  /// **'Tomates ; 500 ; tas ; Légumes ; 40\nHuile rouge ; 1 200 ; ; Huiles et condiments ;'**
+  String get importExample;
+
+  /// Import en masse : champ
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes lignes'**
+  String get importPasteLabel;
+
+  /// Import en masse : aperçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Vérifier'**
+  String get importCheck;
+
+  /// Import en masse : résumé
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune ligne prête} =1{1 ligne prête} other{{count} lignes prêtes}} · {errors, plural, =0{aucune erreur} =1{1 erreur} other{{errors} erreurs}}'**
+  String importSummary(int count, int errors);
+
+  /// Import en masse : erreur d'une ligne
+  ///
+  /// In fr, this message translates to:
+  /// **'Ligne {line} : {reason}'**
+  String importLineError(int line, String reason);
+
+  /// Import : raison
+  ///
+  /// In fr, this message translates to:
+  /// **'nom manquant ou trop long'**
+  String get importNameInvalid;
+
+  /// Import : raison
+  ///
+  /// In fr, this message translates to:
+  /// **'prix illisible'**
+  String get importPriceInvalid;
+
+  /// Import : raison
+  ///
+  /// In fr, this message translates to:
+  /// **'rayon inconnu'**
+  String get importCategoryUnknown;
+
+  /// Import : raison
+  ///
+  /// In fr, this message translates to:
+  /// **'unité inconnue'**
+  String get importUnitUnknown;
+
+  /// Import : raison
+  ///
+  /// In fr, this message translates to:
+  /// **'stock illisible'**
+  String get importStockInvalid;
+
+  /// Import en masse : bouton
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Importer 1 produit} other{Importer {count} produits}}'**
+  String importRun(int count);
+
+  /// Import en masse : fin
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 brouillon créé} other{{count} brouillons créés}}'**
+  String importDone(int count);
+
+  /// Import en masse : suite
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute les photos, puis publie depuis le catalogue.'**
+  String get importDoneHint;
+
+  /// Import en masse : retour
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir le catalogue'**
+  String get importBackToCatalog;
 }
 
 class _DymLocalizationsDelegate

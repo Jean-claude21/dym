@@ -77,6 +77,9 @@ class DemoVendorNavigator implements AppNavigator {
   void toPublishStatus() {}
 
   @override
+  Future<void> toImportProducts() async {}
+
+  @override
   void toBroadcast() {}
 
   @override

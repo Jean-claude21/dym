@@ -14,17 +14,22 @@ class ProductsView extends StackedView<ProductsViewModel> {
     required this.onEdit,
     required this.onCategories,
     super.key,
+    this.onImport,
   });
 
   final CatalogService service;
   final Future<void> Function(Product? product) onEdit;
   final Future<void> Function() onCategories;
 
+  /// Import en masse (spec 081) ; au retour, le catalogue est relu.
+  final Future<void> Function()? onImport;
+
   @override
   ProductsViewModel viewModelBuilder(BuildContext context) => ProductsViewModel(
     service: service,
     onEdit: onEdit,
     onCategories: onCategories,
+    onImport: onImport,
   );
 
   @override
@@ -123,6 +128,12 @@ class _Header extends StatelessWidget {
                     child: Text(l10n.navCatalog, style: t.display),
                   ),
                 ),
+                if (viewModel.canImport)
+                  IconButton(
+                    tooltip: l10n.importTitle,
+                    onPressed: viewModel.importProducts,
+                    icon: Icon(Icons.upload_file_rounded, color: c.textPrimary),
+                  ),
                 IconButton(
                   tooltip: l10n.categoriesTitle,
                   onPressed: viewModel.manageCategories,

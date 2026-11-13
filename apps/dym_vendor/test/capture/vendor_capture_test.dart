@@ -6,7 +6,9 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/catalog/import/import_products_view.dart';
 import 'package:dym_vendor/features/catalog/products/products_view.dart';
+import 'package:dym_vendor/features/catalog/testing.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_service.dart';
 import 'package:dym_vendor/features/dashboard/dashboard_view.dart';
 import 'package:dym_vendor/features/orders/new_order_alert.dart';
@@ -202,6 +204,16 @@ void main() {
       t,
       'commandes',
       OrdersView(service: _orders(), onOpen: (_) {}, clock: _respondClock),
+    );
+  });
+  testWidgets('import', (t) async {
+    await _capture(
+      t,
+      'import_produits',
+      ImportProductsView(
+        service: MemoryCatalogService(config: togoConfig()),
+        onBack: () {},
+      ),
     );
   });
   testWidgets('nouvelle commande', (t) async {

@@ -2050,5 +2050,22 @@
   "missionRoute": "Directions",
   "searchFuzzy": "Results close to “{query}”",
   "notifCartReminderTitle": "Your cart is waiting",
-  "notifCartReminderBody": "{summary}: finish your order in one tap."
+  "notifCartReminderBody": "{summary}: finish your order in one tap.",
+  "importTitle": "Import products",
+  "importAction": "Import",
+  "importHelp": "Paste your rows from a spreadsheet: one row per product, in the order name, price, unit, aisle, stock. Products arrive as drafts: add photos, then publish.",
+  "importExample": "Tomatoes ; 500 ; heap ; Vegetables ; 40\nRed oil ; 1200 ; ; Oils and condiments ;",
+  "importPasteLabel": "Your rows",
+  "importCheck": "Check",
+  "importSummary": "{count, plural, =0{No row ready} =1{1 row ready} other{{count} rows ready}} · {errors, plural, =0{no error} =1{1 error} other{{errors} errors}}",
+  "importLineError": "Row {line}: {reason}",
+  "importNameInvalid": "name missing or too long",
+  "importPriceInvalid": "unreadable price",
+  "importCategoryUnknown": "unknown aisle",
+  "importUnitUnknown": "unknown unit",
+  "importStockInvalid": "unreadable stock",
+  "importRun": "{count, plural, =1{Import 1 product} other{Import {count} products}}",
+  "importDone": "{count, plural, =1{1 draft created} other{{count} drafts created}}",
+  "importDoneHint": "Add photos, then publish from the catalogue.",
+  "importBackToCatalog": "See the catalogue"
 }

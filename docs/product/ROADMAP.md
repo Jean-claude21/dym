@@ -218,6 +218,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `livreur-terrain` | Livreur : « Appeler » et « Itinéraire » (app de cartes du téléphone) pour la boutique et la cliente de la course en cours | 0,5 h | ✅ Spec 078 |
 | `recherche-tolerante` | Recherche tolérante aux fautes (« tomattes » trouve les tomates), résultat signalé « Résultats proches de … » | 1 h | ✅ Spec 079 |
 | `notifications-suite` | Notifications : photo du produit principal dans le push d'une commande, rappel « Ton panier t'attend » (une fois par jour, 9 h – 20 h) qui ouvre le panier ; boutons d'action reportés | 1,5 h | ✅ Spec 080 |
+| `import-catalogue` | Import du catalogue (supermarchés) : coller des lignes depuis un tableur, vérification ligne par ligne, création en brouillon ; personnel multiple et succursales à cadrer | 2 h | ✅ Spec 081 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

@@ -138,6 +138,9 @@ class _Navigator implements AppNavigator {
   void toPublishStatus() {}
 
   @override
+  Future<void> toImportProducts() async {}
+
+  @override
   void toBroadcast() => routes.add('broadcast');
 
   @override
