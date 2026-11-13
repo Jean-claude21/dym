@@ -74,29 +74,28 @@ class _DymBrandSceneViewState extends State<DymBrandSceneView>
   }
 }
 
-/// Écran de démarrage animé : le sac se dessine, les légumes arrivent des
-/// coins, le nom monte, puis le logo « respire » tant que l'app charge.
+/// Écran de démarrage, identique à `docs/design/marque/splash-anime.gif` :
+/// le sac se dessine, les légumes arrivent des coins, le nom monte, puis
+/// l'accroche et la signature apparaissent (images 50 à 62) et le logo
+/// respire. L'animation se joue en entier, à sa vitesse (120 images à
+/// 30 i/s, 4 s) ; si l'app charge encore, la respiration (60–120) continue.
 ///
 /// L'animation (390 × 844) couvre l'écran en portrait ; en paysage elle est
-/// contenue pour garder le logo à taille raisonnable. [tagline] s'affiche
-/// sous le nom, [footer] en bas (signature du réalisateur), [below] sous
-/// l'accroche (état de chargement, environnement).
+/// contenue. [tagline] et [footer] sont placés comme dans l'aperçu (550 et
+/// 640 dans le repère de l'animation).
 class DymSplash extends StatefulWidget {
   const new({
     required this.tagline,
     super.key,
     this.footer,
-    this.below,
     this.onIntroComplete,
   });
 
   final String tagline;
   final Widget? footer;
-  final Widget? below;
 
-  /// Appelé quand l'entrée est jouée (tout de suite si les animations sont
-  /// réduites ou si l'animation ne peut pas être lue) : l'app peut alors
-  /// changer d'écran sans couper le logo.
+  /// Appelé quand l'animation a été jouée en entier (tout de suite si les
+  /// animations sont réduites ou si l'animation ne peut pas être lue).
   final VoidCallback? onIntroComplete;
 
   @override
@@ -105,9 +104,10 @@ class DymSplash extends StatefulWidget {
 
 class _DymSplashState extends State<DymSplash>
     with SingleTickerProviderStateMixin {
-  // Composition : 120 images, entrée 0–60, boucle de respiration 60–120.
   static const _size = Size(390, 844);
+  static const _frames = 120.0;
   static const _taglineTop = 550.0;
+  static const _footerTop = 640.0;
   static const _loopStart = 0.5;
 
   late final AnimationController _controller = AnimationController(vsync: this);
@@ -125,10 +125,7 @@ class _DymSplashState extends State<DymSplash>
       widget.onIntroComplete?.call();
       return;
     }
-    await _controller.animateTo(
-      _loopStart,
-      duration: composition.duration * _loopStart,
-    );
+    await _controller.forward(from: 0);
     if (!mounted) return;
     widget.onIntroComplete?.call();
     await _controller.repeat(
@@ -136,6 +133,12 @@ class _DymSplashState extends State<DymSplash>
       max: 1,
       period: composition.duration * (1 - _loopStart),
     );
+  }
+
+  /// Accroche et signature : fondu entre les images 50 et 62.
+  double get _textOpacity {
+    if (!DymMotion.enabled(context)) return 1;
+    return ((_controller.value * _frames - 50) / 12).clamp(0.0, 1.0);
   }
 
   @override
@@ -175,42 +178,57 @@ class _DymSplashState extends State<DymSplash>
                   ),
                 ),
               ),
-              Positioned(
-                left: 24,
-                right: 24,
-                top: math.min(dy + _taglineTop * scale, box.maxHeight - 160),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      widget.tagline,
-                      textAlign: TextAlign.center,
-                      style: t.title.copyWith(color: c.textSecondary),
-                    ),
-                    if (widget.below != null) ...[
-                      const SizedBox(height: 20),
-                      widget.below!,
-                    ],
-                  ],
-                ),
-              ),
-              if (widget.footer != null)
-                Positioned(
-                  left: 24,
-                  right: 24,
-                  bottom: 0,
-                  child: SafeArea(
-                    top: false,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: DefaultTextStyle(
-                        style: t.label.copyWith(color: c.textSecondary),
-                        textAlign: TextAlign.center,
-                        child: widget.footer!,
+              AnimatedBuilder(
+                animation: _controller,
+                builder: (context, _) {
+                  final o = _textOpacity;
+                  return Stack(
+                    children: [
+                      Positioned(
+                        left: 40,
+                        right: 40,
+                        top: math.min(
+                          dy + _taglineTop * scale,
+                          box.maxHeight - 120,
+                        ),
+                        child: Opacity(
+                          opacity: o,
+                          child: Text(
+                            widget.tagline,
+                            textAlign: TextAlign.center,
+                            style: t.body.copyWith(
+                              fontSize: 17,
+                              height: 1.4,
+                              color: c.textSecondary,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
+                      if (widget.footer != null)
+                        Positioned(
+                          left: 24,
+                          right: 24,
+                          top: math.min(
+                            dy + _footerTop * scale,
+                            box.maxHeight - 48,
+                          ),
+                          child: Opacity(
+                            opacity: o,
+                            child: DefaultTextStyle(
+                              style: t.label.copyWith(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w400,
+                                color: c.textSecondary,
+                              ),
+                              textAlign: TextAlign.center,
+                              child: widget.footer!,
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
             ],
           );
         },

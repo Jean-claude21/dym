@@ -26,7 +26,7 @@ class StartupViewModel extends BaseViewModel {
   /// Attente maximale de l'entrée animée du splash au premier lancement :
   /// l'écran change quand elle est jouée ([introFinished]), au plus tard
   /// après ce délai (téléphone lent, animation illisible).
-  static const defaultIntro = Duration(seconds: 5);
+  static const defaultIntro = Duration(seconds: 7);
 
   Duration _introDelay;
   final _intro = Completer<void>();

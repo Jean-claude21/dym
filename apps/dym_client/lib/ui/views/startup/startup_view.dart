@@ -26,9 +26,7 @@ class StartupView extends StackedView<StartupViewModel> {
     Widget? child,
   ) {
     final c = context.dym.colors;
-    final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final environment = viewModel.environmentName;
     return Scaffold(
       backgroundColor: c.background,
       // Le splash couvre tout l'écran (légumes jusque sous la barre d'état) ;
@@ -53,16 +51,6 @@ class StartupView extends StackedView<StartupViewModel> {
               footer: DymMadeBy(
                 prefix: l10n.brandMadeByPrefix,
                 maker: l10n.brandMakerName,
-              ),
-              below: Semantics(
-                label: l10n.startupPreparing,
-                liveRegion: true,
-                child: environment == null
-                    ? const SizedBox.shrink()
-                    : Text(
-                        l10n.environmentLabel(environment),
-                        style: t.label.copyWith(color: c.textSecondary),
-                      ),
               ),
             ),
     );
