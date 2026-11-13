@@ -107,6 +107,9 @@ abstract interface class AppNavigator {
   /// Mes contenus et publication (écran 75, spec 020).
   void toContents();
 
+  /// Publier un statut directement (raccourci de l'accueil, spec 077).
+  void toPublishStatus();
+
   /// Relance des clientes et stock bas (écran 78, spec 021).
   void toBroadcast();
 }
@@ -157,6 +160,21 @@ class StackedAppNavigator implements AppNavigator {
       MaterialPageRoute(
         builder: (_) =>
             BroadcastView(service: broadcasts, onBack: () => _navigator.pop()),
+      ),
+    );
+  }
+
+  @override
+  void toPublishStatus() {
+    final contents = _contents;
+    if (contents == null) return;
+    _navigator.push<void>(
+      MaterialPageRoute(
+        builder: (route) => PublishContentView(
+          service: contents,
+          onBack: () => Navigator.of(route).pop(),
+          onPublished: () => Navigator.of(route).pop(),
+        ),
       ),
     );
   }

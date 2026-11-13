@@ -214,6 +214,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `parcours-client` | Parcours d'achat : suivi « en direct » (phase en clair, minutes restantes, avancement, appeler le livreur, écrire à la boutique, récapitulatif complet), format épuisé dit en clair | 2 h | ✅ Spec 074 |
 | `nouvelle-commande` | Nouvelle commande chez la vendeuse : alerte plein écran sur tous les onglets (son répété, montant, « Voir la commande »), compte à rebours avant refus automatique sur la carte et le détail | 2 h | ✅ Spec 075 |
 | `journee-vendeuse` | Accueil de la vendeuse : commandes en attente en tête avec heure limite, ventes comparées à la veille au même moment ; catalogue : « En stock / Rupture » qui suit l'interrupteur | 1 h | ✅ Spec 076 |
+| `statuts` | Statuts : « Publier un statut » depuis l'accueil de la vendeuse, vocabulaire « statut » partout, partage WhatsApp (repli : copie) depuis le fil, la créatrice et le lecteur de statuts | 1 h | ✅ Spec 077 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

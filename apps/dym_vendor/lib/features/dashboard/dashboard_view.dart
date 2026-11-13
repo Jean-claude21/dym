@@ -17,6 +17,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
     this.onMessages,
     this.onTill,
     this.onCharge,
+    this.onPublish,
     this.greeting,
   });
 
@@ -32,6 +33,9 @@ class DashboardView extends StackedView<DashboardViewModel> {
 
   /// « Encaisser » : QR ou code pour la cliente (spec 046).
   final VoidCallback? onCharge;
+
+  /// Publier un statut (statuts actifs seulement, spec 077).
+  final VoidCallback? onPublish;
 
   /// « Bonjour Fatou » ; nul : titre de la page.
   final String? greeting;
@@ -142,6 +146,15 @@ class DashboardView extends StackedView<DashboardViewModel> {
                         ),
                     ],
                   ),
+                  if (onPublish case final publish?) ...[
+                    const SizedBox(height: DymTokenSpace.s2),
+                    DymButton(
+                      label: l.vendorPublishStatus,
+                      icon: Icons.add_a_photo_outlined,
+                      variant: DymButtonVariant.secondary,
+                      onPressed: publish,
+                    ),
+                  ],
                   if (vm.failure != null)
                     Padding(
                       padding: const EdgeInsets.only(top: DymTokenSpace.s2),

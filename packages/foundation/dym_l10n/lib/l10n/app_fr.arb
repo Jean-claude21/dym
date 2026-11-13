@@ -4560,7 +4560,7 @@
   "@feedLike": {
     "description": "Aimer un contenu"
   },
-  "storiesTitle": "Stories des boutiques",
+  "storiesTitle": "Statuts des boutiques",
   "@storiesTitle": {
     "description": "Rangée de stories (accueil)"
   },
@@ -4610,7 +4610,7 @@
   "@reportOther": {
     "description": "Motif"
   },
-  "contentMine": "Mes stories et vidéos",
+  "contentMine": "Mes statuts et vidéos",
   "@contentMine": {
     "description": "Contenus de la vendeuse"
   },
@@ -4618,7 +4618,7 @@
   "@contentPublishTitle": {
     "description": "Titre de la publication (75)"
   },
-  "contentStory": "Story 24 h",
+  "contentStory": "Statut 24 h",
   "@contentStory": {
     "description": "Type de contenu"
   },
@@ -4662,7 +4662,7 @@
   "@contentCaption": {
     "description": "Légende d'un contenu"
   },
-  "contentPublishStory": "Publier la story",
+  "contentPublishStory": "Publier le statut",
   "@contentPublishStory": {
     "description": "Publier une story"
   },
@@ -4678,7 +4678,7 @@
   "@contentVideoHint": {
     "description": "Aide d'une vidéo"
   },
-  "contentNone": "Pas encore de story ni de vidéo.",
+  "contentNone": "Pas encore de statut ni de vidéo.",
   "@contentNone": {
     "description": "Aucun contenu"
   },
@@ -4746,7 +4746,7 @@
   "@moderationVideo": {
     "description": "Type de cible"
   },
-  "moderationStory": "Story",
+  "moderationStory": "Statut",
   "@moderationStory": {
     "description": "Type de cible"
   },
@@ -7919,5 +7919,9 @@
   "productOutOfStockShort": "Rupture",
   "@productOutOfStockShort": {
     "description": "Catalogue : interrupteur coupé"
+  },
+  "vendorPublishStatus": "Publier un statut",
+  "@vendorPublishStatus": {
+    "description": "Accueil vendeuse : raccourci de publication"
   }
 }

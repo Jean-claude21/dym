@@ -2044,5 +2044,6 @@
   "vendorVsDay": "vs yesterday at the same time",
   "vendorVsWeek": "vs last week",
   "vendorVsMonth": "vs last month",
-  "productOutOfStockShort": "Out of stock"
+  "productOutOfStockShort": "Out of stock",
+  "vendorPublishStatus": "Post a status"
 }
