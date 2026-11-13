@@ -7088,4 +7088,10 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get importBackToCatalog => 'See the catalogue';
+
+  @override
+  String get brandMadeByPrefix => 'Made by';
+
+  @override
+  String get brandMakerName => 'Kete';
 }

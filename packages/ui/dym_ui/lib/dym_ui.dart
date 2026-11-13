@@ -32,6 +32,7 @@ export 'src/components/dym_store_card.dart';
 export 'src/components/dym_switch_tile.dart';
 export 'src/components/dym_text_field.dart';
 export 'src/components/dym_timeline.dart';
+export 'src/foundation/dym_brand_animation.dart';
 export 'src/foundation/dym_illustrations.dart';
 export 'src/foundation/dym_sized_image.dart';
 export 'src/foundation/money_text.dart';

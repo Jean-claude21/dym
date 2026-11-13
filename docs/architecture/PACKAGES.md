@@ -87,7 +87,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |
-| Motion et illustration | `rive`, `flutter_animate`, `flutter_svg` | `dym_ui` |
+| Motion et illustration | `lottie` (marque : splash et scènes, décision 0018), `flutter_animate`, `flutter_svg` | `dym_ui` |
 | Catalogue de composants | `widgetbook` | `apps/dym_widgetbook` (outil, non livré) |
 | Erreurs | `sentry` (client Dart pur, compatible GlitchTip) ; `sentry_flutter` écarté : ses versions compatibles imposent Android 8 (minSdk 26) | `dym_platform` |
 | Tests | `mocktail`, `patrol` | Tous |

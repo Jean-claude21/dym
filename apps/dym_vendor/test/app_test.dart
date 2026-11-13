@@ -208,6 +208,7 @@ void main() {
         tester,
         StartupView(
           viewModelFactory: () => StartupViewModel(
+            introDelay: Duration.zero,
             auth: _Auth(result),
             stores: stores ?? memoryStores(),
             environment: _env(env),
