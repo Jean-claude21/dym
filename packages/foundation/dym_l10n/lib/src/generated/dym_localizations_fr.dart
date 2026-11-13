@@ -6607,4 +6607,96 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get fraudHaggleBurst => 'Marchandage en rafale sans achat';
+
+  @override
+  String get chatToday => 'aujourd\'hui';
+
+  @override
+  String get chatQuickIsAvailable => 'C\'est disponible ?';
+
+  @override
+  String get chatQuickPrice => 'Quel est le prix ?';
+
+  @override
+  String get chatQuickDeliveryToday => 'Vous livrez aujourd\'hui ?';
+
+  @override
+  String get chatQuickThanks => 'Merci !';
+
+  @override
+  String get chatQuickYesAvailable => 'Oui, c\'est disponible.';
+
+  @override
+  String get chatQuickSoldOut => 'Désolée, ce n\'est plus disponible.';
+
+  @override
+  String get chatQuickPreparing => 'Je prépare votre commande.';
+
+  @override
+  String get chatQuickThanksOrder => 'Merci pour votre commande !';
+
+  @override
+  String get chatSending => 'Envoi…';
+
+  @override
+  String get chatNotSent => 'Non envoyé';
+
+  @override
+  String get chatSent => 'Envoyé';
+
+  @override
+  String get chatSeen => 'Vu';
+
+  @override
+  String get chatDiscard => 'Supprimer';
+
+  @override
+  String get chatActiveOrder => 'Commande en cours';
+
+  @override
+  String get chatSeeOrder => 'Voir la commande';
+
+  @override
+  String get chatSeeStore => 'Voir la boutique';
+
+  @override
+  String get chatAttach => 'Joindre';
+
+  @override
+  String get chatSearchConversations => 'Chercher une conversation';
+
+  @override
+  String chatYou(String text) {
+    return 'Toi : $text';
+  }
+
+  @override
+  String get chatVoicePreview => 'Message vocal';
+
+  @override
+  String get chatCallPreview => 'Appel';
+
+  @override
+  String chatEmptyThreadStore(String name) {
+    return 'Pose ta question à $name : disponibilité, prix, livraison.';
+  }
+
+  @override
+  String chatEmptyThreadClient(String name) {
+    return '$name t\'a ouvert une conversation. Réponds-lui ici.';
+  }
+
+  @override
+  String chatShareSelected(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Envoyer $n produits',
+      one: 'Envoyer 1 produit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatSearchStoreProducts => 'Chercher dans la boutique';
 }

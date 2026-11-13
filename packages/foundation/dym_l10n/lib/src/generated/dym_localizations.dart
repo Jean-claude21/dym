@@ -10932,6 +10932,162 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Marchandage en rafale sans achat'**
   String get fraudHaggleBurst;
+
+  /// Séparateur de jour dans une conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'aujourd\'hui'**
+  String get chatToday;
+
+  /// Réponse rapide de la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est disponible ?'**
+  String get chatQuickIsAvailable;
+
+  /// Réponse rapide de la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel est le prix ?'**
+  String get chatQuickPrice;
+
+  /// Réponse rapide de la cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous livrez aujourd\'hui ?'**
+  String get chatQuickDeliveryToday;
+
+  /// Réponse rapide
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci !'**
+  String get chatQuickThanks;
+
+  /// Réponse rapide de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Oui, c\'est disponible.'**
+  String get chatQuickYesAvailable;
+
+  /// Réponse rapide de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Désolée, ce n\'est plus disponible.'**
+  String get chatQuickSoldOut;
+
+  /// Réponse rapide de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Je prépare votre commande.'**
+  String get chatQuickPreparing;
+
+  /// Réponse rapide de la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci pour votre commande !'**
+  String get chatQuickThanksOrder;
+
+  /// Message en cours d'envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoi…'**
+  String get chatSending;
+
+  /// Message en échec
+  ///
+  /// In fr, this message translates to:
+  /// **'Non envoyé'**
+  String get chatNotSent;
+
+  /// Message reçu par le serveur
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyé'**
+  String get chatSent;
+
+  /// Message ouvert par l'autre personne
+  ///
+  /// In fr, this message translates to:
+  /// **'Vu'**
+  String get chatSeen;
+
+  /// Abandonner un message non envoyé
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer'**
+  String get chatDiscard;
+
+  /// Bandeau de la commande en cours dans une conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande en cours'**
+  String get chatActiveOrder;
+
+  /// Ouvrir la commande depuis la conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la commande'**
+  String get chatSeeOrder;
+
+  /// Ouvrir la boutique depuis la conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la boutique'**
+  String get chatSeeStore;
+
+  /// Bouton joindre (photo, produit)
+  ///
+  /// In fr, this message translates to:
+  /// **'Joindre'**
+  String get chatAttach;
+
+  /// Recherche dans les conversations
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher une conversation'**
+  String get chatSearchConversations;
+
+  /// Aperçu de mon dernier message
+  ///
+  /// In fr, this message translates to:
+  /// **'Toi : {text}'**
+  String chatYou(String text);
+
+  /// Aperçu d'un vocal
+  ///
+  /// In fr, this message translates to:
+  /// **'Message vocal'**
+  String get chatVoicePreview;
+
+  /// Aperçu d'un appel
+  ///
+  /// In fr, this message translates to:
+  /// **'Appel'**
+  String get chatCallPreview;
+
+  /// Conversation vide côté cliente
+  ///
+  /// In fr, this message translates to:
+  /// **'Pose ta question à {name} : disponibilité, prix, livraison.'**
+  String chatEmptyThreadStore(String name);
+
+  /// Conversation vide côté vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} t\'a ouvert une conversation. Réponds-lui ici.'**
+  String chatEmptyThreadClient(String name);
+
+  /// Envoi groupé de produits
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{Envoyer 1 produit} other{Envoyer {n} produits}}'**
+  String chatShareSelected(int n);
+
+  /// Recherche des produits de la boutique (cliente)
+  ///
+  /// In fr, this message translates to:
+  /// **'Chercher dans la boutique'**
+  String get chatSearchStoreProducts;
 }
 
 class _DymLocalizationsDelegate

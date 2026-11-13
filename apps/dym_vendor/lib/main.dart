@@ -87,8 +87,14 @@ Future<void> configureServices(DymEnvironment environment) async {
           neon.data,
         ).registerDevice(token: token, platform: platform, app: 'vendor')).isOk,
         onOpened: (data) {
+          final nav = StackedAppNavigator();
           final order = data['order_id'];
-          if (order != null) StackedAppNavigator().toOrder(order);
+          final conversation = data['conversation_id'];
+          if (conversation != null) {
+            nav.toChat(conversation);
+          } else if (order != null) {
+            nav.toOrder(order);
+          }
         },
       ),
     )

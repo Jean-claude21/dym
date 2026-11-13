@@ -121,6 +121,14 @@ class MemoryChatService implements ChatService {
             unread: 1,
           ),
           role: role.code,
+          // Lu jusqu'à la fiche produit ; une commande en préparation.
+          peerReadAt: day.add(const Duration(minutes: 5)),
+          activeOrder: ChatOrder(
+            id: 'o1',
+            status: OrderStatus.preparing,
+            totalMinor: 3500 * _unitOf(config.currency),
+            currencyCode: config.currency.code,
+          ),
           messages: [
             msg(
               'm0',
@@ -288,11 +296,7 @@ class MemoryChatService implements ChatService {
       productId: productId,
       createdAt: _now,
     );
-    _threads[conversationId] = ConversationThread(
-      conversation: t.conversation,
-      role: t.role,
-      messages: [...t.messages, message],
-    );
+    _threads[conversationId] = t.copyWith(messages: [...t.messages, message]);
     sent.add('${kind.name}:${body ?? productId ?? 'photo'}');
     return Ok(message);
   }

@@ -73,6 +73,26 @@ void main() {
         conversationId: 'c1',
         onBack: () {},
         onAddToCart: (_) async {},
+        onOpenStore: (_) {},
+        onOpenOrder: (_) {},
+        clock: _clock,
+        refreshEvery: null,
+      ),
+    );
+  });
+  testWidgets('conversation vendeuse', (t) async {
+    await capture(
+      t,
+      'conversation_vendeuse',
+      ChatView(
+        service: MemoryChatService.demo(
+          role: ChatRole.vendor,
+          config: togoConfig(),
+        ),
+        conversationId: 'c1',
+        onBack: () {},
+        onOpenOrder: (_) {},
+        pickProducts: (_, _) async => null,
         clock: _clock,
         refreshEvery: null,
       ),

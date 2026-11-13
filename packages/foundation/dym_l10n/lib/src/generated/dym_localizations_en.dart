@@ -6560,4 +6560,96 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get fraudHaggleBurst => 'Haggling burst without purchase';
+
+  @override
+  String get chatToday => 'today';
+
+  @override
+  String get chatQuickIsAvailable => 'Is it available?';
+
+  @override
+  String get chatQuickPrice => 'What\'s the price?';
+
+  @override
+  String get chatQuickDeliveryToday => 'Do you deliver today?';
+
+  @override
+  String get chatQuickThanks => 'Thank you!';
+
+  @override
+  String get chatQuickYesAvailable => 'Yes, it\'s available.';
+
+  @override
+  String get chatQuickSoldOut => 'Sorry, it\'s no longer available.';
+
+  @override
+  String get chatQuickPreparing => 'I\'m preparing your order.';
+
+  @override
+  String get chatQuickThanksOrder => 'Thank you for your order!';
+
+  @override
+  String get chatSending => 'Sending…';
+
+  @override
+  String get chatNotSent => 'Not sent';
+
+  @override
+  String get chatSent => 'Sent';
+
+  @override
+  String get chatSeen => 'Seen';
+
+  @override
+  String get chatDiscard => 'Delete';
+
+  @override
+  String get chatActiveOrder => 'Order in progress';
+
+  @override
+  String get chatSeeOrder => 'View order';
+
+  @override
+  String get chatSeeStore => 'View shop';
+
+  @override
+  String get chatAttach => 'Attach';
+
+  @override
+  String get chatSearchConversations => 'Search conversations';
+
+  @override
+  String chatYou(String text) {
+    return 'You: $text';
+  }
+
+  @override
+  String get chatVoicePreview => 'Voice message';
+
+  @override
+  String get chatCallPreview => 'Call';
+
+  @override
+  String chatEmptyThreadStore(String name) {
+    return 'Ask $name your question: availability, price, delivery.';
+  }
+
+  @override
+  String chatEmptyThreadClient(String name) {
+    return '$name opened a conversation with you. Reply here.';
+  }
+
+  @override
+  String chatShareSelected(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: 'Send $n products',
+      one: 'Send 1 product',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatSearchStoreProducts => 'Search the shop';
 }

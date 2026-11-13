@@ -430,13 +430,14 @@ class StackedAppNavigator implements AppNavigator {
         service: _chat,
         conversationId: conversationId,
         onBack: () => _navigator.pop(),
-        pickProduct: _pickProduct,
+        pickProducts: _pickProducts,
+        onOpenOrder: toOrder,
       ),
     ),
   );
 
-  /// Mes produits publiés, proposés au partage (écran 62).
-  Future<String?> _pickProduct(BuildContext context) async {
+  /// Mes produits publiés, proposés au partage (écran 62), un ou plusieurs.
+  Future<List<String>?> _pickProducts(BuildContext context, String _) async {
     final products = await _catalog.products();
     final config = await _stores.countryConfig();
     if (!context.mounted) return null;

@@ -80,7 +80,10 @@ Future<void> configureServices(DymEnvironment environment) async {
         onOpened: (data) {
           final nav = StackedAppNavigator();
           final order = data['order_id'];
-          if (order != null) {
+          final conversation = data['conversation_id'];
+          if (conversation != null) {
+            nav.toChat(conversation);
+          } else if (order != null) {
             nav.toOrder(order);
           } else {
             nav.toNotifications();

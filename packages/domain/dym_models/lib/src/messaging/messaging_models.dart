@@ -1,3 +1,4 @@
+import 'package:dym_models/src/cart/order_tracking.dart';
 import 'package:dym_models/src/discovery/discovery_models.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
@@ -102,6 +103,8 @@ class ConversationThread {
     required this.conversation,
     required this.role,
     this.messages = const [],
+    this.peerReadAt,
+    this.activeOrder,
   });
 
   factory fromJson(Map<String, dynamic> json) =>
@@ -113,6 +116,58 @@ class ConversationThread {
   /// Rôle de la lectrice.
   final String role;
   final List<ChatMessage> messages;
+
+  /// Dernière lecture de l'autre personne (spec 070) : mes messages envoyés
+  /// avant sont « vus ».
+  final DateTime? peerReadAt;
+
+  /// Commande en cours entre la cliente et la boutique (spec 070).
+  @JsonKey(fromJson: ChatOrder.maybeFromJson, includeToJson: false)
+  final ChatOrder? activeOrder;
+
+  /// Vrai si l'autre personne a ouvert la conversation après [message].
+  bool seen(ChatMessage message) {
+    final read = peerReadAt;
+    return read != null && !message.createdAt.isAfter(read);
+  }
+
+  ConversationThread copyWith({List<ChatMessage>? messages}) =>
+      ConversationThread(
+        conversation: conversation,
+        role: role,
+        messages: messages ?? this.messages,
+        peerReadAt: peerReadAt,
+        activeOrder: activeOrder,
+      );
+}
+
+/// Commande en cours rappelée en tête d'une conversation (spec 070).
+@immutable
+class ChatOrder {
+  const new({
+    required this.id,
+    required this.status,
+    required this.totalMinor,
+    required this.currencyCode,
+  });
+
+  static ChatOrder? maybeFromJson(Object? json) => switch (json) {
+    final Map<dynamic, dynamic> m => ChatOrder(
+      id: m['id'] as String,
+      status: OrderStatus.values.firstWhere(
+        (s) => s.code == m['status'],
+        orElse: () => OrderStatus.unknown,
+      ),
+      totalMinor: (m['total_minor'] as num?)?.toInt() ?? 0,
+      currencyCode: m['currency_code'] as String? ?? '',
+    ),
+    _ => null,
+  };
+
+  final String id;
+  final OrderStatus status;
+  final int totalMinor;
+  final String currencyCode;
 }
 
 /// Type d'appel (spec 035).

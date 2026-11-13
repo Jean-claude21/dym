@@ -809,7 +809,7 @@ final referenceScreens = <ReferenceScreen>[
       service: _chat(c, ChatRole.vendor),
       conversationId: 'c1',
       onBack: () {},
-      pickProduct: (_) async => null,
+      pickProducts: (_, _) async => null,
       clock: _chatNow,
       refreshEvery: null,
     ),

@@ -99,22 +99,40 @@ Conversation _$ConversationFromJson(
 );
 
 ConversationThread _$ConversationThreadFromJson(Map<String, dynamic> json) =>
-    $checkedCreate('ConversationThread', json, ($checkedConvert) {
-      final val = ConversationThread(
-        conversation: $checkedConvert(
-          'conversation',
-          (v) => Conversation.fromJson(v as Map<String, dynamic>),
-          readValue: _self,
-        ),
-        role: $checkedConvert('role', (v) => v as String),
-        messages: $checkedConvert(
-          'messages',
-          (v) =>
-              (v as List<dynamic>?)
-                  ?.map((e) => ChatMessage.fromJson(e as Map<String, dynamic>))
-                  .toList() ??
-              const [],
-        ),
-      );
-      return val;
-    });
+    $checkedCreate(
+      'ConversationThread',
+      json,
+      ($checkedConvert) {
+        final val = ConversationThread(
+          conversation: $checkedConvert(
+            'conversation',
+            (v) => Conversation.fromJson(v as Map<String, dynamic>),
+            readValue: _self,
+          ),
+          role: $checkedConvert('role', (v) => v as String),
+          messages: $checkedConvert(
+            'messages',
+            (v) =>
+                (v as List<dynamic>?)
+                    ?.map(
+                      (e) => ChatMessage.fromJson(e as Map<String, dynamic>),
+                    )
+                    .toList() ??
+                const [],
+          ),
+          peerReadAt: $checkedConvert(
+            'peer_read_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          activeOrder: $checkedConvert(
+            'active_order',
+            (v) => ChatOrder.maybeFromJson(v),
+          ),
+        );
+        return val;
+      },
+      fieldKeyMap: const {
+        'peerReadAt': 'peer_read_at',
+        'activeOrder': 'active_order',
+      },
+    );

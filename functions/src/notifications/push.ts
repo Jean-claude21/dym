@@ -29,6 +29,8 @@ export interface ClaimedPush {
   category: string;
   order_id: string | null;
   purchase_id: string | null;
+  /** Paramètres du modèle (`conversation_id` pour un message). */
+  params?: Record<string, unknown> | null;
   allowed: boolean;
   tokens: string[];
   text: { title: string; body: string } | null;
@@ -166,6 +168,10 @@ export async function dispatchPushes(queue: PushQueue, sender: PushSender, limit
           kind: push.kind,
           ...(push.order_id ? { order_id: push.order_id } : {}),
           ...(push.purchase_id ? { purchase_id: push.purchase_id } : {}),
+          // Message : le toucher ouvre la conversation.
+          ...(typeof push.params?.conversation_id === "string"
+            ? { conversation_id: push.params.conversation_id }
+            : {}),
         },
       });
       invalid.push(...result.invalidTokens);
