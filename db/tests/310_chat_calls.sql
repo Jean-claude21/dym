@@ -10,6 +10,8 @@ select tests.create_user('awa@example.com') as awa,
        null::uuid as kodjo_store, null::uuid as conv, null::uuid as call1;
 update _t set kodjo_store = tests.open_store(kodjo, 'Étal de Kodjo', 'be');
 grant select, update on _t to authenticated, anonymous;
+-- Appels vidéo ouverts pour ces essais (fermés par défaut, spec 089).
+update public.feature_flags set is_enabled = true where key = 'calls_video' and country_code is null;
 
 select tests.login_as((select awa from _t));
 select public.complete_profile('Awa', (select be from _t), 'client');

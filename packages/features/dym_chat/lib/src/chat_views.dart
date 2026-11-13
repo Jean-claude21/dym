@@ -572,11 +572,13 @@ class ChatView extends StackedView<ChatViewModel> {
                 onPressed: () => _call(context, calls, CallKind.audio, name),
                 icon: Icon(Icons.call_rounded, color: c.brandDeep),
               ),
-              IconButton(
-                tooltip: l10n.callVideo,
-                onPressed: () => _call(context, calls, CallKind.video, name),
-                icon: Icon(Icons.videocam_rounded, color: c.brandDeep),
-              ),
+              // Vidéo ouverte par le flag `calls_video` (spec 089).
+              if (vm.videoCalls)
+                IconButton(
+                  tooltip: l10n.callVideo,
+                  onPressed: () => _call(context, calls, CallKind.video, name),
+                  icon: Icon(Icons.videocam_rounded, color: c.brandDeep),
+                ),
             ],
           ],
         ),
