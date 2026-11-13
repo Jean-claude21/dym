@@ -15,6 +15,10 @@ class MyStoreViewModel extends BaseViewModel {
 
   MyStore? _store;
   CountryConfig? _config;
+  List<StoreAccess> _stores = const [];
+
+  /// Boutiques où je travaille (succursales, spec 087).
+  List<StoreAccess> get stores => _stores;
   Failure? _loadFailure;
   Failure? _toggleFailure;
   bool _toggling = false;
@@ -48,6 +52,7 @@ class MyStoreViewModel extends BaseViewModel {
         _config = cfg;
         _store = current;
         await _refreshOpenNow();
+        if (await _service.myStores() case Ok(:final value)) _stores = value;
       case (Ok(), Ok()):
         _loadFailure = const NotFoundFailure('aucune boutique');
       case (Err(:final failure), _) || (_, Err(:final failure)):
@@ -85,5 +90,12 @@ class MyStoreViewModel extends BaseViewModel {
       _store = current;
       notifyListeners();
     }
+  }
+
+  /// Change de boutique active ; vrai si la base l'a acceptée.
+  Future<bool> switchStore(String storeId) async {
+    final result = await _service.setActiveStore(storeId);
+    if (result case Ok(:final value)) _stores = value;
+    return result is Ok;
   }
 }

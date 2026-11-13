@@ -121,6 +121,11 @@ MyStore _$MyStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) =>
             (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
       ),
+      staffRole: $checkedConvert('staff_role', (v) => v as String? ?? 'owner'),
+      staffPermissions: $checkedConvert(
+        'staff_permissions',
+        (v) => (v as List<dynamic>?)?.map((e) => e as String).toList() ?? [],
+      ),
     );
     return val;
   },
@@ -137,6 +142,8 @@ MyStore _$MyStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
     'pickupAddress': 'pickup_address',
     'deliveryZoneIds': 'delivery_zone_ids',
     'paymentMethodIds': 'payment_method_ids',
+    'staffRole': 'staff_role',
+    'staffPermissions': 'staff_permissions',
   },
 );
 

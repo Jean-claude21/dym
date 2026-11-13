@@ -2,6 +2,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/store/my_store/my_store_viewmodel.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
+import 'package:dym_vendor/features/store/staff/staff_view.dart';
 import 'package:dym_vendor/features/store/store_format.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:dym_vendor/features/store/store_summary.dart';
@@ -27,9 +28,17 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     this.onContents,
     this.onBroadcast,
     this.onAccount,
+    this.onStaff,
+    this.onStoreSwitched,
   });
 
   /// « Mon compte » (aide, langue, déconnexion) ; nul : masqué.
+  /// Équipe de la boutique (propriétaire, spec 087).
+  final VoidCallback? onStaff;
+
+  /// Boutique active changée : l'app recharge tout.
+  final VoidCallback? onStoreSwitched;
+
   final VoidCallback? onAccount;
 
   /// Relancer mes clientes (spec 021) ; nul : non affiché.
@@ -247,7 +256,10 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                     ? l10n.myStoreOpenHint
                     : l10n.myStoreClosedHint,
                 value: store.isOpen,
-                onChanged: viewModel.suspended || viewModel.toggling
+                onChanged:
+                    viewModel.suspended ||
+                        viewModel.toggling ||
+                        !store.can('orders')
                     ? null
                     : (open) => viewModel.setOpen(open: open),
               ),
@@ -255,47 +267,68 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 StorePrivacyNote(text: l10n.myStoreSuspended)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
+              if (!store.isOwner)
+                Padding(
+                  padding: const EdgeInsets.only(top: DymTokenSpace.s3),
+                  child: StorePrivacyNote(
+                    text: l10n.staffYouAre(
+                      staffRoleLabel(l10n, store.staffRole),
+                    ),
+                  ),
+                ),
               group(l10n.storeGroupMoney, [
-                if (onTill case final till?)
+                if (onTill case final till? when store.can('till'))
                   row(Icons.point_of_sale_outlined, l10n.tillTitle, till),
-                if (onCredit case final credit?)
+                if (onCredit case final credit? when store.can('till'))
                   row(Icons.menu_book_outlined, l10n.creditTitle, credit),
-                if (onCourierCash case final cash?)
+                if (onCourierCash case final cash? when store.can('orders'))
                   row(Icons.two_wheeler_outlined, l10n.courierCashTitle, cash),
               ]),
               group(l10n.storeGroupSell, [
-                if (onHaggling case final haggling?)
+                if (onHaggling case final haggling? when store.can('offers'))
                   row(Icons.handshake_outlined, l10n.hagglingTitle, haggling),
-                if (onGroupOffers case final groups?)
+                if (onGroupOffers case final groups? when store.can('offers'))
                   row(Icons.diversity_3_outlined, l10n.groupOfferTitle, groups),
-                if (onWholesale case final wholesale?)
+                if (onWholesale case final wholesale? when store.can('offers'))
                   row(Icons.warehouse_outlined, l10n.wholesaleTitle, wholesale),
-                if (onMembership case final membership?)
+                if (onMembership case final membership? when store.isOwner)
                   row(
                     Icons.workspace_premium_outlined,
                     l10n.membershipVendorTitle,
                     membership,
                   ),
-                if (onStudio case final studio?)
+                if (onStudio case final studio? when store.isOwner)
                   row(Icons.campaign_outlined, l10n.studioTitle, studio),
-                if (onContents case final contents?)
+                if (onContents case final contents? when store.isOwner)
                   row(
                     Icons.play_circle_outline_rounded,
                     l10n.contentMine,
                     contents,
                   ),
-                if (onBroadcast case final broadcast?)
+                if (onBroadcast case final broadcast? when store.isOwner)
                   row(Icons.send_outlined, l10n.broadcastEntry, broadcast),
-                if (onReviews case final reviews?)
+                if (onReviews case final reviews? when store.can('orders'))
                   row(Icons.star_outline_rounded, l10n.reviewMine, reviews),
               ]),
               group(l10n.storeGroupSettings, [
-                for (final (icon, label, value, step) in rows)
+                if (store.isOwner)
+                  for (final (icon, label, value, step) in rows)
+                    DymMenuRow(
+                      icon: icon,
+                      label: label,
+                      value: value,
+                      onTap: () => viewModel.edit(step),
+                    ),
+              ]),
+              group(l10n.staffGroupTeam, [
+                if (onStaff case final staff? when store.isOwner)
+                  row(Icons.groups_2_outlined, l10n.staffTitle, staff),
+                if (viewModel.stores.length > 1)
                   DymMenuRow(
-                    icon: icon,
-                    label: label,
-                    value: value,
-                    onTap: () => viewModel.edit(step),
+                    icon: Icons.swap_horiz_rounded,
+                    label: l10n.staffSwitchStore,
+                    value: store.name,
+                    onTap: () => _pickStore(context, viewModel),
                   ),
               ]),
               group(null, [
@@ -311,5 +344,34 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
         },
       ),
     );
+  }
+
+  /// Liste des boutiques ; choisir recharge l'app sur la nouvelle.
+  Future<void> _pickStore(BuildContext context, MyStoreViewModel vm) async {
+    final l10n = DymLocalizations.of(context);
+    final picked = await showModalBottomSheet<String>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheet) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            for (final s in vm.stores)
+              ListTile(
+                leading: Icon(
+                  s.active
+                      ? Icons.radio_button_checked_rounded
+                      : Icons.radio_button_unchecked_rounded,
+                ),
+                title: Text(s.name),
+                subtitle: Text(staffRoleLabel(l10n, s.role)),
+                onTap: () => Navigator.of(sheet).pop(s.id),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (picked == null) return;
+    if (await vm.switchStore(picked)) onStoreSwitched?.call();
   }
 }

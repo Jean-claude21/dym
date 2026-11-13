@@ -109,6 +109,8 @@ class MyStore {
     this.paymentMethodIds = const [],
     this.hours = const [],
     this.missing = const [],
+    this.staffRole = 'owner',
+    this.staffPermissions = const [],
   });
 
   factory fromJson(Map<String, dynamic> json) => _$MyStoreFromJson(json);
@@ -137,6 +139,66 @@ class MyStore {
   /// `pickup_address`, `delivery_zones`, `payment_methods`, `hours`).
   final List<String> missing;
 
+  /// Rôle de la personne connectée (spec 087) : `owner`, `manager`,
+  /// `preparer` ou `cashier`.
+  @JsonKey(defaultValue: 'owner')
+  final String staffRole;
+
+  /// Permissions de la personne connectée dans cette boutique.
+  @JsonKey(defaultValue: <String>[])
+  final List<String> staffPermissions;
+
   bool get isActive => status == StoreStatus.active;
   bool get isComplete => missing.isEmpty;
+  bool get isOwner => staffRole == 'owner';
+
+  /// La propriétaire peut tout ; le personnel, ce que son rôle ouvre.
+  bool can(String permission) =>
+      isOwner || staffPermissions.contains(permission);
+}
+
+/// Boutique où la personne travaille (spec 087) : la sienne ou une autre.
+class StoreAccess {
+  const new({
+    required this.id,
+    required this.name,
+    required this.role,
+    this.active = false,
+  });
+
+  factory fromJson(Map<String, Object?> json) => StoreAccess(
+    id: json['id']! as String,
+    name: json['name'] as String? ?? '',
+    role: json['role'] as String? ?? 'owner',
+    active: json['active'] == true,
+  );
+
+  final String id;
+  final String name;
+  final String role;
+  final bool active;
+}
+
+/// Membre du personnel d'une boutique, ou invitation en attente.
+class StoreStaffMember {
+  const new({
+    required this.email,
+    required this.role,
+    this.firstName,
+    this.invited = false,
+  });
+
+  factory fromJson(Map<String, Object?> json) => StoreStaffMember(
+    email: json['email']! as String,
+    role: json['role'] as String? ?? 'preparer',
+    firstName: json['first_name'] as String?,
+    invited: json['status'] == 'invited',
+  );
+
+  final String email;
+  final String role;
+  final String? firstName;
+
+  /// Invitation envoyée, compte pas encore créé.
+  final bool invited;
 }

@@ -34,6 +34,17 @@ abstract interface class StoreService {
 
   /// Vrai si la boutique reçoit des commandes maintenant.
   Future<Result<bool>> openNow();
+
+  /// Boutiques où je travaille ; accepte les invitations (spec 087).
+  Future<Result<List<StoreAccess>>> myStores();
+
+  Future<Result<List<StoreAccess>>> setActiveStore(String storeId);
+
+  Future<Result<List<StoreStaffMember>>> myStaff();
+
+  Future<Result<List<StoreStaffMember>>> inviteStaff(String email, String role);
+
+  Future<Result<List<StoreStaffMember>>> removeStaff(String email);
 }
 
 /// Implémentation Neon : dépôts `dym_data`, pays lu du profil.
@@ -63,6 +74,26 @@ class NeonStoreService implements StoreService {
 
   @override
   Future<Result<MyStore?>> myStore() => _stores.myStore();
+
+  @override
+  Future<Result<List<StoreAccess>>> myStores() => _stores.myStores();
+
+  @override
+  Future<Result<List<StoreAccess>>> setActiveStore(String storeId) =>
+      _stores.setActiveStore(storeId);
+
+  @override
+  Future<Result<List<StoreStaffMember>>> myStaff() => _stores.myStaff();
+
+  @override
+  Future<Result<List<StoreStaffMember>>> inviteStaff(
+    String email,
+    String role,
+  ) => _stores.inviteStaff(email, role);
+
+  @override
+  Future<Result<List<StoreStaffMember>>> removeStaff(String email) =>
+      _stores.removeStaff(email);
 
   @override
   Future<Result<MyStore?>> start({required String name, String? description}) =>

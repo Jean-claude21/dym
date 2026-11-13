@@ -114,6 +114,9 @@ class _Navigator implements AppNavigator {
   void toAccount() => routes.add('account');
 
   @override
+  void toStaff() => routes.add('staff');
+
+  @override
   void toCredit() => routes.add('credit');
 
   @override

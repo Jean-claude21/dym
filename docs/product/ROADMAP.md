@@ -224,6 +224,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `appels-livekit` | Appels réels dans le chat (LiveKit) : fournisseur choisi par la base (flag `calls_livekit`), jeton émis par la Function aux deux personnes de l'appel, micro, haut-parleur, vidéo plein écran ; numéro jamais dévoilé | 3 h | ✅ Spec 084 |
 | `roles-admin` | Rôles des admins (super-admin, opérations, support, finance, contenu, analyste) : permission exigée par la base pour chaque fonction admin, menu et réglages filtrés, rôle choisi à l'invitation et modifiable, changements journalisés | 3 h | ✅ Spec 085 |
 | `analytics-mcp` | Analytics dans la base (vues sans donnée personnelle, lecteur en lecture seule pour Looker Studio ou Metabase) et serveur MCP de l'admin : clés personnelles, fonctions admin avec les droits de l'admin, requêtes d'analyse, écritures journalisées | 4 h | ✅ Spec 086 |
+| `personnel-boutique` | Personnel des boutiques (gérante, préparatrice, caissière) invité par email, accès vérifiés par la base, argent et réglages à la propriétaire ; succursales : une boutique par lieu, changement de boutique | 4 h | ✅ Spec 087 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au
