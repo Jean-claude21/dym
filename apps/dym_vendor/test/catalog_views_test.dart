@@ -174,11 +174,12 @@ void main() {
         onCategories: () async {},
       ),
     );
-    expect(find.text('Rupture'), findsOneWidget);
+    // « Rupture » : sous le nom et sous l'interrupteur coupé (spec 076).
+    expect(find.text('Rupture'), findsNWidgets(2));
     expect(find.text('Brouillon'), findsOneWidget);
     await _tap(tester, find.byType(Switch).first);
     expect(catalog.current.first.isAvailable, isFalse);
-    expect(find.text('Rupture'), findsNWidgets(2));
+    expect(find.text('Rupture'), findsNWidgets(4));
 
     await _tap(tester, find.text('Sirops'));
     expect(find.text('Jus de bissap'), findsNothing);

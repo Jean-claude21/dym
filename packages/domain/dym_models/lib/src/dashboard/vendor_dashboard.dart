@@ -17,6 +17,9 @@ class VendorDashboard {
     required this.activeOrders,
     required this.outOfStock,
     required this.criticalNotifications,
+    this.previousRevenueMinor,
+    this.previousOrderCount,
+    this.respondBy,
   });
 
   factory fromJson(Map<String, dynamic> json) => VendorDashboard(
@@ -29,7 +32,37 @@ class VendorDashboard {
     activeOrders: minorFromJson(json['active_orders']),
     outOfStock: minorFromJson(json['out_of_stock']),
     criticalNotifications: minorFromJson(json['critical_notifications']),
+    previousRevenueMinor: switch (json['previous']) {
+      final Map<String, dynamic> p => minorFromJson(p['revenue_minor']),
+      _ => null,
+    },
+    previousOrderCount: switch (json['previous']) {
+      final Map<String, dynamic> p => minorFromJson(p['order_count']),
+      _ => null,
+    },
+    respondBy: switch (json['respond_by']) {
+      final String at => DateTime.parse(at),
+      _ => null,
+    },
   );
+
+  /// Ventes et commandes de la période précédente au même moment (spec 076).
+  final int? previousRevenueMinor;
+  final int? previousOrderCount;
+
+  /// Heure limite de la commande en attente la plus ancienne.
+  final DateTime? respondBy;
+
+  /// Évolution des ventes en % (nulle sans base de comparaison).
+  int? get revenueChange => _change(revenueMinor, previousRevenueMinor);
+
+  /// Évolution du nombre de commandes en %.
+  int? get ordersChange => _change(orderCount, previousOrderCount);
+
+  static int? _change(int current, int? previous) =>
+      previous == null || previous == 0
+      ? null
+      : ((current - previous) * 100 / previous).round();
 
   final DashboardPeriod period;
   final String currencyCode;

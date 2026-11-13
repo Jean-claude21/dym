@@ -412,10 +412,21 @@ class _ProductCard extends StatelessWidget {
                               ),
                       ),
                     ),
+                    // Libellé qui suit l'état de l'interrupteur (spec 076).
                     ExcludeSemantics(
                       child: Text(
-                        l10n.productInStock,
-                        style: t.label.copyWith(fontSize: 13),
+                        viewModel.available(product)
+                            ? l10n.productInStock
+                            : l10n.productOutOfStockShort,
+                        style: t.label.copyWith(
+                          fontSize: 13,
+                          color: viewModel.available(product)
+                              ? c.textPrimary
+                              : c.pimentStrong,
+                          fontWeight: viewModel.available(product)
+                              ? null
+                              : FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
