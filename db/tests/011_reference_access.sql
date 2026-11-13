@@ -28,7 +28,7 @@ select results_eq(
   array['cash'],
   'anonyme : seul le cash est proposé (Mobile Money inactif)'
 );
-select is((select count(*)::int from public.store_origins), 3, 'anonyme : trois origines de boutique');
+select is((select count(*)::int from public.store_origins), 4, 'anonyme : quatre origines de boutique');
 select ok((select count(*) from public.delivery_fee_defaults) = 1, 'anonyme : frais de livraison du Togo');
 select throws_ok('select * from public.commission_rules', '42501', null, 'anonyme : commissions illisibles');
 select throws_ok('select * from public.ai_models', '42501', null, 'anonyme : modèles d''IA illisibles');

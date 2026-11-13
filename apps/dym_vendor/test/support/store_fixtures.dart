@@ -27,6 +27,7 @@ CountryConfig togoConfig() {
     ('marche', 'Au marché', 'At the market', 'Tu as un étal au marché.'),
     ('maison', 'Fait maison', 'Homemade', 'Tu prépares depuis ta maison.'),
     ('magasin', 'Boutique', 'Shop', 'Tu as un magasin ou un kiosque.'),
+    ('supermarche', 'Supermarché', 'Supermarket', 'Tu gères une supérette.'),
   ];
   return CountryConfig(
     country: Country.fromJson(const {

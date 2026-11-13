@@ -81,6 +81,7 @@ class _ComponentsPageState extends State<ComponentsPage> {
                 StoreOrigin.marche => 'Au marché',
                 StoreOrigin.maison => 'Fait maison',
                 StoreOrigin.magasin => 'Boutique',
+                StoreOrigin.supermarche => 'Supermarché',
               },
             ),
           const DymPromoBadge(label: '−20 %'),

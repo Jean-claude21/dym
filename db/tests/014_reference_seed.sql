@@ -20,8 +20,8 @@ select ok(
 );
 select results_eq(
   'select code from public.store_origins order by sort',
-  array['marche', 'maison', 'magasin'],
-  'trois origines de boutique'
+  array['marche', 'maison', 'magasin', 'supermarche'],
+  'quatre origines de boutique (supermarché : spec 071)'
 );
 select ok(
   exists (select 1 from public.units where country_code = 'GH' and code = 'olonka')
