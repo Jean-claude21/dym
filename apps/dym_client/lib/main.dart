@@ -255,6 +255,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         auth: auth,
         location: const PluginLocationProvider(),
         environment: environment,
+        live: live,
       ),
     );
 }

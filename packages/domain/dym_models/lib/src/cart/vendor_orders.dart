@@ -93,9 +93,13 @@ class VendorOrder {
     this.refundDue = false,
     this.history = const [],
     this.nextStatuses = const [],
+    this.courier,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$VendorOrderFromJson(json);
+
+  /// Livreur de la commande, une fois assigné (spec 068).
+  final OrderCourier? courier;
 
   final String id;
   final DateTime createdAt;

@@ -1916,6 +1916,12 @@
       }
     }
   },
+  "vendorCashBodyCourier": "Le livreur DYM encaisse {amount} et te remet {due}, le prix des articles.",
+  "@vendorCashBodyCourier": {"description": "Cash encaissé par le livreur DYM (spec 068)", "placeholders": {"amount": {"type": "String"}, "due": {"type": "String"}}},
+  "vendorCourierDym": "Livreur DYM : {name}",
+  "@vendorCourierDym": {"description": "Livreur DYM assigné", "placeholders": {"name": {"type": "String"}}},
+  "vendorCourierExternal": "Livreur : {name}",
+  "@vendorCourierExternal": {"description": "Livreur externe assigné par l'équipe", "placeholders": {"name": {"type": "String"}}},
   "vendorItems": "Articles",
   "@vendorItems": {
     "description": "Section articles"
@@ -6703,6 +6709,8 @@
   },
   "handoverLocked": "Trop d'essais : l'équipe DYM va t'aider à terminer la remise.",
   "trackHandoverCode": "Code de remise",
+  "trackCourier": "{name} te livre",
+  "@trackCourier": {"description": "Livreur dans le suivi de la cliente (spec 068)", "placeholders": {"name": {"type": "String"}}},
   "trackHandoverHint": "Donne ce code au livreur quand il te remet la commande.",
   "walletWithdraw": "Retirer",
   "walletWithdrawSimulated": "Retrait simulé : aucun versement réel tant que le fournisseur n'est pas branché.",

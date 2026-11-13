@@ -6,6 +6,20 @@ part of 'order_tracking.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+OrderCourier _$OrderCourierFromJson(Map<String, dynamic> json) =>
+    $checkedCreate('OrderCourier', json, ($checkedConvert) {
+      final val = OrderCourier(
+        name: $checkedConvert('name', (v) => v as String),
+        phone: $checkedConvert('phone', (v) => v as String),
+        assignedAt: $checkedConvert(
+          'assigned_at',
+          (v) => v == null ? null : DateTime.parse(v as String),
+        ),
+        isDym: $checkedConvert('is_dym', (v) => v as bool? ?? false),
+      );
+      return val;
+    }, fieldKeyMap: const {'assignedAt': 'assigned_at', 'isDym': 'is_dym'});
+
 OrderStatusEvent _$OrderStatusEventFromJson(Map<String, dynamic> json) =>
     $checkedCreate(
       'OrderStatusEvent',
@@ -189,6 +203,12 @@ CustomerOrder _$CustomerOrderFromJson(Map<String, dynamic> json) =>
             (v) => v == null
                 ? null
                 : PurchaseAddress.fromJson(v as Map<String, dynamic>),
+          ),
+          courier: $checkedConvert(
+            'courier',
+            (v) => v == null
+                ? null
+                : OrderCourier.fromJson(v as Map<String, dynamic>),
           ),
         );
         return val;

@@ -194,6 +194,11 @@ VendorOrder _$VendorOrderFromJson(Map<String, dynamic> json) => $checkedCreate(
                 .toList() ??
             const [],
       ),
+      courier: $checkedConvert(
+        'courier',
+        (v) =>
+            v == null ? null : OrderCourier.fromJson(v as Map<String, dynamic>),
+      ),
     );
     return val;
   },

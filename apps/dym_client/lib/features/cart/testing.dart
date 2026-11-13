@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
@@ -80,6 +82,12 @@ class MemoryCartService implements CartService {
        _lines = {...initialLines} {
     _view.value = _quote();
   }
+
+  /// Signaux en direct simulés (tests).
+  final liveSignals = StreamController<LiveSignal>.broadcast();
+
+  @override
+  Stream<LiveSignal> get live => liveSignals.stream;
 
   final CountryConfig config;
   final Map<String, MemoryCartStore> stores;

@@ -115,10 +115,17 @@ class _Till implements TillService {
   Object? noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-VendorOrder _order(String id, String name, int total) => VendorOrder(
+VendorOrder _order(
+  String id,
+  String name,
+  int total, {
+  OrderStatus status = OrderStatus.pending,
+  OrderCourier? courier,
+}) => VendorOrder(
   id: id,
   createdAt: DateTime.utc(2026, 11, 11, 12, 15),
-  status: OrderStatus.pending,
+  status: status,
+  courier: courier,
   fulfillment: Fulfillment.delivery,
   currencyCode: 'XOF',
   subtotalMinor: total - 500,
@@ -195,6 +202,33 @@ void main() {
       t,
       'commande',
       OrderDetailView(service: _orders(), orderId: 'o1', onBack: () {}),
+    );
+  });
+  // Commande prête confiée à un livreur DYM (spec 068).
+  testWidgets('commande livreur', (t) async {
+    await _capture(
+      t,
+      'commande_livreur',
+      OrderDetailView(
+        service: MemoryOrdersService(
+          config: togoConfig(),
+          orders: [
+            _order(
+              'o3',
+              'Awa',
+              3450,
+              status: OrderStatus.ready,
+              courier: const OrderCourier(
+                name: 'Kofi',
+                phone: '+228 90 11 22 33',
+                isDym: true,
+              ),
+            ),
+          ],
+        ),
+        orderId: 'o3',
+        onBack: () {},
+      ),
     );
   });
   testWidgets('catalogue', (t) async {

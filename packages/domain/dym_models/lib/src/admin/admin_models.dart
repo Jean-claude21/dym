@@ -223,19 +223,6 @@ class AdminDisputeRef {
   bool get isOpen => status == 'open';
 }
 
-/// Livreur externe assigné.
-@immutable
-@JsonSerializable()
-class OrderCourier {
-  const new({required this.name, required this.phone, this.assignedAt});
-
-  factory fromJson(Map<String, dynamic> json) => _$OrderCourierFromJson(json);
-
-  final String name;
-  final String phone;
-  final DateTime? assignedAt;
-}
-
 /// Entrée du journal d'audit.
 @immutable
 @JsonSerializable()

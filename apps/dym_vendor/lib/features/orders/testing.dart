@@ -208,6 +208,13 @@ class MemoryOrdersService implements OrdersService {
           occurredAt: DateTime.utc(2026, 10, 5, 10, 45),
         ),
     ],
-    nextStatuses: vendorNextStatuses(status, o.fulfillment),
+    // Livreur DYM assigné : la vendeuse ne fait ni partir ni remettre (068).
+    nextStatuses: [
+      for (final s in vendorNextStatuses(status, o.fulfillment))
+        if (!(o.courier?.isDym ?? false) ||
+            (s != OrderStatus.outForDelivery && s != OrderStatus.delivered))
+          s,
+    ],
+    courier: o.courier,
   );
 }

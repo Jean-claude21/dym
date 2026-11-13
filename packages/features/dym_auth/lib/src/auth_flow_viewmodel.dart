@@ -40,6 +40,7 @@ class AuthFlowViewModel extends BaseViewModel {
     required this._service,
     required this.onReady,
     this.locale = 'fr',
+    this.supportedLocales,
     this.resendDelay = const Duration(seconds: 60),
     AuthStep initialStep = AuthStep.welcome,
     String initialEmail = '',
@@ -51,8 +52,23 @@ class AuthFlowViewModel extends BaseViewModel {
   /// Appelé quand le profil est complet : la personne entre dans l'app.
   final void Function(Me me) onReady;
 
-  /// Langue de l'appareil (profil).
+  /// Langue de l'appareil.
   final String locale;
+
+  /// Langues traduites dans l'app ; nul : toutes acceptées.
+  final List<String>? supportedLocales;
+
+  /// Langue du profil (spec 068) : celle du pays choisi si l'app la parle
+  /// (un téléphone réglé en anglais au Togo reçoit l'app en français), sinon
+  /// celle de l'appareil. Modifiable ensuite dans « Moi ».
+  String get profileLocale {
+    final country = _config?.country.defaultLocale;
+    final known = supportedLocales;
+    if (country != null && (known == null || known.contains(country))) {
+      return country;
+    }
+    return locale;
+  }
 
   /// Délai avant de pouvoir renvoyer un code.
   final Duration resendDelay;
@@ -367,7 +383,7 @@ class AuthFlowViewModel extends BaseViewModel {
       _service.completeProfile(
         firstName: _firstName.trim(),
         zoneId: zone,
-        locale: locale,
+        locale: profileLocale,
       ),
     );
     switch (result) {

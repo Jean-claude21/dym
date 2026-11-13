@@ -465,14 +465,49 @@ class AddressFormViewModel extends _CartLoadingViewModel {
 
 /// Commande envoyée (écran 37) : récapitulatif de l'achat.
 class OrderSentViewModel extends _CartLoadingViewModel {
-  new({required CartService service, required this.purchase}) : super(service);
+  new({
+    required CartService service,
+    required this._purchase,
+    this.refreshEvery = const Duration(seconds: 20),
+  }) : super(service);
 
-  final Purchase purchase;
+  /// Relecture en filet ; le temps réel prévient d'abord (spec 068) : la
+  /// page suit l'acceptation par les vendeuses au lieu de rester figée.
+  final Duration refreshEvery;
+  Purchase _purchase;
+  Timer? _timer;
+  StreamSubscription<LiveSignal>? _live;
+
+  Purchase get purchase => _purchase;
 
   bool get ready => _config != null && !failed;
 
   @override
-  Future<void> load() => run(() async => null);
+  Future<void> load() async {
+    await run(() async => null);
+    _timer ??= Timer.periodic(refreshEvery, (_) => unawaited(refresh()));
+    final ids = {for (final o in _purchase.orders) o.id};
+    _live ??= watchLive(
+      service.live,
+      when: (s) => s.entityId != null && ids.contains(s.entityId),
+      reload: () => unawaited(refresh()),
+    );
+  }
+
+  /// Relecture silencieuse de l'achat (statut de chaque commande).
+  Future<void> refresh() async {
+    if (await service.purchase(_purchase.id) case Ok(:final value)) {
+      _purchase = value;
+      notifyListeners();
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    unawaited(_live?.cancel());
+    super.dispose();
+  }
 }
 
 // ------------------------------------------------------------------ paiement

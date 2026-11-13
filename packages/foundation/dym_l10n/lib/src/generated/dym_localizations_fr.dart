@@ -1520,6 +1520,21 @@ class DymLocalizationsFr extends DymLocalizations {
   }
 
   @override
+  String vendorCashBodyCourier(String amount, String due) {
+    return 'Le livreur DYM encaisse $amount et te remet $due, le prix des articles.';
+  }
+
+  @override
+  String vendorCourierDym(String name) {
+    return 'Livreur DYM : $name';
+  }
+
+  @override
+  String vendorCourierExternal(String name) {
+    return 'Livreur : $name';
+  }
+
+  @override
   String get vendorItems => 'Articles';
 
   @override
@@ -5516,6 +5531,11 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get trackHandoverCode => 'Code de remise';
+
+  @override
+  String trackCourier(String name) {
+    return '$name te livre';
+  }
 
   @override
   String get trackHandoverHint =>

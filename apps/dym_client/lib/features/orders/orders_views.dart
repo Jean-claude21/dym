@@ -503,6 +503,32 @@ class _Tracking extends StatelessWidget {
             ),
           ),
         ),
+      // Livreur assigné (spec 068) : nom et téléphone, pour se retrouver.
+      if (order.courier case final courier?
+          when order.status.isActive && !pickup)
+        CartCard(
+          child: Row(
+            children: [
+              Icon(Icons.two_wheeler_rounded, color: c.brandDeep, size: 28),
+              const SizedBox(width: DymTokenSpace.s3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.trackCourier(courier.name),
+                      style: t.title.copyWith(fontSize: 17),
+                    ),
+                    SelectableText(
+                      courier.phone,
+                      style: t.label.copyWith(color: c.textSecondary),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       if (vm.handoverCode case final code?)
         CartCard(
           child: Row(

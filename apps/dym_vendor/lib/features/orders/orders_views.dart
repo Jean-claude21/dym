@@ -660,6 +660,12 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
                   Text(
                     order.isPaid
                         ? l10n.vendorPaidBody
+                        : (order.courier?.isDym ?? false)
+                        // Livreur DYM : c'est lui qui encaisse (spec 068).
+                        ? l10n.vendorCashBodyCourier(
+                            total,
+                            vm.money(order.subtotalMinor)?.format() ?? '',
+                          )
                         : l10n.vendorCashBody(total),
                     style: t.label.copyWith(
                       fontSize: 15,
@@ -758,6 +764,34 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
                 ),
               ),
           ],
+          // Livreur assigné (spec 068) : la vendeuse sait à qui remettre.
+          if (order.courier case final courier?)
+            Padding(
+              padding: const EdgeInsets.only(top: DymTokenSpace.s3),
+              child: Row(
+                children: [
+                  Icon(Icons.two_wheeler_rounded, color: c.brand),
+                  const SizedBox(width: DymTokenSpace.s2),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          courier.isDym
+                              ? l10n.vendorCourierDym(courier.name)
+                              : l10n.vendorCourierExternal(courier.name),
+                          style: t.title.copyWith(fontSize: 16),
+                        ),
+                        SelectableText(
+                          courier.phone,
+                          style: t.label.copyWith(fontSize: 15),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
       if (order.history.isNotEmpty) ...[

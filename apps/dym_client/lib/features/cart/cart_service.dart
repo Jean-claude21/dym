@@ -63,6 +63,9 @@ class LocatedPlace {
 /// partagé (mini-panier, panier, livraison). Montants et refus viennent de la
 /// base. Remplaçable en test.
 abstract interface class CartService {
+  /// Changements en direct (statut des commandes envoyées, spec 068).
+  Stream<LiveSignal> get live;
+
   /// Quartier choisi à l'inscription, s'il existe.
   String? get profileZoneId;
 
@@ -147,7 +150,13 @@ class NeonCartService implements CartService {
     required this._location,
     required this._environment,
     this._pages = const PluginExternalPageOpener(),
+    this._live = LiveFeed.none,
   });
+
+  final LiveFeed _live;
+
+  @override
+  Stream<LiveSignal> get live => _live.signals;
 
   final CartRepository _cart;
   final AddressRepository _addresses;
