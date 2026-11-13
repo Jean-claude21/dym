@@ -7347,5 +7347,129 @@
   "fraudStoreRefusalBurst": "Refus répétés (boutique)",
   "fraudSharedDevice": "Appareil partagé par plusieurs comptes",
   "fraudHandoverFailures": "Codes de remise faux (livreur)",
-  "fraudHaggleBurst": "Marchandage en rafale sans achat"
+  "fraudHaggleBurst": "Marchandage en rafale sans achat",
+  "chatToday": "aujourd'hui",
+  "@chatToday": {
+    "description": "Séparateur de jour dans une conversation"
+  },
+  "chatQuickIsAvailable": "C'est disponible ?",
+  "@chatQuickIsAvailable": {
+    "description": "Réponse rapide de la cliente"
+  },
+  "chatQuickPrice": "Quel est le prix ?",
+  "@chatQuickPrice": {
+    "description": "Réponse rapide de la cliente"
+  },
+  "chatQuickDeliveryToday": "Vous livrez aujourd'hui ?",
+  "@chatQuickDeliveryToday": {
+    "description": "Réponse rapide de la cliente"
+  },
+  "chatQuickThanks": "Merci !",
+  "@chatQuickThanks": {
+    "description": "Réponse rapide"
+  },
+  "chatQuickYesAvailable": "Oui, c'est disponible.",
+  "@chatQuickYesAvailable": {
+    "description": "Réponse rapide de la vendeuse"
+  },
+  "chatQuickSoldOut": "Désolée, ce n'est plus disponible.",
+  "@chatQuickSoldOut": {
+    "description": "Réponse rapide de la vendeuse"
+  },
+  "chatQuickPreparing": "Je prépare votre commande.",
+  "@chatQuickPreparing": {
+    "description": "Réponse rapide de la vendeuse"
+  },
+  "chatQuickThanksOrder": "Merci pour votre commande !",
+  "@chatQuickThanksOrder": {
+    "description": "Réponse rapide de la vendeuse"
+  },
+  "chatSending": "Envoi…",
+  "@chatSending": {
+    "description": "Message en cours d'envoi"
+  },
+  "chatNotSent": "Non envoyé",
+  "@chatNotSent": {
+    "description": "Message en échec"
+  },
+  "chatSent": "Envoyé",
+  "@chatSent": {
+    "description": "Message reçu par le serveur"
+  },
+  "chatSeen": "Vu",
+  "@chatSeen": {
+    "description": "Message ouvert par l'autre personne"
+  },
+  "chatDiscard": "Supprimer",
+  "@chatDiscard": {
+    "description": "Abandonner un message non envoyé"
+  },
+  "chatActiveOrder": "Commande en cours",
+  "@chatActiveOrder": {
+    "description": "Bandeau de la commande en cours dans une conversation"
+  },
+  "chatSeeOrder": "Voir la commande",
+  "@chatSeeOrder": {
+    "description": "Ouvrir la commande depuis la conversation"
+  },
+  "chatSeeStore": "Voir la boutique",
+  "@chatSeeStore": {
+    "description": "Ouvrir la boutique depuis la conversation"
+  },
+  "chatAttach": "Joindre",
+  "@chatAttach": {
+    "description": "Bouton joindre (photo, produit)"
+  },
+  "chatSearchConversations": "Chercher une conversation",
+  "@chatSearchConversations": {
+    "description": "Recherche dans les conversations"
+  },
+  "chatYou": "Toi : {text}",
+  "@chatYou": {
+    "description": "Aperçu de mon dernier message",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "chatVoicePreview": "Message vocal",
+  "@chatVoicePreview": {
+    "description": "Aperçu d'un vocal"
+  },
+  "chatCallPreview": "Appel",
+  "@chatCallPreview": {
+    "description": "Aperçu d'un appel"
+  },
+  "chatEmptyThreadStore": "Pose ta question à {name} : disponibilité, prix, livraison.",
+  "@chatEmptyThreadStore": {
+    "description": "Conversation vide côté cliente",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatEmptyThreadClient": "{name} t'a ouvert une conversation. Réponds-lui ici.",
+  "@chatEmptyThreadClient": {
+    "description": "Conversation vide côté vendeuse",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatShareSelected": "{n, plural, =1{Envoyer 1 produit} other{Envoyer {n} produits}}",
+  "@chatShareSelected": {
+    "description": "Envoi groupé de produits",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "chatSearchStoreProducts": "Chercher dans la boutique",
+  "@chatSearchStoreProducts": {
+    "description": "Recherche des produits de la boutique (cliente)"
+  }
 }

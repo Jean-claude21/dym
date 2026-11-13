@@ -58,6 +58,7 @@ fiabilité (ops).
 | `space_contributed` (montant), `space_funded` (montant) | Serveur | Argent des espaces (spec 032) |
 | `order_scheduled` (jours d'avance, précommande), `product_arrival_set` (jours d'avance) | Serveur | Précommande et créneaux (spec 033) |
 | `substitution_proposed`, `substitution_answered` (accepté), `freshness_claimed` (montant) | Serveur | Remplacement et fraîcheur (spec 034) |
+| `chat_message_sent` (type, rôle, commande en cours) | Serveur | Messagerie (spec 070) |
 | `voice_message_sent` (durée), `call_started` (type), `call_ended` (issue, durée) | Serveur | Vocaux et appels (spec 035) |
 | `creator_joined`, `content_published` (+ catégorie, provenance, créatrice) | Serveur | Créateurs (spec 036) |
 | `follow_added` (cible), `comment_added` | Serveur | Fil classé (spec 037) |

@@ -112,7 +112,30 @@ void main() {
       vm.dispose();
     });
 
-    test('envoi en échec : même clé au nouvel essai (aucun doublon)', () async {
+    test(
+      'envoi en échec : reste dans le fil, même clé au nouvel essai',
+      () async {
+        final service = _service(ChatRole.client);
+        final vm = ChatViewModel(
+          service: service,
+          conversationId: 'c1',
+          refreshEvery: null,
+        );
+        await vm.load();
+        service.failNext = const NetworkFailure('3G');
+        expect(await vm.sendText('Allô'), isFalse);
+        expect(vm.outbox.single.state, OutgoingState.failed);
+        expect(vm.entries.last, isA<ChatOutgoingEntry>());
+        final key = vm.outbox.single.key;
+        expect(await vm.retry(vm.outbox.single), isTrue);
+        expect(vm.outbox, isEmpty);
+        expect(vm.messages.last.id, key);
+        expect(vm.messages.where((m) => m.body == 'Allô'), hasLength(1));
+        vm.dispose();
+      },
+    );
+
+    test('réseau revenu : les messages en échec repartent seuls', () async {
       final service = _service(ChatRole.client);
       final vm = ChatViewModel(
         service: service,
@@ -121,11 +144,96 @@ void main() {
       );
       await vm.load();
       service.failNext = const NetworkFailure('3G');
-      expect(await vm.sendText('Allô'), isFalse);
-      expect(vm.sendFailure, isA<NetworkFailure>());
-      expect(await vm.sendText('Allô'), isTrue);
-      expect(await vm.sendText('Allô'), isTrue);
-      expect(vm.messages.where((m) => m.body == 'Allô'), hasLength(2));
+      await vm.sendText('Je passe à 18 h');
+      expect(vm.outbox, hasLength(1));
+      await vm.load();
+      await Future<void>.delayed(Duration.zero);
+      expect(vm.outbox, isEmpty);
+      expect(service.sent, ['text:Je passe à 18 h']);
+      vm.dispose();
+    });
+
+    test('abandon : le message en échec disparaît', () async {
+      final service = _service(ChatRole.client);
+      final vm = ChatViewModel(
+        service: service,
+        conversationId: 'c1',
+        refreshEvery: null,
+      );
+      await vm.load();
+      service.failNext = const ServerFailure('500');
+      await vm.sendText('Oups');
+      vm.discard(vm.outbox.single);
+      expect(vm.outbox, isEmpty);
+      vm.dispose();
+    });
+
+    test('fil : un séparateur par jour, « vu », groupes, commande', () async {
+      final vm = ChatViewModel(
+        service: _service(ChatRole.client),
+        conversationId: 'c1',
+        refreshEvery: null,
+      );
+      await vm.load();
+      final entries = vm.entries;
+      expect(entries.first, isA<ChatDayEntry>());
+      expect(entries.whereType<ChatDayEntry>(), hasLength(1));
+      final m0 = entries.whereType<ChatMessageEntry>().first;
+      expect(m0.seen, isTrue, reason: 'lu par la boutique');
+      final m3 = entries.whereType<ChatMessageEntry>().last;
+      expect(m3.seen, isFalse, reason: 'photo envoyée après la lecture');
+      final m2 = entries.whereType<ChatMessageEntry>().elementAt(2);
+      expect(m2.continued, isTrue, reason: 'suite de la boutique');
+      expect(vm.activeOrder?.status, OrderStatus.preparing);
+      expect(vm.activeOrderTotal, isNotNull);
+      vm.dispose();
+    });
+
+    test(
+      'réponses rapides : selon le rôle, cachées pendant la saisie',
+      () async {
+        final client = ChatViewModel(
+          service: _service(ChatRole.client),
+          conversationId: 'c1',
+          refreshEvery: null,
+        );
+        final vendor = ChatViewModel(
+          service: _service(ChatRole.vendor),
+          conversationId: 'c1',
+          refreshEvery: null,
+        );
+        expect(client.quickReplies, QuickReply.client);
+        expect(vendor.quickReplies, QuickReply.vendor);
+        client.textChanged('Bonj');
+        expect(client.quickReplies, isEmpty);
+        client.textChanged();
+        expect(client.quickReplies, isNotEmpty);
+        client.dispose();
+        vendor.dispose();
+      },
+    );
+
+    test('conversations : recherche par prénom', () async {
+      final vm = ConversationsViewModel(
+        service: _service(ChatRole.vendor),
+        refreshEvery: null,
+      );
+      await vm.load();
+      vm.setQuery('mar');
+      expect(vm.shown.single.clientFirstName, 'Mariam');
+      vm.dispose();
+    });
+
+    test('panier proposé : plusieurs produits envoyés', () async {
+      final service = _service(ChatRole.vendor);
+      final vm = ChatViewModel(
+        service: service,
+        conversationId: 'c1',
+        refreshEvery: null,
+      );
+      await vm.load();
+      expect(await vm.sendProducts(['p-gombo', 'p-gombo']), isTrue);
+      expect(service.sent, ['product:p-gombo', 'product:p-gombo']);
       vm.dispose();
     });
   });
@@ -173,7 +281,7 @@ void main() {
               service: _service(ChatRole.vendor),
               conversationId: 'c1',
               onBack: () {},
-              pickProduct: (_) async => null,
+              pickProducts: (_, _) async => null,
               clock: _clock,
               refreshEvery: null,
             ),
@@ -226,7 +334,9 @@ void main() {
     await tester.pumpWidget(const SizedBox());
   });
 
-  testWidgets('62 : la vendeuse partage un produit', (tester) async {
+  testWidgets('62 : la vendeuse partage des produits (panier proposé)', (
+    tester,
+  ) async {
     final service = _service(ChatRole.vendor);
     await _pump(
       tester,
@@ -234,18 +344,54 @@ void main() {
         service: service,
         conversationId: 'c1',
         onBack: () {},
-        pickProduct: (context) => showProductShareSheet(context, const [
+        pickProducts: (context, _) => showProductShareSheet(context, const [
           ShareableProduct(id: 'p-gombo', name: 'Gombo frais'),
+          ShareableProduct(id: 'p-tomate', name: 'Tomates'),
         ]),
         clock: _clock,
         refreshEvery: null,
       ),
     );
-    await tester.tap(find.byTooltip('Partager un produit'));
+    await tester.tap(find.byTooltip('Joindre'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Partager'));
+    await tester.tap(find.text('Partager un produit'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gombo frais').last);
+    await tester.pump();
+    await tester.tap(find.text('Envoyer 1 produit'));
     await tester.pumpAndSettle();
     expect(service.sent, ['product:p-gombo']);
+    await tester.pumpWidget(const SizedBox());
+  });
+
+  testWidgets('60 : réponse rapide, bandeau de commande, boutique', (
+    tester,
+  ) async {
+    final service = _service(ChatRole.client);
+    final orders = <String>[];
+    final stores = <String>[];
+    await _pump(
+      tester,
+      ChatView(
+        service: service,
+        conversationId: 'c1',
+        onBack: () {},
+        onOpenOrder: orders.add,
+        onOpenStore: stores.add,
+        clock: _clock,
+        refreshEvery: null,
+      ),
+    );
+    expect(find.text("Aujourd'hui"), findsOneWidget);
+    expect(find.text('Commande en cours'), findsOneWidget);
+    await tester.tap(find.text('Commande en cours'));
+    expect(orders, ['o1']);
+    await tester.tap(find.text('Voir la boutique'));
+    expect(stores, ['s1']);
+    await tester.tap(find.text("C'est disponible ?"));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(service.sent, ["text:C'est disponible ?"]);
     await tester.pumpWidget(const SizedBox());
   });
 

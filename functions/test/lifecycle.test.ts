@@ -122,6 +122,16 @@ describe("transitions", () => {
     expect(sent[0]).toMatchObject({ tokens: ["tok-1"], title: "Commande acceptée", data: { kind: "order_accepted", order_id: order } });
   });
 
+  it("push d'un message : identifiant de conversation dans les données", async () => {
+    const queue = new FakeQueue([
+      push("n9", { kind: "new_message_vendor", order_id: null, params: { sender_name: "Awa", conversation_id: "c-1" } }),
+    ]);
+    const sent: PushMessage[] = [];
+    const sender: PushSender = { enabled: true, async send(m) { sent.push(m); return { sent: 1, invalidTokens: [] }; } };
+    await dispatchPushes(queue, sender);
+    expect(sent[0]?.data).toEqual({ kind: "new_message_vendor", conversation_id: "c-1" });
+  });
+
   it("encaissement", async () => {
     const res = await post(createApp({ verifyToken, lifecycle: new FakeLifecycle() }), `/v1/orders/${order}/cash-collected`, {});
     expect(res.status).toBe(200);

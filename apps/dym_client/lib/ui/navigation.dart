@@ -790,6 +790,9 @@ class StackedAppNavigator implements AppNavigator {
       onBack: _back,
       initialProductId: productId,
       onOpenProduct: toProduct,
+      onOpenOrder: toOrder,
+      onOpenStore: toStore,
+      pickProducts: _pickStoreProducts,
       onAddToCart: (item) async {
         final variant = item.defaultVariantId;
         if (item.variantCount > 1 || variant == null) {
@@ -800,6 +803,28 @@ class StackedAppNavigator implements AppNavigator {
       },
     ),
   );
+
+  /// Produits de la boutique, à montrer dans la conversation (« c'est
+  /// disponible ? »).
+  Future<List<String>?> _pickStoreProducts(
+    BuildContext context,
+    String storeId,
+  ) async {
+    final page = await _discovery.storePage(storeId);
+    if (!context.mounted) return null;
+    final locale = Localizations.localeOf(context).languageCode;
+    final products = page.valueOrNull?.products ?? const <CatalogItem>[];
+    return await showProductShareSheet(context, [
+      for (final p in products)
+        if (p.available)
+          ShareableProduct(
+            id: p.id,
+            name: p.name,
+            detail: p.unitLabel?.resolve(locale),
+            photo: p.photoKey == null ? null : _discovery.photo(p.photoKey!),
+          ),
+    ], searchLabel: DymLocalizations.of(context).chatSearchStoreProducts);
+  }
 
   @override
   void toNotificationSettings() =>
