@@ -221,6 +221,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `import-catalogue` | Import du catalogue (supermarchés) : coller des lignes depuis un tableur, vérification ligne par ligne, création en brouillon ; personnel multiple et succursales à cadrer | 2 h | ✅ Spec 081 |
 | `marque` | Marque : logo (sac DoYourMarket aux couleurs « Épuré »), icônes des trois apps (fond propre à chacune, icône adaptative), splash animé « Réalisé par Kete » identique à `splash-anime.gif` (4 s), photos d'accueil gardées sans monument | 3 h | ✅ Spec 082 |
 | `suivi-erreurs` | Suivi des erreurs : cinq projets Sentry (quatre apps, Functions), DSN hors dépôt, `ERROR_REPORTING_DSN` enfin transmis au déploiement des Functions | 0,5 h | ✅ Spec 083 |
+| `appels-livekit` | Appels réels dans le chat (LiveKit) : fournisseur choisi par la base (flag `calls_livekit`), jeton émis par la Function aux deux personnes de l'appel, micro, haut-parleur, vidéo plein écran ; numéro jamais dévoilé | 3 h | ✅ Spec 084 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

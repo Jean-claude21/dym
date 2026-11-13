@@ -80,7 +80,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Localisation | `geolocator` | `dym_platform` |
 | Micro (recherche vocale, spec 018 ; vocaux, spec 035) | `record` | `dym_platform` |
 | Lecture des vocaux (spec 035) | `audioplayers` (derrière `AudioPlayback`) | `dym_platform` |
-| Média des appels (spec 035) | Simulé derrière `CallProvider` ; WebRTC et serveur TURN avant la production finale | `dym_platform` |
+| Média des appels (spec 035, 084) | `livekit_client` derrière `CallProvider` (décision 0019) ; simulé quand le flag `calls_livekit` est coupé | `dym_platform` |
 | QR : affichage et lecture (spec 046) | `qr_flutter`, `mobile_scanner` (derrière `DymQrImage`, `QrScanView`) | `dym_platform` |
 | Identifiant d'installation (spec 039) | UUID aléatoire dans `flutter_secure_storage` (derrière `InstallIdProvider`) | `dym_platform` |
 | Import TikTok (spec 040) | oEmbed public dans la Function (derrière `VideoImportProvider`) ; Login Kit et Share Kit à l'ouverture de l'accès | Functions |

@@ -81,7 +81,8 @@ node db/scripts/dym-db.mjs test --url "<même URL>" && npx neonctl branches dele
 # Déploiement : clés lues dans un fichier hors dépôt.
 cd functions && npx neonctl deploy --branch staging --env <fichier .env hors dépôt> --no-env-pull
 # Le fichier DOIT contenir toutes les variables de neon.ts (ALLOWED_ORIGINS, OPENAI_API_KEY,
-# PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT, MEDIA_PUBLIC_URL, ERROR_REPORTING_DSN) : une variable absente est
+# PAYMENTS_SIMULATOR_SECRET, FCM_SERVICE_ACCOUNT, MEDIA_PUBLIC_URL, ERROR_REPORTING_DSN, LIVEKIT_URL,
+# LIVEKIT_API_KEY, LIVEKIT_API_SECRET) : une variable absente est
 # remise à vide. MEDIA_PUBLIC_URL = DYM_MEDIA_URL de config/<env>.json (photos des push).
 ```
 

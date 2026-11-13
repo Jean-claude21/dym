@@ -5,6 +5,7 @@ import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _Recorder implements VoiceRecorder {
@@ -51,10 +52,13 @@ class _Calls implements CallService {
     status: status,
     outgoing: session.outgoing,
     callerName: session.callerName,
+    provider: session.provider,
   );
 
+  CallProvider provider = SimulatedCallProvider();
+
   @override
-  final CallProvider provider = const SimulatedCallProvider();
+  CallProvider providerFor(CallSession call) => provider;
 
   @override
   Future<Result<CallSession>> start(
@@ -77,6 +81,57 @@ class _Calls implements CallService {
 
   @override
   Future<Result<CallSession?>> incoming() async => Ok(session);
+}
+
+/// Média réel factice (LiveKit en vrai) : retient les gestes.
+class _Media implements CallProvider {
+  new({this.fail = false});
+
+  final bool fail;
+  final ValueNotifier<int> _changes = ValueNotifier(0);
+  final joins = <(String, bool)>[];
+  bool left = false;
+  bool _mic = true;
+  bool _speaker = false;
+
+  @override
+  bool get simulated => false;
+
+  @override
+  Listenable get changes => _changes;
+
+  @override
+  bool get microphoneOn => _mic;
+
+  @override
+  bool get speakerOn => _speaker;
+
+  @override
+  Future<Result<void>> join(String callId, {required bool video}) async {
+    joins.add((callId, video));
+    return fail ? const Err(NetworkFailure('hors ligne')) : const Ok(null);
+  }
+
+  @override
+  Future<void> setMicrophone({required bool on}) async {
+    _mic = on;
+    _changes.value++;
+  }
+
+  @override
+  Future<void> setSpeaker({required bool on}) async {
+    _speaker = on;
+    _changes.value++;
+  }
+
+  @override
+  Widget? remoteVideo() => null;
+
+  @override
+  Widget? localVideo() => null;
+
+  @override
+  Future<void> leave() async => left = true;
 }
 
 void main() {
@@ -151,6 +206,64 @@ void main() {
       expect(vm.joined, isTrue);
       await vm.hangUp();
       expect(vm.finished, isTrue);
+      vm.dispose();
+    });
+
+    test('appel réel (spec 084) : média rejoint au décroché, micro et '
+        'haut-parleur, quitté à la fin', () async {
+      final media = _Media();
+      final calls = _Calls()
+        ..provider = media
+        ..session = const CallSession(
+          id: 'call1',
+          conversationId: 'c1',
+          kind: CallKind.video,
+          status: CallStatus.ringing,
+          callerName: 'Kodjo',
+          provider: 'livekit',
+        );
+      final vm = CallViewModel(
+        service: calls,
+        session: calls.session,
+        pollEvery: const Duration(hours: 1),
+      );
+      var notified = 0;
+      vm.addListener(() => notified++);
+      await vm.init();
+      expect(vm.simulated, isFalse);
+      await vm.answer(accept: true);
+      expect(media.joins, [('call1', true)]);
+      expect(vm.mediaFailed, isFalse);
+      await vm.toggleMicrophone();
+      expect(vm.microphoneOn, isFalse);
+      await vm.toggleSpeaker();
+      expect(vm.speakerOn, isTrue);
+      expect(notified, greaterThan(2));
+      await vm.hangUp();
+      expect(media.left, isTrue);
+      vm.dispose();
+    });
+
+    test('appel réel : média injoignable signalé, appel gardé', () async {
+      final calls = _Calls()
+        ..provider = _Media(fail: true)
+        ..session = const CallSession(
+          id: 'call1',
+          conversationId: 'c1',
+          kind: CallKind.audio,
+          status: CallStatus.ringing,
+          callerName: 'Kodjo',
+          provider: 'livekit',
+        );
+      final vm = CallViewModel(
+        service: calls,
+        session: calls.session,
+        pollEvery: const Duration(hours: 1),
+      );
+      await vm.init();
+      await vm.answer(accept: true);
+      expect(vm.mediaFailed, isTrue);
+      expect(vm.call!.status, CallStatus.ongoing);
       vm.dispose();
     });
 

@@ -35,6 +35,10 @@ export default defineConfig({
         MEDIA_PUBLIC_URL: process.env.MEDIA_PUBLIC_URL ?? "",
         // Suivi des erreurs (Sentry, projet « dym-functions ») ; vide : rien n'est envoyé.
         ERROR_REPORTING_DSN: process.env.ERROR_REPORTING_DSN ?? "",
+        // Appels réels du chat (LiveKit, spec 084) ; vides : appels simulés seulement.
+        LIVEKIT_URL: process.env.LIVEKIT_URL ?? "",
+        LIVEKIT_API_KEY: process.env.LIVEKIT_API_KEY ?? "",
+        LIVEKIT_API_SECRET: process.env.LIVEKIT_API_SECRET ?? "",
       },
     },
   },

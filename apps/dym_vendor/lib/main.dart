@@ -218,7 +218,9 @@ Future<void> configureServices(DymEnvironment environment) async {
             dymNetworkImage(environment.media(key).toString()),
         recorder: PluginVoiceRecorder(),
         playback: PluginAudioPlayback(),
-        calls: NeonCallService(repository: CallRepository(neon.data)),
+        calls: _callService(
+          CallRepository(neon.data, functions: neon.functions),
+        ),
         liveFeed: live,
       ),
     )
@@ -271,5 +273,14 @@ PushChannels _pushChannels() {
     messages: t.pushChannelMessages,
     missions: t.pushChannelMissions,
     general: t.pushChannelGeneral,
+  );
+}
+
+/// Appels du chat : états en base, média LiveKit quand la base le choisit
+/// (spec 084), jeton émis par la Function.
+CallService _callService(CallRepository calls) {
+  return NeonCallService(
+    repository: calls,
+    livekit: LiveKitCallProvider(credentials: calls.mediaCredentials),
   );
 }

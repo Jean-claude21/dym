@@ -2069,5 +2069,10 @@
   "importDoneHint": "Add photos, then publish from the catalogue.",
   "importBackToCatalog": "See the catalogue",
   "brandMadeByPrefix": "Made by",
-  "brandMakerName": "Kete"
+  "brandMakerName": "Kete",
+  "callMicrophoneOn": "Mic on",
+  "callMicrophoneOff": "Mic off",
+  "callSpeakerOn": "Speaker",
+  "callSpeakerOff": "Earpiece",
+  "callMediaFailed": "No audio: check your connection, then call again."
 }

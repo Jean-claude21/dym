@@ -4,9 +4,11 @@ import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 
 /// Appels d'une conversation (spec 035) : états en base, média par le
-/// fournisseur (simulé tant que le vrai n'est pas branché).
+/// fournisseur choisi par la base pour chaque appel (spec 084 : LiveKit, ou
+/// simulé).
 abstract interface class CallService {
-  CallProvider get provider;
+  /// Fournisseur d'un appel (`CallSession.provider`).
+  CallProvider providerFor(CallSession call);
 
   Future<Result<CallSession>> start(String conversationId, CallKind kind);
 
@@ -20,15 +22,18 @@ abstract interface class CallService {
 }
 
 class NeonCallService implements CallService {
-  new({
-    required this._repository,
-    this.provider = const SimulatedCallProvider(),
-  });
+  new({required this._repository, CallProvider? simulated, this._livekit})
+    : _simulated = simulated ?? SimulatedCallProvider();
 
   final CallRepository _repository;
+  final CallProvider _simulated;
+  final CallProvider? _livekit;
 
   @override
-  final CallProvider provider;
+  CallProvider providerFor(CallSession call) => switch (call.provider) {
+    'livekit' => _livekit ?? _simulated,
+    _ => _simulated,
+  };
 
   @override
   Future<Result<CallSession>> start(String conversationId, CallKind kind) =>
