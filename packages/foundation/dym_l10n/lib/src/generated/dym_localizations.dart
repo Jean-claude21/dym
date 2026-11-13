@@ -11670,6 +11670,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Résultats proches de « {query} »'**
   String searchFuzzy(String query);
+
+  /// Notification : rappel de panier
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier t\'attend'**
+  String get notifCartReminderTitle;
+
+  /// Notification : rappel de panier
+  ///
+  /// In fr, this message translates to:
+  /// **'{summary} : finalise ta commande en un geste.'**
+  String notifCartReminderBody(String summary);
 }
 
 class _DymLocalizationsDelegate

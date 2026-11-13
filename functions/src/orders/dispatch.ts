@@ -6,7 +6,7 @@ import { fromPgError } from "../lib/db.js";
 
 /** Refus automatiques et relances de livreurs d'un passage (spec 066). */
 export interface DispatchWatch {
-  run(at: string): Promise<{ refused: number; relaunched: number }>;
+  run(at: string): Promise<{ refused: number; relaunched: number; cartReminders?: number }>;
 }
 
 export function pgDispatchWatch(pool: pg.Pool): DispatchWatch {
@@ -16,7 +16,12 @@ export function pgDispatchWatch(pool: pg.Pool): DispatchWatch {
         const result = await pool.query("select app.run_dispatch_watch($1::timestamptz) as value", [at]);
         // Ménage des événements en direct de plus de 24 h (spec 067).
         await pool.query("select app.prune_live_events($1::timestamptz)", [at]);
-        return result.rows[0].value as { refused: number; relaunched: number };
+        // Rappels « Ton panier t'attend » (spec 080) ; envoyés par le push qui suit.
+        const carts = await pool.query("select app.remind_carts($1::timestamptz) as value", [at]);
+        return {
+          ...(result.rows[0].value as { refused: number; relaunched: number }),
+          cartReminders: carts.rows[0].value as number,
+        };
       } catch (error) {
         throw fromPgError(error);
       }

@@ -754,6 +754,7 @@ class StackedAppNavigator implements AppNavigator {
       service: _orders,
       onBack: _back,
       onOpenOrder: toOrder,
+      onOpenCart: toCart,
       onOpenConversation: toChat,
       onOpenShoppingList: (id) => unawaited(toShoppingList(id)),
       onOpenSpace: (id) => unawaited(toSpace(id)),

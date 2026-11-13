@@ -6993,4 +6993,12 @@ class DymLocalizationsEn extends DymLocalizations {
   String searchFuzzy(String query) {
     return 'Results close to “$query”';
   }
+
+  @override
+  String get notifCartReminderTitle => 'Your cart is waiting';
+
+  @override
+  String notifCartReminderBody(String summary) {
+    return '$summary: finish your order in one tap.';
+  }
 }

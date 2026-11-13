@@ -7940,5 +7940,18 @@
         "type": "String"
       }
     }
+  },
+  "notifCartReminderTitle": "Ton panier t'attend",
+  "@notifCartReminderTitle": {
+    "description": "Notification : rappel de panier"
+  },
+  "notifCartReminderBody": "{summary} : finalise ta commande en un geste.",
+  "@notifCartReminderBody": {
+    "description": "Notification : rappel de panier",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -31,6 +31,8 @@ export default defineConfig({
         PAYMENTS_SIMULATOR_SECRET: process.env.PAYMENTS_SIMULATOR_SECRET ?? "",
         // Compte de service Firebase (JSON) pour les push FCM (spec 011).
         FCM_SERVICE_ACCOUNT: process.env.FCM_SERVICE_ACCOUNT ?? "",
+        // Adresse publique des photos du catalogue (grande photo des push, spec 080).
+        MEDIA_PUBLIC_URL: process.env.MEDIA_PUBLIC_URL ?? "",
       },
     },
   },

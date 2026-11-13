@@ -12,6 +12,8 @@ export interface PushMessage {
   channel?: string;
   /** Regroupement : une nouvelle notification du même sujet remplace l'ancienne. */
   tag?: string;
+  /** Grande photo (produit principal de la commande), URL publique. */
+  image?: string;
 }
 
 /** Courses du livreur : canal à part, pour un son et une importance dédiés. */
@@ -53,6 +55,8 @@ export interface ClaimedPush {
   category: string;
   order_id: string | null;
   purchase_id: string | null;
+  /** Photo du produit principal d'une commande (clé du catalogue public). */
+  image_key?: string | null;
   /** Paramètres du modèle (`conversation_id` pour un message). */
   params?: Record<string, unknown> | null;
   allowed: boolean;
@@ -131,7 +135,11 @@ export function fcmPushSender(
             body: JSON.stringify({
               message: {
                 token: device,
-                notification: { title: message.title, body: message.body },
+                notification: {
+                  title: message.title,
+                  body: message.body,
+                  ...(message.image ? { image: message.image } : {}),
+                },
                 data: message.data,
                 android: {
                   priority: "high",
@@ -179,7 +187,12 @@ export function pgPushQueue(pool: pg.Pool): PushQueue {
  * Envoie les push en attente : jamais deux fois (réservés en base), seulement
  * aux téléphones enregistrés et pour les catégories autorisées.
  */
-export async function dispatchPushes(queue: PushQueue, sender: PushSender, limit = 50) {
+export async function dispatchPushes(
+  queue: PushQueue,
+  sender: PushSender,
+  limit = 50,
+  mediaBase?: string,
+) {
   const claimed = await queue.claim(limit);
   const skipped: string[] = [];
   const sent: string[] = [];
@@ -198,6 +211,9 @@ export async function dispatchPushes(queue: PushQueue, sender: PushSender, limit
         title: push.text.title,
         body: push.text.body,
         channel: pushChannel(push.kind, push.category),
+        ...(mediaBase && push.image_key
+          ? { image: `${mediaBase.replace(/\/$/, "")}/${push.image_key}` }
+          : {}),
         ...(conversation ?? push.order_id ? { tag: (conversation ?? push.order_id) as string } : {}),
         data: {
           kind: push.kind,

@@ -1020,6 +1020,7 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
     this.onOpenConversation,
     this.onOpenShoppingList,
     this.onOpenSpace,
+    this.onOpenCart,
     super.key,
     this.clock = DateTime.now,
   });
@@ -1027,6 +1028,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
   final OrdersService service;
   final VoidCallback onBack;
   final ValueChanged<String> onOpenOrder;
+
+  /// Rappel de panier (spec 080) : ouvrir le panier.
+  final VoidCallback? onOpenCart;
 
   /// Notification de message : ouvrir la conversation (spec 015).
   final ValueChanged<String>? onOpenConversation;
@@ -1115,7 +1119,9 @@ class NotificationsView extends StackedView<NotificationsViewModel> {
                                 ago: timeAgo(l10n, n.createdAt, now),
                                 onTap: () async {
                                   await vm.open(n);
-                                  if (n.orderId case final id?) {
+                                  if (n.kind == 'cart_reminder') {
+                                    onOpenCart?.call();
+                                  } else if (n.orderId case final id?) {
                                     onOpenOrder(id);
                                   } else if (n.param('conversation_id')
                                       case final conv?) {

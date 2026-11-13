@@ -2048,5 +2048,7 @@
   "vendorPublishStatus": "Post a status",
   "missionCall": "Call",
   "missionRoute": "Directions",
-  "searchFuzzy": "Results close to “{query}”"
+  "searchFuzzy": "Results close to “{query}”",
+  "notifCartReminderTitle": "Your cart is waiting",
+  "notifCartReminderBody": "{summary}: finish your order in one tap."
 }

@@ -7041,4 +7041,12 @@ class DymLocalizationsFr extends DymLocalizations {
   String searchFuzzy(String query) {
     return 'Résultats proches de « $query »';
   }
+
+  @override
+  String get notifCartReminderTitle => 'Ton panier t\'attend';
+
+  @override
+  String notifCartReminderBody(String summary) {
+    return '$summary : finalise ta commande en un geste.';
+  }
 }
