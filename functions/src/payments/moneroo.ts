@@ -37,8 +37,7 @@ const outcomeOf = (status: unknown): PaymentOutcome | null =>
  * webhook signé (HMAC-SHA256 du corps brut). L'avis du webhook est incomplet :
  * le statut, le montant et la référence DYM sont relus chez Moneroo
  * (`/payments/:id/verify`) avant d'être appliqués. Bac à sable ou réel selon
- * la clé ; aucune donnée personnelle n'est envoyée (Moneroo la demande sur sa
- * page si besoin).
+ * la clé. Seuls l'email et le prénom de la cliente sont transmis (exigés).
  */
 export function monerooProvider(config: MonerooConfig): PaymentProvider & {
   resolveEvent(rawBody: string): Promise<NormalizedEvent | null>;
@@ -54,7 +53,9 @@ export function monerooProvider(config: MonerooConfig): PaymentProvider & {
 
   return {
     code: MONEROO,
+    needsCustomer: true,
     async initiate(input) {
+      if (!input.customer?.email || !input.customer.firstName) throw new Error("cliente absente pour Moneroo");
       const res = await send(`${api}/v1/payments/initialize`, {
         method: "POST",
         headers,
@@ -64,6 +65,12 @@ export function monerooProvider(config: MonerooConfig): PaymentProvider & {
           description: `DYM ${input.reference}`,
           return_url: `${input.selfOrigin}/v1/payments/return/${input.paymentId}`,
           metadata: { payment_id: input.paymentId, reference: input.reference },
+          // Exigé par Moneroo ; DYM ne demande pas de nom de famille.
+          customer: {
+            email: input.customer.email,
+            first_name: input.customer.firstName,
+            last_name: input.customer.firstName,
+          },
         }),
       });
       const body = (await res.json().catch(() => ({}))) as {
