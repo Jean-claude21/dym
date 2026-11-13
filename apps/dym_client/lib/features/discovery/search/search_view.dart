@@ -183,9 +183,16 @@ class SearchView extends StackedView<SearchViewModel> {
                   child: Semantics(
                     liveRegion: true,
                     child: Text(
-                      '${l10n.searchResultCount(results.total)} · '
-                      '${_sortLabel(l10n, vm.filters.sort)}',
-                      style: t.label.copyWith(color: c.textSecondary),
+                      [
+                        // Trouvé malgré une faute : on le dit (spec 079).
+                        if (results.fuzzy) l10n.searchFuzzy(vm.text.trim()),
+                        l10n.searchResultCount(results.total),
+                        _sortLabel(l10n, vm.filters.sort),
+                      ].join(' · '),
+                      style: t.label.copyWith(
+                        color: results.fuzzy ? c.brandDeep : c.textSecondary,
+                        fontWeight: results.fuzzy ? FontWeight.w600 : null,
+                      ),
                     ),
                   ),
                 ),

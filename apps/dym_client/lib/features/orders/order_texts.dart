@@ -112,6 +112,10 @@ String timeAgo(DymLocalizations l10n, DateTime at, DateTime now) {
       l10n.notifShoppingDueTitle,
       l10n.notifShoppingDueBody(n.param('list_name') ?? ''),
     ),
+    'cart_reminder' => (
+      l10n.notifCartReminderTitle,
+      l10n.notifCartReminderBody(n.param('items_summary') ?? ''),
+    ),
     _ => (l10n.notificationsTitle, ''),
   };
 }
@@ -132,5 +136,6 @@ IconData notificationIcon(String kind) => switch (kind) {
   'shopping_list_due' => Icons.checklist_rounded,
   'space_validated' => Icons.groups_rounded,
   'substitution_proposed' => Icons.swap_horiz_rounded,
+  'cart_reminder' => Icons.shopping_basket_rounded,
   _ => Icons.notifications_rounded,
 };

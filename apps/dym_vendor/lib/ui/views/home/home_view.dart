@@ -197,6 +197,7 @@ class _HomeViewState extends State<HomeView> {
           service: _catalog,
           onEdit: (product) => _navigator.toProductEditor(product: product),
           onCategories: _navigator.toStoreCategories,
+          onImport: _navigator.toImportProducts,
         ),
         HomeTab.store => MyStoreView(
           service: _stores,

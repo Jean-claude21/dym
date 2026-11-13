@@ -58,6 +58,26 @@ class _HomeViewState extends State<HomeView> {
     }
   }
 
+  /// Composeur du téléphone.
+  void _call(String phone) => unawaited(
+    const PluginExternalPageOpener().open(
+      Uri(scheme: 'tel', path: phone.replaceAll(' ', '')),
+    ),
+  );
+
+  /// App de cartes du téléphone (`geo:`), sinon une page de carte.
+  Future<void> _route(double latitude, double longitude) async {
+    const opener = PluginExternalPageOpener();
+    final geo = Uri.parse('geo:$latitude,$longitude?q=$latitude,$longitude');
+    if ((await opener.open(geo)).valueOrNull ?? false) return;
+    await opener.open(
+      Uri.https('www.openstreetmap.org', '/', {
+        'mlat': '$latitude',
+        'mlon': '$longitude',
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_onboarding) {
@@ -87,7 +107,12 @@ class _HomeViewState extends State<HomeView> {
         HomeTab.missions => MissionsView(
           service: _missions,
           onAccepted: () => setState(() => _runs++),
-          active: MyRunsView(key: ValueKey(_runs), service: _missions),
+          active: MyRunsView(
+            key: ValueKey(_runs),
+            service: _missions,
+            onCall: _call,
+            onRoute: _route,
+          ),
         ),
         HomeTab.runs => MyRunsView(service: _missions, history: true),
         HomeTab.earnings => EarningsView(service: _missions),

@@ -197,6 +197,7 @@ SearchResults _$SearchResultsFromJson(Map<String, dynamic> json) =>
                   .toList() ??
               const [],
         ),
+        fuzzy: $checkedConvert('fuzzy', (v) => v as bool? ?? false),
       );
       return val;
     });

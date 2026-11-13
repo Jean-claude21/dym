@@ -40,6 +40,29 @@ class CatalogRepository {
     },
   });
 
+  /// Import en masse (spec 081) : aperçu ([dry]) ou création en brouillon.
+  Future<Result<ImportReport>> importProducts(
+    List<ImportRow> rows, {
+    required bool dry,
+  }) async {
+    final result = await _data.rpc<Object?>(
+      'import_products',
+      params: {
+        'p_rows': [for (final r in rows) r.toJson()],
+        'p_dry': dry,
+      },
+    );
+    switch (result) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        if (value is! Map<String, dynamic>) {
+          return const Err(ServerFailure('rapport illisible'));
+        }
+        return Ok(ImportReport.fromJson(value));
+    }
+  }
+
   /// Publie (refusé si incomplet : `ValidationFailure`).
   Future<Result<Product>> publish(String id) =>
       _product('publish_product', {'p_id': id});

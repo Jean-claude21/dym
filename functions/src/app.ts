@@ -74,7 +74,7 @@ export interface AppDeps {
   /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
   reportError?: ErrorReporter;
   /** Push : file en base et fournisseur (spec 011). */
-  push?: { queue: PushQueue; sender: PushSender };
+  push?: { queue: PushQueue; sender: PushSender; mediaBase?: string };
 }
 
 /** App HTTP des Functions DYM. Les dépendances sont injectées (tests). */
@@ -94,7 +94,7 @@ export function createApp(deps: AppDeps) {
   app.use("/v1/*", async (c, next) => {
     await next();
     if (deps.push && c.req.method === "POST" && c.res.status < 400) {
-      await dispatchPushes(deps.push.queue, deps.push.sender).catch((error) =>
+      await dispatchPushes(deps.push.queue, deps.push.sender, 50, deps.push.mediaBase).catch((error) =>
         console.error("[push] file en échec", error),
       );
     }

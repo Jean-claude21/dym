@@ -6982,4 +6982,110 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get vendorPublishStatus => 'Post a status';
+
+  @override
+  String get missionCall => 'Call';
+
+  @override
+  String get missionRoute => 'Directions';
+
+  @override
+  String searchFuzzy(String query) {
+    return 'Results close to “$query”';
+  }
+
+  @override
+  String get notifCartReminderTitle => 'Your cart is waiting';
+
+  @override
+  String notifCartReminderBody(String summary) {
+    return '$summary: finish your order in one tap.';
+  }
+
+  @override
+  String get importTitle => 'Import products';
+
+  @override
+  String get importAction => 'Import';
+
+  @override
+  String get importHelp =>
+      'Paste your rows from a spreadsheet: one row per product, in the order name, price, unit, aisle, stock. Products arrive as drafts: add photos, then publish.';
+
+  @override
+  String get importExample =>
+      'Tomatoes ; 500 ; heap ; Vegetables ; 40\nRed oil ; 1200 ; ; Oils and condiments ;';
+
+  @override
+  String get importPasteLabel => 'Your rows';
+
+  @override
+  String get importCheck => 'Check';
+
+  @override
+  String importSummary(int count, int errors) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count rows ready',
+      one: '1 row ready',
+      zero: 'No row ready',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      errors,
+      locale: localeName,
+      other: '$errors errors',
+      one: '1 error',
+      zero: 'no error',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String importLineError(int line, String reason) {
+    return 'Row $line: $reason';
+  }
+
+  @override
+  String get importNameInvalid => 'name missing or too long';
+
+  @override
+  String get importPriceInvalid => 'unreadable price';
+
+  @override
+  String get importCategoryUnknown => 'unknown aisle';
+
+  @override
+  String get importUnitUnknown => 'unknown unit';
+
+  @override
+  String get importStockInvalid => 'unreadable stock';
+
+  @override
+  String importRun(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Import $count products',
+      one: 'Import 1 product',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String importDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count drafts created',
+      one: '1 draft created',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get importDoneHint => 'Add photos, then publish from the catalogue.';
+
+  @override
+  String get importBackToCatalog => 'See the catalogue';
 }

@@ -122,6 +122,8 @@ export default createApp({
   push: {
     queue: pgPushQueue(pool),
     sender: process.env.FCM_SERVICE_ACCOUNT ? fcmPushSender(process.env.FCM_SERVICE_ACCOUNT) : noPushSender,
+    // Photos publiques du catalogue (spec 080) : grande photo dans le push.
+    ...(process.env.MEDIA_PUBLIC_URL ? { mediaBase: process.env.MEDIA_PUBLIC_URL } : {}),
   },
   payments: {
     store: pgPaymentStore(pool),

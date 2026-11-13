@@ -134,6 +134,18 @@ describe("transitions", () => {
     expect(sent[0]).toMatchObject({ channel: "dym_messages", tag: "c-1" });
   });
 
+  it("grande photo : URL publique du produit principal", async () => {
+    const queue = new FakeQueue([push("n10", { image_key: "stores/s/products/p.jpg" })]);
+    const sent: PushMessage[] = [];
+    const sender: PushSender = { enabled: true, async send(m) { sent.push(m); return { sent: 1, invalidTokens: [] }; } };
+    await dispatchPushes(queue, sender, 50, "https://media.test/product-photos/");
+    expect(sent[0]?.image).toBe("https://media.test/product-photos/stores/s/products/p.jpg");
+    const none = new FakeQueue([push("n11", { image_key: "stores/s/products/p.jpg" })]);
+    const sent2: PushMessage[] = [];
+    await dispatchPushes(none, { enabled: true, async send(m) { sent2.push(m); return { sent: 1, invalidTokens: [] }; } });
+    expect(sent2[0]?.image).toBeUndefined();
+  });
+
   it("canaux : commandes, messages, courses, le reste", () => {
     expect(pushChannel("new_order", "orders")).toBe("dym_orders");
     expect(pushChannel("payment_succeeded", "payments")).toBe("dym_orders");

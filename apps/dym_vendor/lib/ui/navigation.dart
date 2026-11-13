@@ -13,6 +13,7 @@ import 'package:dym_vendor/features/broadcast/broadcast_view.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/categories/store_categories_view.dart';
 import 'package:dym_vendor/features/catalog/editor/product_editor_view.dart';
+import 'package:dym_vendor/features/catalog/import/import_products_view.dart';
 import 'package:dym_vendor/features/content/contents_views.dart';
 import 'package:dym_vendor/features/credit/credit_service.dart';
 import 'package:dym_vendor/features/credit/credit_views.dart';
@@ -61,6 +62,9 @@ abstract interface class AppNavigator {
 
   /// « Mes catégories » ; se termine au retour.
   Future<void> toStoreCategories();
+
+  /// Import en masse du catalogue (spec 081).
+  Future<void> toImportProducts();
 
   /// Détail d'une commande (écran 42).
   void toOrder(String orderId);
@@ -428,6 +432,14 @@ class StackedAppNavigator implements AppNavigator {
         onDone: (_) => _navigator.pop(),
         onCancel: () => _navigator.pop(),
       ),
+    ),
+  );
+
+  @override
+  Future<void> toImportProducts() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) =>
+          ImportProductsView(service: _catalog, onBack: () => _navigator.pop()),
     ),
   );
 

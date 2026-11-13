@@ -85,6 +85,8 @@ Future<void> configureServices(DymEnvironment environment) async {
           final conversation = data['conversation_id'];
           if (conversation != null) {
             nav.toChat(conversation);
+          } else if (data['kind'] == 'cart_reminder') {
+            nav.toCart();
           } else if (order != null) {
             nav.toOrder(order);
           } else {

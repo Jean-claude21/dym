@@ -7923,5 +7923,129 @@
   "vendorPublishStatus": "Publier un statut",
   "@vendorPublishStatus": {
     "description": "Accueil vendeuse : raccourci de publication"
+  },
+  "missionCall": "Appeler",
+  "@missionCall": {
+    "description": "Livreur : appeler la boutique ou la cliente"
+  },
+  "missionRoute": "Itinéraire",
+  "@missionRoute": {
+    "description": "Livreur : ouvrir l'itinéraire dans l'app de cartes"
+  },
+  "searchFuzzy": "Résultats proches de « {query} »",
+  "@searchFuzzy": {
+    "description": "Recherche : résultats trouvés malgré une faute",
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "notifCartReminderTitle": "Ton panier t'attend",
+  "@notifCartReminderTitle": {
+    "description": "Notification : rappel de panier"
+  },
+  "notifCartReminderBody": "{summary} : finalise ta commande en un geste.",
+  "@notifCartReminderBody": {
+    "description": "Notification : rappel de panier",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "importTitle": "Importer des produits",
+  "@importTitle": {
+    "description": "Import en masse : titre"
+  },
+  "importAction": "Importer",
+  "@importAction": {
+    "description": "Catalogue : ouvrir l'import en masse"
+  },
+  "importHelp": "Colle tes lignes depuis un tableur : une ligne par produit, dans l'ordre nom, prix, unité, rayon, stock. Les produits arrivent en brouillon : ajoute les photos, puis publie.",
+  "@importHelp": {
+    "description": "Import en masse : explication"
+  },
+  "importExample": "Tomates ; 500 ; tas ; Légumes ; 40\nHuile rouge ; 1 200 ; ; Huiles et condiments ;",
+  "@importExample": {
+    "description": "Import en masse : exemple"
+  },
+  "importPasteLabel": "Tes lignes",
+  "@importPasteLabel": {
+    "description": "Import en masse : champ"
+  },
+  "importCheck": "Vérifier",
+  "@importCheck": {
+    "description": "Import en masse : aperçu"
+  },
+  "importSummary": "{count, plural, =0{Aucune ligne prête} =1{1 ligne prête} other{{count} lignes prêtes}} · {errors, plural, =0{aucune erreur} =1{1 erreur} other{{errors} erreurs}}",
+  "@importSummary": {
+    "description": "Import en masse : résumé",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "errors": {
+        "type": "int"
+      }
+    }
+  },
+  "importLineError": "Ligne {line} : {reason}",
+  "@importLineError": {
+    "description": "Import en masse : erreur d'une ligne",
+    "placeholders": {
+      "line": {
+        "type": "int"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "importNameInvalid": "nom manquant ou trop long",
+  "@importNameInvalid": {
+    "description": "Import : raison"
+  },
+  "importPriceInvalid": "prix illisible",
+  "@importPriceInvalid": {
+    "description": "Import : raison"
+  },
+  "importCategoryUnknown": "rayon inconnu",
+  "@importCategoryUnknown": {
+    "description": "Import : raison"
+  },
+  "importUnitUnknown": "unité inconnue",
+  "@importUnitUnknown": {
+    "description": "Import : raison"
+  },
+  "importStockInvalid": "stock illisible",
+  "@importStockInvalid": {
+    "description": "Import : raison"
+  },
+  "importRun": "{count, plural, =1{Importer 1 produit} other{Importer {count} produits}}",
+  "@importRun": {
+    "description": "Import en masse : bouton",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importDone": "{count, plural, =1{1 brouillon créé} other{{count} brouillons créés}}",
+  "@importDone": {
+    "description": "Import en masse : fin",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importDoneHint": "Ajoute les photos, puis publie depuis le catalogue.",
+  "@importDoneHint": {
+    "description": "Import en masse : suite"
+  },
+  "importBackToCatalog": "Voir le catalogue",
+  "@importBackToCatalog": {
+    "description": "Import en masse : retour"
   }
 }

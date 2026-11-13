@@ -189,6 +189,42 @@ class MemoryCatalogService implements CatalogService {
     return Ok(saved);
   }
 
+  /// Lignes importées (création, spec 081).
+  final imported = <ImportRow>[];
+
+  /// Miroir de `import_products` : nom, prix, rayon connu (par libellé).
+  @override
+  Future<Result<ImportReport>> importProducts(
+    List<ImportRow> rows, {
+    required bool dry,
+  }) async {
+    final errors = <ImportError>[];
+    var valid = 0;
+    final rayons = {
+      for (final c in config.categories) ...[
+        c.slug.toLowerCase(),
+        for (final l in c.label.values.values) l.toLowerCase(),
+      ],
+    };
+    for (final (i, r) in rows.indexed) {
+      final price = r.price.replaceAll(RegExp(r'\s'), '').replaceAll(',', '.');
+      final reason = switch (r) {
+        _ when r.name.trim().length < 2 => 'name_invalid',
+        _ when (double.tryParse(price) ?? 0) <= 0 => 'price_invalid',
+        _ when !rayons.contains(r.category.trim().toLowerCase()) =>
+          'category_unknown',
+        _ => null,
+      };
+      if (reason == null) {
+        valid++;
+        if (!dry) imported.add(r);
+      } else {
+        errors.add(ImportError(line: i + 1, reason: reason));
+      }
+    }
+    return Ok(ImportReport(valid: valid, errors: errors, dry: dry));
+  }
+
   @override
   Future<Result<Product>> publish(String id) async {
     final failed = _fail<Product>('publish');
