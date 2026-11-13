@@ -7180,4 +7180,63 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminMcpNeverUsed => 'Never used';
+
+  @override
+  String get staffTitle => 'Team';
+
+  @override
+  String get staffHelp =>
+      'Invite the people who help you. Each has their own account and only sees their work; money, settings and the team stay with you.';
+
+  @override
+  String get staffRoleLabel => 'Role';
+
+  @override
+  String get staffRoleOwner => 'Owner';
+
+  @override
+  String get staffRoleManager => 'Manager';
+
+  @override
+  String get staffRolePreparer => 'Preparer';
+
+  @override
+  String get staffRoleCashier => 'Cashier';
+
+  @override
+  String get staffRoleManagerHint =>
+      'Orders, catalogue, prices, messages, till and offers.';
+
+  @override
+  String get staffRolePreparerHint => 'Orders and customer messages.';
+
+  @override
+  String get staffRoleCashierHint => 'Till, payments and orders.';
+
+  @override
+  String get staffInvite => 'Invite';
+
+  @override
+  String get staffInvited => 'Invitation sent';
+
+  @override
+  String get staffRemove => 'Remove from team';
+
+  @override
+  String get staffEmpty => 'No one in the team';
+
+  @override
+  String get staffEmptyHint =>
+      'Invite someone by email: they sign in to DYM Vendor with that account.';
+
+  @override
+  String get staffGroupTeam => 'Team';
+
+  @override
+  String get staffSwitchStore => 'Switch shop';
+
+  @override
+  String staffYouAre(String role) {
+    return 'You work here as $role.';
+  }
 }

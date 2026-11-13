@@ -87,6 +87,8 @@ class MemoryStoreService implements StoreService {
     deliveryZoneIds: _zones,
     paymentMethodIds: _methods,
     hours: _hours,
+    staffRole: staffRole,
+    staffPermissions: staffPermissions,
     missing: [
       if (_origin == null) 'origin',
       if (_zoneId == null) 'zone',
@@ -117,6 +119,54 @@ class MemoryStoreService implements StoreService {
 
   @override
   Future<Result<MyStore?>> myStore() async => _run('myStore', () {});
+
+  /// Boutiques accessibles (spec 087) ; la mienne par défaut.
+  List<StoreAccess> stores = const [];
+
+  /// Rôle de la personne connectée (`owner` par défaut).
+  String staffRole = 'owner';
+  List<String> staffPermissions = const [];
+
+  final List<StoreStaffMember> staff = [];
+
+  @override
+  Future<Result<List<StoreAccess>>> myStores() async {
+    calls.add('myStores');
+    return Ok(stores);
+  }
+
+  @override
+  Future<Result<List<StoreAccess>>> setActiveStore(String storeId) async {
+    calls.add('setActiveStore:$storeId');
+    stores = [
+      for (final s in stores)
+        StoreAccess(
+          id: s.id,
+          name: s.name,
+          role: s.role,
+          active: s.id == storeId,
+        ),
+    ];
+    return Ok(stores);
+  }
+
+  @override
+  Future<Result<List<StoreStaffMember>>> myStaff() async => Ok(List.of(staff));
+
+  @override
+  Future<Result<List<StoreStaffMember>>> inviteStaff(
+    String email,
+    String role,
+  ) async {
+    staff.add(StoreStaffMember(email: email, role: role, invited: true));
+    return Ok(List.of(staff));
+  }
+
+  @override
+  Future<Result<List<StoreStaffMember>>> removeStaff(String email) async {
+    staff.removeWhere((m) => m.email == email);
+    return Ok(List.of(staff));
+  }
 
   @override
   Future<Result<MyStore?>> start({

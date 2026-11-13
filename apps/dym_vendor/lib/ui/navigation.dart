@@ -27,6 +27,7 @@ import 'package:dym_vendor/features/reviews/reviews_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
+import 'package:dym_vendor/features/store/staff/staff_view.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
 import 'package:dym_vendor/features/till/end_of_market_view.dart';
 import 'package:dym_vendor/features/till/qr_charge_view.dart';
@@ -86,6 +87,9 @@ abstract interface class AppNavigator {
 
   /// « Mon compte », rangé dans Boutique (design « Épuré »).
   void toAccount();
+
+  /// Équipe de la boutique (spec 087).
+  void toStaff();
 
   /// Ardoise (spec 047).
   void toCredit();
@@ -326,6 +330,16 @@ class StackedAppNavigator implements AppNavigator {
       ),
     );
   }
+
+  @override
+  void toStaff() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (route) => Scaffold(
+        appBar: AppBar(),
+        body: StaffView(service: locator<StoreService>()),
+      ),
+    ),
+  );
 
   @override
   void toAccount() => _navigator.push<void>(

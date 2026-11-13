@@ -6,6 +6,7 @@ import 'package:dym_vendor/features/store/my_store/my_store_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_view.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/opened/store_opened_view.dart';
+import 'package:dym_vendor/features/store/staff/staff_view.dart';
 import 'package:dym_vendor/features/store/testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -295,6 +296,96 @@ void main() {
       await tester.tap(find.byType(Switch));
       await tester.pumpAndSettle();
       expect(stores.calls, isNot(contains('setOpen')));
+    });
+  });
+
+  group('personnel des boutiques (spec 087)', () {
+    testWidgets('préparatrice : rôle affiché, ni réglages ni équipe', (
+      tester,
+    ) async {
+      final stores = memoryStores(initial: openStore())
+        ..staffRole = 'preparer'
+        ..staffPermissions = const ['chat', 'orders'];
+      await _pump(
+        tester,
+        MyStoreView(service: stores, onEdit: (_) async {}, onStaff: () {}),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Tu travailles ici comme Préparatrice.'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Horaires'), findsNothing);
+      expect(find.text('Équipe'), findsNothing);
+    });
+
+    testWidgets('propriétaire : équipe, invitation avec un rôle', (
+      tester,
+    ) async {
+      final stores = memoryStores(initial: openStore());
+      var opened = false;
+      await _pump(
+        tester,
+        MyStoreView(
+          service: stores,
+          onEdit: (_) async {},
+          onStaff: () => opened = true,
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(find.text('Équipe').last, 200);
+      await tester.tap(find.text('Équipe').last);
+      expect(opened, isTrue);
+
+      await _pump(tester, StaffView(service: stores));
+      await tester.pumpAndSettle();
+      expect(find.text("Personne dans l'équipe"), findsOneWidget);
+      await tester.enterText(find.byType(TextField), 'ama@example.com');
+      await tester.tap(find.text('Caissière'));
+      await tester.tap(find.text('Inviter'));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('Caissière · Invitation envoyée'),
+        findsOneWidget,
+      );
+      expect(stores.staff.single.role, 'cashier');
+    });
+
+    testWidgets("succursales : changer de boutique recharge l'app", (
+      tester,
+    ) async {
+      final stores = memoryStores(initial: openStore())
+        ..stores = const [
+          StoreAccess(
+            id: 'store',
+            name: 'Super Frais',
+            role: 'owner',
+            active: true,
+          ),
+          StoreAccess(id: 'b2', name: 'Super Frais Bè', role: 'manager'),
+        ];
+      var switched = false;
+      await _pump(
+        tester,
+        MyStoreView(
+          service: stores,
+          onEdit: (_) async {},
+          onStoreSwitched: () => switched = true,
+        ),
+      );
+      await tester.pumpAndSettle();
+      final row = find.textContaining(
+        'Changer de boutique',
+        findRichText: true,
+      );
+      await tester.ensureVisible(row);
+      await tester.pumpAndSettle();
+      await tester.tap(row);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Super Frais Bè'));
+      await tester.pumpAndSettle();
+      expect(stores.calls, contains('setActiveStore:b2'));
+      expect(switched, isTrue);
     });
   });
 }

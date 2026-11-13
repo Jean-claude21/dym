@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
@@ -99,9 +100,38 @@ class _HomeViewState extends State<HomeView> {
   };
   CountryConfig? _config;
 
+  /// Boutique et rôle (spec 087) ; `null` tant qu'ils ne sont pas lus.
+  MyStore? _store;
+
+  bool _allowed(HomeTab tab) {
+    final store = _store;
+    if (store == null) return true;
+    return switch (tab) {
+      HomeTab.dashboard || HomeTab.orders => store.can('orders'),
+      HomeTab.products => store.can('catalog'),
+      HomeTab.messages => store.can('chat'),
+      HomeTab.store => true,
+    };
+  }
+
+  List<HomeTab> get _tabs => [
+    for (final t in HomeTab.values)
+      if (_allowed(t)) t,
+  ];
+
   @override
   void initState() {
     super.initState();
+    unawaited(
+      _stores.myStore().then((r) {
+        if (r case Ok(value: final store?) when mounted) {
+          setState(() {
+            _store = store;
+            if (!_allowed(_tab)) _tab = _tabs.first;
+          });
+        }
+      }),
+    );
     if (locator.isRegistered<PushNotifications>()) {
       unawaited(locator<PushNotifications>().start());
     }
@@ -160,17 +190,32 @@ class _HomeViewState extends State<HomeView> {
     final name = _service.me?.profile?.firstName;
     final scaffold = DymAdaptiveScaffold(
       backgroundColor: c.background,
-      currentIndex: _tab.index,
-      onDestinationSelected: (i) => _select(HomeTab.values[i]),
+      currentIndex: _tabs.indexOf(_tab).clamp(0, _tabs.length - 1),
+      onDestinationSelected: (i) => _select(_tabs[i]),
       destinations: [
-        DymNavItem(icon: Icons.today_outlined, label: l10n.navToday),
-        DymNavItem(icon: Icons.receipt_long_outlined, label: l10n.navOrders),
-        DymNavItem(icon: Icons.grid_view_outlined, label: l10n.navCatalog),
-        DymNavItem(
-          icon: Icons.chat_bubble_outline_rounded,
-          label: l10n.chatMessagesTitle,
-        ),
-        DymNavItem(icon: Icons.storefront_outlined, label: l10n.navStore),
+        for (final t in _tabs)
+          switch (t) {
+            HomeTab.dashboard => DymNavItem(
+              icon: Icons.today_outlined,
+              label: l10n.navToday,
+            ),
+            HomeTab.orders => DymNavItem(
+              icon: Icons.receipt_long_outlined,
+              label: l10n.navOrders,
+            ),
+            HomeTab.products => DymNavItem(
+              icon: Icons.grid_view_outlined,
+              label: l10n.navCatalog,
+            ),
+            HomeTab.messages => DymNavItem(
+              icon: Icons.chat_bubble_outline_rounded,
+              label: l10n.chatMessagesTitle,
+            ),
+            HomeTab.store => DymNavItem(
+              icon: Icons.storefront_outlined,
+              label: l10n.navStore,
+            ),
+          },
       ],
       body: switch (_tab) {
         HomeTab.dashboard => DashboardView(
@@ -214,6 +259,8 @@ class _HomeViewState extends State<HomeView> {
           onContents: _contents ? _navigator.toContents : null,
           onBroadcast: _broadcast ? _navigator.toBroadcast : null,
           onAccount: _navigator.toAccount,
+          onStaff: _navigator.toStaff,
+          onStoreSwitched: _navigator.toStartup,
         ),
       },
     );

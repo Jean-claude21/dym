@@ -7230,4 +7230,63 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminMcpNeverUsed => 'Jamais utilisée';
+
+  @override
+  String get staffTitle => 'Équipe';
+
+  @override
+  String get staffHelp =>
+      'Invite les personnes qui t\'aident. Chacune a son compte et ne voit que son travail ; l\'argent, les réglages et l\'équipe restent à toi.';
+
+  @override
+  String get staffRoleLabel => 'Rôle';
+
+  @override
+  String get staffRoleOwner => 'Propriétaire';
+
+  @override
+  String get staffRoleManager => 'Gérante';
+
+  @override
+  String get staffRolePreparer => 'Préparatrice';
+
+  @override
+  String get staffRoleCashier => 'Caissière';
+
+  @override
+  String get staffRoleManagerHint =>
+      'Commandes, catalogue, prix, messages, caisse et offres.';
+
+  @override
+  String get staffRolePreparerHint => 'Commandes et messages des clientes.';
+
+  @override
+  String get staffRoleCashierHint => 'Caisse, encaissements et commandes.';
+
+  @override
+  String get staffInvite => 'Inviter';
+
+  @override
+  String get staffInvited => 'Invitation envoyée';
+
+  @override
+  String get staffRemove => 'Retirer de l\'équipe';
+
+  @override
+  String get staffEmpty => 'Personne dans l\'équipe';
+
+  @override
+  String get staffEmptyHint =>
+      'Invite une personne par son email : elle se connecte à DYM Vendeuse avec ce compte.';
+
+  @override
+  String get staffGroupTeam => 'Équipe';
+
+  @override
+  String get staffSwitchStore => 'Changer de boutique';
+
+  @override
+  String staffYouAre(String role) {
+    return 'Tu travailles ici comme $role.';
+  }
 }

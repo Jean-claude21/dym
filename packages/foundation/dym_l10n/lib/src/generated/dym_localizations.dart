@@ -11958,6 +11958,114 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Jamais utilisée'**
   String get adminMcpNeverUsed;
+
+  /// Vendeuse : écran et ligne de l'équipe de la boutique.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe'**
+  String get staffTitle;
+
+  /// Vendeuse, équipe : explication.
+  ///
+  /// In fr, this message translates to:
+  /// **'Invite les personnes qui t\'aident. Chacune a son compte et ne voit que son travail ; l\'argent, les réglages et l\'équipe restent à toi.'**
+  String get staffHelp;
+
+  /// Vendeuse, équipe : choix du rôle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rôle'**
+  String get staffRoleLabel;
+
+  /// Rôle de boutique : propriétaire.
+  ///
+  /// In fr, this message translates to:
+  /// **'Propriétaire'**
+  String get staffRoleOwner;
+
+  /// Rôle de boutique : gère le quotidien.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gérante'**
+  String get staffRoleManager;
+
+  /// Rôle de boutique : prépare les commandes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Préparatrice'**
+  String get staffRolePreparer;
+
+  /// Rôle de boutique : tient la caisse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Caissière'**
+  String get staffRoleCashier;
+
+  /// Rôle gérante : ce qu'il permet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes, catalogue, prix, messages, caisse et offres.'**
+  String get staffRoleManagerHint;
+
+  /// Rôle préparatrice : ce qu'il permet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes et messages des clientes.'**
+  String get staffRolePreparerHint;
+
+  /// Rôle caissière : ce qu'il permet.
+  ///
+  /// In fr, this message translates to:
+  /// **'Caisse, encaissements et commandes.'**
+  String get staffRoleCashierHint;
+
+  /// Vendeuse, équipe : bouton d'invitation.
+  ///
+  /// In fr, this message translates to:
+  /// **'Inviter'**
+  String get staffInvite;
+
+  /// Vendeuse, équipe : compte pas encore créé.
+  ///
+  /// In fr, this message translates to:
+  /// **'Invitation envoyée'**
+  String get staffInvited;
+
+  /// Vendeuse, équipe : retirer une personne.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer de l\'équipe'**
+  String get staffRemove;
+
+  /// Vendeuse, équipe : liste vide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Personne dans l\'équipe'**
+  String get staffEmpty;
+
+  /// Vendeuse, équipe : liste vide, aide.
+  ///
+  /// In fr, this message translates to:
+  /// **'Invite une personne par son email : elle se connecte à DYM Vendeuse avec ce compte.'**
+  String get staffEmptyHint;
+
+  /// Vendeuse, Ma boutique : groupe équipe et succursales.
+  ///
+  /// In fr, this message translates to:
+  /// **'Équipe'**
+  String get staffGroupTeam;
+
+  /// Vendeuse : choisir la boutique active (succursales).
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de boutique'**
+  String get staffSwitchStore;
+
+  /// Vendeuse, Ma boutique : rôle du personnel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu travailles ici comme {role}.'**
+  String staffYouAre(String role);
 }
 
 class _DymLocalizationsDelegate

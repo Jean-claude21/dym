@@ -8168,5 +8168,82 @@
   "adminMcpNeverUsed": "Jamais utilisée",
   "@adminMcpNeverUsed": {
     "description": "Admin, clés MCP : clé jamais utilisée."
+  },
+  "staffTitle": "Équipe",
+  "@staffTitle": {
+    "description": "Vendeuse : écran et ligne de l'équipe de la boutique."
+  },
+  "staffHelp": "Invite les personnes qui t'aident. Chacune a son compte et ne voit que son travail ; l'argent, les réglages et l'équipe restent à toi.",
+  "@staffHelp": {
+    "description": "Vendeuse, équipe : explication."
+  },
+  "staffRoleLabel": "Rôle",
+  "@staffRoleLabel": {
+    "description": "Vendeuse, équipe : choix du rôle."
+  },
+  "staffRoleOwner": "Propriétaire",
+  "@staffRoleOwner": {
+    "description": "Rôle de boutique : propriétaire."
+  },
+  "staffRoleManager": "Gérante",
+  "@staffRoleManager": {
+    "description": "Rôle de boutique : gère le quotidien."
+  },
+  "staffRolePreparer": "Préparatrice",
+  "@staffRolePreparer": {
+    "description": "Rôle de boutique : prépare les commandes."
+  },
+  "staffRoleCashier": "Caissière",
+  "@staffRoleCashier": {
+    "description": "Rôle de boutique : tient la caisse."
+  },
+  "staffRoleManagerHint": "Commandes, catalogue, prix, messages, caisse et offres.",
+  "@staffRoleManagerHint": {
+    "description": "Rôle gérante : ce qu'il permet."
+  },
+  "staffRolePreparerHint": "Commandes et messages des clientes.",
+  "@staffRolePreparerHint": {
+    "description": "Rôle préparatrice : ce qu'il permet."
+  },
+  "staffRoleCashierHint": "Caisse, encaissements et commandes.",
+  "@staffRoleCashierHint": {
+    "description": "Rôle caissière : ce qu'il permet."
+  },
+  "staffInvite": "Inviter",
+  "@staffInvite": {
+    "description": "Vendeuse, équipe : bouton d'invitation."
+  },
+  "staffInvited": "Invitation envoyée",
+  "@staffInvited": {
+    "description": "Vendeuse, équipe : compte pas encore créé."
+  },
+  "staffRemove": "Retirer de l'équipe",
+  "@staffRemove": {
+    "description": "Vendeuse, équipe : retirer une personne."
+  },
+  "staffEmpty": "Personne dans l'équipe",
+  "@staffEmpty": {
+    "description": "Vendeuse, équipe : liste vide."
+  },
+  "staffEmptyHint": "Invite une personne par son email : elle se connecte à DYM Vendeuse avec ce compte.",
+  "@staffEmptyHint": {
+    "description": "Vendeuse, équipe : liste vide, aide."
+  },
+  "staffGroupTeam": "Équipe",
+  "@staffGroupTeam": {
+    "description": "Vendeuse, Ma boutique : groupe équipe et succursales."
+  },
+  "staffSwitchStore": "Changer de boutique",
+  "@staffSwitchStore": {
+    "description": "Vendeuse : choisir la boutique active (succursales)."
+  },
+  "staffYouAre": "Tu travailles ici comme {role}.",
+  "@staffYouAre": {
+    "description": "Vendeuse, Ma boutique : rôle du personnel.",
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -75,6 +75,8 @@ class StartupViewModel extends BaseViewModel {
   }
 
   Future<void> _routeByStore() async {
+    // Invitations du personnel acceptées avant de lire la boutique (spec 087).
+    await _stores.myStores();
     final result = await runBusyFuture(_stores.myStore());
     switch (result) {
       case Ok(

@@ -12,6 +12,47 @@ class StoreRepository {
   /// Ma boutique, ou `null` si elle n'existe pas encore.
   Future<Result<MyStore?>> myStore() => _store('my_store');
 
+  /// Boutiques où je travaille ; accepte les invitations reçues (spec 087).
+  Future<Result<List<StoreAccess>>> myStores() async {
+    final result = await _data.rpc<Object?>('my_stores');
+    return result.map(_accesses);
+  }
+
+  Future<Result<List<StoreAccess>>> setActiveStore(String storeId) async {
+    final result = await _data.rpc<Object?>(
+      'set_active_store',
+      params: {'p_store': storeId},
+    );
+    return result.map(_accesses);
+  }
+
+  Future<Result<List<StoreStaffMember>>> myStaff() async =>
+      (await _data.rpc<Object?>('my_store_staff')).map(_staff);
+
+  Future<Result<List<StoreStaffMember>>> inviteStaff(
+    String email,
+    String role,
+  ) async => (await _data.rpc<Object?>(
+    'invite_store_staff',
+    params: {'p_email': email, 'p_role': role},
+  )).map(_staff);
+
+  Future<Result<List<StoreStaffMember>>> removeStaff(String email) async =>
+      (await _data.rpc<Object?>(
+        'remove_store_staff',
+        params: {'p_email': email},
+      )).map(_staff);
+
+  static List<StoreAccess> _accesses(Object? json) => [
+    for (final s in json! as List)
+      StoreAccess.fromJson((s as Map).cast<String, Object?>()),
+  ];
+
+  static List<StoreStaffMember> _staff(Object? json) => [
+    for (final s in json! as List)
+      StoreStaffMember.fromJson((s as Map).cast<String, Object?>()),
+  ];
+
   /// Étape 1 : crée la boutique en brouillon (ou la renomme).
   Future<Result<MyStore?>> start({required String name, String? description}) =>
       _store('start_store', {'p_name': name, 'p_description': description});
