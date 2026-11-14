@@ -66,6 +66,31 @@ class CartPageView extends StackedView<CartViewModel> {
           ? null
           : l10n.cartSummary(cart.storeCount, cart.itemCount),
       onBack: onBack,
+      trailing: cart.isEmpty || (onSave == null && onSendToSpace == null)
+          ? null
+          : PopupMenuButton<Future<void> Function(BuildContext)>(
+              tooltip: l10n.cartMoreActions,
+              icon: Icon(Icons.more_horiz_rounded, color: c.textPrimary),
+              onSelected: (action) => unawaited(action(context)),
+              itemBuilder: (_) => [
+                if (onSave case final save?)
+                  PopupMenuItem(
+                    value: save,
+                    child: ListTile(
+                      leading: const Icon(Icons.bookmark_add_rounded),
+                      title: Text(l10n.basketSave),
+                    ),
+                  ),
+                if (onSendToSpace case final send?)
+                  PopupMenuItem(
+                    value: send,
+                    child: ListTile(
+                      leading: const Icon(Icons.groups_rounded),
+                      title: Text(l10n.spaceSendToSpace),
+                    ),
+                  ),
+              ],
+            ),
     );
 
     Widget body;
@@ -93,29 +118,6 @@ class CartPageView extends StackedView<CartViewModel> {
             header,
             if (vm.offline && !cart.isEmpty)
               _OfflineBanner(label: l10n.errorOffline),
-            if (!cart.isEmpty && (onSave != null || onSendToSpace != null))
-              DymContentWidth.form(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Wrap(
-                    alignment: WrapAlignment.end,
-                    children: [
-                      if (onSendToSpace case final send?)
-                        TextButton.icon(
-                          onPressed: () => send(context),
-                          icon: const Icon(Icons.groups_rounded),
-                          label: Text(l10n.spaceSendToSpace),
-                        ),
-                      if (onSave case final save?)
-                        TextButton.icon(
-                          onPressed: () => save(context),
-                          icon: const Icon(Icons.bookmark_add_rounded),
-                          label: Text(l10n.basketSave),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
             Expanded(child: body),
           ],
         ),
@@ -151,10 +153,11 @@ class _SlotCard extends StatelessWidget {
       };
     }
 
-    final day =
-        slots.days.where((d) => d.date == vm.slotDay).firstOrNull ??
-        slots.days.first;
     final chosen = vm.slot;
+    final shown = chosen?.date ?? vm.slotDay;
+    final day =
+        slots.days.where((d) => d.date == shown).firstOrNull ??
+        slots.days.first;
     return CartCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,13 +186,14 @@ class _SlotCard extends StatelessWidget {
               for (final d in slots.days)
                 ChoiceChip(
                   label: Text(dayLabel(d.date)),
-                  selected: d.date == day.date && chosen != null,
+                  selected: chosen?.date == d.date,
                   materialTapTargetSize: MaterialTapTargetSize.padded,
                   onSelected: (_) => vm.showDay(d.date),
                 ),
             ],
           ),
-          if (vm.slotDay != null || chosen != null) ...[
+          // Créneaux du jour choisi ; masqués sur « dès que possible ».
+          if (chosen != null || slots.required) ...[
             const SizedBox(height: DymTokenSpace.s2),
             Wrap(
               spacing: DymTokenSpace.s2,

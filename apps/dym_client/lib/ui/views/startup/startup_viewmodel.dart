@@ -24,6 +24,13 @@ class StartupViewModel extends BaseViewModel {
   static const defaultIntro = Duration(seconds: 7);
 
   Duration _introDelay;
+
+  /// Splash joué une seule fois, au lancement : le retour au démarrage après
+  /// la connexion passe directement à la page suivante.
+  static bool _launched = false;
+
+  /// Splash affiché (premier démarrage de l'app seulement).
+  final bool showSplash = !_launched;
   final _intro = Completer<void>();
 
   /// Entrée du splash jouée (appelé par la vue).
@@ -46,7 +53,8 @@ class StartupViewModel extends BaseViewModel {
 
   Future<void> runStartupLogic() async {
     _failure = null;
-    final intro = _introDelay == Duration.zero
+    _launched = true;
+    final intro = _introDelay == Duration.zero || !showSplash
         ? null
         : Future.any([_intro.future, Future<void>.delayed(_introDelay)]);
     _introDelay = Duration.zero;

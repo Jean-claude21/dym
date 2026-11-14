@@ -91,10 +91,30 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Quand ?'), findsOneWidget);
       expect(find.text('Dès que possible'), findsOneWidget);
-      expect(find.text('Demain'), findsOneWidget);
+      // « Dès que possible » : créneaux masqués.
+      expect(find.text('14:00–16:00'), findsNothing);
+      // Le jour choisi retient son premier créneau, puis un autre se choisit.
+      await tester.tap(find.text('Demain'));
+      await tester.pumpAndSettle();
+      expect(service.selection.slot?.windowId, 'w1');
+      final asap = tester.widget<ChoiceChip>(
+        find.widgetWithText(ChoiceChip, 'Dès que possible'),
+      );
+      expect(asap.selected, isFalse);
+      expect(
+        tester
+            .widget<ChoiceChip>(find.widgetWithText(ChoiceChip, 'Demain'))
+            .selected,
+        isTrue,
+      );
       await tester.tap(find.text('14:00–16:00'));
-      await tester.pump();
+      await tester.pumpAndSettle();
       expect(service.selection.slot?.windowId, 'w2');
+      // Retour à « dès que possible ».
+      await tester.tap(find.text('Dès que possible'));
+      await tester.pumpAndSettle();
+      expect(service.selection.slot, isNull);
+      expect(find.text('14:00–16:00'), findsNothing);
     });
 
     testWidgets('confirmation : le créneau est rappelé (spec 056)', (

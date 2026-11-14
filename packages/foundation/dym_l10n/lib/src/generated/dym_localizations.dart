@@ -7561,12 +7561,6 @@ abstract class DymLocalizations {
   /// **'Pas encore d\'espace. Crée-en un ou rejoins celui d\'un proche avec son code.'**
   String get spacesEmpty;
 
-  /// Aucun espace (panier)
-  ///
-  /// In fr, this message translates to:
-  /// **'Crée ou rejoins d\'abord un espace dans « Moi ».'**
-  String get spacesEmptyShort;
-
   /// Créer
   ///
   /// In fr, this message translates to:
@@ -10342,7 +10336,7 @@ abstract class DymLocalizations {
   /// No description provided for @groupBuyEmpty.
   ///
   /// In fr, this message translates to:
-  /// **'Aucun achat groupé près de chez toi pour le moment.'**
+  /// **'Pas encore d\'achat groupé près de chez toi. Ce sont les vendeuses qui les lancent depuis leur boutique : reviens bientôt.'**
   String get groupBuyEmpty;
 
   /// No description provided for @groupBuyPrice.
@@ -11785,18 +11779,6 @@ abstract class DymLocalizations {
   /// **'Voir le catalogue'**
   String get importBackToCatalog;
 
-  /// Signature du splash : début de « Réalisé par Kete » (Kete a réalisé l'application).
-  ///
-  /// In fr, this message translates to:
-  /// **'Réalisé par'**
-  String get brandMadeByPrefix;
-
-  /// Nom du réalisateur de l'application, affiché en vert sur le splash.
-  ///
-  /// In fr, this message translates to:
-  /// **'Kete'**
-  String get brandMakerName;
-
   /// Écran d'appel : bascule du micro (ouvert).
   ///
   /// In fr, this message translates to:
@@ -12072,6 +12054,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'prenom@exemple.com'**
   String get authEmailHint;
+
+  /// Bouton « ⋯ » de l'en-tête du panier : enregistrer, envoyer à un espace
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'actions'**
+  String get cartMoreActions;
 }
 
 class _DymLocalizationsDelegate

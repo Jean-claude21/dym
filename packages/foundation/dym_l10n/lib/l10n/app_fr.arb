@@ -5670,10 +5670,6 @@
   "@spacesEmpty": {
     "description": "Aucun espace"
   },
-  "spacesEmptyShort": "Crée ou rejoins d'abord un espace dans « Moi ».",
-  "@spacesEmptyShort": {
-    "description": "Aucun espace (panier)"
-  },
   "spaceCreate": "Créer un espace",
   "@spaceCreate": {
     "description": "Créer"
@@ -7134,7 +7130,7 @@
   "accountGroupBuys": "Achats groupés",
   "groupBuyTitle": "Achats groupés entre voisins",
   "groupBuyHint": "Rejoins tes voisins chez une vendeuse : quand le groupe est complet, chacun paie le prix de groupe et la livraison est partagée.",
-  "groupBuyEmpty": "Aucun achat groupé près de chez toi pour le moment.",
+  "groupBuyEmpty": "Pas encore d'achat groupé près de chez toi. Ce sont les vendeuses qui les lancent depuis leur boutique : reviens bientôt.",
   "groupBuyPrice": "{group} au lieu de {price}",
   "@groupBuyPrice": {
     "placeholders": {
@@ -8048,14 +8044,6 @@
   "@importBackToCatalog": {
     "description": "Import en masse : retour"
   },
-  "brandMadeByPrefix": "Réalisé par",
-  "@brandMadeByPrefix": {
-    "description": "Signature du splash : début de « Réalisé par Kete » (Kete a réalisé l'application)."
-  },
-  "brandMakerName": "Kete",
-  "@brandMakerName": {
-    "description": "Nom du réalisateur de l'application, affiché en vert sur le splash."
-  },
   "callMicrophoneOn": "Micro ouvert",
   "@callMicrophoneOn": {
     "description": "Écran d'appel : bascule du micro (ouvert)."
@@ -8249,5 +8237,9 @@
   "authEmailHint": "prenom@exemple.com",
   "@authEmailHint": {
     "description": "Exemple dans le champ email de la connexion."
+  },
+  "cartMoreActions": "Plus d'actions",
+  "@cartMoreActions": {
+    "description": "Bouton « ⋯ » de l'en-tête du panier : enregistrer, envoyer à un espace"
   }
 }
