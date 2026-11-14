@@ -5,10 +5,7 @@
 name: iOS sur BrowserStack
 
 on:
-  # Premier essai : à chaque envoi sur cette branche (le lancement manuel n'est visible qu'une
-  # fois le workflow sur la branche principale).
-  push:
-    branches: [feat/ios-browserstack]
+  # Lancement à la main (onglet Actions) : les minutes des Mac sont comptées.
   workflow_dispatch:
     inputs:
       app:
