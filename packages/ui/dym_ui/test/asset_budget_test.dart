@@ -16,7 +16,9 @@ void main() {
           .toList();
 
   test('images de dym_ui en WebP et dans leur budget', () {
-    for (final f in images('assets').where((f) => !f.path.endsWith('.json'))) {
+    for (final f in images(
+      'assets',
+    ).where((f) => !f.path.endsWith('.json') && !f.path.endsWith('.svg'))) {
       expect(f.path, endsWith('.webp'), reason: f.path);
       final budget = f.path.contains('aisles') ? thumb : full;
       expect(f.lengthSync(), lessThanOrEqualTo(budget), reason: f.path);

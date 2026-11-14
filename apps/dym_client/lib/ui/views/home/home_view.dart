@@ -117,6 +117,10 @@ class _HomeViewState extends State<HomeView> {
     final result = await orders.reorder(orderId);
     if (!mounted) return;
     switch (result) {
+      // Rien de la commande n'est encore en vente : on le dit, sans ouvrir un
+      // panier vide.
+      case Ok(:final value) when value.added == 0:
+        messenger?.showSnackBar(SnackBar(content: Text(l10n.reorderNothing)));
       case Ok():
         await CartScope.maybeOf(context)?.service.refresh();
         _navigator.toCart();

@@ -1,0 +1,8 @@
+{
+  "projects": { "staging": "do-your-market-79ff7" },
+  "targets": {
+    "do-your-market-79ff7": {
+      "hosting": { "admin": ["dym-admin-stg"], "client": ["do-your-market-79ff7"] }
+    }
+  }
+}

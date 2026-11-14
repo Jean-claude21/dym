@@ -7239,4 +7239,7 @@ class DymLocalizationsEn extends DymLocalizations {
   String staffYouAre(String role) {
     return 'You work here as $role.';
   }
+
+  @override
+  String get authEmailHint => 'name@example.com';
 }
