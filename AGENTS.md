@@ -98,6 +98,12 @@ MCP admin (spec 086) : clé créée dans l'admin (Configuration → MCP, super-a
 Graphiques (Looker Studio, Metabase) : créer un utilisateur de connexion sur la branche (console ou
 `neonctl roles create`), puis `grant analytics_reader to <utilisateur>;` ; il ne lit que `analytics.*`.
 
+Secrets (décision 0021) : Doppler est la référence (`dym-functions`, `dym-apps`, `dym-outils`).
+Régénérer les fichiers locaux, jeton dans `DOPPLER_TOKEN` (jamais affiché) :
+`node scripts/secrets.mjs functions-env stg <fichier .env hors dépôt>` puis le déploiement ci-dessus ;
+`node scripts/secrets.mjs apps prd <dossier des clés hors dépôt>` pour les clés de signature Android,
+`key.properties` et `google-services.json` des trois apps.
+
 Suivi des erreurs (facultatif ; sans valeur, rien n'est envoyé) : `--dart-define=DYM_ERROR_DSN=https://<clé>@<hôte>/<projet>`
 pour les apps (Sentry ou GlitchTip), variable `ERROR_REPORTING_DSN` pour les Functions. Sentry
 (organisation `dym-mq`, région Europe) : un projet par app (`dym-client`, `dym-vendor`,
