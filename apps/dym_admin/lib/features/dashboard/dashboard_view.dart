@@ -533,8 +533,18 @@ class _DeliveryCard extends StatelessWidget {
           label: l10n.adminMetricCouriers,
         ),
         (
-          value: median == null ? '—' : '$median',
-          unit: median == null ? null : 'min',
+          value: switch (median) {
+            null => '—',
+            final m when m < 120 => '$m',
+            final m when m < 2880 => '${(m / 60).round()}',
+            final m => '${(m / 1440).round()}',
+          },
+          unit: switch (median) {
+            null => null,
+            final m when m < 120 => l10n.adminUnitMinutes,
+            final m when m < 2880 => l10n.adminUnitHours,
+            _ => l10n.adminUnitDays,
+          },
           label: l10n.adminMetricAccept,
         ),
       ],

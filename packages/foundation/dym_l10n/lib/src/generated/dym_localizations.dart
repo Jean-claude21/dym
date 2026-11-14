@@ -12342,6 +12342,24 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Type'**
   String get adminColType;
+
+  /// Unité après un nombre de minutes (chiffre clé)
+  ///
+  /// In fr, this message translates to:
+  /// **'min'**
+  String get adminUnitMinutes;
+
+  /// Unité après un nombre d'heures (chiffre clé)
+  ///
+  /// In fr, this message translates to:
+  /// **'h'**
+  String get adminUnitHours;
+
+  /// Unité après un nombre de jours (chiffre clé)
+  ///
+  /// In fr, this message translates to:
+  /// **'j'**
+  String get adminUnitDays;
 }
 
 class _DymLocalizationsDelegate

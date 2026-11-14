@@ -8448,5 +8448,17 @@
   "adminColType": "Type",
   "@adminColType": {
     "description": "En-tête de colonne : type de boutique (marché, fait maison…)"
+  },
+  "adminUnitMinutes": "min",
+  "@adminUnitMinutes": {
+    "description": "Unité après un nombre de minutes (chiffre clé)"
+  },
+  "adminUnitHours": "h",
+  "@adminUnitHours": {
+    "description": "Unité après un nombre d'heures (chiffre clé)"
+  },
+  "adminUnitDays": "j",
+  "@adminUnitDays": {
+    "description": "Unité après un nombre de jours (chiffre clé)"
   }
 }

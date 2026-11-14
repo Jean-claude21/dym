@@ -7385,4 +7385,13 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminColType => 'Type';
+
+  @override
+  String get adminUnitMinutes => 'min';
+
+  @override
+  String get adminUnitHours => 'h';
+
+  @override
+  String get adminUnitDays => 'd';
 }

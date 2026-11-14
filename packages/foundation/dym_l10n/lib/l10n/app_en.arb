@@ -2160,5 +2160,8 @@
   "adminSignInHeroTitle": "The neighbourhood market, at a glance.",
   "adminSignInHeroBody": "Orders, stores, couriers and payments: all of DYM's activity in one place.",
   "adminStoresSubtitle": "{total} stores · {active} active · {drafts} to review",
-  "adminColType": "Type"
+  "adminColType": "Type",
+  "adminUnitMinutes": "min",
+  "adminUnitHours": "h",
+  "adminUnitDays": "d"
 }

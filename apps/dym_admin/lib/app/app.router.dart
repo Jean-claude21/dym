@@ -8,6 +8,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 
 import 'package:dym_admin/features/ops/admin_service.dart' as _i10;
+import 'package:dym_admin/features/ops_center/ops_center_view.dart' as _i11;
 import 'package:dym_admin/ui/navigation.dart' as _i7;
 import 'package:dym_admin/ui/views/home/admin_home_view.dart' as _i4;
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_view.dart' as _i3;
@@ -18,7 +19,7 @@ import 'package:dym_auth/dym_auth.dart' as _i9;
 import 'package:flutter/material.dart' as _i5;
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i11;
+import 'package:stacked_services/stacked_services.dart' as _i12;
 
 class Routes {
   static const startupView = '/';
@@ -72,6 +73,7 @@ class StackedRouter extends _i1.RouterBase {
           key: args.key,
           service: args.service,
           admin: args.admin,
+          ops: args.ops,
           navigator: args.navigator,
           inactivity: args.inactivity,
           initialTab: args.initialTab,
@@ -150,9 +152,10 @@ class AdminHomeViewArguments {
     this.key,
     this.service,
     this.admin,
+    this.ops,
     this.navigator,
     this.inactivity,
-    this.initialTab = _i4.AdminTab.orders,
+    this.initialTab = _i4.AdminTab.dashboard,
     this.clock = DateTime.now,
   });
 
@@ -161,6 +164,8 @@ class AdminHomeViewArguments {
   final _i9.AuthService? service;
 
   final _i10.AdminService? admin;
+
+  final _i11.OpsCenterService? ops;
 
   final _i7.AdminNavigator? navigator;
 
@@ -172,7 +177,7 @@ class AdminHomeViewArguments {
 
   @override
   String toString() {
-    return '{"key": "$key", "service": "$service", "admin": "$admin", "navigator": "$navigator", "inactivity": "$inactivity", "initialTab": "$initialTab", "clock": "$clock"}';
+    return '{"key": "$key", "service": "$service", "admin": "$admin", "ops": "$ops", "navigator": "$navigator", "inactivity": "$inactivity", "initialTab": "$initialTab", "clock": "$clock"}';
   }
 
   @override
@@ -181,6 +186,7 @@ class AdminHomeViewArguments {
     return other.key == key &&
         other.service == service &&
         other.admin == admin &&
+        other.ops == ops &&
         other.navigator == navigator &&
         other.inactivity == inactivity &&
         other.initialTab == initialTab &&
@@ -192,6 +198,7 @@ class AdminHomeViewArguments {
     return key.hashCode ^
         service.hashCode ^
         admin.hashCode ^
+        ops.hashCode ^
         navigator.hashCode ^
         inactivity.hashCode ^
         initialTab.hashCode ^
@@ -199,7 +206,7 @@ class AdminHomeViewArguments {
   }
 }
 
-extension NavigatorStateExtension on _i11.NavigationService {
+extension NavigatorStateExtension on _i12.NavigationService {
   Future<dynamic> navigateToStartupView({
     _i5.Key? key,
     _i6.StartupViewModel Function()? viewModelFactory,
@@ -250,9 +257,10 @@ extension NavigatorStateExtension on _i11.NavigationService {
     _i5.Key? key,
     _i9.AuthService? service,
     _i10.AdminService? admin,
+    _i11.OpsCenterService? ops,
     _i7.AdminNavigator? navigator,
     Duration? inactivity,
-    _i4.AdminTab initialTab = _i4.AdminTab.orders,
+    _i4.AdminTab initialTab = _i4.AdminTab.dashboard,
     DateTime Function() clock = DateTime.now,
     int? routerId,
     bool preventDuplicates = true,
@@ -266,6 +274,7 @@ extension NavigatorStateExtension on _i11.NavigationService {
         key: key,
         service: service,
         admin: admin,
+        ops: ops,
         navigator: navigator,
         inactivity: inactivity,
         initialTab: initialTab,
@@ -328,9 +337,10 @@ extension NavigatorStateExtension on _i11.NavigationService {
     _i5.Key? key,
     _i9.AuthService? service,
     _i10.AdminService? admin,
+    _i11.OpsCenterService? ops,
     _i7.AdminNavigator? navigator,
     Duration? inactivity,
-    _i4.AdminTab initialTab = _i4.AdminTab.orders,
+    _i4.AdminTab initialTab = _i4.AdminTab.dashboard,
     DateTime Function() clock = DateTime.now,
     int? routerId,
     bool preventDuplicates = true,
@@ -344,6 +354,7 @@ extension NavigatorStateExtension on _i11.NavigationService {
         key: key,
         service: service,
         admin: admin,
+        ops: ops,
         navigator: navigator,
         inactivity: inactivity,
         initialTab: initialTab,

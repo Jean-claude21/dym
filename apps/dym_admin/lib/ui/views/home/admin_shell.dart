@@ -48,7 +48,6 @@ class AdminShell<T> extends StatelessWidget {
     Widget menu({required bool drawer}) => _Sidebar<T>(
       groups: groups,
       selected: selected,
-      environment: environment,
       account: account,
       role: role,
       onSelect: (id) {
@@ -63,6 +62,7 @@ class AdminShell<T> extends StatelessWidget {
           title: title,
           account: account,
           role: role,
+          environment: environment,
           onSignOut: onSignOut,
           showMenu: !wide,
         ),
@@ -121,7 +121,6 @@ class _Sidebar<T> extends StatelessWidget {
     required this.onSelect,
     required this.account,
     required this.role,
-    this.environment,
   });
 
   final List<AdminNavGroup<T>> groups;
@@ -129,7 +128,6 @@ class _Sidebar<T> extends StatelessWidget {
   final ValueChanged<T> onSelect;
   final String account;
   final String? role;
-  final String? environment;
 
   @override
   Widget build(BuildContext context) {
@@ -162,25 +160,6 @@ class _Sidebar<T> extends StatelessWidget {
                   ],
                 ),
               ),
-              if (environment case final env?)
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AdminPalette.amber.$2,
-                    borderRadius: BorderRadius.circular(99),
-                  ),
-                  child: Text(
-                    env,
-                    style: t.label.copyWith(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      color: AdminPalette.amber.$1,
-                    ),
-                  ),
-                ),
             ],
           ),
         ),
@@ -334,8 +313,10 @@ class _TopBar extends StatelessWidget {
     required this.role,
     required this.onSignOut,
     required this.showMenu,
+    this.environment,
   });
 
+  final String? environment;
   final String title;
   final String account;
   final String? role;
@@ -378,6 +359,23 @@ class _TopBar extends StatelessWidget {
                 style: t.label.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
+            if (environment case final env?)
+              Container(
+                margin: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: AdminPalette.amber.$2,
+                  borderRadius: BorderRadius.circular(99),
+                ),
+                child: Text(
+                  env,
+                  style: t.label.copyWith(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: AdminPalette.amber.$1,
+                  ),
+                ),
+              ),
             PopupMenuButton<void>(
               tooltip: account,
               position: PopupMenuPosition.under,
