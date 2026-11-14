@@ -1,10 +1,10 @@
 import 'package:dym_admin/ui/views/startup/startup_viewmodel.dart';
-import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Démarrage de l'admin le temps de vérifier la session.
+/// Démarrage de l'admin le temps de vérifier la session : fond uni, sans
+/// splash ; la page voulue s'affiche dès que la session est connue.
 class StartupView extends StackedView<StartupViewModel> {
   const new({super.key, this.viewModelFactory});
 
@@ -24,19 +24,5 @@ class StartupView extends StackedView<StartupViewModel> {
     BuildContext context,
     StartupViewModel viewModel,
     Widget? child,
-  ) {
-    final c = context.dym.colors;
-    final l10n = DymLocalizations.of(context);
-    return Scaffold(
-      backgroundColor: c.background,
-      body: DymSplash(
-        onIntroComplete: viewModel.introFinished,
-        tagline: l10n.appNameAdmin,
-        footer: DymMadeBy(
-          prefix: l10n.brandMadeByPrefix,
-          maker: l10n.brandMakerName,
-        ),
-      ),
-    );
-  }
+  ) => Scaffold(backgroundColor: context.dym.colors.background);
 }

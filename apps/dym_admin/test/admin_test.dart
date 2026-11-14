@@ -134,7 +134,6 @@ void main() {
         tester,
         StartupView(
           viewModelFactory: () => StartupViewModel(
-            introDelay: Duration.zero,
             auth: _Auth(bootstrapResult: r),
             environment: env,
             navigator: nav,
