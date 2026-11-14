@@ -29,19 +29,28 @@ class NeonDataClient {
   /// Requête sur une table ou une vue.
   PostgrestQueryBuilder<void> from(String table) => _client.from(table);
 
-  /// Exécute une requête et convertit toute erreur en [Failure].
-  Future<Result<T>> run<T>(Future<T> Function(PostgrestClient db) query) async {
+  /// Exécute une requête et convertit toute erreur en [Failure] ; un échec
+  /// inattendu est signalé au suivi d'erreurs avec son lieu ([where]).
+  Future<Result<T>> run<T>(
+    Future<T> Function(PostgrestClient db) query, {
+    String where = 'data',
+  }) async {
     try {
       return Ok(await query(_client));
-    } on Object catch (error) {
-      return Err(failureFrom(error));
+    } on Object catch (error, stack) {
+      final failure = failureFrom(error);
+      FailureReports.report(failure, where, stack);
+      return Err(failure);
     }
   }
 
   /// Appelle une fonction SQL exposée (`/rpc/<fn>`).
   Future<Result<T>> rpc<T>(String fn, {Map<String, Object?>? params}) =>
       // Toujours un objet : la Data API de Neon refuse un corps `null`.
-      run((db) => db.rpc<T>(fn, params: params ?? const <String, Object?>{}));
+      run(
+        (db) => db.rpc<T>(fn, params: params ?? const <String, Object?>{}),
+        where: 'rpc/$fn',
+      );
 }
 
 /// Client HTTP qui porte le JWT courant et rejoue une fois après un 401.

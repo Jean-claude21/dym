@@ -10,4 +10,5 @@ export 'src/live/live_feed.dart';
 export 'src/money/currency.dart';
 export 'src/money/money.dart';
 export 'src/result/failure.dart';
+export 'src/result/failure_reports.dart';
 export 'src/result/result.dart';

@@ -36,10 +36,38 @@ Future<void> runWithErrorReporting({
       Sentry.captureException(details.exception, stackTrace: details.stack),
     );
   };
+  // Échecs inattendus attrapés par les clients (5xx, réponse illisible,
+  // erreur inconnue) : signalés aussi, regroupés par lieu.
+  FailureReports.sink = (failure, where, stack) => unawaited(
+    Sentry.captureException(
+      ReportedFailure(failure, where),
+      stackTrace: stack,
+      withScope: (scope) async {
+        await scope.setTag('where', where);
+        await scope.setTag('failure', failure.runtimeType.toString());
+      },
+    ),
+  );
   PlatformDispatcher.instance.onError = (error, stack) {
     unawaited(Sentry.captureException(error, stackTrace: stack));
     // Laisse aussi l'erreur suivre son chemin habituel (journal).
     return false;
   };
   await body();
+}
+
+/// Échec inattendu envoyé au suivi d'erreurs : type, lieu, message technique
+/// (sans donnée personnelle, limité à 300 caractères).
+class ReportedFailure implements Exception {
+  const new(this.failure, this.where);
+
+  final Failure failure;
+  final String where;
+
+  @override
+  String toString() {
+    final m = failure.message;
+    final message = m.length > 300 ? '${m.substring(0, 300)}…' : m;
+    return '${failure.runtimeType} · $where · $message';
+  }
 }
