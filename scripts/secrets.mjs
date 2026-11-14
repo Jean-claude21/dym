@@ -5,6 +5,10 @@
 //   DOPPLER_TOKEN=… node scripts/secrets.mjs apps <config> <dossier des clés>
 //       écrit les clés de signature Android dans <dossier des clés> (hors dépôt), les
 //       `android/key.properties` et `android/app/google-services.json` des trois apps.
+//   DOPPLER_TOKEN=… node scripts/secrets.mjs perso prd <fichier>
+//       écrit les clés personnelles (projet cles-perso : jetons d'admin des services,
+//       partagés par tous les projets et tous les PC) dans <fichier>, par exemple
+//       `../.secrets/.admin.env`, avec DOPPLER_TOKEN en tête.
 //
 // Le jeton se lit dans DOPPLER_TOKEN (jamais en argument).
 import fs from 'node:fs';
@@ -13,7 +17,7 @@ import path from 'node:path';
 const [cmd, config, target] = process.argv.slice(2);
 const token = process.env.DOPPLER_TOKEN;
 if (!token || !cmd || !config || !target) {
-  console.error('usage : DOPPLER_TOKEN=… node scripts/secrets.mjs functions-env|apps <config> <cible>');
+  console.error('usage : DOPPLER_TOKEN=… node scripts/secrets.mjs functions-env|apps|perso <config> <cible>');
   process.exit(2);
 }
 
@@ -54,6 +58,14 @@ if (cmd === 'functions-env') {
     }
     console.log(app, ': clé de signature et Firebase écrites');
   }
+} else if (cmd === 'perso') {
+  const keys = await download('cles-perso');
+  const lines = [
+    `DOPPLER_TOKEN=${token}`,
+    ...Object.entries(keys).map(([k, v]) => `${k}=${String(v).replace(/\r?\n/g, '')}`),
+  ];
+  fs.writeFileSync(target, `${lines.join('\n')}\n`, { mode: 0o600 });
+  console.log(Object.keys(keys).length, 'clés personnelles écrites dans', target);
 } else {
   console.error('commande inconnue :', cmd);
   process.exit(2);
