@@ -135,15 +135,7 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
         children: [
           Row(
             children: [
-              Container(
-                width: 32,
-                height: 32,
-                decoration: BoxDecoration(
-                  color: c.brand,
-                  borderRadius: BorderRadius.circular(DymTokenRadius.field),
-                ),
-                child: Icon(Icons.eco_rounded, color: c.onBrand, size: 18),
-              ),
+              const DymLogoMark(size: 36),
               const SizedBox(width: DymTokenSpace.s2),
               Text(l10n.appNameAdmin, style: t.title.copyWith(fontSize: 17)),
             ],

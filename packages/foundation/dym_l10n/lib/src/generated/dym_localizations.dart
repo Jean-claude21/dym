@@ -12066,6 +12066,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Tu travailles ici comme {role}.'**
   String staffYouAre(String role);
+
+  /// Exemple dans le champ email de la connexion.
+  ///
+  /// In fr, this message translates to:
+  /// **'prenom@exemple.com'**
+  String get authEmailHint;
 }
 
 class _DymLocalizationsDelegate

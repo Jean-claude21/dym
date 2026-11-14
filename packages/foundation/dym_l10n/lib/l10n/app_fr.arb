@@ -8245,5 +8245,9 @@
         "type": "String"
       }
     }
+  },
+  "authEmailHint": "prenom@exemple.com",
+  "@authEmailHint": {
+    "description": "Exemple dans le champ email de la connexion."
   }
 }

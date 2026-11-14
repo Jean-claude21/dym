@@ -59,7 +59,7 @@ class _EmailStepState extends State<EmailStep> {
           label: l10n.authEmailLabel,
           controller: _controller,
           icon: Icons.mail_outline_rounded,
-          hint: 'prenom@exemple.com',
+          hint: l10n.authEmailHint,
           keyboardType: TextInputType.emailAddress,
           textInputAction: TextInputAction.send,
           autofillHints: const [AutofillHints.email],

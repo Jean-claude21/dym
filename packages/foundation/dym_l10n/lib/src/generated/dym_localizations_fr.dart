@@ -7289,4 +7289,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String staffYouAre(String role) {
     return 'Tu travailles ici comme $role.';
   }
+
+  @override
+  String get authEmailHint => 'prenom@exemple.com';
 }

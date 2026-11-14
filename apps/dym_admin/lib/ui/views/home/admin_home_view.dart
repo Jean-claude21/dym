@@ -245,10 +245,17 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         }),
         railLeading: Padding(
           padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s3),
-          child: Text(
-            l10n.appNameAdmin,
-            textAlign: TextAlign.center,
-            style: t.display.copyWith(fontSize: 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DymLogoMark(size: 40, semanticLabel: l10n.appNameAdmin),
+              const SizedBox(height: DymTokenSpace.s2),
+              Text(
+                l10n.appNameAdmin,
+                textAlign: TextAlign.center,
+                style: t.title.copyWith(fontSize: 16),
+              ),
+            ],
           ),
         ),
         destinations: [

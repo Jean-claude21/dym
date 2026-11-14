@@ -2114,5 +2114,6 @@
   "staffEmptyHint": "Invite someone by email: they sign in to DYM Vendor with that account.",
   "staffGroupTeam": "Team",
   "staffSwitchStore": "Switch shop",
-  "staffYouAre": "You work here as {role}."
+  "staffYouAre": "You work here as {role}.",
+  "authEmailHint": "name@example.com"
 }
