@@ -5,6 +5,10 @@
 name: iOS sur BrowserStack
 
 on:
+  # Premier essai : à chaque envoi sur cette branche (le lancement manuel n'est visible qu'une
+  # fois le workflow sur la branche principale).
+  push:
+    branches: [feat/ios-browserstack]
   workflow_dispatch:
     inputs:
       app:
@@ -36,33 +40,33 @@ jobs:
           ln -sfn "$(dirname "$(dirname "$(which flutter)")")" .fvm/flutter_sdk
 
       - name: Compiler (sans signature)
-        working-directory: apps/${{ inputs.app }}
+        working-directory: apps/${{ inputs.app || 'dym_client' }}
         run: |
           flutter pub get
           flutter build ios --release --no-codesign \
             --dart-define-from-file=../../config/staging.json
 
       - name: Paquet .ipa
-        working-directory: apps/${{ inputs.app }}
+        working-directory: apps/${{ inputs.app || 'dym_client' }}
         run: |
           mkdir -p Payload
           cp -R build/ios/iphoneos/Runner.app Payload/
-          zip -qr "${{ inputs.app }}.ipa" Payload
-          ls -la "${{ inputs.app }}.ipa"
+          zip -qr "${{ inputs.app || 'dym_client' }}.ipa" Payload
+          ls -la "${{ inputs.app || 'dym_client' }}.ipa"
 
       - name: Envoyer sur BrowserStack
-        working-directory: apps/${{ inputs.app }}
+        working-directory: apps/${{ inputs.app || 'dym_client' }}
         env:
           BS_USER: ${{ secrets.BROWSERSTACK_USERNAME }}
           BS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
         run: |
           curl -sS -u "$BS_USER:$BS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
-            -F "file=@${{ inputs.app }}.ipa" -F "custom_id=${{ inputs.app }}-ios" | tee upload.json
+            -F "file=@${{ inputs.app || 'dym_client' }}.ipa" -F "custom_id=${{ inputs.app || 'dym_client' }}-ios" | tee upload.json
           echo
           jq -r '.app_url // .error' upload.json
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.app }}-ios
-          path: apps/${{ inputs.app }}/${{ inputs.app }}.ipa
+          name: ${{ inputs.app || 'dym_client' }}-ios
+          path: apps/${{ inputs.app || 'dym_client' }}/${{ inputs.app || 'dym_client' }}.ipa
           retention-days: 7
