@@ -167,28 +167,3 @@ class _DymSplashState extends State<DymSplash>
     );
   }
 }
-
-/// Signature « Réalisé par Kete » : [prefix] discret, [maker] en vert.
-class DymMadeBy extends StatelessWidget {
-  const new({required this.prefix, required this.maker, super.key});
-
-  final String prefix;
-  final String maker;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    return Text.rich(
-      TextSpan(
-        text: '$prefix ',
-        children: [
-          TextSpan(
-            text: maker,
-            style: TextStyle(fontWeight: FontWeight.w700, color: c.brand),
-          ),
-        ],
-      ),
-      textAlign: TextAlign.center,
-    );
-  }
-}

@@ -45,13 +45,11 @@ class StartupView extends StackedView<StartupViewModel> {
                 onAction: viewModel.runStartupLogic,
               ),
             )
+          : !viewModel.showSplash
+          ? const SizedBox.shrink()
           : DymSplash(
               onIntroComplete: viewModel.introFinished,
               tagline: l10n.vendorTagline,
-              footer: DymMadeBy(
-                prefix: l10n.brandMadeByPrefix,
-                maker: l10n.brandMakerName,
-              ),
             ),
     );
   }

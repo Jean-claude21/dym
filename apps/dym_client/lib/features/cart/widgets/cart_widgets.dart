@@ -158,10 +158,14 @@ class CartHeader extends StatelessWidget {
     required this.onBack,
     super.key,
     this.subtitle,
+    this.trailing,
   });
 
   final String title;
   final String? subtitle;
+
+  /// Action à droite du titre (menu « ⋯ » du panier).
+  final Widget? trailing;
 
   /// Retour ; nul dans l'onglet « Panier » (pas de bouton).
   final VoidCallback? onBack;
@@ -184,30 +188,38 @@ class CartHeader extends StatelessWidget {
                 onPressed: back,
                 icon: Icon(Icons.arrow_back_rounded, color: c.textPrimary),
               ),
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Semantics(
-                    header: true,
-                    child: Text(
-                      title,
-                      style: onBack == null
-                          ? t.display
-                          : t.display.copyWith(fontSize: 26),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Semantics(
+                          header: true,
+                          child: Text(
+                            title,
+                            style: onBack == null
+                                ? t.display
+                                : t.display.copyWith(fontSize: 26),
+                          ),
+                        ),
+                        if (subtitle != null)
+                          Text(
+                            subtitle!,
+                            style: t.label.copyWith(
+                              color: c.textSecondary,
+                              fontSize: 14,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle!,
-                      style: t.label.copyWith(
-                        color: c.textSecondary,
-                        fontSize: 14,
-                      ),
-                    ),
-                ],
-              ),
+                ),
+                ?trailing,
+              ],
             ),
           ],
         ),

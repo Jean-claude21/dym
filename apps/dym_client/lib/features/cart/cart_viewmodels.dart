@@ -125,9 +125,18 @@ class CartViewModel extends _CartLoadingViewModel {
     }
   }
 
+  /// Choix d'un jour : son premier créneau est retenu (la cliente peut
+  /// ensuite en prendre un autre) ; « dès que possible » n'est plus coché.
   void showDay(DateTime day) {
     slotDay = day;
-    notifyListeners();
+    final windows =
+        slots?.days.where((d) => d.date == day).firstOrNull?.windows ??
+        const <DeliveryWindow>[];
+    if (slot?.date == day || windows.isEmpty) {
+      notifyListeners();
+      return;
+    }
+    selectSlot(SlotChoice(date: day, windowId: windows.first.id));
   }
 
   void selectSlot(SlotChoice? value) {

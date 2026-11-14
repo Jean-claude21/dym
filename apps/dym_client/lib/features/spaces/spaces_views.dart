@@ -829,11 +829,9 @@ Future<String?> sendCartToSpace(
   final messenger = ScaffoldMessenger.maybeOf(context);
   final spaces = (await service.spaces()).valueOrNull ?? const [];
   if (!context.mounted) return null;
-  if (spaces.isEmpty) {
-    messenger?.showSnackBar(SnackBar(content: Text(l10n.spacesEmptyShort)));
-    return null;
-  }
-  final chosen = await showModalBottomSheet<SpaceSummary>(
+  // Choix : un espace existant, ou en créer / rejoindre un sans quitter le
+  // panier (le panier y est envoyé ensuite).
+  final pick = await showModalBottomSheet<Object>(
     context: context,
     showDragHandle: true,
     builder: (sheet) => SafeArea(
@@ -844,6 +842,16 @@ Future<String?> sendCartToSpace(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: Text(l10n.spaceSendCartTitle, style: sheet.dym.text.title),
           ),
+          if (spaces.isEmpty)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+              child: Text(
+                l10n.spacesEmpty,
+                style: sheet.dym.text.body.copyWith(
+                  color: sheet.dym.colors.textSecondary,
+                ),
+              ),
+            ),
           for (final s in spaces)
             ListTile(
               minTileHeight: 56,
@@ -851,11 +859,54 @@ Future<String?> sendCartToSpace(
               title: Text(s.name),
               onTap: () => Navigator.of(sheet).pop(s),
             ),
+          ListTile(
+            minTileHeight: 56,
+            leading: const Icon(Icons.add_rounded),
+            title: Text(l10n.spaceCreate),
+            onTap: () => Navigator.of(sheet).pop(_SpacePick.create),
+          ),
+          ListTile(
+            minTileHeight: 56,
+            leading: const Icon(Icons.group_add_rounded),
+            title: Text(l10n.spaceJoin),
+            onTap: () => Navigator.of(sheet).pop(_SpacePick.join),
+          ),
         ],
       ),
     ),
   );
-  if (chosen == null) return null;
+  if (!context.mounted || pick == null) return null;
+  final ({String id, String name})? chosen;
+  switch (pick) {
+    case SpaceSummary(:final id, :final name):
+      chosen = (id: id, name: name);
+    case _SpacePick.create || _SpacePick.join:
+      final create = pick == _SpacePick.create;
+      final text = await _ask(
+        context,
+        title: create ? l10n.spaceCreate : l10n.spaceJoin,
+        hint: create ? l10n.spaceName : l10n.spaceCodeHint,
+        caps: !create,
+        action: create ? l10n.spaceCreateAction : null,
+      );
+      if (text == null || text.trim().isEmpty) return null;
+      final made = create
+          ? await service.create(text.trim())
+          : await service.join(text.trim());
+      switch (made) {
+        case Ok(:final value):
+          chosen = (id: value.id, name: value.name);
+        case Err(:final failure):
+          messenger?.showSnackBar(
+            SnackBar(
+              content: Text(spaceErrorLabel(l10n, spaceErrorOf(failure))),
+            ),
+          );
+          return null;
+      }
+    default:
+      return null;
+  }
   final result = await service.sendCart(chosen.id);
   messenger?.showSnackBar(
     SnackBar(
@@ -867,3 +918,6 @@ Future<String?> sendCartToSpace(
   );
   return result.isOk ? chosen.id : null;
 }
+
+/// Choix du panneau « Envoyer à un espace » autre qu'un espace existant.
+enum _SpacePick { create, join }

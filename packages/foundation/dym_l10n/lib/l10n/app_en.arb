@@ -1336,7 +1336,6 @@
   "spacesTitle": "My spaces",
   "spacesIntro": "A space brings together those who fill the basket and those who confirm and pay: home, family back home, a savings group…",
   "spacesEmpty": "No space yet. Create one or join a relative's with their code.",
-  "spacesEmptyShort": "First create or join a space in “Me”.",
   "spaceCreate": "Create a space",
   "spaceCreateAction": "Create",
   "spaceJoin": "Join",
@@ -1822,7 +1821,7 @@
   "accountGroupBuys": "Group purchases",
   "groupBuyTitle": "Group purchases with neighbours",
   "groupBuyHint": "Join your neighbours at a seller: when the group is complete, everyone pays the group price and delivery is shared.",
-  "groupBuyEmpty": "No group purchase near you right now.",
+  "groupBuyEmpty": "No group purchase near you yet. Sellers start them from their shop: check back soon.",
   "groupBuyPrice": "{group} instead of {price}",
   "groupBuySharedDelivery": "Shared delivery: {fee}",
   "groupBuyProgress": "{committed} of {min} · {members, plural, =0{nobody yet} =1{1 neighbour} other{{members} neighbours}}",
@@ -2068,8 +2067,6 @@
   "importDone": "{count, plural, =1{1 draft created} other{{count} drafts created}}",
   "importDoneHint": "Add photos, then publish from the catalogue.",
   "importBackToCatalog": "See the catalogue",
-  "brandMadeByPrefix": "Made by",
-  "brandMakerName": "Kete",
   "callMicrophoneOn": "Mic on",
   "callMicrophoneOff": "Mic off",
   "callSpeakerOn": "Speaker",
@@ -2115,5 +2112,6 @@
   "staffGroupTeam": "Team",
   "staffSwitchStore": "Switch shop",
   "staffYouAre": "You work here as {role}.",
-  "authEmailHint": "name@example.com"
+  "authEmailHint": "name@example.com",
+  "cartMoreActions": "More actions"
 }

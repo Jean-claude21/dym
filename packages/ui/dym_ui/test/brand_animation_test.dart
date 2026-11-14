@@ -29,14 +29,13 @@ Future<void> _pump(
 
 void main() {
   for (final size in const [Size(360, 640), Size(412, 915), Size(915, 412)]) {
-    testWidgets('splash : accroche et signature, sans débordement $size', (
+    testWidgets('splash : accroche, sans débordement $size', (
       tester,
     ) async {
       await _pump(
         tester,
         const DymSplash(
           tagline: 'Le marché près de chez toi, livré chez toi',
-          footer: DymMadeBy(prefix: 'Réalisé par', maker: 'Kete'),
         ),
         size: size,
       );
@@ -45,7 +44,6 @@ void main() {
         find.text('Le marché près de chez toi, livré chez toi'),
         findsOneWidget,
       );
-      expect(find.textContaining('Kete', findRichText: true), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   }

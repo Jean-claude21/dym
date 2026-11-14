@@ -71,6 +71,11 @@ class PluginGoogleIdTokenProvider implements GoogleIdTokenProvider {
       return Ok(token);
     } on GoogleSignInException catch (error) {
       return switch (error.code) {
+        // Android : empreinte de l'app inconnue de Google (« [16] Account
+        // reauth failed ») ; remonté comme une annulation, mais à signaler.
+        GoogleSignInExceptionCode.canceled
+            when (error.description ?? '').contains('[16]') =>
+          const Err(ValidationFailure('connexion Google mal configurée')),
         GoogleSignInExceptionCode.canceled ||
         GoogleSignInExceptionCode.interrupted => const Ok(null),
         GoogleSignInExceptionCode.clientConfigurationError ||

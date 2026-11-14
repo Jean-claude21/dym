@@ -4456,9 +4456,6 @@ class DymLocalizationsEn extends DymLocalizations {
       'No space yet. Create one or join a relative\'s with their code.';
 
   @override
-  String get spacesEmptyShort => 'First create or join a space in “Me”.';
-
-  @override
   String get spaceCreate => 'Create a space';
 
   @override
@@ -6195,7 +6192,8 @@ class DymLocalizationsEn extends DymLocalizations {
       'Join your neighbours at a seller: when the group is complete, everyone pays the group price and delivery is shared.';
 
   @override
-  String get groupBuyEmpty => 'No group purchase near you right now.';
+  String get groupBuyEmpty =>
+      'No group purchase near you yet. Sellers start them from their shop: check back soon.';
 
   @override
   String groupBuyPrice(String group, String price) {
@@ -7090,12 +7088,6 @@ class DymLocalizationsEn extends DymLocalizations {
   String get importBackToCatalog => 'See the catalogue';
 
   @override
-  String get brandMadeByPrefix => 'Made by';
-
-  @override
-  String get brandMakerName => 'Kete';
-
-  @override
   String get callMicrophoneOn => 'Mic on';
 
   @override
@@ -7242,4 +7234,7 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get authEmailHint => 'name@example.com';
+
+  @override
+  String get cartMoreActions => 'More actions';
 }
