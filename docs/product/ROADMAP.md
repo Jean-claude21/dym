@@ -228,6 +228,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `moneroo` | Mobile Money par Moneroo (bac à sable ou réel selon la clé) : page Moneroo, webhook signé relu chez Moneroo, bascule simulation ↔ Moneroo par l'admin, journalisée | 3 h | ✅ Spec 088 |
 | `appels-audio` | Appels audio seulement (vidéo fermée par le flag `calls_video`), validés entre deux téléphones : sonnerie, décroché, voix dans les deux sens, raccrocher | 1 h | ✅ Spec 089 |
 | `essais-testeurs` | Côte d'Ivoire ouverte par configuration, admin en ligne (Firebase Hosting) avec le logo, comptes des testeuses, APK Android signés, retours des premiers essais | 5 h | ✅ Spec 090 |
+| `admin-refonte` | Admin refondue en console : menu groupé avec compteurs, tableau de bord en six cartes, boutiques en tableau avec fiche latérale, connexion dans le même style, déployée | 6 h | ✅ Spec 091 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

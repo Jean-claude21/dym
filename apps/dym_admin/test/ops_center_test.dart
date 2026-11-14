@@ -1,8 +1,8 @@
 import 'package:dym_admin/features/ops_center/ops_center_view.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -153,7 +153,7 @@ void main() {
       String? opened;
       await tester.pumpWidget(
         MaterialApp(
-          theme: DymTheme.light(),
+          theme: adminTheme(),
           locale: const Locale('fr'),
           localizationsDelegates: DymLocalizations.localizationsDelegates,
           supportedLocales: DymLocalizations.supportedLocales,

@@ -8,10 +8,10 @@ import 'package:dym_admin/features/orders/orders_views.dart';
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/settings/settings_viewmodel.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -41,7 +41,7 @@ Future<void> _pump(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     MaterialApp(
-      theme: DymTheme.light(),
+      theme: adminTheme(),
       locale: locale,
       localizationsDelegates: DymLocalizations.localizationsDelegates,
       supportedLocales: DymLocalizations.supportedLocales,

@@ -1,5 +1,6 @@
 import 'package:dym_admin/app/config_error_app.dart';
 import 'package:dym_admin/features/ops/testing.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_admin/ui/views/home/admin_home_view.dart';
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_view.dart';
@@ -11,7 +12,6 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -107,7 +107,7 @@ Future<void> _pump(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     MaterialApp(
-      theme: DymTheme.light(),
+      theme: adminTheme(),
       locale: locale,
       localizationsDelegates: DymLocalizations.localizationsDelegates,
       supportedLocales: DymLocalizations.supportedLocales,

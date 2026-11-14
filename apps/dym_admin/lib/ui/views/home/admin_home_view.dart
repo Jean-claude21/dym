@@ -8,6 +8,7 @@ import 'package:dym_admin/features/disputes/disputes_view.dart';
 import 'package:dym_admin/features/finance/finance_view.dart';
 import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
+import 'package:dym_admin/features/ops/admin_texts.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
 import 'package:dym_admin/features/ops_center/ops_center_view.dart';
 import 'package:dym_admin/features/orders/orders_views.dart';
@@ -16,11 +17,11 @@ import 'package:dym_admin/features/stores/stores_view.dart';
 import 'package:dym_admin/features/support/support_view.dart';
 import 'package:dym_admin/ui/inactivity_guard.dart';
 import 'package:dym_admin/ui/navigation.dart';
+import 'package:dym_admin/ui/views/home/admin_shell.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 
 /// Onglet de l'admin (specs 013 et 017), dans l'ordre de la maquette 67.
@@ -37,10 +38,6 @@ enum AdminTab {
   settings,
   audit,
 }
-
-/// Sept domaines de la console (design « Épuré », PARCOURS §4.4) ; chacun
-/// regroupe des écrans existants, choisis par des puces.
-enum AdminDomain { live, orders, support, accounts, finance, settings, audit }
 
 /// Admin de l'équipe : tableau de bord (67), commandes (52, 53), litiges
 /// (54), boutiques (55), clientes (68), finances (57, 70), support (69),
@@ -91,10 +88,21 @@ class _AdminHomeViewState extends State<AdminHomeView> {
   /// tout reste visible, la base refuse ce que le rôle ne permet pas.
   AdminAccess? _access;
 
+  /// Compteurs du menu (litiges, boutiques à valider, demandes, commandes
+  /// bloquées) ; absents tant qu'ils ne sont pas lus.
+  AdminDashboard? _counts;
+
   @override
   void initState() {
     super.initState();
     unawaited(_loadAccess());
+    unawaited(_loadCounts());
+  }
+
+  Future<void> _loadCounts() async {
+    if (await _admin.dashboard('day') case Ok(:final value) when mounted) {
+      setState(() => _counts = value);
+    }
   }
 
   Future<void> _loadAccess() async {
@@ -102,7 +110,10 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       setState(() {
         _access = value;
         if (!_allowed(_tab)) {
-          _tab = _visibleDomains.map(_tabsOf).expand((t) => t).first;
+          _tab = _groups(DymLocalizations.of(context))
+              .expand((g) => g.entries)
+              .first
+              .id;
         }
       });
     }
@@ -132,11 +143,6 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       ? '${locator<DymEnvironment>().functionsUrl.toString().replaceAll(RegExp(r'/$'), '')}/mcp'
       : null;
 
-  List<AdminDomain> get _visibleDomains => [
-    for (final d in AdminDomain.values)
-      if (_tabsOf(d).isNotEmpty) d,
-  ];
-
   Future<void> _signOut({AdminNotice? notice}) async {
     await _service.signOut();
     _navigator.toSignIn(notice: notice);
@@ -144,8 +150,6 @@ class _AdminHomeViewState extends State<AdminHomeView> {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final orderId = _orderId;
     final body = switch (_tab) {
@@ -215,150 +219,99 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       ),
       AdminTab.audit => AdminAuditView(service: _admin),
     };
-    final domain = _domainOf(_tab);
-    final tabs = _tabsOf(domain);
-    final domains = _visibleDomains;
-    String tabLabel(AdminTab tab) => switch (tab) {
-      AdminTab.ops => l10n.opsTitle,
-      AdminTab.dashboard => l10n.adminNavDashboard,
-      AdminTab.support => l10n.adminNavSupport,
-      AdminTab.disputes => l10n.adminNavDisputes,
-      AdminTab.moderation => l10n.adminNavModeration,
-      AdminTab.stores => l10n.navStores,
-      AdminTab.clients => l10n.adminNavClients,
-      AdminTab.orders => l10n.navOrders,
-      AdminTab.finance => l10n.adminNavFinance,
-      AdminTab.settings => l10n.adminNavConfig,
-      AdminTab.audit => l10n.adminNavAudit,
-    };
+    final env = locator.isRegistered<DymEnvironment>()
+        ? locator<DymEnvironment>()
+        : null;
+    final role = _access?.role;
     return InactivityGuard(
       timeout: widget.inactivity ?? const Duration(minutes: 30),
       onTimeout: () => _signOut(notice: AdminNotice.inactive),
-      child: DymAdaptiveScaffold(
-        backgroundColor: c.background,
-        currentIndex: domains.indexOf(domain).clamp(0, domains.length - 1),
-        maxBottomItems: 4,
-        moreItem: DymNavItem(icon: Icons.menu_rounded, label: l10n.navMore),
-        onDestinationSelected: (i) => setState(() {
-          _tab = _tabsOf(domains[i]).first;
+      child: AdminShell<AdminTab>(
+        groups: _groups(l10n),
+        selected: _tab,
+        onSelect: (tab) => setState(() {
+          _tab = tab;
           _orderId = null;
         }),
-        railLeading: Padding(
-          padding: const EdgeInsets.symmetric(vertical: DymTokenSpace.s3),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DymLogoMark(size: 40, semanticLabel: l10n.appNameAdmin),
-              const SizedBox(height: DymTokenSpace.s2),
-              Text(
-                l10n.appNameAdmin,
-                textAlign: TextAlign.center,
-                style: t.title.copyWith(fontSize: 16),
-              ),
-            ],
-          ),
-        ),
-        destinations: [
-          for (final d in domains)
-            switch (d) {
-              AdminDomain.live => DymNavItem(
-                icon: Icons.show_chart_rounded,
-                label: l10n.adminNavLive,
-              ),
-              AdminDomain.orders => DymNavItem(
-                icon: Icons.shopping_cart_outlined,
-                label: l10n.navOrders,
-              ),
-              AdminDomain.support => DymNavItem(
-                icon: Icons.chat_bubble_outline_rounded,
-                label: l10n.adminNavSupport,
-              ),
-              AdminDomain.accounts => DymNavItem(
-                icon: Icons.people_outline_rounded,
-                label: l10n.adminNavAccounts,
-              ),
-              AdminDomain.finance => DymNavItem(
-                icon: Icons.account_balance_outlined,
-                label: l10n.adminNavFinance,
-              ),
-              AdminDomain.settings => DymNavItem(
-                icon: Icons.settings_outlined,
-                label: l10n.adminNavConfig,
-              ),
-              AdminDomain.audit => DymNavItem(
-                icon: Icons.menu_book_outlined,
-                label: l10n.adminNavAudit,
-              ),
-            },
-        ],
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Sous-sections du domaine (ex. Support : demandes, litiges,
-              // modération).
-              if (tabs.length > 1)
-                Padding(
-                  padding: EdgeInsets.fromLTRB(
-                    DymLayout.gutter(context),
-                    DymTokenSpace.s3,
-                    DymLayout.gutter(context),
-                    0,
-                  ),
-                  child: Wrap(
-                    spacing: DymTokenSpace.s2,
-                    runSpacing: DymTokenSpace.s2,
-                    children: [
-                      for (final tab in tabs)
-                        DymFilterChip(
-                          label: tabLabel(tab),
-                          selected: tab == _tab,
-                          onTap: () => setState(() {
-                            _tab = tab;
-                            _orderId = null;
-                          }),
-                        ),
-                    ],
-                  ),
-                ),
-              Expanded(
-                child: KeyedSubtree(key: ValueKey(_tab), child: body),
-              ),
-            ],
-          ),
-        ),
+        title: _label(l10n, _tab),
+        account: _service.email ?? '',
+        role: role == null ? null : adminRoleLabel(l10n, role),
+        environment: env == null || env.isProduction ? null : env.name.name,
+        onSignOut: _signOut,
+        body: KeyedSubtree(key: ValueKey(_tab), child: body),
       ),
     );
   }
 
-  AdminDomain _domainOf(AdminTab tab) => switch (tab) {
-    AdminTab.ops || AdminTab.dashboard => AdminDomain.live,
-    AdminTab.orders => AdminDomain.orders,
-    AdminTab.support ||
-    AdminTab.disputes ||
-    AdminTab.moderation => AdminDomain.support,
-    AdminTab.stores || AdminTab.clients => AdminDomain.accounts,
-    AdminTab.finance => AdminDomain.finance,
-    AdminTab.settings => AdminDomain.settings,
-    AdminTab.audit => AdminDomain.audit,
+  String _label(DymLocalizations l10n, AdminTab tab) => switch (tab) {
+    AdminTab.ops => l10n.opsTitle,
+    AdminTab.dashboard => l10n.adminNavDashboard,
+    AdminTab.support => l10n.adminNavSupport,
+    AdminTab.disputes => l10n.adminNavDisputes,
+    AdminTab.moderation => l10n.adminNavModeration,
+    AdminTab.stores => l10n.navStores,
+    AdminTab.clients => l10n.adminNavClients,
+    AdminTab.orders => l10n.navOrders,
+    AdminTab.finance => l10n.adminNavFinance,
+    AdminTab.settings => l10n.adminNavConfig,
+    AdminTab.audit => l10n.adminNavAudit,
   };
 
-  List<AdminTab> _tabsOf(AdminDomain domain) => [
-    for (final tab in _domainTabs(domain))
-      if (_allowed(tab)) tab,
-  ];
-
-  List<AdminTab> _domainTabs(AdminDomain domain) => switch (domain) {
-    AdminDomain.live => [if (_ops != null) AdminTab.ops, AdminTab.dashboard],
-    AdminDomain.orders => const [AdminTab.orders],
-    AdminDomain.support => const [
-      AdminTab.support,
-      AdminTab.disputes,
-      AdminTab.moderation,
-    ],
-    AdminDomain.accounts => const [AdminTab.stores, AdminTab.clients],
-    AdminDomain.finance => const [AdminTab.finance],
-    AdminDomain.settings => const [AdminTab.settings],
-    AdminDomain.audit => const [AdminTab.audit],
+  IconData _icon(AdminTab tab) => switch (tab) {
+    AdminTab.dashboard => Icons.space_dashboard_outlined,
+    AdminTab.ops => Icons.monitor_heart_outlined,
+    AdminTab.orders => Icons.shopping_bag_outlined,
+    AdminTab.stores => Icons.storefront_outlined,
+    AdminTab.clients => Icons.people_outline_rounded,
+    AdminTab.finance => Icons.account_balance_wallet_outlined,
+    AdminTab.disputes => Icons.gavel_rounded,
+    AdminTab.moderation => Icons.shield_outlined,
+    AdminTab.support => Icons.chat_bubble_outline_rounded,
+    AdminTab.settings => Icons.settings_outlined,
+    AdminTab.audit => Icons.receipt_long_outlined,
   };
+
+  int? _badge(AdminTab tab) {
+    final d = _counts;
+    if (d == null) return null;
+    return switch (tab) {
+      AdminTab.disputes => d.openDisputes,
+      AdminTab.stores => d.draftStores,
+      AdminTab.support => d.openTickets,
+      AdminTab.orders => d.stuckOrders,
+      _ => null,
+    };
+  }
+
+  /// Menu groupé par métier ; seuls les onglets ouverts au rôle y figurent.
+  List<AdminNavGroup<AdminTab>> _groups(DymLocalizations l10n) {
+    AdminNavGroup<AdminTab> group(String label, List<AdminTab> tabs) => (
+      label: label,
+      entries: [
+        for (final tab in tabs)
+          if (_allowed(tab) && (tab != AdminTab.ops || _ops != null))
+            (
+              id: tab,
+              icon: _icon(tab),
+              label: _label(l10n, tab),
+              badge: _badge(tab),
+            ),
+      ],
+    );
+    return [
+      group(l10n.adminGroupPilot, const [AdminTab.dashboard, AdminTab.ops]),
+      group(l10n.adminGroupCommerce, const [
+        AdminTab.orders,
+        AdminTab.stores,
+        AdminTab.clients,
+      ]),
+      group(l10n.adminGroupMoney, const [AdminTab.finance]),
+      group(l10n.adminGroupQuality, const [
+        AdminTab.disputes,
+        AdminTab.moderation,
+        AdminTab.support,
+      ]),
+      group(l10n.adminGroupSettings, const [AdminTab.settings, AdminTab.audit]),
+    ].where((g) => g.entries.isNotEmpty).toList();
+  }
 }

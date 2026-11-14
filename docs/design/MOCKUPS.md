@@ -33,6 +33,10 @@ ville ou de quartier : les lieux du pays hôte sont saisis par l'équipe. Correc
 affichée d'avance (position ou recherche), écran 12 compris.
 Les autres parcours sont produits spec par spec dans la même direction.
 
+**Spec 091 — console admin validée le 2026-11-14** (bureau 1440 × 1000) :
+[tableau de bord](screens/admin-2026/tableau-de-bord.webp), [boutiques](screens/admin-2026/boutiques.webp).
+Les autres pages de l'admin suivent le même style par les composants partagés.
+
 ## Ordre de production
 
 Spec 014 : parcours 11, [maquette 59 — tableau de bord vendeuse](screens/59-vendeuse-tableau-de-bord.webp),
