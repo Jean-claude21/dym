@@ -98,7 +98,7 @@ MCP admin (spec 086) : clé créée dans l'admin (Configuration → MCP, super-a
 Graphiques (Looker Studio, Metabase) : créer un utilisateur de connexion sur la branche (console ou
 `neonctl roles create`), puis `grant analytics_reader to <utilisateur>;` ; il ne lit que `analytics.*`.
 
-Secrets (décision 0021) : Doppler est la référence (`dym-functions`, `dym-apps`, `dym-outils`).
+Secrets (décision 0021) : Doppler est la référence (`dym-functions`, `dym-apps`, `dym-tools`).
 Régénérer les fichiers locaux, jeton dans `DOPPLER_TOKEN` (jamais affiché) :
 `node scripts/secrets.mjs functions-env stg <fichier .env hors dépôt>` puis le déploiement ci-dessus ;
 `node scripts/secrets.mjs apps prd <dossier des clés hors dépôt>` pour les clés de signature Android,
@@ -123,7 +123,7 @@ avec les clés de debug (essais seulement).
 iOS sur de vrais iPhone (BrowserStack) : workflow « iOS sur BrowserStack » lancé à la main
 (Mac de GitHub, Xcode le plus récent, CocoaPods, sans signature Apple) ; il envoie l'app et affiche
 son adresse `bs://…`, utilisée ensuite par les sessions Appium (identifiants BrowserStack dans
-Doppler `dym-outils` et dans les secrets GitHub).
+Doppler `dym-tools` et dans les secrets GitHub).
 
 Galerie de validation du design system : `cd apps/dym_gallery && fvm flutter run -d chrome`.
 
