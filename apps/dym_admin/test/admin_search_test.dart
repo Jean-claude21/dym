@@ -1,8 +1,8 @@
 import 'package:dym_admin/features/ops/testing.dart';
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/settings/settings_viewmodel.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_l10n/dym_l10n.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -33,7 +33,7 @@ void main() {
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
         MaterialApp(
-          theme: DymTheme.light(),
+          theme: adminTheme(),
           locale: const Locale('fr'),
           localizationsDelegates: DymLocalizations.localizationsDelegates,
           supportedLocales: DymLocalizations.supportedLocales,

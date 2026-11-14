@@ -2,9 +2,9 @@ import 'package:dym_admin/features/dashboard/ai_health_view.dart';
 import 'package:dym_admin/features/dashboard/dashboard_view.dart';
 import 'package:dym_admin/features/moderation/moderation_view.dart';
 import 'package:dym_admin/features/ops/testing.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -34,7 +34,7 @@ Future<void> _pump(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     MaterialApp(
-      theme: DymTheme.light(),
+      theme: adminTheme(),
       locale: locale,
       localizationsDelegates: DymLocalizations.localizationsDelegates,
       supportedLocales: DymLocalizations.supportedLocales,

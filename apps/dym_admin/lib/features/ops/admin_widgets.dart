@@ -1,3 +1,4 @@
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -36,7 +37,7 @@ abstract class AdminViewModel extends BaseViewModel {
   }
 }
 
-/// Page de l'admin : titre, sous-titre, actions, contenu.
+/// Page de l'admin : titre, sous-titre, actions à droite, contenu (spec 091).
 class AdminPage extends StatelessWidget {
   const new({
     required this.title,
@@ -61,38 +62,59 @@ class AdminPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
-    final gutter = DymLayout.gutter(context);
-    final header = Padding(
-      padding: EdgeInsets.fromLTRB(gutter, gutter, gutter, DymTokenSpace.s3),
-      child: Wrap(
-        spacing: DymTokenSpace.s3,
-        runSpacing: DymTokenSpace.s2,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        alignment: WrapAlignment.spaceBetween,
-        children: [
-          Row(
+    final wide = MediaQuery.sizeOf(context).width >= 900;
+    final pad = wide ? 28.0 : DymLayout.gutter(context);
+    final heading = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ?leading,
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              ?leading,
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(title, style: t.display.copyWith(fontSize: 32)),
-                    if (subtitle case final s?)
-                      Text(s, style: t.body.copyWith(color: c.textSecondary)),
-                  ],
+              Semantics(header: true, child: Text(title, style: t.display)),
+              if (subtitle case final s?)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    s,
+                    style: t.body.copyWith(color: c.textSecondary),
+                  ),
                 ),
-              ),
             ],
           ),
-          ...actions,
-        ],
-      ),
+        ),
+      ],
+    );
+    final header = Padding(
+      padding: EdgeInsets.fromLTRB(pad, pad - 4, pad, 18),
+      child: wide && actions.isNotEmpty
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(child: heading),
+                const SizedBox(width: DymTokenSpace.s3),
+                Flexible(
+                  child: Wrap(
+                    alignment: WrapAlignment.end,
+                    spacing: DymTokenSpace.s2,
+                    runSpacing: DymTokenSpace.s2,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: actions,
+                  ),
+                ),
+              ],
+            )
+          : Wrap(
+              spacing: DymTokenSpace.s3,
+              runSpacing: DymTokenSpace.s2,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [heading, ...actions],
+            ),
     );
     final body = Padding(
-      padding: EdgeInsets.fromLTRB(gutter, 0, gutter, gutter),
+      padding: EdgeInsets.fromLTRB(pad, 0, pad, pad),
       child: child,
     );
     return ColoredBox(
@@ -119,7 +141,7 @@ class AdminCard extends StatelessWidget {
     this.trailing,
     this.color,
     this.borderColor,
-    this.padding = const EdgeInsets.all(DymTokenSpace.s4),
+    this.padding = const EdgeInsets.fromLTRB(18, 16, 18, 16),
   });
 
   final Widget child;
@@ -137,7 +159,7 @@ class AdminCard extends StatelessWidget {
     return Material(
       color: color ?? c.card,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        borderRadius: BorderRadius.circular(13),
         side: BorderSide(color: borderColor ?? c.hairline),
       ),
       child: Padding(
@@ -166,7 +188,7 @@ class AdminCard extends StatelessWidget {
 /// Ton d'une pastille.
 enum AdminTone { neutral, success, warning, danger }
 
-/// Pastille de statut (texte + fond teinté).
+/// Pastille de statut : point et texte sur fond teinté (spec 091).
 class AdminPill extends StatelessWidget {
   const new(this.label, {super.key, this.tone = AdminTone.neutral, this.icon});
 
@@ -176,36 +198,37 @@ class AdminPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final (bg, fg) = switch (tone) {
-      AdminTone.success => (c.tintVertTendre, c.brandDeep),
-      // Jaune réservé au cash et aux notes : l'alerte prend la teinte pêche.
-      AdminTone.warning => (c.tintPeche, c.originMaisonFg),
-      AdminTone.danger => (c.tintPimentClair, c.pimentStrong),
-      AdminTone.neutral => (c.muted, c.textSecondary),
+    final (fg, bg) = switch (tone) {
+      AdminTone.success => AdminPalette.green,
+      AdminTone.warning => AdminPalette.amber,
+      AdminTone.danger => AdminPalette.rose,
+      AdminTone.neutral => (AdminPalette.ink2, AdminPalette.muted),
     };
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: DymTokenSpace.s2,
-        vertical: 4,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: bg,
-        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+        borderRadius: BorderRadius.circular(99),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: 16, color: fg),
-            const SizedBox(width: 4),
-          ],
+          if (icon != null)
+            Icon(icon, size: 13, color: fg)
+          else
+            Container(
+              width: 6,
+              height: 6,
+              decoration: BoxDecoration(color: fg, shape: BoxShape.circle),
+            ),
+          const SizedBox(width: 5),
           Flexible(
             child: Text(
               label,
               style: context.dym.text.label.copyWith(
                 color: fg,
-                fontWeight: FontWeight.w700,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),

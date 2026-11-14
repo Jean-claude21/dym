@@ -12060,6 +12060,288 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Plus d\'actions'**
   String get cartMoreActions;
+
+  /// Groupe du menu de l'admin : tableau de bord, opérations
+  ///
+  /// In fr, this message translates to:
+  /// **'Pilotage'**
+  String get adminGroupPilot;
+
+  /// Groupe du menu : commandes, boutiques, clientes
+  ///
+  /// In fr, this message translates to:
+  /// **'Commerce'**
+  String get adminGroupCommerce;
+
+  /// Groupe du menu : finances
+  ///
+  /// In fr, this message translates to:
+  /// **'Argent'**
+  String get adminGroupMoney;
+
+  /// Groupe du menu : litiges, modération, support
+  ///
+  /// In fr, this message translates to:
+  /// **'Qualité'**
+  String get adminGroupQuality;
+
+  /// Groupe du menu : configuration, journal
+  ///
+  /// In fr, this message translates to:
+  /// **'Réglages'**
+  String get adminGroupSettings;
+
+  /// Sous-titre sous « DYM Admin » dans le menu
+  ///
+  /// In fr, this message translates to:
+  /// **'Console de l\'équipe'**
+  String get adminBrandSub;
+
+  /// Premier élément du fil d'Ariane de l'admin
+  ///
+  /// In fr, this message translates to:
+  /// **'DYM'**
+  String get adminCrumbRoot;
+
+  /// Bouton du menu de l'admin sur petit écran
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir le menu'**
+  String get adminOpenMenu;
+
+  /// Sous-titre du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes, livraisons et incidents. Chaque chiffre vient des mêmes données que le reste de DYM.'**
+  String get adminDashboardSubtitle;
+
+  /// Carte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes'**
+  String get adminCardSales;
+
+  /// Carte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutiques'**
+  String get adminCardStores;
+
+  /// Carte du tableau de bord
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get adminCardDelivery;
+
+  /// Carte du tableau de bord : barres des commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes dans le temps'**
+  String get adminCardDaily;
+
+  /// Carte du tableau de bord : de la visite à la livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Parcours des clientes'**
+  String get adminCardJourney;
+
+  /// Chiffre clé
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes livrées'**
+  String get adminMetricSales;
+
+  /// Chiffre clé : commandes livrées
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrées'**
+  String get adminMetricDelivered;
+
+  /// Chiffre clé
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier moyen'**
+  String get adminMetricBasket;
+
+  /// Chiffre clé : boutiques actives
+  ///
+  /// In fr, this message translates to:
+  /// **'Actives'**
+  String get adminMetricActive;
+
+  /// Chiffre clé : boutiques en brouillon
+  ///
+  /// In fr, this message translates to:
+  /// **'À valider'**
+  String get adminMetricToValidate;
+
+  /// Chiffre clé
+  ///
+  /// In fr, this message translates to:
+  /// **'Clientes actives'**
+  String get adminMetricActiveClients;
+
+  /// Chiffre clé : taux de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraisons réussies'**
+  String get adminMetricDeliveryRate;
+
+  /// Chiffre clé : en ligne sur actifs
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreurs en ligne'**
+  String get adminMetricCouriers;
+
+  /// Chiffre clé : délai médian d'acceptation d'une course
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise en charge'**
+  String get adminMetricAccept;
+
+  /// Chiffre clé
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get adminMetricOrders;
+
+  /// Chiffre clé : plus forte valeur de la série
+  ///
+  /// In fr, this message translates to:
+  /// **'Pic'**
+  String get adminMetricPeak;
+
+  /// Chiffre clé
+  ///
+  /// In fr, this message translates to:
+  /// **'Litiges ouverts'**
+  String get adminMetricDisputes;
+
+  /// Chiffre clé : tickets de support
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandes ouvertes'**
+  String get adminMetricTickets;
+
+  /// Chiffre clé
+  ///
+  /// In fr, this message translates to:
+  /// **'Bloquées'**
+  String get adminMetricStuck;
+
+  /// Chiffre clé : clientes actives du parcours
+  ///
+  /// In fr, this message translates to:
+  /// **'Clientes venues'**
+  String get adminMetricVisitors;
+
+  /// Chiffre clé : commandes / visites
+  ///
+  /// In fr, this message translates to:
+  /// **'Conversion'**
+  String get adminMetricConversion;
+
+  /// Intitulé au-dessus des barres
+  ///
+  /// In fr, this message translates to:
+  /// **'Articles vendus par rayon'**
+  String get adminSoldByAisle;
+
+  /// Intitulé au-dessus des barres des boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'Les plus actives'**
+  String get adminMostActiveStores;
+
+  /// Intitulé au-dessus des barres de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Issue des commandes'**
+  String get adminOrdersOutcome;
+
+  /// Note en bas de la carte Ventes
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes livrées · comparées à la période précédente'**
+  String get adminNoteSales;
+
+  /// Note en bas de la carte Boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes livrées par boutique sur la période'**
+  String get adminNoteStores;
+
+  /// Note en bas de la carte Livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'{relaunches} relances · {refused} refus automatiques'**
+  String adminNoteDelivery(String relaunches, String refused);
+
+  /// Note en bas de la carte À traiter
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez une ligne pour ouvrir l\'écran où agir'**
+  String get adminNoteTodo;
+
+  /// Note en bas de la carte Commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes boutiques · une barre par point de la période'**
+  String get adminNoteDaily;
+
+  /// Pastille d'une ligne À traiter
+  ///
+  /// In fr, this message translates to:
+  /// **'Litige'**
+  String get adminPillDispute;
+
+  /// Pastille d'une ligne À traiter
+  ///
+  /// In fr, this message translates to:
+  /// **'Support'**
+  String get adminPillTicket;
+
+  /// Pastille d'une ligne À traiter
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande'**
+  String get adminPillOrder;
+
+  /// Pastille d'une ligne À traiter
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique'**
+  String get adminPillStore;
+
+  /// Pastille d'une ligne À traiter
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get adminPillCourier;
+
+  /// Phrase sur la photo de la page de connexion de l'admin
+  ///
+  /// In fr, this message translates to:
+  /// **'Le marché du quartier, piloté en un coup d\'œil.'**
+  String get adminSignInHeroTitle;
+
+  /// Texte sous la phrase de la photo de connexion
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes, boutiques, livreurs et paiements : toute l\'activité de DYM au même endroit.'**
+  String get adminSignInHeroBody;
+
+  /// Sous-titre de la page Boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'{total} boutiques · {active} actives · {drafts} à valider'**
+  String adminStoresSubtitle(int total, String active, String drafts);
+
+  /// En-tête de colonne : type de boutique (marché, fait maison…)
+  ///
+  /// In fr, this message translates to:
+  /// **'Type'**
+  String get adminColType;
 }
 
 class _DymLocalizationsDelegate

@@ -1,7 +1,9 @@
 import 'package:dym_admin/features/dashboard/admin_charts.dart';
 import 'package:dym_admin/features/dashboard/ai_health_view.dart';
+import 'package:dym_admin/features/ops/admin_metric.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
@@ -297,102 +299,69 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
     final l10n = DymLocalizations.of(context);
     final vm = viewModel;
     final d = vm.data;
-    final toolbar = Wrap(
-      spacing: DymTokenSpace.s4,
-      runSpacing: DymTokenSpace.s2,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      children: [
-        _Segmented(
+    final actions = [
+      AdminSegmented(
+        options: [
+          (false, l10n.adminDashboardOverview),
+          (true, l10n.adminDashboardAi),
+        ],
+        selected: vm.ai,
+        onSelect: (v) => vm.selectAi(value: v),
+      ),
+      if (!vm.ai)
+        AdminSegmented(
           options: [
-            (false, l10n.adminDashboardOverview),
-            (true, l10n.adminDashboardAi),
+            ('day', l10n.dashboardDay),
+            ('week', l10n.dashboardWeek),
+            ('month', l10n.dashboardMonth),
           ],
-          selected: vm.ai,
-          onSelect: (v) => vm.selectAi(value: v),
+          selected: vm.period,
+          onSelect: vm.selectPeriod,
         ),
-        if (!vm.ai)
-          _Segmented(
-            options: [
-              ('day', l10n.dashboardDay),
-              ('week', l10n.dashboardWeek),
-              ('month', l10n.dashboardMonth),
-            ],
-            selected: vm.period,
-            onSelect: vm.selectPeriod,
-          ),
-      ],
-    );
-    if (vm.ai) {
-      return AdminPage(
-        title: l10n.adminNavDashboard,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            toolbar,
-            const SizedBox(height: DymTokenSpace.s3),
-            AdminAiHealthView(service: service),
-          ],
-        ),
-      );
-    }
-    if (!vm.ready || d == null) {
-      return AdminPage(
-        title: l10n.adminNavDashboard,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            toolbar,
-            const SizedBox(height: DymTokenSpace.s3),
-            AdminState(
-              failure: vm.isBusy ? null : vm.failure,
-              onRetry: vm.load,
-            ),
-          ],
-        ),
-      );
-    }
-    const gap = SizedBox(height: DymTokenSpace.s3);
-    return AdminPage(
+    ];
+    AdminPage page(Widget child) => AdminPage(
       title: l10n.adminNavDashboard,
-      child: Column(
+      subtitle: l10n.adminDashboardSubtitle,
+      actions: actions,
+      child: child,
+    );
+    if (vm.ai) return page(AdminAiHealthView(service: service));
+    if (!vm.ready || d == null) {
+      return page(
+        AdminState(failure: vm.isBusy ? null : vm.failure, onRetry: vm.load),
+      );
+    }
+    const gap = SizedBox(height: 14);
+    return page(
+      Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          toolbar,
-          gap,
-          _TodoCard(vm: vm, onOpen: onOpen),
+          AdminCardGrid(
+            children: [
+              _SalesCard(vm: vm),
+              _StoresCard(vm: vm, onOpen: onOpen),
+              _DeliveryCard(vm: vm),
+              _TodoCard(vm: vm, onOpen: onOpen),
+              if (vm.overview != null) _DailyCard(vm: vm),
+              if (vm.overview case final o?) _JourneyCard(funnel: o.funnel),
+            ],
+          ),
           gap,
           if (vm.overview != null) ...[
-            _KpiGrid(vm: vm, onOpen: onOpen),
-            gap,
             AdminRow(
               items: [
                 (8, _TrendCard(vm: vm)),
-                (4, _FunnelCard(funnel: vm.overview!.funnel)),
+                if (vm.overview case final o?)
+                  (4, _OutcomesCard(outcomes: o.outcomes)),
               ],
             ),
             gap,
           ],
           AdminRow(
             items: [
-              if (vm.overview case final o?)
-                (4, _OutcomesCard(outcomes: o.outcomes)),
-              if (vm.dispatch case final x?)
-                (4, _DeliveryCard(dispatch: x, onOpen: onOpen)),
               if (vm.exchanges case final x?) (4, _StoresByTypeCard(x: x)),
-            ],
-          ),
-          gap,
-          AdminRow(
-            items: [
-              if (vm.exchanges case final x?) (6, _ExchangesCard(x: x)),
-              (6, _AudienceCard(data: d, coverage: vm.coverage)),
-            ],
-          ),
-          gap,
-          AdminRow(
-            items: [
-              (7, _TopStoresCard(vm: vm, onOpen: onOpen)),
-              (5, _TopCategoriesCard(data: d)),
+              if (vm.exchanges case final x?) (4, _ExchangesCard(x: x)),
+              (4, _AudienceCard(data: d, coverage: vm.coverage)),
             ],
           ),
         ],
@@ -401,67 +370,209 @@ class AdminDashboardView extends StackedView<AdminDashboardViewModel> {
   }
 }
 
-/// Choix exclusif compact (période, section).
-class _Segmented<T> extends StatelessWidget {
-  const new({
-    required this.options,
-    required this.selected,
-    required this.onSelect,
-  });
+/// Ventes : montant livré, commandes livrées, panier moyen, rayons.
+class _SalesCard extends StatelessWidget {
+  const new({required this.vm});
 
-  final List<(T, String)> options;
-  final T selected;
-  final ValueChanged<T> onSelect;
+  final AdminDashboardViewModel vm;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: c.card,
-        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-        border: Border.all(color: c.hairline),
-      ),
-      child: Wrap(
-        children: [
-          for (final (value, label) in options)
-            Semantics(
-              selected: value == selected,
-              button: true,
-              child: Material(
-                color: value == selected ? c.brand : Colors.transparent,
-                borderRadius: BorderRadius.circular(DymTokenRadius.chip - 2),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(DymTokenRadius.chip - 2),
-                  onTap: () => onSelect(value),
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(minHeight: 40),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: DymTokenSpace.s3,
-                        vertical: 8,
-                      ),
-                      child: Text(
-                        label,
-                        style: t.label.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: value == selected ? c.onBrand : c.textPrimary,
-                        ),
-                      ),
+    final l10n = DymLocalizations.of(context);
+    final locale = Localizations.localeOf(context).languageCode;
+    final d = vm.data!;
+    final o = vm.overview;
+    final code = vm.currency;
+    final sales = code == null ? null : o?.current.salesIn(code);
+    final basket = code == null ? null : o?.current.basketIn(code);
+    final total = d.topCategories.fold(0, (s, x) => s + x.quantity);
+    final top = d.topCategories.fold(
+      1,
+      (m, x) => x.quantity > m ? x.quantity : m,
+    );
+    return AdminMetricCard(
+      icon: Icons.eco_outlined,
+      hue: AdminPalette.green,
+      title: l10n.adminCardSales,
+      metrics: [
+        (
+          value: sales == null ? '—' : vm.money(sales, code),
+          unit: null,
+          label: l10n.adminMetricSales,
+        ),
+        (
+          value: '${o?.current.delivered ?? '—'}',
+          unit: null,
+          label: l10n.adminMetricDelivered,
+        ),
+        (
+          value: basket == null ? '—' : vm.money(basket, code),
+          unit: null,
+          label: l10n.adminMetricBasket,
+        ),
+      ],
+      caption: d.topCategories.isEmpty ? null : l10n.adminSoldByAisle,
+      note: l10n.adminNoteSales,
+      child: d.topCategories.isEmpty
+          ? AdminEmpty(l10n.adminNoData)
+          : Column(
+              children: [
+                for (final cat in d.topCategories.take(5))
+                  AdminBarRow(
+                    label: cat.label.resolve(locale),
+                    value: '${cat.quantity}',
+                    extra: l10n.adminPercent(
+                      total == 0 ? 0 : (cat.quantity * 100 / total).round(),
                     ),
+                    fraction: cat.quantity / top,
+                    hue: AdminPalette.green,
                   ),
-                ),
-              ),
+              ],
             ),
-        ],
-      ),
     );
   }
 }
 
-/// Alertes à traiter, chacune ouvre l'écran où agir.
+/// Boutiques : actives, à valider, clientes actives, les plus actives.
+class _StoresCard extends StatelessWidget {
+  const new({required this.vm, required this.onOpen});
+
+  final AdminDashboardViewModel vm;
+  final ValueChanged<DashboardLink> onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final d = vm.data!;
+    final top = d.topStores.fold(
+      1,
+      (m, s) => s.salesMinor > m ? s.salesMinor : m,
+    );
+    return AdminMetricCard(
+      icon: Icons.storefront_outlined,
+      hue: AdminPalette.blue,
+      title: l10n.adminCardStores,
+      action: TextButton(
+        onPressed: () => onOpen(DashboardLink.stores),
+        child: Text(l10n.adminSeeAll),
+      ),
+      metrics: [
+        (
+          value: '${d.activeVendors}',
+          unit: null,
+          label: l10n.adminMetricActive,
+        ),
+        (
+          value: '${d.draftStores}',
+          unit: null,
+          label: l10n.adminMetricToValidate,
+        ),
+        (
+          value: '${d.activeClients}',
+          unit: null,
+          label: l10n.adminMetricActiveClients,
+        ),
+      ],
+      caption: d.topStores.isEmpty ? null : l10n.adminMostActiveStores,
+      note: l10n.adminNoteStores,
+      child: d.topStores.isEmpty
+          ? AdminEmpty(l10n.adminNoData)
+          : Column(
+              children: [
+                for (final s in d.topStores.take(5))
+                  AdminBarRow(
+                    label: s.name,
+                    value: vm.money(s.salesMinor, s.currencyCode),
+                    extra: l10n.adminOrdersCount(s.orders),
+                    extraWidth: 96,
+                    fraction: s.salesMinor / top,
+                    hue: AdminPalette.blue,
+                  ),
+              ],
+            ),
+    );
+  }
+}
+
+/// Livraison : taux de réussite, livreurs en ligne, prise en charge, issues.
+class _DeliveryCard extends StatelessWidget {
+  const new({required this.vm});
+
+  final AdminDashboardViewModel vm;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final d = vm.data!;
+    final x = vm.dispatch;
+    final out = vm.overview?.outcomes;
+    final rate = d.deliveries.percent;
+    final parts = out == null
+        ? const <(String, int, AdminHue)>[]
+        : [
+            (l10n.adminOutcomeDelivered, out.delivered, AdminPalette.teal),
+            (l10n.adminOutcomeInProgress, out.inProgress, AdminPalette.blue),
+            (l10n.adminOutcomeRefused, out.refused, AdminPalette.rose),
+            (l10n.adminOutcomeCancelled, out.cancelled, AdminPalette.amber),
+          ];
+    final sum = parts.fold(0, (s, p) => s + p.$2);
+    final median = x?.medianAcceptMinutes;
+    return AdminMetricCard(
+      icon: Icons.two_wheeler_outlined,
+      hue: AdminPalette.teal,
+      title: l10n.adminCardDelivery,
+      metrics: [
+        (
+          value: rate == null ? '—' : '$rate',
+          unit: rate == null ? null : '%',
+          label: l10n.adminMetricDeliveryRate,
+        ),
+        (
+          value: x == null ? '—' : '${x.couriersOnline}',
+          unit: x == null ? null : '/ ${x.couriersActive}',
+          label: l10n.adminMetricCouriers,
+        ),
+        (
+          value: median == null ? '—' : '$median',
+          unit: median == null ? null : 'min',
+          label: l10n.adminMetricAccept,
+        ),
+      ],
+      caption: parts.isEmpty ? null : l10n.adminOrdersOutcome,
+      note: x == null
+          ? null
+          : l10n.adminNoteDelivery('${x.relaunches}', '${x.autoRefused}'),
+      child: parts.isEmpty
+          ? AdminEmpty(l10n.adminNoData)
+          : Column(
+              children: [
+                for (final (label, n, hue) in parts)
+                  AdminBarRow(
+                    label: label,
+                    value: '$n',
+                    extra: l10n.adminPercent(
+                      sum == 0 ? 0 : (n * 100 / sum).round(),
+                    ),
+                    fraction: sum == 0 ? 0 : n / sum,
+                    hue: hue,
+                  ),
+              ],
+            ),
+    );
+  }
+}
+
+/// Ligne de « À traiter ».
+typedef _Todo = ({
+  int count,
+  String label,
+  String? late,
+  String pill,
+  AdminTone tone,
+  DashboardLink link,
+});
+
+/// À traiter : chaque ligne ouvre l'écran où agir.
 class _TodoCard extends StatelessWidget {
   const new({required this.vm, required this.onOpen});
 
@@ -474,321 +585,254 @@ class _TodoCard extends StatelessWidget {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final d = vm.data!;
-    if (vm.nothingToDo) {
-      return AdminCard(
-        color: c.tintVertTendre,
-        borderColor: c.tintVertTendre,
-        child: Row(
-          children: [
-            Icon(Icons.check_circle_rounded, color: c.brandDeep),
-            const SizedBox(width: DymTokenSpace.s2),
-            Text(
-              l10n.adminTodoNone,
-              style: t.body.copyWith(
-                color: c.brandDeep,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-    final items = [
+    final waiting = vm.dispatch?.waiting ?? 0;
+    final rows = <_Todo>[
       if (d.stuckOrders > 0)
-        _TodoItem(
-          icon: Icons.error_rounded,
+        (
           count: d.stuckOrders,
           label: l10n.adminStuckOrders,
-          danger: true,
-          onTap: () => onOpen(DashboardLink.stuckOrders),
+          late: null,
+          pill: l10n.adminPillOrder,
+          tone: AdminTone.danger,
+          link: DashboardLink.stuckOrders,
         ),
-      if ((vm.dispatch?.waiting ?? 0) > 0)
-        _TodoItem(
-          icon: Icons.two_wheeler_rounded,
-          count: vm.dispatch!.waiting,
+      if (waiting > 0)
+        (
+          count: waiting,
           label: l10n.adminMissionsWaiting,
-          danger: true,
-          onTap: () => onOpen(DashboardLink.live),
+          late: null,
+          pill: l10n.adminPillCourier,
+          tone: AdminTone.danger,
+          link: DashboardLink.live,
         ),
       if (d.openDisputes > 0)
-        _TodoItem(
-          icon: Icons.gavel_rounded,
+        (
           count: d.openDisputes,
           label: l10n.adminPendingDisputes,
-          note: d.lateDisputes > 0
+          late: d.lateDisputes > 0
               ? l10n.adminLateDisputes(d.lateDisputes)
               : null,
-          onTap: () => onOpen(DashboardLink.disputes),
+          pill: l10n.adminPillDispute,
+          tone: AdminTone.danger,
+          link: DashboardLink.disputes,
         ),
       if (d.openTickets > 0)
-        _TodoItem(
-          icon: Icons.forum_rounded,
+        (
           count: d.openTickets,
           label: l10n.adminOpenTickets,
-          note: d.lateTickets > 0 ? l10n.adminLateTickets(d.lateTickets) : null,
-          onTap: () => onOpen(DashboardLink.tickets),
+          late: d.lateTickets > 0 ? l10n.adminLateTickets(d.lateTickets) : null,
+          pill: l10n.adminPillTicket,
+          tone: AdminTone.warning,
+          link: DashboardLink.tickets,
         ),
       if (d.draftStores > 0)
-        _TodoItem(
-          icon: Icons.storefront_rounded,
+        (
           count: d.draftStores,
           label: l10n.adminDraftStores,
-          onTap: () => onOpen(DashboardLink.drafts),
+          late: null,
+          pill: l10n.adminPillStore,
+          tone: AdminTone.warning,
+          link: DashboardLink.drafts,
         ),
     ];
-    return AdminCard(
+    return AdminMetricCard(
+      icon: Icons.warning_amber_rounded,
+      hue: AdminPalette.rose,
       title: l10n.adminTodoTitle,
-      child: Wrap(
-        spacing: DymTokenSpace.s3,
-        runSpacing: DymTokenSpace.s3,
-        children: items,
-      ),
-    );
-  }
-}
-
-class _TodoItem extends StatelessWidget {
-  const new({
-    required this.icon,
-    required this.count,
-    required this.label,
-    required this.onTap,
-    this.note,
-    this.danger = false,
-  });
-
-  final IconData icon;
-  final int count;
-  final String label;
-  final String? note;
-  final bool danger;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    final (bg, fg) = danger
-        ? (c.tintPimentClair, c.pimentStrong)
-        : (c.tintPeche, c.originMaisonFg);
-    return SizedBox(
-      width: 260,
-      child: Material(
-        color: bg,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(DymTokenSpace.s3),
-            child: Row(
+      metrics: [
+        (
+          value: '${d.openDisputes}',
+          unit: null,
+          label: l10n.adminMetricDisputes,
+        ),
+        (value: '${d.openTickets}', unit: null, label: l10n.adminMetricTickets),
+        (value: '${d.stuckOrders}', unit: null, label: l10n.adminMetricStuck),
+      ],
+      note: rows.isEmpty ? null : l10n.adminNoteTodo,
+      child: rows.isEmpty
+          ? Row(
               children: [
-                Icon(icon, color: fg),
-                const SizedBox(width: DymTokenSpace.s2),
-                Text(
-                  '$count',
-                  style: t.title.copyWith(fontSize: 28, color: fg),
-                ),
-                const SizedBox(width: DymTokenSpace.s2),
+                Icon(Icons.check_circle_rounded, color: c.brand, size: 20),
+                const SizedBox(width: 8),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        label,
-                        style: t.label.copyWith(
-                          color: fg,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      if (note case final n?)
-                        Text(
-                          n,
-                          style: t.label.copyWith(color: fg, fontSize: 12),
-                        ),
-                    ],
+                  child: Text(
+                    l10n.adminTodoNone,
+                    style: t.body.copyWith(
+                      color: c.brandDeep,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
-                Icon(Icons.arrow_forward_rounded, color: fg, size: 20),
+              ],
+            )
+          : Column(
+              children: [
+                for (final row in rows)
+                  InkWell(
+                    onTap: () => onOpen(row.link),
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      constraints: const BoxConstraints(minHeight: 48),
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: AdminPalette.line),
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 34,
+                            child: Text(
+                              '${row.count}',
+                              style: t.title.copyWith(fontSize: 16),
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  row.label,
+                                  style: t.label.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                                if (row.late case final late?)
+                                  Text(
+                                    late,
+                                    style: t.label.copyWith(
+                                      fontSize: 12,
+                                      color: AdminPalette.rose.$1,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                          AdminPill(row.pill, tone: row.tone),
+                          const SizedBox(width: 4),
+                          const Icon(
+                            Icons.chevron_right_rounded,
+                            size: 18,
+                            color: AdminPalette.ink3,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
               ],
             ),
-          ),
-        ),
-      ),
     );
   }
 }
 
-/// Six chiffres clés : 6 colonnes sur grand écran, 3 sur tablette, 2 sur
-/// téléphone.
-class _KpiGrid extends StatelessWidget {
-  const new({required this.vm, required this.onOpen});
+/// Commandes dans le temps : une barre par point de la période.
+class _DailyCard extends StatelessWidget {
+  const new({required this.vm});
 
   final AdminDashboardViewModel vm;
-  final ValueChanged<DashboardLink> onOpen;
 
   @override
   Widget build(BuildContext context) {
-    final kpis = vm.kpis;
-    return LayoutBuilder(
-      builder: (context, box) {
-        final w = box.maxWidth;
-        final cols = w >= 1200
-            ? 6
-            : w >= 720
-            ? 3
-            : (w >= 340 ? 2 : 1);
-        const gap = DymTokenSpace.s3;
-        final width = (w - gap * (cols - 1)) / cols;
-        return Wrap(
-          spacing: gap,
-          runSpacing: gap,
-          children: [
-            for (final k in kpis)
-              SizedBox(
-                width: width,
-                child: _KpiCard(
-                  kpi: k,
-                  period: vm.period,
-                  onTap: () => onOpen(k.link),
-                ),
-              ),
-          ],
-        );
-      },
+    final l10n = DymLocalizations.of(context);
+    final material = MaterialLocalizations.of(context);
+    final o = vm.overview!;
+    final values = [for (final p in o.series) p.orders];
+    final peak = values.fold(0, (m, v) => v > m ? v : m);
+    final hourly = vm.period == 'day';
+    final every = values.length <= 8 ? 1 : (values.length / 5).ceil();
+    String? at(int i) {
+      if (i % every != 0 && i != values.length - 1) return null;
+      final d = o.series[i].at.toLocal();
+      return hourly
+          ? material.formatTimeOfDay(TimeOfDay.fromDateTime(d))
+          : material.formatShortMonthDay(d);
+    }
+
+    return AdminMetricCard(
+      icon: Icons.bar_chart_rounded,
+      hue: AdminPalette.blue,
+      title: l10n.adminCardDaily,
+      metrics: [
+        (
+          value: '${o.current.orders}',
+          unit: null,
+          label: l10n.adminMetricOrders,
+        ),
+        (
+          value: '${o.current.delivered}',
+          unit: null,
+          label: l10n.adminMetricDelivered,
+        ),
+        (value: '$peak', unit: null, label: l10n.adminMetricPeak),
+      ],
+      note: l10n.adminNoteDaily,
+      child: values.isEmpty
+          ? AdminEmpty(l10n.adminNoData)
+          : AdminColumnChart(
+              values: values,
+              hue: AdminPalette.blue,
+              label: at,
+              semanticLabel: l10n.adminCardDaily,
+            ),
     );
   }
 }
 
-class _KpiCard extends StatelessWidget {
-  const new({required this.kpi, required this.period, required this.onTap});
+/// Parcours des clientes : de la visite à la livraison.
+class _JourneyCard extends StatelessWidget {
+  const new({required this.funnel});
 
-  final DashboardKpi kpi;
-  final String period;
-  final VoidCallback onTap;
+  final AdminFunnel funnel;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final (icon, label) = switch (kpi.kind) {
-      KpiKind.sales => (Icons.payments_rounded, l10n.adminKpiSales),
-      KpiKind.orders => (Icons.shopping_bag_rounded, l10n.adminKpiOrders),
-      KpiKind.basket => (Icons.shopping_basket_rounded, l10n.adminKpiBasket),
-      KpiKind.deliveries => (
-        Icons.local_shipping_rounded,
-        l10n.adminKpiDeliveries,
-      ),
-      KpiKind.payments => (Icons.credit_card_rounded, l10n.adminKpiPayments),
-      KpiKind.signups => (Icons.person_add_rounded, l10n.adminKpiSignups),
-    };
-    final rate = kpi.kind == KpiKind.deliveries || kpi.kind == KpiKind.payments;
-    String show(String? v) =>
-        v == null ? '—' : (rate ? l10n.adminPercent(int.parse(v)) : v);
-    final vs = switch (period) {
-      'week' => l10n.adminVsWeek,
-      'month' => l10n.adminVsMonth,
-      _ => l10n.adminVsDay,
-    };
-    final delta = kpi.delta;
-    final good = delta == null || delta == 0
+    final steps = [
+      (l10n.adminFunnelActive, funnel.active),
+      (l10n.adminFunnelViewed, funnel.viewed),
+      (l10n.adminFunnelAdded, funnel.added),
+      (l10n.adminFunnelOrdered, funnel.ordered),
+      (l10n.adminFunnelDelivered, funnel.delivered),
+    ];
+    final top = steps.fold(1, (m, s) => s.$2 > m ? s.$2 : m);
+    final conversion = funnel.active == 0
         ? null
-        : (delta > 0) == kpi.higherIsBetter;
-    final (dbg, dfg) = switch (good) {
-      true => (c.tintVertTendre, c.brandDeep),
-      false => (c.tintPimentClair, c.pimentStrong),
-      null => (c.muted, c.textSecondary),
-    };
-    final deltaText = switch (delta) {
-      null => kpi.isNew ? l10n.adminDeltaNew : '—',
-      0 => '= ${rate ? l10n.adminPoints(0) : l10n.adminPercent(0)}',
-      final d => [
-        if (d > 0) '▲' else '▼',
-        if (rate) l10n.adminPoints(d.abs()) else l10n.adminPercent(d.abs()),
-      ].join(' '),
-    };
-    return Material(
-      color: c.card,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-        side: BorderSide(color: c.hairline),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(DymTokenSpace.s3),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    radius: 16,
-                    backgroundColor: c.tintVertTendre,
-                    child: Icon(icon, size: 18, color: c.brandDeep),
-                  ),
-                  const SizedBox(width: DymTokenSpace.s2),
-                  Expanded(
-                    child: Text(
-                      label,
-                      maxLines: 2,
-                      style: t.label.copyWith(color: c.textSecondary),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: DymTokenSpace.s2),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  show(kpi.value),
-                  style: t.display.copyWith(fontSize: 30, height: 1.1),
-                ),
-              ),
-              const SizedBox(height: 6),
-              Wrap(
-                spacing: 6,
-                runSpacing: 4,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: dbg,
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      deltaText,
-                      style: t.label.copyWith(
-                        fontSize: 12,
-                        color: dfg,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    vs,
-                    style: t.label.copyWith(
-                      fontSize: 12,
-                      color: c.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: DymTokenSpace.s2),
-              if (kpi.spark.length > 1)
-                AdminSparkline(values: kpi.spark, color: c.brand)
-              else
-                const SizedBox(height: 36),
-            ],
-          ),
+        : (funnel.ordered * 100 / funnel.active).round();
+    return AdminMetricCard(
+      icon: Icons.route_outlined,
+      hue: AdminPalette.orange,
+      title: l10n.adminCardJourney,
+      metrics: [
+        (
+          value: '${funnel.active}',
+          unit: null,
+          label: l10n.adminMetricVisitors,
         ),
+        (
+          value: '${funnel.ordered}',
+          unit: null,
+          label: l10n.adminFunnelOrdered,
+        ),
+        (
+          value: conversion == null ? '—' : '$conversion',
+          unit: conversion == null ? null : '%',
+          label: l10n.adminMetricConversion,
+        ),
+      ],
+      note: l10n.adminFunnelHelp,
+      child: Column(
+        children: [
+          for (final (label, n) in steps)
+            AdminBarRow(
+              label: label,
+              value: '$n',
+              extra: l10n.adminPercent((n * 100 / top).round()),
+              fraction: n / top,
+              hue: AdminPalette.orange,
+            ),
+        ],
       ),
     );
   }
@@ -822,7 +866,7 @@ class _TrendCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Segmented(
+          AdminSegmented(
             options: [
               (TrendMetric.orders, l10n.adminTrendOrders),
               (TrendMetric.sales, l10n.adminTrendSales),
@@ -838,42 +882,6 @@ class _TrendCard extends StatelessWidget {
             xLabel: at,
             yLabel: AdminDashboardViewModel.compact,
             tooltip: (i) => '${at(i)} · $label : ${vm.trendValue(i)}',
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FunnelCard extends StatelessWidget {
-  const new({required this.funnel});
-
-  final AdminFunnel funnel;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    final l10n = DymLocalizations.of(context);
-    return AdminCard(
-      title: l10n.adminFunnelTitle,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          AdminFunnelChart(
-            percent: l10n.adminPercent,
-            steps: [
-              (label: l10n.adminFunnelActive, value: funnel.active),
-              (label: l10n.adminFunnelViewed, value: funnel.viewed),
-              (label: l10n.adminFunnelAdded, value: funnel.added),
-              (label: l10n.adminFunnelOrdered, value: funnel.ordered),
-              (label: l10n.adminFunnelDelivered, value: funnel.delivered),
-            ],
-          ),
-          const SizedBox(height: DymTokenSpace.s3),
-          Text(
-            l10n.adminFunnelHelp,
-            style: t.label.copyWith(fontSize: 12, color: c.textSecondary),
           ),
         ],
       ),
@@ -922,115 +930,35 @@ class _OutcomesCard extends StatelessWidget {
   }
 }
 
-/// Grand chiffre avec son libellé (cliquable si [onTap]).
+/// Grand chiffre avec son libellé, sur fond gris clair.
 class _Stat extends StatelessWidget {
-  const new({
-    required this.label,
-    required this.value,
-    this.danger = false,
-    this.onTap,
-  });
+  const new({required this.label, required this.value});
 
   final String label;
   final String value;
-  final bool danger;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
     final t = context.dym.text;
-    final fg = danger ? c.pimentStrong : c.textPrimary;
-    return Material(
-      color: danger ? c.tintPimentClair : c.background,
-      borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(DymTokenRadius.chip),
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(DymTokenSpace.s2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  value,
-                  style: t.title.copyWith(fontSize: 24, color: fg),
-                ),
-              ),
-              Text(
-                label,
-                maxLines: 2,
-                style: t.label.copyWith(
-                  fontSize: 12,
-                  color: danger ? fg : c.textSecondary,
-                ),
-              ),
-            ],
-          ),
-        ),
+    return Container(
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: AdminPalette.muted,
+        borderRadius: BorderRadius.circular(10),
       ),
-    );
-  }
-}
-
-class _DeliveryCard extends StatelessWidget {
-  const new({required this.dispatch, required this.onOpen});
-
-  final AdminDispatch dispatch;
-  final ValueChanged<DashboardLink> onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = DymLocalizations.of(context);
-    final x = dispatch;
-    return AdminCard(
-      title: l10n.adminDispatchTitle,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: _Stat(
-                  label: l10n.adminStatOnline,
-                  value: l10n.adminCouriersOnlineValue(
-                    x.couriersOnline,
-                    x.couriersActive,
-                  ),
-                  onTap: () => onOpen(DashboardLink.live),
-                ),
-              ),
-              const SizedBox(width: DymTokenSpace.s2),
-              Expanded(
-                child: _Stat(
-                  label: l10n.adminStatWaiting,
-                  value: '${x.waiting}',
-                  danger: x.waiting > 0,
-                  onTap: () => onOpen(DashboardLink.live),
-                ),
-              ),
-              const SizedBox(width: DymTokenSpace.s2),
-              Expanded(
-                child: _Stat(
-                  label: l10n.adminStatMedian,
-                  value: switch (x.medianAcceptMinutes) {
-                    final m? => l10n.adminMinutesValue(m),
-                    null => '—',
-                  },
-                ),
-              ),
-            ],
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value, style: t.display.copyWith(fontSize: 20)),
           ),
-          const SizedBox(height: DymTokenSpace.s3),
-          AdminField(
-            l10n.adminRelaunches,
-            l10n.adminRelaunchesValue(x.relaunches, x.widened),
+          Text(
+            label,
+            maxLines: 2,
+            style: t.label.copyWith(fontSize: 12, color: AdminPalette.ink3),
           ),
-          AdminField(l10n.adminAutoRefused, '${x.autoRefused}'),
-          AdminField(l10n.adminReadyAlerts, '${x.readyAlerts}'),
         ],
       ),
     );
@@ -1233,220 +1161,6 @@ class _AudienceCard extends StatelessWidget {
             Text(
               l10n.adminCoverageHelp,
               style: t.label.copyWith(fontSize: 12, color: c.textSecondary),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _TopStoresCard extends StatelessWidget {
-  const new({required this.vm, required this.onOpen});
-
-  final AdminDashboardViewModel vm;
-  final ValueChanged<DashboardLink> onOpen;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    final l10n = DymLocalizations.of(context);
-    final stores = vm.data!.topStores;
-    final head = t.label.copyWith(
-      color: c.textSecondary,
-      fontWeight: FontWeight.w600,
-    );
-    return AdminCard(
-      title: l10n.adminTopStores,
-      trailing: TextButton(
-        onPressed: () => onOpen(DashboardLink.stores),
-        child: Text(l10n.adminSeeAll),
-      ),
-      child: stores.isEmpty
-          ? AdminEmpty(l10n.adminNoData)
-          // Téléphone : une ligne par boutique plutôt qu'un tableau serré.
-          : MediaQuery.sizeOf(context).width < 640
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                for (final (i, s) in stores.indexed)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 28,
-                          child: Text(
-                            '${i + 1}',
-                            style: t.label.copyWith(
-                              color: c.brandDeep,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                s.name,
-                                style: t.body.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                [
-                                  l10n.adminOrdersCount(s.orders),
-                                  vm.money(s.salesMinor, s.currencyCode),
-                                  if (s.rating case final r?)
-                                    '★ ${r.toStringAsFixed(1)}',
-                                ].join(' · '),
-                                style: t.label.copyWith(color: c.textSecondary),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            )
-          : Table(
-              columnWidths: const {
-                0: FixedColumnWidth(32),
-                1: FlexColumnWidth(3),
-                2: FlexColumnWidth(1.4),
-                3: FlexColumnWidth(2),
-                4: FlexColumnWidth(1.2),
-              },
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                TableRow(
-                  decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(color: c.hairline)),
-                  ),
-                  children: [
-                    const SizedBox(height: 32),
-                    Text(l10n.adminColStore, style: head),
-                    Text(
-                      l10n.adminColOrders,
-                      style: head,
-                      textAlign: TextAlign.end,
-                    ),
-                    Text(
-                      l10n.adminColSales,
-                      style: head,
-                      textAlign: TextAlign.end,
-                    ),
-                    Text(
-                      l10n.adminColRating,
-                      style: head,
-                      textAlign: TextAlign.end,
-                    ),
-                  ],
-                ),
-                for (final (i, s) in stores.indexed)
-                  TableRow(
-                    decoration: BoxDecoration(
-                      border: Border(bottom: BorderSide(color: c.hairline)),
-                    ),
-                    children: [
-                      SizedBox(
-                        height: 44,
-                        child: Center(
-                          child: Text(
-                            '${i + 1}',
-                            style: t.label.copyWith(
-                              color: c.brandDeep,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Text(
-                        s.name,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: t.body.copyWith(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        '${s.orders}',
-                        style: t.body,
-                        textAlign: TextAlign.end,
-                      ),
-                      Text(
-                        vm.money(s.salesMinor, s.currencyCode),
-                        style: t.body,
-                        textAlign: TextAlign.end,
-                      ),
-                      Text(
-                        s.rating == null
-                            ? '—'
-                            : '★ ${s.rating!.toStringAsFixed(1)}',
-                        style: t.body,
-                        textAlign: TextAlign.end,
-                      ),
-                    ],
-                  ),
-              ],
-            ),
-    );
-  }
-}
-
-class _TopCategoriesCard extends StatelessWidget {
-  const new({required this.data});
-
-  final AdminDashboard data;
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final t = context.dym.text;
-    final l10n = DymLocalizations.of(context);
-    final locale = Localizations.localeOf(context).languageCode;
-    final total = data.topCategories.fold(0, (s, x) => s + x.quantity);
-    final maxProduct = data.topProducts.fold(
-      1,
-      (m, x) => x.quantity > m ? x.quantity : m,
-    );
-    return AdminCard(
-      title: l10n.adminTopCategories,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (data.topCategories.isEmpty) AdminEmpty(l10n.adminNoData),
-          AdminBarList(
-            rows: [
-              for (final cat in data.topCategories)
-                (
-                  cat.label.resolve(locale),
-                  l10n.adminPercent(
-                    total == 0 ? 0 : (cat.quantity * 100 / total).round(),
-                  ),
-                  total == 0 ? 0 : cat.quantity / total,
-                ),
-            ],
-          ),
-          if (data.topProducts.isNotEmpty) ...[
-            const SizedBox(height: DymTokenSpace.s3),
-            Text(
-              l10n.adminTopProducts,
-              style: t.label.copyWith(
-                color: c.textSecondary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            AdminBarList(
-              rows: [
-                for (final p in data.topProducts)
-                  (
-                    [p.label.resolve(locale), ?p.detail].join(' · '),
-                    '${p.quantity}',
-                    p.quantity / maxProduct,
-                  ),
-              ],
             ),
           ],
         ],

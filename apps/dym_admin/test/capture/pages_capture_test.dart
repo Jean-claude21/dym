@@ -12,8 +12,8 @@ import 'package:dym_admin/features/orders/orders_views.dart';
 import 'package:dym_admin/features/settings/settings_view.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
 import 'package:dym_admin/features/support/support_view.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_l10n/dym_l10n.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -33,7 +33,7 @@ Future<void> _capture(
   await tester.pumpWidget(
     MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: DymTheme.light(),
+      theme: adminTheme(),
       locale: const Locale('fr'),
       localizationsDelegates: DymLocalizations.localizationsDelegates,
       supportedLocales: DymLocalizations.supportedLocales,

@@ -8,6 +8,7 @@ import 'package:dym_admin/features/settings/settings_viewmodel.dart';
 import 'package:dym_admin/features/stores/stores_view.dart';
 import 'package:dym_admin/features/stores/stores_viewmodel.dart';
 import 'package:dym_admin/features/support/support_view.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_admin/ui/views/home/admin_home_view.dart';
 import 'package:dym_auth/dym_auth.dart';
@@ -15,7 +16,6 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -45,7 +45,7 @@ Future<void> _pump(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     MaterialApp(
-      theme: DymTheme.light(),
+      theme: adminTheme(),
       locale: locale,
       localizationsDelegates: DymLocalizations.localizationsDelegates,
       supportedLocales: DymLocalizations.supportedLocales,
@@ -71,6 +71,9 @@ Future<void> _settle(WidgetTester tester) async {
 class _Auth implements AuthService {
   @override
   AccountApp get app => AccountApp.admin;
+
+  @override
+  String? get email => 'ops@dym.example';
 
   @override
   Future<Result<void>> signOut() async => const Ok(null);
@@ -275,12 +278,16 @@ void main() {
         clock: _clock,
       ),
     );
+    await tester.ensureVisible(find.text('Tickets ouverts'));
+    await _settle(tester);
     await tester.tap(find.text('Tickets ouverts'));
     await _settle(tester);
     expect(find.text('Comment changer mes horaires ?'), findsOneWidget);
   });
 
-  testWidgets('téléphone : « Plus » ouvre les autres onglets', (tester) async {
+  testWidgets('téléphone : le menu s’ouvre en tiroir (spec 091)', (
+    tester,
+  ) async {
     await _pump(
       tester,
       AdminHomeView(
@@ -291,13 +298,14 @@ void main() {
       ),
       size: const Size(412, 915),
     );
-    // Sept domaines : les trois premiers dans la barre, le reste dans « Plus ».
-    expect(find.text('Plus'), findsOneWidget);
+    // Menu replié : seul le bouton de la barre du haut est visible.
     expect(find.text('Journal'), findsNothing);
+    await tester.tap(find.byTooltip('Ouvrir le menu'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Support').last);
     await tester.pumpAndSettle();
     expect(find.text('Je n’ai pas reçu ma monnaie'), findsOneWidget);
-    await tester.tap(find.text('Plus'));
+    await tester.tap(find.byTooltip('Ouvrir le menu'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Journal'));
     await tester.pumpAndSettle();

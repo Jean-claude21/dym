@@ -8241,5 +8241,212 @@
   "cartMoreActions": "Plus d'actions",
   "@cartMoreActions": {
     "description": "Bouton « ⋯ » de l'en-tête du panier : enregistrer, envoyer à un espace"
+  },
+  "adminGroupPilot": "Pilotage",
+  "@adminGroupPilot": {
+    "description": "Groupe du menu de l'admin : tableau de bord, opérations"
+  },
+  "adminGroupCommerce": "Commerce",
+  "@adminGroupCommerce": {
+    "description": "Groupe du menu : commandes, boutiques, clientes"
+  },
+  "adminGroupMoney": "Argent",
+  "@adminGroupMoney": {
+    "description": "Groupe du menu : finances"
+  },
+  "adminGroupQuality": "Qualité",
+  "@adminGroupQuality": {
+    "description": "Groupe du menu : litiges, modération, support"
+  },
+  "adminGroupSettings": "Réglages",
+  "@adminGroupSettings": {
+    "description": "Groupe du menu : configuration, journal"
+  },
+  "adminBrandSub": "Console de l'équipe",
+  "@adminBrandSub": {
+    "description": "Sous-titre sous « DYM Admin » dans le menu"
+  },
+  "adminCrumbRoot": "DYM",
+  "@adminCrumbRoot": {
+    "description": "Premier élément du fil d'Ariane de l'admin"
+  },
+  "adminOpenMenu": "Ouvrir le menu",
+  "@adminOpenMenu": {
+    "description": "Bouton du menu de l'admin sur petit écran"
+  },
+  "adminDashboardSubtitle": "Ventes, livraisons et incidents. Chaque chiffre vient des mêmes données que le reste de DYM.",
+  "@adminDashboardSubtitle": {
+    "description": "Sous-titre du tableau de bord"
+  },
+  "adminCardSales": "Ventes",
+  "@adminCardSales": {
+    "description": "Carte du tableau de bord"
+  },
+  "adminCardStores": "Boutiques",
+  "@adminCardStores": {
+    "description": "Carte du tableau de bord"
+  },
+  "adminCardDelivery": "Livraison",
+  "@adminCardDelivery": {
+    "description": "Carte du tableau de bord"
+  },
+  "adminCardDaily": "Commandes dans le temps",
+  "@adminCardDaily": {
+    "description": "Carte du tableau de bord : barres des commandes"
+  },
+  "adminCardJourney": "Parcours des clientes",
+  "@adminCardJourney": {
+    "description": "Carte du tableau de bord : de la visite à la livraison"
+  },
+  "adminMetricSales": "Ventes livrées",
+  "@adminMetricSales": {
+    "description": "Chiffre clé"
+  },
+  "adminMetricDelivered": "Livrées",
+  "@adminMetricDelivered": {
+    "description": "Chiffre clé : commandes livrées"
+  },
+  "adminMetricBasket": "Panier moyen",
+  "@adminMetricBasket": {
+    "description": "Chiffre clé"
+  },
+  "adminMetricActive": "Actives",
+  "@adminMetricActive": {
+    "description": "Chiffre clé : boutiques actives"
+  },
+  "adminMetricToValidate": "À valider",
+  "@adminMetricToValidate": {
+    "description": "Chiffre clé : boutiques en brouillon"
+  },
+  "adminMetricActiveClients": "Clientes actives",
+  "@adminMetricActiveClients": {
+    "description": "Chiffre clé"
+  },
+  "adminMetricDeliveryRate": "Livraisons réussies",
+  "@adminMetricDeliveryRate": {
+    "description": "Chiffre clé : taux de livraison"
+  },
+  "adminMetricCouriers": "Livreurs en ligne",
+  "@adminMetricCouriers": {
+    "description": "Chiffre clé : en ligne sur actifs"
+  },
+  "adminMetricAccept": "Prise en charge",
+  "@adminMetricAccept": {
+    "description": "Chiffre clé : délai médian d'acceptation d'une course"
+  },
+  "adminMetricOrders": "Commandes",
+  "@adminMetricOrders": {
+    "description": "Chiffre clé"
+  },
+  "adminMetricPeak": "Pic",
+  "@adminMetricPeak": {
+    "description": "Chiffre clé : plus forte valeur de la série"
+  },
+  "adminMetricDisputes": "Litiges ouverts",
+  "@adminMetricDisputes": {
+    "description": "Chiffre clé"
+  },
+  "adminMetricTickets": "Demandes ouvertes",
+  "@adminMetricTickets": {
+    "description": "Chiffre clé : tickets de support"
+  },
+  "adminMetricStuck": "Bloquées",
+  "@adminMetricStuck": {
+    "description": "Chiffre clé"
+  },
+  "adminMetricVisitors": "Clientes venues",
+  "@adminMetricVisitors": {
+    "description": "Chiffre clé : clientes actives du parcours"
+  },
+  "adminMetricConversion": "Conversion",
+  "@adminMetricConversion": {
+    "description": "Chiffre clé : commandes / visites"
+  },
+  "adminSoldByAisle": "Articles vendus par rayon",
+  "@adminSoldByAisle": {
+    "description": "Intitulé au-dessus des barres"
+  },
+  "adminMostActiveStores": "Les plus actives",
+  "@adminMostActiveStores": {
+    "description": "Intitulé au-dessus des barres des boutiques"
+  },
+  "adminOrdersOutcome": "Issue des commandes",
+  "@adminOrdersOutcome": {
+    "description": "Intitulé au-dessus des barres de livraison"
+  },
+  "adminNoteSales": "Commandes livrées · comparées à la période précédente",
+  "@adminNoteSales": {
+    "description": "Note en bas de la carte Ventes"
+  },
+  "adminNoteStores": "Ventes livrées par boutique sur la période",
+  "@adminNoteStores": {
+    "description": "Note en bas de la carte Boutiques"
+  },
+  "adminNoteDelivery": "{relaunches} relances · {refused} refus automatiques",
+  "@adminNoteDelivery": {
+    "description": "Note en bas de la carte Livraison",
+    "placeholders": {
+      "relaunches": {
+        "type": "String"
+      },
+      "refused": {
+        "type": "String"
+      }
+    }
+  },
+  "adminNoteTodo": "Touchez une ligne pour ouvrir l'écran où agir",
+  "@adminNoteTodo": {
+    "description": "Note en bas de la carte À traiter"
+  },
+  "adminNoteDaily": "Toutes boutiques · une barre par point de la période",
+  "@adminNoteDaily": {
+    "description": "Note en bas de la carte Commandes"
+  },
+  "adminPillDispute": "Litige",
+  "@adminPillDispute": {
+    "description": "Pastille d'une ligne À traiter"
+  },
+  "adminPillTicket": "Support",
+  "@adminPillTicket": {
+    "description": "Pastille d'une ligne À traiter"
+  },
+  "adminPillOrder": "Commande",
+  "@adminPillOrder": {
+    "description": "Pastille d'une ligne À traiter"
+  },
+  "adminPillStore": "Boutique",
+  "@adminPillStore": {
+    "description": "Pastille d'une ligne À traiter"
+  },
+  "adminPillCourier": "Livraison",
+  "@adminPillCourier": {
+    "description": "Pastille d'une ligne À traiter"
+  },
+  "adminSignInHeroTitle": "Le marché du quartier, piloté en un coup d'œil.",
+  "@adminSignInHeroTitle": {
+    "description": "Phrase sur la photo de la page de connexion de l'admin"
+  },
+  "adminSignInHeroBody": "Commandes, boutiques, livreurs et paiements : toute l'activité de DYM au même endroit.",
+  "@adminSignInHeroBody": {
+    "description": "Texte sous la phrase de la photo de connexion"
+  },
+  "adminStoresSubtitle": "{total} boutiques · {active} actives · {drafts} à valider",
+  "@adminStoresSubtitle": {
+    "description": "Sous-titre de la page Boutiques",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "active": {
+        "type": "String"
+      },
+      "drafts": {
+        "type": "String"
+      }
+    }
+  },
+  "adminColType": "Type",
+  "@adminColType": {
+    "description": "En-tête de colonne : type de boutique (marché, fait maison…)"
   }
 }

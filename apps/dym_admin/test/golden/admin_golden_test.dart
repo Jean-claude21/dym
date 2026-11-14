@@ -1,12 +1,12 @@
 @Tags(['golden'])
 library;
 
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_view.dart';
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_viewmodel.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_l10n/dym_l10n.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -36,7 +36,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: DymTheme.light(),
+        theme: adminTheme(),
         locale: const Locale('fr'),
         localizationsDelegates: DymLocalizations.localizationsDelegates,
         supportedLocales: DymLocalizations.supportedLocales,

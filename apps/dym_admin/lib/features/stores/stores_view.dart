@@ -1,7 +1,9 @@
+import 'package:dym_admin/features/ops/admin_metric.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/ops/admin_texts.dart';
 import 'package:dym_admin/features/ops/admin_widgets.dart';
 import 'package:dym_admin/features/stores/stores_viewmodel.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
@@ -9,7 +11,7 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Écran 55 : boutiques, profil et actions de l'équipe.
+/// Écran 55 : boutiques en tableau, fiche à droite (spec 091).
 class AdminStoresView extends StackedView<AdminStoresViewModel> {
   const new({required this.service, super.key});
 
@@ -29,39 +31,62 @@ class AdminStoresView extends StackedView<AdminStoresViewModel> {
     Widget? child,
   ) {
     final l10n = DymLocalizations.of(context);
+    final t = context.dym.text;
     final vm = viewModel;
     final page = vm.page;
+    final wide = MediaQuery.sizeOf(context).width >= 1000;
+    int count(AdminStoreStatus s) => page?.count(s) ?? 0;
+    final total =
+        count(AdminStoreStatus.active) +
+        count(AdminStoreStatus.draft) +
+        count(AdminStoreStatus.suspended);
+    final search = SizedBox(
+      width: wide ? 300 : double.infinity,
+      child: TextField(
+        textInputAction: TextInputAction.search,
+        onSubmitted: vm.search,
+        style: t.body,
+        decoration: InputDecoration(
+          isDense: true,
+          hintText: l10n.adminStoreSearch,
+          prefixIcon: const Icon(Icons.search_rounded, size: 20),
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: AdminPalette.lineStrong),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: AdminPalette.lineStrong),
+          ),
+        ),
+      ),
+    );
+    final tabs = AdminSegmented(
+      options: [
+        for (final s in const [
+          AdminStoreStatus.active,
+          AdminStoreStatus.draft,
+          AdminStoreStatus.suspended,
+        ])
+          (
+            s,
+            switch (s) {
+              AdminStoreStatus.active => l10n.adminStoresActive,
+              AdminStoreStatus.draft => l10n.adminStoresDraft,
+              _ => l10n.adminStoresSuspended,
+            }(count(s)),
+          ),
+      ],
+      selected: vm.status,
+      onSelect: vm.selectStatus,
+    );
     final list = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        DymTextField(
-          label: l10n.adminStoreSearch,
-          icon: Icons.search_rounded,
-          textInputAction: TextInputAction.search,
-          onSubmitted: vm.search,
-        ),
-        const SizedBox(height: DymTokenSpace.s2),
-        Wrap(
-          spacing: DymTokenSpace.s2,
-          runSpacing: DymTokenSpace.s2,
-          children: [
-            for (final s in const [
-              AdminStoreStatus.active,
-              AdminStoreStatus.draft,
-              AdminStoreStatus.suspended,
-            ])
-              DymFilterChip(
-                label: switch (s) {
-                  AdminStoreStatus.active => l10n.adminStoresActive,
-                  AdminStoreStatus.draft => l10n.adminStoresDraft,
-                  _ => l10n.adminStoresSuspended,
-                }(page?.count(s) ?? 0),
-                selected: vm.status == s,
-                onTap: () => vm.selectStatus(s),
-              ),
-          ],
-        ),
-        const SizedBox(height: DymTokenSpace.s2),
+        Align(alignment: Alignment.centerLeft, child: tabs),
+        const SizedBox(height: 14),
+        if (wide) const _HeaderRow(),
         Expanded(
           child: !vm.ready || page == null
               ? AdminState(
@@ -72,8 +97,9 @@ class AdminStoresView extends StackedView<AdminStoresViewModel> {
                   children: [
                     if (page.stores.isEmpty) AdminEmpty(l10n.adminNoStores),
                     for (final s in page.stores)
-                      _StoreTile(
+                      _StoreRow(
                         row: s,
+                        wide: wide,
                         selected: s.id == vm.selectedId,
                         onTap: () => vm.select(s.id),
                       ),
@@ -83,29 +109,147 @@ class AdminStoresView extends StackedView<AdminStoresViewModel> {
       ],
     );
     final selected = vm.selectedId;
+    final detail = selected == null
+        ? null
+        : (vm.store == null
+              ? AdminState(
+                  failure: vm.loadingStore ? null : vm.actionFailure,
+                  onRetry: () => vm.select(selected),
+                )
+              : _Profile(vm: vm));
     return AdminPage(
       title: l10n.navStores,
+      subtitle: page == null
+          ? null
+          : l10n.adminStoresSubtitle(
+              total,
+              '${count(AdminStoreStatus.active)}',
+              '${count(AdminStoreStatus.draft)}',
+            ),
+      actions: [search],
       scrollable: false,
-      child: AdminSplit(
-        list: list,
-        detail: selected == null
-            ? null
-            : (vm.store == null
-                  ? AdminState(
-                      failure: vm.loadingStore ? null : vm.actionFailure,
-                      onRetry: () => vm.select(selected),
-                    )
-                  : _Profile(vm: vm)),
-        onCloseDetail: vm.close,
+      child: wide
+          ? Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: list),
+                if (detail != null) ...[
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    width: 380,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          left: BorderSide(color: AdminPalette.line),
+                        ),
+                      ),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              tooltip: l10n.adminClose,
+                              onPressed: vm.close,
+                              icon: const Icon(
+                                Icons.close_rounded,
+                                size: 20,
+                                color: AdminPalette.ink3,
+                              ),
+                            ),
+                          ),
+                          Expanded(child: detail),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            )
+          : AdminSplit(list: list, detail: detail, onCloseDetail: vm.close),
+    );
+  }
+}
+
+/// Teinte d'avatar stable pour une boutique.
+AdminHue _hueOf(String name) {
+  const hues = [
+    AdminPalette.green,
+    AdminPalette.blue,
+    AdminPalette.teal,
+    AdminPalette.orange,
+    AdminPalette.rose,
+    AdminPalette.amber,
+  ];
+  return hues[name.codeUnits.fold(0, (a, b) => a + b) % hues.length];
+}
+
+class _Avatar extends StatelessWidget {
+  const new({required this.name, this.size = 32});
+
+  final String name;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final hue = _hueOf(name);
+    return Container(
+      width: size,
+      height: size,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: hue.$1,
+        borderRadius: BorderRadius.circular(size * 0.27),
+      ),
+      child: Text(
+        name.characters.first.toUpperCase(),
+        style: context.dym.text.title.copyWith(
+          color: Colors.white,
+          fontSize: size * 0.42,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
 }
 
-class _StoreTile extends StatelessWidget {
-  const new({required this.row, required this.selected, required this.onTap});
+class _HeaderRow extends StatelessWidget {
+  const new();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final style = context.dym.text.label.copyWith(
+      fontSize: 12,
+      color: AdminPalette.ink3,
+      fontWeight: FontWeight.w500,
+    );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+      child: Row(
+        children: [
+          Expanded(flex: 5, child: Text(l10n.adminColStore, style: style)),
+          Expanded(flex: 2, child: Text(l10n.adminColType, style: style)),
+          Expanded(flex: 2, child: Text(l10n.adminColStatus, style: style)),
+          Expanded(flex: 2, child: Text(l10n.adminActorVendor, style: style)),
+          const SizedBox(width: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class _StoreRow extends StatelessWidget {
+  const new({
+    required this.row,
+    required this.wide,
+    required this.selected,
+    required this.onTap,
+  });
 
   final AdminStoreRow row;
+  final bool wide;
   final bool selected;
   final VoidCallback onTap;
 
@@ -113,50 +257,107 @@ class _StoreTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
     final origin =
         row.originLabel?.resolve(
           Localizations.localeOf(context).languageCode,
         ) ??
         '';
+    final place = [?row.zoneName, ?row.cityName].join(' · ');
+    final status = AdminPill(
+      _statusLabel(l10n, row.status),
+      tone: _statusTone(row.status),
+    );
+    final name = Row(
+      children: [
+        _Avatar(name: row.name),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                row.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: t.label.copyWith(
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w600,
+                  color: c.textPrimary,
+                ),
+              ),
+              if (place.isNotEmpty || !wide)
+                Text(
+                  wide
+                      ? place
+                      : [
+                          if (origin.isNotEmpty) origin,
+                          ?row.ownerFirstName,
+                        ].join(' · '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.label.copyWith(
+                    fontSize: 12,
+                    color: AdminPalette.ink3,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
     return Material(
-      color: selected ? c.tintVertTendre : Colors.transparent,
-      shape: Border(bottom: BorderSide(color: c.hairline)),
+      color: selected ? const Color(0xFFF3F8F5) : Colors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Container(
-          constraints: const BoxConstraints(minHeight: 64),
-          padding: const EdgeInsets.symmetric(
-            horizontal: DymTokenSpace.s3,
-            vertical: DymTokenSpace.s2,
-          ),
+          constraints: const BoxConstraints(minHeight: 56),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: c.background)),
+            border: Border(
+              top: const BorderSide(color: AdminPalette.line),
+              left: BorderSide(
+                color: selected ? c.brand : Colors.transparent,
+                width: 3,
+              ),
+            ),
           ),
           child: Row(
             children: [
-              CircleAvatar(
-                backgroundColor: c.tintVertTendre,
-                child: Text(
-                  row.name.characters.first,
-                  style: t.title.copyWith(color: c.brandDeep),
+              if (wide) ...[
+                Expanded(flex: 5, child: name),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    origin,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: t.label,
+                  ),
                 ),
-              ),
-              const SizedBox(width: DymTokenSpace.s2),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(row.name, style: t.title.copyWith(fontSize: 16)),
-                    Text(
-                      row.ownerFirstName ?? '',
-                      style: t.label.copyWith(color: c.textSecondary),
-                    ),
-                  ],
+                Expanded(
+                  flex: 2,
+                  child: Align(alignment: Alignment.centerLeft, child: status),
                 ),
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    row.ownerFirstName ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: t.label,
+                  ),
+                ),
+              ] else ...[
+                Expanded(child: name),
+                status,
+              ],
+              const Icon(
+                Icons.chevron_right_rounded,
+                size: 20,
+                color: AdminPalette.ink3,
               ),
-              if (origin.isNotEmpty)
-                Flexible(child: AdminPill(origin, tone: AdminTone.success)),
-              const Icon(Icons.chevron_right_rounded),
             ],
           ),
         ),
@@ -164,6 +365,19 @@ class _StoreTile extends StatelessWidget {
     );
   }
 }
+
+String _statusLabel(DymLocalizations l10n, AdminStoreStatus status) =>
+    switch (status) {
+      AdminStoreStatus.active => l10n.adminStoreActive,
+      AdminStoreStatus.draft => l10n.adminStoreDraft,
+      _ => l10n.adminStoreSuspended,
+    };
+
+AdminTone _statusTone(AdminStoreStatus status) => switch (status) {
+  AdminStoreStatus.active => AdminTone.success,
+  AdminStoreStatus.suspended => AdminTone.danger,
+  _ => AdminTone.warning,
+};
 
 class _Profile extends StatelessWidget {
   const new({required this.vm});
@@ -178,41 +392,11 @@ class _Profile extends StatelessWidget {
     final s = vm.store!;
     final row = s.row;
     final suspended = row.status == AdminStoreStatus.suspended;
-    Widget stat(
-      IconData icon,
-      String label,
-      String value, {
-      bool alert = false,
-    }) => Container(
-      constraints: const BoxConstraints(minWidth: 180),
-      padding: const EdgeInsets.all(DymTokenSpace.s3),
-      decoration: BoxDecoration(
-        color: alert ? c.tintPimentClair : c.tintVertTendre,
-        borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: alert ? c.pimentStrong : c.brandDeep),
-          const SizedBox(width: DymTokenSpace.s2),
-          Flexible(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(label, style: t.label),
-                Text(
-                  value,
-                  style: t.title.copyWith(
-                    fontSize: 22,
-                    color: alert ? c.pimentStrong : c.brandDeep,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+    final origin =
+        row.originLabel?.resolve(
+          Localizations.localeOf(context).languageCode,
+        ) ??
+        '';
     Future<void> toggle() async {
       final reason = await showReasonDialog(
         context,
@@ -248,150 +432,235 @@ class _Profile extends StatelessWidget {
       );
     }
 
+    final stats = [
+      (l10n.adminOrders7d, '${s.orders7d}', false),
+      (l10n.adminSales7d, vm.money(s.sales7dMinor, s.currencyCode), false),
+      (l10n.adminPublishedProducts, '${s.publishedProducts}', false),
+      (l10n.adminOpenDisputesCount, '${s.openDisputes}', s.openDisputes > 0),
+    ];
     return SingleChildScrollView(
-      child: AdminCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Wrap(
-              spacing: DymTokenSpace.s2,
-              crossAxisAlignment: WrapCrossAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border.all(color: AdminPalette.line),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(row.name, style: t.display.copyWith(fontSize: 28)),
-                AdminPill(
-                  switch (row.status) {
-                    AdminStoreStatus.active => l10n.adminStoreActive,
-                    AdminStoreStatus.draft => l10n.adminStoreDraft,
-                    _ => l10n.adminStoreSuspended,
-                  },
-                  tone: switch (row.status) {
-                    AdminStoreStatus.active => AdminTone.success,
-                    AdminStoreStatus.suspended => AdminTone.danger,
-                    _ => AdminTone.neutral,
-                  },
+                Row(
+                  children: [
+                    _Avatar(name: row.name, size: 44),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            [
+                              if (origin.isNotEmpty) origin,
+                              [?row.zoneName, ?row.cityName].join(', '),
+                            ].where((x) => x.isNotEmpty).join(' · '),
+                            style: t.label.copyWith(
+                              fontSize: 12,
+                              color: AdminPalette.ink3,
+                            ),
+                          ),
+                          Text(
+                            row.name,
+                            style: t.display.copyWith(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: DymTokenSpace.s1),
-            AdminField(l10n.adminActorVendor, row.ownerFirstName ?? ''),
-            AdminField(
-              l10n.adminAddress,
-              [?row.zoneName, ?row.cityName].join(', '),
-            ),
-            if (row.publishedAt case final at?)
-              AdminField(
-                l10n.adminOpenedOn,
-                MaterialLocalizations.of(context)
-                    .formatMediumDate(at.toLocal()),
-              ),
-            const Divider(height: DymTokenSpace.s5),
-            Wrap(
-              spacing: DymTokenSpace.s2,
-              runSpacing: DymTokenSpace.s2,
-              children: [
-                stat(
-                  Icons.shopping_cart_rounded,
-                  l10n.adminOrders7d,
-                  '${s.orders7d}',
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 6,
+                  children: [
+                    AdminPill(
+                      _statusLabel(l10n, row.status),
+                      tone: _statusTone(row.status),
+                    ),
+                  ],
                 ),
-                stat(
-                  Icons.payments_rounded,
-                  l10n.adminSales7d,
-                  vm.money(s.sales7dMinor, s.currencyCode),
+                const SizedBox(height: 12),
+                AdminField(l10n.adminActorVendor, row.ownerFirstName ?? ''),
+                AdminField(
+                  l10n.adminAddress,
+                  [?row.zoneName, ?row.cityName].join(', '),
                 ),
-                stat(
-                  Icons.inventory_2_rounded,
-                  l10n.adminPublishedProducts,
-                  '${s.publishedProducts}',
-                ),
-                stat(
-                  Icons.warning_amber_rounded,
-                  l10n.adminOpenDisputesCount,
-                  '${s.openDisputes}',
-                  alert: s.openDisputes > 0,
-                ),
-              ],
-            ),
-            const SizedBox(height: DymTokenSpace.s3),
-            Text(l10n.adminTeamHistory, style: t.title.copyWith(fontSize: 18)),
-            if (s.audit.isEmpty) AdminEmpty(l10n.adminNoHistory),
-            for (final e in s.audit)
-              ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: Icon(Icons.history_rounded, color: c.textSecondary),
-                title: Text(
-                  [
+                if (row.publishedAt case final at?)
+                  AdminField(
+                    l10n.adminOpenedOn,
                     MaterialLocalizations.of(context)
-                        .formatShortMonthDay(e.occurredAt.toLocal()),
-                    auditActionLabel(l10n, e.action),
-                    ?e.reason,
-                  ].join(' · '),
-                ),
-                subtitle: e.actorFirstName == null
-                    ? null
-                    : Text(e.actorFirstName!),
-              ),
-            if (vm.actionFailure case final failure?)
-              AdminAlert(adminFailureLabel(l10n, failure)),
-            const SizedBox(height: DymTokenSpace.s2),
-            Wrap(
-              spacing: DymTokenSpace.s2,
-              runSpacing: DymTokenSpace.s3,
-              children: [
-                DymButton(
-                  label: l10n.adminViewAsVendor,
-                  icon: Icons.visibility_rounded,
-                  variant: DymButtonVariant.secondary,
-                  expanded: false,
-                  onPressed: asVendor,
-                ),
-                DymButton(
-                  label: l10n.adminEditStore,
-                  icon: Icons.edit_rounded,
-                  variant: DymButtonVariant.secondary,
-                  expanded: false,
-                  onPressed: vm.acting ? null : edit,
-                ),
-                DymButton(
-                  label: suspended
-                      ? l10n.adminReactivateStore
-                      : l10n.adminSuspendStore,
-                  icon: suspended
-                      ? Icons.play_arrow_rounded
-                      : Icons.block_rounded,
-                  variant: suspended
-                      ? DymButtonVariant.primary
-                      : DymButtonVariant.destructive,
-                  expanded: false,
-                  loading: vm.acting,
-                  onPressed: vm.acting ? null : toggle,
-                ),
+                        .formatMediumDate(at.toLocal()),
+                  ),
               ],
             ),
-            if (row.publishedAt == null)
-              Padding(
-                padding: const EdgeInsets.only(top: DymTokenSpace.s2),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: DymButton(
-                    label: l10n.adminDeleteVendor,
-                    icon: Icons.delete_forever_rounded,
-                    variant: DymButtonVariant.destructive,
-                    expanded: false,
-                    onPressed: vm.acting ? null : remove,
+          ),
+          const SizedBox(height: 12),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: AdminPalette.line),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Column(
+              children: [
+                for (final pair in [stats.sublist(0, 2), stats.sublist(2)])
+                  IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final (i, (label, value, alert)) in pair.indexed)
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  left: i == 0
+                                      ? BorderSide.none
+                                      : const BorderSide(
+                                          color: AdminPalette.line,
+                                        ),
+                                  top: pair == stats.sublist(0, 2)
+                                      ? BorderSide.none
+                                      : const BorderSide(
+                                          color: AdminPalette.line,
+                                        ),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    label,
+                                    style: t.label.copyWith(
+                                      fontSize: 12,
+                                      color: AdminPalette.ink3,
+                                    ),
+                                  ),
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      value,
+                                      style: t.display.copyWith(
+                                        fontSize: 18,
+                                        color: alert
+                                            ? AdminPalette.rose.$1
+                                            : c.textPrimary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(l10n.adminTeamHistory, style: t.title),
+          const SizedBox(height: 6),
+          if (s.audit.isEmpty) AdminEmpty(l10n.adminNoHistory),
+          for (final e in s.audit)
+            Container(
+              margin: const EdgeInsets.only(bottom: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+              decoration: BoxDecoration(
+                border: Border.all(color: AdminPalette.line),
+                borderRadius: BorderRadius.circular(10),
               ),
-            if (!suspended)
-              Padding(
-                padding: const EdgeInsets.only(top: DymTokenSpace.s1),
-                child: Text(
-                  l10n.adminSuspendHelp,
-                  style: t.label.copyWith(color: c.textSecondary),
-                ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.history_rounded,
+                    size: 16,
+                    color: AdminPalette.ink3,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      [
+                        MaterialLocalizations.of(context)
+                            .formatShortMonthDay(e.occurredAt.toLocal()),
+                        auditActionLabel(l10n, e.action),
+                        ?e.reason,
+                        ?e.actorFirstName,
+                      ].join(' · '),
+                      style: t.label,
+                    ),
+                  ),
+                ],
               ),
-          ],
-        ),
+            ),
+          if (vm.actionFailure case final failure?)
+            AdminAlert(adminFailureLabel(l10n, failure)),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              DymButton(
+                label: l10n.adminViewAsVendor,
+                icon: Icons.visibility_rounded,
+                variant: DymButtonVariant.secondary,
+                expanded: false,
+                compact: true,
+                onPressed: asVendor,
+              ),
+              DymButton(
+                label: l10n.adminEditStore,
+                icon: Icons.edit_rounded,
+                variant: DymButtonVariant.secondary,
+                expanded: false,
+                compact: true,
+                onPressed: vm.acting ? null : edit,
+              ),
+              DymButton(
+                label: suspended
+                    ? l10n.adminReactivateStore
+                    : l10n.adminSuspendStore,
+                icon: suspended
+                    ? Icons.play_arrow_rounded
+                    : Icons.block_rounded,
+                variant: suspended
+                    ? DymButtonVariant.primary
+                    : DymButtonVariant.destructive,
+                expanded: false,
+                compact: true,
+                loading: vm.acting,
+                onPressed: vm.acting ? null : toggle,
+              ),
+              if (row.publishedAt == null)
+                DymButton(
+                  label: l10n.adminDeleteVendor,
+                  icon: Icons.delete_forever_rounded,
+                  variant: DymButtonVariant.destructive,
+                  expanded: false,
+                  compact: true,
+                  onPressed: vm.acting ? null : remove,
+                ),
+            ],
+          ),
+          if (!suspended)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                l10n.adminSuspendHelp,
+                style: t.label.copyWith(fontSize: 12, color: AdminPalette.ink3),
+              ),
+            ),
+        ],
       ),
     );
   }

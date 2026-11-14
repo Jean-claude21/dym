@@ -1,6 +1,6 @@
 import 'package:dym_admin/app/app.router.dart';
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_l10n/dym_l10n.dart';
-import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -11,7 +11,7 @@ class AdminApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     onGenerateTitle: (context) => DymLocalizations.of(context).appNameAdmin,
-    theme: DymTheme.light(),
+    theme: adminTheme(),
     debugShowCheckedModeBanner: false,
     localizationsDelegates: DymLocalizations.localizationsDelegates,
     supportedLocales: DymLocalizations.supportedLocales,

@@ -1,3 +1,4 @@
+import 'package:dym_admin/ui/admin_theme.dart';
 import 'package:dym_admin/ui/navigation.dart';
 import 'package:dym_admin/ui/views/sign_in/admin_sign_in_viewmodel.dart';
 import 'package:dym_admin/ui/views/sign_in/google_button.dart';
@@ -7,8 +8,8 @@ import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
-/// Connexion de l'équipe (design « Épuré ») : formulaire posé sur le fond,
-/// photo du marché en pleine hauteur à gauche sur grand écran.
+/// Connexion de l'équipe (spec 091) : sur grand écran, carte blanche centrée
+/// sur le fond de la console, photo du marché encadrée à gauche.
 class AdminSignInView extends StackedView<AdminSignInViewModel> {
   const new({super.key, this.notice, this.viewModelFactory});
 
@@ -141,11 +142,11 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
             ],
           ),
           const SizedBox(height: DymTokenSpace.s6),
-          Text(l10n.adminSignInTitle, style: t.display.copyWith(fontSize: 30)),
+          Text(l10n.adminSignInTitle, style: t.display.copyWith(fontSize: 28)),
           const SizedBox(height: DymTokenSpace.s2),
           Text(
             l10n.adminSignInBody,
-            style: t.body.copyWith(fontSize: 16, color: c.textSecondary),
+            style: t.body.copyWith(color: c.textSecondary),
           ),
           const SizedBox(height: DymTokenSpace.s5),
           emailAction,
@@ -192,49 +193,125 @@ class AdminSignInView extends StackedView<AdminSignInViewModel> {
       ),
     );
 
-    final page = Center(
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(DymLayout.gutter(context)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            card,
-            const SizedBox(height: DymTokenSpace.s4),
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 420),
-              child: Text(
-                l10n.adminAuditNote,
-                style: t.label.copyWith(
-                  fontWeight: FontWeight.w400,
-                  color: c.textSecondary,
-                ),
-              ),
+    final form = ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 400),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          card,
+          const SizedBox(height: DymTokenSpace.s3),
+          Text(
+            l10n.adminAuditNote,
+            style: t.label.copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: AdminPalette.ink3,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
 
+    if (!wide) {
+      return Scaffold(
+        backgroundColor: AdminPalette.panel,
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(DymLayout.gutter(context)),
+              child: form,
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Grand écran : carte blanche centrée, photo encadrée à gauche (spec 091).
+    final hero = ClipRRect(
+      borderRadius: BorderRadius.circular(14),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const Image(
+            image: AssetImage('assets/admin_hero.webp', package: 'dym_auth'),
+            fit: BoxFit.cover,
+          ),
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0x00000000), Color(0xB3102A20)],
+                stops: [0.45, 1],
+              ),
+            ),
+          ),
+          Positioned(
+            left: 28,
+            right: 28,
+            bottom: 28,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.adminSignInHeroTitle,
+                  style: t.display.copyWith(
+                    color: Colors.white,
+                    fontSize: 26,
+                    height: 1.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.adminSignInHeroBody,
+                  style: t.body.copyWith(color: const Color(0xE6FFFFFF)),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
     return Scaffold(
-      backgroundColor: c.background,
+      backgroundColor: AdminPalette.shell,
       body: SafeArea(
-        child: wide
-            ? Row(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 1120),
+              height: 660,
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: AdminPalette.panel,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: AdminPalette.line),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x0F000000),
+                    blurRadius: 40,
+                    offset: Offset(0, 12),
+                  ),
+                ],
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Expanded(
-                    child: Image(
-                      image: AssetImage(
-                        'assets/admin_hero.webp',
-                        package: 'dym_auth',
+                  Expanded(child: hero),
+                  Expanded(
+                    child: Center(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(horizontal: 48),
+                        child: form,
                       ),
-                      fit: BoxFit.cover,
-                      height: double.infinity,
                     ),
                   ),
-                  Expanded(child: page),
                 ],
-              )
-            : page,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

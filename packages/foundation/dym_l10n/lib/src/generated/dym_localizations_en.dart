@@ -7237,4 +7237,152 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get cartMoreActions => 'More actions';
+
+  @override
+  String get adminGroupPilot => 'Overview';
+
+  @override
+  String get adminGroupCommerce => 'Commerce';
+
+  @override
+  String get adminGroupMoney => 'Money';
+
+  @override
+  String get adminGroupQuality => 'Quality';
+
+  @override
+  String get adminGroupSettings => 'Settings';
+
+  @override
+  String get adminBrandSub => 'Team console';
+
+  @override
+  String get adminCrumbRoot => 'DYM';
+
+  @override
+  String get adminOpenMenu => 'Open menu';
+
+  @override
+  String get adminDashboardSubtitle =>
+      'Sales, deliveries and incidents. Every figure comes from the same data as the rest of DYM.';
+
+  @override
+  String get adminCardSales => 'Sales';
+
+  @override
+  String get adminCardStores => 'Stores';
+
+  @override
+  String get adminCardDelivery => 'Delivery';
+
+  @override
+  String get adminCardDaily => 'Orders over time';
+
+  @override
+  String get adminCardJourney => 'Customer journey';
+
+  @override
+  String get adminMetricSales => 'Delivered sales';
+
+  @override
+  String get adminMetricDelivered => 'Delivered';
+
+  @override
+  String get adminMetricBasket => 'Average basket';
+
+  @override
+  String get adminMetricActive => 'Active';
+
+  @override
+  String get adminMetricToValidate => 'To review';
+
+  @override
+  String get adminMetricActiveClients => 'Active customers';
+
+  @override
+  String get adminMetricDeliveryRate => 'Successful deliveries';
+
+  @override
+  String get adminMetricCouriers => 'Couriers online';
+
+  @override
+  String get adminMetricAccept => 'Pickup time';
+
+  @override
+  String get adminMetricOrders => 'Orders';
+
+  @override
+  String get adminMetricPeak => 'Peak';
+
+  @override
+  String get adminMetricDisputes => 'Open disputes';
+
+  @override
+  String get adminMetricTickets => 'Open requests';
+
+  @override
+  String get adminMetricStuck => 'Stuck';
+
+  @override
+  String get adminMetricVisitors => 'Visiting customers';
+
+  @override
+  String get adminMetricConversion => 'Conversion';
+
+  @override
+  String get adminSoldByAisle => 'Items sold by aisle';
+
+  @override
+  String get adminMostActiveStores => 'Most active';
+
+  @override
+  String get adminOrdersOutcome => 'Order outcomes';
+
+  @override
+  String get adminNoteSales =>
+      'Delivered orders · compared with the previous period';
+
+  @override
+  String get adminNoteStores => 'Delivered sales by store over the period';
+
+  @override
+  String adminNoteDelivery(String relaunches, String refused) {
+    return '$relaunches relaunches · $refused automatic refusals';
+  }
+
+  @override
+  String get adminNoteTodo => 'Tap a row to open the screen where you can act';
+
+  @override
+  String get adminNoteDaily => 'All stores · one bar per point of the period';
+
+  @override
+  String get adminPillDispute => 'Dispute';
+
+  @override
+  String get adminPillTicket => 'Support';
+
+  @override
+  String get adminPillOrder => 'Order';
+
+  @override
+  String get adminPillStore => 'Store';
+
+  @override
+  String get adminPillCourier => 'Delivery';
+
+  @override
+  String get adminSignInHeroTitle => 'The neighbourhood market, at a glance.';
+
+  @override
+  String get adminSignInHeroBody =>
+      'Orders, stores, couriers and payments: all of DYM\'s activity in one place.';
+
+  @override
+  String adminStoresSubtitle(int total, String active, String drafts) {
+    return '$total stores · $active active · $drafts to review';
+  }
+
+  @override
+  String get adminColType => 'Type';
 }
