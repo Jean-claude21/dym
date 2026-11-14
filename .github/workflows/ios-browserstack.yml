@@ -49,6 +49,9 @@ jobs:
       - name: Compiler (sans signature)
         working-directory: apps/${{ inputs.app || 'dym_client' }}
         run: |
+          # CocoaPods plutôt que Swift Package Manager : Firebase 13 et Google Sign-In 9 s'y
+          # résolvent ensemble.
+          flutter config --no-enable-swift-package-manager
           flutter pub get
           flutter build ios --release --no-codesign \
             --dart-define-from-file=../../config/staging.json
