@@ -3,18 +3,70 @@
     {
       "target": "admin",
       "public": "apps/dym_admin/build/web",
-      "ignore": ["firebase.json", "**/.*"],
-      "rewrites": [{ "source": "**", "destination": "/index.html" }],
+      "ignore": [
+        "firebase.json",
+        "**/.*"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
       "headers": [
-        { "source": "**/*.@(js|wasm|png|webp|ttf|otf|json)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=3600" }] },
-        { "source": "/index.html", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }
+        {
+          "source": "**/*.@(png|webp|ttf|otf|wasm)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "**/@(index.html|flutter_bootstrap.js|main.dart.js|flutter_service_worker.js|version.json|manifest.json|flutter.js)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
       ]
     },
     {
       "target": "client",
       "public": "apps/dym_client/build/web",
-      "ignore": ["firebase.json", "**/.*"],
-      "rewrites": [{ "source": "**", "destination": "/index.html" }]
+      "ignore": [
+        "firebase.json",
+        "**/.*"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ],
+      "headers": [
+        {
+          "source": "**/*.@(png|webp|ttf|otf|wasm)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "public, max-age=3600"
+            }
+          ]
+        },
+        {
+          "source": "**/@(index.html|flutter_bootstrap.js|main.dart.js|flutter_service_worker.js|version.json|manifest.json|flutter.js)",
+          "headers": [
+            {
+              "key": "Cache-Control",
+              "value": "no-cache"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
