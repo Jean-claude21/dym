@@ -14,7 +14,6 @@ void main() {
   final tomorrow = DateTime.now().add(const Duration(days: 1));
   final day = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
   final slots = DeliverySlots(
-    required: false,
     minDate: day,
     days: [
       DeliveryDay(
@@ -41,7 +40,7 @@ void main() {
       'retours_panier_menu',
       cart(),
       before: (t) async {
-        await t.tap(find.byTooltip('Plus d\'actions'));
+        await t.tap(find.byTooltip("Plus d'actions"));
         await t.pumpAndSettle();
       },
     );
