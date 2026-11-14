@@ -1,0 +1,68 @@
+# App iOS sur de vrais iPhone (BrowserStack App Automate).
+# Compilée sur un Mac de GitHub sans signature Apple : BrowserStack re-signe l'app pour ses
+# appareils de test. Lancée à la main (onglet Actions) ; l'adresse `bs://…` de l'app envoyée
+# sert ensuite aux sessions Appium.
+name: iOS sur BrowserStack
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App à compiler (dym_client ou dym_vendor)"
+        required: true
+        default: dym_client
+
+jobs:
+  ios:
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      # Version de Flutter lue dans .fvmrc (source de vérité, décision 0006).
+      - name: Version de Flutter
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      - name: Lien du SDK pour Melos
+        run: |
+          mkdir -p .fvm
+          ln -sfn "$(dirname "$(dirname "$(which flutter)")")" .fvm/flutter_sdk
+
+      - name: Compiler (sans signature)
+        working-directory: apps/${{ inputs.app }}
+        run: |
+          flutter pub get
+          flutter build ios --release --no-codesign \
+            --dart-define-from-file=../../config/staging.json
+
+      - name: Paquet .ipa
+        working-directory: apps/${{ inputs.app }}
+        run: |
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qr "${{ inputs.app }}.ipa" Payload
+          ls -la "${{ inputs.app }}.ipa"
+
+      - name: Envoyer sur BrowserStack
+        working-directory: apps/${{ inputs.app }}
+        env:
+          BS_USER: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+        run: |
+          curl -sS -u "$BS_USER:$BS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
+            -F "file=@${{ inputs.app }}.ipa" -F "custom_id=${{ inputs.app }}-ios" | tee upload.json
+          echo
+          jq -r '.app_url // .error' upload.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app }}-ios
+          path: apps/${{ inputs.app }}/${{ inputs.app }}.ipa
+          retention-days: 7
