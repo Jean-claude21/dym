@@ -18,7 +18,7 @@ on:
 
 jobs:
   ios:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
@@ -38,6 +38,13 @@ jobs:
         run: |
           mkdir -p .fvm
           ln -sfn "$(dirname "$(dirname "$(which flutter)")")" .fvm/flutter_sdk
+
+      # Firebase iOS (SDK 13) exige les outils Swift 6.2 : le Xcode le plus récent du Mac.
+      - name: Xcode le plus récent
+        run: |
+          ls -d /Applications/Xcode*.app
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
 
       - name: Compiler (sans signature)
         working-directory: apps/${{ inputs.app || 'dym_client' }}
