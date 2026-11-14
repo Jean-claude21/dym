@@ -1,0 +1,79 @@
+# App iOS sur de vrais iPhone (BrowserStack App Automate).
+# Compilée sur un Mac de GitHub sans signature Apple : BrowserStack re-signe l'app pour ses
+# appareils de test. Lancée à la main (onglet Actions) ; l'adresse `bs://…` de l'app envoyée
+# sert ensuite aux sessions Appium.
+name: iOS sur BrowserStack
+
+on:
+  # Lancement à la main (onglet Actions) : les minutes des Mac sont comptées.
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App à compiler (dym_client ou dym_vendor)"
+        required: true
+        default: dym_client
+
+jobs:
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      # Version de Flutter lue dans .fvmrc (source de vérité, décision 0006).
+      - name: Version de Flutter
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      - name: Lien du SDK pour Melos
+        run: |
+          mkdir -p .fvm
+          ln -sfn "$(dirname "$(dirname "$(which flutter)")")" .fvm/flutter_sdk
+
+      # Firebase iOS (SDK 13) exige les outils Swift 6.2 : le Xcode le plus récent du Mac.
+      - name: Xcode le plus récent
+        run: |
+          ls -d /Applications/Xcode*.app
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
+
+      - name: Compiler (sans signature)
+        working-directory: apps/${{ inputs.app || 'dym_client' }}
+        run: |
+          # CocoaPods plutôt que Swift Package Manager : Firebase 13 et Google Sign-In 9 s'y
+          # résolvent ensemble.
+          flutter config --no-enable-swift-package-manager
+          flutter pub get
+          flutter build ios --release --no-codesign \
+            --dart-define-from-file=../../config/staging.json
+
+      - name: Paquet .ipa
+        working-directory: apps/${{ inputs.app || 'dym_client' }}
+        run: |
+          mkdir -p Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qr "${{ inputs.app || 'dym_client' }}.ipa" Payload
+          ls -la "${{ inputs.app || 'dym_client' }}.ipa"
+
+      - name: Envoyer sur BrowserStack
+        working-directory: apps/${{ inputs.app || 'dym_client' }}
+        env:
+          BS_USER: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+        run: |
+          curl -sS -u "$BS_USER:$BS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
+            -F "file=@${{ inputs.app || 'dym_client' }}.ipa" -F "custom_id=${{ inputs.app || 'dym_client' }}-ios" | tee upload.json
+          echo
+          jq -r '.app_url // .error' upload.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.app || 'dym_client' }}-ios
+          path: apps/${{ inputs.app || 'dym_client' }}/${{ inputs.app || 'dym_client' }}.ipa
+          retention-days: 7

@@ -120,6 +120,11 @@ Builds de release Android : `apps/dym_client/android/key.properties` (et `dym_ve
 avec `storeFile`, `storePassword`, `keyAlias`, `keyPassword`. Sans ce fichier, la release est signée
 avec les clés de debug (essais seulement).
 
+iOS sur de vrais iPhone (BrowserStack) : workflow « iOS sur BrowserStack » lancé à la main
+(Mac de GitHub, Xcode le plus récent, CocoaPods, sans signature Apple) ; il envoie l'app et affiche
+son adresse `bs://…`, utilisée ensuite par les sessions Appium (identifiants BrowserStack dans
+Doppler `dym-outils` et dans les secrets GitHub).
+
 Galerie de validation du design system : `cd apps/dym_gallery && fvm flutter run -d chrome`.
 
 Les scripts Melos sont définis dans le `pubspec.yaml` racine.
