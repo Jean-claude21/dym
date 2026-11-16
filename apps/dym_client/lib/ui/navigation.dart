@@ -254,6 +254,15 @@ class StackedAppNavigator implements AppNavigator {
         arguments: SignInViewArguments(startWithProfile: startWithProfile),
       );
 
+  /// Connexion ouverte par-dessus l'app (visiteuse, spec 093) : le retour
+  /// ramène à ce qu'elle découvrait.
+  void toSignInOverApp() => unawaited(
+    _navigation.navigateTo<void>(
+      Routes.signInView,
+      arguments: const SignInViewArguments(),
+    ),
+  );
+
   /// Lien de partage reçu à l'ouverture de l'app web (`?share=<code>`), gardé
   /// jusqu'à l'accueil (après connexion ou création du compte).
   static String? pendingShare = Uri.base.queryParameters['share'];

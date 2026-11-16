@@ -57,6 +57,8 @@ Future<void> configureServices(DymEnvironment environment) async {
   final installs = SecureInstallIdProvider();
   final reference = ReferenceRepository(neon.data);
   final locale = LocalePreference();
+  // Visiteuse sans compte (spec 093) : quartier gardé sur l'appareil.
+  final visitor = VisitorPlaceStore();
   final auth = NeonAuthService(
     neon: neon,
     account: AccountRepository(neon.data),
@@ -97,6 +99,7 @@ Future<void> configureServices(DymEnvironment environment) async {
     )
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
+    ..registerSingleton(visitor)
     ..registerLazySingleton<DiscoveryService>(
       () => NeonDiscoveryService(
         discovery: DiscoveryRepository(neon.data),
@@ -106,6 +109,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         location: const PluginLocationProvider(),
         environment: environment,
         reviews: ReviewRepository(data: neon.data, functions: neon.functions),
+        visitor: visitor,
       ),
     )
     ..registerLazySingleton<SearchAiService>(
@@ -284,7 +288,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         location: const PluginLocationProvider(),
         environment: environment,
         live: live,
-      ),
+      )..onAccountNeeded = () => StackedAppNavigator().toSignInOverApp(),
     );
 }
 

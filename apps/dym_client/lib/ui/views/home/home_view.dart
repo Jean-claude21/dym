@@ -13,6 +13,7 @@ import 'package:dym_client/features/discovery/market/market_view.dart';
 import 'package:dym_client/features/orders/active_order_banner.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/ui/navigation.dart';
+import 'package:dym_client/ui/views/home/visitor_gate.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_platform/dym_platform.dart';
@@ -75,10 +76,20 @@ class _HomeViewState extends State<HomeView> {
   bool _cartLoaded = false;
   bool _cuisine = false;
 
+  /// Visiteuse sans compte (spec 093) : découverte libre, compte demandé
+  /// pour le panier, le compte, les notifications.
+  bool get _visitor => _service.me == null;
+
+  /// Connexion par-dessus l'accueil (retour possible) pour la visiteuse.
+  void _signIn() => switch (_navigator) {
+    final StackedAppNavigator nav => nav.toSignInOverApp(),
+    final nav => nav.toSignIn(),
+  };
+
   @override
   void initState() {
     super.initState();
-    if (locator.isRegistered<PushNotifications>()) {
+    if (!_visitor && locator.isRegistered<PushNotifications>()) {
       unawaited(locator<PushNotifications>().start());
     }
     final content = _content;
@@ -101,7 +112,7 @@ class _HomeViewState extends State<HomeView> {
     super.didChangeDependencies();
     // Panier conservé côté serveur : le mini-panier le montre dès l'accueil.
     final cart = CartScope.maybeOf(context);
-    if (cart != null && !_cartLoaded) {
+    if (cart != null && !_cartLoaded && !_visitor) {
       _cartLoaded = true;
       cart.service.refresh().ignore();
     }
@@ -164,8 +175,8 @@ class _HomeViewState extends State<HomeView> {
             onOpenProduct: _navigator.toProduct,
             onReorder: _reorder,
             onShoppingLists: _navigator.toShoppingLists,
-            onNotifications: _navigator.toNotifications,
-            activeOrder: switch (_orders) {
+            onNotifications: _visitor ? _signIn : _navigator.toNotifications,
+            activeOrder: switch (_visitor ? null : _orders) {
               final orders? => ActiveOrderBanner(
                 service: orders,
                 onOpen: _navigator.toOrder,
@@ -197,6 +208,14 @@ class _HomeViewState extends State<HomeView> {
           ),
           null => const SizedBox.shrink(),
         },
+        ClientTab.cart when _visitor => VisitorGate(
+          message: l10n.visitorCartBody,
+          onSignIn: _signIn,
+        ),
+        ClientTab.me when _visitor => VisitorGate(
+          message: l10n.visitorMeBody,
+          onSignIn: _signIn,
+        ),
         ClientTab.cart =>
           hasCart
               ? _navigator.cartPage(onBrowse: () => _select(ClientTab.market))

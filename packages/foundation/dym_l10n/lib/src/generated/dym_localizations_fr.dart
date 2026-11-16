@@ -7444,4 +7444,38 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminUnitDays => 'j';
+
+  @override
+  String get errorLoadMessage =>
+      'La page n\'a pas pu se charger. Réessaie dans un instant.';
+
+  @override
+  String get authBrowse => 'Découvrir sans compte';
+
+  @override
+  String get authBrowseTitle => 'Où veux-tu découvrir DYM ?';
+
+  @override
+  String get authBrowseSubtitle =>
+      'Les boutiques qui livrent ce quartier s\'affichent. Tu crées ton compte seulement pour commander.';
+
+  @override
+  String get authBrowseAction => 'Découvrir';
+
+  @override
+  String get visitorTitle => 'Connecte-toi pour continuer';
+
+  @override
+  String get visitorCartBody =>
+      'Crée ton compte en une minute pour remplir ton panier et commander.';
+
+  @override
+  String get visitorMeBody =>
+      'Ton compte garde tes commandes, tes adresses et ton wallet.';
+
+  @override
+  String get visitorSignIn => 'Se connecter ou créer un compte';
+
+  @override
+  String get visitorChangePlace => 'Changer de quartier';
 }

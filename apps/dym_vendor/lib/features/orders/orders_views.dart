@@ -35,7 +35,7 @@ class _State extends StatelessWidget {
     return DymStateView(
       kind: offline ? DymStateKind.offline : DymStateKind.error,
       title: offline ? l10n.errorOffline : l10n.errorGeneric,
-      message: l10n.storeSaveError,
+      message: l10n.errorLoadMessage,
       actionLabel: l10n.retry,
       onAction: onRetry,
     );

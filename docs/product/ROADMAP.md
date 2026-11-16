@@ -25,9 +25,10 @@
 | 12 · Vendeuse | Caisse, QR, ardoise, Studio IA, gros | Vente hors app et QR enregistrés au grand livre | ~22 h | ✅ Faite (specs 045-049 fusionnées, migrations sur staging) ; gate : démonstration web à faire |
 | 13 · Différence | Marchandage, achat groupé, DYM+, centre d'opérations | Démonstration complète validée | ~22 h | ✅ Faite (specs 050-054 fusionnées, migrations sur staging) ; gate : démonstration web complète du 2026-11-11, ouverture de la phase 14 accordée par le porteur produit le 2026-11-11 |
 | 14 · Épuré | Design system épuré, navigation des quatre apps, flux vidéo, fluidité terrain | Les huit parcours de `PARCOURS.md` rejoués sur un Android d'entrée de gamme en plein soleil, aux budgets de fluidité, validés par le porteur produit | ~46 h | 🔵 En cours (design et parcours validés, accord du 2026-11-11) |
+| 15 · Mondial et commerce | Tout par position, carte, livraison suivie, notifications, vendeuse, chat de commerce, wallet entre personnes, Cuisine sociale | Une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la porte, validée par le porteur produit | ~25 j | 🔵 En cours (plan validé le 2026-11-16) |
 
 **Légende :** ✅ faite · 🔵 en cours · 🟡 code fait, gate terrain ou relecture à faire · ⬜ à faire · ⏸️ reportée · ➖ remplacée.
-Mis à jour à chaque spec (dernière mise à jour : 2026-11-11).
+Mis à jour à chaque spec (dernière mise à jour : 2026-11-16).
 
 Les gates des phases 6 à 13 se valident par une démonstration web au porteur produit, en simulation
 pour tout service indisponible. Les durées sont des estimations.
@@ -235,6 +236,30 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au
 défilement, ouverture en moins de 3 s, validés par le porteur produit. La phase s'ouvre quand le
 gate de la phase 13 est consigné.
+
+## Phase 15 — Mondial et commerce
+
+Retours des premiers essais (2026-11-16) et décisions du porteur produit : DYM devient une application
+mondiale (France ouverte : Rouen, Troyes, Paris, Toulouse), la position remplace le quartier comme
+base de tout, et les grands modules (livraison, chat, wallet, Cuisine, vendeuse) sont poussés au
+niveau des grandes applications. On garde le design « Épuré » des apps. Les services indisponibles
+restent simulés et signalés (décision 0015). Une spec à la fois, dans cet ordre.
+
+| Spec | Contenu | Heures | État |
+|---|---|---|---|
+| `identite-visiteurs` | Couleurs par app (client fond clair, vendeuse fond vert, livreur plantain, admin vert profond) sur icônes et splash ; mode visiteur (découvrir sans compte, connexion demandée pour commander, écrire, payer) ; message « page non chargée » distinct de « enregistrement impossible » | 6 h | 🔵 Spec 093 |
+| `position-partout` | Tout par position (PostGIS) : boutique placée sur la carte avec rayon ou zone de livraison dessinée, cliente servie selon sa position, tri par distance, frais par tranches de distance (par pays, en SQL), livreurs par distance ; quartiers et villes deviennent des repères facultatifs (nom lisible, repli sans GPS, statistiques) ; données existantes reprises | 18 h | ⬜ Spec 094 |
+| `carte` | Carte DYM (MapLibre, fonds OpenFreeMap, style aux couleurs DYM, fournisseur derrière une interface) : boutiques autour de soi en liste ou carte (épingles par type, regroupement, fiche), filtres pays, ville, ouvert, catégorie ; « Placer ma porte » ; zone de livraison de la boutique sur la carte | 14 h | ⬜ Spec 095 |
+| `livraison-suivie` | Suivi en direct (position du livreur pendant la course, heure d'arrivée), code de récupération (QR montré par le livreur, scanné par la vendeuse) et code de livraison ; partage du suivi par lien temporaire (proche du livreur, personne qui réceptionne) ; outils du livreur (gains, client injoignable, SOS) ; livreurs propres à la boutique ; validation des comptes vendeuse et livreur | 22 h | ⬜ Spec 096 |
+| `notifications-appels` | Un son par événement, boutons d'action dans les notifications (accepter, répondre, appeler, voir), boîte de notifications de la vendeuse et du livreur, appel qui sonne en plein écran même téléphone verrouillé, appel manqué | 14 h | ⬜ Spec 097 |
+| `vendeuse-plus` | Accueil de la vendeuse poussé : alerte de commande, statistiques simples, résumé du jour, alertes de stock, meilleurs produits et clientes fidèles | 12 h | ⬜ Spec 098 |
+| `chat-commerce` | Chat de commerce : vidéo enregistrée ou partagée, vocal soigné avec transcription, position (ponctuelle ou en direct), fiches produit avec ajout au panier, devis accepté en un geste, demande de paiement, coupons, appels vidéo | 22 h | ⬜ Spec 099 |
+| `wallet-personnes` | Avoir DYM entre personnes (simulé) : QR personnel, envoyer, demander (« paie ma commande »), recharger pour un proche, argent de poche et suivi parental avec plafonds ; jamais de retrait | 14 h | ⬜ Spec 100 |
+| `cuisine-sociale` | Cuisine sociale : profils de créatrices et boutiques, s'abonner, fils Pour toi / Abonnements / Près de moi, commentaires, « Mes recettes », « J'ai fait la recette » ; vidéo adaptative (HLS) dès que le compte vidéo est fourni | 18 h | ⬜ Spec 101 |
+| `connexion-google` | Pont de connexion (Function) : jeton Google vérifié puis session ouverte ; prêt pour WhatsApp dès que le compte Meta est fourni | 6 h | ⬜ Spec 102 |
+
+Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
+porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.
 
 ## Phase 5 — Scale (anciennes specs sur déclencheur, remplacées sauf mention)
 
