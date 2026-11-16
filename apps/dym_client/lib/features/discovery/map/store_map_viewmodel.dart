@@ -5,6 +5,7 @@ import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_map/dym_map.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:flutter/widgets.dart' show EdgeInsets;
 import 'package:stacked/stacked.dart';
 
 /// Carte des boutiques (spec 095) : le cadre visible commande la liste,
@@ -168,9 +169,21 @@ class StoreMapViewModel extends BaseViewModel {
     await reload();
   }
 
-  void select(String? id) {
+  /// Boutique choisie : la carte se cadre sur sa zone de livraison, en
+  /// laissant la place de la fiche ([padding]).
+  Future<void> select(
+    String? id, {
+    EdgeInsets padding = EdgeInsets.zero,
+  }) async {
     _selectedId = id;
     notifyListeners();
+    final area = areas.firstOrNull;
+    if (area == null) return;
+    final bounds = DymBounds.around([
+      for (final p in circleRing(area.center, area.radiusM, steps: 16))
+        DymLatLng(p[1], p[0]),
+    ]);
+    if (bounds != null) await controls?.fit(bounds, padding: padding);
   }
 
   /// Recentre sur l'appareil, sur demande.
@@ -203,7 +216,7 @@ class StoreMapViewModel extends BaseViewModel {
     if (points.length == 1) {
       await controls?.moveTo(points.single, zoom: 13);
     } else {
-      await controls?.fit(bounds);
+      await controls?.fit(bounds, padding: const EdgeInsets.only(top: 56));
     }
   }
 }
