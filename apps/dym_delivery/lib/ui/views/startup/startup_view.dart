@@ -28,7 +28,9 @@ class StartupView extends StackedView<StartupViewModel> {
     final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
     return Scaffold(
-      backgroundColor: c.background,
+      backgroundColor: viewModel.showSplash && !viewModel.failed
+          ? c.plantain
+          : c.background,
       // Le splash couvre tout l'écran (légumes jusque sous la barre d'état) ;
       // seul l'écran de reprise reste dans la zone sûre.
       body: viewModel.failed
@@ -48,6 +50,7 @@ class StartupView extends StackedView<StartupViewModel> {
           : !viewModel.showSplash
           ? const SizedBox.shrink()
           : DymSplash(
+              tone: DymSplashTone.plantain,
               onIntroComplete: viewModel.introFinished,
               tagline: l10n.deliveryTagline,
             ),

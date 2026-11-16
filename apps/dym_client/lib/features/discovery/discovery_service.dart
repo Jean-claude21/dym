@@ -59,7 +59,13 @@ class NeonDiscoveryService implements DiscoveryService {
     required this._location,
     required this._environment,
     required this._reviews,
-  }) : _zone = ValueNotifier(_auth.me?.profile?.zoneId);
+    this._visitor,
+  }) : _zone = ValueNotifier(
+         _auth.me?.profile?.zoneId ?? _visitor?.value?.zoneId,
+       );
+
+  /// Lieu de la visiteuse sans compte (spec 093).
+  final VisitorPlaceStore? _visitor;
 
   final ReviewRepository _reviews;
 
@@ -76,7 +82,8 @@ class NeonDiscoveryService implements DiscoveryService {
   final ValueNotifier<String?> _zone;
   CountryConfig? _config;
 
-  String? get _countryCode => _auth.me?.profile?.countryCode;
+  String? get _countryCode =>
+      _auth.me?.profile?.countryCode ?? _visitor?.value?.countryCode;
 
   @override
   ValueListenable<String?> get zone => _zone;

@@ -8460,5 +8460,45 @@
   "adminUnitDays": "j",
   "@adminUnitDays": {
     "description": "Unité après un nombre de jours (chiffre clé)"
+  },
+  "errorLoadMessage": "La page n'a pas pu se charger. Réessaie dans un instant.",
+  "@errorLoadMessage": {
+    "description": "Message d'un écran dont le chargement a échoué (pas une sauvegarde)"
+  },
+  "authBrowse": "Découvrir sans compte",
+  "@authBrowse": {
+    "description": "Lien de la bienvenue cliente : parcourir l'app sans s'inscrire"
+  },
+  "authBrowseTitle": "Où veux-tu découvrir DYM ?",
+  "@authBrowseTitle": {
+    "description": "Titre du choix du quartier en visiteuse"
+  },
+  "authBrowseSubtitle": "Les boutiques qui livrent ce quartier s'affichent. Tu crées ton compte seulement pour commander.",
+  "@authBrowseSubtitle": {
+    "description": "Sous-titre du choix du quartier en visiteuse"
+  },
+  "authBrowseAction": "Découvrir",
+  "@authBrowseAction": {
+    "description": "Bouton qui ouvre l'app en visiteuse"
+  },
+  "visitorTitle": "Connecte-toi pour continuer",
+  "@visitorTitle": {
+    "description": "Titre de l'invitation à se connecter (visiteuse)"
+  },
+  "visitorCartBody": "Crée ton compte en une minute pour remplir ton panier et commander.",
+  "@visitorCartBody": {
+    "description": "Texte de l'onglet Panier en visiteuse"
+  },
+  "visitorMeBody": "Ton compte garde tes commandes, tes adresses et ton wallet.",
+  "@visitorMeBody": {
+    "description": "Texte de l'onglet Moi en visiteuse"
+  },
+  "visitorSignIn": "Se connecter ou créer un compte",
+  "@visitorSignIn": {
+    "description": "Bouton de l'invitation à se connecter"
+  },
+  "visitorChangePlace": "Changer de quartier",
+  "@visitorChangePlace": {
+    "description": "Lien pour choisir un autre quartier en visiteuse"
   }
 }

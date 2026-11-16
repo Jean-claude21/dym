@@ -1,6 +1,7 @@
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/ui/navigation.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/widgets.dart';
 
 /// Connexion (parcours partagé `dym_auth`), puis accueil.
@@ -15,5 +16,11 @@ class SignInView extends StatelessWidget {
     service: locator<AuthService>(),
     startWithProfile: startWithProfile,
     onReady: (_) => StackedAppNavigator().toHome(),
+    onBrowse: (zoneId, countryCode) async {
+      await locator<VisitorPlaceStore>().save(
+        VisitorPlace(zoneId: zoneId, countryCode: countryCode),
+      );
+      StackedAppNavigator().toHome();
+    },
   );
 }

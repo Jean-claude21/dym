@@ -4,6 +4,7 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:stacked/stacked.dart';
 
 /// Démarrage : restaure la session puis oriente vers la connexion, le profil
@@ -13,10 +14,19 @@ class StartupViewModel extends BaseViewModel {
     AuthService? auth,
     DymEnvironment? environment,
     AppNavigator? navigator,
+    VisitorPlaceStore? visitor,
     this._introDelay = defaultIntro,
   }) : _auth = auth ?? locator<AuthService>(),
        _environment = environment ?? locator<DymEnvironment>(),
-       _navigator = navigator ?? StackedAppNavigator();
+       _navigator = navigator ?? StackedAppNavigator(),
+       _visitor =
+           visitor ??
+           (locator.isRegistered<VisitorPlaceStore>()
+               ? locator<VisitorPlaceStore>()
+               : null);
+
+  /// Lieu de la visiteuse sans compte (spec 093) ; nul : pas de visite.
+  final VisitorPlaceStore? _visitor;
 
   /// Attente maximale de l'entrée animée du splash au premier lancement :
   /// l'écran change quand elle est jouée ([introFinished]), au plus tard
@@ -66,7 +76,13 @@ class StartupViewModel extends BaseViewModel {
       case Ok(value: AuthState(status: AuthStatus.needsProfile)):
         _navigator.toSignIn(startWithProfile: true);
       case Ok():
-        _navigator.toSignIn();
+        // Sans session : la visiteuse qui a déjà choisi un quartier découvre
+        // directement l'app ; sinon, bienvenue.
+        if (await _visitor?.load() != null) {
+          _navigator.toHome();
+        } else {
+          _navigator.toSignIn();
+        }
       case Err(:final failure):
         if (failure is UnauthenticatedFailure || failure is ForbiddenFailure) {
           _navigator.toSignIn();

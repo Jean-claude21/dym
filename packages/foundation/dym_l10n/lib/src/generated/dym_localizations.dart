@@ -12360,6 +12360,66 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'j'**
   String get adminUnitDays;
+
+  /// Message d'un écran dont le chargement a échoué (pas une sauvegarde)
+  ///
+  /// In fr, this message translates to:
+  /// **'La page n\'a pas pu se charger. Réessaie dans un instant.'**
+  String get errorLoadMessage;
+
+  /// Lien de la bienvenue cliente : parcourir l'app sans s'inscrire
+  ///
+  /// In fr, this message translates to:
+  /// **'Découvrir sans compte'**
+  String get authBrowse;
+
+  /// Titre du choix du quartier en visiteuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Où veux-tu découvrir DYM ?'**
+  String get authBrowseTitle;
+
+  /// Sous-titre du choix du quartier en visiteuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Les boutiques qui livrent ce quartier s\'affichent. Tu crées ton compte seulement pour commander.'**
+  String get authBrowseSubtitle;
+
+  /// Bouton qui ouvre l'app en visiteuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Découvrir'**
+  String get authBrowseAction;
+
+  /// Titre de l'invitation à se connecter (visiteuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'Connecte-toi pour continuer'**
+  String get visitorTitle;
+
+  /// Texte de l'onglet Panier en visiteuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Crée ton compte en une minute pour remplir ton panier et commander.'**
+  String get visitorCartBody;
+
+  /// Texte de l'onglet Moi en visiteuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton compte garde tes commandes, tes adresses et ton wallet.'**
+  String get visitorMeBody;
+
+  /// Bouton de l'invitation à se connecter
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter ou créer un compte'**
+  String get visitorSignIn;
+
+  /// Lien pour choisir un autre quartier en visiteuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de quartier'**
+  String get visitorChangePlace;
 }
 
 class _DymLocalizationsDelegate

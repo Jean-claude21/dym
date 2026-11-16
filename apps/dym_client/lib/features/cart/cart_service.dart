@@ -198,8 +198,16 @@ class NeonCartService implements CartService {
     ),
   );
 
+  /// Visiteuse sans compte (spec 093) : appelé quand un geste demande un
+  /// compte (ajout au panier) ; l'app ouvre la connexion.
+  VoidCallback? onAccountNeeded;
+
   @override
   Future<Result<CartView>> add(String variantId, {int quantity = 1}) async {
+    if (_auth.me == null) {
+      onAccountNeeded?.call();
+      return const Err(UnauthenticatedFailure('visiteuse'));
+    }
     final result = _keep(await _cart.add(variantId, quantity: quantity));
     if (result case Ok(:final value)) {
       unawaited(

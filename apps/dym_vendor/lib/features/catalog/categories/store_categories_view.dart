@@ -78,7 +78,7 @@ class StoreCategoriesView extends StackedView<StoreCategoriesViewModel> {
           : DymStateView(
               kind: vm.offline ? DymStateKind.offline : DymStateKind.error,
               title: vm.offline ? l10n.errorOffline : l10n.errorGeneric,
-              message: l10n.storeSaveError,
+              message: l10n.errorLoadMessage,
               actionLabel: l10n.retry,
               onAction: vm.load,
             );

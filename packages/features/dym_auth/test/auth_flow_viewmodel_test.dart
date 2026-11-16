@@ -240,4 +240,28 @@ void main() {
     await other.startProfile();
     expect(other.profileLocale, 'en', reason: 'langue du pays non traduite');
   });
+
+  test('découvrir sans compte : quartier choisi, sans prénom ni session '
+      '(spec 093)', () async {
+    final places = <String>[];
+    final visitor = AuthFlowViewModel(
+      service: service,
+      onReady: ready.add,
+      onBrowse: (zone, country) => places.add('$zone/$country'),
+    );
+    addTearDown(visitor.dispose);
+    expect(visitor.canBrowse, isTrue);
+    await visitor.chooseBrowse();
+    expect(visitor.step, AuthStep.profile);
+    expect(visitor.browsing, isTrue);
+    expect(visitor.canSubmitProfile, isFalse, reason: 'quartier à choisir');
+    visitor
+      ..selectZone('z-be')
+      ..submitBrowse();
+    expect(places, ['z-be/TG']);
+    expect(ready, isEmpty, reason: 'aucune session ouverte');
+    expect(visitor.back(), isTrue);
+    expect(visitor.step, AuthStep.welcome);
+    expect(vm.canBrowse, isFalse, reason: 'absent sans rappel');
+  });
 }

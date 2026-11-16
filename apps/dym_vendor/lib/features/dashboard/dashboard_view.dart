@@ -59,7 +59,7 @@ class DashboardView extends StackedView<DashboardViewModel> {
             : DymStateView(
                 kind: vm.offline ? DymStateKind.offline : DymStateKind.error,
                 title: vm.offline ? l.errorOffline : l.errorGeneric,
-                message: l.storeSaveError,
+                message: l.errorLoadMessage,
                 actionLabel: l.retry,
                 onAction: vm.load,
               ),

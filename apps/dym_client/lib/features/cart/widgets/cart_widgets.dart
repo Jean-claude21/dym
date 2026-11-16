@@ -86,6 +86,8 @@ Future<void> addToCart(
   if (result.isOk) unawaited(HapticFeedback.lightImpact());
   final message = switch (result) {
     Ok() => confirm ? l10n.cartAdded : null,
+    // Visiteuse : la connexion s'ouvre, sans message.
+    Err(failure: UnauthenticatedFailure()) => null,
     Err(failure: NetworkFailure()) => l10n.errorOffline,
     Err(failure: ValidationFailure(message: 'other_country')) =>
       l10n.cartOtherCountry,

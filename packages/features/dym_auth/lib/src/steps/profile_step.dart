@@ -33,70 +33,77 @@ class _ProfileStepState extends State<ProfileStep> {
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
     final locale = Localizations.localeOf(context).languageCode;
+    final browsing = vm.browsing;
     return StepScaffold(
-      title: l10n.authProfileTitle,
-      subtitle: Text(l10n.authProfileSubtitle),
+      title: browsing ? l10n.authBrowseTitle : l10n.authProfileTitle,
+      subtitle: Text(
+        browsing ? l10n.authBrowseSubtitle : l10n.authProfileSubtitle,
+      ),
       action: DymButton(
-        label: l10n.authStart,
+        label: browsing ? l10n.authBrowseAction : l10n.authStart,
         loading: vm.isBusy,
-        onPressed: vm.canSubmitProfile ? vm.submitProfile : null,
+        onPressed: !vm.canSubmitProfile
+            ? null
+            : (browsing ? vm.submitBrowse : vm.submitProfile),
       ),
       children: [
-        Text(l10n.authFirstNameLabel, style: t.title),
-        const SizedBox(height: DymTokenSpace.s2),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: DymTextField(
-                label: l10n.authFirstNameLabel,
-                controller: _name,
-                maxLength: 40,
-                textCapitalization: TextCapitalization.words,
-                textInputAction: TextInputAction.done,
-                autofillHints: const [AutofillHints.givenName],
-                onChanged: vm.setFirstName,
-                status: vm.authError == AuthError.firstNameInvalid
-                    ? DymFieldStatus.error
-                    : DymFieldStatus.none,
-                message: l10n.authFirstNameInvalid,
+        if (!browsing) ...[
+          Text(l10n.authFirstNameLabel, style: t.title),
+          const SizedBox(height: DymTokenSpace.s2),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: DymTextField(
+                  label: l10n.authFirstNameLabel,
+                  controller: _name,
+                  maxLength: 40,
+                  textCapitalization: TextCapitalization.words,
+                  textInputAction: TextInputAction.done,
+                  autofillHints: const [AutofillHints.givenName],
+                  onChanged: vm.setFirstName,
+                  status: vm.authError == AuthError.firstNameInvalid
+                      ? DymFieldStatus.error
+                      : DymFieldStatus.none,
+                  message: l10n.authFirstNameInvalid,
+                ),
               ),
-            ),
-            const SizedBox(width: DymTokenSpace.s3),
-            Tooltip(
-              message: l10n.comingSoon,
-              child: Column(
-                children: [
-                  Container(
-                    width: 64,
-                    height: 64,
-                    decoration: BoxDecoration(
-                      color: c.card,
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: c.textSecondary.withValues(alpha: 0.2),
+              const SizedBox(width: DymTokenSpace.s3),
+              Tooltip(
+                message: l10n.comingSoon,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 64,
+                      height: 64,
+                      decoration: BoxDecoration(
+                        color: c.card,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: c.textSecondary.withValues(alpha: 0.2),
+                        ),
+                      ),
+                      child: Icon(
+                        Icons.photo_camera_rounded,
+                        color: c.textSecondary,
                       ),
                     ),
-                    child: Icon(
-                      Icons.photo_camera_rounded,
-                      color: c.textSecondary,
+                    const SizedBox(height: DymTokenSpace.s1),
+                    SizedBox(
+                      width: 88,
+                      child: Text(
+                        l10n.authPhotoOptional,
+                        textAlign: TextAlign.center,
+                        style: t.label.copyWith(color: c.textSecondary),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: DymTokenSpace.s1),
-                  SizedBox(
-                    width: 88,
-                    child: Text(
-                      l10n.authPhotoOptional,
-                      textAlign: TextAlign.center,
-                      style: t.label.copyWith(color: c.textSecondary),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: DymTokenSpace.s5),
+            ],
+          ),
+          const SizedBox(height: DymTokenSpace.s5),
+        ],
         Text(l10n.authZoneLabel, style: t.title),
         const SizedBox(height: DymTokenSpace.s2),
         if (vm.countries.length > 1) ...[

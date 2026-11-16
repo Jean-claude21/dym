@@ -1,8 +1,10 @@
 """Icônes Android (héritées + adaptatives) et image du splash natif des apps.
 
-Chaque app a son fond pour se distinguer sur le téléphone :
-client vert marque, vendeuse claire, livreur plantain.
+Chaque app a son fond pour se distinguer sur le téléphone (spec 093) :
+client clair (sac vert), vendeuse verte (sac blanc), livreur plantain, admin vert profond.
+Le même fond sert au splash natif et au splash animé de l'app.
 """
+import json
 import os
 import subprocess
 import sys
@@ -20,10 +22,12 @@ LEAVES = ('M142.0,56.0 Q127.0,47.0 127.9,29.5 Q142.9,38.5 142.0,56.0 Z',
 
 APPS = {
     # app: (fond, sac, anse, feuilles)
-    'dym_client': ('#145C43', '#FFFFFF', '#F6C343', '#F6C343'),
-    'dym_vendor': ('#FAFAF7', '#145C43', '#0E4632', '#3FA06B'),
+    'dym_client': ('#FAFAF7', '#145C43', '#0E4632', '#3FA06B'),
+    'dym_vendor': ('#145C43', '#FFFFFF', '#F6C343', '#F6C343'),
     'dym_delivery': ('#F6C343', '#0E4632', '#145C43', '#145C43'),
 }
+# Admin : web seulement.
+WEB_ONLY = {'dym_admin': ('#0E4632', '#FFFFFF', '#F6C343', '#3FA06B')}
 
 
 def svg(bg, bag, handle, leaves, box):
@@ -109,8 +113,29 @@ for app, (bg, bag, handle, leaves) in APPS.items():
     <!-- Fond de l'icône adaptative (docs/design/marque/). -->
     <color name="ic_launcher_background">{bg}</color>
     <!-- Fond du splash natif, identique au splash animé de l'app. -->
-    <color name="splash_background">#FAFAF7</color>
+    <color name="splash_background">{bg}</color>
 </resources>
 ''')
     full.save(os.path.join(OUT, f'{app}_apercu.png'))
+
+
+def web_icons(app, colors):
+    """Icônes web (favicon, PWA, masquables) et couleurs du manifeste."""
+    bg, bag, handle, leaves = colors
+    full = render(f'{app}_web', svg(bg, bag, handle, leaves, 340))
+    safe = render(f'{app}_web_safe', svg(bg, bag, handle, leaves, 460))
+    web = os.path.join(REPO, 'apps', app, 'web')
+    rounded(full, 180).resize((192, 192), Image.LANCZOS).save(os.path.join(web, 'icons', 'Icon-192.png'))
+    rounded(full, 180).resize((512, 512), Image.LANCZOS).save(os.path.join(web, 'icons', 'Icon-512.png'))
+    safe.resize((192, 192), Image.LANCZOS).save(os.path.join(web, 'icons', 'Icon-maskable-192.png'))
+    safe.resize((512, 512), Image.LANCZOS).save(os.path.join(web, 'icons', 'Icon-maskable-512.png'))
+    rounded(full, 180).resize((64, 64), Image.LANCZOS).save(os.path.join(web, 'favicon.png'))
+    manifest = os.path.join(web, 'manifest.json')
+    data = json.load(open(manifest, encoding='utf-8'))
+    data['background_color'] = bg
+    open(manifest, 'w', encoding='utf-8').write(json.dumps(data, ensure_ascii=False, indent=4) + '\n')
+
+
+for app, colors in {**APPS, **WEB_ONLY}.items():
+    web_icons(app, colors)
 print('ok')
