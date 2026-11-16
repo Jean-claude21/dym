@@ -12558,6 +12558,120 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Le cercle montre où tu livres.'**
   String get storeDeliveryMapHint;
+
+  /// Suivi de commande : titre de la carte (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi en direct'**
+  String get trackLiveTitle;
+
+  /// Suivi : position du livreur pas encore connue
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livreur apparaîtra ici'**
+  String get trackLiveWaiting;
+
+  /// Suivi : le livreur est en route
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} arrive'**
+  String trackLiveCourier(String name);
+
+  /// Suivi : minutes restantes estimées
+  ///
+  /// In fr, this message translates to:
+  /// **'~{minutes} min'**
+  String trackLiveEta(int minutes);
+
+  /// Suivi : partager le lien avec un proche ou la personne qui réceptionne
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager le suivi'**
+  String get trackShare;
+
+  /// Message envoyé avec le lien de suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'Suis ma livraison DYM en direct : {url}'**
+  String trackShareText(String url);
+
+  /// Livreur : compte en attente de validation par l'équipe (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte en cours de validation'**
+  String get courierPending;
+
+  /// Livreur : explication de l'attente de validation
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM vérifie ton compte. Tu pourras passer en ligne dès qu\'il est validé.'**
+  String get courierPendingHint;
+
+  /// Livreur : compte refusé, le motif suit
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte à revoir'**
+  String get courierRejected;
+
+  /// Livreur : montrer le QR de récupération à la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de récupération'**
+  String get pickupCodeShow;
+
+  /// Titre de la feuille du code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Montre ce code à la vendeuse'**
+  String get pickupCodeTitle;
+
+  /// Explication du code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle le scanne pour te remettre la commande.'**
+  String get pickupCodeHint;
+
+  /// Livreur : la cliente ne répond pas devant la porte
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente injoignable'**
+  String get courierUnreachable;
+
+  /// Livreur : confirmation du signalement injoignable
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente est prévenue. Attends {minutes} min avant de repartir.'**
+  String courierUnreachableSent(int minutes);
+
+  /// Livreur : bouton d'alerte
+  ///
+  /// In fr, this message translates to:
+  /// **'SOS'**
+  String get courierSos;
+
+  /// Livreur : confirmation de l'alerte SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerter l\'équipe DYM ?'**
+  String get courierSosTitle;
+
+  /// Livreur : explication de l'alerte SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe reçoit ta position et te rappelle tout de suite. En cas de danger, appelle aussi les secours.'**
+  String get courierSosBody;
+
+  /// Livreur : envoyer l'alerte SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer l\'alerte'**
+  String get courierSosSend;
+
+  /// Livreur : alerte SOS envoyée
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte envoyée. L\'équipe te rappelle.'**
+  String get courierSosSent;
 }
 
 class _DymLocalizationsDelegate

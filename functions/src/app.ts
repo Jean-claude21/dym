@@ -27,6 +27,7 @@ import { type CreatorContentDeps, registerCreatorContentRoutes } from "./content
 import { registerTikTokRoutes, type TikTokDeps } from "./content/tiktok.js";
 import { registerContentRoutes } from "./content/routes.js";
 import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes.js";
+import { registerTrackingRoutes, type TrackingStore } from "./orders/tracking.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -75,6 +76,8 @@ export interface AppDeps {
   searchAi?: SearchAiDeps;
   /** Copilote d'intention (spec 019). */
   copilot?: CopilotDeps;
+  /** Lien de suivi partagé (spec 096). */
+  tracking?: TrackingStore;
   /** Relance des clientes (spec 021). */
   broadcasts?: BroadcastStore;
   /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
@@ -152,6 +155,7 @@ export function createApp(deps: AppDeps) {
   registerCreatorContentRoutes(app, deps.verifyToken, deps.creatorContent);
   registerTikTokRoutes(app, deps.verifyToken, deps.tiktok);
   registerBroadcastRoutes(app, deps.verifyToken, deps.broadcasts);
+  registerTrackingRoutes(app, deps.tracking);
 
   return app;
 }

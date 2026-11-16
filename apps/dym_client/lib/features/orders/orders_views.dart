@@ -1,6 +1,7 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_client/features/orders/adjustments_view.dart';
+import 'package:dym_client/features/orders/live_map_card.dart';
 import 'package:dym_client/features/orders/order_texts.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/orders/orders_viewmodels.dart';
@@ -527,6 +528,7 @@ class _Tracking extends StatelessWidget {
             ],
           ),
         ),
+      LiveMapCard(vm: vm),
       if (vm.handoverCode case final code?)
         CartCard(
           child: Row(

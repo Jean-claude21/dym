@@ -76,6 +76,8 @@ Future<void> configureServices(DymEnvironment environment) async {
         auth: auth,
         wallet: WalletRepository(neon.data),
         live: live,
+        delivery: DeliveryRepository(neon.data),
+        location: const PluginLocationProvider(),
       ),
     );
 }

@@ -16,6 +16,7 @@ export 'src/catalog/catalog_models.dart';
 export 'src/content/content_models.dart';
 export 'src/dashboard/vendor_dashboard.dart';
 export 'src/delivery/delivery_models.dart';
+export 'src/delivery/tracking_models.dart';
 export 'src/discovery/discovery_models.dart';
 export 'src/discovery/favorites_models.dart';
 export 'src/messaging/messaging_models.dart';

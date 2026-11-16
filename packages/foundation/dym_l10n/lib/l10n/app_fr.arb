@@ -8616,5 +8616,101 @@
   "storeDeliveryMapHint": "Le cercle montre où tu livres.",
   "@storeDeliveryMapHint": {
     "description": "Vendeuse : légende de la carte du rayon de livraison"
+  },
+  "trackLiveTitle": "Suivi en direct",
+  "@trackLiveTitle": {
+    "description": "Suivi de commande : titre de la carte (spec 096)"
+  },
+  "trackLiveWaiting": "Le livreur apparaîtra ici",
+  "@trackLiveWaiting": {
+    "description": "Suivi : position du livreur pas encore connue"
+  },
+  "trackLiveCourier": "{name} arrive",
+  "@trackLiveCourier": {
+    "description": "Suivi : le livreur est en route",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trackLiveEta": "~{minutes} min",
+  "@trackLiveEta": {
+    "description": "Suivi : minutes restantes estimées",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "trackShare": "Partager le suivi",
+  "@trackShare": {
+    "description": "Suivi : partager le lien avec un proche ou la personne qui réceptionne"
+  },
+  "trackShareText": "Suis ma livraison DYM en direct : {url}",
+  "@trackShareText": {
+    "description": "Message envoyé avec le lien de suivi",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "courierPending": "Compte en cours de validation",
+  "@courierPending": {
+    "description": "Livreur : compte en attente de validation par l'équipe (spec 096)"
+  },
+  "courierPendingHint": "L'équipe DYM vérifie ton compte. Tu pourras passer en ligne dès qu'il est validé.",
+  "@courierPendingHint": {
+    "description": "Livreur : explication de l'attente de validation"
+  },
+  "courierRejected": "Compte à revoir",
+  "@courierRejected": {
+    "description": "Livreur : compte refusé, le motif suit"
+  },
+  "pickupCodeShow": "Code de récupération",
+  "@pickupCodeShow": {
+    "description": "Livreur : montrer le QR de récupération à la vendeuse"
+  },
+  "pickupCodeTitle": "Montre ce code à la vendeuse",
+  "@pickupCodeTitle": {
+    "description": "Titre de la feuille du code de récupération"
+  },
+  "pickupCodeHint": "Elle le scanne pour te remettre la commande.",
+  "@pickupCodeHint": {
+    "description": "Explication du code de récupération"
+  },
+  "courierUnreachable": "Cliente injoignable",
+  "@courierUnreachable": {
+    "description": "Livreur : la cliente ne répond pas devant la porte"
+  },
+  "courierUnreachableSent": "La cliente est prévenue. Attends {minutes} min avant de repartir.",
+  "@courierUnreachableSent": {
+    "description": "Livreur : confirmation du signalement injoignable",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "courierSos": "SOS",
+  "@courierSos": {
+    "description": "Livreur : bouton d'alerte"
+  },
+  "courierSosTitle": "Alerter l'équipe DYM ?",
+  "@courierSosTitle": {
+    "description": "Livreur : confirmation de l'alerte SOS"
+  },
+  "courierSosBody": "L'équipe reçoit ta position et te rappelle tout de suite. En cas de danger, appelle aussi les secours.",
+  "@courierSosBody": {
+    "description": "Livreur : explication de l'alerte SOS"
+  },
+  "courierSosSend": "Envoyer l'alerte",
+  "@courierSosSend": {
+    "description": "Livreur : envoyer l'alerte SOS"
+  },
+  "courierSosSent": "Alerte envoyée. L'équipe te rappelle.",
+  "@courierSosSent": {
+    "description": "Livreur : alerte SOS envoyée"
   }
 }

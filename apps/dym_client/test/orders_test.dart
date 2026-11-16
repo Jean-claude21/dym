@@ -1,9 +1,11 @@
 import 'package:dym_client/features/orders/disputes_views.dart';
+import 'package:dym_client/features/orders/live_map_card.dart';
 import 'package:dym_client/features/orders/orders_viewmodels.dart';
 import 'package:dym_client/features/orders/orders_views.dart';
 import 'package:dym_client/features/orders/testing.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_map/dym_map.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -176,6 +178,53 @@ void main() {
     await vm.refresh();
     expect(vm.phase, TrackPhase.onTheWay);
     expect(vm.progress, greaterThan(before));
+    vm.dispose();
+  });
+
+  testWidgets('suivi en direct : carte, livreur, minutes, partage (spec 096)', (
+    tester,
+  ) async {
+    final engine = FakeMapEngine();
+    final previous = DymMap.engine;
+    DymMap.engine = engine;
+    addTearDown(() => DymMap.engine = previous);
+    final service = _service()
+      ..liveTrackings['o1'] = const LiveTracking(
+        orderId: 'o1',
+        status: 'out_for_delivery',
+        storeName: 'Étal',
+        store: TrackPoint(6.13, 1.22),
+        destination: TrackPoint(6.14, 1.23),
+        courier: TrackedCourier(
+          name: 'Kofi',
+          position: TrackPoint(6.135, 1.225),
+        ),
+        etaMinutes: 7,
+      );
+    final vm = TrackingViewModel(
+      service: service,
+      orderId: 'o1',
+      refreshEvery: null,
+    );
+    await vm.load();
+    expect(vm.showMap, isTrue);
+    expect(vm.live?.etaMinutes, 7);
+    final url = await vm.shareTracking();
+    expect(url.toString(), contains('/t/'));
+    expect(service.sharedTrackings, ['o1']);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: DymTheme.light(),
+        locale: const Locale('fr'),
+        localizationsDelegates: DymLocalizations.localizationsDelegates,
+        supportedLocales: DymLocalizations.supportedLocales,
+        home: Scaffold(body: LiveMapCard(vm: vm)),
+      ),
+    );
+    await tester.pump();
+    expect(find.text('Kofi arrive'), findsOneWidget);
+    expect(find.text('~7 min'), findsOneWidget);
+    expect(engine.last!.pins.map((p) => p.id), ['store', 'door', 'courier']);
     vm.dispose();
   });
 

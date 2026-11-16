@@ -7564,4 +7564,71 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get storeDeliveryMapHint => 'Le cercle montre où tu livres.';
+
+  @override
+  String get trackLiveTitle => 'Suivi en direct';
+
+  @override
+  String get trackLiveWaiting => 'Le livreur apparaîtra ici';
+
+  @override
+  String trackLiveCourier(String name) {
+    return '$name arrive';
+  }
+
+  @override
+  String trackLiveEta(int minutes) {
+    return '~$minutes min';
+  }
+
+  @override
+  String get trackShare => 'Partager le suivi';
+
+  @override
+  String trackShareText(String url) {
+    return 'Suis ma livraison DYM en direct : $url';
+  }
+
+  @override
+  String get courierPending => 'Compte en cours de validation';
+
+  @override
+  String get courierPendingHint =>
+      'L\'équipe DYM vérifie ton compte. Tu pourras passer en ligne dès qu\'il est validé.';
+
+  @override
+  String get courierRejected => 'Compte à revoir';
+
+  @override
+  String get pickupCodeShow => 'Code de récupération';
+
+  @override
+  String get pickupCodeTitle => 'Montre ce code à la vendeuse';
+
+  @override
+  String get pickupCodeHint => 'Elle le scanne pour te remettre la commande.';
+
+  @override
+  String get courierUnreachable => 'Cliente injoignable';
+
+  @override
+  String courierUnreachableSent(int minutes) {
+    return 'La cliente est prévenue. Attends $minutes min avant de repartir.';
+  }
+
+  @override
+  String get courierSos => 'SOS';
+
+  @override
+  String get courierSosTitle => 'Alerter l\'équipe DYM ?';
+
+  @override
+  String get courierSosBody =>
+      'L\'équipe reçoit ta position et te rappelle tout de suite. En cas de danger, appelle aussi les secours.';
+
+  @override
+  String get courierSosSend => 'Envoyer l\'alerte';
+
+  @override
+  String get courierSosSent => 'Alerte envoyée. L\'équipe te rappelle.';
 }

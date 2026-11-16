@@ -53,7 +53,7 @@ begin
   perform app.transition_order((select kodjo from _t), p_order, 'ready', 'accepted');
   select handover_code into v_code from public.orders where id = p_order;
   perform tests.login_as((select kofi from _t));
-  perform public.courier_transition(p_order, 'out_for_delivery', 'ready');
+  perform tests.pickup(p_order);
   perform public.courier_deliver(p_order, v_code);
   perform tests.logout();
 end

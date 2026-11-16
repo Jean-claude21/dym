@@ -22,6 +22,12 @@ abstract interface class OrdersService {
   /// Code de remise à donner au livreur DYM (spec 042) ; nul : aucun.
   Future<Result<String?>> handoverCode(String orderId);
 
+  /// Suivi en direct : boutique, porte, livreur, minutes restantes (spec 096).
+  Future<Result<LiveTracking>> liveTracking(String orderId);
+
+  /// Lien de suivi à partager (n'importe quelle messagerie), 24 h au plus.
+  Future<Result<Uri>> shareTracking(String orderId);
+
   Future<Result<CustomerOrder>> cancel(CustomerOrder order);
 
   Future<Result<List<AppNotification>>> notifications();
@@ -75,7 +81,30 @@ class NeonOrdersService implements OrdersService {
     required this._reference,
     required this._auth,
     this._live = LiveFeed.none,
+    this._delivery,
+    this._trackingBase,
   });
+
+  /// Suivi en direct (spec 096) ; absent : pas de carte.
+  final DeliveryRepository? _delivery;
+
+  /// Adresse publique des liens de suivi (`<Functions>/t/`).
+  final Uri? _trackingBase;
+
+  @override
+  Future<Result<LiveTracking>> liveTracking(String orderId) async =>
+      await _delivery?.tracking(orderId) ?? const Err(NotFoundFailure('suivi'));
+
+  @override
+  Future<Result<Uri>> shareTracking(String orderId) async {
+    final delivery = _delivery;
+    final base = _trackingBase;
+    if (delivery == null || base == null) {
+      return const Err(NotFoundFailure('suivi'));
+    }
+    return (await delivery.share(orderId))
+        .map((share) => base.replace(path: '${base.path}/t/${share.token}'));
+  }
 
   final LiveFeed _live;
 
