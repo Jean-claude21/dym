@@ -1,5 +1,6 @@
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_client/features/discovery/discovery_viewmodels.dart';
+import 'package:dym_client/features/discovery/map/store_map_view.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -7,7 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 /// Onglet « Marché » (design « Épuré », PARCOURS §4.1) : recherche, rayons en
-/// photos, achats groupés, boutiques du quartier en liste.
+/// photos, achats groupés, boutiques du quartier en liste ou sur la carte
+/// (spec 095).
 class MarketView extends StackedView<DiscoveryHomeViewModel> {
   const new({
     required this.service,
@@ -52,6 +54,47 @@ class MarketView extends StackedView<DiscoveryHomeViewModel> {
       );
     }
     final locale = Localizations.localeOf(context).languageCode;
+    final header = Row(
+      children: [
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Text(l10n.navMarket, style: t.display),
+          ),
+        ),
+        _ViewToggle(
+          map: vm.showMap,
+          onChanged: (value) => vm.setShowMap(value: value),
+        ),
+      ],
+    );
+    if (vm.showMap) {
+      return SafeArea(
+        child: LayoutBuilder(
+          builder: (context, box) {
+            final inset = DymLayout.sideInset(
+              box.maxWidth,
+              gutter: DymLayout.gutter(context),
+            );
+            return Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(inset, 16, inset, 12),
+                  child: header,
+                ),
+                Expanded(
+                  child: StoreMapView(
+                    service: vm.service,
+                    config: vm.config,
+                    onOpenStore: onOpenStore,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    }
     final stores = [
       ...vm.result.openStores,
       ...vm.result.stores.where((s) => !s.openNow),
@@ -79,10 +122,7 @@ class MarketView extends StackedView<DiscoveryHomeViewModel> {
             child: ListView(
               padding: EdgeInsets.fromLTRB(inset, 16, inset, 96),
               children: [
-                Semantics(
-                  header: true,
-                  child: Text(l10n.navMarket, style: t.display),
-                ),
+                header,
                 const SizedBox(height: DymTokenSpace.s3),
                 DymSearchBar(
                   hint: l10n.homeSearchHint,
@@ -147,6 +187,36 @@ class MarketView extends StackedView<DiscoveryHomeViewModel> {
           );
         },
       ),
+    );
+  }
+}
+
+/// Bascule Liste / Carte (icône et libellé, cible de 48 dp).
+class _ViewToggle extends StatelessWidget {
+  const new({required this.map, required this.onChanged});
+
+  final bool map;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    return SegmentedButton<bool>(
+      showSelectedIcon: false,
+      segments: [
+        ButtonSegment(
+          value: false,
+          icon: const Icon(Icons.view_list_rounded),
+          label: Text(l10n.marketViewList),
+        ),
+        ButtonSegment(
+          value: true,
+          icon: const Icon(Icons.map_rounded),
+          label: Text(l10n.marketViewMap),
+        ),
+      ],
+      selected: {map},
+      onSelectionChanged: (s) => onChanged(s.first),
     );
   }
 }

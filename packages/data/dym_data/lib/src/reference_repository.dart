@@ -54,7 +54,8 @@ class ReferenceRepository {
       ),
       _list(
         'zones',
-        'id, city_id, slug, name, sort, city:cities!inner(country_code)',
+        'id, city_id, slug, name, sort, latitude, longitude, '
+            'city:cities!inner(country_code)',
         Zone.fromJson,
         eq: {'city.country_code': countryCode},
         order: 'sort',

@@ -70,6 +70,16 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
 
   List<Category> get aisles => _config?.topCategories ?? const [];
 
+  /// Marché en carte plutôt qu'en liste (spec 095).
+  bool get showMap => _showMap;
+  bool _showMap = false;
+
+  void setShowMap({required bool value}) {
+    if (_showMap == value) return;
+    _showMap = value;
+    notifyListeners();
+  }
+
   @override
   Future<void> load() => run(() async {
     final config = await _service.countryConfig();

@@ -21,6 +21,45 @@ class DiscoveryRepository {
     'p_longitude': ?longitude,
   }, DiscoverResult.fromJson);
 
+  /// Carte (spec 095) : boutiques actives dont la position tombe dans le
+  /// cadre donné, ouvertes d'abord ; filtres catégorie et « ouvertes ».
+  Future<Result<List<PublicStore>>> mapStores({
+    required double south,
+    required double west,
+    required double north,
+    required double east,
+    String? categoryId,
+    bool openOnly = false,
+  }) async {
+    final result = await _data.rpc<Object?>(
+      'map_stores',
+      params: {
+        'p_south': south,
+        'p_west': west,
+        'p_north': north,
+        'p_east': east,
+        'p_category': categoryId,
+        'p_open_only': openOnly,
+      },
+    );
+    switch (result) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        if (value is! List) {
+          return const Err(ServerFailure('réponse illisible'));
+        }
+        try {
+          return Ok([
+            for (final row in value)
+              PublicStore.fromJson(row as Map<String, dynamic>),
+          ]);
+        } on Object catch (error) {
+          return Err(ServerFailure('réponse illisible : ${error.runtimeType}'));
+        }
+    }
+  }
+
   /// Fil personnel de l'accueil (spec 027) pour [zoneId].
   Future<Result<HomeFeed>> homeFeed(String zoneId) =>
       _object('home_feed', {'p_zone': zoneId}, HomeFeed.fromJson);

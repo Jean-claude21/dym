@@ -32,6 +32,35 @@ abstract interface class DiscoveryService {
   /// Recherche ou rayon, dans le quartier choisi.
   Future<Result<SearchResults>> search(SearchQuery query);
 
+  /// Carte (spec 095) : boutiques dans un cadre, ouvertes d'abord.
+  Future<Result<List<PublicStore>>> mapStores({
+    required double south,
+    required double west,
+    required double north,
+    required double east,
+    String? categoryId,
+    bool openOnly = false,
+  });
+
+  /// Dernière position trouvée sur demande (jamais conservée hors session).
+  GeoPoint? get lastPosition;
+
+  /// Position de l'appareil, sur demande (`null` : refusée ou indisponible).
+  Future<Result<GeoPoint?>> myPosition();
+
+  /// Pays ouverts (explorateur de la carte).
+  Future<Result<List<Country>>> countries();
+
+  /// Référentiel d'un autre pays (villes et quartiers de la carte).
+  Future<Result<CountryConfig>> configOf(String countryCode);
+
+  /// `store_map_viewed` : nombres et filtres seulement, jamais la position.
+  void storeMapViewed({
+    required int stores,
+    required bool openOnly,
+    required bool category,
+  });
+
   Future<Result<StorePageData>> storePage(String storeId);
 
   /// Avis publics d'une boutique (écran 64).
@@ -159,6 +188,57 @@ class NeonDiscoveryService implements DiscoveryService {
   @override
   Future<Result<SearchResults>> search(SearchQuery query) =>
       _discovery.search(query.copyWith(zoneId: query.zoneId ?? _zone.value));
+
+  @override
+  Future<Result<List<PublicStore>>> mapStores({
+    required double south,
+    required double west,
+    required double north,
+    required double east,
+    String? categoryId,
+    bool openOnly = false,
+  }) => _discovery.mapStores(
+    south: south,
+    west: west,
+    north: north,
+    east: east,
+    categoryId: categoryId,
+    openOnly: openOnly,
+  );
+
+  @override
+  GeoPoint? get lastPosition => _point;
+
+  @override
+  Future<Result<GeoPoint?>> myPosition() async {
+    final result = await _location.current();
+    if (result case Ok(value: final point?)) _point = point;
+    return result;
+  }
+
+  @override
+  Future<Result<List<Country>>> countries() => _reference.countries();
+
+  @override
+  Future<Result<CountryConfig>> configOf(String countryCode) async {
+    if (_config case final c? when c.country.code == countryCode) {
+      return Ok(c);
+    }
+    return await _reference.countryConfig(countryCode);
+  }
+
+  @override
+  void storeMapViewed({
+    required int stores,
+    required bool openOnly,
+    required bool category,
+  }) => unawaited(
+    _events.track(
+      'store_map_viewed',
+      countryCode: _countryCode,
+      props: {'stores': stores, 'open_only': openOnly, 'category': category},
+    ),
+  );
 
   @override
   Future<Result<StorePageData>> storePage(String storeId) =>

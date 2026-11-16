@@ -111,6 +111,9 @@ abstract interface class CartService {
   /// Position de l'appareil et quartier proposé ; `Ok(null)` : refusée.
   Future<Result<LocatedPlace?>> locate();
 
+  /// Quartier d'un point placé sur la carte (« Placer ma porte », spec 095).
+  Future<Result<ZoneMatch?>> zoneAt(GeoPoint point);
+
   /// Commande le panier avec la sélection courante. Une nouvelle tentative
   /// après une erreur réseau réutilise la même clé d'idempotence.
   Future<Result<Purchase>> placeOrder();
@@ -283,6 +286,13 @@ class NeonCartService implements CartService {
   @override
   Future<Result<List<CustomerAddress>>> setDefaultAddress(String id) =>
       _addresses.setDefault(id);
+
+  @override
+  Future<Result<ZoneMatch?>> zoneAt(GeoPoint point) => _discovery.nearestZone(
+    point.latitude,
+    point.longitude,
+    countryCode: _view.value.countryCode,
+  );
 
   @override
   Future<Result<LocatedPlace?>> locate() async {

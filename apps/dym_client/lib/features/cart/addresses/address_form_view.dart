@@ -4,7 +4,9 @@ import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_map/dym_map.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -156,6 +158,17 @@ class _FormState extends State<_Form> {
           AddressLocation.found || null => null,
         },
       ),
+      const SizedBox(height: DymTokenSpace.s2),
+      Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: TextButton.icon(
+          onPressed: vm.locating || vm.doorStart == null
+              ? null
+              : () => _placeDoor(context, vm),
+          icon: const Icon(Icons.pin_drop_rounded),
+          label: Text(l10n.addressPlaceDoor),
+        ),
+      ),
       if (vm.hasPosition)
         Padding(
           padding: const EdgeInsets.only(top: DymTokenSpace.s2),
@@ -165,7 +178,9 @@ class _FormState extends State<_Form> {
               const SizedBox(width: DymTokenSpace.s1),
               Flexible(
                 child: Text(
-                  l10n.addressPositionSaved,
+                  vm.doorPlaced
+                      ? l10n.addressDoorPlaced
+                      : l10n.addressPositionSaved,
                   style: t.label.copyWith(
                     color: c.brandDeep,
                     fontWeight: FontWeight.w700,
@@ -226,6 +241,53 @@ class _FormState extends State<_Form> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       children: [for (final w in children) DymContentWidth.form(child: w)],
+    );
+  }
+}
+
+/// « Placer ma porte » : carte plein écran, épingle fixe, validation.
+Future<void> _placeDoor(BuildContext context, AddressFormViewModel vm) async {
+  final start = vm.doorStart;
+  if (start == null) return;
+  final point = await Navigator.of(
+    context,
+  ).push<GeoPoint>(MaterialPageRoute(builder: (_) => _DoorPage(start: start)));
+  if (point != null) await vm.placeDoor(point);
+}
+
+class _DoorPage extends StatefulWidget {
+  const new({required this.start});
+
+  final GeoPoint start;
+
+  @override
+  State<_DoorPage> createState() => _DoorPageState();
+}
+
+class _DoorPageState extends State<_DoorPage> {
+  late GeoPoint _point = widget.start;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.addressPlaceDoor)),
+      body: DymPinPlacer(
+        initial: DymLatLng(widget.start.latitude, widget.start.longitude),
+        hint: l10n.addressPlaceDoorHint,
+        semanticLabel: l10n.addressPlaceDoor,
+        onChanged: (p) => _point = GeoPoint(p.latitude, p.longitude),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(DymTokenSpace.s4),
+          child: DymButton(
+            label: l10n.addressPlaceDoorConfirm,
+            icon: Icons.check_rounded,
+            onPressed: () => Navigator.of(context).pop(_point),
+          ),
+        ),
+      ),
     );
   }
 }

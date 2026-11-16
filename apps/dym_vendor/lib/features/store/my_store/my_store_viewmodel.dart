@@ -1,4 +1,5 @@
 import 'package:dym_core/dym_core.dart';
+import 'package:dym_map/dym_map.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
 import 'package:dym_vendor/features/store/store_service.dart';
@@ -31,6 +32,22 @@ class MyStoreViewModel extends BaseViewModel {
   bool get offline => _loadFailure is NetworkFailure;
   bool get ready => _store != null && _config != null;
   bool get suspended => _store?.status == StoreStatus.suspended;
+
+  /// Point de la boutique sur la carte (spec 095) : adresse de retrait
+  /// située, sinon centre du quartier ; comme `app.store_point` en base.
+  DymLatLng? get storePoint {
+    final s = _store;
+    if (s == null) return null;
+    final pickup = s.pickupAddress;
+    if ((pickup?.latitude, pickup?.longitude) case (final lat?, final lng?)) {
+      return DymLatLng(lat, lng);
+    }
+    final zone = _config?.zones.where((z) => z.id == s.zoneId).firstOrNull;
+    if (zone case Zone(:final latitude?, :final longitude?)) {
+      return DymLatLng(latitude, longitude);
+    }
+    return null;
+  }
 
   /// Interrupteur sur « ouverte », mais hors des horaires.
   bool get closedByHours => (_store?.isOpen ?? false) && !_openNow;

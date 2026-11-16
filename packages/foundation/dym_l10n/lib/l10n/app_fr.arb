@@ -8530,5 +8530,91 @@
   "visitorChangePlace": "Changer de quartier",
   "@visitorChangePlace": {
     "description": "Lien pour choisir un autre quartier en visiteuse"
+  },
+  "marketViewList": "Liste",
+  "@marketViewList": {
+    "description": "Marché : bascule vers la liste des boutiques (spec 095)"
+  },
+  "marketViewMap": "Carte",
+  "@marketViewMap": {
+    "description": "Marché : bascule vers la carte des boutiques (spec 095)"
+  },
+  "mapSemantic": "Carte des boutiques",
+  "@mapSemantic": {
+    "description": "Lecteur d'écran : la carte des boutiques"
+  },
+  "mapFilterOpen": "Ouvertes",
+  "@mapFilterOpen": {
+    "description": "Filtre de la carte : boutiques ouvertes maintenant"
+  },
+  "mapFilterAll": "Tout",
+  "@mapFilterAll": {
+    "description": "Filtre de la carte : toutes les catégories"
+  },
+  "mapExplore": "Explorer",
+  "@mapExplore": {
+    "description": "Carte : choisir un pays et une ville à afficher"
+  },
+  "mapExploreTitle": "Où regarder ?",
+  "@mapExploreTitle": {
+    "description": "Titre de la feuille de choix du pays et de la ville"
+  },
+  "mapCountries": "Pays",
+  "@mapCountries": {
+    "description": "Titre de la liste des pays dans l'explorateur"
+  },
+  "mapMyPosition": "Ma position",
+  "@mapMyPosition": {
+    "description": "Carte : recentrer sur la position de l'appareil"
+  },
+  "mapPositionUnavailable": "Position indisponible. Déplace la carte à la main.",
+  "@mapPositionUnavailable": {
+    "description": "Carte : la position n'a pas pu être lue"
+  },
+  "mapEmpty": "Aucune boutique dans cette partie de la carte. Déplace-la ou retire un filtre.",
+  "@mapEmpty": {
+    "description": "Carte : aucune boutique dans le cadre"
+  },
+  "mapSeeStore": "Voir la boutique",
+  "@mapSeeStore": {
+    "description": "Fiche de la carte : ouvrir la boutique"
+  },
+  "mapDeliversWithin": "Livre jusqu'à {km} km",
+  "@mapDeliversWithin": {
+    "description": "Fiche de la carte : rayon de livraison de la boutique",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "mapStoresCount": "{count, plural, =0{Aucune boutique} =1{1 boutique} other{{count} boutiques}}",
+  "@mapStoresCount": {
+    "description": "Carte : nombre de boutiques visibles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "addressPlaceDoor": "Placer ma porte",
+  "@addressPlaceDoor": {
+    "description": "Adresse : placer précisément la porte sur la carte (spec 095)"
+  },
+  "addressPlaceDoorHint": "Fais glisser la carte pour mettre l'épingle sur ta porte.",
+  "@addressPlaceDoorHint": {
+    "description": "Consigne affichée sur la carte « Placer ma porte »"
+  },
+  "addressPlaceDoorConfirm": "Valider cet emplacement",
+  "@addressPlaceDoorConfirm": {
+    "description": "Bouton : valider la porte placée"
+  },
+  "addressDoorPlaced": "Porte placée sur la carte",
+  "@addressDoorPlaced": {
+    "description": "Adresse : la porte a été placée sur la carte"
+  },
+  "storeDeliveryMapHint": "Le cercle montre où tu livres.",
+  "@storeDeliveryMapHint": {
+    "description": "Vendeuse : légende de la carte du rayon de livraison"
   }
 }

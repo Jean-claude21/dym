@@ -15,6 +15,7 @@ dependencies:
   dym_core: ^0.1.0
   dym_data: ^0.1.0
   dym_l10n: ^0.1.0
+  dym_map: ^0.1.0
   dym_models: ^0.1.0
   dym_platform: ^0.1.0
   dym_ui: ^0.1.0

@@ -7493,4 +7493,75 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get visitorChangePlace => 'Changer de quartier';
+
+  @override
+  String get marketViewList => 'Liste';
+
+  @override
+  String get marketViewMap => 'Carte';
+
+  @override
+  String get mapSemantic => 'Carte des boutiques';
+
+  @override
+  String get mapFilterOpen => 'Ouvertes';
+
+  @override
+  String get mapFilterAll => 'Tout';
+
+  @override
+  String get mapExplore => 'Explorer';
+
+  @override
+  String get mapExploreTitle => 'Où regarder ?';
+
+  @override
+  String get mapCountries => 'Pays';
+
+  @override
+  String get mapMyPosition => 'Ma position';
+
+  @override
+  String get mapPositionUnavailable =>
+      'Position indisponible. Déplace la carte à la main.';
+
+  @override
+  String get mapEmpty =>
+      'Aucune boutique dans cette partie de la carte. Déplace-la ou retire un filtre.';
+
+  @override
+  String get mapSeeStore => 'Voir la boutique';
+
+  @override
+  String mapDeliversWithin(String km) {
+    return 'Livre jusqu\'à $km km';
+  }
+
+  @override
+  String mapStoresCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count boutiques',
+      one: '1 boutique',
+      zero: 'Aucune boutique',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addressPlaceDoor => 'Placer ma porte';
+
+  @override
+  String get addressPlaceDoorHint =>
+      'Fais glisser la carte pour mettre l\'épingle sur ta porte.';
+
+  @override
+  String get addressPlaceDoorConfirm => 'Valider cet emplacement';
+
+  @override
+  String get addressDoorPlaced => 'Porte placée sur la carte';
+
+  @override
+  String get storeDeliveryMapHint => 'Le cercle montre où tu livres.';
 }
