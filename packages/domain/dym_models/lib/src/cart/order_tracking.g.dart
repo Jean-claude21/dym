@@ -290,6 +290,7 @@ AppNotification _$AppNotificationFromJson(Map<String, dynamic> json) =>
             'read_at',
             (v) => v == null ? null : DateTime.parse(v as String),
           ),
+          text: $checkedConvert('text', (v) => v as Map<String, dynamic>?),
         );
         return val;
       },

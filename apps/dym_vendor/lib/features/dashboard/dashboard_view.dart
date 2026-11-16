@@ -19,7 +19,11 @@ class DashboardView extends StackedView<DashboardViewModel> {
     this.onCharge,
     this.onPublish,
     this.greeting,
+    this.bell,
   });
+
+  /// Cloche des notifications (spec 097) ; nulle : masquée.
+  final Widget? bell;
 
   final DashboardService service;
   final VoidCallback onOrders;
@@ -108,9 +112,16 @@ class DashboardView extends StackedView<DashboardViewModel> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Semantics(
-                    header: true,
-                    child: Text(greeting ?? l.navToday, style: t.display),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Semantics(
+                          header: true,
+                          child: Text(greeting ?? l.navToday, style: t.display),
+                        ),
+                      ),
+                      ?bell,
+                    ],
                   ),
                   // Commandes en attente : d'abord, et en couleur (spec 076).
                   if (summary.pendingOrders > 0) ...[

@@ -14,7 +14,30 @@ export interface PushMessage {
   tag?: string;
   /** Grande photo (produit principal de la commande), URL publique. */
   image?: string;
+  /**
+   * Données seules (spec 097) : l'app affiche elle-même la notification, avec ses boutons
+   * (accepter, répondre, décrocher) et, pour un appel, en plein écran avec sonnerie.
+   */
+  dataOnly?: boolean;
 }
+
+/** Notifications à boutons ou appels : affichées par l'app (données seules). */
+export function isActionable(kind: string): boolean {
+  return (
+    kind === "new_order" ||
+    kind === "mission_available" ||
+    kind.startsWith("incoming_call") ||
+    kind.startsWith("new_message")
+  );
+}
+
+/** Son du canal (fichier `res/raw` des apps), pour les notifications affichées par le système. */
+const channelSounds: Record<string, string> = {
+  dym_orders_v2: "dym_order",
+  dym_messages_v2: "dym_message",
+  dym_missions_v2: "dym_mission",
+  dym_calls_v2: "dym_ring",
+};
 
 /** Courses du livreur : canal à part, pour un son et une importance dédiés. */
 const missionKinds = new Set([
@@ -30,10 +53,12 @@ const missionKinds = new Set([
  * `PushNotifications` dans les apps.
  */
 export function pushChannel(kind: string, category: string): string {
-  if (missionKinds.has(kind)) return "dym_missions";
-  if (category === "messages") return "dym_messages";
-  if (category === "orders" || category === "payments") return "dym_orders";
-  return "dym_general";
+  // Spec 097 : un canal par son ; les appels sonnent en plein écran.
+  if (kind.startsWith("incoming_call")) return "dym_calls_v2";
+  if (missionKinds.has(kind)) return "dym_missions_v2";
+  if (category === "messages") return "dym_messages_v2";
+  if (category === "orders" || category === "payments") return "dym_orders_v2";
+  return "dym_general_v2";
 }
 
 export interface PushSendResult {
@@ -133,23 +158,36 @@ export function fcmPushSender(
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify({
-              message: {
-                token: device,
-                notification: {
-                  title: message.title,
-                  body: message.body,
-                  ...(message.image ? { image: message.image } : {}),
-                },
-                data: message.data,
-                android: {
-                  priority: "high",
-                  notification: {
-                    sound: "default",
-                    ...(message.channel ? { channel_id: message.channel } : {}),
-                    ...(message.tag ? { tag: message.tag } : {}),
+              message: message.dataOnly
+                ? {
+                    token: device,
+                    // Données seules : titre, texte, canal et sujet passent à l'app.
+                    data: {
+                      ...message.data,
+                      title: message.title,
+                      body: message.body,
+                      ...(message.channel ? { channel: message.channel } : {}),
+                      ...(message.tag ? { tag: message.tag } : {}),
+                    },
+                    android: { priority: "high", ttl: "60s" },
+                  }
+                : {
+                    token: device,
+                    notification: {
+                      title: message.title,
+                      body: message.body,
+                      ...(message.image ? { image: message.image } : {}),
+                    },
+                    data: message.data,
+                    android: {
+                      priority: "high",
+                      notification: {
+                        sound: (message.channel && channelSounds[message.channel]) || "default",
+                        ...(message.channel ? { channel_id: message.channel } : {}),
+                        ...(message.tag ? { tag: message.tag } : {}),
+                      },
+                    },
                   },
-                },
-              },
             }),
           },
         );
@@ -211,6 +249,7 @@ export async function dispatchPushes(
         title: push.text.title,
         body: push.text.body,
         channel: pushChannel(push.kind, push.category),
+        dataOnly: isActionable(push.kind),
         ...(mediaBase && push.image_key
           ? { image: `${mediaBase.replace(/\/$/, "")}/${push.image_key}` }
           : {}),
@@ -221,6 +260,8 @@ export async function dispatchPushes(
           ...(push.purchase_id ? { purchase_id: push.purchase_id } : {}),
           // Message : le toucher ouvre la conversation.
           ...(conversation ? { conversation_id: conversation } : {}),
+          // Appel : « Refuser » depuis la notification (spec 097).
+          ...(typeof push.params?.call_id === "string" ? { call_id: push.params.call_id } : {}),
         },
       });
       invalid.push(...result.invalidTokens);

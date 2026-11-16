@@ -3,6 +3,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Quartier proposé à partir de la position à l'inscription (dym_auth), précision réduite. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Appel qui sonne en plein écran, même verrouillé (spec 097). -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <application
         android:label="DYM Livreur"
         android:name="${applicationName}"
@@ -12,6 +14,8 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="dym_orders" />
         <activity
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"

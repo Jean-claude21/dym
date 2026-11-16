@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sons des notifications (spec 097) : appelés par leur nom, jamais retirés au build. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:keep="@raw/dym_*" />

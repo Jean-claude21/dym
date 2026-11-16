@@ -2273,5 +2273,13 @@
   "adminDeliverySimDistance": "Distance (m)",
   "adminDeliverySimLong": "Outside the shop's radius",
   "adminDeliverySimResult": "Fee: {fee}",
-  "adminSaved": "Saved"
+  "adminSaved": "Saved",
+  "inboxEmptyMessage": "Orders, messages, calls and stock alerts will show up here.",
+  "pushChannelCalls": "Calls",
+  "pushActionAccept": "Accept",
+  "pushActionView": "View",
+  "pushActionReply": "Reply",
+  "pushActionReplyHint": "Your message",
+  "pushActionAnswer": "Answer",
+  "pushActionDecline": "Decline"
 }

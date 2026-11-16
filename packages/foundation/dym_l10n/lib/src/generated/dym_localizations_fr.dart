@@ -7812,4 +7812,29 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminSaved => 'Enregistré';
+
+  @override
+  String get inboxEmptyMessage =>
+      'Commandes, messages, appels et alertes de stock apparaîtront ici.';
+
+  @override
+  String get pushChannelCalls => 'Appels';
+
+  @override
+  String get pushActionAccept => 'Accepter';
+
+  @override
+  String get pushActionView => 'Voir';
+
+  @override
+  String get pushActionReply => 'Répondre';
+
+  @override
+  String get pushActionReplyHint => 'Ton message';
+
+  @override
+  String get pushActionAnswer => 'Décrocher';
+
+  @override
+  String get pushActionDecline => 'Refuser';
 }

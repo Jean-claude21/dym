@@ -5,6 +5,7 @@ import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_notifications/dym_notifications.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/app/app.locator.dart';
@@ -183,6 +184,24 @@ class _HomeViewState extends State<HomeView> {
     return config.money(o.totalMinor).format();
   }
 
+  /// Boîte de notifications (spec 097) : toucher ouvre la commande ou le chat.
+  Future<void> _openInbox(BuildContext context) =>
+      Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          builder: (route) => NotificationInboxView(
+            service: locator<NotificationInboxService>(),
+            onOpen: (n) {
+              Navigator.of(route).pop();
+              if (n.param('conversation_id') case final c?) {
+                _navigator.toChat(c);
+              } else if (n.orderId case final o?) {
+                _navigator.toOrder(o);
+              }
+            },
+          ),
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
@@ -219,6 +238,12 @@ class _HomeViewState extends State<HomeView> {
       ],
       body: switch (_tab) {
         HomeTab.dashboard => DashboardView(
+          bell: locator.isRegistered<NotificationInboxService>()
+              ? NotificationBell(
+                  service: locator<NotificationInboxService>(),
+                  onTap: () => _openInbox(context),
+                )
+              : null,
           service: _dashboard,
           greeting: name == null || name.isEmpty
               ? null

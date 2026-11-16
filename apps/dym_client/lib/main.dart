@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_chat/dym_chat.dart';
@@ -25,6 +27,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
+import 'package:neon_kit/neon_kit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,23 +81,11 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton(
       PushNotifications(
         channels: _pushChannels,
+        labels: _pushLabels,
         register: (token, platform) async => (await NotificationRepository(
           neon.data,
         ).registerDevice(token: token, platform: platform, app: 'client')).isOk,
-        onOpened: (data) {
-          final nav = StackedAppNavigator();
-          final order = data['order_id'];
-          final conversation = data['conversation_id'];
-          if (conversation != null) {
-            nav.toChat(conversation);
-          } else if (data['kind'] == 'cart_reminder') {
-            nav.toCart();
-          } else if (order != null) {
-            nav.toOrder(order);
-          } else {
-            nav.toNotifications();
-          }
-        },
+        onOpened: (data) => unawaited(_openPush(data, neon)),
       ),
     )
     ..registerSingleton(locale)
@@ -306,6 +297,7 @@ PushChannels _pushChannels() {
     messages: t.pushChannelMessages,
     missions: t.pushChannelMissions,
     general: t.pushChannelGeneral,
+    calls: t.pushChannelCalls,
   );
 }
 
@@ -316,4 +308,48 @@ CallService _callService(CallRepository calls) {
     repository: calls,
     livekit: LiveKitCallProvider(credentials: calls.mediaCredentials),
   );
+}
+
+/// Libellés des boutons des notifications (spec 097), langue du téléphone.
+PushLabels _pushLabels() {
+  final device = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  final supported = DymLocalizations.supportedLocales.any(
+    (l) => l.languageCode == device,
+  );
+  final t = lookupDymLocalizations(Locale(supported ? device : 'fr'));
+  return PushLabels(
+    accept: t.pushActionAccept,
+    view: t.pushActionView,
+    reply: t.pushActionReply,
+    replyHint: t.pushActionReplyHint,
+    answer: t.pushActionAnswer,
+    decline: t.pushActionDecline,
+  );
+}
+
+/// Notification touchée ou bouton (spec 097) : répondre ou refuser sur place,
+/// sinon l'écran concerné.
+Future<void> _openPush(Map<String, String> data, NeonClient neon) async {
+  final done = await quickChatAction(
+    data,
+    messages: MessagingRepository(
+      data: neon.data,
+      functions: neon.functions,
+      uploads: neon.uploads,
+    ),
+    calls: CallRepository(neon.data, functions: neon.functions),
+  );
+  if (done) return;
+  final nav = StackedAppNavigator();
+  final order = data['order_id'];
+  final conversation = data['conversation_id'];
+  if (conversation != null) {
+    nav.toChat(conversation);
+  } else if (data['kind'] == 'cart_reminder') {
+    nav.toCart();
+  } else if (order != null) {
+    nav.toOrder(order);
+  } else {
+    nav.toNotifications();
+  }
 }

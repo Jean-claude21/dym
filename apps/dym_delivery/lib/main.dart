@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
@@ -7,6 +9,7 @@ import 'package:dym_delivery/app/delivery_app.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_notifications/dym_notifications.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 
@@ -58,13 +61,20 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton(
       PushNotifications(
         channels: _pushChannels,
+        labels: _pushLabels,
         register: (token, platform) async =>
             (await NotificationRepository(neon.data).registerDevice(
               token: token,
               platform: platform,
               app: 'delivery',
             )).isOk,
-        onOpened: (_) => StackedAppNavigator().toHome(),
+        onOpened: (data) => unawaited(_openPush(data)),
+      ),
+    )
+    ..registerSingleton<NotificationInboxService>(
+      NeonNotificationInboxService(
+        NotificationRepository(neon.data),
+        app: 'delivery',
       ),
     )
     ..registerSingleton(locale)
@@ -94,5 +104,38 @@ PushChannels _pushChannels() {
     messages: t.pushChannelMessages,
     missions: t.pushChannelMissions,
     general: t.pushChannelGeneral,
+    calls: t.pushChannelCalls,
   );
+}
+
+/// Libellés des boutons des notifications (spec 097), langue du téléphone.
+PushLabels _pushLabels() {
+  final device = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+  final supported = DymLocalizations.supportedLocales.any(
+    (l) => l.languageCode == device,
+  );
+  final t = lookupDymLocalizations(Locale(supported ? device : 'fr'));
+  return PushLabels(
+    accept: t.pushActionAccept,
+    view: t.pushActionView,
+    reply: t.pushActionReply,
+    replyHint: t.pushActionReplyHint,
+    answer: t.pushActionAnswer,
+    decline: t.pushActionDecline,
+  );
+}
+
+/// Notification touchée ou bouton (spec 097) : « Accepter » prend la course.
+Future<void> _openPush(Map<String, String> data) async {
+  final order = data['order_id'];
+  if (data['action'] == 'accept' &&
+      data['kind'] == 'mission_available' &&
+      order != null) {
+    final missions = locator<MissionsService>();
+    if (await missions.available() case Ok(:final value)) {
+      final mission = value.where((m) => m.orderId == order).firstOrNull;
+      if (mission != null) await missions.accept(mission);
+    }
+  }
+  StackedAppNavigator().toHome();
 }
