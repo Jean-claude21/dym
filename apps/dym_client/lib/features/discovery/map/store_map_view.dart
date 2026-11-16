@@ -60,11 +60,19 @@ class StoreMapView extends StackedView<StoreMapViewModel> {
             pins: vm.pins(styleOf),
             pinStyles: styles,
             areas: vm.areas,
+            selectedPinId: selected?.id,
             semanticLabel: l10n.mapSemantic,
             onReady: (controls) => vm.controls = controls,
             onCameraIdle: (view) => unawaited(vm.onCameraIdle(view)),
-            onPinTap: vm.select,
-            onMapTap: (_) => vm.select(null),
+            // Fiche en bas (~300 dp) et filtres en haut : le cercle reste
+            // entièrement visible.
+            onPinTap: (id) => unawaited(
+              vm.select(
+                id,
+                padding: const EdgeInsets.only(top: 56, bottom: 300),
+              ),
+            ),
+            onMapTap: (_) => unawaited(vm.select(null)),
           ),
         ),
         Positioned(

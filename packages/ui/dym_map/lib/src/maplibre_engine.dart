@@ -38,6 +38,7 @@ class _MapLibreViewState extends State<_MapLibreView>
   MapLibreMapController? _controller;
   bool _styleReady = false;
   final _images = <String>{};
+  Symbol? _selectedSymbol;
   String? _style;
 
   DymMapSpec get spec => widget.spec;
@@ -53,7 +54,8 @@ class _MapLibreViewState extends State<_MapLibreView>
     super.didUpdateWidget(old);
     if (!_styleReady) return;
     if (!listEquals(old.spec.pins, spec.pins) ||
-        !mapEquals(old.spec.pinStyles, spec.pinStyles)) {
+        !mapEquals(old.spec.pinStyles, spec.pinStyles) ||
+        old.spec.selectedPinId != spec.selectedPinId) {
       unawaited(_pushPins());
     }
     if (!listEquals(old.spec.areas, spec.areas)) unawaited(_pushAreas());
@@ -78,24 +80,42 @@ class _MapLibreViewState extends State<_MapLibreView>
         await controller.addImage(_imageName(key), bytes, false, 3);
       }
     }
+    Map<String, Object?> feature(DymMapPin pin) => {
+      'type': 'Feature',
+      'id': pin.id,
+      'properties': {
+        'pin': pin.id,
+        'icon': _imageName(pin.style),
+        'label': pin.label ?? '',
+        'dimmed': pin.dimmed,
+      },
+      'geometry': {
+        'type': 'Point',
+        'coordinates': [pin.point.longitude, pin.point.latitude],
+      },
+    };
+    final selected = spec.selectedPinId;
+    // Épingle choisie : annotation au-dessus des calques, jamais regroupée.
+    final previous = _selectedSymbol;
+    _selectedSymbol = null;
+    if (previous != null) await controller.removeSymbol(previous);
+    final chosen = spec.pins.where((p) => p.id == selected).firstOrNull;
+    if (chosen != null) {
+      _selectedSymbol = await controller.addSymbol(
+        SymbolOptions(
+          geometry: LatLng(chosen.point.latitude, chosen.point.longitude),
+          iconImage: _imageName(chosen.style),
+          iconSize: 1.3,
+          iconAnchor: 'bottom',
+          zIndex: 10,
+        ),
+      );
+    }
     await controller.setGeoJsonSource(DymMapLayers.pinsSource, {
       'type': 'FeatureCollection',
       'features': [
         for (final pin in spec.pins)
-          {
-            'type': 'Feature',
-            'id': pin.id,
-            'properties': {
-              'pin': pin.id,
-              'icon': _imageName(pin.style),
-              'label': pin.label ?? '',
-              'dimmed': pin.dimmed,
-            },
-            'geometry': {
-              'type': 'Point',
-              'coordinates': [pin.point.longitude, pin.point.latitude],
-            },
-          },
+          if (pin.id != selected) feature(pin),
       ],
     });
   }
@@ -200,7 +220,10 @@ class _MapLibreViewState extends State<_MapLibreView>
   }
 
   @override
-  Future<void> fit(DymBounds bounds) async {
+  Future<void> fit(
+    DymBounds bounds, {
+    EdgeInsets padding = EdgeInsets.zero,
+  }) async {
     final sw = bounds.southWest;
     final ne = bounds.northEast;
     if (sw == ne) {
@@ -213,10 +236,10 @@ class _MapLibreViewState extends State<_MapLibreView>
           southwest: LatLng(sw.latitude, sw.longitude),
           northeast: LatLng(ne.latitude, ne.longitude),
         ),
-        left: 48,
-        top: 48,
-        right: 48,
-        bottom: 48,
+        left: 24 + padding.left,
+        top: 24 + padding.top,
+        right: 24 + padding.right,
+        bottom: 24 + padding.bottom,
       ),
     );
   }
