@@ -81,7 +81,7 @@ describe("messagerie", () => {
     const fake = new FakeStore();
     const path = `/v1/conversations/${conv}/messages`;
     expect((await post(fake, path, { kind: "text", body: "Bonjour" })).status).toBe(400);
-    expect((await post(fake, path, { kind: "video" }, { "Idempotency-Key": key })).status).toBe(422);
+    expect((await post(fake, path, { kind: "sticker" }, { "Idempotency-Key": key })).status).toBe(422);
     const res = await post(fake, path, { kind: "text", body: "Bonjour" }, { "Idempotency-Key": key });
     expect(res.status).toBe(201);
     expect(fake.calls[0]).toMatchObject({ userId: user, conversationId: conv, kind: "text", idempotencyKey: key });
