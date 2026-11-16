@@ -9241,5 +9241,240 @@
   "chatTranscriptSimulated": "Transcription simulée : service à brancher.",
   "@chatTranscriptSimulated": {
     "description": "Chat : transcription indisponible, simulée (décision 0015)"
+  },
+  "peopleTitle": "Entre proches",
+  "@peopleTitle": {
+    "description": "Wallet : avoir entre personnes (spec 100)"
+  },
+  "peopleSimulatedNote": "Avoir DYM simulé : il se dépense chez les boutiques DYM, il ne se retire pas.",
+  "@peopleSimulatedNote": {
+    "description": "Wallet entre personnes : rappel simulé, jamais de retrait"
+  },
+  "peopleMyCodeHint": "Mon code : montre ce QR pour recevoir",
+  "@peopleMyCodeHint": {
+    "description": "Wallet : code personnel à partager"
+  },
+  "peopleSend": "Envoyer",
+  "@peopleSend": {
+    "description": "Wallet : envoyer de l'avoir"
+  },
+  "peopleRequest": "Demander",
+  "@peopleRequest": {
+    "description": "Wallet : demander de l'avoir (« paie ma commande »)"
+  },
+  "peopleTopupFor": "Recharger un proche",
+  "@peopleTopupFor": {
+    "description": "Wallet : recharger le wallet d'une autre personne"
+  },
+  "peopleRequests": "Demandes en cours",
+  "@peopleRequests": {
+    "description": "Wallet : demandes d'avoir"
+  },
+  "peopleAsksYou": "{name} te demande {amount}",
+  "@peopleAsksYou": {
+    "description": "Wallet : demande reçue",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleYouAsked": "Tu as demandé {amount} à {name}",
+  "@peopleYouAsked": {
+    "description": "Wallet : demande envoyée",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peoplePay": "Payer",
+  "@peoplePay": {
+    "description": "Wallet : payer une demande"
+  },
+  "peopleHistory": "Entre proches",
+  "@peopleHistory": {
+    "description": "Wallet : historique des envois et réceptions"
+  },
+  "peopleHistoryEmpty": "Rien pour l'instant.",
+  "@peopleHistoryEmpty": {
+    "description": "Wallet : historique vide"
+  },
+  "peopleFrom": "De {name}",
+  "@peopleFrom": {
+    "description": "Wallet : avoir reçu de",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleTo": "À {name}",
+  "@peopleTo": {
+    "description": "Wallet : avoir envoyé à",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleSendTo": "Envoyer à {name}",
+  "@peopleSendTo": {
+    "description": "Wallet : titre de l'envoi",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleRequestFrom": "Demander à {name}",
+  "@peopleRequestFrom": {
+    "description": "Wallet : titre de la demande",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleTopupForName": "Recharger le wallet de {name}",
+  "@peopleTopupForName": {
+    "description": "Wallet : titre de la recharge pour un proche",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "peopleNote": "Message (facultatif)",
+  "@peopleNote": {
+    "description": "Wallet : message joint"
+  },
+  "peopleDone": "C'est fait.",
+  "@peopleDone": {
+    "description": "Wallet : geste réussi"
+  },
+  "peopleCodeTitle": "Code de la personne",
+  "@peopleCodeTitle": {
+    "description": "Wallet : saisir ou scanner un code"
+  },
+  "peopleCodeLabel": "Code à 8 caractères",
+  "@peopleCodeLabel": {
+    "description": "Wallet : champ du code"
+  },
+  "peopleScan": "Scanner son QR",
+  "@peopleScan": {
+    "description": "Wallet : scanner le QR personnel"
+  },
+  "peopleContinue": "Continuer",
+  "@peopleContinue": {
+    "description": "Wallet : valider le code"
+  },
+  "peopleUnknownCode": "Code inconnu.",
+  "@peopleUnknownCode": {
+    "description": "Wallet : code introuvable"
+  },
+  "peopleChildLimit": "Plafond du jour atteint (réglé par un parent).",
+  "@peopleChildLimit": {
+    "description": "Wallet : plafond parental dépassé"
+  },
+  "peopleCurrencyMismatch": "Cette personne utilise une autre devise.",
+  "@peopleCurrencyMismatch": {
+    "description": "Wallet : devises différentes"
+  },
+  "familyTitle": "Famille et argent de poche",
+  "@familyTitle": {
+    "description": "Wallet : famille (spec 100)"
+  },
+  "familyHint": "Invite ton enfant avec son code : tu vois son solde, ses dépenses du jour, et tu règles son argent de poche et son plafond.",
+  "@familyHint": {
+    "description": "Famille : explication"
+  },
+  "familyInvite": "Inviter mon enfant",
+  "@familyInvite": {
+    "description": "Famille : inviter par code"
+  },
+  "familyInvitedBy": "{name} t'invite à suivre ton argent de poche",
+  "@familyInvitedBy": {
+    "description": "Famille : invitation reçue",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "familyAccept": "Accepter",
+  "@familyAccept": {
+    "description": "Famille : accepter l'invitation"
+  },
+  "familyWaiting": "Invitation envoyée",
+  "@familyWaiting": {
+    "description": "Famille : en attente d'acceptation"
+  },
+  "familyBalance": "Solde : {amount}",
+  "@familyBalance": {
+    "description": "Famille : solde de l'enfant",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "familySpentToday": "Dépensé aujourd'hui : {spent} (plafond : {limit})",
+  "@familySpentToday": {
+    "description": "Famille : dépenses du jour et plafond",
+    "placeholders": {
+      "spent": {
+        "type": "String"
+      },
+      "limit": {
+        "type": "String"
+      }
+    }
+  },
+  "familyAllowance": "Argent de poche : {amount} tous les {days} jours",
+  "@familyAllowance": {
+    "description": "Famille : argent de poche",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "familyRules": "Argent de poche et plafond",
+  "@familyRules": {
+    "description": "Famille : régler les règles"
+  },
+  "familyAllowanceLabel": "Argent de poche (vide : aucun)",
+  "@familyAllowanceLabel": {
+    "description": "Famille : montant de l'argent de poche"
+  },
+  "familyLimitLabel": "Plafond par jour (vide : aucun)",
+  "@familyLimitLabel": {
+    "description": "Famille : plafond journalier"
+  },
+  "walletPeople": "Entre proches",
+  "@walletPeople": {
+    "description": "Wallet : bouton vers l'avoir entre personnes"
+  },
+  "familyEveryDay": "Chaque jour",
+  "@familyEveryDay": {
+    "description": "Famille : argent de poche quotidien"
+  },
+  "familyEveryWeek": "Chaque semaine",
+  "@familyEveryWeek": {
+    "description": "Famille : argent de poche hebdomadaire"
+  },
+  "familyEveryMonth": "Chaque mois",
+  "@familyEveryMonth": {
+    "description": "Famille : argent de poche mensuel"
   }
 }

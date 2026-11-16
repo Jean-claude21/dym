@@ -16,6 +16,8 @@ export function pgDispatchWatch(pool: pg.Pool): DispatchWatch {
         const result = await pool.query("select app.run_dispatch_watch($1::timestamptz) as value", [at]);
         // Ménage des événements en direct de plus de 24 h (spec 067).
         await pool.query("select app.prune_live_events($1::timestamptz)", [at]);
+        // Argent de poche dû (spec 100), versé depuis le wallet du parent.
+        await pool.query("select app.pay_allowances($1::timestamptz)", [at]);
         // Sonneries de plus de 60 s : appels manqués, notifiés (spec 097).
         await pool.query("select app.sweep_missed_calls($1::timestamptz)", [at]);
         // Rappels « Ton panier t'attend » (spec 080) ; envoyés par le push qui suit.

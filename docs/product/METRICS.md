@@ -84,4 +84,5 @@ fiabilité (ops).
 | `tracking_shared`, `courier_unreachable_reported`, `courier_sos` (jamais la position dans l'événement), `pickup_confirmed` | Serveur | Livraison suivie (spec 096) |
 | `call_missed` (type d'appel) | Serveur | Appels (spec 097) |
 | `quote_accepted` (lignes), `coupon_claimed` (pourcentage) | Serveur | Chat de commerce (spec 099) |
+| `wallet_shared` (type : envoi, demande payée, recharge, argent de poche ; montant) | Serveur | Avoir entre personnes (spec 100) |
 | `courier_relaunched` (rang, élargie, livreurs prévenus), `courier_ready_alerted` ; `order_rejected` avec le motif `no_response` (acteur système) | Serveur | Livreurs relancés, alerte « prête », refus automatique (spec 066) |

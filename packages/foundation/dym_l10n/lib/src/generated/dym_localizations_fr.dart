@@ -8025,4 +8025,156 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get chatTranscriptSimulated =>
       'Transcription simulée : service à brancher.';
+
+  @override
+  String get peopleTitle => 'Entre proches';
+
+  @override
+  String get peopleSimulatedNote =>
+      'Avoir DYM simulé : il se dépense chez les boutiques DYM, il ne se retire pas.';
+
+  @override
+  String get peopleMyCodeHint => 'Mon code : montre ce QR pour recevoir';
+
+  @override
+  String get peopleSend => 'Envoyer';
+
+  @override
+  String get peopleRequest => 'Demander';
+
+  @override
+  String get peopleTopupFor => 'Recharger un proche';
+
+  @override
+  String get peopleRequests => 'Demandes en cours';
+
+  @override
+  String peopleAsksYou(String name, String amount) {
+    return '$name te demande $amount';
+  }
+
+  @override
+  String peopleYouAsked(String amount, String name) {
+    return 'Tu as demandé $amount à $name';
+  }
+
+  @override
+  String get peoplePay => 'Payer';
+
+  @override
+  String get peopleHistory => 'Entre proches';
+
+  @override
+  String get peopleHistoryEmpty => 'Rien pour l\'instant.';
+
+  @override
+  String peopleFrom(String name) {
+    return 'De $name';
+  }
+
+  @override
+  String peopleTo(String name) {
+    return 'À $name';
+  }
+
+  @override
+  String peopleSendTo(String name) {
+    return 'Envoyer à $name';
+  }
+
+  @override
+  String peopleRequestFrom(String name) {
+    return 'Demander à $name';
+  }
+
+  @override
+  String peopleTopupForName(String name) {
+    return 'Recharger le wallet de $name';
+  }
+
+  @override
+  String get peopleNote => 'Message (facultatif)';
+
+  @override
+  String get peopleDone => 'C\'est fait.';
+
+  @override
+  String get peopleCodeTitle => 'Code de la personne';
+
+  @override
+  String get peopleCodeLabel => 'Code à 8 caractères';
+
+  @override
+  String get peopleScan => 'Scanner son QR';
+
+  @override
+  String get peopleContinue => 'Continuer';
+
+  @override
+  String get peopleUnknownCode => 'Code inconnu.';
+
+  @override
+  String get peopleChildLimit =>
+      'Plafond du jour atteint (réglé par un parent).';
+
+  @override
+  String get peopleCurrencyMismatch =>
+      'Cette personne utilise une autre devise.';
+
+  @override
+  String get familyTitle => 'Famille et argent de poche';
+
+  @override
+  String get familyHint =>
+      'Invite ton enfant avec son code : tu vois son solde, ses dépenses du jour, et tu règles son argent de poche et son plafond.';
+
+  @override
+  String get familyInvite => 'Inviter mon enfant';
+
+  @override
+  String familyInvitedBy(String name) {
+    return '$name t\'invite à suivre ton argent de poche';
+  }
+
+  @override
+  String get familyAccept => 'Accepter';
+
+  @override
+  String get familyWaiting => 'Invitation envoyée';
+
+  @override
+  String familyBalance(String amount) {
+    return 'Solde : $amount';
+  }
+
+  @override
+  String familySpentToday(String spent, String limit) {
+    return 'Dépensé aujourd\'hui : $spent (plafond : $limit)';
+  }
+
+  @override
+  String familyAllowance(String amount, int days) {
+    return 'Argent de poche : $amount tous les $days jours';
+  }
+
+  @override
+  String get familyRules => 'Argent de poche et plafond';
+
+  @override
+  String get familyAllowanceLabel => 'Argent de poche (vide : aucun)';
+
+  @override
+  String get familyLimitLabel => 'Plafond par jour (vide : aucun)';
+
+  @override
+  String get walletPeople => 'Entre proches';
+
+  @override
+  String get familyEveryDay => 'Chaque jour';
+
+  @override
+  String get familyEveryWeek => 'Chaque semaine';
+
+  @override
+  String get familyEveryMonth => 'Chaque mois';
 }

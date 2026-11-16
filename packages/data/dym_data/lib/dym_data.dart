@@ -23,6 +23,7 @@ export 'src/messaging_repository.dart';
 export 'src/ops_repository.dart';
 export 'src/order_adjustment_repository.dart';
 export 'src/order_tracking_repository.dart';
+export 'src/people_wallet_repository.dart';
 export 'src/pilot_repository.dart';
 export 'src/qr_payment_repository.dart';
 export 'src/reference_repository.dart';

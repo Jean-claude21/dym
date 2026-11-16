@@ -34,4 +34,5 @@ export 'src/store/membership_models.dart';
 export 'src/store/store_models.dart';
 export 'src/store/till_models.dart';
 export 'src/store/wholesale_models.dart';
+export 'src/wallet/people_wallet_models.dart';
 export 'src/wallet/wallet_models.dart';
