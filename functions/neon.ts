@@ -46,6 +46,7 @@ export default defineConfig({
         BUNNY_STREAM_LIBRARY_ID: process.env.BUNNY_STREAM_LIBRARY_ID ?? "",
         BUNNY_STREAM_API_KEY: process.env.BUNNY_STREAM_API_KEY ?? "",
         BUNNY_STREAM_CDN: process.env.BUNNY_STREAM_CDN ?? "",
+        GOOGLE_CLIENT_IDS: process.env.GOOGLE_CLIENT_IDS ?? "",
       },
     },
   },

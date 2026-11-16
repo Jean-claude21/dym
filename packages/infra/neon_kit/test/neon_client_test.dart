@@ -42,12 +42,15 @@ void main() {
           {'set-auth-token': 'session-1'},
         );
       })
-      ..on('POST', '/neondb/auth/sign-in/social', (r) {
+      ..on('POST', '/v1/auth/google', (r) {
+        expect(r.bearer, isNull);
         final body = r.body! as Map;
-        expect(body['provider'], 'google');
+        if (body['idToken'] != 'google-id') {
+          return const FakeResponse(401, {'error': 'unauthenticated'});
+        }
         return const FakeResponse(200, {
-          'token': 'session-g',
-          'user': {'id': _user, 'email': 'awa@gmail.com'},
+          'email': 'awa@example.com',
+          'code': '123456',
         });
       })
       ..on('GET', '/neondb/auth/token', (r) {
@@ -155,12 +158,18 @@ void main() {
       expect(await store.read(), isNull);
     });
 
-    test('Google : idToken → session', () async {
+    test('Google : idToken → pont → code → session (spec 102)', () async {
       authRoutes();
-      final result = await neon.auth.signInWithGoogleIdToken('google-id');
-      expect(result.valueOrNull?.email, 'awa@gmail.com');
-      final body = server.requests.first.body! as Map;
-      expect((body['idToken'] as Map)['token'], 'google-id');
+      final result = await neon.signInWithGoogleIdToken('google-id');
+      expect(result.valueOrNull?.email, 'awa@example.com');
+      expect(server.count('POST', '/neondb/auth/sign-in/email-otp'), 1);
+    });
+
+    test('Google : jeton refusé par le pont, pas de session', () async {
+      authRoutes();
+      final result = await neon.signInWithGoogleIdToken('autre');
+      expect(result.failureOrNull, isNotNull);
+      expect(await store.read(), isNull);
     });
 
     test('restauration : session révoquée → déconnectée', () async {

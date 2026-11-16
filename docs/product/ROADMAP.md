@@ -256,7 +256,7 @@ restent simulés et signalés (décision 0015). Une spec à la fois, dans cet or
 | `chat-commerce` | Chat de commerce : vidéo enregistrée ou partagée, vocal soigné avec transcription, position (ponctuelle ou en direct), fiches produit avec ajout au panier, devis accepté en un geste, demande de paiement, coupons, appels vidéo | 22 h | ✅ Spec 099 (transcription simulée sans fournisseur IA ; appels vidéo derrière `calls_video`) |
 | `wallet-personnes` | Avoir DYM entre personnes (simulé) : QR personnel, envoyer, demander (« paie ma commande »), recharger pour un proche, argent de poche et suivi parental avec plafonds ; jamais de retrait | 14 h | ✅ Spec 100 (simulé ; validation juridique avant l'argent réel) |
 | `cuisine-sociale` | Cuisine sociale : profils de créatrices et boutiques, s'abonner, fils Pour toi / Abonnements / Près de moi, commentaires, « Mes recettes », « J'ai fait la recette » ; vidéo adaptative (HLS) dès que le compte vidéo est fourni | 18 h | ✅ Spec 101 (HLS actif sur staging) |
-| `connexion-google` | Pont de connexion (Function) : jeton Google vérifié puis session ouverte ; prêt pour WhatsApp dès que le compte Meta est fourni | 6 h | 🔵 Spec 102 |
+| `connexion-google` | Pont de connexion (Function) : jeton Google vérifié puis session ouverte ; prêt pour WhatsApp dès que le compte Meta est fourni | 6 h | ✅ Spec 102 (pont : jeton vérifié puis code à usage unique) |
 
 Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
 porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.

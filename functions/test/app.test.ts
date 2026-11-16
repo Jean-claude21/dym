@@ -50,7 +50,7 @@ describe("santé", () => {
   it("répond sans jeton, avec la branche", async () => {
     const res = await call("/health");
     expect(res.status).toBe(200);
-    expect(await res.json()).toEqual({ status: "ok", branch: "preview" });
+    expect(await res.json()).toMatchObject({ status: "ok", branch: "preview", features: { google: false } });
   });
 
   it("route inconnue : 404 normalisé", async () => {

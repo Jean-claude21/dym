@@ -29,6 +29,7 @@ import { registerContentRoutes } from "./content/routes.js";
 import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes.js";
 import { registerTrackingRoutes, type TrackingStore } from "./orders/tracking.js";
 import { registerStreamJob, type StreamDeps } from "./content/streams.js";
+import { type GoogleBridgeDeps, registerGoogleBridge } from "./auth/google.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -81,6 +82,8 @@ export interface AppDeps {
   tracking?: TrackingStore;
   /** Vidéo adaptative des contenus (spec 101). */
   streams?: StreamDeps;
+  /** Pont de connexion Google (spec 102). */
+  google?: GoogleBridgeDeps;
   /** Relance des clientes (spec 021). */
   broadcasts?: BroadcastStore;
   /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
@@ -127,7 +130,17 @@ export function createApp(deps: AppDeps) {
 
   // Santé (sans jeton) : vérifie le déploiement et la branche.
   app.get("/health", (c) =>
-    c.json({ status: "ok", branch: deps.branch ?? null }),
+    c.json({
+      status: "ok",
+      branch: deps.branch ?? null,
+      // Services facultatifs branchés (oui/non, jamais de valeur).
+      features: {
+        google: Boolean(deps.google),
+        streams: Boolean(deps.streams?.provider),
+        ai: Boolean(deps.catalog?.suggester),
+        push: Boolean(deps.push),
+      },
+    }),
   );
 
   // Identité (avec jeton) : vérifie la chaîne Neon Auth → Function (spec 003, US5).
@@ -160,6 +173,7 @@ export function createApp(deps: AppDeps) {
   registerBroadcastRoutes(app, deps.verifyToken, deps.broadcasts);
   registerTrackingRoutes(app, deps.tracking);
   registerStreamJob(app, deps.streams);
+  registerGoogleBridge(app, deps.google);
 
   return app;
 }
