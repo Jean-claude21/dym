@@ -51,6 +51,13 @@ PublicStore _$PublicStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
         'review_count',
         (v) => (v as num?)?.toInt() ?? 0,
       ),
+      latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
+      longitude: $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
+      deliveryRadiusM: $checkedConvert(
+        'delivery_radius_m',
+        (v) => (v as num?)?.toInt(),
+      ),
+      distanceM: $checkedConvert('distance_m', (v) => (v as num?)?.toInt()),
     );
     return val;
   },
@@ -69,6 +76,8 @@ PublicStore _$PublicStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
     'coverKey': 'cover_key',
     'productCount': 'product_count',
     'reviewCount': 'review_count',
+    'deliveryRadiusM': 'delivery_radius_m',
+    'distanceM': 'distance_m',
   },
 );
 

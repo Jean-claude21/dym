@@ -106,6 +106,7 @@ class MyStore {
     this.deliveryFeeMinor,
     this.pickupAddress,
     this.deliveryZoneIds = const [],
+    this.deliveryRadiusM = 5000,
     this.paymentMethodIds = const [],
     this.hours = const [],
     this.missing = const [],
@@ -132,6 +133,9 @@ class MyStore {
   final int onboardingStep;
   final PickupAddress? pickupAddress;
   final List<String> deliveryZoneIds;
+
+  /// Rayon de livraison autour de la boutique, en mètres (spec 094).
+  final int deliveryRadiusM;
   final List<String> paymentMethodIds;
   final List<StoreHours> hours;
 

@@ -933,7 +933,7 @@ class DymLocalizationsFr extends DymLocalizations {
   String get storeClosedNow => 'Fermé';
 
   @override
-  String distanceMeters(int meters) {
+  String distanceMeters(String meters) {
     return '$meters m';
   }
 
@@ -7444,4 +7444,19 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminUnitDays => 'j';
+
+  @override
+  String distanceKilometers(String km) {
+    return '$km km';
+  }
+
+  @override
+  String get storeDeliveryRadius => 'Je livre jusqu\'à';
+
+  @override
+  String get storeDeliveryRadiusHint =>
+      'Les clientes dans ce rayon autour de ta boutique voient tes produits et peuvent commander.';
+
+  @override
+  String get storeDeliveryRadiusSaved => 'Rayon de livraison enregistré.';
 }

@@ -7,6 +7,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 /// Origine du design system pour un code du référentiel.
 StoreOrigin? originOf(String? code) =>
@@ -37,7 +38,24 @@ String storeMeta(BuildContext context, PublicStore store) {
       : store.closesAt == null
       ? l10n.storeOpenNow
       : l10n.storeOpenUntil(store.closesAt!);
-  return l10n.placeAndMeta(store.zoneName, status);
+  final distance = store.distanceM;
+  final place = distance == null
+      ? store.zoneName
+      : l10n.placeAndMeta(store.zoneName, formatDistance(context, distance));
+  return l10n.placeAndMeta(place, status);
+}
+
+/// « 350 m » ou « 1,2 km », selon la langue (spec 094).
+String formatDistance(BuildContext context, int meters) {
+  final l10n = DymLocalizations.of(context);
+  if (meters < 1000) {
+    return l10n.distanceMeters('${(meters / 10).round() * 10}');
+  }
+  final km = meters / 1000;
+  final locale = Localizations.localeOf(context).toString();
+  return l10n.distanceKilometers(
+    NumberFormat(km < 10 ? '0.0' : '0', locale).format(km),
+  );
 }
 
 /// Teintes des tuiles, en rotation (tokens `color.tint.*`).

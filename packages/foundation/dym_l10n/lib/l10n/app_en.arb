@@ -2163,5 +2163,10 @@
   "adminColType": "Type",
   "adminUnitMinutes": "min",
   "adminUnitHours": "h",
-  "adminUnitDays": "d"
+  "adminUnitDays": "d",
+  "distanceMeters": "{meters} m",
+  "distanceKilometers": "{km} km",
+  "storeDeliveryRadius": "I deliver up to",
+  "storeDeliveryRadiusHint": "Customers within this radius around your store see your products and can order.",
+  "storeDeliveryRadiusSaved": "Delivery radius saved."
 }

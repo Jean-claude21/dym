@@ -61,6 +61,17 @@ class MyStoreViewModel extends BaseViewModel {
     setBusy(false);
   }
 
+  /// Rayon de livraison (spec 094) ; vrai si la base l'a enregistré.
+  Future<bool> setDeliveryRadius(int meters) async {
+    final result = await _service.update({'delivery_radius_m': meters});
+    if (result case Ok(value: final current?)) {
+      _store = current;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
   /// Ouvre ou ferme la boutique ; l'interrupteur suit l'état renvoyé par la
   /// base.
   Future<void> setOpen({required bool open}) async {

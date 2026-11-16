@@ -30,6 +30,10 @@ class PublicStore {
     this.productCount = 0,
     this.rating,
     this.reviewCount = 0,
+    this.latitude,
+    this.longitude,
+    this.deliveryRadiusM,
+    this.distanceM,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$PublicStoreFromJson(json);
@@ -61,6 +65,15 @@ class PublicStore {
   /// Note moyenne sur 5 (nulle sans avis, spec 016).
   final double? rating;
   final int reviewCount;
+
+  /// Position de la boutique (adresse de retrait, sinon centre du quartier)
+  /// et rayon de livraison en mètres (spec 094).
+  final double? latitude;
+  final double? longitude;
+  final int? deliveryRadiusM;
+
+  /// Distance depuis la position de la cliente, en mètres (découverte).
+  final int? distanceM;
 }
 
 /// Boutique d'un élément de liste.

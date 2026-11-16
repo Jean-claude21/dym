@@ -319,6 +319,15 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                       value: value,
                       onTap: () => viewModel.edit(step),
                     ),
+                if (store.isOwner)
+                  DymMenuRow(
+                    icon: Icons.radar_rounded,
+                    label: l10n.storeDeliveryRadius,
+                    value: l10n.distanceKilometers(
+                      '${(store.deliveryRadiusM / 1000).round()}',
+                    ),
+                    onTap: () => _editRadius(context, viewModel),
+                  ),
               ]),
               group(l10n.staffGroupTeam, [
                 if (onStaff case final staff? when store.isOwner)
@@ -373,5 +382,85 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     );
     if (picked == null) return;
     if (await vm.switchStore(picked)) onStoreSwitched?.call();
+  }
+}
+
+/// Rayon de livraison (spec 094) : de 1 à 30 km autour de la boutique.
+Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final chosen = await showModalBottomSheet<int>(
+    context: context,
+    showDragHandle: true,
+    builder: (_) => _RadiusSheet(initialKm: vm.store!.deliveryRadiusM ~/ 1000),
+  );
+  if (chosen == null) return;
+  final ok = await vm.setDeliveryRadius(chosen * 1000);
+  messenger?.showSnackBar(
+    SnackBar(
+      content: Text(ok ? l10n.storeDeliveryRadiusSaved : l10n.errorGeneric),
+    ),
+  );
+}
+
+class _RadiusSheet extends StatefulWidget {
+  const new({required this.initialKm});
+
+  final int initialKm;
+
+  @override
+  State<_RadiusSheet> createState() => _RadiusSheetState();
+}
+
+class _RadiusSheetState extends State<_RadiusSheet> {
+  late double _km = widget.initialKm.clamp(1, 30).toDouble();
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final t = context.dym.text;
+    final c = context.dym.colors;
+    final label = l10n.distanceKilometers('${_km.round()}');
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          DymTokenSpace.s4,
+          0,
+          DymTokenSpace.s4,
+          DymTokenSpace.s4,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.storeDeliveryRadius, style: t.title),
+            const SizedBox(height: DymTokenSpace.s2),
+            Text(
+              l10n.storeDeliveryRadiusHint,
+              style: t.body.copyWith(color: c.textSecondary),
+            ),
+            const SizedBox(height: DymTokenSpace.s4),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: t.display.copyWith(color: c.brand),
+            ),
+            Slider(
+              value: _km,
+              min: 1,
+              max: 30,
+              divisions: 29,
+              label: label,
+              onChanged: (v) => setState(() => _km = v),
+            ),
+            const SizedBox(height: DymTokenSpace.s3),
+            DymButton(
+              label: l10n.adminSave,
+              onPressed: () => Navigator.of(context).pop(_km.round()),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

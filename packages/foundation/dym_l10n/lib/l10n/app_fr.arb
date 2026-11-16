@@ -8460,5 +8460,35 @@
   "adminUnitDays": "j",
   "@adminUnitDays": {
     "description": "Unité après un nombre de jours (chiffre clé)"
+  },
+  "distanceMeters": "{meters} m",
+  "@distanceMeters": {
+    "description": "Distance courte, en mètres (ex. « 350 m »)",
+    "placeholders": {
+      "meters": {
+        "type": "String"
+      }
+    }
+  },
+  "distanceKilometers": "{km} km",
+  "@distanceKilometers": {
+    "description": "Distance en kilomètres, une décimale (ex. « 1,2 km »)",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "storeDeliveryRadius": "Je livre jusqu'à",
+  "@storeDeliveryRadius": {
+    "description": "Réglage de la boutique : rayon de livraison"
+  },
+  "storeDeliveryRadiusHint": "Les clientes dans ce rayon autour de ta boutique voient tes produits et peuvent commander.",
+  "@storeDeliveryRadiusHint": {
+    "description": "Explication sous le réglage du rayon de livraison"
+  },
+  "storeDeliveryRadiusSaved": "Rayon de livraison enregistré.",
+  "@storeDeliveryRadiusSaved": {
+    "description": "Confirmation après changement du rayon"
   }
 }
