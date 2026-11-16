@@ -229,6 +229,7 @@ inscription, onboarding compris) : une page n'est terminée que propre et confor
 | `appels-audio` | Appels audio seulement (vidéo fermée par le flag `calls_video`), validés entre deux téléphones : sonnerie, décroché, voix dans les deux sens, raccrocher | 1 h | ✅ Spec 089 |
 | `essais-testeurs` | Côte d'Ivoire ouverte par configuration, admin en ligne (Firebase Hosting) avec le logo, comptes des testeuses, APK Android signés, retours des premiers essais | 5 h | ✅ Spec 090 |
 | `admin-refonte` | Admin refondue en console : menu groupé avec compteurs, tableau de bord en six cartes, boutiques en tableau avec fiche latérale, connexion dans le même style, déployée | 6 h | ✅ Spec 091 |
+| `suivi-erreurs` | Erreurs du serveur attrapées par les apps (5xx, réponse illisible, erreur inconnue) signalées à Sentry par lieu, sans donnée personnelle ; branchement vérifié dans les quatre projets | 1 h | ✅ Spec 092 |
 | `last-pages` | Grille de relecture des captures (`REVUE_CAPTURES.md`), espacements, jaune des moments forts, cartes produit identiques, rayon et accueil resserrés ; toutes les captures relues et corrigées | 4 h | ✅ Spec 064 |
 
 Gate : les huit parcours rejoués sur un Android d'entrée de gamme en plein soleil, 60 images/s au

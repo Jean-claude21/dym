@@ -25,6 +25,7 @@ class NeonFunctionsClient {
       options: Options(headers: {'Idempotency-Key': ?idempotencyKey}),
     ),
     decode,
+    'functions:POST $path',
   );
 
   /// `GET <slug/chemin>`.
@@ -32,17 +33,24 @@ class NeonFunctionsClient {
     String path, {
     required T Function(Object? json) decode,
     Map<String, Object?>? query,
-  }) => _call(() => _dio.get<Object?>(path, queryParameters: query), decode);
+  }) => _call(
+    () => _dio.get<Object?>(path, queryParameters: query),
+    decode,
+    'functions:GET $path',
+  );
 
   Future<Result<T>> _call<T>(
     Future<Response<Object?>> Function() request,
     T Function(Object? json) decode,
+    String where,
   ) async {
     try {
       final response = await request();
       return Ok(decode(response.data));
-    } on Object catch (error) {
-      return Err(failureFrom(error));
+    } on Object catch (error, stack) {
+      final failure = failureFrom(error);
+      FailureReports.report(failure, where, stack);
+      return Err(failure);
     }
   }
 }

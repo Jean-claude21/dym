@@ -272,8 +272,10 @@ class NeonAuthClient {
   Future<Result<T>> _guard<T>(Future<T> Function() action) async {
     try {
       return Ok(await action());
-    } on Object catch (error) {
-      return Err(failureFrom(error));
+    } on Object catch (error, stack) {
+      final failure = failureFrom(error);
+      FailureReports.report(failure, 'auth', stack);
+      return Err(failure);
     }
   }
 }

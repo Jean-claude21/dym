@@ -281,6 +281,28 @@ void main() {
       expect(server.count('POST', '/rest/v1/stores'), 1);
     });
 
+    test('5xx signalé au suivi d’erreurs avec la fonction ; 4xx non', () async {
+      await signIn();
+      final seen = <String>[];
+      FailureReports.sink = (failure, where, _) =>
+          seen.add('${failure.runtimeType} $where');
+      addTearDown(() => FailureReports.sink = null);
+      server
+        ..on(
+          'POST',
+          '/rest/v1/rpc/broken',
+          (_) => const FakeResponse(500, {'code': '500', 'message': 'boom'}),
+        )
+        ..on(
+          'POST',
+          '/rest/v1/rpc/refused',
+          (_) => const FakeResponse(400, {'code': 'P0001', 'message': 'non'}),
+        );
+      await neon.data.rpc<Object?>('broken');
+      await neon.data.rpc<Object?>('refused');
+      expect(seen, ['ServerFailure rpc/broken']);
+    });
+
     test('doublon : 409/23505 → ConflictFailure', () async {
       await signIn();
       server.on(
