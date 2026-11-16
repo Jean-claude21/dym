@@ -74,3 +74,146 @@ class VendorDashboard {
   final int outOfStock;
   final int criticalNotifications;
 }
+
+/// Jour de la tendance (spec 098).
+@immutable
+class InsightDay {
+  const new({
+    required this.day,
+    required this.revenueMinor,
+    required this.orders,
+  });
+
+  final DateTime day;
+  final int revenueMinor;
+  final int orders;
+}
+
+/// Produit le plus vendu de la période.
+@immutable
+class TopProduct {
+  const new({
+    required this.productId,
+    required this.name,
+    required this.quantity,
+    required this.revenueMinor,
+    this.photoKey,
+  });
+
+  final String productId;
+  final String name;
+  final num quantity;
+  final int revenueMinor;
+  final String? photoKey;
+}
+
+/// Cliente fidèle : prénom et nombre de commandes, rien d'autre.
+@immutable
+class LoyalCustomer {
+  const new({required this.firstName, required this.orders, this.lastOrderAt});
+
+  final String firstName;
+  final int orders;
+  final DateTime? lastOrderAt;
+}
+
+/// Produit sous le seuil d'alerte.
+@immutable
+class LowStockItem {
+  const new({
+    required this.productId,
+    required this.name,
+    required this.stock,
+    this.variant,
+  });
+
+  final String productId;
+  final String name;
+  final String? variant;
+  final num stock;
+}
+
+/// Accueil poussé de la vendeuse (spec 098) : `my_vendor_insights`.
+@immutable
+class VendorInsights {
+  const new({
+    required this.currencyCode,
+    this.days = const [],
+    this.orderCount = 0,
+    this.averageBasketMinor = 0,
+    this.customers = 0,
+    this.newCustomers = 0,
+    this.returningCustomers = 0,
+    this.topProducts = const [],
+    this.loyalCustomers = const [],
+    this.lowStock = const [],
+    this.lowStockThreshold = 5,
+  });
+
+  factory fromJson(Map<String, dynamic> j) {
+    int i(Object? v) => (v as num?)?.toInt() ?? 0;
+    List<Map<String, dynamic>> rows(String key) => [
+      for (final r in j[key] as List? ?? const [])
+        (r as Map).cast<String, dynamic>(),
+    ];
+    return VendorInsights(
+      currencyCode: j['currency_code'] as String? ?? '',
+      days: [
+        for (final d in rows('days'))
+          InsightDay(
+            day: DateTime.parse(d['day'] as String),
+            revenueMinor: i(d['revenue_minor']),
+            orders: i(d['orders']),
+          ),
+      ],
+      orderCount: i(j['order_count']),
+      averageBasketMinor: i(j['average_basket_minor']),
+      customers: i(j['customers']),
+      newCustomers: i(j['new_customers']),
+      returningCustomers: i(j['returning_customers']),
+      topProducts: [
+        for (final p in rows('top_products'))
+          TopProduct(
+            productId: p['product_id'] as String,
+            name: p['name'] as String? ?? '',
+            quantity: (p['quantity'] as num?) ?? 0,
+            revenueMinor: i(p['revenue_minor']),
+            photoKey: p['photo_key'] as String?,
+          ),
+      ],
+      loyalCustomers: [
+        for (final c in rows('loyal_customers'))
+          LoyalCustomer(
+            firstName: c['first_name'] as String? ?? '',
+            orders: i(c['orders']),
+            lastOrderAt: switch (c['last_order_at']) {
+              final String s => DateTime.tryParse(s),
+              _ => null,
+            },
+          ),
+      ],
+      lowStock: [
+        for (final s in rows('low_stock'))
+          LowStockItem(
+            productId: s['product_id'] as String,
+            name: s['name'] as String? ?? '',
+            variant: s['variant'] as String?,
+            stock: (s['stock'] as num?) ?? 0,
+          ),
+      ],
+      lowStockThreshold: i(j['low_stock_threshold']),
+    );
+  }
+
+  final String currencyCode;
+  final List<InsightDay> days;
+  final int orderCount;
+  final int averageBasketMinor;
+  final int customers;
+  final int newCustomers;
+  final int returningCustomers;
+  final List<TopProduct> topProducts;
+  final List<LoyalCustomer> loyalCustomers;
+  final List<LowStockItem> lowStock;
+  final int lowStockThreshold;
+}

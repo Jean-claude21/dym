@@ -12,6 +12,9 @@ class DashboardViewModel extends BaseViewModel {
   final DashboardService service;
   DashboardPeriod period = DashboardPeriod.day;
   VendorDashboard? summary;
+
+  /// Accueil poussé (spec 098) ; un échec garde la dernière lecture.
+  VendorInsights? insights;
   CountryConfig? config;
   Failure? failure;
 
@@ -49,6 +52,10 @@ class DashboardViewModel extends BaseViewModel {
             if (await service.unreadMessages() case Ok(:final value)) {
               unreadMessages = value;
             }
+            if (await service.insights(period) case Ok(:final value)
+                when !_disposed && request == _request) {
+              insights = value;
+            }
           case Ok():
             failure = const ServerFailure('dashboard_currency_mismatch');
           case Err(:final failure):
@@ -73,6 +80,7 @@ class DashboardViewModel extends BaseViewModel {
     if (value == period) return;
     period = value;
     summary = null;
+    insights = null;
     await load();
   }
 

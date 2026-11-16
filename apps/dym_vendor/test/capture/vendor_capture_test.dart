@@ -24,8 +24,12 @@ import '../support/catalog_fixtures.dart';
 import '../support/store_fixtures.dart';
 
 /// Captures de contrôle de la vendeuse (design « Épuré », planche 04).
-Future<void> _capture(WidgetTester tester, String name, Widget child) async {
-  const size = Size(412, 915);
+Future<void> _capture(
+  WidgetTester tester,
+  String name,
+  Widget child, {
+  Size size = const Size(412, 915),
+}) async {
   tester.view
     ..physicalSize = size * 2
     ..devicePixelRatio = 2;
@@ -38,11 +42,11 @@ Future<void> _capture(WidgetTester tester, String name, Widget child) async {
       localizationsDelegates: DymLocalizations.localizationsDelegates,
       supportedLocales: DymLocalizations.supportedLocales,
       home: MediaQuery(
-        data: const MediaQueryData(
+        data: MediaQueryData(
           size: size,
           devicePixelRatio: 2,
           disableAnimations: true,
-          padding: EdgeInsets.only(top: 24, bottom: 16),
+          padding: const EdgeInsets.only(top: 24, bottom: 16),
         ),
         child: Builder(
           builder: (context) {
@@ -86,6 +90,10 @@ Future<void> _capture(WidgetTester tester, String name, Widget child) async {
 
 class _Dashboard implements DashboardService {
   @override
+  Future<Result<VendorInsights>> insights(DashboardPeriod period) async =>
+      const Ok(VendorInsights(currencyCode: 'XOF'));
+
+  @override
   Stream<LiveSignal> get live => const Stream.empty();
 
   @override
@@ -111,6 +119,58 @@ class _Dashboard implements DashboardService {
 
   @override
   Future<Result<int>> unreadMessages() async => const Ok(4);
+}
+
+/// Accueil poussé (spec 098) : tendance, clientes, produits, stock.
+class _DashboardPlus extends _Dashboard {
+  @override
+  Future<Result<VendorInsights>> insights(DashboardPeriod period) async {
+    const sales = [12000, 18500, 9000, 21000, 15500, 26000, 17000];
+    return Ok(
+      VendorInsights(
+        currencyCode: 'XOF',
+        days: [
+          for (var i = 0; i < 7; i++)
+            InsightDay(
+              day: DateTime.utc(2026, 11, 10 + i),
+              revenueMinor: sales[i],
+              orders: 3 + i,
+            ),
+        ],
+        orderCount: 42,
+        averageBasketMinor: 2850,
+        customers: 27,
+        newCustomers: 6,
+        returningCustomers: 21,
+        topProducts: const [
+          TopProduct(
+            productId: 'p1',
+            name: 'Tomates',
+            quantity: 38,
+            revenueMinor: 19000,
+          ),
+          TopProduct(
+            productId: 'p2',
+            name: 'Gombo',
+            quantity: 22,
+            revenueMinor: 8800,
+          ),
+        ],
+        loyalCustomers: const [
+          LoyalCustomer(firstName: 'Awa', orders: 7),
+          LoyalCustomer(firstName: 'Mia', orders: 4),
+        ],
+        lowStock: const [
+          LowStockItem(
+            productId: 'p2',
+            name: 'Gombo',
+            variant: 'le tas',
+            stock: 2,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _Till implements TillService {
@@ -197,6 +257,21 @@ void main() {
         onCharge: () {},
         onTill: () {},
       ),
+    );
+  });
+  testWidgets('aujourdhui plus', (t) async {
+    await _capture(
+      t,
+      'aujourdhui_plus',
+      DashboardView(
+        service: _DashboardPlus(),
+        greeting: 'Bonjour Fatou',
+        onOrders: () {},
+        onProducts: () {},
+        onCharge: () {},
+        onTill: () {},
+      ),
+      size: const Size(412, 1900),
     );
   });
   testWidgets('commandes', (t) async {
