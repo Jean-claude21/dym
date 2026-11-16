@@ -67,13 +67,6 @@ class NeonAuthClient {
     'password': password,
   });
 
-  /// Ouvre une session avec un `idToken` Google obtenu sur l'appareil.
-  Future<Result<NeonSession>> signInWithGoogleIdToken(String idToken) =>
-      _signIn(_paths.signInSocial, {
-        'provider': 'google',
-        'idToken': {'token': idToken},
-      });
-
   /// Restaure la session enregistrée au démarrage de l'app.
   ///
   /// Session révoquée → `Ok(null)` (déconnecté). Réseau indisponible → la

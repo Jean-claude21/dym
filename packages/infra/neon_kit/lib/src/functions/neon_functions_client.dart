@@ -28,6 +28,21 @@ class NeonFunctionsClient {
     'functions:POST $path',
   );
 
+  /// `POST` sans session (connexion) : aucun jeton n'est joint.
+  Future<Result<T>> postPublic<T>(
+    String path, {
+    required T Function(Object? json) decode,
+    Object? body,
+  }) => _call(
+    () => _dio.post<Object?>(
+      path,
+      data: body,
+      options: Options(extra: {NeonAuthInterceptor.publicKey: true}),
+    ),
+    decode,
+    'functions:POST $path',
+  );
+
   /// `GET <slug/chemin>`.
   Future<Result<T>> get<T>(
     String path, {
@@ -65,11 +80,15 @@ class NeonAuthInterceptor extends Interceptor {
 
   static const _retriedKey = 'neon_kit.auth_retried';
 
+  /// Requête sans session (pont de connexion) : ni jeton, ni renouvellement.
+  static const publicKey = 'neon_kit.public';
+
   @override
   Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
+    if (options.extra[publicKey] == true) return handler.next(options);
     switch (await auth.validAccessToken()) {
       case Ok(:final value):
         options.headers['Authorization'] = 'Bearer $value';
@@ -87,7 +106,9 @@ class NeonAuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     final options = err.requestOptions;
-    if (err.response?.statusCode != 401 || options.extra[_retriedKey] == true) {
+    if (err.response?.statusCode != 401 ||
+        options.extra[_retriedKey] == true ||
+        options.extra[publicKey] == true) {
       return handler.next(err);
     }
     switch (await auth.refresh()) {

@@ -183,7 +183,7 @@ class NeonAuthService implements AuthService {
 
   @override
   Future<Result<AuthState>> signInWithGoogleIdToken(String idToken) async {
-    final session = await _neon.auth.signInWithGoogleIdToken(idToken);
+    final session = await _neon.signInWithGoogleIdToken(idToken);
     if (session case Err(:final failure)) return Err(failure);
     return await _afterSession(recordSignIn: true);
   }

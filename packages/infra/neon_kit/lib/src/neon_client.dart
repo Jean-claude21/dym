@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:neon_kit/src/auth/credentials_adapter.dart'
     if (dart.library.js_interop) 'package:neon_kit/src/auth/credentials_adapter_web.dart';
@@ -109,4 +110,22 @@ class NeonClient {
 
   /// Envoi d'objets vers des URL présignées.
   final NeonObjectUploader uploads;
+
+  /// Connexion Google (spec 102). Neon Auth ignore le jeton Google envoyé par
+  /// l'app : la Function `/v1/auth/google` le vérifie auprès de Google et
+  /// rend un code à usage unique, qui ouvre une session Neon Auth standard.
+  Future<Result<NeonSession>> signInWithGoogleIdToken(String idToken) async {
+    final bridge = await functions.postPublic<({String email, String code})>(
+      '/v1/auth/google',
+      body: {'idToken': idToken},
+      decode: (json) {
+        final map = json! as Map;
+        return (email: map['email'] as String, code: map['code'] as String);
+      },
+    );
+    return switch (bridge) {
+      Err(:final failure) => Err(failure),
+      Ok(:final value) => await auth.verifyEmailOtp(value.email, value.code),
+    };
+  }
 }

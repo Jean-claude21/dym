@@ -27,6 +27,7 @@ import { LiveHub, pgLiveStore } from "./live/gateway.js";
 import { pgMcpStore } from "./mcp/server.js";
 import { pgTrackingStore } from "./orders/tracking.js";
 import { bunnyStreamProvider, pgStreamStore } from "./content/streams.js";
+import { googleVerifier, pgLoginCodeStore } from "./auth/google.js";
 import { pgCallMediaStore } from "./messaging/calls.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
@@ -124,6 +125,15 @@ export default createApp({
         }
       : {}),
   },
+  // Connexion Google (spec 102) : clients OAuth acceptés (identifiants publics, pas des secrets).
+  ...(process.env.GOOGLE_CLIENT_IDS
+    ? {
+        google: {
+          verify: googleVerifier(process.env.GOOGLE_CLIENT_IDS.split(",").map((id) => id.trim()).filter(Boolean)),
+          store: pgLoginCodeStore(pool),
+        },
+      }
+    : {}),
   searchAi: {
     store: pgSearchAiStore(pool),
     transcriber: searchModels ? aiTranscriber(searchModels) : undefined,
