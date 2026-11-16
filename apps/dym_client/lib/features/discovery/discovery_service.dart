@@ -82,6 +82,10 @@ class NeonDiscoveryService implements DiscoveryService {
   final ValueNotifier<String?> _zone;
   CountryConfig? _config;
 
+  /// Position de l'appareil trouvée (spec 094) : les boutiques sont cherchées
+  /// autour d'elle ; un quartier choisi à la main l'efface.
+  GeoPoint? _point;
+
   String? get _countryCode =>
       _auth.me?.profile?.countryCode ?? _visitor?.value?.countryCode;
 
@@ -89,7 +93,10 @@ class NeonDiscoveryService implements DiscoveryService {
   ValueListenable<String?> get zone => _zone;
 
   @override
-  void selectZone(String zoneId) => _zone.value = zoneId;
+  void selectZone(String zoneId) {
+    _point = null;
+    _zone.value = zoneId;
+  }
 
   @override
   Future<Result<CountryConfig>> countryConfig() async {
@@ -118,8 +125,13 @@ class NeonDiscoveryService implements DiscoveryService {
   @override
   Future<Result<DiscoverResult>> discover() async {
     final zoneId = _zone.value;
-    if (zoneId == null) return const Ok(DiscoverResult());
-    return await _discovery.discover(zoneId);
+    final point = _point;
+    if (zoneId == null && point == null) return const Ok(DiscoverResult());
+    return await _discovery.discover(
+      zoneId,
+      latitude: point?.latitude,
+      longitude: point?.longitude,
+    );
   }
 
   @override
@@ -139,6 +151,7 @@ class NeonDiscoveryService implements DiscoveryService {
         if (match case Ok(value: final m?) when !m.covered) {
           unawaited(trackOutsideCoverage(_events, m));
         }
+        if (match case Ok(value: final m?) when m.covered) _point = point;
         return match;
     }
   }

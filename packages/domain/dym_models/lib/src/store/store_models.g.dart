@@ -103,6 +103,10 @@ MyStore _$MyStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) =>
             (v as List<dynamic>?)?.map((e) => e as String).toList() ?? const [],
       ),
+      deliveryRadiusM: $checkedConvert(
+        'delivery_radius_m',
+        (v) => (v as num?)?.toInt() ?? 5000,
+      ),
       paymentMethodIds: $checkedConvert(
         'payment_method_ids',
         (v) =>
@@ -141,6 +145,7 @@ MyStore _$MyStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
     'deliveryFeeMinor': 'delivery_fee_minor',
     'pickupAddress': 'pickup_address',
     'deliveryZoneIds': 'delivery_zone_ids',
+    'deliveryRadiusM': 'delivery_radius_m',
     'paymentMethodIds': 'payment_method_ids',
     'staffRole': 'staff_role',
     'staffPermissions': 'staff_permissions',

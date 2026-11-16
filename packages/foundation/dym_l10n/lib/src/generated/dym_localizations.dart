@@ -1663,11 +1663,11 @@ abstract class DymLocalizations {
   /// **'Fermé'**
   String get storeClosedNow;
 
-  /// Distance en mètres
+  /// Distance courte, en mètres (ex. « 350 m »)
   ///
   /// In fr, this message translates to:
   /// **'{meters} m'**
-  String distanceMeters(int meters);
+  String distanceMeters(String meters);
 
   /// Distance en kilomètres (texte déjà formaté)
   ///
@@ -12360,6 +12360,30 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'j'**
   String get adminUnitDays;
+
+  /// Distance en kilomètres, une décimale (ex. « 1,2 km »)
+  ///
+  /// In fr, this message translates to:
+  /// **'{km} km'**
+  String distanceKilometers(String km);
+
+  /// Réglage de la boutique : rayon de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Je livre jusqu\'à'**
+  String get storeDeliveryRadius;
+
+  /// Explication sous le réglage du rayon de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Les clientes dans ce rayon autour de ta boutique voient tes produits et peuvent commander.'**
+  String get storeDeliveryRadiusHint;
+
+  /// Confirmation après changement du rayon
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon de livraison enregistré.'**
+  String get storeDeliveryRadiusSaved;
 
   /// Message d'un écran dont le chargement a échoué (pas une sauvegarde)
   ///

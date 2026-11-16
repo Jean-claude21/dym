@@ -9,9 +9,17 @@ class DiscoveryRepository {
 
   final NeonDataClient _data;
 
-  /// Accueil : boutiques qui livrent [zoneId], ouvertes d'abord.
-  Future<Result<DiscoverResult>> discover(String zoneId) =>
-      _object('discover_stores', {'p_zone': zoneId}, DiscoverResult.fromJson);
+  /// Accueil : boutiques qui livrent [zoneId] ou la position donnée (rayon de
+  /// la boutique, spec 094), ouvertes d'abord puis les plus proches.
+  Future<Result<DiscoverResult>> discover(
+    String? zoneId, {
+    double? latitude,
+    double? longitude,
+  }) => _object('discover_stores', {
+    'p_zone': zoneId,
+    'p_latitude': ?latitude,
+    'p_longitude': ?longitude,
+  }, DiscoverResult.fromJson);
 
   /// Fil personnel de l'accueil (spec 027) pour [zoneId].
   Future<Result<HomeFeed>> homeFeed(String zoneId) =>
