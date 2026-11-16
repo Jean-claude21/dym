@@ -1,6 +1,7 @@
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/discovery/widgets/discovery_widgets.dart';
 import 'package:dym_client/features/orders/order_texts.dart';
+import 'package:dym_client/features/wallet/people/people_wallet.dart';
 import 'package:dym_client/features/wallet/qr_pay_view.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/features/wallet/wallet_viewmodel.dart';
@@ -13,10 +14,18 @@ import 'package:stacked/stacked.dart';
 /// « Mon wallet » (spec 025) : solde, poches, mouvements ; recharge simulée en
 /// test, transferts, poches libres.
 class WalletView extends StackedView<WalletViewModel> {
-  const new({required this.service, required this.onBack, super.key});
+  const new({
+    required this.service,
+    required this.onBack,
+    super.key,
+    this.people,
+  });
 
   final WalletService service;
   final VoidCallback onBack;
+
+  /// Avoir entre personnes (spec 100) ; absent : bouton masqué.
+  final PeopleWalletService? people;
 
   @override
   WalletViewModel viewModelBuilder(BuildContext context) =>
@@ -43,7 +52,7 @@ class WalletView extends StackedView<WalletViewModel> {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
           children: [
             DymContentWidth.form(
-              child: _BalanceCard(vm: vm, wallet: wallet),
+              child: _BalanceCard(vm: vm, wallet: wallet, people: people),
             ),
             if (vm.walletError != null)
               DymContentWidth.form(
@@ -149,7 +158,10 @@ String walletErrorLabel(DymLocalizations l10n, WalletError error) =>
     };
 
 class _BalanceCard extends StatelessWidget {
-  const new({required this.vm, required this.wallet});
+  const new({required this.vm, required this.wallet, this.people});
+
+  /// Avoir entre personnes (spec 100).
+  final PeopleWalletService? people;
 
   final WalletViewModel vm;
   final Wallet wallet;
@@ -172,6 +184,18 @@ class _BalanceCard extends StatelessWidget {
                   note: l10n.walletTopupSimulated,
                   onConfirm: vm.topup,
                 ),
+        ),
+      // Avoir entre personnes (spec 100).
+      if (people case final p?)
+        (
+          Icons.people_alt_rounded,
+          l10n.walletPeople,
+          () async {
+            await Navigator.of(context).push<void>(
+              MaterialPageRoute(builder: (_) => PeopleWalletView(service: p)),
+            );
+            await vm.load();
+          },
         ),
       // Paiement chez une vendeuse par QR (spec 046).
       (

@@ -13344,6 +13344,258 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Transcription simulée : service à brancher.'**
   String get chatTranscriptSimulated;
+
+  /// Wallet : avoir entre personnes (spec 100)
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre proches'**
+  String get peopleTitle;
+
+  /// Wallet entre personnes : rappel simulé, jamais de retrait
+  ///
+  /// In fr, this message translates to:
+  /// **'Avoir DYM simulé : il se dépense chez les boutiques DYM, il ne se retire pas.'**
+  String get peopleSimulatedNote;
+
+  /// Wallet : code personnel à partager
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon code : montre ce QR pour recevoir'**
+  String get peopleMyCodeHint;
+
+  /// Wallet : envoyer de l'avoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer'**
+  String get peopleSend;
+
+  /// Wallet : demander de l'avoir (« paie ma commande »)
+  ///
+  /// In fr, this message translates to:
+  /// **'Demander'**
+  String get peopleRequest;
+
+  /// Wallet : recharger le wallet d'une autre personne
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharger un proche'**
+  String get peopleTopupFor;
+
+  /// Wallet : demandes d'avoir
+  ///
+  /// In fr, this message translates to:
+  /// **'Demandes en cours'**
+  String get peopleRequests;
+
+  /// Wallet : demande reçue
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} te demande {amount}'**
+  String peopleAsksYou(String name, String amount);
+
+  /// Wallet : demande envoyée
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as demandé {amount} à {name}'**
+  String peopleYouAsked(String amount, String name);
+
+  /// Wallet : payer une demande
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer'**
+  String get peoplePay;
+
+  /// Wallet : historique des envois et réceptions
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre proches'**
+  String get peopleHistory;
+
+  /// Wallet : historique vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien pour l\'instant.'**
+  String get peopleHistoryEmpty;
+
+  /// Wallet : avoir reçu de
+  ///
+  /// In fr, this message translates to:
+  /// **'De {name}'**
+  String peopleFrom(String name);
+
+  /// Wallet : avoir envoyé à
+  ///
+  /// In fr, this message translates to:
+  /// **'À {name}'**
+  String peopleTo(String name);
+
+  /// Wallet : titre de l'envoi
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer à {name}'**
+  String peopleSendTo(String name);
+
+  /// Wallet : titre de la demande
+  ///
+  /// In fr, this message translates to:
+  /// **'Demander à {name}'**
+  String peopleRequestFrom(String name);
+
+  /// Wallet : titre de la recharge pour un proche
+  ///
+  /// In fr, this message translates to:
+  /// **'Recharger le wallet de {name}'**
+  String peopleTopupForName(String name);
+
+  /// Wallet : message joint
+  ///
+  /// In fr, this message translates to:
+  /// **'Message (facultatif)'**
+  String get peopleNote;
+
+  /// Wallet : geste réussi
+  ///
+  /// In fr, this message translates to:
+  /// **'C\'est fait.'**
+  String get peopleDone;
+
+  /// Wallet : saisir ou scanner un code
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de la personne'**
+  String get peopleCodeTitle;
+
+  /// Wallet : champ du code
+  ///
+  /// In fr, this message translates to:
+  /// **'Code à 8 caractères'**
+  String get peopleCodeLabel;
+
+  /// Wallet : scanner le QR personnel
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanner son QR'**
+  String get peopleScan;
+
+  /// Wallet : valider le code
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer'**
+  String get peopleContinue;
+
+  /// Wallet : code introuvable
+  ///
+  /// In fr, this message translates to:
+  /// **'Code inconnu.'**
+  String get peopleUnknownCode;
+
+  /// Wallet : plafond parental dépassé
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond du jour atteint (réglé par un parent).'**
+  String get peopleChildLimit;
+
+  /// Wallet : devises différentes
+  ///
+  /// In fr, this message translates to:
+  /// **'Cette personne utilise une autre devise.'**
+  String get peopleCurrencyMismatch;
+
+  /// Wallet : famille (spec 100)
+  ///
+  /// In fr, this message translates to:
+  /// **'Famille et argent de poche'**
+  String get familyTitle;
+
+  /// Famille : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'Invite ton enfant avec son code : tu vois son solde, ses dépenses du jour, et tu règles son argent de poche et son plafond.'**
+  String get familyHint;
+
+  /// Famille : inviter par code
+  ///
+  /// In fr, this message translates to:
+  /// **'Inviter mon enfant'**
+  String get familyInvite;
+
+  /// Famille : invitation reçue
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} t\'invite à suivre ton argent de poche'**
+  String familyInvitedBy(String name);
+
+  /// Famille : accepter l'invitation
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter'**
+  String get familyAccept;
+
+  /// Famille : en attente d'acceptation
+  ///
+  /// In fr, this message translates to:
+  /// **'Invitation envoyée'**
+  String get familyWaiting;
+
+  /// Famille : solde de l'enfant
+  ///
+  /// In fr, this message translates to:
+  /// **'Solde : {amount}'**
+  String familyBalance(String amount);
+
+  /// Famille : dépenses du jour et plafond
+  ///
+  /// In fr, this message translates to:
+  /// **'Dépensé aujourd\'hui : {spent} (plafond : {limit})'**
+  String familySpentToday(String spent, String limit);
+
+  /// Famille : argent de poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Argent de poche : {amount} tous les {days} jours'**
+  String familyAllowance(String amount, int days);
+
+  /// Famille : régler les règles
+  ///
+  /// In fr, this message translates to:
+  /// **'Argent de poche et plafond'**
+  String get familyRules;
+
+  /// Famille : montant de l'argent de poche
+  ///
+  /// In fr, this message translates to:
+  /// **'Argent de poche (vide : aucun)'**
+  String get familyAllowanceLabel;
+
+  /// Famille : plafond journalier
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond par jour (vide : aucun)'**
+  String get familyLimitLabel;
+
+  /// Wallet : bouton vers l'avoir entre personnes
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre proches'**
+  String get walletPeople;
+
+  /// Famille : argent de poche quotidien
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque jour'**
+  String get familyEveryDay;
+
+  /// Famille : argent de poche hebdomadaire
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque semaine'**
+  String get familyEveryWeek;
+
+  /// Famille : argent de poche mensuel
+  ///
+  /// In fr, this message translates to:
+  /// **'Chaque mois'**
+  String get familyEveryMonth;
 }
 
 class _DymLocalizationsDelegate

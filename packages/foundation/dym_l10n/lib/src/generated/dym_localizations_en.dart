@@ -7976,4 +7976,154 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get chatTranscriptSimulated =>
       'Simulated transcription: service to be connected.';
+
+  @override
+  String get peopleTitle => 'Between people';
+
+  @override
+  String get peopleSimulatedNote =>
+      'Simulated DYM credit: spend it at DYM shops, it cannot be withdrawn.';
+
+  @override
+  String get peopleMyCodeHint => 'My code: show this QR to receive';
+
+  @override
+  String get peopleSend => 'Send';
+
+  @override
+  String get peopleRequest => 'Request';
+
+  @override
+  String get peopleTopupFor => 'Top up someone';
+
+  @override
+  String get peopleRequests => 'Pending requests';
+
+  @override
+  String peopleAsksYou(String name, String amount) {
+    return '$name asks you for $amount';
+  }
+
+  @override
+  String peopleYouAsked(String amount, String name) {
+    return 'You asked $name for $amount';
+  }
+
+  @override
+  String get peoplePay => 'Pay';
+
+  @override
+  String get peopleHistory => 'Between people';
+
+  @override
+  String get peopleHistoryEmpty => 'Nothing yet.';
+
+  @override
+  String peopleFrom(String name) {
+    return 'From $name';
+  }
+
+  @override
+  String peopleTo(String name) {
+    return 'To $name';
+  }
+
+  @override
+  String peopleSendTo(String name) {
+    return 'Send to $name';
+  }
+
+  @override
+  String peopleRequestFrom(String name) {
+    return 'Ask $name';
+  }
+
+  @override
+  String peopleTopupForName(String name) {
+    return 'Top up $name\'s wallet';
+  }
+
+  @override
+  String get peopleNote => 'Message (optional)';
+
+  @override
+  String get peopleDone => 'Done.';
+
+  @override
+  String get peopleCodeTitle => 'Person\'s code';
+
+  @override
+  String get peopleCodeLabel => '8-character code';
+
+  @override
+  String get peopleScan => 'Scan their QR';
+
+  @override
+  String get peopleContinue => 'Continue';
+
+  @override
+  String get peopleUnknownCode => 'Unknown code.';
+
+  @override
+  String get peopleChildLimit => 'Daily limit reached (set by a parent).';
+
+  @override
+  String get peopleCurrencyMismatch => 'This person uses another currency.';
+
+  @override
+  String get familyTitle => 'Family and pocket money';
+
+  @override
+  String get familyHint =>
+      'Invite your child with their code: you see their balance and today\'s spending, and you set their pocket money and daily limit.';
+
+  @override
+  String get familyInvite => 'Invite my child';
+
+  @override
+  String familyInvitedBy(String name) {
+    return '$name invites you to follow your pocket money';
+  }
+
+  @override
+  String get familyAccept => 'Accept';
+
+  @override
+  String get familyWaiting => 'Invitation sent';
+
+  @override
+  String familyBalance(String amount) {
+    return 'Balance: $amount';
+  }
+
+  @override
+  String familySpentToday(String spent, String limit) {
+    return 'Spent today: $spent (limit: $limit)';
+  }
+
+  @override
+  String familyAllowance(String amount, int days) {
+    return 'Pocket money: $amount every $days days';
+  }
+
+  @override
+  String get familyRules => 'Pocket money and limit';
+
+  @override
+  String get familyAllowanceLabel => 'Pocket money (empty: none)';
+
+  @override
+  String get familyLimitLabel => 'Daily limit (empty: none)';
+
+  @override
+  String get walletPeople => 'Between people';
+
+  @override
+  String get familyEveryDay => 'Every day';
+
+  @override
+  String get familyEveryWeek => 'Every week';
+
+  @override
+  String get familyEveryMonth => 'Every month';
 }

@@ -40,6 +40,7 @@ import 'package:dym_client/features/shopping/shopping_viewmodels.dart';
 import 'package:dym_client/features/shopping/shopping_views.dart';
 import 'package:dym_client/features/spaces/spaces_service.dart';
 import 'package:dym_client/features/spaces/spaces_views.dart';
+import 'package:dym_client/features/wallet/people/people_wallet.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/features/wallet/wallet_view.dart';
 import 'package:dym_client/ui/views/home/home_view.dart';
@@ -550,7 +551,15 @@ class StackedAppNavigator implements AppNavigator {
   void toHelp() => _push(SupportView(service: _support, onBack: _back));
 
   @override
-  void toWallet() => _push(WalletView(service: _wallet, onBack: _back));
+  void toWallet() => _push(
+    WalletView(
+      service: _wallet,
+      onBack: _back,
+      people: locator.isRegistered<PeopleWalletService>()
+          ? locator<PeopleWalletService>()
+          : null,
+    ),
+  );
 
   @override
   void toShoppingLists() => _push(

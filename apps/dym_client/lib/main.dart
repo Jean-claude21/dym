@@ -19,6 +19,7 @@ import 'package:dym_client/features/orders/adjustments_view.dart';
 import 'package:dym_client/features/orders/orders_service.dart';
 import 'package:dym_client/features/shopping/shopping_service.dart';
 import 'package:dym_client/features/spaces/spaces_service.dart';
+import 'package:dym_client/features/wallet/people/people_wallet.dart';
 import 'package:dym_client/features/wallet/wallet_service.dart';
 import 'package:dym_client/ui/navigation.dart';
 import 'package:dym_core/dym_core.dart';
@@ -274,6 +275,13 @@ Future<void> configureServices(DymEnvironment environment) async {
         reference: reference,
         auth: auth,
         qr: QrPaymentRepository(neon.data),
+      ),
+    )
+    // Avoir entre personnes (spec 100), simulé.
+    ..registerLazySingleton<PeopleWalletService>(
+      () => NeonPeopleWalletService(
+        PeopleWalletRepository(neon.data),
+        config: () => locator<WalletService>().countryConfig(),
       ),
     )
     ..registerLazySingleton<CartService>(
