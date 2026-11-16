@@ -4,6 +4,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -13,6 +14,7 @@ enum MissionError {
   taken,
   tooMany,
   suspended,
+  pending,
   invalidPhone,
   invalidZones,
   codeLocked,
@@ -25,6 +27,7 @@ MissionError missionErrorOf(Failure failure) => switch (failure) {
   _ when failure.message == 'mission_taken' => MissionError.taken,
   _ when failure.message == 'too_many_missions' => MissionError.tooMany,
   _ when failure.message == 'courier_suspended' => MissionError.suspended,
+  _ when failure.message == 'courier_pending' => MissionError.pending,
   _ when failure.message == 'invalid_phone' => MissionError.invalidPhone,
   _ when failure.message == 'invalid_zones' => MissionError.invalidZones,
   _ when failure.message == 'code_locked' => MissionError.codeLocked,
@@ -36,6 +39,7 @@ String missionErrorText(DymLocalizations l10n, MissionError error) =>
       MissionError.taken => l10n.missionTaken,
       MissionError.tooMany => l10n.missionTooMany,
       MissionError.suspended => l10n.courierSuspended,
+      MissionError.pending => l10n.courierPending,
       MissionError.invalidPhone => l10n.courierInvalidPhone,
       MissionError.invalidZones => l10n.courierInvalidZones,
       MissionError.codeLocked => l10n.handoverLocked,
@@ -460,7 +464,10 @@ class MissionsView extends StackedView<MissionsViewModel> {
                         const SizedBox(width: DymTokenSpace.s2),
                         Switch(
                           value: online,
-                          onChanged: vm.profile == null
+                          onChanged:
+                              vm.profile == null ||
+                                  (vm.profile?.pending ?? false) ||
+                                  (vm.profile?.rejected ?? false)
                               ? null
                               : (on) => vm.setOnline(online: on),
                         ),
@@ -479,6 +486,21 @@ class MissionsView extends StackedView<MissionsViewModel> {
                 ),
               ),
             ),
+            if (vm.profile case final p? when p.pending || p.rejected)
+              DymContentWidth(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: DymTokenSpace.s3),
+                  child: DymStateView(
+                    kind: DymStateKind.empty,
+                    title: p.pending
+                        ? l10n.courierPending
+                        : l10n.courierRejected,
+                    message: p.pending
+                        ? l10n.courierPendingHint
+                        : (p.reviewNote ?? ''),
+                  ),
+                ),
+              ),
             if (active case final a?) DymContentWidth(child: a),
             if (vm.problem case final p?)
               DymContentWidth(
@@ -814,15 +836,56 @@ class MyRunsViewModel extends BaseViewModel {
         active: () => runs?.any((r) => r.status != 'delivered') ?? false,
         every: const Duration(seconds: 60),
       );
+      // Position envoyée toutes les 30 s pendant une course (spec 096).
+      _pinger ??= Timer.periodic(const Duration(seconds: 30), (_) {
+        if (hasActive) unawaited(service.ping());
+      });
     }
     return load();
   }
+
+  Timer? _pinger;
+
+  /// Course en cours (non livrée).
+  bool get hasActive => runs?.any((r) => !r.delivered) ?? false;
 
   @override
   void dispose() {
     unawaited(_live?.cancel());
     _refresher?.dispose();
+    _pinger?.cancel();
     super.dispose();
+  }
+
+  /// Code de récupération (QR montré à la vendeuse).
+  Future<String?> pickupCode(Mission mission) async {
+    final result = await service.pickupCode(mission);
+    if (result case Err(failure: final f)) {
+      problem = missionErrorOf(f);
+      notifyListeners();
+    }
+    return result.valueOrNull;
+  }
+
+  /// Cliente injoignable : minutes d'attente, nul si refusé.
+  Future<int?> reportUnreachable(Mission mission) async {
+    final result = await service.reportUnreachable(mission);
+    if (result case Err(failure: final f)) {
+      problem = missionErrorOf(f);
+      notifyListeners();
+    }
+    return result.valueOrNull;
+  }
+
+  /// SOS : vrai si l'équipe est prévenue.
+  Future<bool> sos() async {
+    final active = runs?.where((r) => !r.delivered).firstOrNull;
+    final result = await service.sos(mission: active);
+    if (result case Err(failure: final f)) {
+      problem = missionErrorOf(f);
+      notifyListeners();
+    }
+    return result.isOk;
   }
 
   CountryConfig? config;
@@ -932,11 +995,11 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
       onCall: onCall,
       onRoute: onRoute,
       action: switch (m.next.firstOrNull) {
+        // Récupération : la vendeuse scanne le code du livreur (spec 096).
         'out_for_delivery' => DymButton(
-          label: l10n.missionPickedUp,
-          icon: Icons.inventory_2_outlined,
-          loading: vm.acting == m.orderId,
-          onPressed: () => vm.advance(m, 'out_for_delivery'),
+          label: l10n.pickupCodeShow,
+          icon: Icons.qr_code_2_rounded,
+          onPressed: () => _showPickupCode(context, vm, m),
         ),
         'delivered' => DymButton(
           label: l10n.missionHandedOver,
@@ -957,6 +1020,13 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
               variant: DymButtonVariant.secondary,
               onPressed: () => vm.release(m),
             )
+          : m.next.firstOrNull == 'delivered'
+          ? DymButton(
+              label: l10n.courierUnreachable,
+              icon: Icons.phone_missed_rounded,
+              variant: DymButtonVariant.secondary,
+              onPressed: () => _reportUnreachable(context, vm, m),
+            )
           : null,
     );
     if (embedded) {
@@ -967,9 +1037,25 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              l10n.runsActiveTitle,
-              style: t.body.copyWith(fontWeight: FontWeight.w600),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.runsActiveTitle,
+                    style: t.body.copyWith(fontWeight: FontWeight.w600),
+                  ),
+                ),
+                if (vm.hasActive)
+                  TextButton.icon(
+                    style: TextButton.styleFrom(
+                      foregroundColor: c.pimentStrong,
+                      minimumSize: const Size(48, 48),
+                    ),
+                    onPressed: () => _sos(context, vm),
+                    icon: const Icon(Icons.sos_rounded),
+                    label: Text(l10n.courierSos),
+                  ),
+              ],
             ),
             if (vm.problem case final p?)
               Text(
@@ -1236,4 +1322,96 @@ class _MissionFact extends StatelessWidget {
       ),
     );
   }
+}
+
+/// QR de récupération (spec 096) : la vendeuse le scanne, la commande part.
+Future<void> _showPickupCode(
+  BuildContext context,
+  MyRunsViewModel vm,
+  Mission m,
+) async {
+  final code = await vm.pickupCode(m);
+  if (code == null || !context.mounted) return;
+  final l10n = DymLocalizations.of(context);
+  final t = context.dym.text;
+  final c = context.dym.colors;
+  await showModalBottomSheet<void>(
+    context: context,
+    showDragHandle: true,
+    isScrollControlled: true,
+    builder: (sheet) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.pickupCodeTitle, style: t.title),
+            const SizedBox(height: DymTokenSpace.s2),
+            Text(
+              l10n.pickupCodeHint,
+              textAlign: TextAlign.center,
+              style: t.body.copyWith(color: c.textSecondary),
+            ),
+            const SizedBox(height: DymTokenSpace.s4),
+            DymQrImage(data: 'dym-pickup:$code'),
+            const SizedBox(height: DymTokenSpace.s3),
+            Text(
+              code,
+              style: t.display.copyWith(fontSize: 32, letterSpacing: 6),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+  await vm.load();
+}
+
+Future<void> _reportUnreachable(
+  BuildContext context,
+  MyRunsViewModel vm,
+  Mission m,
+) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final minutes = await vm.reportUnreachable(m);
+  if (minutes == null) return;
+  messenger?.showSnackBar(
+    SnackBar(content: Text(l10n.courierUnreachableSent(minutes))),
+  );
+}
+
+Future<void> _sos(BuildContext context, MyRunsViewModel vm) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final yes = await showModalBottomSheet<bool>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheet) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l10n.courierSosTitle, style: sheet.dym.text.title),
+            const SizedBox(height: DymTokenSpace.s2),
+            Text(l10n.courierSosBody),
+            const SizedBox(height: DymTokenSpace.s4),
+            DymButton(
+              label: l10n.courierSosSend,
+              icon: Icons.sos_rounded,
+              variant: DymButtonVariant.destructive,
+              onPressed: () => Navigator.pop(sheet, true),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+  if (yes != true) return;
+  final ok = await vm.sos();
+  messenger?.showSnackBar(
+    SnackBar(content: Text(ok ? l10n.courierSosSent : l10n.errorGeneric)),
+  );
 }

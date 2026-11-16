@@ -58,6 +58,10 @@ PublicStore _$PublicStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
         (v) => (v as num?)?.toInt(),
       ),
       distanceM: $checkedConvert('distance_m', (v) => (v as num?)?.toInt()),
+      longDistance: $checkedConvert(
+        'long_distance',
+        (v) => v as bool? ?? false,
+      ),
     );
     return val;
   },
@@ -78,6 +82,7 @@ PublicStore _$PublicStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
     'reviewCount': 'review_count',
     'deliveryRadiusM': 'delivery_radius_m',
     'distanceM': 'distance_m',
+    'longDistance': 'long_distance',
   },
 );
 

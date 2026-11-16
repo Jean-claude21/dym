@@ -32,12 +32,16 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     this.onBroadcast,
     this.onAccount,
     this.onStaff,
+    this.onCouriers,
     this.onStoreSwitched,
   });
 
   /// « Mon compte » (aide, langue, déconnexion) ; nul : masqué.
   /// Équipe de la boutique (propriétaire, spec 087).
   final VoidCallback? onStaff;
+
+  /// Mes livreurs (spec 096).
+  final VoidCallback? onCouriers;
 
   /// Boutique active changée : l'app recharge tout.
   final VoidCallback? onStoreSwitched;
@@ -261,6 +265,8 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 value: store.isOpen,
                 onChanged:
                     viewModel.suspended ||
+                        viewModel.inReview ||
+                        viewModel.rejected ||
                         viewModel.toggling ||
                         !store.can('orders')
                     ? null
@@ -268,6 +274,10 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
               ),
               if (viewModel.suspended)
                 StorePrivacyNote(text: l10n.myStoreSuspended)
+              else if (viewModel.inReview)
+                StorePrivacyNote(text: l10n.myStoreInReview)
+              else if (viewModel.rejected)
+                StorePrivacyNote(text: l10n.myStoreRejected)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
               if (!store.isOwner)
@@ -335,6 +345,12 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
               group(l10n.staffGroupTeam, [
                 if (onStaff case final staff? when store.isOwner)
                   row(Icons.groups_2_outlined, l10n.staffTitle, staff),
+                if (onCouriers case final couriers?)
+                  row(
+                    Icons.two_wheeler_rounded,
+                    l10n.storeCouriersTitle,
+                    couriers,
+                  ),
                 if (viewModel.stores.length > 1)
                   DymMenuRow(
                     icon: Icons.swap_horiz_rounded,
@@ -399,6 +415,8 @@ Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
     builder: (_) => _RadiusSheet(
       initialKm: vm.store!.deliveryRadiusM ~/ 1000,
       center: vm.storePoint,
+      // Borne du pays (spec 096), 50 km au plus.
+      maxKm: ((vm.config?.maxDeliveryDistanceM ?? 30000) ~/ 1000).clamp(1, 50),
     ),
   );
   if (chosen == null) return;
@@ -411,9 +429,12 @@ Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
 }
 
 class _RadiusSheet extends StatefulWidget {
-  const new({required this.initialKm, this.center});
+  const new({required this.initialKm, this.center, this.maxKm = 30});
 
   final int initialKm;
+
+  /// Rayon maximal en km (distance maximale du pays).
+  final int maxKm;
 
   /// Point de la boutique ; sans lui, pas de carte (le rayon reste réglable).
   final DymLatLng? center;
@@ -423,7 +444,7 @@ class _RadiusSheet extends StatefulWidget {
 }
 
 class _RadiusSheetState extends State<_RadiusSheet> {
-  late double _km = widget.initialKm.clamp(1, 30).toDouble();
+  late double _km = widget.initialKm.clamp(1, widget.maxKm).toDouble();
   DymMapControls? _controls;
   static const _mapHeight = 220.0;
 
@@ -493,8 +514,8 @@ class _RadiusSheetState extends State<_RadiusSheet> {
             Slider(
               value: _km,
               min: 1,
-              max: 30,
-              divisions: 29,
+              max: widget.maxKm.toDouble(),
+              divisions: widget.maxKm > 1 ? widget.maxKm - 1 : null,
               label: label,
               onChanged: (v) => setState(() => _km = v),
               onChangeEnd: (_) {

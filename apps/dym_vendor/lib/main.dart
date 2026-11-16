@@ -244,6 +244,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         disputes: DisputeRepository(data: neon.data, functions: neon.functions),
         stores: stores,
         live: live,
+        delivery: DeliveryRepository(neon.data),
       ),
     )
     ..registerSingleton<CatalogService>(

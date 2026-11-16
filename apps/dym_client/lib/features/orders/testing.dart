@@ -78,6 +78,24 @@ class MemoryOrdersService implements OrdersService {
   Future<Result<String?>> handoverCode(String orderId) async =>
       Ok(handoverCodes[orderId]);
 
+  /// Suivis en direct par commande (spec 096).
+  final liveTrackings = <String, LiveTracking>{};
+  int trackingReads = 0;
+  final sharedTrackings = <String>[];
+
+  @override
+  Future<Result<LiveTracking>> liveTracking(String orderId) async {
+    trackingReads++;
+    final t = liveTrackings[orderId];
+    return t == null ? const Err(NotFoundFailure('suivi')) : Ok(t);
+  }
+
+  @override
+  Future<Result<Uri>> shareTracking(String orderId) async {
+    sharedTrackings.add(orderId);
+    return Ok(Uri.parse('https://example.test/t/jeton-$orderId'));
+  }
+
   @override
   Future<Result<CustomerOrder>> order(String id) async {
     reads++;

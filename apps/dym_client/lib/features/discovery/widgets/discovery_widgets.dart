@@ -42,7 +42,11 @@ String storeMeta(BuildContext context, PublicStore store) {
   final place = distance == null
       ? store.zoneName
       : l10n.placeAndMeta(store.zoneName, formatDistance(context, distance));
-  return l10n.placeAndMeta(place, status);
+  final meta = l10n.placeAndMeta(place, status);
+  // Hors du rayon de la boutique : livraison possible, à confirmer (spec 096).
+  return store.longDistance
+      ? l10n.placeAndMeta(meta, l10n.storeLongDistance)
+      : meta;
 }
 
 /// « 350 m » ou « 1,2 km », selon la langue (spec 094).

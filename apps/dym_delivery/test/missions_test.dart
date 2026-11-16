@@ -235,10 +235,27 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(find.text('Course en cours'), findsOneWidget);
-      expect(find.text('Commande récupérée'), findsOneWidget);
-      await tester.tap(find.text('Commande récupérée'));
+      // Récupération (spec 096) : le livreur montre son QR, la vendeuse scanne.
+      service.pickupCodes['o1'] = '583104';
+      await tester.tap(find.text('Code de récupération'));
+      await tester.pumpAndSettle();
+      expect(find.text('583104'), findsOneWidget);
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      await service.advance(_mission('o1'), 'out_for_delivery');
+      await tester.pumpWidget(
+        _app(
+          ListView(
+            children: [MyRunsView(key: UniqueKey(), service: service)],
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Commande remise'), findsOneWidget);
+      expect(find.text('Cliente injoignable'), findsOneWidget);
+      await tester.tap(find.text('Cliente injoignable'));
+      await tester.pumpAndSettle();
+      expect(service.unreachable, ['o1']);
       // Remise : le code de la cliente est demandé.
       service.codes['o1'] = '4821';
       await tester.tap(find.text('Commande remise'));

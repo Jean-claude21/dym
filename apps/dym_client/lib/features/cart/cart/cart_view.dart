@@ -568,6 +568,8 @@ class _StoreGroup extends StatelessWidget {
           ),
           for (final issue in store.issues)
             CartIssue(label: storeIssueLabel(l10n, issue)),
+          if (store.longDistance)
+            CartIssue(label: l10n.cartLongDistance, blocking: false),
           for (final (i, line) in store.lines.indexed) ...[
             if (i > 0)
               Divider(height: 1, color: c.hairline)

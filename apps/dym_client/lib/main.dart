@@ -177,6 +177,8 @@ Future<void> configureServices(DymEnvironment environment) async {
         live: live,
         reference: reference,
         auth: auth,
+        delivery: DeliveryRepository(neon.data),
+        trackingBase: environment.functionsUrl,
       ),
     )
     ..registerLazySingleton<ChatService>(

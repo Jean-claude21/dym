@@ -16,7 +16,12 @@ class CountryConfig {
     required this.paymentMethods,
     required this.deliveryFees,
     required this.featureFlags,
+    this.maxDeliveryDistanceM = 20000,
   });
+
+  /// Distance maximale de livraison du pays (spec 096) : borne du rayon
+  /// des boutiques et de la livraison longue distance.
+  final int maxDeliveryDistanceM;
 
   final Country country;
   final Currency currency;

@@ -4,6 +4,7 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 
 /// Livreur (spec 041) : profil, missions proposées et en cours, gestes.
 abstract interface class MissionsService {
@@ -45,6 +46,18 @@ abstract interface class MissionsService {
 
   /// Retrait simulé du wallet.
   Future<Result<void>> withdraw(int amountMinor);
+
+  /// Code de récupération à montrer en QR à la vendeuse (spec 096).
+  Future<Result<String>> pickupCode(Mission mission);
+
+  /// Cliente injoignable devant la porte : minutes d'attente conseillées.
+  Future<Result<int>> reportUnreachable(Mission mission);
+
+  /// Alerte SOS à l'équipe (avec la position si elle est disponible).
+  Future<Result<void>> sos({Mission? mission});
+
+  /// Envoie la position pendant une course (rien hors course).
+  Future<void> ping();
 }
 
 /// Implémentation Neon.
@@ -55,7 +68,45 @@ class NeonMissionsService implements MissionsService {
     required this._auth,
     required this._wallet,
     this._live = LiveFeed.none,
+    this._delivery,
+    this._location,
   });
+
+  /// Suivi et outils de course (spec 096) ; absents : simulés comme refusés.
+  final DeliveryRepository? _delivery;
+  final LocationProvider? _location;
+
+  @override
+  Future<Result<String>> pickupCode(Mission mission) async =>
+      await _delivery?.pickupCode(mission.orderId) ??
+      const Err(NotFoundFailure('livraison'));
+
+  @override
+  Future<Result<int>> reportUnreachable(Mission mission) async =>
+      await _delivery?.reportUnreachable(mission.orderId) ??
+      const Err(NotFoundFailure('livraison'));
+
+  @override
+  Future<Result<void>> sos({Mission? mission}) async {
+    final delivery = _delivery;
+    if (delivery == null) return const Err(NotFoundFailure('livraison'));
+    final point = (await _location?.current())?.valueOrNull;
+    return await delivery.sos(
+      orderId: mission?.orderId,
+      latitude: point?.latitude,
+      longitude: point?.longitude,
+    );
+  }
+
+  @override
+  Future<void> ping() async {
+    final delivery = _delivery;
+    final location = _location;
+    if (delivery == null || location == null) return;
+    if ((await location.current()).valueOrNull case final point?) {
+      await delivery.ping(point.latitude, point.longitude);
+    }
+  }
 
   final LiveFeed _live;
 
@@ -330,4 +381,31 @@ class MemoryMissionsService implements MissionsService {
           _ => const [],
         },
       );
+
+  /// Codes de récupération, signalements, SOS et positions (spec 096).
+  final pickupCodes = <String, String>{};
+  final unreachable = <String>[];
+  int sosCount = 0;
+  int pings = 0;
+
+  @override
+  Future<Result<String>> pickupCode(Mission mission) async {
+    final code = pickupCodes[mission.orderId];
+    return code == null ? const Err(NotFoundFailure('code')) : Ok(code);
+  }
+
+  @override
+  Future<Result<int>> reportUnreachable(Mission mission) async {
+    unreachable.add(mission.orderId);
+    return const Ok(10);
+  }
+
+  @override
+  Future<Result<void>> sos({Mission? mission}) async {
+    sosCount++;
+    return const Ok(null);
+  }
+
+  @override
+  Future<void> ping() async => pings++;
 }

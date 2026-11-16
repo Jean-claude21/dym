@@ -22,6 +22,9 @@ class CourierProfile {
     this.suspended = false,
     this.isOnline = false,
     this.zoneIds = const [],
+    this.pending = false,
+    this.rejected = false,
+    this.reviewNote,
   });
 
   factory fromJson(Map<String, dynamic> json) => CourierProfile(
@@ -29,6 +32,9 @@ class CourierProfile {
     phone: json['phone']! as String,
     vehicle: CourierVehicle.parse(json['vehicle']),
     suspended: json['status'] == 'suspended',
+    pending: json['status'] == 'pending',
+    rejected: json['status'] == 'rejected',
+    reviewNote: json['review_note'] as String?,
     isOnline: json['is_online'] as bool? ?? false,
     zoneIds: [
       for (final z in json['zone_ids'] as List? ?? const []) z as String,
@@ -41,6 +47,11 @@ class CourierProfile {
   final bool suspended;
   final bool isOnline;
   final List<String> zoneIds;
+
+  /// Compte en attente de validation, ou refusé avec un motif (spec 096).
+  final bool pending;
+  final bool rejected;
+  final String? reviewNote;
 }
 
 /// Consigne de conservation (`categories.storage`, `products.storage`).

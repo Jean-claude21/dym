@@ -30,3 +30,14 @@ Future<void> shareContent(
   await Clipboard.setData(ClipboardData(text: text));
   messenger?.showSnackBar(SnackBar(content: Text(l10n.shareCopied)));
 }
+
+/// Texte partagé par WhatsApp, sinon copié (suivi de livraison, spec 096).
+Future<void> shareTextOrCopy(BuildContext context, String text) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final whatsapp = Uri.https('wa.me', '/', {'text': text});
+  final opened = (await shareOpener.open(whatsapp)).valueOrNull ?? false;
+  if (opened) return;
+  await Clipboard.setData(ClipboardData(text: text));
+  messenger?.showSnackBar(SnackBar(content: Text(l10n.shareCopied)));
+}

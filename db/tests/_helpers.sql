@@ -76,3 +76,12 @@ $$;
 
 grant usage on schema tests to authenticated, anonymous;
 grant execute on all functions in schema tests to authenticated, anonymous;
+
+-- Récupération par le livreur assigné, comme après le scan de la vendeuse (spec 096).
+create function tests.pickup(p_order uuid) returns jsonb
+language sql security definer set search_path = ''
+as $$
+  select app.transition_order(oc.courier_id, p_order, 'out_for_delivery', 'ready')
+  from public.order_couriers oc where oc.order_id = p_order
+$$;
+grant execute on function tests.pickup(uuid) to authenticated, anonymous;

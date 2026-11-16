@@ -124,6 +124,11 @@ CartStoreGroup _$CartStoreGroupFromJson(Map<String, dynamic> json) =>
                     .toList() ??
                 const [],
           ),
+          distanceM: $checkedConvert('distance_m', (v) => (v as num?)?.toInt()),
+          longDistance: $checkedConvert(
+            'long_distance',
+            (v) => v as bool? ?? false,
+          ),
         );
         return val;
       },
@@ -134,6 +139,8 @@ CartStoreGroup _$CartStoreGroupFromJson(Map<String, dynamic> json) =>
         'offersPickup': 'offers_pickup',
         'isOpen': 'is_open',
         'prepTimeMinutes': 'prep_time_minutes',
+        'distanceM': 'distance_m',
+        'longDistance': 'long_distance',
       },
     );
 

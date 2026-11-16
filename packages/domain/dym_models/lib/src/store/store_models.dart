@@ -6,7 +6,7 @@ import 'package:meta/meta.dart';
 part 'store_models.g.dart';
 
 /// Statut d'administration d'une boutique.
-enum StoreStatus { draft, active, suspended }
+enum StoreStatus { draft, review, active, rejected, suspended }
 
 /// Adresse de ramassage (privée : propriétaire, équipe, livreur de la
 /// commande).

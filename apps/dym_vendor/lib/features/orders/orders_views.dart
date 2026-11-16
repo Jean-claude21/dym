@@ -6,6 +6,7 @@ import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
+import 'package:dym_vendor/features/orders/couriers_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_viewmodels.dart';
 import 'package:flutter/material.dart';
@@ -566,6 +567,13 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
             ),
           ],
         )
+      else if (vm.awaitsPickupScan)
+        DymButton(
+          label: l10n.pickupScan,
+          icon: Icons.qr_code_scanner_rounded,
+          loading: vm.acting,
+          onPressed: vm.acting ? null : () => _scanPickup(context, vm),
+        )
       else if (next != null)
         DymButton(
           label: stepLabel(l10n, next, order.fulfillment),
@@ -583,6 +591,19 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
           onPressed: vm.acting ? null : vm.confirmCash,
         ),
     ];
+    if (vm.canAssignCourier) {
+      actions.add(
+        Padding(
+          padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+          child: DymButton(
+            label: l10n.storeCourierAssign,
+            icon: Icons.two_wheeler_rounded,
+            variant: DymButtonVariant.secondary,
+            onPressed: vm.acting ? null : () => _assignCourier(context, vm),
+          ),
+        ),
+      );
+    }
     final payment = order.payment;
     final delivery = order.delivery;
     Widget card(String title, List<Widget> children) => Container(
@@ -1229,4 +1250,63 @@ class _RefusalSheetState extends State<RefusalSheet> {
       ),
     );
   }
+}
+
+/// Scan du code du livreur DYM (spec 096).
+Future<void> _scanPickup(BuildContext context, OrderDetailViewModel vm) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final code = await scanPickupCode(context);
+  if (code == null) return;
+  final check = await vm.confirmPickup(code);
+  if (check == null) return;
+  messenger?.showSnackBar(
+    SnackBar(
+      content: Text(
+        check.ok
+            ? l10n.pickupConfirmed
+            : l10n.pickupCodeWrong(check.attemptsLeft),
+      ),
+    ),
+  );
+}
+
+/// Confier la commande à un livreur de la boutique (spec 096).
+Future<void> _assignCourier(
+  BuildContext context,
+  OrderDetailViewModel vm,
+) async {
+  final l10n = DymLocalizations.of(context);
+  final couriers = await vm.couriers();
+  if (!context.mounted) return;
+  final chosen = await showModalBottomSheet<StoreCourierInfo>(
+    context: context,
+    showDragHandle: true,
+    builder: (sheet) => SafeArea(
+      child: couriers.isEmpty
+          ? Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+              child: Text(l10n.storeCouriersEmpty),
+            )
+          : ListView(
+              shrinkWrap: true,
+              children: [
+                for (final c in couriers)
+                  ListTile(
+                    leading: const Icon(Icons.two_wheeler_rounded),
+                    title: Text(c.name),
+                    subtitle: Text(
+                      c.busy
+                          ? l10n.storeCourierBusy
+                          : (c.isOnline
+                                ? l10n.courierOnline
+                                : l10n.courierOffline),
+                    ),
+                    onTap: () => Navigator.pop(sheet, c),
+                  ),
+              ],
+            ),
+    ),
+  );
+  if (chosen != null) await vm.assignCourier(chosen.courierId);
 }

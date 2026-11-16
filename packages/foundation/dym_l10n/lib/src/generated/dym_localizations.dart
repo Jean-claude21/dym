@@ -12558,6 +12558,462 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Le cercle montre où tu livres.'**
   String get storeDeliveryMapHint;
+
+  /// Suivi de commande : titre de la carte (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi en direct'**
+  String get trackLiveTitle;
+
+  /// Suivi : position du livreur pas encore connue
+  ///
+  /// In fr, this message translates to:
+  /// **'Le livreur apparaîtra ici'**
+  String get trackLiveWaiting;
+
+  /// Suivi : le livreur est en route
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} arrive'**
+  String trackLiveCourier(String name);
+
+  /// Suivi : minutes restantes estimées
+  ///
+  /// In fr, this message translates to:
+  /// **'~{minutes} min'**
+  String trackLiveEta(int minutes);
+
+  /// Suivi : partager le lien avec un proche ou la personne qui réceptionne
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager le suivi'**
+  String get trackShare;
+
+  /// Message envoyé avec le lien de suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'Suis ma livraison DYM en direct : {url}'**
+  String trackShareText(String url);
+
+  /// Livreur : compte en attente de validation par l'équipe (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte en cours de validation'**
+  String get courierPending;
+
+  /// Livreur : explication de l'attente de validation
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM vérifie ton compte. Tu pourras passer en ligne dès qu\'il est validé.'**
+  String get courierPendingHint;
+
+  /// Livreur : compte refusé, le motif suit
+  ///
+  /// In fr, this message translates to:
+  /// **'Compte à revoir'**
+  String get courierRejected;
+
+  /// Livreur : montrer le QR de récupération à la vendeuse
+  ///
+  /// In fr, this message translates to:
+  /// **'Code de récupération'**
+  String get pickupCodeShow;
+
+  /// Titre de la feuille du code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Montre ce code à la vendeuse'**
+  String get pickupCodeTitle;
+
+  /// Explication du code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Elle le scanne pour te remettre la commande.'**
+  String get pickupCodeHint;
+
+  /// Livreur : la cliente ne répond pas devant la porte
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente injoignable'**
+  String get courierUnreachable;
+
+  /// Livreur : confirmation du signalement injoignable
+  ///
+  /// In fr, this message translates to:
+  /// **'La cliente est prévenue. Attends {minutes} min avant de repartir.'**
+  String courierUnreachableSent(int minutes);
+
+  /// Livreur : bouton d'alerte
+  ///
+  /// In fr, this message translates to:
+  /// **'SOS'**
+  String get courierSos;
+
+  /// Livreur : confirmation de l'alerte SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerter l\'équipe DYM ?'**
+  String get courierSosTitle;
+
+  /// Livreur : explication de l'alerte SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe reçoit ta position et te rappelle tout de suite. En cas de danger, appelle aussi les secours.'**
+  String get courierSosBody;
+
+  /// Livreur : envoyer l'alerte SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer l\'alerte'**
+  String get courierSosSend;
+
+  /// Livreur : alerte SOS envoyée
+  ///
+  /// In fr, this message translates to:
+  /// **'Alerte envoyée. L\'équipe te rappelle.'**
+  String get courierSosSent;
+
+  /// Vendeuse : livreurs de la boutique (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes livreurs'**
+  String get storeCouriersTitle;
+
+  /// Vendeuse : ajouter un livreur par son numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un livreur'**
+  String get storeCouriersAdd;
+
+  /// Vendeuse : explication des livreurs de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute les livreurs avec qui tu travailles : tu pourras leur confier tes commandes.'**
+  String get storeCouriersHint;
+
+  /// Vendeuse : aucun livreur ajouté
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur pour l\'instant'**
+  String get storeCouriersEmpty;
+
+  /// Champ : numéro du compte livreur DYM
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro du livreur'**
+  String get storeCourierPhone;
+
+  /// Vendeuse : numéro inconnu
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte livreur DYM validé avec ce numéro.'**
+  String get storeCourierNotFound;
+
+  /// Vendeuse : retirer un livreur de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get storeCourierRemove;
+
+  /// Livreur occupé par une course
+  ///
+  /// In fr, this message translates to:
+  /// **'En course'**
+  String get storeCourierBusy;
+
+  /// Vendeuse : confier la commande à son livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Confier à un de mes livreurs'**
+  String get storeCourierAssign;
+
+  /// Vendeuse : scanner le QR de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanner le code du livreur'**
+  String get pickupScan;
+
+  /// Titre de l'écran de scan du code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Code du livreur'**
+  String get pickupScanTitle;
+
+  /// Saisie du code de récupération à la main
+  ///
+  /// In fr, this message translates to:
+  /// **'Code à 6 chiffres'**
+  String get pickupCodeManual;
+
+  /// Valider le code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get pickupCodeValidate;
+
+  /// Vendeuse : code bon, commande partie
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande remise au livreur.'**
+  String get pickupConfirmed;
+
+  /// Vendeuse : mauvais code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect. Encore {count} essais.'**
+  String pickupCodeWrong(int count);
+
+  /// Vendeuse : boutique en validation (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM vérifie ta boutique. Tu pourras l\'ouvrir dès qu\'elle est validée.'**
+  String get myStoreInReview;
+
+  /// Vendeuse : boutique refusée
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta boutique est à revoir. Corrige ce qui est demandé puis publie-la de nouveau.'**
+  String get myStoreRejected;
+
+  /// Admin : boutiques et livreurs à valider (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptes à valider'**
+  String get adminAccountsTitle;
+
+  /// Admin : rien à valider
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte en attente'**
+  String get adminAccountsEmpty;
+
+  /// Admin : type de compte boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique'**
+  String get adminAccountStore;
+
+  /// Admin : type de compte livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur'**
+  String get adminAccountCourier;
+
+  /// Admin : valider un compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get adminAccountApprove;
+
+  /// Admin : refuser un compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get adminAccountReject;
+
+  /// Admin : motif du refus
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif (envoyé au compte)'**
+  String get adminAccountReason;
+
+  /// Admin : SOS et clientes injoignables (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Incidents de livraison'**
+  String get adminIncidentsTitle;
+
+  /// Admin : aucun incident
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun incident ouvert'**
+  String get adminIncidentsEmpty;
+
+  /// Admin : incident SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'SOS'**
+  String get adminIncidentSos;
+
+  /// Admin : incident cliente injoignable
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente injoignable'**
+  String get adminIncidentUnreachable;
+
+  /// Admin : clore un incident
+  ///
+  /// In fr, this message translates to:
+  /// **'Clore'**
+  String get adminIncidentResolve;
+
+  /// Admin : tranches de frais de livraison (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais par distance'**
+  String get adminFeeBandsTitle;
+
+  /// Admin : explication des tranches
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais selon la distance de la boutique à la porte. Une boutique peut fixer ses propres frais.'**
+  String get adminFeeBandsHint;
+
+  /// Admin : distance maximale de la tranche
+  ///
+  /// In fr, this message translates to:
+  /// **'Jusqu\'à (m)'**
+  String get adminFeeBandUpTo;
+
+  /// Admin : montant de la tranche
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais (unités mineures)'**
+  String get adminFeeBandFee;
+
+  /// Admin : ajouter une tranche
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une tranche'**
+  String get adminFeeBandAdd;
+
+  /// Boutique hors de son rayon : livraison possible, à confirmer par elle (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Longue distance · à confirmer'**
+  String get storeLongDistance;
+
+  /// Panier : boutique au-delà de son rayon de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Longue distance : frais plus élevés, la boutique confirme la livraison.'**
+  String get cartLongDistance;
+
+  /// Admin : réglages de livraison du pays (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get adminDeliveryTitle;
+
+  /// Admin : mode de calcul des frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcul des frais'**
+  String get adminDeliveryMode;
+
+  /// Admin : mode au km
+  ///
+  /// In fr, this message translates to:
+  /// **'Au kilomètre'**
+  String get adminDeliveryPerKm;
+
+  /// Admin : mode par tranches
+  ///
+  /// In fr, this message translates to:
+  /// **'Par tranches'**
+  String get adminDeliveryBands;
+
+  /// Admin : frais fixes de départ
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise en charge'**
+  String get adminDeliveryBase;
+
+  /// Admin : distance comprise dans la prise en charge
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance incluse (m)'**
+  String get adminDeliveryIncluded;
+
+  /// Admin : prix par kilomètre au-delà de la distance incluse
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix par km'**
+  String get adminDeliveryPerKmFee;
+
+  /// Admin : frais minimum
+  ///
+  /// In fr, this message translates to:
+  /// **'Minimum'**
+  String get adminDeliveryMin;
+
+  /// Admin : frais maximum
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond (vide : aucun)'**
+  String get adminDeliveryMaxFee;
+
+  /// Admin : arrondi des frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrondi'**
+  String get adminDeliveryRounding;
+
+  /// Admin : supplément au-delà du rayon de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Supplément longue distance'**
+  String get adminDeliveryLongSurcharge;
+
+  /// Admin : au-delà, retrait seulement
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance maximale de livraison (m)'**
+  String get adminDeliveryMaxDistance;
+
+  /// Admin : soir, week-end, heures de pointe
+  ///
+  /// In fr, this message translates to:
+  /// **'Majorations horaires'**
+  String get adminDeliverySurcharges;
+
+  /// Admin : ajouter une majoration horaire
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une majoration'**
+  String get adminDeliverySurchargeAdd;
+
+  /// Admin : rayon par défaut par ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon proposé aux nouvelles boutiques'**
+  String get adminDeliveryCityRadius;
+
+  /// Admin : calculer des frais pour tester le tarif
+  ///
+  /// In fr, this message translates to:
+  /// **'Simulateur'**
+  String get adminDeliverySimulator;
+
+  /// Admin : lancer la simulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculer'**
+  String get adminDeliverySimulate;
+
+  /// Admin : distance simulée
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance (m)'**
+  String get adminDeliverySimDistance;
+
+  /// Admin : simuler la longue distance
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors du rayon de la boutique'**
+  String get adminDeliverySimLong;
+
+  /// Admin : résultat du simulateur
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais : {fee}'**
+  String adminDeliverySimResult(String fee);
+
+  /// Admin : réglage enregistré
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistré'**
+  String get adminSaved;
 }
 
 class _DymLocalizationsDelegate

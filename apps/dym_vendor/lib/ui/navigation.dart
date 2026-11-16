@@ -21,6 +21,7 @@ import 'package:dym_vendor/features/group_buy/group_offers_view.dart';
 import 'package:dym_vendor/features/haggle/haggling_view.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/courier_cash_view.dart';
+import 'package:dym_vendor/features/orders/couriers_view.dart';
 import 'package:dym_vendor/features/orders/orders_service.dart';
 import 'package:dym_vendor/features/orders/orders_views.dart';
 import 'package:dym_vendor/features/reviews/reviews_view.dart';
@@ -90,6 +91,9 @@ abstract interface class AppNavigator {
 
   /// Équipe de la boutique (spec 087).
   void toStaff();
+
+  /// Livreurs de la boutique (spec 096).
+  void toStoreCouriers();
 
   /// Ardoise (spec 047).
   void toCredit();
@@ -330,6 +334,13 @@ class StackedAppNavigator implements AppNavigator {
       ),
     );
   }
+
+  @override
+  void toStoreCouriers() => _navigator.push<void>(
+    MaterialPageRoute(
+      builder: (_) => StoreCouriersView(service: locator<OrdersService>()),
+    ),
+  );
 
   @override
   void toStaff() => _navigator.push<void>(

@@ -103,9 +103,17 @@ class CartStoreGroup {
     this.isOpen = true,
     this.prepTimeMinutes = 0,
     this.issues = const [],
+    this.distanceM,
+    this.longDistance = false,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$CartStoreGroupFromJson(json);
+
+  /// Distance de la boutique à la porte, en mètres (spec 096).
+  final int? distanceM;
+
+  /// Au-delà du rayon de la boutique : livraison à confirmer par elle.
+  final bool longDistance;
 
   final String id;
   final String name;

@@ -33,6 +33,10 @@ class MyStoreViewModel extends BaseViewModel {
   bool get ready => _store != null && _config != null;
   bool get suspended => _store?.status == StoreStatus.suspended;
 
+  /// Boutique en validation par l'équipe, ou refusée (spec 096).
+  bool get inReview => _store?.status == StoreStatus.review;
+  bool get rejected => _store?.status == StoreStatus.rejected;
+
   /// Point de la boutique sur la carte (spec 095) : adresse de retrait
   /// située, sinon centre du quartier ; comme `app.store_point` en base.
   DymLatLng? get storePoint {

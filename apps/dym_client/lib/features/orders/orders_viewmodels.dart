@@ -126,8 +126,59 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
   bool _cancelling = false;
   Failure? _cancelFailure;
   String? _handoverCode;
+  LiveTracking? _tracking;
+  Timer? _liveTimer;
+  bool _sharing = false;
 
   CustomerOrder? get order => _order;
+
+  /// Suivi en direct (spec 096) : nul hors livraison en cours.
+  LiveTracking? get live => _tracking;
+  bool get sharing => _sharing;
+
+  /// Carte affichée : livraison en cours et au moins un point connu.
+  bool get showMap =>
+      (_tracking?.live ?? false) &&
+      (_tracking?.store != null || _tracking?.destination != null);
+
+  /// Lit la position du livreur toutes les 15 s tant que la course dure.
+  Future<void> _readLive() async {
+    final o = _order;
+    if (o == null ||
+        o.fulfillment != Fulfillment.delivery ||
+        !o.status.isActive) {
+      _tracking = null;
+      _liveTimer?.cancel();
+      _liveTimer = null;
+      return;
+    }
+    final first = await service.liveTracking(orderId);
+    if (first case Ok(:final value)) _tracking = value;
+    if (!first.isOk) return;
+    _liveTimer ??= Timer.periodic(const Duration(seconds: 15), (_) async {
+      if (await service.liveTracking(orderId) case Ok(:final value)) {
+        _tracking = value;
+        notifyListeners();
+      }
+    });
+  }
+
+  /// Lien de suivi à partager ; nul si la base l'a refusé.
+  Future<Uri?> shareTracking() async {
+    if (_sharing) return null;
+    _sharing = true;
+    notifyListeners();
+    final result = await service.shareTracking(orderId);
+    _sharing = false;
+    notifyListeners();
+    return result.valueOrNull;
+  }
+
+  @override
+  void dispose() {
+    _liveTimer?.cancel();
+    super.dispose();
+  }
 
   /// Code à donner au livreur DYM à la remise (spec 042).
   String? get handoverCode => _handoverCode;
@@ -242,6 +293,7 @@ class TrackingViewModel extends _OrdersLoadingViewModel {
         _review = value;
       }
     }
+    await _readLive();
     return result.failureOrNull;
   }
 

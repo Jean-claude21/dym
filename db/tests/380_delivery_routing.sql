@@ -92,7 +92,7 @@ select ok((select code is not null from _t), 'code visible par la cliente');
 select tests.logout();
 select app.transition_order((select kodjo from _t), (select order_k from _t), 'ready', 'accepted');
 select tests.login_as((select kofi from _t));
-select public.courier_transition((select order_k from _t), 'out_for_delivery', 'ready');
+select tests.pickup((select order_k from _t));
 select throws_ok(format($$select public.courier_transition('%s', 'delivered', 'out_for_delivery')$$, (select order_k from _t)),
   'P0001', 'code_required', 'livrée sans code refusée');
 select is(public.courier_deliver((select order_k from _t), 'xxxx') ->> 'ok', 'false', 'mauvais code');

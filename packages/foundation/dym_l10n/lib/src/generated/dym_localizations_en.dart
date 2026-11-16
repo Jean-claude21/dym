@@ -7514,4 +7514,252 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get storeDeliveryMapHint => 'The circle shows where you deliver.';
+
+  @override
+  String get trackLiveTitle => 'Live tracking';
+
+  @override
+  String get trackLiveWaiting => 'Your courier will show up here';
+
+  @override
+  String trackLiveCourier(String name) {
+    return '$name is on the way';
+  }
+
+  @override
+  String trackLiveEta(int minutes) {
+    return '~$minutes min';
+  }
+
+  @override
+  String get trackShare => 'Share tracking';
+
+  @override
+  String trackShareText(String url) {
+    return 'Follow my DYM delivery live: $url';
+  }
+
+  @override
+  String get courierPending => 'Account under review';
+
+  @override
+  String get courierPendingHint =>
+      'The DYM team is checking your account. You can go online once it is approved.';
+
+  @override
+  String get courierRejected => 'Account to review';
+
+  @override
+  String get pickupCodeShow => 'Pickup code';
+
+  @override
+  String get pickupCodeTitle => 'Show this code to the seller';
+
+  @override
+  String get pickupCodeHint => 'She scans it to hand you the order.';
+
+  @override
+  String get courierUnreachable => 'Customer unreachable';
+
+  @override
+  String courierUnreachableSent(int minutes) {
+    return 'The customer has been notified. Wait $minutes min before leaving.';
+  }
+
+  @override
+  String get courierSos => 'SOS';
+
+  @override
+  String get courierSosTitle => 'Alert the DYM team?';
+
+  @override
+  String get courierSosBody =>
+      'The team gets your location and calls you right away. If you are in danger, also call emergency services.';
+
+  @override
+  String get courierSosSend => 'Send the alert';
+
+  @override
+  String get courierSosSent => 'Alert sent. The team will call you.';
+
+  @override
+  String get storeCouriersTitle => 'My couriers';
+
+  @override
+  String get storeCouriersAdd => 'Add a courier';
+
+  @override
+  String get storeCouriersHint =>
+      'Add the couriers you work with: you can then give them your orders.';
+
+  @override
+  String get storeCouriersEmpty => 'No courier yet';
+
+  @override
+  String get storeCourierPhone => 'Courier\'s phone number';
+
+  @override
+  String get storeCourierNotFound =>
+      'No approved DYM courier account with this number.';
+
+  @override
+  String get storeCourierRemove => 'Remove';
+
+  @override
+  String get storeCourierBusy => 'On a delivery';
+
+  @override
+  String get storeCourierAssign => 'Give to one of my couriers';
+
+  @override
+  String get pickupScan => 'Scan the courier\'s code';
+
+  @override
+  String get pickupScanTitle => 'Courier\'s code';
+
+  @override
+  String get pickupCodeManual => '6-digit code';
+
+  @override
+  String get pickupCodeValidate => 'Confirm';
+
+  @override
+  String get pickupConfirmed => 'Order handed to the courier.';
+
+  @override
+  String pickupCodeWrong(int count) {
+    return 'Wrong code. $count tries left.';
+  }
+
+  @override
+  String get myStoreInReview =>
+      'The DYM team is checking your shop. You can open it once it is approved.';
+
+  @override
+  String get myStoreRejected =>
+      'Your shop needs changes. Fix what is asked, then publish it again.';
+
+  @override
+  String get adminAccountsTitle => 'Accounts to review';
+
+  @override
+  String get adminAccountsEmpty => 'No pending account';
+
+  @override
+  String get adminAccountStore => 'Shop';
+
+  @override
+  String get adminAccountCourier => 'Courier';
+
+  @override
+  String get adminAccountApprove => 'Approve';
+
+  @override
+  String get adminAccountReject => 'Reject';
+
+  @override
+  String get adminAccountReason => 'Reason (sent to the account)';
+
+  @override
+  String get adminIncidentsTitle => 'Delivery incidents';
+
+  @override
+  String get adminIncidentsEmpty => 'No open incident';
+
+  @override
+  String get adminIncidentSos => 'SOS';
+
+  @override
+  String get adminIncidentUnreachable => 'Customer unreachable';
+
+  @override
+  String get adminIncidentResolve => 'Close';
+
+  @override
+  String get adminFeeBandsTitle => 'Fees by distance';
+
+  @override
+  String get adminFeeBandsHint =>
+      'Fees by distance from the shop to the door. A shop can set its own fees.';
+
+  @override
+  String get adminFeeBandUpTo => 'Up to (m)';
+
+  @override
+  String get adminFeeBandFee => 'Fee (minor units)';
+
+  @override
+  String get adminFeeBandAdd => 'Add a band';
+
+  @override
+  String get storeLongDistance => 'Long distance · to be confirmed';
+
+  @override
+  String get cartLongDistance =>
+      'Long distance: higher fees, the shop confirms the delivery.';
+
+  @override
+  String get adminDeliveryTitle => 'Delivery';
+
+  @override
+  String get adminDeliveryMode => 'Fee calculation';
+
+  @override
+  String get adminDeliveryPerKm => 'Per kilometre';
+
+  @override
+  String get adminDeliveryBands => 'By bands';
+
+  @override
+  String get adminDeliveryBase => 'Base fee';
+
+  @override
+  String get adminDeliveryIncluded => 'Included distance (m)';
+
+  @override
+  String get adminDeliveryPerKmFee => 'Price per km';
+
+  @override
+  String get adminDeliveryMin => 'Minimum';
+
+  @override
+  String get adminDeliveryMaxFee => 'Cap (empty: none)';
+
+  @override
+  String get adminDeliveryRounding => 'Rounding';
+
+  @override
+  String get adminDeliveryLongSurcharge => 'Long-distance surcharge';
+
+  @override
+  String get adminDeliveryMaxDistance => 'Maximum delivery distance (m)';
+
+  @override
+  String get adminDeliverySurcharges => 'Time surcharges';
+
+  @override
+  String get adminDeliverySurchargeAdd => 'Add a surcharge';
+
+  @override
+  String get adminDeliveryCityRadius => 'Radius suggested to new shops';
+
+  @override
+  String get adminDeliverySimulator => 'Simulator';
+
+  @override
+  String get adminDeliverySimulate => 'Calculate';
+
+  @override
+  String get adminDeliverySimDistance => 'Distance (m)';
+
+  @override
+  String get adminDeliverySimLong => 'Outside the shop\'s radius';
+
+  @override
+  String adminDeliverySimResult(String fee) {
+    return 'Fee: $fee';
+  }
+
+  @override
+  String get adminSaved => 'Saved';
 }

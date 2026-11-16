@@ -7564,4 +7564,252 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get storeDeliveryMapHint => 'Le cercle montre où tu livres.';
+
+  @override
+  String get trackLiveTitle => 'Suivi en direct';
+
+  @override
+  String get trackLiveWaiting => 'Le livreur apparaîtra ici';
+
+  @override
+  String trackLiveCourier(String name) {
+    return '$name arrive';
+  }
+
+  @override
+  String trackLiveEta(int minutes) {
+    return '~$minutes min';
+  }
+
+  @override
+  String get trackShare => 'Partager le suivi';
+
+  @override
+  String trackShareText(String url) {
+    return 'Suis ma livraison DYM en direct : $url';
+  }
+
+  @override
+  String get courierPending => 'Compte en cours de validation';
+
+  @override
+  String get courierPendingHint =>
+      'L\'équipe DYM vérifie ton compte. Tu pourras passer en ligne dès qu\'il est validé.';
+
+  @override
+  String get courierRejected => 'Compte à revoir';
+
+  @override
+  String get pickupCodeShow => 'Code de récupération';
+
+  @override
+  String get pickupCodeTitle => 'Montre ce code à la vendeuse';
+
+  @override
+  String get pickupCodeHint => 'Elle le scanne pour te remettre la commande.';
+
+  @override
+  String get courierUnreachable => 'Cliente injoignable';
+
+  @override
+  String courierUnreachableSent(int minutes) {
+    return 'La cliente est prévenue. Attends $minutes min avant de repartir.';
+  }
+
+  @override
+  String get courierSos => 'SOS';
+
+  @override
+  String get courierSosTitle => 'Alerter l\'équipe DYM ?';
+
+  @override
+  String get courierSosBody =>
+      'L\'équipe reçoit ta position et te rappelle tout de suite. En cas de danger, appelle aussi les secours.';
+
+  @override
+  String get courierSosSend => 'Envoyer l\'alerte';
+
+  @override
+  String get courierSosSent => 'Alerte envoyée. L\'équipe te rappelle.';
+
+  @override
+  String get storeCouriersTitle => 'Mes livreurs';
+
+  @override
+  String get storeCouriersAdd => 'Ajouter un livreur';
+
+  @override
+  String get storeCouriersHint =>
+      'Ajoute les livreurs avec qui tu travailles : tu pourras leur confier tes commandes.';
+
+  @override
+  String get storeCouriersEmpty => 'Aucun livreur pour l\'instant';
+
+  @override
+  String get storeCourierPhone => 'Numéro du livreur';
+
+  @override
+  String get storeCourierNotFound =>
+      'Aucun compte livreur DYM validé avec ce numéro.';
+
+  @override
+  String get storeCourierRemove => 'Retirer';
+
+  @override
+  String get storeCourierBusy => 'En course';
+
+  @override
+  String get storeCourierAssign => 'Confier à un de mes livreurs';
+
+  @override
+  String get pickupScan => 'Scanner le code du livreur';
+
+  @override
+  String get pickupScanTitle => 'Code du livreur';
+
+  @override
+  String get pickupCodeManual => 'Code à 6 chiffres';
+
+  @override
+  String get pickupCodeValidate => 'Valider';
+
+  @override
+  String get pickupConfirmed => 'Commande remise au livreur.';
+
+  @override
+  String pickupCodeWrong(int count) {
+    return 'Code incorrect. Encore $count essais.';
+  }
+
+  @override
+  String get myStoreInReview =>
+      'L\'équipe DYM vérifie ta boutique. Tu pourras l\'ouvrir dès qu\'elle est validée.';
+
+  @override
+  String get myStoreRejected =>
+      'Ta boutique est à revoir. Corrige ce qui est demandé puis publie-la de nouveau.';
+
+  @override
+  String get adminAccountsTitle => 'Comptes à valider';
+
+  @override
+  String get adminAccountsEmpty => 'Aucun compte en attente';
+
+  @override
+  String get adminAccountStore => 'Boutique';
+
+  @override
+  String get adminAccountCourier => 'Livreur';
+
+  @override
+  String get adminAccountApprove => 'Valider';
+
+  @override
+  String get adminAccountReject => 'Refuser';
+
+  @override
+  String get adminAccountReason => 'Motif (envoyé au compte)';
+
+  @override
+  String get adminIncidentsTitle => 'Incidents de livraison';
+
+  @override
+  String get adminIncidentsEmpty => 'Aucun incident ouvert';
+
+  @override
+  String get adminIncidentSos => 'SOS';
+
+  @override
+  String get adminIncidentUnreachable => 'Cliente injoignable';
+
+  @override
+  String get adminIncidentResolve => 'Clore';
+
+  @override
+  String get adminFeeBandsTitle => 'Frais par distance';
+
+  @override
+  String get adminFeeBandsHint =>
+      'Frais selon la distance de la boutique à la porte. Une boutique peut fixer ses propres frais.';
+
+  @override
+  String get adminFeeBandUpTo => 'Jusqu\'à (m)';
+
+  @override
+  String get adminFeeBandFee => 'Frais (unités mineures)';
+
+  @override
+  String get adminFeeBandAdd => 'Ajouter une tranche';
+
+  @override
+  String get storeLongDistance => 'Longue distance · à confirmer';
+
+  @override
+  String get cartLongDistance =>
+      'Longue distance : frais plus élevés, la boutique confirme la livraison.';
+
+  @override
+  String get adminDeliveryTitle => 'Livraison';
+
+  @override
+  String get adminDeliveryMode => 'Calcul des frais';
+
+  @override
+  String get adminDeliveryPerKm => 'Au kilomètre';
+
+  @override
+  String get adminDeliveryBands => 'Par tranches';
+
+  @override
+  String get adminDeliveryBase => 'Prise en charge';
+
+  @override
+  String get adminDeliveryIncluded => 'Distance incluse (m)';
+
+  @override
+  String get adminDeliveryPerKmFee => 'Prix par km';
+
+  @override
+  String get adminDeliveryMin => 'Minimum';
+
+  @override
+  String get adminDeliveryMaxFee => 'Plafond (vide : aucun)';
+
+  @override
+  String get adminDeliveryRounding => 'Arrondi';
+
+  @override
+  String get adminDeliveryLongSurcharge => 'Supplément longue distance';
+
+  @override
+  String get adminDeliveryMaxDistance => 'Distance maximale de livraison (m)';
+
+  @override
+  String get adminDeliverySurcharges => 'Majorations horaires';
+
+  @override
+  String get adminDeliverySurchargeAdd => 'Ajouter une majoration';
+
+  @override
+  String get adminDeliveryCityRadius => 'Rayon proposé aux nouvelles boutiques';
+
+  @override
+  String get adminDeliverySimulator => 'Simulateur';
+
+  @override
+  String get adminDeliverySimulate => 'Calculer';
+
+  @override
+  String get adminDeliverySimDistance => 'Distance (m)';
+
+  @override
+  String get adminDeliverySimLong => 'Hors du rayon de la boutique';
+
+  @override
+  String adminDeliverySimResult(String fee) {
+    return 'Frais : $fee';
+  }
+
+  @override
+  String get adminSaved => 'Enregistré';
 }

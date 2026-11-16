@@ -8616,5 +8616,339 @@
   "storeDeliveryMapHint": "Le cercle montre où tu livres.",
   "@storeDeliveryMapHint": {
     "description": "Vendeuse : légende de la carte du rayon de livraison"
+  },
+  "trackLiveTitle": "Suivi en direct",
+  "@trackLiveTitle": {
+    "description": "Suivi de commande : titre de la carte (spec 096)"
+  },
+  "trackLiveWaiting": "Le livreur apparaîtra ici",
+  "@trackLiveWaiting": {
+    "description": "Suivi : position du livreur pas encore connue"
+  },
+  "trackLiveCourier": "{name} arrive",
+  "@trackLiveCourier": {
+    "description": "Suivi : le livreur est en route",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "trackLiveEta": "~{minutes} min",
+  "@trackLiveEta": {
+    "description": "Suivi : minutes restantes estimées",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "trackShare": "Partager le suivi",
+  "@trackShare": {
+    "description": "Suivi : partager le lien avec un proche ou la personne qui réceptionne"
+  },
+  "trackShareText": "Suis ma livraison DYM en direct : {url}",
+  "@trackShareText": {
+    "description": "Message envoyé avec le lien de suivi",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
+  },
+  "courierPending": "Compte en cours de validation",
+  "@courierPending": {
+    "description": "Livreur : compte en attente de validation par l'équipe (spec 096)"
+  },
+  "courierPendingHint": "L'équipe DYM vérifie ton compte. Tu pourras passer en ligne dès qu'il est validé.",
+  "@courierPendingHint": {
+    "description": "Livreur : explication de l'attente de validation"
+  },
+  "courierRejected": "Compte à revoir",
+  "@courierRejected": {
+    "description": "Livreur : compte refusé, le motif suit"
+  },
+  "pickupCodeShow": "Code de récupération",
+  "@pickupCodeShow": {
+    "description": "Livreur : montrer le QR de récupération à la vendeuse"
+  },
+  "pickupCodeTitle": "Montre ce code à la vendeuse",
+  "@pickupCodeTitle": {
+    "description": "Titre de la feuille du code de récupération"
+  },
+  "pickupCodeHint": "Elle le scanne pour te remettre la commande.",
+  "@pickupCodeHint": {
+    "description": "Explication du code de récupération"
+  },
+  "courierUnreachable": "Cliente injoignable",
+  "@courierUnreachable": {
+    "description": "Livreur : la cliente ne répond pas devant la porte"
+  },
+  "courierUnreachableSent": "La cliente est prévenue. Attends {minutes} min avant de repartir.",
+  "@courierUnreachableSent": {
+    "description": "Livreur : confirmation du signalement injoignable",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "courierSos": "SOS",
+  "@courierSos": {
+    "description": "Livreur : bouton d'alerte"
+  },
+  "courierSosTitle": "Alerter l'équipe DYM ?",
+  "@courierSosTitle": {
+    "description": "Livreur : confirmation de l'alerte SOS"
+  },
+  "courierSosBody": "L'équipe reçoit ta position et te rappelle tout de suite. En cas de danger, appelle aussi les secours.",
+  "@courierSosBody": {
+    "description": "Livreur : explication de l'alerte SOS"
+  },
+  "courierSosSend": "Envoyer l'alerte",
+  "@courierSosSend": {
+    "description": "Livreur : envoyer l'alerte SOS"
+  },
+  "courierSosSent": "Alerte envoyée. L'équipe te rappelle.",
+  "@courierSosSent": {
+    "description": "Livreur : alerte SOS envoyée"
+  },
+  "storeCouriersTitle": "Mes livreurs",
+  "@storeCouriersTitle": {
+    "description": "Vendeuse : livreurs de la boutique (spec 096)"
+  },
+  "storeCouriersAdd": "Ajouter un livreur",
+  "@storeCouriersAdd": {
+    "description": "Vendeuse : ajouter un livreur par son numéro"
+  },
+  "storeCouriersHint": "Ajoute les livreurs avec qui tu travailles : tu pourras leur confier tes commandes.",
+  "@storeCouriersHint": {
+    "description": "Vendeuse : explication des livreurs de la boutique"
+  },
+  "storeCouriersEmpty": "Aucun livreur pour l'instant",
+  "@storeCouriersEmpty": {
+    "description": "Vendeuse : aucun livreur ajouté"
+  },
+  "storeCourierPhone": "Numéro du livreur",
+  "@storeCourierPhone": {
+    "description": "Champ : numéro du compte livreur DYM"
+  },
+  "storeCourierNotFound": "Aucun compte livreur DYM validé avec ce numéro.",
+  "@storeCourierNotFound": {
+    "description": "Vendeuse : numéro inconnu"
+  },
+  "storeCourierRemove": "Retirer",
+  "@storeCourierRemove": {
+    "description": "Vendeuse : retirer un livreur de la boutique"
+  },
+  "storeCourierBusy": "En course",
+  "@storeCourierBusy": {
+    "description": "Livreur occupé par une course"
+  },
+  "storeCourierAssign": "Confier à un de mes livreurs",
+  "@storeCourierAssign": {
+    "description": "Vendeuse : confier la commande à son livreur"
+  },
+  "pickupScan": "Scanner le code du livreur",
+  "@pickupScan": {
+    "description": "Vendeuse : scanner le QR de récupération"
+  },
+  "pickupScanTitle": "Code du livreur",
+  "@pickupScanTitle": {
+    "description": "Titre de l'écran de scan du code de récupération"
+  },
+  "pickupCodeManual": "Code à 6 chiffres",
+  "@pickupCodeManual": {
+    "description": "Saisie du code de récupération à la main"
+  },
+  "pickupCodeValidate": "Valider",
+  "@pickupCodeValidate": {
+    "description": "Valider le code de récupération"
+  },
+  "pickupConfirmed": "Commande remise au livreur.",
+  "@pickupConfirmed": {
+    "description": "Vendeuse : code bon, commande partie"
+  },
+  "pickupCodeWrong": "Code incorrect. Encore {count} essais.",
+  "@pickupCodeWrong": {
+    "description": "Vendeuse : mauvais code de récupération",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "myStoreInReview": "L'équipe DYM vérifie ta boutique. Tu pourras l'ouvrir dès qu'elle est validée.",
+  "@myStoreInReview": {
+    "description": "Vendeuse : boutique en validation (spec 096)"
+  },
+  "myStoreRejected": "Ta boutique est à revoir. Corrige ce qui est demandé puis publie-la de nouveau.",
+  "@myStoreRejected": {
+    "description": "Vendeuse : boutique refusée"
+  },
+  "adminAccountsTitle": "Comptes à valider",
+  "@adminAccountsTitle": {
+    "description": "Admin : boutiques et livreurs à valider (spec 096)"
+  },
+  "adminAccountsEmpty": "Aucun compte en attente",
+  "@adminAccountsEmpty": {
+    "description": "Admin : rien à valider"
+  },
+  "adminAccountStore": "Boutique",
+  "@adminAccountStore": {
+    "description": "Admin : type de compte boutique"
+  },
+  "adminAccountCourier": "Livreur",
+  "@adminAccountCourier": {
+    "description": "Admin : type de compte livreur"
+  },
+  "adminAccountApprove": "Valider",
+  "@adminAccountApprove": {
+    "description": "Admin : valider un compte"
+  },
+  "adminAccountReject": "Refuser",
+  "@adminAccountReject": {
+    "description": "Admin : refuser un compte"
+  },
+  "adminAccountReason": "Motif (envoyé au compte)",
+  "@adminAccountReason": {
+    "description": "Admin : motif du refus"
+  },
+  "adminIncidentsTitle": "Incidents de livraison",
+  "@adminIncidentsTitle": {
+    "description": "Admin : SOS et clientes injoignables (spec 096)"
+  },
+  "adminIncidentsEmpty": "Aucun incident ouvert",
+  "@adminIncidentsEmpty": {
+    "description": "Admin : aucun incident"
+  },
+  "adminIncidentSos": "SOS",
+  "@adminIncidentSos": {
+    "description": "Admin : incident SOS"
+  },
+  "adminIncidentUnreachable": "Cliente injoignable",
+  "@adminIncidentUnreachable": {
+    "description": "Admin : incident cliente injoignable"
+  },
+  "adminIncidentResolve": "Clore",
+  "@adminIncidentResolve": {
+    "description": "Admin : clore un incident"
+  },
+  "adminFeeBandsTitle": "Frais par distance",
+  "@adminFeeBandsTitle": {
+    "description": "Admin : tranches de frais de livraison (spec 096)"
+  },
+  "adminFeeBandsHint": "Frais selon la distance de la boutique à la porte. Une boutique peut fixer ses propres frais.",
+  "@adminFeeBandsHint": {
+    "description": "Admin : explication des tranches"
+  },
+  "adminFeeBandUpTo": "Jusqu'à (m)",
+  "@adminFeeBandUpTo": {
+    "description": "Admin : distance maximale de la tranche"
+  },
+  "adminFeeBandFee": "Frais (unités mineures)",
+  "@adminFeeBandFee": {
+    "description": "Admin : montant de la tranche"
+  },
+  "adminFeeBandAdd": "Ajouter une tranche",
+  "@adminFeeBandAdd": {
+    "description": "Admin : ajouter une tranche"
+  },
+  "storeLongDistance": "Longue distance · à confirmer",
+  "@storeLongDistance": {
+    "description": "Boutique hors de son rayon : livraison possible, à confirmer par elle (spec 096)"
+  },
+  "cartLongDistance": "Longue distance : frais plus élevés, la boutique confirme la livraison.",
+  "@cartLongDistance": {
+    "description": "Panier : boutique au-delà de son rayon de livraison"
+  },
+  "adminDeliveryTitle": "Livraison",
+  "@adminDeliveryTitle": {
+    "description": "Admin : réglages de livraison du pays (spec 096)"
+  },
+  "adminDeliveryMode": "Calcul des frais",
+  "@adminDeliveryMode": {
+    "description": "Admin : mode de calcul des frais"
+  },
+  "adminDeliveryPerKm": "Au kilomètre",
+  "@adminDeliveryPerKm": {
+    "description": "Admin : mode au km"
+  },
+  "adminDeliveryBands": "Par tranches",
+  "@adminDeliveryBands": {
+    "description": "Admin : mode par tranches"
+  },
+  "adminDeliveryBase": "Prise en charge",
+  "@adminDeliveryBase": {
+    "description": "Admin : frais fixes de départ"
+  },
+  "adminDeliveryIncluded": "Distance incluse (m)",
+  "@adminDeliveryIncluded": {
+    "description": "Admin : distance comprise dans la prise en charge"
+  },
+  "adminDeliveryPerKmFee": "Prix par km",
+  "@adminDeliveryPerKmFee": {
+    "description": "Admin : prix par kilomètre au-delà de la distance incluse"
+  },
+  "adminDeliveryMin": "Minimum",
+  "@adminDeliveryMin": {
+    "description": "Admin : frais minimum"
+  },
+  "adminDeliveryMaxFee": "Plafond (vide : aucun)",
+  "@adminDeliveryMaxFee": {
+    "description": "Admin : frais maximum"
+  },
+  "adminDeliveryRounding": "Arrondi",
+  "@adminDeliveryRounding": {
+    "description": "Admin : arrondi des frais"
+  },
+  "adminDeliveryLongSurcharge": "Supplément longue distance",
+  "@adminDeliveryLongSurcharge": {
+    "description": "Admin : supplément au-delà du rayon de la boutique"
+  },
+  "adminDeliveryMaxDistance": "Distance maximale de livraison (m)",
+  "@adminDeliveryMaxDistance": {
+    "description": "Admin : au-delà, retrait seulement"
+  },
+  "adminDeliverySurcharges": "Majorations horaires",
+  "@adminDeliverySurcharges": {
+    "description": "Admin : soir, week-end, heures de pointe"
+  },
+  "adminDeliverySurchargeAdd": "Ajouter une majoration",
+  "@adminDeliverySurchargeAdd": {
+    "description": "Admin : ajouter une majoration horaire"
+  },
+  "adminDeliveryCityRadius": "Rayon proposé aux nouvelles boutiques",
+  "@adminDeliveryCityRadius": {
+    "description": "Admin : rayon par défaut par ville"
+  },
+  "adminDeliverySimulator": "Simulateur",
+  "@adminDeliverySimulator": {
+    "description": "Admin : calculer des frais pour tester le tarif"
+  },
+  "adminDeliverySimulate": "Calculer",
+  "@adminDeliverySimulate": {
+    "description": "Admin : lancer la simulation"
+  },
+  "adminDeliverySimDistance": "Distance (m)",
+  "@adminDeliverySimDistance": {
+    "description": "Admin : distance simulée"
+  },
+  "adminDeliverySimLong": "Hors du rayon de la boutique",
+  "@adminDeliverySimLong": {
+    "description": "Admin : simuler la longue distance"
+  },
+  "adminDeliverySimResult": "Frais : {fee}",
+  "@adminDeliverySimResult": {
+    "description": "Admin : résultat du simulateur",
+    "placeholders": {
+      "fee": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSaved": "Enregistré",
+  "@adminSaved": {
+    "description": "Admin : réglage enregistré"
   }
 }

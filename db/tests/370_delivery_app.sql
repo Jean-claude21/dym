@@ -88,13 +88,13 @@ select is(jsonb_array_length(public.my_missions()), 1, 'dans mes courses');
 
 -- Gestes : récupérer seulement une commande prête, puis livrer.
 select throws_ok(format($$select public.courier_transition('%s', 'out_for_delivery', 'accepted')$$, (select order1 from _t)),
-  'P0001', 'transition_not_allowed', 'pas encore prête');
+  'P0001', 'pickup_code_required', 'récupération : scan de la vendeuse exigé (spec 096)');
 select tests.logout();
 select app.transition_order((select kodjo from _t), (select order1 from _t), 'ready', 'accepted');
 alter table _t add column code text;
 update _t set code = (select handover_code from public.orders where id = (select order1 from _t));
 select tests.login_as((select kofi from _t));
-select is(public.courier_transition((select order1 from _t), 'out_for_delivery', 'ready') ->> 'status',
+select is(tests.pickup((select order1 from _t)) ->> 'status',
   'out_for_delivery', 'récupérée');
 select throws_ok(format($$select public.release_mission('%s')$$, (select order1 from _t)), 'P0002', null,
   'plus de retour après retrait');
