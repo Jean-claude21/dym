@@ -36,6 +36,12 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
       productId: $checkedConvert('product_id', (v) => v as String?),
       durationMs: $checkedConvert('duration_ms', (v) => (v as num?)?.toInt()),
       call: $checkedConvert('call', (v) => CallSummary.maybeFromJson(v)),
+      payload: $checkedConvert('payload', (v) => v as Map<String, dynamic>?),
+      transcript: $checkedConvert('transcript', (v) => v as String?),
+      liveUntil: $checkedConvert(
+        'live_until',
+        (v) => v == null ? null : DateTime.parse(v as String),
+      ),
     );
     return val;
   },
@@ -46,6 +52,7 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
     'hasMedia': 'has_media',
     'productId': 'product_id',
     'durationMs': 'duration_ms',
+    'liveUntil': 'live_until',
   },
 );
 
@@ -55,6 +62,11 @@ const _$MessageKindEnumMap = {
   MessageKind.product: 'product',
   MessageKind.audio: 'audio',
   MessageKind.call: 'call',
+  MessageKind.video: 'video',
+  MessageKind.location: 'location',
+  MessageKind.quote: 'quote',
+  MessageKind.paymentRequest: 'payment_request',
+  MessageKind.coupon: 'coupon',
   MessageKind.unknown: 'unknown',
 };
 

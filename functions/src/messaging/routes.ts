@@ -1,3 +1,5 @@
+import type { AiModelConfig } from "../catalog/ports.js";
+import type { Transcriber } from "../search/ports.js";
 import { randomUUID } from "node:crypto";
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -28,6 +30,11 @@ export interface MessagingStore {
   uploadAllowed(userId: string, conversationId: string): Promise<boolean>;
   /** Clés des images lisibles par l'utilisatrice, par message. */
   mediaKeys(userId: string, messageIds: string[]): Promise<Record<string, string>>;
+  /** Vocal lisible par la personne (spec 099) ; `null` : introuvable. */
+  transcriptTarget(userId: string, messageId: string): Promise<{ media_key: string; transcript: string | null } | null>;
+  /** Modèle de transcription du pays ; `null` : coupé ou absent (simulé côté app). */
+  transcriptionModel(userId: string): Promise<AiModelConfig | null>;
+  setTranscript(messageId: string, text: string): Promise<void>;
 }
 
 /** Stockage privé des images de conversation : liens signés courts. */
@@ -61,6 +68,16 @@ export function pgMessagingStore(pool: pg.Pool): MessagingStore {
     uploadAllowed: (u, c) => one<boolean>("select app.chat_upload_allowed($1, $2) as value", [u, c]),
     mediaKeys: (u, ids) =>
       one<Record<string, string>>("select app.chat_media_keys($1, $2::uuid[]) as value", [u, ids]),
+    transcriptTarget: (u, m) =>
+      one<{ media_key: string; transcript: string | null } | null>(
+        "select app.transcript_target($1, $2) as value",
+        [u, m],
+      ),
+    transcriptionModel: (u) =>
+      one<AiModelConfig | null>("select app.chat_transcription_model($1) as value", [u]),
+    setTranscript: async (m, t) => {
+      await one<null>("select app.set_transcript($1, $2) as value", [m, t]);
+    },
   };
 }
 
@@ -90,6 +107,8 @@ export function s3MediaSigner(options: {
 export interface MessagingDeps {
   store: MessagingStore;
   signer?: MediaSigner;
+  /** Transcription des vocaux (spec 099) ; absente : simulée et signalée. */
+  transcriber?: Transcriber;
 }
 
 const uuid = z.string().uuid();
@@ -102,7 +121,12 @@ const extensions = {
   "audio/mp4": "m4a",
   "audio/webm": "webm",
   "audio/ogg": "ogg",
+  "video/mp4": "mp4",
+  "video/webm": "webm",
+  "video/quicktime": "mov",
 } as const;
+
+const audioMedia: Record<string, string> = { wav: "audio/wav", m4a: "audio/mp4", webm: "audio/webm", ogg: "audio/ogg" };
 
 /**
  * Messagerie (spec 015) ; la base vérifie la participation :
@@ -141,7 +165,7 @@ export function registerMessagingRoutes(
     const body = await parseBody(
       c,
       z.object({
-        kind: z.enum(["text", "image", "product", "audio"]),
+        kind: z.enum(["text", "image", "product", "audio", "video"]),
         body: z.string().max(1000).nullable().optional(),
         media_key: z.string().max(300).nullable().optional(),
         product_id: uuid.nullable().optional(),
@@ -164,7 +188,17 @@ export function registerMessagingRoutes(
   app.post("/v1/conversations/:id/media-uploads", auth, async (c) => {
     const conversationId = id(c.req.param("id"));
     const body = await parseBody(c, z.object({
-        content_type: z.enum(["image/jpeg", "image/webp", "audio/wav", "audio/mp4", "audio/webm", "audio/ogg"]),
+        content_type: z.enum([
+          "image/jpeg",
+          "image/webp",
+          "audio/wav",
+          "audio/mp4",
+          "audio/webm",
+          "audio/ogg",
+          "video/mp4",
+          "video/webm",
+          "video/quicktime",
+        ]),
       }));
     const d = need();
     if (!d.signer) throw httpErrors.unavailable("stockage non configuré");
@@ -190,4 +224,27 @@ export function registerMessagingRoutes(
     }
     return c.json({ urls, expires_in: READ_EXPIRES_IN });
   });
+
+  // Transcription d'un vocal (spec 099) : texte gardé ; sans fournisseur, simulée et signalée.
+  app.post("/v1/chat-media/transcribe", auth, async (c) => {
+    const body = await parseBody(c, z.object({ message_id: uuid }));
+    const d = need();
+    const userId = c.get("user").id;
+    const target = await d.store.transcriptTarget(userId, body.message_id);
+    if (!target) throw httpErrors.notFound("vocal introuvable");
+    if (target.transcript) return c.json({ transcript: target.transcript, simulated: false });
+    const model = await d.store.transcriptionModel(userId);
+    if (!model || !d.transcriber || !d.signer) return c.json({ transcript: null, simulated: true });
+    const audio = await fetch(await d.signer.presignGet(target.media_key, READ_EXPIRES_IN));
+    if (!audio.ok) throw httpErrors.unavailable("vocal illisible");
+    const extension = target.media_key.split(".").pop() ?? "";
+    const text = await d.transcriber.transcribe({
+      model,
+      audio: new Uint8Array(await audio.arrayBuffer()),
+      mediaType: audioMedia[extension] ?? "audio/mp4",
+    });
+    if (text) await d.store.setTranscript(body.message_id, text);
+    return c.json({ transcript: text ?? null, simulated: false });
+  });
+
 }

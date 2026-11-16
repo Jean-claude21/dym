@@ -7835,4 +7835,145 @@ class DymLocalizationsEn extends DymLocalizations {
     );
     return '$name · $_temp0';
   }
+
+  @override
+  String get chatVideo => 'Video';
+
+  @override
+  String get chatVideoPlay => 'Play the video';
+
+  @override
+  String chatVideoDuration(int seconds) {
+    return 'Video · $seconds s';
+  }
+
+  @override
+  String get chatVideoRecord => 'Record a video';
+
+  @override
+  String get chatVideoShare => 'Share a video';
+
+  @override
+  String get chatLocation => 'Location';
+
+  @override
+  String chatLocationLive(String time) {
+    return 'Live location until $time';
+  }
+
+  @override
+  String get chatLocationOpen => 'Open the map';
+
+  @override
+  String get chatLocationStop => 'Stop sharing';
+
+  @override
+  String get chatLocationSend => 'Send my location';
+
+  @override
+  String get chatLocationLiveSend => 'Live location (15 min)';
+
+  @override
+  String get chatQuote => 'Quote';
+
+  @override
+  String chatQuoteTotal(String amount) {
+    return 'Total: $amount';
+  }
+
+  @override
+  String get chatQuoteAccept => 'Accept and add to cart';
+
+  @override
+  String get chatQuoteAccepted => 'Quote accepted';
+
+  @override
+  String get chatQuotePending => 'Waiting for the customer';
+
+  @override
+  String get chatQuoteInCart =>
+      'Items added to your cart at the quoted prices.';
+
+  @override
+  String get chatQuoteSend => 'Make a quote';
+
+  @override
+  String get chatQuoteEmpty => 'Add products to your catalogue first.';
+
+  @override
+  String chatQuoteUnitPrice(String price) {
+    return 'Unit price (listed: $price)';
+  }
+
+  @override
+  String get chatQuoteLess => 'Less';
+
+  @override
+  String get chatQuoteMore => 'More';
+
+  @override
+  String get chatExpired => 'Expired';
+
+  @override
+  String get chatPaymentRequest => 'Payment request';
+
+  @override
+  String get chatPaymentRequestSend => 'Request a payment';
+
+  @override
+  String chatPay(String amount) {
+    return 'Pay $amount';
+  }
+
+  @override
+  String get chatPaid => 'Paid';
+
+  @override
+  String get chatPaymentWaiting => 'Waiting for payment';
+
+  @override
+  String chatAmount(String symbol) {
+    return 'Amount ($symbol)';
+  }
+
+  @override
+  String get chatPaymentLabel => 'What for? (optional)';
+
+  @override
+  String chatCoupon(int percent) {
+    return '−$percent % off your next order';
+  }
+
+  @override
+  String chatCouponUntil(String date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get chatCouponClaim => 'Keep the coupon';
+
+  @override
+  String get chatCouponClaimed =>
+      'Coupon kept: it applies to your next order here.';
+
+  @override
+  String get chatCouponSend => 'Give a coupon';
+
+  @override
+  String chatCouponDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Valid $count days',
+      one: 'Valid 1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatTranscribe => 'Transcribe';
+
+  @override
+  String get chatTranscriptSimulated =>
+      'Simulated transcription: service to be connected.';
 }

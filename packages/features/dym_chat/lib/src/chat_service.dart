@@ -1,4 +1,5 @@
 import 'package:dym_chat/src/call_service.dart';
+import 'package:dym_chat/src/chat_commerce.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_models/dym_models.dart';
@@ -61,6 +62,9 @@ abstract interface class ChatService {
   /// Appels (spec 035) ; absents : pas de bouton d'appel.
   CallService? get calls;
 
+  /// Chat de commerce (spec 099) ; absent : texte, photo, produit, vocal.
+  ChatCommerce? get commerce;
+
   /// Liens de lecture signés des images et vocaux, par message.
   Future<Result<Map<String, String>>> mediaUrls(List<String> messageIds);
 
@@ -84,8 +88,12 @@ class NeonChatService implements ChatService {
     this.recorder,
     this.playback,
     this.calls,
+    this.commerce,
     this.liveFeed = LiveFeed.none,
   });
+
+  @override
+  final ChatCommerce? commerce;
 
   /// Source temps réel de l'app (spec 067).
   final LiveFeed liveFeed;

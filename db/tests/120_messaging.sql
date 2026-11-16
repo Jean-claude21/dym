@@ -63,7 +63,7 @@ select ok(not ((select params from public.notifications where user_id = (select 
            and kind = 'new_message_vendor') ? 'body'), 'notification sans contenu');
 select throws_ok($$select app.send_message((select awa from _t), (select conv from _t), 'text', '  ', null, null,
   gen_random_uuid())$$, 'P0001', 'message_invalid', 'texte vide refusé');
-select throws_ok($$select app.send_message((select awa from _t), (select conv from _t), 'video', 'x', null, null,
+select throws_ok($$select app.send_message((select awa from _t), (select conv from _t), 'sticker', 'x', null, null,
   gen_random_uuid())$$, 'P0001', 'message_invalid', 'type inconnu refusé');
 select throws_ok(format($$select app.send_message('%s', '%s', 'image', null, 'stores/x/products/y.jpg', null,
   gen_random_uuid())$$, (select awa from _t), (select conv from _t)), 'P0001', 'media_invalid',

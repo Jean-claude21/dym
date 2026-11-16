@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dym_chat/src/chat_commerce.dart';
 import 'package:dym_chat/src/chat_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
@@ -425,6 +426,193 @@ class ChatViewModel extends BaseViewModel {
   }
 
   /// Photo prise ou choisie, envoyée compressée. Annulé : rien.
+  // ---------------------------------------------------------------- spec 099
+
+  /// Chat de commerce ; nul : menu réduit (texte, photo, produit, vocal).
+  ChatCommerce? get commerce => service.commerce;
+
+  /// Textes des vocaux transcrits, par message.
+  final transcripts = <String, String>{};
+
+  /// Vocaux dont la transcription est simulée (aucun fournisseur).
+  final simulatedTranscripts = <String>{};
+
+  /// Geste de commerce en cours (envoi, acceptation, paiement).
+  bool commerceBusy = false;
+
+  Timer? _liveTimer;
+  String? _liveMessageId;
+
+  /// Position en direct partagée depuis cet appareil.
+  String? get liveMessageId => _liveMessageId;
+
+  Future<bool> _commerceSend(
+    Future<Result<ChatMessage>> Function(ChatCommerce c) work,
+  ) async {
+    final c = commerce;
+    if (c == null || commerceBusy) return false;
+    commerceBusy = true;
+    _sendFailure = null;
+    notifyListeners();
+    final result = await work(c);
+    commerceBusy = false;
+    if (_disposed) return result.isOk;
+    switch (result) {
+      case Ok(:final value):
+        _append(value);
+        if (value.hasMedia) await _signMedia();
+      case Err(:final failure):
+        _sendFailure = failure;
+    }
+    notifyListeners();
+    return result.isOk;
+  }
+
+  Future<bool> _commerceAct(
+    Future<Result<void>> Function(ChatCommerce c) work,
+  ) async {
+    final c = commerce;
+    if (c == null || commerceBusy) return false;
+    commerceBusy = true;
+    _sendFailure = null;
+    notifyListeners();
+    final result = await work(c);
+    commerceBusy = false;
+    if (_disposed) return result.isOk;
+    if (result case Err(:final failure)) _sendFailure = failure;
+    await load();
+    return result.isOk;
+  }
+
+  /// Vidéo enregistrée ou choisie (une minute au plus).
+  Future<bool> sendVideo(PhotoSource source) async {
+    final c = commerce;
+    if (c == null) return false;
+    final picked = await c.pickVideo(source);
+    switch (picked) {
+      case Err(:final failure):
+        _sendFailure = failure;
+        notifyListeners();
+        return false;
+      case Ok(value: null):
+        return false;
+      case Ok(value: final video?):
+        return await _commerceSend(
+          (c) => c.sendVideo(conversationId, video, idempotencyKey: Uuid.v4()),
+        );
+    }
+  }
+
+  /// Position de l'appareil ; [liveMinutes] > 0 : relue toutes les 30 s
+  /// tant que le fil est ouvert et le partage actif.
+  Future<bool> shareLocation({int liveMinutes = 0}) async {
+    final ok = await _commerceSend(
+      (c) => c.sendLocation(
+        conversationId,
+        idempotencyKey: Uuid.v4(),
+        liveMinutes: liveMinutes,
+      ),
+    );
+    if (ok && liveMinutes > 0) {
+      final live = messages.lastWhere((m) => m.isLive && m.fromMe(role));
+      _liveMessageId = live.id;
+      _liveTimer?.cancel();
+      _liveTimer = Timer.periodic(const Duration(seconds: 30), (_) async {
+        final id = _liveMessageId;
+        final c = commerce;
+        if (id == null || c == null) return;
+        if (await c.refreshLocation(id) case Err()) {
+          _liveTimer?.cancel();
+          _liveMessageId = null;
+        }
+      });
+      notifyListeners();
+    }
+    return ok;
+  }
+
+  Future<void> stopLiveLocation() async {
+    final id = _liveMessageId;
+    _liveTimer?.cancel();
+    _liveMessageId = null;
+    if (id != null) await commerce?.stopLocation(id);
+    await load();
+  }
+
+  Future<List<QuoteChoice>> quoteChoices() async =>
+      (await commerce?.quoteChoices())?.valueOrNull ?? const [];
+
+  Future<bool> sendQuote(List<QuoteLine> lines, {String? note}) =>
+      _commerceSend(
+        (c) => c.sendQuote(
+          conversationId,
+          lines,
+          idempotencyKey: Uuid.v4(),
+          note: note,
+        ),
+      );
+
+  Future<bool> sendPaymentRequest(int amountMinor, {String? label}) =>
+      _commerceSend(
+        (c) => c.sendPaymentRequest(
+          conversationId,
+          amountMinor: amountMinor,
+          idempotencyKey: Uuid.v4(),
+          label: label,
+        ),
+      );
+
+  Future<bool> sendCoupon(int percent, int days) => _commerceSend(
+    (c) => c.sendCoupon(
+      conversationId,
+      percent: percent,
+      days: days,
+      idempotencyKey: Uuid.v4(),
+    ),
+  );
+
+  /// Devis accepté : les articles passent au panier, aux prix du devis.
+  Future<bool> acceptQuote(ChatMessage m) async {
+    final id = m.payloadText('quote_id');
+    if (id == null) return false;
+    return await _commerceAct((c) => c.acceptQuote(id));
+  }
+
+  /// Demande de paiement réglée avec le wallet.
+  Future<bool> payRequest(ChatMessage m) async {
+    final code = m.payloadText('code');
+    if (code == null) return false;
+    return await _commerceAct(
+      (c) => c.payRequest(code, idempotencyKey: Uuid.v4()),
+    );
+  }
+
+  /// Coupon gardé : il s'applique à la prochaine commande de la boutique.
+  Future<bool> claimCoupon(ChatMessage m) async {
+    final id = m.payloadText('coupon_id');
+    if (id == null) return false;
+    return await _commerceAct((c) => c.claimCoupon(id));
+  }
+
+  /// Transcription d'un vocal, à la demande.
+  Future<void> transcribe(ChatMessage m) async {
+    if (m.transcript case final t?) {
+      transcripts[m.id] = t;
+      notifyListeners();
+      return;
+    }
+    final c = commerce;
+    if (c == null) return;
+    if (await c.transcribe(m.id) case Ok(:final value)) {
+      if (value.simulated) {
+        simulatedTranscripts.add(m.id);
+      } else if (value.text case final text?) {
+        transcripts[m.id] = text;
+      }
+      if (!_disposed) notifyListeners();
+    }
+  }
+
   Future<bool> sendPhoto(PhotoSource source) async {
     final picked = await service.pickPhoto(source);
     switch (picked) {
@@ -572,6 +760,7 @@ class ChatViewModel extends BaseViewModel {
   @override
   void dispose() {
     _disposed = true;
+    _liveTimer?.cancel();
     _timer?.cancel();
     unawaited(_live?.cancel());
     unawaited(_playing?.cancel());

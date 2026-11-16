@@ -172,12 +172,19 @@ Future<void> configureServices(DymEnvironment environment) async {
         trackingBase: environment.functionsUrl,
       ),
     )
-    ..registerLazySingleton<ChatService>(
-      () => NeonChatService(
-        repository: MessagingRepository(
-          data: neon.data,
-          functions: neon.functions,
-          uploads: neon.uploads,
+    ..registerLazySingleton<ChatService>(() {
+      final messages = MessagingRepository(
+        data: neon.data,
+        functions: neon.functions,
+        uploads: neon.uploads,
+      );
+      return NeonChatService(
+        repository: messages,
+        // Chat de commerce (spec 099) : vidéo, position, devis, paiement.
+        commerce: NeonChatCommerce(
+          repository: messages,
+          videos: PluginVideoPicker(),
+          location: const PluginLocationProvider(),
         ),
         role: ChatRole.client,
         countryConfig: () => locator<OrdersService>().countryConfig(),
@@ -190,8 +197,8 @@ Future<void> configureServices(DymEnvironment environment) async {
           CallRepository(neon.data, functions: neon.functions),
         ),
         liveFeed: live,
-      ),
-    )
+      );
+    })
     ..registerLazySingleton<CreatorService>(
       () => NeonCreatorService(
         repository: ContentRepository(

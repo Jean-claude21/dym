@@ -132,6 +132,173 @@ class MessagingRepository {
         },
       );
 
+  /// Vidéo enregistrée ou partagée (spec 099), une minute au plus.
+  Future<Result<ChatMessage>> sendVideo(
+    String conversationId,
+    List<int> bytes, {
+    required String contentType,
+    required String idempotencyKey,
+    int? durationMs,
+  }) async {
+    final grant = await _functions.post<Map<String, dynamic>>(
+      '/v1/conversations/$conversationId/media-uploads',
+      body: {'content_type': contentType},
+      decode: (json) => json! as Map<String, dynamic>,
+    );
+    switch (grant) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        final sent = await _uploads.put(
+          Uri.parse(value['upload_url'] as String),
+          bytes,
+          contentType: contentType,
+        );
+        if (sent case Err(:final failure)) return Err(failure);
+        return await _send(conversationId, {
+          'kind': 'video',
+          'media_key': value['object_key'],
+          'duration_ms': ?durationMs,
+        }, idempotencyKey);
+    }
+  }
+
+  /// Position ponctuelle (0) ou en direct ([liveMinutes], 60 au plus).
+  Future<Result<ChatMessage>> sendLocation(
+    String conversationId, {
+    required double latitude,
+    required double longitude,
+    required String idempotencyKey,
+    int liveMinutes = 0,
+  }) async => _message(
+    await _data.rpc<Object?>(
+      'chat_send_location',
+      params: {
+        'p_conversation': conversationId,
+        'p_latitude': latitude,
+        'p_longitude': longitude,
+        'p_live_minutes': liveMinutes,
+        'p_key': idempotencyKey,
+      },
+    ),
+  );
+
+  Future<Result<ChatMessage>> updateLocation(
+    String messageId, {
+    required double latitude,
+    required double longitude,
+  }) async => _message(
+    await _data.rpc<Object?>(
+      'chat_update_location',
+      params: {
+        'p_message': messageId,
+        'p_latitude': latitude,
+        'p_longitude': longitude,
+      },
+    ),
+  );
+
+  Future<Result<ChatMessage>> stopLocation(String messageId) async => _message(
+    await _data.rpc<Object?>(
+      'chat_stop_location',
+      params: {'p_message': messageId},
+    ),
+  );
+
+  /// Devis de la boutique : lignes `variant_id`, `quantity`, `price_minor`.
+  Future<Result<ChatMessage>> sendQuote(
+    String conversationId,
+    List<Map<String, Object>> lines, {
+    required String idempotencyKey,
+    String? note,
+  }) async => _message(
+    await _data.rpc<Object?>(
+      'send_quote',
+      params: {
+        'p_conversation': conversationId,
+        'p_lines': lines,
+        'p_note': note,
+        'p_key': idempotencyKey,
+      },
+    ),
+  );
+
+  /// Devis accepté : les lignes passent au panier, aux prix du devis.
+  Future<Result<void>> acceptQuote(String quoteId) async =>
+      (await _data.rpc<Object?>(
+        'accept_quote',
+        params: {'p_quote': quoteId},
+      )).map((_) {});
+
+  Future<Result<ChatMessage>> sendPaymentRequest(
+    String conversationId, {
+    required int amountMinor,
+    required String idempotencyKey,
+    String? label,
+  }) async => _message(
+    await _data.rpc<Object?>(
+      'send_payment_request',
+      params: {
+        'p_conversation': conversationId,
+        'p_amount_minor': amountMinor,
+        'p_label': label,
+        'p_key': idempotencyKey,
+      },
+    ),
+  );
+
+  /// Paiement d'une demande avec le wallet (spec 046).
+  Future<Result<void>> payRequest(
+    String code, {
+    required String idempotencyKey,
+  }) async => (await _data.rpc<Object?>(
+    'pay_payment_request',
+    params: {'p_code': code, 'p_key': idempotencyKey},
+  )).map((_) {});
+
+  Future<Result<ChatMessage>> sendCoupon(
+    String conversationId, {
+    required int percent,
+    required int days,
+    required String idempotencyKey,
+  }) async => _message(
+    await _data.rpc<Object?>(
+      'send_coupon',
+      params: {
+        'p_conversation': conversationId,
+        'p_percent': percent,
+        'p_days': days,
+        'p_key': idempotencyKey,
+      },
+    ),
+  );
+
+  Future<Result<void>> claimCoupon(String couponId) async =>
+      (await _data.rpc<Object?>(
+        'claim_coupon',
+        params: {'p_coupon': couponId},
+      )).map((_) {});
+
+  /// Texte d'un vocal ; `simulated` : pas de fournisseur (signalé à l'écran).
+  Future<Result<({String? text, bool simulated})>> transcribe(
+    String messageId,
+  ) => _functions.post(
+    '/v1/chat-media/transcribe',
+    body: {'message_id': messageId},
+    decode: (json) {
+      final m = json! as Map<String, dynamic>;
+      return (
+        text: m['transcript'] as String?,
+        simulated: m['simulated'] as bool? ?? false,
+      );
+    },
+  );
+
+  Result<ChatMessage> _message(Result<Object?> result) => _decode(
+    result,
+    (json) => ChatMessage.fromJson((json! as Map).cast<String, dynamic>()),
+  );
+
   Future<Result<ChatMessage>> _send(
     String conversationId,
     Map<String, Object?> body,
