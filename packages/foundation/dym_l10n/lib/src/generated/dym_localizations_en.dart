@@ -7787,4 +7787,52 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get pushActionDecline => 'Decline';
+
+  @override
+  String get insightsTrend => 'Sales day by day';
+
+  @override
+  String get insightsAverageBasket => 'Average basket';
+
+  @override
+  String insightsCustomers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'customers · $count new',
+      one: 'customers · 1 new',
+      zero: 'customers',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get insightsLowStock => 'Running low';
+
+  @override
+  String insightsStockLeft(String stock) {
+    return '$stock left';
+  }
+
+  @override
+  String get insightsTopProducts => 'Your best products';
+
+  @override
+  String insightsSold(String quantity, String amount) {
+    return '$quantity sold · $amount';
+  }
+
+  @override
+  String get insightsLoyal => 'Your loyal customers';
+
+  @override
+  String insightsLoyalChip(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count orders',
+      one: '1 order',
+    );
+    return '$name · $_temp0';
+  }
 }

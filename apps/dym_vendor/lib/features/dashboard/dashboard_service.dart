@@ -11,6 +11,10 @@ abstract interface class DashboardService {
   Future<Result<CountryConfig>> countryConfig();
   Future<Result<VendorDashboard>> summary(DashboardPeriod period);
 
+  /// Accueil poussé (spec 098) : tendance, clientes, meilleurs produits,
+  /// alertes de stock.
+  Future<Result<VendorInsights>> insights(DashboardPeriod period);
+
   /// Messages non lus (V-DASH-04).
   Future<Result<int>> unreadMessages();
 }
@@ -37,6 +41,10 @@ class NeonDashboardService implements DashboardService {
 
   @override
   Future<Result<CountryConfig>> countryConfig() => stores.countryConfig();
+
+  @override
+  Future<Result<VendorInsights>> insights(DashboardPeriod period) =>
+      repository.insights(period);
 
   @override
   Future<Result<VendorDashboard>> summary(DashboardPeriod period) =>

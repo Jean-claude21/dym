@@ -10,6 +10,63 @@ class DemoDashboardService implements DashboardService {
 
   final DemoCountry country;
 
+  /// Accueil poussé (spec 098) : données illustratives de la galerie.
+  @override
+  Future<Result<VendorInsights>> insights(DashboardPeriod period) async {
+    final now = DateTime.now();
+    const sales = [12000, 18500, 9000, 21000, 15500, 26000, 17000];
+    return Ok(
+      VendorInsights(
+        currencyCode: 'XOF',
+        days: [
+          for (var i = 0; i < 7; i++)
+            InsightDay(
+              day: now.subtract(Duration(days: 6 - i)),
+              revenueMinor: sales[i],
+              orders: 3 + i,
+            ),
+        ],
+        orderCount: 42,
+        averageBasketMinor: 2850,
+        customers: 27,
+        newCustomers: 6,
+        returningCustomers: 21,
+        topProducts: const [
+          TopProduct(
+            productId: 'p1',
+            name: 'Tomates',
+            quantity: 38,
+            revenueMinor: 19000,
+          ),
+          TopProduct(
+            productId: 'p2',
+            name: 'Gombo',
+            quantity: 22,
+            revenueMinor: 8800,
+          ),
+          TopProduct(
+            productId: 'p3',
+            name: 'Piment frais',
+            quantity: 15,
+            revenueMinor: 4500,
+          ),
+        ],
+        loyalCustomers: const [
+          LoyalCustomer(firstName: 'Awa', orders: 7),
+          LoyalCustomer(firstName: 'Mia', orders: 4),
+        ],
+        lowStock: const [
+          LowStockItem(
+            productId: 'p2',
+            name: 'Gombo',
+            variant: 'le tas',
+            stock: 2,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Stream<LiveSignal> get live => const Stream.empty();
 

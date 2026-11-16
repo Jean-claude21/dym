@@ -24,4 +24,11 @@ class VendorDashboardRepository {
         }
     }
   }
+
+  /// Accueil poussé (spec 098) : tendance, clientes, meilleurs produits, stock.
+  Future<Result<VendorInsights>> insights(DashboardPeriod period) async =>
+      (await _data.rpc<Object?>(
+        'my_vendor_insights',
+        params: {'p_period': period.name},
+      )).map((j) => VendorInsights.fromJson((j! as Map).cast()));
 }

@@ -8982,5 +8982,67 @@
   "pushActionDecline": "Refuser",
   "@pushActionDecline": {
     "description": "Bouton de notification : refuser l'appel"
+  },
+  "insightsTrend": "Ventes jour par jour",
+  "@insightsTrend": {
+    "description": "Vendeuse : tendance des ventes (spec 098)"
+  },
+  "insightsAverageBasket": "Panier moyen",
+  "@insightsAverageBasket": {
+    "description": "Vendeuse : montant moyen d'une commande"
+  },
+  "insightsCustomers": "{count, plural, =0{clientes} =1{clientes · 1 nouvelle} other{clientes · {count} nouvelles}}",
+  "@insightsCustomers": {
+    "description": "Vendeuse : clientes de la période, dont nouvelles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "insightsLowStock": "Bientôt en rupture",
+  "@insightsLowStock": {
+    "description": "Vendeuse : produits sous le seuil d'alerte"
+  },
+  "insightsStockLeft": "Reste {stock}",
+  "@insightsStockLeft": {
+    "description": "Vendeuse : stock restant",
+    "placeholders": {
+      "stock": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsTopProducts": "Tes meilleurs produits",
+  "@insightsTopProducts": {
+    "description": "Vendeuse : produits les plus vendus de la période"
+  },
+  "insightsSold": "{quantity} vendus · {amount}",
+  "@insightsSold": {
+    "description": "Vendeuse : quantité et montant vendus",
+    "placeholders": {
+      "quantity": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "insightsLoyal": "Tes clientes fidèles",
+  "@insightsLoyal": {
+    "description": "Vendeuse : clientes qui reviennent (prénom seulement)"
+  },
+  "insightsLoyalChip": "{name} · {count, plural, =1{1 commande} other{{count} commandes}}",
+  "@insightsLoyalChip": {
+    "description": "Vendeuse : cliente fidèle et nombre de commandes",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

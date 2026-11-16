@@ -13062,6 +13062,60 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Refuser'**
   String get pushActionDecline;
+
+  /// Vendeuse : tendance des ventes (spec 098)
+  ///
+  /// In fr, this message translates to:
+  /// **'Ventes jour par jour'**
+  String get insightsTrend;
+
+  /// Vendeuse : montant moyen d'une commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Panier moyen'**
+  String get insightsAverageBasket;
+
+  /// Vendeuse : clientes de la période, dont nouvelles
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{clientes} =1{clientes · 1 nouvelle} other{clientes · {count} nouvelles}}'**
+  String insightsCustomers(int count);
+
+  /// Vendeuse : produits sous le seuil d'alerte
+  ///
+  /// In fr, this message translates to:
+  /// **'Bientôt en rupture'**
+  String get insightsLowStock;
+
+  /// Vendeuse : stock restant
+  ///
+  /// In fr, this message translates to:
+  /// **'Reste {stock}'**
+  String insightsStockLeft(String stock);
+
+  /// Vendeuse : produits les plus vendus de la période
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes meilleurs produits'**
+  String get insightsTopProducts;
+
+  /// Vendeuse : quantité et montant vendus
+  ///
+  /// In fr, this message translates to:
+  /// **'{quantity} vendus · {amount}'**
+  String insightsSold(String quantity, String amount);
+
+  /// Vendeuse : clientes qui reviennent (prénom seulement)
+  ///
+  /// In fr, this message translates to:
+  /// **'Tes clientes fidèles'**
+  String get insightsLoyal;
+
+  /// Vendeuse : cliente fidèle et nombre de commandes
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} · {count, plural, =1{1 commande} other{{count} commandes}}'**
+  String insightsLoyalChip(String name, int count);
 }
 
 class _DymLocalizationsDelegate

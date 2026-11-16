@@ -228,6 +228,12 @@ class DashboardView extends StackedView<DashboardViewModel> {
                       ),
                     ),
                   ],
+                  if (vm.insights case final insights?)
+                    _Insights(
+                      insights: insights,
+                      money: (minor) => vm.config?.money(minor).format() ?? '',
+                      onProducts: onProducts,
+                    ),
                   const SizedBox(height: DymTokenSpace.s4),
                   Text(
                     l.dashboardToDo,
@@ -436,6 +442,184 @@ class _Row extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Accueil poussé (spec 098) : tendance jour par jour, panier moyen,
+/// clientes, meilleurs produits, clientes fidèles, alertes de stock.
+class _Insights extends StatelessWidget {
+  const new({
+    required this.insights,
+    required this.money,
+    required this.onProducts,
+  });
+
+  final VendorInsights insights;
+  final String Function(int minor) money;
+  final VoidCallback onProducts;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = DymLocalizations.of(context);
+    final t = context.dym.text;
+    final c = context.dym.colors;
+    final days = insights.days;
+    final peak = days.fold<int>(
+      0,
+      (m, d) => d.revenueMinor > m ? d.revenueMinor : m,
+    );
+    Widget section(String title) => Padding(
+      padding: const EdgeInsets.only(
+        top: DymTokenSpace.s4,
+        bottom: DymTokenSpace.s1,
+      ),
+      child: Text(title, style: t.body.copyWith(fontWeight: FontWeight.w600)),
+    );
+    Widget tile(IconData icon, String value, String label) => Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(DymTokenSpace.s3),
+        decoration: BoxDecoration(
+          color: c.card,
+          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+          border: Border.all(color: c.hairline),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(icon, color: c.brand, size: 20),
+            const SizedBox(height: DymTokenSpace.s1),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(value, style: t.title),
+            ),
+            Text(label, style: t.label.copyWith(color: c.textSecondary)),
+          ],
+        ),
+      ),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (days.length > 1) ...[
+          section(l.insightsTrend),
+          SizedBox(
+            height: 96,
+            child: Semantics(
+              label: l.insightsTrend,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  for (final d in days)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              height: peak == 0
+                                  ? 2
+                                  : 4 + 68 * d.revenueMinor / peak,
+                              decoration: BoxDecoration(
+                                color: d.revenueMinor == 0
+                                    ? c.hairline
+                                    : c.brand,
+                                borderRadius: BorderRadius.circular(3),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              days.length <= 7
+                                  ? MaterialLocalizations.of(context)
+                                        .narrowWeekdays[d.day.weekday % 7]
+                                  : '',
+                              style: t.label.copyWith(
+                                color: c.textSecondary,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+        const SizedBox(height: DymTokenSpace.s3),
+        Row(
+          children: [
+            tile(
+              Icons.shopping_basket_outlined,
+              money(insights.averageBasketMinor),
+              l.insightsAverageBasket,
+            ),
+            const SizedBox(width: DymTokenSpace.s2),
+            tile(
+              Icons.people_outline_rounded,
+              '${insights.customers}',
+              l.insightsCustomers(insights.newCustomers),
+            ),
+          ],
+        ),
+        if (insights.lowStock.isNotEmpty) ...[
+          section(l.insightsLowStock),
+          for (final item in insights.lowStock.take(5))
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              leading: Icon(Icons.inventory_2_outlined, color: c.piment),
+              title: Text(
+                [item.name, ?item.variant].join(' · '),
+                style: t.body,
+              ),
+              trailing: Text(
+                l.insightsStockLeft('${item.stock}'),
+                style: t.label.copyWith(color: c.pimentStrong),
+              ),
+              onTap: onProducts,
+            ),
+        ],
+        if (insights.topProducts.isNotEmpty) ...[
+          section(l.insightsTopProducts),
+          for (final (i, p) in insights.topProducts.indexed)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              leading: CircleAvatar(
+                radius: 14,
+                backgroundColor: c.tintVertTendre,
+                child: Text('${i + 1}', style: t.label),
+              ),
+              title: Text(p.name, style: t.body),
+              trailing: Text(
+                l.insightsSold('${p.quantity}', money(p.revenueMinor)),
+                style: t.label.copyWith(color: c.textSecondary),
+              ),
+            ),
+        ],
+        if (insights.loyalCustomers.isNotEmpty) ...[
+          section(l.insightsLoyal),
+          Wrap(
+            spacing: DymTokenSpace.s2,
+            runSpacing: DymTokenSpace.s1,
+            children: [
+              for (final cust in insights.loyalCustomers)
+                Chip(
+                  avatar: Icon(
+                    Icons.favorite_rounded,
+                    size: 16,
+                    color: c.piment,
+                  ),
+                  label: Text(l.insightsLoyalChip(cust.firstName, cust.orders)),
+                ),
+            ],
+          ),
+        ],
+      ],
     );
   }
 }

@@ -27,6 +27,10 @@ VendorDashboard _summary(DashboardPeriod period, {int revenue = 12500}) =>
 
 class _Service implements DashboardService {
   @override
+  Future<Result<VendorInsights>> insights(DashboardPeriod period) async =>
+      const Ok(VendorInsights(currencyCode: 'XOF'));
+
+  @override
   Stream<LiveSignal> get live => const Stream.empty();
 
   Result<VendorDashboard>? result;

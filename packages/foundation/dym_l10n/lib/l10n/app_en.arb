@@ -2281,5 +2281,14 @@
   "pushActionReply": "Reply",
   "pushActionReplyHint": "Your message",
   "pushActionAnswer": "Answer",
-  "pushActionDecline": "Decline"
+  "pushActionDecline": "Decline",
+  "insightsTrend": "Sales day by day",
+  "insightsAverageBasket": "Average basket",
+  "insightsCustomers": "{count, plural, =0{customers} =1{customers · 1 new} other{customers · {count} new}}",
+  "insightsLowStock": "Running low",
+  "insightsStockLeft": "{stock} left",
+  "insightsTopProducts": "Your best products",
+  "insightsSold": "{quantity} sold · {amount}",
+  "insightsLoyal": "Your loyal customers",
+  "insightsLoyalChip": "{name} · {count, plural, =1{1 order} other{{count} orders}}"
 }
