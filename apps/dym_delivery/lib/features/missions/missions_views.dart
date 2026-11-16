@@ -409,7 +409,11 @@ class MissionsView extends StackedView<MissionsViewModel> {
     required this.onAccepted,
     super.key,
     this.active,
+    this.bell,
   });
+
+  /// Cloche des notifications (spec 097) ; nulle : masquée.
+  final Widget? bell;
 
   final MissionsService service;
   final VoidCallback onAccepted;
@@ -453,6 +457,7 @@ class MissionsView extends StackedView<MissionsViewModel> {
                       child: Text(l10n.missionsTitle, style: t.display),
                     ),
                   ),
+                  ?bell,
                   MergeSemantics(
                     child: Row(
                       mainAxisSize: MainAxisSize.min,

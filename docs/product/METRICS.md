@@ -82,4 +82,5 @@ fiabilité (ops).
 | `location_outside_coverage` (pays le plus proche, distance en km, app ; jamais la position) | App | Couverture : où ouvrir ensuite (spec 065) |
 | `store_map_viewed` (boutiques visibles, filtre ouvertes, filtre catégorie ; jamais la position) | App | Carte des boutiques (spec 095) |
 | `tracking_shared`, `courier_unreachable_reported`, `courier_sos` (jamais la position dans l'événement), `pickup_confirmed` | Serveur | Livraison suivie (spec 096) |
+| `call_missed` (type d'appel) | Serveur | Appels (spec 097) |
 | `courier_relaunched` (rang, élargie, livreurs prévenus), `courier_ready_alerted` ; `order_rejected` avec le motif `no_response` (acteur système) | Serveur | Livreurs relancés, alerte « prête », refus automatique (spec 066) |

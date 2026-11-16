@@ -221,10 +221,18 @@ class AppNotification {
     this.purchaseId,
     this.params = const {},
     this.readAt,
+    this.text,
   });
 
   factory fromJson(Map<String, dynamic> json) =>
       _$AppNotificationFromJson(json);
+
+  /// Texte rendu par la base dans la langue de la personne (boîte de la
+  /// vendeuse et du livreur, spec 097) : `title`, `body`.
+  final Map<String, dynamic>? text;
+
+  String? get title => text?['title'] as String?;
+  String? get body => text?['body'] as String?;
 
   final String id;
   final String kind;

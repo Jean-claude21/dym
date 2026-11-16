@@ -8950,5 +8950,37 @@
   "adminSaved": "Enregistré",
   "@adminSaved": {
     "description": "Admin : réglage enregistré"
+  },
+  "inboxEmptyMessage": "Commandes, messages, appels et alertes de stock apparaîtront ici.",
+  "@inboxEmptyMessage": {
+    "description": "Boîte de notifications vide (vendeuse, livreur, spec 097)"
+  },
+  "pushChannelCalls": "Appels",
+  "@pushChannelCalls": {
+    "description": "Canal Android des appels qui sonnent (spec 097)"
+  },
+  "pushActionAccept": "Accepter",
+  "@pushActionAccept": {
+    "description": "Bouton de notification : accepter la commande ou la course"
+  },
+  "pushActionView": "Voir",
+  "@pushActionView": {
+    "description": "Bouton de notification : ouvrir"
+  },
+  "pushActionReply": "Répondre",
+  "@pushActionReply": {
+    "description": "Bouton de notification : répondre au message"
+  },
+  "pushActionReplyHint": "Ton message",
+  "@pushActionReplyHint": {
+    "description": "Champ de réponse dans la notification"
+  },
+  "pushActionAnswer": "Décrocher",
+  "@pushActionAnswer": {
+    "description": "Bouton de notification : décrocher l'appel"
+  },
+  "pushActionDecline": "Refuser",
+  "@pushActionDecline": {
+    "description": "Bouton de notification : refuser l'appel"
   }
 }

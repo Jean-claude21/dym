@@ -75,6 +75,32 @@ class NotificationRepository {
         },
       );
 
+  /// Boîte d'une app (`vendor`, `delivery`, `client`), texte rendu (spec 097).
+  Future<Result<List<AppNotification>>> appNotifications(
+    String app, {
+    int limit = 50,
+  }) async => _decode(
+    await _data.rpc<Object?>(
+      'my_app_notifications',
+      params: {'p_app': app, 'p_limit': limit},
+    ),
+    (json) {
+      if (json is! List) throw const FormatException();
+      return [
+        for (final n in json)
+          AppNotification.fromJson(n as Map<String, dynamic>),
+      ];
+    },
+  );
+
+  Future<Result<int>> unreadAppCount(String app) async => _decode(
+    await _data.rpc<Object?>(
+      'unread_app_notifications',
+      params: {'p_app': app},
+    ),
+    (json) => (json! as num).toInt(),
+  );
+
   Future<Result<int>> unreadCount() async => _decode(
     await _data.rpc<Object?>('unread_notifications_count'),
     (json) => (json! as num).toInt(),

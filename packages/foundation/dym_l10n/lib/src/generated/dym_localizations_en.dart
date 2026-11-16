@@ -7762,4 +7762,29 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get adminSaved => 'Saved';
+
+  @override
+  String get inboxEmptyMessage =>
+      'Orders, messages, calls and stock alerts will show up here.';
+
+  @override
+  String get pushChannelCalls => 'Calls';
+
+  @override
+  String get pushActionAccept => 'Accept';
+
+  @override
+  String get pushActionView => 'View';
+
+  @override
+  String get pushActionReply => 'Reply';
+
+  @override
+  String get pushActionReplyHint => 'Your message';
+
+  @override
+  String get pushActionAnswer => 'Answer';
+
+  @override
+  String get pushActionDecline => 'Decline';
 }

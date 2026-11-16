@@ -8,6 +8,7 @@ import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_delivery/features/missions/missions_views.dart';
 import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_notifications/dym_notifications.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,19 @@ class _HomeViewState extends State<HomeView> {
         // La course acceptée apparaît au-dessus des propositions (planche 05).
         HomeTab.missions => MissionsView(
           service: _missions,
+          bell: locator.isRegistered<NotificationInboxService>()
+              ? NotificationBell(
+                  service: locator<NotificationInboxService>(),
+                  onTap: () => Navigator.of(context).push<void>(
+                    MaterialPageRoute(
+                      builder: (route) => NotificationInboxView(
+                        service: locator<NotificationInboxService>(),
+                        onOpen: (_) => Navigator.of(route).pop(),
+                      ),
+                    ),
+                  ),
+                )
+              : null,
           onAccepted: () => setState(() => _runs++),
           active: MyRunsView(
             key: ValueKey(_runs),

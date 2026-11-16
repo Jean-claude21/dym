@@ -59,7 +59,7 @@ dym/
 | `dym_ui` | UI (thème généré depuis `docs/design/tokens/dym.tokens.json`) | `dym_core`, `dym_l10n` | Features, apps | `foundation` |
 | `dym_map` | UI (carte, décision 0022) | `dym_core`, `dym_ui`, `maplibre_gl` | Client, vendeur (livreur : spec 096) | `carte` (spec 095) |
 | `dym_auth` | Feature | Stacked, `dym_data`, `dym_ui` | 4 apps | `auth` |
-| `dym_notifications` | Feature | idem | Client, vendeur, livreur | `order-lifecycle` |
+| `dym_notifications` | Feature | `dym_data`, `dym_ui` | Vendeur, livreur (boîte et cloche, spec 097) | `notifications-appels` |
 | `dym_chat` | Feature | idem | Client, vendeur | `messaging` |
 | `dym_account` | Feature | idem | Client, vendeur, livreur | `auth` |
 

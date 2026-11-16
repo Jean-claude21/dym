@@ -131,7 +131,7 @@ describe("transitions", () => {
     const sender: PushSender = { enabled: true, async send(m) { sent.push(m); return { sent: 1, invalidTokens: [] }; } };
     await dispatchPushes(queue, sender);
     expect(sent[0]?.data).toEqual({ kind: "new_message_vendor", conversation_id: "c-1" });
-    expect(sent[0]).toMatchObject({ channel: "dym_messages", tag: "c-1" });
+    expect(sent[0]).toMatchObject({ channel: "dym_messages_v2", tag: "c-1" });
   });
 
   it("grande photo : URL publique du produit principal", async () => {
@@ -147,11 +147,12 @@ describe("transitions", () => {
   });
 
   it("canaux : commandes, messages, courses, le reste", () => {
-    expect(pushChannel("new_order", "orders")).toBe("dym_orders");
-    expect(pushChannel("payment_succeeded", "payments")).toBe("dym_orders");
-    expect(pushChannel("new_message", "messages")).toBe("dym_messages");
-    expect(pushChannel("mission_available", "orders")).toBe("dym_missions");
-    expect(pushChannel("store_broadcast", "promotions")).toBe("dym_general");
+    expect(pushChannel("new_order", "orders")).toBe("dym_orders_v2");
+    expect(pushChannel("payment_succeeded", "payments")).toBe("dym_orders_v2");
+    expect(pushChannel("new_message", "messages")).toBe("dym_messages_v2");
+    expect(pushChannel("mission_available", "orders")).toBe("dym_missions_v2");
+    expect(pushChannel("store_broadcast", "promotions")).toBe("dym_general_v2");
+    expect(pushChannel("incoming_call_vendor", "messages")).toBe("dym_calls_v2");
   });
 
   it("FCM : canal et regroupement transmis à Android", async () => {
@@ -170,9 +171,9 @@ describe("transitions", () => {
       return new Response("{}", { status: 200 });
     }) as typeof fetch;
     const sender = fcmPushSender(serviceAccount, fetchImpl);
-    await sender.send({ tokens: ["tel"], title: "T", body: "B", data: {}, channel: "dym_orders", tag: "o-1" });
+    await sender.send({ tokens: ["tel"], title: "T", body: "B", data: {}, channel: "dym_orders_v2", tag: "o-1" });
     expect(bodies[0]).toMatchObject({
-      message: { android: { notification: { channel_id: "dym_orders", tag: "o-1" } } },
+      message: { android: { notification: { channel_id: "dym_orders_v2", tag: "o-1" } } },
     });
   });
 

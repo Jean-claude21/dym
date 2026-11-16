@@ -13014,6 +13014,54 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Enregistré'**
   String get adminSaved;
+
+  /// Boîte de notifications vide (vendeuse, livreur, spec 097)
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes, messages, appels et alertes de stock apparaîtront ici.'**
+  String get inboxEmptyMessage;
+
+  /// Canal Android des appels qui sonnent (spec 097)
+  ///
+  /// In fr, this message translates to:
+  /// **'Appels'**
+  String get pushChannelCalls;
+
+  /// Bouton de notification : accepter la commande ou la course
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter'**
+  String get pushActionAccept;
+
+  /// Bouton de notification : ouvrir
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir'**
+  String get pushActionView;
+
+  /// Bouton de notification : répondre au message
+  ///
+  /// In fr, this message translates to:
+  /// **'Répondre'**
+  String get pushActionReply;
+
+  /// Champ de réponse dans la notification
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton message'**
+  String get pushActionReplyHint;
+
+  /// Bouton de notification : décrocher l'appel
+  ///
+  /// In fr, this message translates to:
+  /// **'Décrocher'**
+  String get pushActionAnswer;
+
+  /// Bouton de notification : refuser l'appel
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get pushActionDecline;
 }
 
 class _DymLocalizationsDelegate

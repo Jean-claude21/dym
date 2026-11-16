@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <!-- Recherche à la voix (spec 018), seulement pendant l'écoute. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- Appel qui sonne en plein écran, même verrouillé (spec 097). -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
     <application
         android:label="DYM"
         android:name="${applicationName}"
@@ -20,6 +22,8 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="dym_orders" />
         <activity
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"

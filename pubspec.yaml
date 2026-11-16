@@ -17,6 +17,7 @@ workspace:
   - packages/features/dym_auth
   - packages/features/dym_account
   - packages/features/dym_chat
+  - packages/features/dym_notifications
   - apps/dym_gallery
   - apps/dym_client
   - apps/dym_vendor
