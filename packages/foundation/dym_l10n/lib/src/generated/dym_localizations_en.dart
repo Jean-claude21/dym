@@ -7409,4 +7409,38 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get storeDeliveryRadiusSaved => 'Delivery radius saved.';
+
+  @override
+  String get errorLoadMessage =>
+      'This page could not load. Try again in a moment.';
+
+  @override
+  String get authBrowse => 'Browse without an account';
+
+  @override
+  String get authBrowseTitle => 'Where do you want to explore DYM?';
+
+  @override
+  String get authBrowseSubtitle =>
+      'Stores that deliver to this area appear. You only create an account to order.';
+
+  @override
+  String get authBrowseAction => 'Explore';
+
+  @override
+  String get visitorTitle => 'Sign in to continue';
+
+  @override
+  String get visitorCartBody =>
+      'Create your account in a minute to fill your cart and order.';
+
+  @override
+  String get visitorMeBody =>
+      'Your account keeps your orders, addresses and wallet.';
+
+  @override
+  String get visitorSignIn => 'Sign in or create an account';
+
+  @override
+  String get visitorChangePlace => 'Change area';
 }

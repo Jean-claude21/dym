@@ -3,5 +3,5 @@
     <!-- Fond de l'icône adaptative (docs/design/marque/). -->
     <color name="ic_launcher_background">#F6C343</color>
     <!-- Fond du splash natif, identique au splash animé de l'app. -->
-    <color name="splash_background">#FAFAF7</color>
+    <color name="splash_background">#F6C343</color>
 </resources>

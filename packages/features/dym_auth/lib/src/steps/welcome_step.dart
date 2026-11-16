@@ -363,6 +363,15 @@ class _Actions extends StatelessWidget {
             icon: Icons.mail_outline_rounded,
             onPressed: vm.chooseEmail,
           ),
+        if (vm.canBrowse)
+          TextButton(
+            onPressed: vm.isBusy ? null : vm.chooseBrowse,
+            style: TextButton.styleFrom(
+              minimumSize: const Size.fromHeight(DymTokenSize.touchMin),
+              foregroundColor: c.brandDeep,
+            ),
+            child: Text(l10n.authBrowse),
+          ),
         const SizedBox(height: DymTokenSpace.s3),
         Text(
           l10n.authLegal,

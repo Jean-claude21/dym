@@ -8,6 +8,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -217,6 +218,7 @@ void main() {
       WidgetTester tester,
       Result<AuthState> result, {
       String env = 'dev',
+      VisitorPlaceStore? visitor,
     }) async {
       final navigator = _Navigator();
       await _pump(
@@ -227,11 +229,25 @@ void main() {
             auth: _Auth(result),
             environment: _env(env),
             navigator: navigator,
+            visitor: visitor ?? VisitorPlaceStore(persist: false),
           ),
         ),
       );
       return navigator;
     }
+
+    testWidgets('visiteuse déjà venue : accueil sans connexion (spec 093)', (
+      tester,
+    ) async {
+      final visitor = VisitorPlaceStore(persist: false)
+        ..value = const VisitorPlace(zoneId: 'z-be', countryCode: 'TG');
+      final nav = await start(
+        tester,
+        const Ok(AuthState.signedOut()),
+        visitor: visitor,
+      );
+      expect(nav.routes, ['home']);
+    });
 
     testWidgets('sans session : connexion', (tester) async {
       final nav = await start(tester, const Ok(AuthState.signedOut()));

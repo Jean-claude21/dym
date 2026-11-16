@@ -3,7 +3,7 @@
     "short_name": "DYM Admin",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#FAFAF7",
+    "background_color": "#0E4632",
     "theme_color": "#145C43",
     "description": "A new Flutter project.",
     "orientation": "portrait-primary",

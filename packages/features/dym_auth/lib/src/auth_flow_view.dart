@@ -26,6 +26,7 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
     this.startWithProfile = false,
     this.initialStep = AuthStep.welcome,
     this.initialEmail = '',
+    this.onBrowse,
   });
 
   final AuthService service;
@@ -41,10 +42,14 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
   /// Email déjà saisi (prévisualisation).
   final String initialEmail;
 
+  /// Découvrir sans compte (cliente seulement, spec 093).
+  final void Function(String zoneId, String countryCode)? onBrowse;
+
   @override
   AuthFlowViewModel viewModelBuilder(BuildContext context) => AuthFlowViewModel(
     service: service,
     onReady: onReady,
+    onBrowse: onBrowse,
     locale: Localizations.localeOf(context).languageCode,
     supportedLocales: [
       for (final l in DymLocalizations.supportedLocales) l.languageCode,
@@ -78,7 +83,11 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
       AuthStep.profile => ProfileStep(viewModel: viewModel),
     };
     return PopScope(
-      canPop: false,
+      // Ouverte par-dessus l'app (visiteuse, spec 093) : retour possible
+      // depuis la bienvenue.
+      canPop:
+          viewModel.step == AuthStep.welcome &&
+          (ModalRoute.of(context)?.canPop ?? false),
       onPopInvokedWithResult: (didPop, _) {
         if (!didPop) viewModel.back();
       },

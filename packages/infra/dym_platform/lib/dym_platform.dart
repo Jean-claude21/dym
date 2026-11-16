@@ -15,4 +15,5 @@ export 'src/photo_picker.dart';
 export 'src/push_notifications.dart';
 export 'src/qr.dart';
 export 'src/secure_session_store.dart';
+export 'src/visitor_place.dart';
 export 'src/voice_recorder.dart';

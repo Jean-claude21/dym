@@ -42,6 +42,7 @@ class AuthFlowViewModel extends BaseViewModel {
   new({
     required this._service,
     required this.onReady,
+    this.onBrowse,
     this.locale = 'fr',
     this.supportedLocales,
     this.resendDelay = const Duration(seconds: 60),
@@ -54,6 +55,16 @@ class AuthFlowViewModel extends BaseViewModel {
 
   /// Appelé quand le profil est complet : la personne entre dans l'app.
   final void Function(Me me) onReady;
+
+  /// Découvrir sans compte (spec 093) : quartier et pays choisis, sans
+  /// session. Nul : parcours absent (vendeuse, livreur, admin).
+  final void Function(String zoneId, String countryCode)? onBrowse;
+
+  /// Étape « où découvrir » : le profil sans prénom ni session.
+  bool get browsing => _browsing;
+  bool _browsing = false;
+
+  bool get canBrowse => onBrowse != null;
 
   /// Langue de l'appareil.
   final String locale;
@@ -132,7 +143,8 @@ class AuthFlowViewModel extends BaseViewModel {
       _config?.cities.where((c) => c.id == zone.cityId).firstOrNull?.name;
 
   AuthError? get authError => _error;
-  bool get canSubmitProfile => firstNameValid && _zoneId != null && !isBusy;
+  bool get canSubmitProfile =>
+      (_browsing || firstNameValid) && _zoneId != null && !isBusy;
 
   // --- bienvenue
 
@@ -145,6 +157,23 @@ class AuthFlowViewModel extends BaseViewModel {
   void skipWelcome() => setWelcomePage(welcomePages - 1);
 
   void chooseEmail() => _goTo(AuthStep.email);
+
+  /// « Découvrir sans compte » : choix du quartier (position ou liste).
+  Future<void> chooseBrowse() async {
+    _browsing = true;
+    await startProfile();
+  }
+
+  /// Quartier choisi : l'app s'ouvre en visiteuse.
+  void submitBrowse() {
+    final zone = _zoneId;
+    final country = _countryCode;
+    if (zone == null || country == null) {
+      _setError(AuthError.zoneRequired);
+      return;
+    }
+    onBrowse?.call(zone, country);
+  }
 
   Future<void> chooseGoogle() async {
     if (!_service.googleAvailable) {
@@ -410,7 +439,10 @@ class AuthFlowViewModel extends BaseViewModel {
         _resendTimer?.cancel();
         _goTo(AuthStep.email);
       case AuthStep.profile:
-        return false; // session ouverte : le profil est obligatoire
+        // Visiteuse : retour à la bienvenue ; session ouverte : obligatoire.
+        if (!_browsing) return false;
+        _browsing = false;
+        _goTo(AuthStep.welcome);
     }
     return true;
   }

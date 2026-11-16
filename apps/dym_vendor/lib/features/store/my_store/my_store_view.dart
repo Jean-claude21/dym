@@ -111,7 +111,7 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 title: viewModel.offline
                     ? l10n.errorOffline
                     : l10n.errorGeneric,
-                message: l10n.storeSaveError,
+                message: l10n.errorLoadMessage,
                 actionLabel: l10n.retry,
                 onAction: viewModel.load,
               ),
