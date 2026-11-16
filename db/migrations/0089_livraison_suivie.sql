@@ -38,8 +38,8 @@ create policy delivery_fee_bands_read on public.delivery_fee_bands for select
   to anonymous, authenticated using (true);
 grant select on public.delivery_fee_bands to anonymous, authenticated;
 
--- Frais de la tranche qui contient la distance (ville d'abord, puis pays) ; nul sans tranche.
-create or replace function app.distance_fee(p_country char(2), p_city uuid, p_meters numeric)
+-- Tranche qui contient la distance (ville d'abord, puis pays) ; nulle sans tranche.
+create or replace function app.band_fee(p_country char(2), p_city uuid, p_meters numeric)
 returns bigint
 language sql stable security definer set search_path = ''
 as $$
@@ -49,7 +49,190 @@ as $$
   order by b.city_id nulls last, b.max_distance_m
   limit 1
 $$;
-revoke all on function app.distance_fee(char, uuid, numeric) from public;
+revoke all on function app.band_fee(char, uuid, numeric) from public;
+
+-- Tarif de livraison par pays (ou ville) : au kilomètre ou par tranches, avec minimum,
+-- plafond, arrondi et supplément longue distance. Montants en unités mineures de la devise.
+create table public.delivery_pricing (
+  id uuid primary key default gen_random_uuid(),
+  country_code char(2) not null references public.countries (code),
+  city_id uuid references public.cities (id),
+  currency_code char(3) not null references public.currencies (code),
+  mode text not null default 'per_km' check (mode in ('per_km', 'bands')),
+  base_fee_minor bigint not null default 0 check (base_fee_minor >= 0),
+  included_m integer not null default 0 check (included_m between 0 and 50000),
+  per_km_minor bigint not null default 0 check (per_km_minor >= 0),
+  min_fee_minor bigint not null default 0 check (min_fee_minor >= 0),
+  max_fee_minor bigint check (max_fee_minor is null or max_fee_minor >= min_fee_minor),
+  rounding_minor bigint not null default 1 check (rounding_minor >= 1),
+  long_distance_surcharge_minor bigint not null default 0 check (long_distance_surcharge_minor >= 0),
+  updated_at timestamptz not null default now(),
+  unique nulls not distinct (country_code, city_id)
+);
+alter table public.delivery_pricing enable row level security;
+create policy delivery_pricing_read on public.delivery_pricing for select to anonymous, authenticated using (true);
+grant select on public.delivery_pricing to anonymous, authenticated;
+
+-- Majorations horaires (soir, week-end, heures de pointe) en pourcentage, heure locale du pays.
+create table public.delivery_surcharges (
+  id uuid primary key default gen_random_uuid(),
+  country_code char(2) not null references public.countries (code),
+  city_id uuid references public.cities (id),
+  label text not null check (length(btrim(label)) between 2 and 40),
+  weekdays smallint[] not null default '{1,2,3,4,5,6,7}'
+    check (weekdays <@ '{1,2,3,4,5,6,7}'::smallint[] and cardinality(weekdays) > 0),
+  starts_at time not null,
+  ends_at time not null,
+  percent smallint not null check (percent between 1 and 200),
+  created_at timestamptz not null default now()
+);
+alter table public.delivery_surcharges enable row level security;
+create policy delivery_surcharges_read on public.delivery_surcharges for select to anonymous, authenticated using (true);
+grant select on public.delivery_surcharges to anonymous, authenticated;
+
+-- Majoration en vigueur (la plus forte) ; un créneau peut passer minuit (22:00 → 02:00).
+create or replace function app.surcharge_percent(p_country char(2), p_city uuid, p_at timestamptz)
+returns integer
+language sql stable security definer set search_path = ''
+as $$
+  with local as (
+    select (p_at at time zone c.timezone) as t from public.countries c where c.code = p_country
+  )
+  select coalesce(max(s.percent), 0)::int
+  from public.delivery_surcharges s, local l
+  where s.country_code = p_country and (s.city_id = p_city or s.city_id is null)
+    and extract(isodow from l.t)::smallint = any (s.weekdays)
+    and case when s.starts_at <= s.ends_at
+             then l.t::time >= s.starts_at and l.t::time < s.ends_at
+             else l.t::time >= s.starts_at or l.t::time < s.ends_at end
+$$;
+revoke all on function app.surcharge_percent(char, uuid, timestamptz) from public;
+
+-- Frais de livraison par distance : tarif de la ville, sinon du pays. Nul sans tarif ni tranche
+-- (le panier retombe alors sur les frais par défaut).
+create or replace function app.distance_fee(
+  p_country char(2), p_city uuid, p_meters numeric,
+  p_long boolean default false, p_at timestamptz default now()
+) returns bigint
+language plpgsql stable security definer set search_path = ''
+as $$
+declare
+  p public.delivery_pricing;
+  v_fee numeric;
+begin
+  if p_meters is null then return null; end if;
+  select * into p from public.delivery_pricing
+  where country_code = p_country and (city_id = p_city or city_id is null)
+  order by city_id nulls last limit 1;
+  if p.id is null or p.mode = 'bands' then
+    v_fee := app.band_fee(p_country, p_city, p_meters);
+    if v_fee is null then return null; end if;
+  else
+    v_fee := p.base_fee_minor + ceil(greatest(p_meters - p.included_m, 0) / 1000.0 * p.per_km_minor);
+  end if;
+  if p.id is not null then
+    if p_long then v_fee := v_fee + p.long_distance_surcharge_minor; end if;
+    v_fee := v_fee * (100 + app.surcharge_percent(p_country, p_city, p_at)) / 100.0;
+    v_fee := greatest(v_fee, p.min_fee_minor);
+    if p.max_fee_minor is not null then v_fee := least(v_fee, p.max_fee_minor); end if;
+    v_fee := ceil(v_fee / p.rounding_minor) * p.rounding_minor;
+  end if;
+  return v_fee::bigint;
+end
+$$;
+revoke all on function app.distance_fee(char, uuid, numeric, boolean, timestamptz) from public;
+
+-- Admin : tarif d'un pays ou d'une ville (null : pays). Audité.
+create or replace function public.admin_set_delivery_pricing(p_country char(2), p_city uuid, p_pricing jsonb)
+returns jsonb
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_admin uuid := app.require_admin();
+  v_currency char(3) := (select currency_code from public.countries where code = p_country);
+  v_before jsonb;
+  v_after jsonb;
+begin
+  if v_currency is null then raise exception 'pays inconnu' using errcode = 'P0002'; end if;
+  select to_jsonb(d) - 'id' - 'updated_at' into v_before from public.delivery_pricing d
+  where country_code = p_country and city_id is not distinct from p_city;
+  insert into public.delivery_pricing as d (country_code, city_id, currency_code, mode, base_fee_minor, included_m,
+    per_km_minor, min_fee_minor, max_fee_minor, rounding_minor, long_distance_surcharge_minor)
+  values (p_country, p_city, v_currency,
+    coalesce(p_pricing ->> 'mode', 'per_km'),
+    coalesce((p_pricing ->> 'base_fee_minor')::bigint, 0),
+    coalesce((p_pricing ->> 'included_m')::int, 0),
+    coalesce((p_pricing ->> 'per_km_minor')::bigint, 0),
+    coalesce((p_pricing ->> 'min_fee_minor')::bigint, 0),
+    (p_pricing ->> 'max_fee_minor')::bigint,
+    coalesce((p_pricing ->> 'rounding_minor')::bigint, 1),
+    coalesce((p_pricing ->> 'long_distance_surcharge_minor')::bigint, 0))
+  on conflict (country_code, city_id) do update set
+    mode = excluded.mode, base_fee_minor = excluded.base_fee_minor, included_m = excluded.included_m,
+    per_km_minor = excluded.per_km_minor, min_fee_minor = excluded.min_fee_minor,
+    max_fee_minor = excluded.max_fee_minor, rounding_minor = excluded.rounding_minor,
+    long_distance_surcharge_minor = excluded.long_distance_surcharge_minor, updated_at = now()
+  returning to_jsonb(d) - 'id' - 'updated_at' into v_after;
+  perform app.audit(v_admin, 'delivery_pricing_set', 'country', coalesce(p_city::text, p_country), v_before, v_after, null);
+  return v_after;
+end
+$$;
+revoke all on function public.admin_set_delivery_pricing(char, uuid, jsonb) from public;
+grant execute on function public.admin_set_delivery_pricing(char, uuid, jsonb) to authenticated;
+
+-- Admin : remplace les majorations horaires d'un pays (ou d'une ville). Audité.
+create or replace function public.admin_set_delivery_surcharges(p_country char(2), p_city uuid, p_surcharges jsonb)
+returns jsonb
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_admin uuid := app.require_admin();
+  v_before jsonb;
+  v_after jsonb;
+begin
+  if jsonb_typeof(coalesce(p_surcharges, 'null'::jsonb)) <> 'array' then
+    raise exception 'surcharges_required' using errcode = '22023';
+  end if;
+  select coalesce(jsonb_agg(to_jsonb(s) - 'id' - 'created_at' order by starts_at), '[]'::jsonb) into v_before
+  from public.delivery_surcharges s where country_code = p_country and city_id is not distinct from p_city;
+  delete from public.delivery_surcharges where country_code = p_country and city_id is not distinct from p_city;
+  insert into public.delivery_surcharges (country_code, city_id, label, weekdays, starts_at, ends_at, percent)
+  select p_country, p_city, x ->> 'label',
+         coalesce((select array_agg(v::smallint) from jsonb_array_elements_text(x -> 'weekdays') v),
+                  '{1,2,3,4,5,6,7}'),
+         (x ->> 'starts_at')::time, (x ->> 'ends_at')::time, (x ->> 'percent')::smallint
+  from jsonb_array_elements(p_surcharges) x;
+  select coalesce(jsonb_agg(to_jsonb(s) - 'id' - 'created_at' order by starts_at), '[]'::jsonb) into v_after
+  from public.delivery_surcharges s where country_code = p_country and city_id is not distinct from p_city;
+  perform app.audit(v_admin, 'delivery_surcharges_set', 'country', coalesce(p_city::text, p_country), v_before, v_after, null);
+  return v_after;
+end
+$$;
+revoke all on function public.admin_set_delivery_surcharges(char, uuid, jsonb) from public;
+grant execute on function public.admin_set_delivery_surcharges(char, uuid, jsonb) to authenticated;
+
+-- Admin : simulateur (« combien pour 6 km, longue distance, vendredi 20 h ? »).
+create or replace function public.admin_preview_delivery_fee(
+  p_country char(2), p_city uuid, p_meters integer, p_long boolean default false, p_at timestamptz default now()
+) returns jsonb
+language plpgsql stable security definer set search_path = ''
+as $$
+begin
+  perform app.require_admin();
+  return jsonb_build_object(
+    'fee_minor', app.distance_fee(p_country, p_city, p_meters, p_long, p_at),
+    'surcharge_percent', app.surcharge_percent(p_country, p_city, p_at),
+    'currency_code', (select currency_code from public.countries where code = p_country));
+end
+$$;
+revoke all on function public.admin_preview_delivery_fee(char, uuid, integer, boolean, timestamptz) from public;
+grant execute on function public.admin_preview_delivery_fee(char, uuid, integer, boolean, timestamptz) to authenticated;
+
+insert into public.admin_function_permissions (function_name, permission_code) values
+  ('public.admin_set_delivery_pricing', 'catalog.write'),
+  ('public.admin_set_delivery_surcharges', 'catalog.write'),
+  ('public.admin_preview_delivery_fee', 'catalog.read')
+on conflict do nothing;
 
 -- Admin : remplace les tranches d'un pays (ou d'une ville). Audité.
 create or replace function public.admin_set_delivery_fee_bands(
@@ -661,6 +844,128 @@ as $$
   from public.courier_profiles c where c.user_id = p_user
 $$;
 
+-- ------------------------------------------------------------------ rayon souple (spec 096)
+
+-- Distance maximale de livraison par pays : au-delà du rayon de la boutique, livraison
+-- « longue distance » sur demande (la vendeuse accepte ou refuse) ; au-delà, retrait seul.
+create table public.delivery_settings (
+  country_code char(2) primary key references public.countries (code),
+  max_distance_m integer not null default 20000 check (max_distance_m between 1000 and 50000),
+  updated_at timestamptz not null default now()
+);
+alter table public.delivery_settings enable row level security;
+create policy delivery_settings_read on public.delivery_settings for select to anonymous, authenticated using (true);
+grant select on public.delivery_settings to anonymous, authenticated;
+
+-- Rayon proposé aux nouvelles boutiques d'une ville (dense : petit ; petite ville : grand).
+alter table public.cities add column default_delivery_radius_m integer
+  check (default_delivery_radius_m is null or default_delivery_radius_m between 500 and 50000);
+
+create or replace function app.max_delivery_m(p_country char(2))
+returns integer
+language sql stable security definer set search_path = ''
+as $$
+  select coalesce((select max_distance_m from public.delivery_settings where country_code = p_country), 20000)
+$$;
+revoke all on function app.max_delivery_m(char) from public;
+
+-- La boutique peut-elle livrer ce point sur demande (au-delà de son rayon) ?
+create or replace function app.store_reaches_point(p_store uuid, p_lat numeric, p_lng numeric)
+returns boolean
+language sql stable security definer set search_path = ''
+as $$
+  select coalesce((
+    select app.distance_m(sp.lat, sp.lng, p_lat, p_lng) <= app.max_delivery_m(s.country_code)
+    from public.stores s cross join lateral app.store_point(s.id) sp
+    where s.id = p_store and sp.lat is not null and p_lat is not null), false)
+$$;
+revoke all on function app.store_reaches_point(uuid, numeric, numeric) from public;
+
+-- Rayon par défaut de la ville quand la boutique choisit son premier quartier.
+create or replace function app.store_default_radius()
+returns trigger
+language plpgsql security definer set search_path = ''
+as $$
+begin
+  if new.zone_id is not null and (tg_op = 'INSERT' or old.zone_id is null) and new.delivery_radius_m = 5000 then
+    new.delivery_radius_m := coalesce((
+      select c.default_delivery_radius_m from public.zones z join public.cities c on c.id = z.city_id
+      where z.id = new.zone_id), new.delivery_radius_m);
+  end if;
+  return new;
+end
+$$;
+create trigger stores_default_radius before insert or update of zone_id on public.stores
+  for each row execute function app.store_default_radius();
+
+create or replace function public.admin_set_delivery_settings(p_country char(2), p_max_distance_m integer)
+returns jsonb
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_admin uuid := app.require_admin();
+  v_before integer := app.max_delivery_m(p_country);
+begin
+  insert into public.delivery_settings (country_code, max_distance_m) values (p_country, p_max_distance_m)
+  on conflict (country_code) do update set max_distance_m = excluded.max_distance_m, updated_at = now();
+  perform app.audit(v_admin, 'delivery_settings_set', 'country', p_country,
+    jsonb_build_object('max_distance_m', v_before), jsonb_build_object('max_distance_m', p_max_distance_m), null);
+  return jsonb_build_object('country_code', p_country, 'max_distance_m', p_max_distance_m);
+end
+$$;
+revoke all on function public.admin_set_delivery_settings(char, integer) from public;
+grant execute on function public.admin_set_delivery_settings(char, integer) to authenticated;
+
+create or replace function public.admin_set_city_delivery_radius(p_city uuid, p_meters integer)
+returns void
+language plpgsql security definer set search_path = ''
+as $$
+declare
+  v_admin uuid := app.require_admin();
+  v_before integer;
+begin
+  select default_delivery_radius_m into v_before from public.cities where id = p_city for update;
+  if not found then raise exception 'not_found' using errcode = 'P0002'; end if;
+  update public.cities set default_delivery_radius_m = p_meters, updated_at = now() where id = p_city;
+  perform app.audit(v_admin, 'city_delivery_radius_set', 'city', p_city::text,
+    jsonb_build_object('meters', v_before), jsonb_build_object('meters', p_meters), null);
+end
+$$;
+revoke all on function public.admin_set_city_delivery_radius(uuid, integer) from public;
+grant execute on function public.admin_set_city_delivery_radius(uuid, integer) to authenticated;
+
+-- Réglages de livraison d'un pays pour l'admin : distance max, tranches, rayons des villes.
+create or replace function public.admin_delivery_config(p_country char(2))
+returns jsonb
+language plpgsql stable security definer set search_path = ''
+as $$
+begin
+  perform app.require_admin();
+  return jsonb_build_object(
+    'country_code', p_country,
+    'max_distance_m', app.max_delivery_m(p_country),
+    'pricing', (select to_jsonb(d) - 'id' - 'updated_at' from public.delivery_pricing d
+                where d.country_code = p_country and d.city_id is null),
+    'surcharges', coalesce((select jsonb_agg(to_jsonb(s) - 'id' - 'created_at' order by s.starts_at)
+                            from public.delivery_surcharges s
+                            where s.country_code = p_country and s.city_id is null), '[]'::jsonb),
+    'bands', coalesce((select jsonb_agg(jsonb_build_object('max_distance_m', max_distance_m, 'fee_minor', fee_minor)
+                                        order by max_distance_m)
+                       from public.delivery_fee_bands where country_code = p_country and city_id is null), '[]'::jsonb),
+    'cities', coalesce((select jsonb_agg(jsonb_build_object('id', c.id, 'name', c.name,
+                                         'default_delivery_radius_m', c.default_delivery_radius_m) order by c.sort, c.name)
+                        from public.cities c where c.country_code = p_country), '[]'::jsonb));
+end
+$$;
+revoke all on function public.admin_delivery_config(char) from public;
+grant execute on function public.admin_delivery_config(char) to authenticated;
+
+insert into public.admin_function_permissions (function_name, permission_code) values
+  ('public.admin_set_delivery_settings', 'catalog.write'),
+  ('public.admin_set_city_delivery_radius', 'geography.write'),
+  ('public.admin_delivery_config', 'catalog.read')
+on conflict do nothing;
+
 -- ------------------------------------------------------------------ fonctions existantes modifiées
 
 drop function app.cart_quote(uuid, uuid, jsonb, uuid, timestamptz);
@@ -762,8 +1067,11 @@ begin
                   then 'closed' end,
              case when st.fulfillment = 'delivery'
                     and (p_zone is not null or p_latitude is not null)
-                    and not (coalesce(app.store_serves(st.id, p_zone), false)
-                             or coalesce(app.store_serves_point(st.id, p_latitude, p_longitude), false))
+                    -- Porte située : la position décide ; sinon le quartier (spec 096).
+                    and not (case when p_latitude is not null
+                                  then app.store_serves_point(st.id, p_latitude, p_longitude)
+                                       or app.store_reaches_point(st.id, p_latitude, p_longitude)
+                                  else coalesce(app.store_serves(st.id, p_zone), false) end)
                   then 'not_delivered' end,
              case when st.fulfillment = 'pickup' and not st.offers_pickup then 'pickup_unavailable' end,
              case when p_payment_method is not null and not exists (
@@ -789,7 +1097,13 @@ begin
            'own_fee_minor', r.own_fee,
            -- Frais par tranche de distance (spec 096) : de la boutique à la porte.
            'distance_m', round(r.meters)::int,
-           'distance_fee_minor', app.distance_fee(v_cart.country_code, coalesce(v_city, r.store_city), r.meters::numeric),
+           -- Au-delà du rayon de la boutique : longue distance, à confirmer par elle.
+           'long_distance', r.fulfillment = 'delivery' and p_latitude is not null
+             and not app.store_serves_point(r.id, p_latitude, p_longitude),
+           -- Tarif au km ou par tranches, majorations et longue distance (spec 096).
+           'distance_fee_minor', app.distance_fee(v_cart.country_code, coalesce(v_city, r.store_city),
+             r.meters::numeric, r.fulfillment = 'delivery' and p_latitude is not null
+               and not app.store_serves_point(r.id, p_latitude, p_longitude), p_at),
            'lines', r.lines)
            order by r.first_added, r.id)
   into v_stores
@@ -1164,6 +1478,128 @@ begin
   end if;
   perform app.emit_event('store_opened', app.current_user_id(), 'vendor', 'vendor', v_country,
     'store', v_store::text, jsonb_build_object('store_origin', v_origin));
+  return public.my_store();
+end
+$function$;
+
+CREATE OR REPLACE FUNCTION public.discover_stores(p_zone uuid, p_limit integer DEFAULT 20, p_at timestamp with time zone DEFAULT now(), p_latitude numeric DEFAULT NULL::numeric, p_longitude numeric DEFAULT NULL::numeric)
+ RETURNS jsonb
+ LANGUAGE sql
+ STABLE SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+  with here as (
+    select coalesce(p_latitude, z.latitude) as lat, coalesce(p_longitude, z.longitude) as lng
+    from (select 1) one left join public.zones z on z.id = p_zone
+  ),
+  candidates as (
+    select s.id, s.name, s.zone_id = p_zone as same_zone,
+           not ((p_zone is not null and app.store_serves(s.id, p_zone))
+                or app.store_serves_point(s.id, h.lat, h.lng)) as long_distance,
+           app.store_open_at(s.id, p_at) as open_now, s.prep_time_minutes,
+           (select app.distance_m(sp.lat, sp.lng, h.lat, h.lng)
+            from app.store_point(s.id) sp where sp.lat is not null and h.lat is not null) as meters
+    from public.stores s, here h
+    where s.status = 'active'
+      and ((p_zone is not null and app.store_serves(s.id, p_zone))
+           or app.store_serves_point(s.id, h.lat, h.lng)
+           -- Spec 096 : au-delà du rayon, livraison longue distance sur demande.
+           or (p_latitude is not null and app.store_reaches_point(s.id, h.lat, h.lng)))
+  )
+  select jsonb_build_object(
+    'estimate_minutes', (
+      select min(cd.prep_time_minutes) + coalesce(max(c.delivery_minutes), 30)
+      from candidates cd
+      left join public.zones z on z.id = p_zone
+      left join public.cities c on c.id = z.city_id
+      where cd.open_now),
+    'stores', coalesce((
+      select jsonb_agg(app.store_summary(id, p_at)
+                       || jsonb_build_object('distance_m', round(meters)::int, 'long_distance', long_distance)
+                       order by open_now desc, long_distance, meters nulls last, same_zone desc, name)
+      from (select * from candidates
+            order by open_now desc, long_distance, meters nulls last, same_zone desc, name
+            limit greatest(1, least(p_limit, 50))) t), '[]'::jsonb),
+    -- « À la une » (spec 052) : boutiques sponsorisées qui livrent ici, signalées comme telles.
+    'sponsored', coalesce((
+      select jsonb_agg(app.store_summary(cd.id, p_at) order by cd.open_now desc, cd.name)
+      from candidates cd where app.member_flag(null, cd.id, 'sponsored', p_at)), '[]'::jsonb)
+  )
+$function$;
+
+CREATE OR REPLACE FUNCTION public.update_store(p_patch jsonb)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
+declare
+  v_store uuid := app.own_store_id();
+  v_key text;
+  v_country char(2);
+  v_zone uuid;
+begin
+  for v_key in select jsonb_object_keys(p_patch) loop
+    if v_key not in ('name', 'description', 'origin', 'zone_id', 'main_category_id',
+                     'prep_time_minutes', 'offers_pickup', 'delivery_fee_minor', 'onboarding_step',
+                     'delivery_radius_m') then
+      raise exception 'champ non modifiable : %', v_key using errcode = '22023';
+    end if;
+  end loop;
+
+  -- Spec 096 : rayon au plus la distance maximale du pays.
+  if p_patch ? 'delivery_radius_m' and (p_patch ->> 'delivery_radius_m')::integer >
+     app.max_delivery_m((select country_code from public.stores where id = v_store)) then
+    raise exception 'radius_too_large' using errcode = '22023';
+  end if;
+
+  if p_patch ? 'origin' and not exists (
+    select 1 from public.store_origins where code = p_patch ->> 'origin' and is_active
+  ) then
+    raise exception 'origine inconnue' using errcode = '22023';
+  end if;
+
+  if p_patch ? 'main_category_id' and not exists (
+    select 1 from public.categories
+    where id = (p_patch ->> 'main_category_id')::uuid and parent_id is null and is_active
+  ) then
+    raise exception 'rayon principal inconnu' using errcode = '22023';
+  end if;
+
+  if p_patch ? 'zone_id' then
+    v_zone := (p_patch ->> 'zone_id')::uuid;
+    select c.country_code into v_country
+    from public.zones z join public.cities c on c.id = z.city_id
+    where z.id = v_zone and z.is_active and app.city_is_visible(c.id);
+    if v_country is null then
+      raise exception 'quartier inconnu ou inactif' using errcode = '22023';
+    end if;
+  end if;
+
+  update public.stores s set
+    name = coalesce(trim(p_patch ->> 'name'), s.name),
+    description = case when p_patch ? 'description' then nullif(trim(p_patch ->> 'description'), '') else s.description end,
+    origin = coalesce(p_patch ->> 'origin', s.origin),
+    zone_id = coalesce(v_zone, s.zone_id),
+    country_code = coalesce(v_country, s.country_code),
+    currency_code = case when v_country is null then s.currency_code
+      else (select currency_code from public.countries where code = v_country) end,
+    main_category_id = coalesce((p_patch ->> 'main_category_id')::uuid, s.main_category_id),
+    prep_time_minutes = coalesce((p_patch ->> 'prep_time_minutes')::smallint, s.prep_time_minutes),
+    offers_pickup = coalesce((p_patch ->> 'offers_pickup')::boolean, s.offers_pickup),
+    delivery_fee_minor = case when p_patch ? 'delivery_fee_minor' then (p_patch ->> 'delivery_fee_minor')::bigint else s.delivery_fee_minor end,
+    delivery_radius_m = case when p_patch ? 'delivery_radius_m'
+      then (p_patch ->> 'delivery_radius_m')::integer else s.delivery_radius_m end,
+    onboarding_step = greatest(s.onboarding_step, coalesce((p_patch ->> 'onboarding_step')::smallint, s.onboarding_step))
+  where s.id = v_store;
+
+  -- Changer de ville retire les quartiers desservis d'une autre ville.
+  if v_zone is not null then
+    delete from public.store_delivery_zones d
+    where d.store_id = v_store
+      and (select city_id from public.zones where id = d.zone_id)
+       <> (select city_id from public.zones where id = v_zone);
+  end if;
   return public.my_store();
 end
 $function$;
