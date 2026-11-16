@@ -173,7 +173,6 @@ void main() {
           cityName: 'Lomé',
           countryCode: 'TG',
           distanceM: 300,
-          covered: true,
         );
         final service = memoryCart()..zoneAtMatch = match;
         final vm = AddressFormViewModel(service: service);

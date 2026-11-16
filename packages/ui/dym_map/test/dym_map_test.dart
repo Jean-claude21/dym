@@ -27,10 +27,10 @@ void main() {
 
   test('cadre autour de points', () {
     final b = DymBounds.around(const [
-      DymLatLng(49.4, 1.0),
+      DymLatLng(49.4, 1),
       DymLatLng(49.5, 1.2),
     ])!;
-    expect(b.southWest, const DymLatLng(49.4, 1.0));
+    expect(b.southWest, const DymLatLng(49.4, 1));
     expect(b.contains(const DymLatLng(49.45, 1.1)), isTrue);
     expect(DymBounds.around(const []), isNull);
   });

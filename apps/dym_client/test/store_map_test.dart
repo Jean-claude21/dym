@@ -35,8 +35,13 @@ PublicStore _at(
 );
 
 // Rouen (deux boutiques, dont une fermée) et Paris.
-final _rouen = _at('rouen', 'Primeur du Vieux-Marché', 49.443, 1.088);
-final _rouenClosed = _at(
+final PublicStore _rouen = _at(
+  'rouen',
+  'Primeur du Vieux-Marché',
+  49.443,
+  1.088,
+);
+final PublicStore _rouenClosed = _at(
   'rouen2',
   'Épicerie Saint-Marc',
   49.437,
@@ -44,13 +49,18 @@ final _rouenClosed = _at(
   open: false,
   origin: 'magasin',
 );
-final _paris = _at('paris', 'Fromagerie des Martyrs', 48.879, 2.340);
+final PublicStore _paris = _at(
+  'paris',
+  'Fromagerie des Martyrs',
+  48.879,
+  2.340,
+);
 
 const _rouenView = DymMapView(
   center: DymLatLng(49.44, 1.09),
   zoom: 13,
   bounds: DymBounds(
-    southWest: DymLatLng(49.40, 1.00),
+    southWest: DymLatLng(49.40, 1),
     northEast: DymLatLng(49.48, 1.20),
   ),
 );
