@@ -415,6 +415,8 @@ Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
     builder: (_) => _RadiusSheet(
       initialKm: vm.store!.deliveryRadiusM ~/ 1000,
       center: vm.storePoint,
+      // Borne du pays (spec 096), 50 km au plus.
+      maxKm: ((vm.config?.maxDeliveryDistanceM ?? 30000) ~/ 1000).clamp(1, 50),
     ),
   );
   if (chosen == null) return;
@@ -427,9 +429,12 @@ Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
 }
 
 class _RadiusSheet extends StatefulWidget {
-  const new({required this.initialKm, this.center});
+  const new({required this.initialKm, this.center, this.maxKm = 30});
 
   final int initialKm;
+
+  /// Rayon maximal en km (distance maximale du pays).
+  final int maxKm;
 
   /// Point de la boutique ; sans lui, pas de carte (le rayon reste réglable).
   final DymLatLng? center;
@@ -439,7 +444,7 @@ class _RadiusSheet extends StatefulWidget {
 }
 
 class _RadiusSheetState extends State<_RadiusSheet> {
-  late double _km = widget.initialKm.clamp(1, 30).toDouble();
+  late double _km = widget.initialKm.clamp(1, widget.maxKm).toDouble();
   DymMapControls? _controls;
   static const _mapHeight = 220.0;
 
@@ -509,8 +514,8 @@ class _RadiusSheetState extends State<_RadiusSheet> {
             Slider(
               value: _km,
               min: 1,
-              max: 30,
-              divisions: 29,
+              max: widget.maxKm.toDouble(),
+              divisions: widget.maxKm > 1 ? widget.maxKm - 1 : null,
               label: label,
               onChanged: (v) => setState(() => _km = v),
               onChangeEnd: (_) {

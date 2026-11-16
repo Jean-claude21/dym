@@ -4,6 +4,8 @@ import 'package:dym_admin/app/app.locator.dart';
 import 'package:dym_admin/features/audit/audit_view.dart';
 import 'package:dym_admin/features/clients/clients_view.dart';
 import 'package:dym_admin/features/dashboard/dashboard_view.dart';
+import 'package:dym_admin/features/delivery/delivery_admin_service.dart';
+import 'package:dym_admin/features/delivery/delivery_admin_views.dart';
 import 'package:dym_admin/features/disputes/disputes_view.dart';
 import 'package:dym_admin/features/finance/finance_view.dart';
 import 'package:dym_admin/features/moderation/moderation_view.dart';
@@ -37,6 +39,11 @@ enum AdminTab {
   moderation,
   settings,
   audit,
+
+  /// Livraison (spec 096) : tarif, comptes à valider, incidents.
+  delivery,
+  accounts,
+  incidents,
 }
 
 /// Admin de l'équipe : tableau de bord (67), commandes (52, 53), litiges
@@ -49,6 +56,7 @@ class AdminHomeView extends StatefulWidget {
     this.service,
     this.admin,
     this.ops,
+    this.delivery,
     this.navigator,
     this.inactivity,
     this.initialTab = AdminTab.dashboard,
@@ -61,6 +69,9 @@ class AdminHomeView extends StatefulWidget {
   /// Centre d'opérations (spec 053) ; absent : onglet vide.
   final OpsCenterService? ops;
   final AdminNavigator? navigator;
+
+  /// Livraison (spec 096) ; absente : onglets masqués.
+  final DeliveryAdminService? delivery;
 
   /// Délai d'inactivité (tests) ; 30 minutes par défaut.
   final Duration? inactivity;
@@ -80,6 +91,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       widget.ops ??
       (locator.isRegistered<OpsCenterService>()
           ? locator<OpsCenterService>()
+          : null);
+  late final DeliveryAdminService? _delivery =
+      widget.delivery ??
+      (locator.isRegistered<DeliveryAdminService>()
+          ? locator<DeliveryAdminService>()
           : null);
   late final AdminNavigator _navigator =
       widget.navigator ?? StackedAdminNavigator();
@@ -135,6 +151,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       AdminTab.moderation => access.reads('content'),
       AdminTab.settings => true,
       AdminTab.audit => access.reads('system'),
+      AdminTab.delivery => access.reads('catalog'),
+      AdminTab.accounts => access.reads('stores'),
+      AdminTab.incidents => access.reads('orders'),
     };
   }
 
@@ -218,6 +237,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         mcpEndpoint: _mcpEndpoint,
       ),
       AdminTab.audit => AdminAuditView(service: _admin),
+      AdminTab.delivery => AdminDeliveryView(service: _delivery!),
+      AdminTab.accounts => AdminAccountsView(service: _delivery!),
+      AdminTab.incidents => AdminIncidentsView(service: _delivery!),
     };
     final env = locator.isRegistered<DymEnvironment>()
         ? locator<DymEnvironment>()
@@ -255,6 +277,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     AdminTab.finance => l10n.adminNavFinance,
     AdminTab.settings => l10n.adminNavConfig,
     AdminTab.audit => l10n.adminNavAudit,
+    AdminTab.delivery => l10n.adminDeliveryTitle,
+    AdminTab.accounts => l10n.adminAccountsTitle,
+    AdminTab.incidents => l10n.adminIncidentsTitle,
   };
 
   IconData _icon(AdminTab tab) => switch (tab) {
@@ -269,6 +294,15 @@ class _AdminHomeViewState extends State<AdminHomeView> {
     AdminTab.support => Icons.chat_bubble_outline_rounded,
     AdminTab.settings => Icons.settings_outlined,
     AdminTab.audit => Icons.receipt_long_outlined,
+    AdminTab.delivery => Icons.local_shipping_outlined,
+    AdminTab.accounts => Icons.how_to_reg_outlined,
+    AdminTab.incidents => Icons.sos_rounded,
+  };
+
+  static const Set<AdminTab> _deliveryTabs = {
+    AdminTab.delivery,
+    AdminTab.accounts,
+    AdminTab.incidents,
   };
 
   int? _badge(AdminTab tab) {
@@ -289,7 +323,9 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       label: label,
       entries: [
         for (final tab in tabs)
-          if (_allowed(tab) && (tab != AdminTab.ops || _ops != null))
+          if (_allowed(tab) &&
+              (tab != AdminTab.ops || _ops != null) &&
+              (!_deliveryTabs.contains(tab) || _delivery != null))
             (
               id: tab,
               icon: _icon(tab),
@@ -299,10 +335,15 @@ class _AdminHomeViewState extends State<AdminHomeView> {
       ],
     );
     return [
-      group(l10n.adminGroupPilot, const [AdminTab.dashboard, AdminTab.ops]),
+      group(l10n.adminGroupPilot, const [
+        AdminTab.dashboard,
+        AdminTab.ops,
+        AdminTab.incidents,
+      ]),
       group(l10n.adminGroupCommerce, const [
         AdminTab.orders,
         AdminTab.stores,
+        AdminTab.accounts,
         AdminTab.clients,
       ]),
       group(l10n.adminGroupMoney, const [AdminTab.finance]),
@@ -311,7 +352,11 @@ class _AdminHomeViewState extends State<AdminHomeView> {
         AdminTab.moderation,
         AdminTab.support,
       ]),
-      group(l10n.adminGroupSettings, const [AdminTab.settings, AdminTab.audit]),
+      group(l10n.adminGroupSettings, const [
+        AdminTab.delivery,
+        AdminTab.settings,
+        AdminTab.audit,
+      ]),
     ].where((g) => g.entries.isNotEmpty).toList();
   }
 }

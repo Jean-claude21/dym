@@ -8853,5 +8853,102 @@
   "adminFeeBandAdd": "Ajouter une tranche",
   "@adminFeeBandAdd": {
     "description": "Admin : ajouter une tranche"
+  },
+  "storeLongDistance": "Longue distance · à confirmer",
+  "@storeLongDistance": {
+    "description": "Boutique hors de son rayon : livraison possible, à confirmer par elle (spec 096)"
+  },
+  "cartLongDistance": "Longue distance : frais plus élevés, la boutique confirme la livraison.",
+  "@cartLongDistance": {
+    "description": "Panier : boutique au-delà de son rayon de livraison"
+  },
+  "adminDeliveryTitle": "Livraison",
+  "@adminDeliveryTitle": {
+    "description": "Admin : réglages de livraison du pays (spec 096)"
+  },
+  "adminDeliveryMode": "Calcul des frais",
+  "@adminDeliveryMode": {
+    "description": "Admin : mode de calcul des frais"
+  },
+  "adminDeliveryPerKm": "Au kilomètre",
+  "@adminDeliveryPerKm": {
+    "description": "Admin : mode au km"
+  },
+  "adminDeliveryBands": "Par tranches",
+  "@adminDeliveryBands": {
+    "description": "Admin : mode par tranches"
+  },
+  "adminDeliveryBase": "Prise en charge",
+  "@adminDeliveryBase": {
+    "description": "Admin : frais fixes de départ"
+  },
+  "adminDeliveryIncluded": "Distance incluse (m)",
+  "@adminDeliveryIncluded": {
+    "description": "Admin : distance comprise dans la prise en charge"
+  },
+  "adminDeliveryPerKmFee": "Prix par km",
+  "@adminDeliveryPerKmFee": {
+    "description": "Admin : prix par kilomètre au-delà de la distance incluse"
+  },
+  "adminDeliveryMin": "Minimum",
+  "@adminDeliveryMin": {
+    "description": "Admin : frais minimum"
+  },
+  "adminDeliveryMaxFee": "Plafond (vide : aucun)",
+  "@adminDeliveryMaxFee": {
+    "description": "Admin : frais maximum"
+  },
+  "adminDeliveryRounding": "Arrondi",
+  "@adminDeliveryRounding": {
+    "description": "Admin : arrondi des frais"
+  },
+  "adminDeliveryLongSurcharge": "Supplément longue distance",
+  "@adminDeliveryLongSurcharge": {
+    "description": "Admin : supplément au-delà du rayon de la boutique"
+  },
+  "adminDeliveryMaxDistance": "Distance maximale de livraison (m)",
+  "@adminDeliveryMaxDistance": {
+    "description": "Admin : au-delà, retrait seulement"
+  },
+  "adminDeliverySurcharges": "Majorations horaires",
+  "@adminDeliverySurcharges": {
+    "description": "Admin : soir, week-end, heures de pointe"
+  },
+  "adminDeliverySurchargeAdd": "Ajouter une majoration",
+  "@adminDeliverySurchargeAdd": {
+    "description": "Admin : ajouter une majoration horaire"
+  },
+  "adminDeliveryCityRadius": "Rayon proposé aux nouvelles boutiques",
+  "@adminDeliveryCityRadius": {
+    "description": "Admin : rayon par défaut par ville"
+  },
+  "adminDeliverySimulator": "Simulateur",
+  "@adminDeliverySimulator": {
+    "description": "Admin : calculer des frais pour tester le tarif"
+  },
+  "adminDeliverySimulate": "Calculer",
+  "@adminDeliverySimulate": {
+    "description": "Admin : lancer la simulation"
+  },
+  "adminDeliverySimDistance": "Distance (m)",
+  "@adminDeliverySimDistance": {
+    "description": "Admin : distance simulée"
+  },
+  "adminDeliverySimLong": "Hors du rayon de la boutique",
+  "@adminDeliverySimLong": {
+    "description": "Admin : simuler la longue distance"
+  },
+  "adminDeliverySimResult": "Frais : {fee}",
+  "@adminDeliverySimResult": {
+    "description": "Admin : résultat du simulateur",
+    "placeholders": {
+      "fee": {
+        "type": "String"
+      }
+    }
+  },
+  "adminSaved": "Enregistré",
+  "@adminSaved": {
+    "description": "Admin : réglage enregistré"
   }
 }

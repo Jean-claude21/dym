@@ -33,7 +33,8 @@ class ReferenceRepository {
           .select(
             'code, name, currency_code, dial_code, default_locale, timezone, '
             'sort, '
-            'currency:currencies(code, minor_units, symbol, format_locale)',
+            'currency:currencies(code, minor_units, symbol, format_locale), '
+            'delivery_settings(max_distance_m)',
           )
           .eq('code', countryCode)
           .maybeSingle(),
@@ -122,6 +123,7 @@ class ReferenceRepository {
           units: at<MarketUnit>(4),
           paymentMethods: at<PaymentMethod>(5),
           deliveryFees: at<DeliveryFeeDefault>(6),
+          maxDeliveryDistanceM: _maxDistance(row['delivery_settings']),
           featureFlags: at<FeatureFlag>(7)
               .where(
                 (f) => f.countryCode == null || f.countryCode == countryCode,
@@ -165,5 +167,18 @@ class ReferenceRepository {
     } on Object catch (error) {
       return Err(ServerFailure('donnée illisible : ${error.runtimeType}'));
     }
+  }
+
+  /// Distance maximale du pays (spec 096) ; 20 km sans réglage.
+  static int _maxDistance(Object? json) {
+    final row = switch (json) {
+      final List<dynamic> l when l.isNotEmpty => l.first,
+      final Map<dynamic, dynamic> m => m,
+      _ => null,
+    };
+    return switch (row) {
+      {'max_distance_m': final num m} => m.toInt(),
+      _ => 20000,
+    };
   }
 }

@@ -1,6 +1,7 @@
 import 'package:dym_admin/app/admin_app.dart';
 import 'package:dym_admin/app/app.locator.dart';
 import 'package:dym_admin/app/config_error_app.dart';
+import 'package:dym_admin/features/delivery/delivery_admin_service.dart';
 import 'package:dym_admin/features/ops/admin_service.dart';
 import 'package:dym_admin/features/ops_center/ops_center_view.dart';
 import 'package:dym_auth/dym_auth.dart';
@@ -53,6 +54,13 @@ Future<void> configureServices(DymEnvironment environment) async {
       () => NeonOpsCenterService(
         repository: OpsRepository(neon.data),
         currencies: locator<AdminService>().currencies,
+      ),
+    )
+    ..registerSingleton<DeliveryAdminService>(
+      NeonDeliveryAdminService(
+        data: neon.data,
+        delivery: DeliveryRepository(neon.data),
+        reference: ReferenceRepository(neon.data),
       ),
     )
     ..registerSingleton<AdminService>(

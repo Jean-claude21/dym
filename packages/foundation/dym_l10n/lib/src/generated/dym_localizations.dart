@@ -12876,6 +12876,144 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Ajouter une tranche'**
   String get adminFeeBandAdd;
+
+  /// Boutique hors de son rayon : livraison possible, à confirmer par elle (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Longue distance · à confirmer'**
+  String get storeLongDistance;
+
+  /// Panier : boutique au-delà de son rayon de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Longue distance : frais plus élevés, la boutique confirme la livraison.'**
+  String get cartLongDistance;
+
+  /// Admin : réglages de livraison du pays (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison'**
+  String get adminDeliveryTitle;
+
+  /// Admin : mode de calcul des frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Calcul des frais'**
+  String get adminDeliveryMode;
+
+  /// Admin : mode au km
+  ///
+  /// In fr, this message translates to:
+  /// **'Au kilomètre'**
+  String get adminDeliveryPerKm;
+
+  /// Admin : mode par tranches
+  ///
+  /// In fr, this message translates to:
+  /// **'Par tranches'**
+  String get adminDeliveryBands;
+
+  /// Admin : frais fixes de départ
+  ///
+  /// In fr, this message translates to:
+  /// **'Prise en charge'**
+  String get adminDeliveryBase;
+
+  /// Admin : distance comprise dans la prise en charge
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance incluse (m)'**
+  String get adminDeliveryIncluded;
+
+  /// Admin : prix par kilomètre au-delà de la distance incluse
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix par km'**
+  String get adminDeliveryPerKmFee;
+
+  /// Admin : frais minimum
+  ///
+  /// In fr, this message translates to:
+  /// **'Minimum'**
+  String get adminDeliveryMin;
+
+  /// Admin : frais maximum
+  ///
+  /// In fr, this message translates to:
+  /// **'Plafond (vide : aucun)'**
+  String get adminDeliveryMaxFee;
+
+  /// Admin : arrondi des frais
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrondi'**
+  String get adminDeliveryRounding;
+
+  /// Admin : supplément au-delà du rayon de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Supplément longue distance'**
+  String get adminDeliveryLongSurcharge;
+
+  /// Admin : au-delà, retrait seulement
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance maximale de livraison (m)'**
+  String get adminDeliveryMaxDistance;
+
+  /// Admin : soir, week-end, heures de pointe
+  ///
+  /// In fr, this message translates to:
+  /// **'Majorations horaires'**
+  String get adminDeliverySurcharges;
+
+  /// Admin : ajouter une majoration horaire
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une majoration'**
+  String get adminDeliverySurchargeAdd;
+
+  /// Admin : rayon par défaut par ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayon proposé aux nouvelles boutiques'**
+  String get adminDeliveryCityRadius;
+
+  /// Admin : calculer des frais pour tester le tarif
+  ///
+  /// In fr, this message translates to:
+  /// **'Simulateur'**
+  String get adminDeliverySimulator;
+
+  /// Admin : lancer la simulation
+  ///
+  /// In fr, this message translates to:
+  /// **'Calculer'**
+  String get adminDeliverySimulate;
+
+  /// Admin : distance simulée
+  ///
+  /// In fr, this message translates to:
+  /// **'Distance (m)'**
+  String get adminDeliverySimDistance;
+
+  /// Admin : simuler la longue distance
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors du rayon de la boutique'**
+  String get adminDeliverySimLong;
+
+  /// Admin : résultat du simulateur
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais : {fee}'**
+  String adminDeliverySimResult(String fee);
+
+  /// Admin : réglage enregistré
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistré'**
+  String get adminSaved;
 }
 
 class _DymLocalizationsDelegate

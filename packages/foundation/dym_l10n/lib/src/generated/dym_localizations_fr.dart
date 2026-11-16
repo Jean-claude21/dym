@@ -7740,4 +7740,76 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get adminFeeBandAdd => 'Ajouter une tranche';
+
+  @override
+  String get storeLongDistance => 'Longue distance · à confirmer';
+
+  @override
+  String get cartLongDistance =>
+      'Longue distance : frais plus élevés, la boutique confirme la livraison.';
+
+  @override
+  String get adminDeliveryTitle => 'Livraison';
+
+  @override
+  String get adminDeliveryMode => 'Calcul des frais';
+
+  @override
+  String get adminDeliveryPerKm => 'Au kilomètre';
+
+  @override
+  String get adminDeliveryBands => 'Par tranches';
+
+  @override
+  String get adminDeliveryBase => 'Prise en charge';
+
+  @override
+  String get adminDeliveryIncluded => 'Distance incluse (m)';
+
+  @override
+  String get adminDeliveryPerKmFee => 'Prix par km';
+
+  @override
+  String get adminDeliveryMin => 'Minimum';
+
+  @override
+  String get adminDeliveryMaxFee => 'Plafond (vide : aucun)';
+
+  @override
+  String get adminDeliveryRounding => 'Arrondi';
+
+  @override
+  String get adminDeliveryLongSurcharge => 'Supplément longue distance';
+
+  @override
+  String get adminDeliveryMaxDistance => 'Distance maximale de livraison (m)';
+
+  @override
+  String get adminDeliverySurcharges => 'Majorations horaires';
+
+  @override
+  String get adminDeliverySurchargeAdd => 'Ajouter une majoration';
+
+  @override
+  String get adminDeliveryCityRadius => 'Rayon proposé aux nouvelles boutiques';
+
+  @override
+  String get adminDeliverySimulator => 'Simulateur';
+
+  @override
+  String get adminDeliverySimulate => 'Calculer';
+
+  @override
+  String get adminDeliverySimDistance => 'Distance (m)';
+
+  @override
+  String get adminDeliverySimLong => 'Hors du rayon de la boutique';
+
+  @override
+  String adminDeliverySimResult(String fee) {
+    return 'Frais : $fee';
+  }
+
+  @override
+  String get adminSaved => 'Enregistré';
 }

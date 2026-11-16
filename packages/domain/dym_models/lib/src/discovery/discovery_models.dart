@@ -34,6 +34,7 @@ class PublicStore {
     this.longitude,
     this.deliveryRadiusM,
     this.distanceM,
+    this.longDistance = false,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$PublicStoreFromJson(json);
@@ -74,6 +75,10 @@ class PublicStore {
 
   /// Distance depuis la position de la cliente, en mètres (découverte).
   final int? distanceM;
+
+  /// Hors du rayon de la boutique : livraison longue distance, à confirmer
+  /// par elle (spec 096).
+  final bool longDistance;
 }
 
 /// Boutique d'un élément de liste.

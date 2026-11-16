@@ -495,9 +495,9 @@ begin
     update public.order_couriers set pickup_attempts = pickup_attempts + 1 where order_id = p_order;
     return jsonb_build_object('ok', false, 'attempts_left', greatest(0, 4 - v_oc.pickup_attempts));
   end if;
-  perform set_config('dym.pickup_confirmed', p_order::text, true);
   perform app.transition_order(v_oc.courier_id, p_order, 'out_for_delivery', 'ready');
-  perform set_config('dym.pickup_confirmed', '', true);
+  perform app.emit_event('pickup_confirmed', app.current_user_id(), 'vendor', 'server', null, 'order',
+    p_order::text, '{}'::jsonb);
   return jsonb_build_object('ok', true, 'status', 'out_for_delivery');
 end
 $$;
