@@ -32,12 +32,16 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
     this.onBroadcast,
     this.onAccount,
     this.onStaff,
+    this.onCouriers,
     this.onStoreSwitched,
   });
 
   /// « Mon compte » (aide, langue, déconnexion) ; nul : masqué.
   /// Équipe de la boutique (propriétaire, spec 087).
   final VoidCallback? onStaff;
+
+  /// Mes livreurs (spec 096).
+  final VoidCallback? onCouriers;
 
   /// Boutique active changée : l'app recharge tout.
   final VoidCallback? onStoreSwitched;
@@ -261,6 +265,8 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
                 value: store.isOpen,
                 onChanged:
                     viewModel.suspended ||
+                        viewModel.inReview ||
+                        viewModel.rejected ||
                         viewModel.toggling ||
                         !store.can('orders')
                     ? null
@@ -268,6 +274,10 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
               ),
               if (viewModel.suspended)
                 StorePrivacyNote(text: l10n.myStoreSuspended)
+              else if (viewModel.inReview)
+                StorePrivacyNote(text: l10n.myStoreInReview)
+              else if (viewModel.rejected)
+                StorePrivacyNote(text: l10n.myStoreRejected)
               else
                 StoreErrorBanner(failure: viewModel.toggleFailure),
               if (!store.isOwner)
@@ -335,6 +345,12 @@ class MyStoreView extends StackedView<MyStoreViewModel> {
               group(l10n.staffGroupTeam, [
                 if (onStaff case final staff? when store.isOwner)
                   row(Icons.groups_2_outlined, l10n.staffTitle, staff),
+                if (onCouriers case final couriers?)
+                  row(
+                    Icons.two_wheeler_rounded,
+                    l10n.storeCouriersTitle,
+                    couriers,
+                  ),
                 if (viewModel.stores.length > 1)
                   DymMenuRow(
                     icon: Icons.swap_horiz_rounded,

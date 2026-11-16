@@ -260,6 +260,7 @@ class _HomeViewState extends State<HomeView> {
           onBroadcast: _broadcast ? _navigator.toBroadcast : null,
           onAccount: _navigator.toAccount,
           onStaff: _navigator.toStaff,
+          onCouriers: _navigator.toStoreCouriers,
           onStoreSwitched: _navigator.toStartup,
         ),
       },

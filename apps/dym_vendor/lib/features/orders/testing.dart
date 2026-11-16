@@ -221,4 +221,49 @@ class MemoryOrdersService implements OrdersService {
         ? (o.respondBy ?? o.createdAt.add(const Duration(minutes: 20)))
         : null,
   );
+
+  /// Livreurs de la boutique et codes de récupération (spec 096).
+  final storeCourierList = <StoreCourierInfo>[];
+  final pickupCodes = <String, String>{};
+  final assignments = <String, String>{};
+
+  @override
+  Future<Result<List<StoreCourierInfo>>> storeCouriers() async =>
+      Ok([...storeCourierList]);
+
+  @override
+  Future<Result<List<StoreCourierInfo>>> addStoreCourier(String phone) async {
+    if (phone.replaceAll(RegExp('[^0-9]'), '').length < 8) {
+      return const Err(NotFoundFailure('courier_not_found'));
+    }
+    storeCourierList.add(
+      StoreCourierInfo(
+        courierId: 'c${storeCourierList.length + 1}',
+        name: 'Livreur ${storeCourierList.length + 1}',
+        phone: phone,
+        vehicle: 'moto',
+      ),
+    );
+    return Ok([...storeCourierList]);
+  }
+
+  @override
+  Future<Result<List<StoreCourierInfo>>> removeStoreCourier(
+    String courierId,
+  ) async {
+    storeCourierList.removeWhere((c) => c.courierId == courierId);
+    return Ok([...storeCourierList]);
+  }
+
+  @override
+  Future<Result<void>> assignCourier(String orderId, String courierId) async {
+    assignments[orderId] = courierId;
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<CodeCheck>> confirmPickup(String orderId, String code) async {
+    final ok = pickupCodes[orderId] == code;
+    return Ok(CodeCheck(ok: ok, attemptsLeft: ok ? 0 : 4));
+  }
 }

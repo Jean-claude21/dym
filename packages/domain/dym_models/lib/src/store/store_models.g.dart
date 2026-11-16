@@ -154,6 +154,8 @@ MyStore _$MyStoreFromJson(Map<String, dynamic> json) => $checkedCreate(
 
 const _$StoreStatusEnumMap = {
   StoreStatus.draft: 'draft',
+  StoreStatus.review: 'review',
   StoreStatus.active: 'active',
+  StoreStatus.rejected: 'rejected',
   StoreStatus.suspended: 'suspended',
 };

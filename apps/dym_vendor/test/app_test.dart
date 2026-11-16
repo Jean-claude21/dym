@@ -59,6 +59,9 @@ class _Auth implements AuthService {
 }
 
 class _Navigator implements AppNavigator {
+  @override
+  void toStoreCouriers() {}
+
   final routes = <String>[];
 
   @override

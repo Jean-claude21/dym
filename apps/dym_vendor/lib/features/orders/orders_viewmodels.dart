@@ -226,6 +226,56 @@ class OrderDetailViewModel extends _OrdersLoadingViewModel {
 
   Future<void> advance(OrderStatus to) => _act((o) => service.advance(o, to));
 
+  /// Récupération par le livreur DYM : la vendeuse scanne son code (spec 096).
+  bool get awaitsPickupScan {
+    final o = _order;
+    return o != null &&
+        o.status == OrderStatus.ready &&
+        o.fulfillment == Fulfillment.delivery &&
+        (o.courier?.isDym ?? false);
+  }
+
+  /// Livraison sans livreur : la vendeuse peut la confier à un des siens.
+  bool get canAssignCourier {
+    final o = _order;
+    return o != null &&
+        o.fulfillment == Fulfillment.delivery &&
+        o.courier == null &&
+        (o.status == OrderStatus.accepted ||
+            o.status == OrderStatus.preparing ||
+            o.status == OrderStatus.ready);
+  }
+
+  /// Vrai si le code est bon (la commande est partie) ; sinon essais restants.
+  Future<CodeCheck?> confirmPickup(String code) async {
+    if (_acting) return null;
+    _acting = true;
+    _actionFailure = null;
+    notifyListeners();
+    final result = await service.confirmPickup(orderId, code);
+    _acting = false;
+    if (result case Err(:final failure)) _actionFailure = failure;
+    await refresh();
+    notifyListeners();
+    return result.valueOrNull;
+  }
+
+  Future<List<StoreCourierInfo>> couriers() async =>
+      (await service.storeCouriers()).valueOrNull ?? const [];
+
+  Future<bool> assignCourier(String courierId) async {
+    if (_acting) return false;
+    _acting = true;
+    _actionFailure = null;
+    notifyListeners();
+    final result = await service.assignCourier(orderId, courierId);
+    _acting = false;
+    if (result case Err(:final failure)) _actionFailure = failure;
+    await refresh();
+    notifyListeners();
+    return result.isOk;
+  }
+
   Future<void> refuse(RefusalReason reason, String? note) => _act(
     (o) => service.advance(o, OrderStatus.refused, reason: reason, note: note),
   );

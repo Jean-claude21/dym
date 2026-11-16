@@ -32,6 +32,19 @@ abstract interface class OrdersService {
 
   /// Réponse à la cliente. Refus : `dispute_closed`.
   Future<Result<Dispute>> replyDispute(String disputeId, String body);
+
+  /// Livreurs de la boutique (spec 096).
+  Future<Result<List<StoreCourierInfo>>> storeCouriers();
+
+  Future<Result<List<StoreCourierInfo>>> addStoreCourier(String phone);
+
+  Future<Result<List<StoreCourierInfo>>> removeStoreCourier(String courierId);
+
+  /// Confie la commande à un livreur de la boutique.
+  Future<Result<void>> assignCourier(String orderId, String courierId);
+
+  /// Code scanné sur le téléphone du livreur : la commande part avec lui.
+  Future<Result<CodeCheck>> confirmPickup(String orderId, String code);
 }
 
 /// Implémentation Neon.
@@ -41,7 +54,34 @@ class NeonOrdersService implements OrdersService {
     required this._disputes,
     required this._stores,
     this._live = LiveFeed.none,
+    this._delivery,
   });
+
+  /// Livraison suivie (spec 096) ; absente : gestes refusés.
+  final DeliveryRepository? _delivery;
+
+  static const _none = Err<Never>(NotFoundFailure('livraison'));
+
+  @override
+  Future<Result<List<StoreCourierInfo>>> storeCouriers() async =>
+      await _delivery?.storeCouriers() ?? _none;
+
+  @override
+  Future<Result<List<StoreCourierInfo>>> addStoreCourier(String phone) async =>
+      await _delivery?.addStoreCourier(phone) ?? _none;
+
+  @override
+  Future<Result<List<StoreCourierInfo>>> removeStoreCourier(
+    String courierId,
+  ) async => await _delivery?.removeStoreCourier(courierId) ?? _none;
+
+  @override
+  Future<Result<void>> assignCourier(String orderId, String courierId) async =>
+      await _delivery?.assignCourier(orderId, courierId) ?? _none;
+
+  @override
+  Future<Result<CodeCheck>> confirmPickup(String orderId, String code) async =>
+      await _delivery?.confirmPickup(orderId, code) ?? _none;
 
   final LiveFeed _live;
 

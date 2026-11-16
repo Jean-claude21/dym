@@ -12672,6 +12672,210 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Alerte envoyée. L\'équipe te rappelle.'**
   String get courierSosSent;
+
+  /// Vendeuse : livreurs de la boutique (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes livreurs'**
+  String get storeCouriersTitle;
+
+  /// Vendeuse : ajouter un livreur par son numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un livreur'**
+  String get storeCouriersAdd;
+
+  /// Vendeuse : explication des livreurs de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute les livreurs avec qui tu travailles : tu pourras leur confier tes commandes.'**
+  String get storeCouriersHint;
+
+  /// Vendeuse : aucun livreur ajouté
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun livreur pour l\'instant'**
+  String get storeCouriersEmpty;
+
+  /// Champ : numéro du compte livreur DYM
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro du livreur'**
+  String get storeCourierPhone;
+
+  /// Vendeuse : numéro inconnu
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte livreur DYM validé avec ce numéro.'**
+  String get storeCourierNotFound;
+
+  /// Vendeuse : retirer un livreur de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer'**
+  String get storeCourierRemove;
+
+  /// Livreur occupé par une course
+  ///
+  /// In fr, this message translates to:
+  /// **'En course'**
+  String get storeCourierBusy;
+
+  /// Vendeuse : confier la commande à son livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Confier à un de mes livreurs'**
+  String get storeCourierAssign;
+
+  /// Vendeuse : scanner le QR de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Scanner le code du livreur'**
+  String get pickupScan;
+
+  /// Titre de l'écran de scan du code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Code du livreur'**
+  String get pickupScanTitle;
+
+  /// Saisie du code de récupération à la main
+  ///
+  /// In fr, this message translates to:
+  /// **'Code à 6 chiffres'**
+  String get pickupCodeManual;
+
+  /// Valider le code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get pickupCodeValidate;
+
+  /// Vendeuse : code bon, commande partie
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande remise au livreur.'**
+  String get pickupConfirmed;
+
+  /// Vendeuse : mauvais code de récupération
+  ///
+  /// In fr, this message translates to:
+  /// **'Code incorrect. Encore {count} essais.'**
+  String pickupCodeWrong(int count);
+
+  /// Vendeuse : boutique en validation (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'L\'équipe DYM vérifie ta boutique. Tu pourras l\'ouvrir dès qu\'elle est validée.'**
+  String get myStoreInReview;
+
+  /// Vendeuse : boutique refusée
+  ///
+  /// In fr, this message translates to:
+  /// **'Ta boutique est à revoir. Corrige ce qui est demandé puis publie-la de nouveau.'**
+  String get myStoreRejected;
+
+  /// Admin : boutiques et livreurs à valider (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Comptes à valider'**
+  String get adminAccountsTitle;
+
+  /// Admin : rien à valider
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte en attente'**
+  String get adminAccountsEmpty;
+
+  /// Admin : type de compte boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Boutique'**
+  String get adminAccountStore;
+
+  /// Admin : type de compte livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Livreur'**
+  String get adminAccountCourier;
+
+  /// Admin : valider un compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider'**
+  String get adminAccountApprove;
+
+  /// Admin : refuser un compte
+  ///
+  /// In fr, this message translates to:
+  /// **'Refuser'**
+  String get adminAccountReject;
+
+  /// Admin : motif du refus
+  ///
+  /// In fr, this message translates to:
+  /// **'Motif (envoyé au compte)'**
+  String get adminAccountReason;
+
+  /// Admin : SOS et clientes injoignables (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Incidents de livraison'**
+  String get adminIncidentsTitle;
+
+  /// Admin : aucun incident
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun incident ouvert'**
+  String get adminIncidentsEmpty;
+
+  /// Admin : incident SOS
+  ///
+  /// In fr, this message translates to:
+  /// **'SOS'**
+  String get adminIncidentSos;
+
+  /// Admin : incident cliente injoignable
+  ///
+  /// In fr, this message translates to:
+  /// **'Cliente injoignable'**
+  String get adminIncidentUnreachable;
+
+  /// Admin : clore un incident
+  ///
+  /// In fr, this message translates to:
+  /// **'Clore'**
+  String get adminIncidentResolve;
+
+  /// Admin : tranches de frais de livraison (spec 096)
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais par distance'**
+  String get adminFeeBandsTitle;
+
+  /// Admin : explication des tranches
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais selon la distance de la boutique à la porte. Une boutique peut fixer ses propres frais.'**
+  String get adminFeeBandsHint;
+
+  /// Admin : distance maximale de la tranche
+  ///
+  /// In fr, this message translates to:
+  /// **'Jusqu\'à (m)'**
+  String get adminFeeBandUpTo;
+
+  /// Admin : montant de la tranche
+  ///
+  /// In fr, this message translates to:
+  /// **'Frais (unités mineures)'**
+  String get adminFeeBandFee;
+
+  /// Admin : ajouter une tranche
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter une tranche'**
+  String get adminFeeBandAdd;
 }
 
 class _DymLocalizationsDelegate

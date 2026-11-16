@@ -7581,4 +7581,113 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get courierSosSent => 'Alert sent. The team will call you.';
+
+  @override
+  String get storeCouriersTitle => 'My couriers';
+
+  @override
+  String get storeCouriersAdd => 'Add a courier';
+
+  @override
+  String get storeCouriersHint =>
+      'Add the couriers you work with: you can then give them your orders.';
+
+  @override
+  String get storeCouriersEmpty => 'No courier yet';
+
+  @override
+  String get storeCourierPhone => 'Courier\'s phone number';
+
+  @override
+  String get storeCourierNotFound =>
+      'No approved DYM courier account with this number.';
+
+  @override
+  String get storeCourierRemove => 'Remove';
+
+  @override
+  String get storeCourierBusy => 'On a delivery';
+
+  @override
+  String get storeCourierAssign => 'Give to one of my couriers';
+
+  @override
+  String get pickupScan => 'Scan the courier\'s code';
+
+  @override
+  String get pickupScanTitle => 'Courier\'s code';
+
+  @override
+  String get pickupCodeManual => '6-digit code';
+
+  @override
+  String get pickupCodeValidate => 'Confirm';
+
+  @override
+  String get pickupConfirmed => 'Order handed to the courier.';
+
+  @override
+  String pickupCodeWrong(int count) {
+    return 'Wrong code. $count tries left.';
+  }
+
+  @override
+  String get myStoreInReview =>
+      'The DYM team is checking your shop. You can open it once it is approved.';
+
+  @override
+  String get myStoreRejected =>
+      'Your shop needs changes. Fix what is asked, then publish it again.';
+
+  @override
+  String get adminAccountsTitle => 'Accounts to review';
+
+  @override
+  String get adminAccountsEmpty => 'No pending account';
+
+  @override
+  String get adminAccountStore => 'Shop';
+
+  @override
+  String get adminAccountCourier => 'Courier';
+
+  @override
+  String get adminAccountApprove => 'Approve';
+
+  @override
+  String get adminAccountReject => 'Reject';
+
+  @override
+  String get adminAccountReason => 'Reason (sent to the account)';
+
+  @override
+  String get adminIncidentsTitle => 'Delivery incidents';
+
+  @override
+  String get adminIncidentsEmpty => 'No open incident';
+
+  @override
+  String get adminIncidentSos => 'SOS';
+
+  @override
+  String get adminIncidentUnreachable => 'Customer unreachable';
+
+  @override
+  String get adminIncidentResolve => 'Close';
+
+  @override
+  String get adminFeeBandsTitle => 'Fees by distance';
+
+  @override
+  String get adminFeeBandsHint =>
+      'Fees by distance from the shop to the door. A shop can set its own fees.';
+
+  @override
+  String get adminFeeBandUpTo => 'Up to (m)';
+
+  @override
+  String get adminFeeBandFee => 'Fee (minor units)';
+
+  @override
+  String get adminFeeBandAdd => 'Add a band';
 }

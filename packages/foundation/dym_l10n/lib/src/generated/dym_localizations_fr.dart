@@ -7631,4 +7631,113 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get courierSosSent => 'Alerte envoyée. L\'équipe te rappelle.';
+
+  @override
+  String get storeCouriersTitle => 'Mes livreurs';
+
+  @override
+  String get storeCouriersAdd => 'Ajouter un livreur';
+
+  @override
+  String get storeCouriersHint =>
+      'Ajoute les livreurs avec qui tu travailles : tu pourras leur confier tes commandes.';
+
+  @override
+  String get storeCouriersEmpty => 'Aucun livreur pour l\'instant';
+
+  @override
+  String get storeCourierPhone => 'Numéro du livreur';
+
+  @override
+  String get storeCourierNotFound =>
+      'Aucun compte livreur DYM validé avec ce numéro.';
+
+  @override
+  String get storeCourierRemove => 'Retirer';
+
+  @override
+  String get storeCourierBusy => 'En course';
+
+  @override
+  String get storeCourierAssign => 'Confier à un de mes livreurs';
+
+  @override
+  String get pickupScan => 'Scanner le code du livreur';
+
+  @override
+  String get pickupScanTitle => 'Code du livreur';
+
+  @override
+  String get pickupCodeManual => 'Code à 6 chiffres';
+
+  @override
+  String get pickupCodeValidate => 'Valider';
+
+  @override
+  String get pickupConfirmed => 'Commande remise au livreur.';
+
+  @override
+  String pickupCodeWrong(int count) {
+    return 'Code incorrect. Encore $count essais.';
+  }
+
+  @override
+  String get myStoreInReview =>
+      'L\'équipe DYM vérifie ta boutique. Tu pourras l\'ouvrir dès qu\'elle est validée.';
+
+  @override
+  String get myStoreRejected =>
+      'Ta boutique est à revoir. Corrige ce qui est demandé puis publie-la de nouveau.';
+
+  @override
+  String get adminAccountsTitle => 'Comptes à valider';
+
+  @override
+  String get adminAccountsEmpty => 'Aucun compte en attente';
+
+  @override
+  String get adminAccountStore => 'Boutique';
+
+  @override
+  String get adminAccountCourier => 'Livreur';
+
+  @override
+  String get adminAccountApprove => 'Valider';
+
+  @override
+  String get adminAccountReject => 'Refuser';
+
+  @override
+  String get adminAccountReason => 'Motif (envoyé au compte)';
+
+  @override
+  String get adminIncidentsTitle => 'Incidents de livraison';
+
+  @override
+  String get adminIncidentsEmpty => 'Aucun incident ouvert';
+
+  @override
+  String get adminIncidentSos => 'SOS';
+
+  @override
+  String get adminIncidentUnreachable => 'Cliente injoignable';
+
+  @override
+  String get adminIncidentResolve => 'Clore';
+
+  @override
+  String get adminFeeBandsTitle => 'Frais par distance';
+
+  @override
+  String get adminFeeBandsHint =>
+      'Frais selon la distance de la boutique à la porte. Une boutique peut fixer ses propres frais.';
+
+  @override
+  String get adminFeeBandUpTo => 'Jusqu\'à (m)';
+
+  @override
+  String get adminFeeBandFee => 'Frais (unités mineures)';
+
+  @override
+  String get adminFeeBandAdd => 'Ajouter une tranche';
 }
