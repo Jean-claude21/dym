@@ -26,6 +26,7 @@ import { pgDispatchWatch } from "./orders/dispatch.js";
 import { LiveHub, pgLiveStore } from "./live/gateway.js";
 import { pgMcpStore } from "./mcp/server.js";
 import { pgTrackingStore } from "./orders/tracking.js";
+import { bunnyStreamProvider, pgStreamStore } from "./content/streams.js";
 import { pgCallMediaStore } from "./messaging/calls.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
@@ -109,6 +110,20 @@ export default createApp({
   },
   reviews: pgReviewStore(pool),
   tracking: pgTrackingStore(pool),
+  // Vidéo adaptative (spec 101) : Bunny Stream dès que la bibliothèque est fournie.
+  streams: {
+    store: pgStreamStore(pool),
+    ...(process.env.MEDIA_PUBLIC_URL ? { mediaBase: process.env.MEDIA_PUBLIC_URL } : {}),
+    ...(process.env.BUNNY_STREAM_LIBRARY_ID && process.env.BUNNY_STREAM_API_KEY && process.env.BUNNY_STREAM_CDN
+      ? {
+          provider: bunnyStreamProvider({
+            libraryId: process.env.BUNNY_STREAM_LIBRARY_ID,
+            apiKey: process.env.BUNNY_STREAM_API_KEY,
+            cdnHost: process.env.BUNNY_STREAM_CDN,
+          }),
+        }
+      : {}),
+  },
   searchAi: {
     store: pgSearchAiStore(pool),
     transcriber: searchModels ? aiTranscriber(searchModels) : undefined,

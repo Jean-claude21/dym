@@ -2370,5 +2370,14 @@
   "walletPeople": "Between people",
   "familyEveryDay": "Every day",
   "familyEveryWeek": "Every week",
-  "familyEveryMonth": "Every month"
+  "familyEveryMonth": "Every month",
+  "feedNear": "Near me",
+  "feedSave": "Save to « My recipes »",
+  "feedCooked": "I cooked it",
+  "feedCookedTitle": "Did you cook this recipe?",
+  "feedCookedNote": "A short note (optional)",
+  "feedCookedThanks": "Thanks! The author has been notified.",
+  "savedRecipesTitle": "My recipes",
+  "profileFollowers": "{count, plural, =0{No followers} =1{1 follower} other{{count} followers}}",
+  "profileNoContent": "Nothing published yet."
 }

@@ -28,6 +28,7 @@ import { registerTikTokRoutes, type TikTokDeps } from "./content/tiktok.js";
 import { registerContentRoutes } from "./content/routes.js";
 import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes.js";
 import { registerTrackingRoutes, type TrackingStore } from "./orders/tracking.js";
+import { registerStreamJob, type StreamDeps } from "./content/streams.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -78,6 +79,8 @@ export interface AppDeps {
   copilot?: CopilotDeps;
   /** Lien de suivi partagé (spec 096). */
   tracking?: TrackingStore;
+  /** Vidéo adaptative des contenus (spec 101). */
+  streams?: StreamDeps;
   /** Relance des clientes (spec 021). */
   broadcasts?: BroadcastStore;
   /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
@@ -156,6 +159,7 @@ export function createApp(deps: AppDeps) {
   registerTikTokRoutes(app, deps.verifyToken, deps.tiktok);
   registerBroadcastRoutes(app, deps.verifyToken, deps.broadcasts);
   registerTrackingRoutes(app, deps.tracking);
+  registerStreamJob(app, deps.streams);
 
   return app;
 }

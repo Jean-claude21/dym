@@ -8177,4 +8177,40 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get familyEveryMonth => 'Chaque mois';
+
+  @override
+  String get feedNear => 'Près de moi';
+
+  @override
+  String get feedSave => 'Enregistrer dans « Mes recettes »';
+
+  @override
+  String get feedCooked => 'J\'ai fait la recette';
+
+  @override
+  String get feedCookedTitle => 'Tu as fait cette recette ?';
+
+  @override
+  String get feedCookedNote => 'Un petit mot (facultatif)';
+
+  @override
+  String get feedCookedThanks => 'Merci ! L\'autrice est prévenue.';
+
+  @override
+  String get savedRecipesTitle => 'Mes recettes';
+
+  @override
+  String profileFollowers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count abonnées',
+      one: '1 abonnée',
+      zero: 'Aucune abonnée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get profileNoContent => 'Rien de publié pour l\'instant.';
 }

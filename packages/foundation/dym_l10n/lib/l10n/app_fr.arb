@@ -9476,5 +9476,46 @@
   "familyEveryMonth": "Chaque mois",
   "@familyEveryMonth": {
     "description": "Famille : argent de poche mensuel"
+  },
+  "feedNear": "Près de moi",
+  "@feedNear": {
+    "description": "Cuisine : contenus des boutiques qui livrent ici (spec 101)"
+  },
+  "feedSave": "Enregistrer dans « Mes recettes »",
+  "@feedSave": {
+    "description": "Cuisine : enregistrer une recette"
+  },
+  "feedCooked": "J'ai fait la recette",
+  "@feedCooked": {
+    "description": "Cuisine : signaler qu'on a fait la recette"
+  },
+  "feedCookedTitle": "Tu as fait cette recette ?",
+  "@feedCookedTitle": {
+    "description": "Cuisine : titre du « J'ai fait »"
+  },
+  "feedCookedNote": "Un petit mot (facultatif)",
+  "@feedCookedNote": {
+    "description": "Cuisine : mot pour l'autrice"
+  },
+  "feedCookedThanks": "Merci ! L'autrice est prévenue.",
+  "@feedCookedThanks": {
+    "description": "Cuisine : confirmation du « J'ai fait »"
+  },
+  "savedRecipesTitle": "Mes recettes",
+  "@savedRecipesTitle": {
+    "description": "Cuisine : recettes enregistrées"
+  },
+  "profileFollowers": "{count, plural, =0{Aucune abonnée} =1{1 abonnée} other{{count} abonnées}}",
+  "@profileFollowers": {
+    "description": "Profil public : abonnées",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "profileNoContent": "Rien de publié pour l'instant.",
+  "@profileNoContent": {
+    "description": "Profil public : aucun contenu"
   }
 }

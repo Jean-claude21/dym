@@ -17,11 +17,26 @@ abstract interface class ContentService {
   /// Fil : vidéos d'un produit (par date), sinon fil classé (spec 037).
   Future<Result<List<ContentItem>>> feed({
     bool following = false,
+    bool near = false,
     DateTime? before,
     String? productId,
     String? category,
     int offset = 0,
   });
+
+  /// Profil public d'une créatrice ou d'une boutique (spec 101).
+  Future<Result<ContentProfile?>> profile(String kind, String id);
+
+  /// « Mes recettes » : enregistrer ou retirer.
+  Future<Result<ContentItem>> toggleSave(
+    ContentItem content, {
+    required bool on,
+  });
+
+  Future<Result<List<ContentItem>>> saved();
+
+  /// « J'ai fait la recette ».
+  Future<Result<ContentItem>> cooked(ContentItem content, {String? note});
 
   /// Catégories des contenus (puces du fil).
   Future<Result<List<ContentCategory>>> categories();
@@ -128,8 +143,26 @@ class NeonContentService implements ContentService {
       false;
 
   @override
+  Future<Result<ContentProfile?>> profile(String kind, String id) =>
+      _repository.profile(kind, id);
+
+  @override
+  Future<Result<ContentItem>> toggleSave(
+    ContentItem content, {
+    required bool on,
+  }) => _repository.toggleSave(content.id, on: on);
+
+  @override
+  Future<Result<List<ContentItem>>> saved() => _repository.savedContents();
+
+  @override
+  Future<Result<ContentItem>> cooked(ContentItem content, {String? note}) =>
+      _repository.cooked(content.id, note: note);
+
+  @override
   Future<Result<List<ContentItem>>> feed({
     bool following = false,
+    bool near = false,
     DateTime? before,
     String? productId,
     String? category,
@@ -143,6 +176,7 @@ class NeonContentService implements ContentService {
       : _repository.rankedFeed(
           zoneId: _discovery.zone.value,
           following: following,
+          near: near,
           category: category,
           offset: offset,
         );
@@ -279,6 +313,7 @@ class MemoryContentService implements ContentService {
   @override
   Future<Result<List<ContentItem>>> feed({
     bool following = false,
+    bool near = false,
     DateTime? before,
     String? productId,
     String? category,
@@ -419,4 +454,48 @@ class MemoryContentService implements ContentService {
 
   @override
   ImageProvider photo(String objectKey) => discovery.photo(objectKey);
+
+  /// Recettes enregistrées et faites (spec 101).
+  final savedIds = <String>{};
+  final cookedIds = <String>{};
+
+  @override
+  Future<Result<ContentProfile?>> profile(String kind, String id) async => Ok(
+    ContentProfile(
+      kind: kind,
+      id: id,
+      name: kind == 'creator' ? 'Awa cuisine' : 'Étal',
+      followers: 3,
+      contents: [
+        for (final c in contents)
+          if (c.author?.id == id || c.store?.id == id) c,
+      ],
+    ),
+  );
+
+  @override
+  Future<Result<ContentItem>> toggleSave(
+    ContentItem content, {
+    required bool on,
+  }) async {
+    on ? savedIds.add(content.id) : savedIds.remove(content.id);
+    return Ok(
+      content.copyWith(saved: on, saveCount: content.saveCount + (on ? 1 : -1)),
+    );
+  }
+
+  @override
+  Future<Result<List<ContentItem>>> saved() async => Ok([
+    for (final c in contents)
+      if (savedIds.contains(c.id)) c.copyWith(saved: true),
+  ]);
+
+  @override
+  Future<Result<ContentItem>> cooked(
+    ContentItem content, {
+    String? note,
+  }) async {
+    cookedIds.add(content.id);
+    return Ok(content.copyWith(cooked: true, cookCount: content.cookCount + 1));
+  }
 }
