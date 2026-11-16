@@ -12,6 +12,7 @@ class DymMapSpec {
     this.pins = const [],
     this.pinStyles = const {},
     this.areas = const [],
+    this.selectedPinId,
     this.onPinTap,
     this.onMapTap,
     this.onCameraIdle,
@@ -19,6 +20,9 @@ class DymMapSpec {
     this.interactive = true,
     this.semanticLabel,
   });
+
+  /// Épingle mise en avant (jamais regroupée).
+  final String? selectedPinId;
 
   final DymLatLng initialCenter;
   final double initialZoom;
@@ -49,6 +53,7 @@ class DymMap extends StatelessWidget {
     this.pins = const [],
     this.pinStyles = const {},
     this.areas = const [],
+    this.selectedPinId,
     this.onPinTap,
     this.onMapTap,
     this.onCameraIdle,
@@ -56,6 +61,9 @@ class DymMap extends StatelessWidget {
     this.interactive = true,
     this.semanticLabel,
   });
+
+  /// Épingle mise en avant (jamais regroupée).
+  final String? selectedPinId;
 
   /// Moteur utilisé par toutes les cartes ; les tests le remplacent pour
   /// ne pas créer de vue native.
@@ -82,6 +90,7 @@ class DymMap extends StatelessWidget {
       pins: pins,
       pinStyles: pinStyles,
       areas: areas,
+      selectedPinId: selectedPinId,
       onPinTap: onPinTap,
       onMapTap: onMapTap,
       onCameraIdle: onCameraIdle,
@@ -140,7 +149,10 @@ class _FakeControls implements DymMapControls {
   final FakeMapEngine _engine;
 
   @override
-  Future<void> fit(DymBounds bounds) async => _engine.moves.add(bounds.center);
+  Future<void> fit(
+    DymBounds bounds, {
+    EdgeInsets padding = EdgeInsets.zero,
+  }) async => _engine.moves.add(bounds.center);
 
   @override
   Future<void> moveTo(DymLatLng point, {double? zoom}) async =>

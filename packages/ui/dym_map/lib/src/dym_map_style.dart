@@ -12,6 +12,7 @@ abstract final class DymMapLayers {
   static const clusters = 'dym-clusters';
   static const clusterCount = 'dym-cluster-count';
   static const pins = 'dym-pins-icons';
+  static const pinLabels = 'dym-pins-labels';
 
   /// Calques touchables : regroupements et épingles.
   static const List<String> tappable = [clusters, pins];
@@ -322,6 +323,8 @@ String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
         },
         'paint': {'text-color': '#ffffff'},
       },
+      // Icônes et noms en calques séparés : une icône s'affiche même si
+      // les polices ne sont pas encore chargées.
       {
         'id': DymMapLayers.pins,
         'type': 'symbol',
@@ -334,18 +337,6 @@ String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
           'icon-image': ['get', 'icon'],
           'icon-anchor': 'bottom',
           'icon-allow-overlap': true,
-          'text-field': [
-            'step',
-            ['zoom'],
-            '',
-            14,
-            ['get', 'label'],
-          ],
-          'text-font': fontBold,
-          'text-size': 12,
-          'text-anchor': 'top',
-          'text-offset': [0, 0.3],
-          'text-optional': true,
         },
         'paint': {
           'icon-opacity': [
@@ -354,6 +345,26 @@ String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
             0.55,
             1,
           ],
+        },
+      },
+      {
+        'id': DymMapLayers.pinLabels,
+        'type': 'symbol',
+        'source': DymMapLayers.pinsSource,
+        'minzoom': 14,
+        'filter': [
+          '!',
+          ['has', 'point_count'],
+        ],
+        'layout': {
+          'text-field': ['get', 'label'],
+          'text-font': fontBold,
+          'text-size': 12,
+          'text-anchor': 'top',
+          'text-offset': [0, 0.3],
+          'text-optional': true,
+        },
+        'paint': {
           'text-color': brandDeep,
           'text-halo-color': halo,
           'text-halo-width': 1.5,

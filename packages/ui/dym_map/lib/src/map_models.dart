@@ -2,7 +2,7 @@ import 'package:dym_map/dym_map.dart' show DymMap;
 import 'package:dym_map/src/dym_map.dart' show DymMap;
 import 'package:dym_map/src/geo.dart';
 import 'package:flutter/foundation.dart' show immutable;
-import 'package:flutter/widgets.dart' show Color, IconData;
+import 'package:flutter/widgets.dart' show Color, EdgeInsets, IconData;
 
 /// Apparence d'un type d'épingle : carré à pointe, icône et couleurs DYM.
 @immutable
@@ -98,5 +98,7 @@ class DymMapView {
 abstract interface class DymMapControls {
   Future<void> moveTo(DymLatLng point, {double? zoom});
 
-  Future<void> fit(DymBounds bounds);
+  /// Cadre [bounds] ; [padding] réserve la place de ce qui couvre la carte
+  /// (fiche en bas, filtres en haut).
+  Future<void> fit(DymBounds bounds, {EdgeInsets padding});
 }

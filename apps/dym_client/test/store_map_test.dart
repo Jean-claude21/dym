@@ -85,8 +85,12 @@ void main() {
     test('filtre « ouvertes » et sélection avec zone de livraison', () async {
       final vm = StoreMapViewModel(service: _service(), config: togoConfig());
       await vm.onCameraIdle(_rouenView);
-      vm.select('rouen');
+      final engine = FakeMapEngine();
+      vm.controls = engine.controls;
+      await vm.select('rouen');
       expect(vm.areas.single.radiusM, 3000);
+      // La carte se cadre sur le cercle de livraison.
+      expect(engine.moves.single.latitude, closeTo(49.443, 0.001));
       await vm.toggleOpen();
       expect(vm.stores.map((s) => s.id), ['rouen']);
       expect(vm.selected?.id, 'rouen');
