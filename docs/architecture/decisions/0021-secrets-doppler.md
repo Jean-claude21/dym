@@ -14,13 +14,22 @@ n'existaient pas encore. Le porteur veut tout centraliser et sauvegarder (2026-1
   - `dym-functions` (`stg`, `prd`) : variables des Neon Functions ;
   - `dym-apps` (`stg`, `prd`) : DSN Sentry des apps, `google-services.json`, clés de signature
     Android (« upload key », PKCS12, RSA 4096, 10 000 jours) et leurs mots de passe, en base64 ;
-  - `dym-outils` : jetons Neon, Sentry, LiveKit, Moneroo, BrowserStack, Coolify, Agent37, OAuth.
+  - `dym-tools` : jetons Neon, Sentry, LiveKit, Moneroo, BrowserStack, Coolify, Agent37, OAuth.
+- Les clés personnelles du porteur (jetons d'admin des services : OpenAI, Neon, Sentry,
+  Cloudflare, Resend…) vivent une seule fois dans le projet `personal-keys` (config `prd`), partagé
+  par tous ses projets et tous ses PC. Les projets DYM y pointent par référence
+  (`${personal-keys.prd.NOM}`) au lieu de copier la valeur : changer une clé se fait à un seul endroit.
+  Seul `DOPPLER_TOKEN` reste hors de Doppler (il l'ouvre).
 - `scripts/secrets.mjs` régénère les fichiers locaux depuis Doppler (jeton dans `DOPPLER_TOKEN`) ;
-  aucune valeur n'est affichée ni écrite dans le dépôt.
+  aucune valeur n'est affichée ni écrite dans le dépôt. `perso prd <fichier>` réécrit le fichier
+  des clés personnelles (`.secrets/.admin.env`) ; sur un PC sans le dépôt :
+  `doppler login` puis `doppler secrets download --project personal-keys --config prd --no-file --format env`.
 - Play Store : Google garde la clé de signature de l'app (Play App Signing) ; la clé d'envoi est
   dans Doppler, avec une copie chiffrée hors ligne chez le porteur.
 
 ## Conséquences
 
 - Un nouveau poste ou une CI récupère tout avec un jeton Doppler.
+- Un nouveau projet du porteur crée son propre projet Doppler et référence `personal-keys` pour
+  les clés communes.
 - Changer un secret se fait dans Doppler, puis on régénère les fichiers et on redéploie.
