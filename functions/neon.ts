@@ -42,6 +42,10 @@ export default defineConfig({
         // Moneroo (spec 088) : clé secrète (bac à sable ou réelle) et secret des webhooks.
         MONEROO_SECRET_KEY: process.env.MONEROO_SECRET_KEY ?? "",
         MONEROO_WEBHOOK_SECRET: process.env.MONEROO_WEBHOOK_SECRET ?? "",
+        // Bunny Stream (spec 101) : vidéo adaptative des contenus ; vide : vidéo d'origine.
+        BUNNY_STREAM_LIBRARY_ID: process.env.BUNNY_STREAM_LIBRARY_ID ?? "",
+        BUNNY_STREAM_API_KEY: process.env.BUNNY_STREAM_API_KEY ?? "",
+        BUNNY_STREAM_CDN: process.env.BUNNY_STREAM_CDN ?? "",
       },
     },
   },
@@ -85,6 +89,14 @@ export default defineConfig({
       functionPath: "/v1/jobs/fraud-signals",
       // Règles SQL des dernières 24 h ; un signal par règle, sujet et jour (spec 054).
       cron: "*/15 * * * *",
+      enabled: true,
+    },
+    contentStreams: {
+      type: "schedule",
+      function: "api",
+      functionPath: "/v1/jobs/content-streams",
+      // Vidéos des contenus envoyées à Bunny puis suivies jusqu'à la lecture HLS (spec 101).
+      cron: "*/5 * * * *",
       enabled: true,
     },
     moderationTriage: {

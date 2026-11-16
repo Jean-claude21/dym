@@ -274,17 +274,19 @@ class ContentRepository {
 
   // ---------------------------------------------------------------- fil classé
 
-  /// Fil classé par la base (spec 037) : onglet, catégorie, décalage.
+  /// Fil classé par la base (spec 037) : onglet, catégorie, décalage ;
+  /// [near] : boutiques qui livrent ici, par date (spec 101).
   Future<Result<List<ContentItem>>> rankedFeed({
     String? zoneId,
     bool following = false,
+    bool near = false,
     String? category,
     int offset = 0,
   }) async => (await _data.rpc<Object?>(
     'content_feed_ranked',
     params: {
       'p_zone': zoneId,
-      'p_tab': following ? 'following' : 'for_you',
+      'p_tab': near ? 'near' : (following ? 'following' : 'for_you'),
       'p_category': category,
       'p_offset': offset,
     },
@@ -461,4 +463,36 @@ class ContentRepository {
         (json) =>
             CopilotProposal.fromJson((json! as Map).cast<String, dynamic>()),
       );
+
+  // ---------------------------------------------------------------- spec 101
+
+  /// Profil public d'une créatrice (`creator`) ou d'une boutique (`store`).
+  Future<Result<ContentProfile?>> profile(String kind, String id) async =>
+      (await _data.rpc<Object?>(
+        'content_profile',
+        params: {'p_kind': kind, 'p_id': id},
+      )).map(
+        (j) => j == null
+            ? null
+            : ContentProfile.fromJson((j as Map).cast<String, dynamic>()),
+      );
+
+  /// « Mes recettes » : ajouter ou retirer.
+  Future<Result<ContentItem>> toggleSave(
+    String contentId, {
+    required bool on,
+  }) async => (await _data.rpc<Object?>(
+    'toggle_save_content',
+    params: {'p_content': contentId, 'p_on': on},
+  )).map((j) => ContentItem.fromJson((j! as Map).cast<String, dynamic>()));
+
+  Future<Result<List<ContentItem>>> savedContents() async =>
+      (await _data.rpc<Object?>('my_saved_contents')).map(_items);
+
+  /// « J'ai fait la recette », avec un petit mot facultatif.
+  Future<Result<ContentItem>> cooked(String contentId, {String? note}) async =>
+      (await _data.rpc<Object?>(
+        'i_cooked_it',
+        params: {'p_content': contentId, 'p_note': note},
+      )).map((j) => ContentItem.fromJson((j! as Map).cast<String, dynamic>()));
 }

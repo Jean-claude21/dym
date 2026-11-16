@@ -2,6 +2,7 @@ import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
 import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/content/stories.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -175,6 +176,26 @@ void main() {
         'c1:add:p-tomates',
         'c1:report:misleading',
       ]);
+    });
+
+    test("cuisine sociale : mes recettes, j'ai fait, près de moi", () async {
+      final service = MemoryContentService(
+        discovery: memoryDiscovery(),
+        contents: [_content('c1'), _content('c2')],
+      );
+      final vm = FeedViewModel(service: service);
+      await vm.load();
+      await vm.toggleSave(vm.items!.first);
+      expect(vm.items!.first.saved, isTrue);
+      final saved = await service.saved();
+      expect(saved, isA<Ok<List<ContentItem>>>());
+      expect((saved as Ok<List<ContentItem>>).value.single.id, 'c1');
+      await vm.markCooked(vm.items!.first, note: 'Délicieux');
+      expect(vm.items!.first.cooked, isTrue);
+      expect(service.cookedIds, {'c1'});
+      await vm.selectTab(following: false, near: true);
+      expect(vm.near, isTrue);
+      expect(vm.items, isNotNull);
     });
 
     test("suivies : vide ; vidéos d'un produit", () async {

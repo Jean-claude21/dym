@@ -13596,6 +13596,60 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Chaque mois'**
   String get familyEveryMonth;
+
+  /// Cuisine : contenus des boutiques qui livrent ici (spec 101)
+  ///
+  /// In fr, this message translates to:
+  /// **'Près de moi'**
+  String get feedNear;
+
+  /// Cuisine : enregistrer une recette
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer dans « Mes recettes »'**
+  String get feedSave;
+
+  /// Cuisine : signaler qu'on a fait la recette
+  ///
+  /// In fr, this message translates to:
+  /// **'J\'ai fait la recette'**
+  String get feedCooked;
+
+  /// Cuisine : titre du « J'ai fait »
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu as fait cette recette ?'**
+  String get feedCookedTitle;
+
+  /// Cuisine : mot pour l'autrice
+  ///
+  /// In fr, this message translates to:
+  /// **'Un petit mot (facultatif)'**
+  String get feedCookedNote;
+
+  /// Cuisine : confirmation du « J'ai fait »
+  ///
+  /// In fr, this message translates to:
+  /// **'Merci ! L\'autrice est prévenue.'**
+  String get feedCookedThanks;
+
+  /// Cuisine : recettes enregistrées
+  ///
+  /// In fr, this message translates to:
+  /// **'Mes recettes'**
+  String get savedRecipesTitle;
+
+  /// Profil public : abonnées
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune abonnée} =1{1 abonnée} other{{count} abonnées}}'**
+  String profileFollowers(int count);
+
+  /// Profil public : aucun contenu
+  ///
+  /// In fr, this message translates to:
+  /// **'Rien de publié pour l\'instant.'**
+  String get profileNoContent;
 }
 
 class _DymLocalizationsDelegate

@@ -33,6 +33,9 @@ class FeedViewModel extends BaseViewModel {
 
   bool following = false;
 
+  /// « Près de moi » : boutiques qui livrent ici (spec 101).
+  bool near = false;
+
   /// Catégorie filtrée (spec 037) ; nulle : toutes.
   String? category;
   List<ContentCategory> categories = const [];
@@ -66,6 +69,7 @@ class FeedViewModel extends BaseViewModel {
     }
     switch (await service.feed(
       following: following,
+      near: near,
       productId: productId,
       category: category,
     )) {
@@ -79,10 +83,27 @@ class FeedViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> selectTab({required bool following}) async {
-    if (this.following == following) return;
+  Future<void> selectTab({required bool following, bool near = false}) async {
+    if (this.following == following && this.near == near) return;
     this.following = following;
+    this.near = near;
     await load();
+  }
+
+  /// « Mes recettes » (spec 101) : ajout ou retrait, compte relu en base.
+  Future<void> toggleSave(ContentItem content) async {
+    final on = !content.saved;
+    _replace(content.copyWith(saved: on));
+    if (await service.toggleSave(content, on: on) case Ok(:final value)) {
+      _replace(value);
+    }
+  }
+
+  /// « J'ai fait la recette » (spec 101).
+  Future<void> markCooked(ContentItem content, {String? note}) async {
+    if (await service.cooked(content, note: note) case Ok(:final value)) {
+      _replace(value);
+    }
   }
 
   Future<void> selectCategory(String? slug) async {
@@ -138,6 +159,7 @@ class FeedViewModel extends BaseViewModel {
       _loadingMore = true;
       final more = await service.feed(
         following: following,
+        near: near,
         before: productId == null ? null : list.last.createdAt,
         productId: productId,
         category: category,
@@ -329,25 +351,56 @@ class FeedView extends StackedView<FeedViewModel> {
                         else
                           const SizedBox(width: DymTokenSpace.s2),
                         if (productId == null) ...[
-                          for (final (i, (following, label)) in [
-                            (false, l10n.feedForYou),
-                            (true, l10n.feedFollowing),
-                          ].indexed) ...[
-                            if (i > 0)
-                              const Text(
-                                '·',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  shadows: _shadow,
-                                ),
+                          // Onglets défilables : trois onglets tiennent sur
+                          // un petit téléphone, texte agrandi compris.
+                          Expanded(
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  for (final (i, (following, near, label)) in [
+                                    (false, false, l10n.feedForYou),
+                                    (true, false, l10n.feedFollowing),
+                                    (false, true, l10n.feedNear),
+                                  ].indexed) ...[
+                                    if (i > 0)
+                                      const Text(
+                                        '·',
+                                        style: TextStyle(
+                                          color: Colors.white70,
+                                          shadows: _shadow,
+                                        ),
+                                      ),
+                                    _Tab(
+                                      label: label,
+                                      selected:
+                                          vm.following == following &&
+                                          vm.near == near,
+                                      onTap: () => vm.selectTab(
+                                        following: following,
+                                        near: near,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
-                            _Tab(
-                              label: label,
-                              selected: vm.following == following,
-                              onTap: () => vm.selectTab(following: following),
                             ),
-                          ],
-                          const Spacer(),
+                          ),
+                          // « Mes recettes » (spec 101).
+                          IconButton(
+                            tooltip: l10n.savedRecipesTitle,
+                            onPressed: () => Navigator.of(context).push<void>(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    SavedRecipesView(service: vm.service),
+                              ),
+                            ),
+                            icon: const Icon(
+                              Icons.bookmarks_outlined,
+                              color: Colors.white,
+                              shadows: _shadow,
+                            ),
+                          ),
                           IconButton(
                             tooltip: vm.grid
                                 ? l10n.feedFullScreen
@@ -573,7 +626,11 @@ class _ContentPage extends StatelessWidget {
         if (content.isVideo)
           videoBuilder(
             context,
-            service.mediaUrl(content.mediaKey!),
+            // Lecture adaptative HLS quand la vidéo est convertie (spec 101).
+            switch (content.streamUrl) {
+              final hls? => Uri.parse(hls),
+              _ => service.mediaUrl(content.mediaKey!),
+            },
             active: active,
           )
         else
@@ -603,7 +660,17 @@ class _ContentPage extends StatelessWidget {
                         children: [
                           if (name != null)
                             InkWell(
-                              onTap: store == null || onOpenStore == null
+                              // Créatrice : son profil public (spec 101).
+                              onTap: store == null
+                                  ? (author == null
+                                        ? null
+                                        : () => openContentProfile(
+                                            context,
+                                            service,
+                                            'creator',
+                                            author.id,
+                                          ))
+                                  : onOpenStore == null
                                   ? null
                                   : () => onOpenStore!(store.id),
                               child: Text.rich(
@@ -704,6 +771,25 @@ class _ContentPage extends StatelessWidget {
                           tooltip: l10n.feedLike,
                           onTap: () => vm.toggleLike(content),
                         ),
+                        _SideAction(
+                          icon: content.saved
+                              ? Icons.bookmark_rounded
+                              : Icons.bookmark_border_rounded,
+                          color: content.saved ? c.plantain : Colors.white,
+                          label: compactCount(content.saveCount, locale),
+                          tooltip: l10n.feedSave,
+                          onTap: () => vm.toggleSave(content),
+                        ),
+                        if (content.hasRecipe)
+                          _SideAction(
+                            icon: content.cooked
+                                ? Icons.restaurant_rounded
+                                : Icons.restaurant_menu_rounded,
+                            color: content.cooked ? c.plantain : Colors.white,
+                            label: compactCount(content.cookCount, locale),
+                            tooltip: l10n.feedCooked,
+                            onTap: () => _cooked(context, vm, content),
+                          ),
                         _SideAction(
                           icon: Icons.chat_bubble_outline_rounded,
                           label: compactCount(content.commentCount, locale),
@@ -1288,6 +1374,272 @@ class _CommentsSheetState extends State<CommentsSheet> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// « J'ai fait la recette » : un petit mot facultatif (spec 101).
+Future<void> _cooked(
+  BuildContext context,
+  FeedViewModel vm,
+  ContentItem content,
+) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final note = TextEditingController();
+  final ok = await showDialog<bool>(
+    context: context,
+    builder: (d) => AlertDialog(
+      title: Text(l10n.feedCookedTitle),
+      content: TextField(
+        controller: note,
+        maxLength: 280,
+        decoration: InputDecoration(labelText: l10n.feedCookedNote),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(d, false),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(d, true),
+          child: Text(l10n.feedCooked),
+        ),
+      ],
+    ),
+  );
+  final text = note.text.trim();
+  note.dispose();
+  if (ok != true) return;
+  await vm.markCooked(content, note: text.isEmpty ? null : text);
+  messenger?.showSnackBar(SnackBar(content: Text(l10n.feedCookedThanks)));
+}
+
+/// Profil public d'une créatrice ou d'une boutique (spec 101).
+Future<void> openContentProfile(
+  BuildContext context,
+  ContentService service,
+  String kind,
+  String id,
+) => Navigator.of(context).push<void>(
+  MaterialPageRoute(
+    builder: (_) => ContentProfileView(service: service, kind: kind, id: id),
+  ),
+);
+
+class ContentProfileView extends StatefulWidget {
+  const new({
+    required this.service,
+    required this.kind,
+    required this.id,
+    super.key,
+  });
+
+  final ContentService service;
+  final String kind;
+  final String id;
+
+  @override
+  State<ContentProfileView> createState() => _ContentProfileViewState();
+}
+
+class _ContentProfileViewState extends State<ContentProfileView> {
+  ContentProfile? _profile;
+  Failure? _failure;
+  bool _following = false;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_load());
+  }
+
+  Future<void> _load() async {
+    switch (await widget.service.profile(widget.kind, widget.id)) {
+      case Ok(:final value):
+        if (mounted) {
+          setState(() {
+            _profile = value;
+            _following = value?.following ?? false;
+          });
+        }
+      case Err(:final failure):
+        if (mounted) setState(() => _failure = failure);
+    }
+  }
+
+  Future<void> _toggleFollow() async {
+    final p = _profile;
+    final first = p?.contents.firstOrNull;
+    if (p == null || first == null) return;
+    final on = !_following;
+    setState(() => _following = on);
+    await widget.service.follow(first, on: on);
+    await _load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final t = context.dym.text;
+    final c = context.dym.colors;
+    final p = _profile;
+    return Scaffold(
+      appBar: AppBar(title: Text(p?.name ?? '')),
+      body: p == null
+          ? (_failure == null
+                ? const Center(child: CircularProgressIndicator())
+                : DymStateView(
+                    kind: DymStateKind.error,
+                    title: l10n.errorLoadMessage,
+                    message: '',
+                    actionLabel: l10n.retry,
+                    onAction: _load,
+                  ))
+          : ListView(
+              padding: const EdgeInsets.all(DymTokenSpace.s4),
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundColor: c.tintVertTendre,
+                      child: Text(
+                        p.name.characters.firstOrNull ?? '',
+                        style: t.display.copyWith(color: c.brandDeep),
+                      ),
+                    ),
+                    const SizedBox(width: DymTokenSpace.s3),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(p.name, style: t.title),
+                          Text(
+                            l10n.profileFollowers(p.followers),
+                            style: t.label.copyWith(color: c.textSecondary),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (p.contents.isNotEmpty)
+                      DymButton(
+                        label: _following
+                            ? l10n.feedFollowingOne
+                            : l10n.feedFollow,
+                        variant: _following
+                            ? DymButtonVariant.secondary
+                            : DymButtonVariant.primary,
+                        onPressed: _toggleFollow,
+                      ),
+                  ],
+                ),
+                if (p.bio case final bio? when bio.isNotEmpty) ...[
+                  const SizedBox(height: DymTokenSpace.s3),
+                  Text(bio, style: t.body),
+                ],
+                const SizedBox(height: DymTokenSpace.s4),
+                ContentGrid(service: widget.service, items: p.contents),
+              ],
+            ),
+    );
+  }
+}
+
+/// Grille de vignettes (profil, « Mes recettes »).
+class ContentGrid extends StatelessWidget {
+  const new({required this.service, required this.items, super.key});
+
+  final ContentService service;
+  final List<ContentItem> items;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final l10n = DymLocalizations.of(context);
+    if (items.isEmpty) {
+      return DymStateView(
+        kind: DymStateKind.empty,
+        title: l10n.profileNoContent,
+        message: '',
+      );
+    }
+    return GridView.count(
+      crossAxisCount: 3,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      mainAxisSpacing: 4,
+      crossAxisSpacing: 4,
+      childAspectRatio: 9 / 16,
+      children: [
+        for (final item in items)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                if (item.mediaKey != null && !item.isVideo)
+                  Image(image: service.photo(item.mediaKey!), fit: BoxFit.cover)
+                else
+                  ColoredBox(color: c.brandDeep),
+                if (item.isVideo)
+                  const Center(
+                    child: Icon(Icons.play_arrow_rounded, color: Colors.white),
+                  ),
+                Positioned(
+                  left: 6,
+                  right: 6,
+                  bottom: 6,
+                  child: Text(
+                    item.caption ?? '',
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// « Mes recettes » : contenus enregistrés (spec 101).
+class SavedRecipesView extends StatefulWidget {
+  const new({required this.service, super.key});
+
+  final ContentService service;
+
+  @override
+  State<SavedRecipesView> createState() => _SavedRecipesViewState();
+}
+
+class _SavedRecipesViewState extends State<SavedRecipesView> {
+  List<ContentItem>? _items;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(
+      widget.service.saved().then((r) {
+        if (mounted) setState(() => _items = r.valueOrNull ?? const []);
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = DymLocalizations.of(context);
+    final items = _items;
+    return Scaffold(
+      appBar: AppBar(title: Text(l10n.savedRecipesTitle)),
+      body: items == null
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.all(DymTokenSpace.s3),
+              children: [ContentGrid(service: widget.service, items: items)],
+            ),
     );
   }
 }

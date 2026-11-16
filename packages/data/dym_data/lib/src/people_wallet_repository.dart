@@ -10,9 +10,8 @@ class PeopleWalletRepository {
   final NeonDataClient _data;
 
   Future<Result<PeopleWallet>> overview() async =>
-      (await _data.rpc<Object?>('my_p2p')).map(
-        (j) => PeopleWallet.fromJson((j! as Map).cast()),
-      );
+      (await _data.rpc<Object?>('my_p2p'))
+          .map((j) => PeopleWallet.fromJson((j! as Map).cast()));
 
   /// Prénom du destinataire d'un code ; `null` : code inconnu.
   Future<Result<String?>> recipient(String handle) async =>

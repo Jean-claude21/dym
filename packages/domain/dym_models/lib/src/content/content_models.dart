@@ -199,6 +199,11 @@ class ContentItem {
     this.followed = false,
     this.ingredients = const [],
     this.sourceUrl,
+    this.saved = false,
+    this.saveCount = 0,
+    this.cooked = false,
+    this.cookCount = 0,
+    this.streamUrl,
   });
 
   factory fromJson(Map<String, dynamic> json) => ContentItem(
@@ -242,7 +247,23 @@ class ContentItem {
         ShoppingItem.fromJson((i as Map).cast<String, dynamic>()),
     ],
     sourceUrl: json['source_url'] as String?,
+    saved: json['saved'] as bool? ?? false,
+    saveCount: (json['save_count'] as num?)?.toInt() ?? 0,
+    cooked: json['cooked'] as bool? ?? false,
+    cookCount: (json['cook_count'] as num?)?.toInt() ?? 0,
+    streamUrl: json['stream_url'] as String?,
   );
+
+  /// « Mes recettes » (spec 101).
+  final bool saved;
+  final int saveCount;
+
+  /// « J'ai fait la recette » (spec 101).
+  final bool cooked;
+  final int cookCount;
+
+  /// Lecture adaptative HLS, une fois la vidéo convertie (spec 101).
+  final String? streamUrl;
 
   final String id;
   final ContentKind kind;
@@ -293,6 +314,10 @@ class ContentItem {
     String? status,
     int? commentCount,
     bool? followed,
+    bool? saved,
+    int? saveCount,
+    bool? cooked,
+    int? cookCount,
   }) => ContentItem(
     id: id,
     kind: kind,
@@ -317,6 +342,11 @@ class ContentItem {
     followed: followed ?? this.followed,
     ingredients: ingredients,
     sourceUrl: sourceUrl,
+    saved: saved ?? this.saved,
+    saveCount: saveCount ?? this.saveCount,
+    cooked: cooked ?? this.cooked,
+    cookCount: cookCount ?? this.cookCount,
+    streamUrl: streamUrl,
   );
 }
 
@@ -442,4 +472,40 @@ class ModerationItem {
   /// Avis de l'IA (spec 054) : `keep`, `remove` ou `unsure` ; l'équipe décide.
   final String? aiVerdict;
   final String? aiReason;
+}
+
+/// Profil public d'une créatrice ou d'une boutique (spec 101).
+@immutable
+class ContentProfile {
+  const new({
+    required this.kind,
+    required this.id,
+    required this.name,
+    this.bio,
+    this.followers = 0,
+    this.following = false,
+    this.contents = const [],
+  });
+
+  factory fromJson(Map<String, dynamic> json) => ContentProfile(
+    kind: json['kind'] as String? ?? 'creator',
+    id: json['id'] as String,
+    name: json['name'] as String? ?? '',
+    bio: json['bio'] as String?,
+    followers: (json['followers'] as num?)?.toInt() ?? 0,
+    following: json['following'] as bool? ?? false,
+    contents: [
+      for (final c in json['contents'] as List? ?? const [])
+        ContentItem.fromJson((c as Map).cast<String, dynamic>()),
+    ],
+  );
+
+  /// `creator` ou `store`.
+  final String kind;
+  final String id;
+  final String name;
+  final String? bio;
+  final int followers;
+  final bool following;
+  final List<ContentItem> contents;
 }

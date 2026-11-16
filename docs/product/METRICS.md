@@ -85,4 +85,6 @@ fiabilité (ops).
 | `call_missed` (type d'appel) | Serveur | Appels (spec 097) |
 | `quote_accepted` (lignes), `coupon_claimed` (pourcentage) | Serveur | Chat de commerce (spec 099) |
 | `wallet_shared` (type : envoi, demande payée, recharge, argent de poche ; montant) | Serveur | Avoir entre personnes (spec 100) |
+| `recipe_saved` (contenu) | Serveur | « Mes recettes » (spec 101) |
+| `recipe_cooked` (contenu ; jamais la note) | Serveur | « J'ai fait la recette » (spec 101) |
 | `courier_relaunched` (rang, élargie, livreurs prévenus), `courier_ready_alerted` ; `order_rejected` avec le motif `no_response` (acteur système) | Serveur | Livreurs relancés, alerte « prête », refus automatique (spec 066) |
