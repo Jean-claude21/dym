@@ -4,6 +4,7 @@ import 'package:dym_chat/src/call_service.dart';
 import 'package:dym_chat/src/call_views.dart';
 import 'package:dym_chat/src/chat_service.dart';
 import 'package:dym_chat/src/chat_viewmodels.dart';
+import 'package:dym_chat/src/commerce_views.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
@@ -48,6 +49,11 @@ String chatPreview(DymLocalizations l10n, ChatMessage? m, [ChatRole? me]) {
     ChatMessage(kind: MessageKind.image) => l10n.chatPhoto,
     ChatMessage(kind: MessageKind.audio) => l10n.chatVoicePreview,
     ChatMessage(kind: MessageKind.call) => l10n.chatCallPreview,
+    ChatMessage(kind: MessageKind.video) => l10n.chatVideo,
+    ChatMessage(kind: MessageKind.location) => l10n.chatLocation,
+    ChatMessage(kind: MessageKind.quote) => l10n.chatQuote,
+    ChatMessage(kind: MessageKind.paymentRequest) => l10n.chatPaymentRequest,
+    ChatMessage(kind: MessageKind.coupon) => l10n.chatCouponSend,
     ChatMessage(kind: MessageKind.product, :final product) =>
       l10n.chatProductPreview(product?.name ?? ''),
     ChatMessage(:final body) => body ?? '',
@@ -87,6 +93,11 @@ IconData? _previewIcon(MessageKind? kind) => switch (kind) {
   MessageKind.audio => Icons.mic_rounded,
   MessageKind.call => Icons.call_rounded,
   MessageKind.product => Icons.sell_rounded,
+  MessageKind.video => Icons.videocam_rounded,
+  MessageKind.location => Icons.place_rounded,
+  MessageKind.quote => Icons.request_quote_outlined,
+  MessageKind.paymentRequest => Icons.payments_outlined,
+  MessageKind.coupon => Icons.local_offer_outlined,
   _ => null,
 };
 
@@ -939,20 +950,35 @@ class _Bubble extends StatelessWidget {
     final clock = chatClock(context, message.createdAt);
     Widget meta({bool onBrand = false}) =>
         _Meta(time: clock, onBrand: onBrand, mine: mine, seen: entry.seen);
-    final Widget content = switch (message.kind) {
+    final content = switch (message.kind) {
       MessageKind.image => _Photo(
         url: vm.mediaUrl(message.id),
         vm: vm,
         meta: meta(),
         mine: mine,
       ),
-      MessageKind.audio => _AudioBubble(
+      MessageKind.audio => Column(
+        crossAxisAlignment: mine
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _AudioBubble(message: message, vm: vm, mine: mine, meta: meta()),
+          TranscriptLine(message: message, vm: vm),
+        ],
+      ),
+      MessageKind.call => _CallBubble(message: message, meta: meta()),
+      // Chat de commerce (spec 099).
+      MessageKind.video ||
+      MessageKind.location ||
+      MessageKind.quote ||
+      MessageKind.paymentRequest ||
+      MessageKind.coupon => CommerceBubble(
         message: message,
         vm: vm,
         mine: mine,
         meta: meta(),
       ),
-      MessageKind.call => _CallBubble(message: message, meta: meta()),
       MessageKind.product => _ProductCard(
         message: message,
         vm: vm,
@@ -1513,6 +1539,8 @@ class _ComposerState extends State<_Composer> {
       title: Text(label),
       onTap: () => Navigator.pop(context, value),
     );
+    final extra = commerceOptions(l10n, widget.vm);
+    CommerceAction? commerce;
     final choice = await showModalBottomSheet<_Attach>(
       context: context,
       showDragHandle: true,
@@ -1534,10 +1562,27 @@ class _ComposerState extends State<_Composer> {
               Icons.photo_library_rounded,
               l10n.chatGallery,
             ),
+            for (final (action, icon, label) in extra)
+              ListTile(
+                minTileHeight: DymTokenSize.touchMin + 8,
+                leading: CircleAvatar(
+                  backgroundColor: c.tintPlantainClair,
+                  child: Icon(icon, color: c.brandDeep),
+                ),
+                title: Text(label),
+                onTap: () {
+                  commerce = action;
+                  Navigator.pop(context);
+                },
+              ),
           ],
         ),
       ),
     );
+    if (commerce case final action? when mounted) {
+      await runCommerceAction(context, widget.vm, action);
+      return;
+    }
     if (!mounted) return;
     switch (choice) {
       case _Attach.camera:

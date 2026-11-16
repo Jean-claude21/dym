@@ -9,7 +9,20 @@ Object? _self(Map<dynamic, dynamic> json, String key) => json;
 
 /// Nature d'un message.
 @JsonEnum(fieldRename: FieldRename.snake)
-enum MessageKind { text, image, product, audio, call, unknown }
+enum MessageKind {
+  text,
+  image,
+  product,
+  audio,
+  call,
+  // Chat de commerce (spec 099).
+  video,
+  location,
+  quote,
+  paymentRequest,
+  coupon,
+  unknown,
+}
 
 /// Rôle dans une conversation.
 enum ChatRole {
@@ -35,9 +48,35 @@ class ChatMessage {
     this.productId,
     this.durationMs,
     this.call,
+    this.payload,
+    this.transcript,
+    this.liveUntil,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
+
+  /// Contenu structuré (spec 099) : position, devis, demande de paiement,
+  /// coupon ; l'état (accepté, payé, expiré) est relu en base.
+  final Map<String, dynamic>? payload;
+
+  /// Texte d'un vocal, une fois transcrit.
+  final String? transcript;
+
+  /// Position en direct : fin du partage.
+  final DateTime? liveUntil;
+
+  /// Position partagée en direct, encore active.
+  bool get isLive =>
+      kind == MessageKind.location &&
+      (liveUntil?.isAfter(DateTime.now()) ?? false);
+
+  double? payloadNumber(String key) => switch (payload?[key]) {
+    final num n => n.toDouble(),
+    final String s => double.tryParse(s),
+    _ => null,
+  };
+
+  String? payloadText(String key) => payload?[key]?.toString();
 
   final String id;
   final String conversationId;

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dym_chat/src/call_service.dart';
+import 'package:dym_chat/src/chat_commerce.dart';
 import 'package:dym_chat/src/chat_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
@@ -344,6 +345,10 @@ class MemoryChatService implements ChatService {
 
   @override
   CallService? calls;
+
+  /// Chat de commerce (spec 099) ; nul : menu réduit.
+  @override
+  ChatCommerce? commerce;
 
   @override
   Future<Result<Map<String, String>>> mediaUrls(

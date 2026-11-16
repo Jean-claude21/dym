@@ -122,6 +122,7 @@ export default createApp({
   messaging: {
     store: pgMessagingStore(pool),
     signer: s3MediaSigner({ ...env.storage, bucket: CHAT_MEDIA_BUCKET }),
+    transcriber: searchModels ? aiTranscriber(searchModels) : undefined,
   },
   // Serveur MCP de l'admin (spec 086) : clés personnelles, droits de l'admin.
   mcp: pgMcpStore(pool),

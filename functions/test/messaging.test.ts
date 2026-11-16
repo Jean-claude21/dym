@@ -46,6 +46,14 @@ class FakeStore implements MessagingStore {
     if (ids.includes(msg)) keys[msg] = `chats/${conv}/x.jpg`;
     return keys;
   }
+  transcript: string | null = null;
+  async transcriptTarget(_u: string, id: string) {
+    return id === msg ? { media_key: `chats/${conv}/v.m4a`, transcript: this.transcript } : null;
+  }
+  async transcriptionModel() {
+    return null;
+  }
+  async setTranscript() {}
 }
 
 const signer: MediaSigner = {
@@ -103,5 +111,23 @@ describe("messagerie", () => {
       urls: { [msg]: `https://s3.test/get/chats/${conv}/x.jpg` },
       expires_in: 300,
     });
+  });
+});
+
+describe("transcription des vocaux (spec 099)", () => {
+  it("déjà transcrit : texte relu ; sans fournisseur : simulé, signalé", async () => {
+    const fake = new FakeStore();
+    let res = await post(fake, "/v1/chat-media/transcribe", { message_id: msg });
+    expect(await res.json()).toEqual({ transcript: null, simulated: true });
+    fake.transcript = "Je passe à 18 h";
+    res = await post(fake, "/v1/chat-media/transcribe", { message_id: msg });
+    expect(await res.json()).toEqual({ transcript: "Je passe à 18 h", simulated: false });
+  });
+
+  it("vocal inconnu : 404", async () => {
+    const res = await post(new FakeStore(), "/v1/chat-media/transcribe", {
+      message_id: "00000000-0000-4000-8000-000000000000",
+    });
+    expect(res.status).toBe(404);
   });
 });

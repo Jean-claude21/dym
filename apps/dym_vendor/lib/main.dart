@@ -213,6 +213,13 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton<ChatService>(
       NeonChatService(
         repository: messaging,
+        // Chat de commerce (spec 099) : devis à partir du catalogue publié.
+        commerce: NeonChatCommerce(
+          repository: messaging,
+          videos: PluginVideoPicker(),
+          location: const PluginLocationProvider(),
+          choices: _quoteChoices,
+        ),
         role: ChatRole.vendor,
         countryConfig: stores.countryConfig,
         photos: PluginPhotoPicker(),
@@ -337,3 +344,19 @@ Future<void> _openPush(
     nav.toOrder(order);
   }
 }
+
+/// Articles proposables dans un devis : variantes des produits publiés.
+Future<Result<List<QuoteChoice>>> _quoteChoices() async =>
+    (await locator<CatalogService>().products()).map(
+      (products) => [
+        for (final p in products)
+          if (p.status == ProductStatus.published)
+            for (final v in p.variants)
+              if (v.priceMinor ?? p.priceMinor case final price?)
+                QuoteChoice(
+                  variantId: v.id,
+                  label: [p.name, ?v.label].join(' · '),
+                  priceMinor: price,
+                ),
+      ],
+    );

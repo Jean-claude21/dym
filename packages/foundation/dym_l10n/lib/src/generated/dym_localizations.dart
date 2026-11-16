@@ -13116,6 +13116,234 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'{name} · {count, plural, =1{1 commande} other{{count} commandes}}'**
   String insightsLoyalChip(String name, int count);
+
+  /// Chat : message vidéo (spec 099)
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo'**
+  String get chatVideo;
+
+  /// Chat : lire une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Lire la vidéo'**
+  String get chatVideoPlay;
+
+  /// Chat : durée d'une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéo · {seconds} s'**
+  String chatVideoDuration(int seconds);
+
+  /// Chat : enregistrer une vidéo (1 min au plus)
+  ///
+  /// In fr, this message translates to:
+  /// **'Filmer une vidéo'**
+  String get chatVideoRecord;
+
+  /// Chat : choisir une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager une vidéo'**
+  String get chatVideoShare;
+
+  /// Chat : position partagée
+  ///
+  /// In fr, this message translates to:
+  /// **'Position'**
+  String get chatLocation;
+
+  /// Chat : position en direct
+  ///
+  /// In fr, this message translates to:
+  /// **'Position en direct jusqu\'à {time}'**
+  String chatLocationLive(String time);
+
+  /// Chat : ouvrir la position dans une carte
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir la carte'**
+  String get chatLocationOpen;
+
+  /// Chat : arrêter la position en direct
+  ///
+  /// In fr, this message translates to:
+  /// **'Arrêter le partage'**
+  String get chatLocationStop;
+
+  /// Chat : position ponctuelle
+  ///
+  /// In fr, this message translates to:
+  /// **'Envoyer ma position'**
+  String get chatLocationSend;
+
+  /// Chat : partager sa position en direct
+  ///
+  /// In fr, this message translates to:
+  /// **'Position en direct (15 min)'**
+  String get chatLocationLiveSend;
+
+  /// Chat : devis de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Devis'**
+  String get chatQuote;
+
+  /// Chat : total du devis
+  ///
+  /// In fr, this message translates to:
+  /// **'Total : {amount}'**
+  String chatQuoteTotal(String amount);
+
+  /// Chat : accepter le devis en un geste
+  ///
+  /// In fr, this message translates to:
+  /// **'Accepter et mettre au panier'**
+  String get chatQuoteAccept;
+
+  /// Chat : devis accepté
+  ///
+  /// In fr, this message translates to:
+  /// **'Devis accepté'**
+  String get chatQuoteAccepted;
+
+  /// Chat : devis pas encore accepté
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente de la cliente'**
+  String get chatQuotePending;
+
+  /// Chat : devis accepté, panier mis à jour
+  ///
+  /// In fr, this message translates to:
+  /// **'Articles ajoutés au panier aux prix du devis.'**
+  String get chatQuoteInCart;
+
+  /// Chat : la boutique propose un devis
+  ///
+  /// In fr, this message translates to:
+  /// **'Faire un devis'**
+  String get chatQuoteSend;
+
+  /// Chat : aucun produit pour un devis
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajoute d\'abord des produits à ton catalogue.'**
+  String get chatQuoteEmpty;
+
+  /// Chat : prix du devis, ne dépasse pas le prix affiché
+  ///
+  /// In fr, this message translates to:
+  /// **'Prix unitaire (affiché : {price})'**
+  String chatQuoteUnitPrice(String price);
+
+  /// Chat : retirer une unité du devis
+  ///
+  /// In fr, this message translates to:
+  /// **'Moins'**
+  String get chatQuoteLess;
+
+  /// Chat : ajouter une unité au devis
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus'**
+  String get chatQuoteMore;
+
+  /// Chat : devis, paiement ou coupon expiré
+  ///
+  /// In fr, this message translates to:
+  /// **'Expiré'**
+  String get chatExpired;
+
+  /// Chat : demande de paiement de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Demande de paiement'**
+  String get chatPaymentRequest;
+
+  /// Chat : la boutique demande un paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Demander un paiement'**
+  String get chatPaymentRequestSend;
+
+  /// Chat : payer la demande avec le wallet
+  ///
+  /// In fr, this message translates to:
+  /// **'Payer {amount}'**
+  String chatPay(String amount);
+
+  /// Chat : demande payée
+  ///
+  /// In fr, this message translates to:
+  /// **'Payé'**
+  String get chatPaid;
+
+  /// Chat : demande pas encore payée
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente du paiement'**
+  String get chatPaymentWaiting;
+
+  /// Chat : champ montant
+  ///
+  /// In fr, this message translates to:
+  /// **'Montant ({symbol})'**
+  String chatAmount(String symbol);
+
+  /// Chat : motif de la demande de paiement
+  ///
+  /// In fr, this message translates to:
+  /// **'Pour quoi ? (facultatif)'**
+  String get chatPaymentLabel;
+
+  /// Chat : coupon de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'−{percent} % sur ta prochaine commande'**
+  String chatCoupon(int percent);
+
+  /// Chat : fin de validité du coupon
+  ///
+  /// In fr, this message translates to:
+  /// **'Valable jusqu\'au {date}'**
+  String chatCouponUntil(String date);
+
+  /// Chat : la cliente garde le coupon
+  ///
+  /// In fr, this message translates to:
+  /// **'Garder le coupon'**
+  String get chatCouponClaim;
+
+  /// Chat : coupon gardé
+  ///
+  /// In fr, this message translates to:
+  /// **'Coupon gardé : il s\'applique à ta prochaine commande ici.'**
+  String get chatCouponClaimed;
+
+  /// Chat : la boutique offre un coupon
+  ///
+  /// In fr, this message translates to:
+  /// **'Offrir un coupon'**
+  String get chatCouponSend;
+
+  /// Chat : durée du coupon
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{Valable 1 jour} other{Valable {count} jours}}'**
+  String chatCouponDays(int count);
+
+  /// Chat : afficher le texte d'un vocal
+  ///
+  /// In fr, this message translates to:
+  /// **'Transcrire'**
+  String get chatTranscribe;
+
+  /// Chat : transcription indisponible, simulée (décision 0015)
+  ///
+  /// In fr, this message translates to:
+  /// **'Transcription simulée : service à brancher.'**
+  String get chatTranscriptSimulated;
 }
 
 class _DymLocalizationsDelegate

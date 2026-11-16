@@ -9044,5 +9044,202 @@
         "type": "int"
       }
     }
+  },
+  "chatVideo": "Vidéo",
+  "@chatVideo": {
+    "description": "Chat : message vidéo (spec 099)"
+  },
+  "chatVideoPlay": "Lire la vidéo",
+  "@chatVideoPlay": {
+    "description": "Chat : lire une vidéo"
+  },
+  "chatVideoDuration": "Vidéo · {seconds} s",
+  "@chatVideoDuration": {
+    "description": "Chat : durée d'une vidéo",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "chatVideoRecord": "Filmer une vidéo",
+  "@chatVideoRecord": {
+    "description": "Chat : enregistrer une vidéo (1 min au plus)"
+  },
+  "chatVideoShare": "Partager une vidéo",
+  "@chatVideoShare": {
+    "description": "Chat : choisir une vidéo"
+  },
+  "chatLocation": "Position",
+  "@chatLocation": {
+    "description": "Chat : position partagée"
+  },
+  "chatLocationLive": "Position en direct jusqu'à {time}",
+  "@chatLocationLive": {
+    "description": "Chat : position en direct",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "chatLocationOpen": "Ouvrir la carte",
+  "@chatLocationOpen": {
+    "description": "Chat : ouvrir la position dans une carte"
+  },
+  "chatLocationStop": "Arrêter le partage",
+  "@chatLocationStop": {
+    "description": "Chat : arrêter la position en direct"
+  },
+  "chatLocationSend": "Envoyer ma position",
+  "@chatLocationSend": {
+    "description": "Chat : position ponctuelle"
+  },
+  "chatLocationLiveSend": "Position en direct (15 min)",
+  "@chatLocationLiveSend": {
+    "description": "Chat : partager sa position en direct"
+  },
+  "chatQuote": "Devis",
+  "@chatQuote": {
+    "description": "Chat : devis de la boutique"
+  },
+  "chatQuoteTotal": "Total : {amount}",
+  "@chatQuoteTotal": {
+    "description": "Chat : total du devis",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "chatQuoteAccept": "Accepter et mettre au panier",
+  "@chatQuoteAccept": {
+    "description": "Chat : accepter le devis en un geste"
+  },
+  "chatQuoteAccepted": "Devis accepté",
+  "@chatQuoteAccepted": {
+    "description": "Chat : devis accepté"
+  },
+  "chatQuotePending": "En attente de la cliente",
+  "@chatQuotePending": {
+    "description": "Chat : devis pas encore accepté"
+  },
+  "chatQuoteInCart": "Articles ajoutés au panier aux prix du devis.",
+  "@chatQuoteInCart": {
+    "description": "Chat : devis accepté, panier mis à jour"
+  },
+  "chatQuoteSend": "Faire un devis",
+  "@chatQuoteSend": {
+    "description": "Chat : la boutique propose un devis"
+  },
+  "chatQuoteEmpty": "Ajoute d'abord des produits à ton catalogue.",
+  "@chatQuoteEmpty": {
+    "description": "Chat : aucun produit pour un devis"
+  },
+  "chatQuoteUnitPrice": "Prix unitaire (affiché : {price})",
+  "@chatQuoteUnitPrice": {
+    "description": "Chat : prix du devis, ne dépasse pas le prix affiché",
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "chatQuoteLess": "Moins",
+  "@chatQuoteLess": {
+    "description": "Chat : retirer une unité du devis"
+  },
+  "chatQuoteMore": "Plus",
+  "@chatQuoteMore": {
+    "description": "Chat : ajouter une unité au devis"
+  },
+  "chatExpired": "Expiré",
+  "@chatExpired": {
+    "description": "Chat : devis, paiement ou coupon expiré"
+  },
+  "chatPaymentRequest": "Demande de paiement",
+  "@chatPaymentRequest": {
+    "description": "Chat : demande de paiement de la boutique"
+  },
+  "chatPaymentRequestSend": "Demander un paiement",
+  "@chatPaymentRequestSend": {
+    "description": "Chat : la boutique demande un paiement"
+  },
+  "chatPay": "Payer {amount}",
+  "@chatPay": {
+    "description": "Chat : payer la demande avec le wallet",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "chatPaid": "Payé",
+  "@chatPaid": {
+    "description": "Chat : demande payée"
+  },
+  "chatPaymentWaiting": "En attente du paiement",
+  "@chatPaymentWaiting": {
+    "description": "Chat : demande pas encore payée"
+  },
+  "chatAmount": "Montant ({symbol})",
+  "@chatAmount": {
+    "description": "Chat : champ montant",
+    "placeholders": {
+      "symbol": {
+        "type": "String"
+      }
+    }
+  },
+  "chatPaymentLabel": "Pour quoi ? (facultatif)",
+  "@chatPaymentLabel": {
+    "description": "Chat : motif de la demande de paiement"
+  },
+  "chatCoupon": "−{percent} % sur ta prochaine commande",
+  "@chatCoupon": {
+    "description": "Chat : coupon de la boutique",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "chatCouponUntil": "Valable jusqu'au {date}",
+  "@chatCouponUntil": {
+    "description": "Chat : fin de validité du coupon",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "chatCouponClaim": "Garder le coupon",
+  "@chatCouponClaim": {
+    "description": "Chat : la cliente garde le coupon"
+  },
+  "chatCouponClaimed": "Coupon gardé : il s'applique à ta prochaine commande ici.",
+  "@chatCouponClaimed": {
+    "description": "Chat : coupon gardé"
+  },
+  "chatCouponSend": "Offrir un coupon",
+  "@chatCouponSend": {
+    "description": "Chat : la boutique offre un coupon"
+  },
+  "chatCouponDays": "{count, plural, =1{Valable 1 jour} other{Valable {count} jours}}",
+  "@chatCouponDays": {
+    "description": "Chat : durée du coupon",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatTranscribe": "Transcrire",
+  "@chatTranscribe": {
+    "description": "Chat : afficher le texte d'un vocal"
+  },
+  "chatTranscriptSimulated": "Transcription simulée : service à brancher.",
+  "@chatTranscriptSimulated": {
+    "description": "Chat : transcription indisponible, simulée (décision 0015)"
   }
 }
