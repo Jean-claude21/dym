@@ -413,6 +413,13 @@ class MemoryCartService implements CartService {
   Future<Result<LocatedPlace?>> locate() async =>
       _fail<LocatedPlace?>('locate') ?? Ok(located);
 
+  /// Quartier renvoyé par [zoneAt] (par défaut : celui de [located]).
+  ZoneMatch? zoneAtMatch;
+
+  @override
+  Future<Result<ZoneMatch?>> zoneAt(GeoPoint point) async =>
+      _fail<ZoneMatch?>('zoneAt') ?? Ok(zoneAtMatch ?? located?.match);
+
   /// Créneaux renvoyés (spec 033).
   DeliverySlots deliverySlots = const DeliverySlots();
 

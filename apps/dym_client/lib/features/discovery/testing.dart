@@ -1,6 +1,7 @@
 import 'package:dym_client/features/discovery/discovery_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 
@@ -112,6 +113,67 @@ class MemoryDiscoveryService implements DiscoveryService {
   @override
   Future<Result<ZoneMatch?>> locateZone() async =>
       _fail('locateZone') ?? Ok(zoneMatch);
+
+  /// Position renvoyée par [myPosition] (`null` : refusée).
+  GeoPoint? position;
+
+  @override
+  GeoPoint? lastPosition;
+
+  /// Vues de la carte enregistrées (`store_map_viewed`).
+  final mapViews = <({int stores, bool openOnly, bool category})>[];
+
+  @override
+  Future<Result<List<PublicStore>>> mapStores({
+    required double south,
+    required double west,
+    required double north,
+    required double east,
+    String? categoryId,
+    bool openOnly = false,
+  }) async {
+    final failed = _fail<List<PublicStore>>('mapStores');
+    if (failed != null) return failed;
+    final inside =
+        stores.where((s) {
+          final lat = s.latitude ?? s.zoneLatitude;
+          final lng = s.longitude ?? s.zoneLongitude;
+          return lat != null &&
+              lng != null &&
+              lat >= south &&
+              lat <= north &&
+              lng >= west &&
+              lng <= east &&
+              (s.openNow || !openOnly);
+        }).toList()..sort((a, b) {
+          if (a.openNow != b.openNow) return a.openNow ? -1 : 1;
+          return a.name.compareTo(b.name);
+        });
+    return Ok(inside);
+  }
+
+  @override
+  Future<Result<GeoPoint?>> myPosition() async {
+    final failed = _fail<GeoPoint?>('myPosition');
+    if (failed != null) return failed;
+    lastPosition = position ?? lastPosition;
+    return Ok(position);
+  }
+
+  @override
+  Future<Result<List<Country>>> countries() async =>
+      _fail('countries') ?? Ok([config.country]);
+
+  @override
+  Future<Result<CountryConfig>> configOf(String countryCode) async =>
+      _fail('configOf') ?? Ok(config);
+
+  @override
+  void storeMapViewed({
+    required int stores,
+    required bool openOnly,
+    required bool category,
+  }) => mapViews.add((stores: stores, openOnly: openOnly, category: category));
 
   static String _normalize(String text) {
     const from = 'àâäáãéèêëíìîïóòôöõúùûüçñ';

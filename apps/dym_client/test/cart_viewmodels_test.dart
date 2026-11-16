@@ -163,6 +163,48 @@ void main() {
       expect(vm.hasPosition, isFalse);
     });
 
+    test(
+      'porte placée sur la carte : quartier et position (spec 095)',
+      () async {
+        const match = ZoneMatch(
+          zoneId: 'be',
+          zoneName: 'Bè',
+          cityId: 'lome',
+          cityName: 'Lomé',
+          countryCode: 'TG',
+          distanceM: 300,
+        );
+        final service = memoryCart()..zoneAtMatch = match;
+        final vm = AddressFormViewModel(service: service);
+        await vm.load();
+        await vm.placeDoor(const GeoPoint(6.13, 1.22));
+        expect(vm.zoneId, 'be');
+        expect(vm.doorPlaced, isTrue);
+        expect(vm.doorStart?.latitude, 6.13);
+        vm.selectZone('tokoin');
+        expect(vm.doorPlaced, isFalse);
+        expect(vm.hasPosition, isFalse);
+      },
+    );
+
+    test('porte placée hors zone : rien n’est retenu', () async {
+      final service = memoryCart()
+        ..zoneAtMatch = const ZoneMatch(
+          zoneId: 'be',
+          zoneName: 'Bè',
+          cityId: 'lome',
+          cityName: 'Lomé',
+          countryCode: 'TG',
+          distanceM: 640000,
+          covered: false,
+        );
+      final vm = AddressFormViewModel(service: service);
+      await vm.load();
+      await vm.placeDoor(const GeoPoint(5.36, -4.01));
+      expect(vm.location, AddressLocation.outside);
+      expect(vm.hasPosition, isFalse);
+    });
+
     test('position indisponible : message, saisie possible', () async {
       final service = memoryCart();
       final vm = AddressFormViewModel(service: service);

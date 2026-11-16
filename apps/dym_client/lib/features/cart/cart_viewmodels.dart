@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dym_client/features/cart/cart_service.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/widgets.dart' show AppLifecycleListener;
 import 'package:stacked/stacked.dart';
 
@@ -358,6 +359,49 @@ class AddressFormViewModel extends _CartLoadingViewModel {
   bool get locating => _locating;
   AddressLocation? get location => _location;
   bool get hasPosition => _latitude != null;
+
+  /// Porte placée à la main sur la carte (spec 095).
+  bool get doorPlaced => _doorPlaced;
+  bool _doorPlaced = false;
+
+  /// Départ de la carte : position connue, sinon centre du quartier choisi,
+  /// sinon premier quartier situé ; nul sans aucun repère.
+  GeoPoint? get doorStart {
+    if ((_latitude, _longitude) case (final lat?, final lng?)) {
+      return GeoPoint(lat, lng);
+    }
+    final zone =
+        zones.where((z) => z.id == _zoneId && z.latitude != null).firstOrNull ??
+        zones.where((z) => z.latitude != null).firstOrNull;
+    if (zone case Zone(:final latitude?, :final longitude?)) {
+      return GeoPoint(latitude, longitude);
+    }
+    return null;
+  }
+
+  /// La porte placée devient la position de l'adresse ; son quartier est
+  /// celui que la base trouve (jamais choisi d'office hors zone).
+  Future<void> placeDoor(GeoPoint point) async {
+    _locating = true;
+    _location = null;
+    notifyListeners();
+    final result = await service.zoneAt(point);
+    _locating = false;
+    switch (result) {
+      case Ok(value: final match?) when !match.covered:
+        _location = AddressLocation.outside;
+      case Ok(value: final match?):
+        _zoneId = match.zoneId;
+        _latitude = point.latitude;
+        _longitude = point.longitude;
+        _doorPlaced = true;
+        _location = AddressLocation.found;
+      case Ok() || Err():
+        _location = AddressLocation.unavailable;
+    }
+    notifyListeners();
+  }
+
   bool get ready => _config != null && !failed;
   Failure? get saveFailure => _saveFailure;
   bool get editing => initial != null;
@@ -414,6 +458,7 @@ class AddressFormViewModel extends _CartLoadingViewModel {
     _zoneId = id;
     _latitude = null;
     _longitude = null;
+    _doorPlaced = false;
     notifyListeners();
   }
 

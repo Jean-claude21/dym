@@ -12444,6 +12444,120 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Changer de quartier'**
   String get visitorChangePlace;
+
+  /// Marché : bascule vers la liste des boutiques (spec 095)
+  ///
+  /// In fr, this message translates to:
+  /// **'Liste'**
+  String get marketViewList;
+
+  /// Marché : bascule vers la carte des boutiques (spec 095)
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte'**
+  String get marketViewMap;
+
+  /// Lecteur d'écran : la carte des boutiques
+  ///
+  /// In fr, this message translates to:
+  /// **'Carte des boutiques'**
+  String get mapSemantic;
+
+  /// Filtre de la carte : boutiques ouvertes maintenant
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvertes'**
+  String get mapFilterOpen;
+
+  /// Filtre de la carte : toutes les catégories
+  ///
+  /// In fr, this message translates to:
+  /// **'Tout'**
+  String get mapFilterAll;
+
+  /// Carte : choisir un pays et une ville à afficher
+  ///
+  /// In fr, this message translates to:
+  /// **'Explorer'**
+  String get mapExplore;
+
+  /// Titre de la feuille de choix du pays et de la ville
+  ///
+  /// In fr, this message translates to:
+  /// **'Où regarder ?'**
+  String get mapExploreTitle;
+
+  /// Titre de la liste des pays dans l'explorateur
+  ///
+  /// In fr, this message translates to:
+  /// **'Pays'**
+  String get mapCountries;
+
+  /// Carte : recentrer sur la position de l'appareil
+  ///
+  /// In fr, this message translates to:
+  /// **'Ma position'**
+  String get mapMyPosition;
+
+  /// Carte : la position n'a pas pu être lue
+  ///
+  /// In fr, this message translates to:
+  /// **'Position indisponible. Déplace la carte à la main.'**
+  String get mapPositionUnavailable;
+
+  /// Carte : aucune boutique dans le cadre
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune boutique dans cette partie de la carte. Déplace-la ou retire un filtre.'**
+  String get mapEmpty;
+
+  /// Fiche de la carte : ouvrir la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir la boutique'**
+  String get mapSeeStore;
+
+  /// Fiche de la carte : rayon de livraison de la boutique
+  ///
+  /// In fr, this message translates to:
+  /// **'Livre jusqu\'à {km} km'**
+  String mapDeliversWithin(String km);
+
+  /// Carte : nombre de boutiques visibles
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Aucune boutique} =1{1 boutique} other{{count} boutiques}}'**
+  String mapStoresCount(int count);
+
+  /// Adresse : placer précisément la porte sur la carte (spec 095)
+  ///
+  /// In fr, this message translates to:
+  /// **'Placer ma porte'**
+  String get addressPlaceDoor;
+
+  /// Consigne affichée sur la carte « Placer ma porte »
+  ///
+  /// In fr, this message translates to:
+  /// **'Fais glisser la carte pour mettre l\'épingle sur ta porte.'**
+  String get addressPlaceDoorHint;
+
+  /// Bouton : valider la porte placée
+  ///
+  /// In fr, this message translates to:
+  /// **'Valider cet emplacement'**
+  String get addressPlaceDoorConfirm;
+
+  /// Adresse : la porte a été placée sur la carte
+  ///
+  /// In fr, this message translates to:
+  /// **'Porte placée sur la carte'**
+  String get addressDoorPlaced;
+
+  /// Vendeuse : légende de la carte du rayon de livraison
+  ///
+  /// In fr, this message translates to:
+  /// **'Le cercle montre où tu livres.'**
+  String get storeDeliveryMapHint;
 }
 
 class _DymLocalizationsDelegate

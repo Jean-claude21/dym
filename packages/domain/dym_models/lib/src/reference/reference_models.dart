@@ -89,6 +89,8 @@ class Zone {
     required this.slug,
     required this.name,
     this.sort = 0,
+    this.latitude,
+    this.longitude,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ZoneFromJson(json);
@@ -98,6 +100,10 @@ class Zone {
   final String slug;
   final String name;
   final int sort;
+
+  /// Centre du quartier (carte, spec 095).
+  final double? latitude;
+  final double? longitude;
 }
 
 /// Rayon (`categories`), deux niveaux.

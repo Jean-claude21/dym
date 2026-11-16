@@ -90,6 +90,26 @@ void main() {
     expect(result.stores.single.zoneLatitude, 6.152);
   });
 
+  test('carte : cadre, filtres et boutiques', () async {
+    Map<Object?, Object?>? sent;
+    server.on('POST', '/rest/v1/rpc/map_stores', (r) {
+      sent = r.body! as Map;
+      return const FakeResponse(200, [
+        {..._store, 'latitude': 49.44, 'longitude': 1.09},
+      ]);
+    });
+    final stores = (await discovery.mapStores(
+      south: 49.3,
+      west: 0.9,
+      north: 49.6,
+      east: 1.3,
+      openOnly: true,
+    )).valueOrNull!;
+    expect(sent!['p_open_only'], isTrue);
+    expect(sent!['p_category'], isNull);
+    expect(stores.single.latitude, 49.44);
+  });
+
   test('recherche : paramètres et résultats', () async {
     Map<Object?, Object?>? sent;
     server.on('POST', '/rest/v1/rpc/search_catalog', (r) {

@@ -7443,4 +7443,75 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get visitorChangePlace => 'Change area';
+
+  @override
+  String get marketViewList => 'List';
+
+  @override
+  String get marketViewMap => 'Map';
+
+  @override
+  String get mapSemantic => 'Map of shops';
+
+  @override
+  String get mapFilterOpen => 'Open';
+
+  @override
+  String get mapFilterAll => 'All';
+
+  @override
+  String get mapExplore => 'Explore';
+
+  @override
+  String get mapExploreTitle => 'Where to look?';
+
+  @override
+  String get mapCountries => 'Countries';
+
+  @override
+  String get mapMyPosition => 'My location';
+
+  @override
+  String get mapPositionUnavailable =>
+      'Location unavailable. Move the map by hand.';
+
+  @override
+  String get mapEmpty =>
+      'No shop in this part of the map. Move it or remove a filter.';
+
+  @override
+  String get mapSeeStore => 'See the shop';
+
+  @override
+  String mapDeliversWithin(String km) {
+    return 'Delivers within $km km';
+  }
+
+  @override
+  String mapStoresCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count shops',
+      one: '1 shop',
+      zero: 'No shop',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get addressPlaceDoor => 'Place my door';
+
+  @override
+  String get addressPlaceDoorHint =>
+      'Drag the map to put the pin on your door.';
+
+  @override
+  String get addressPlaceDoorConfirm => 'Use this spot';
+
+  @override
+  String get addressDoorPlaced => 'Door placed on the map';
+
+  @override
+  String get storeDeliveryMapHint => 'The circle shows where you deliver.';
 }

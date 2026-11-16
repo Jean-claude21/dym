@@ -70,6 +70,8 @@ Zone _$ZoneFromJson(Map<String, dynamic> json) =>
         slug: $checkedConvert('slug', (v) => v as String),
         name: $checkedConvert('name', (v) => v as String),
         sort: $checkedConvert('sort', (v) => (v as num?)?.toInt() ?? 0),
+        latitude: $checkedConvert('latitude', (v) => (v as num?)?.toDouble()),
+        longitude: $checkedConvert('longitude', (v) => (v as num?)?.toDouble()),
       );
       return val;
     }, fieldKeyMap: const {'cityId': 'city_id'});

@@ -80,4 +80,5 @@ fiabilité (ops).
 | `membership_started` (code de la formule, prolongation), `member_benefit_paid` (montant) | Serveur | DYM+, Pro, visibilité (spec 052) |
 | `fraud_signals_detected` (nombre), `report_triaged` (avis), `support_draft_requested` | Serveur | Antifraude, modération et support assistés (spec 054) |
 | `location_outside_coverage` (pays le plus proche, distance en km, app ; jamais la position) | App | Couverture : où ouvrir ensuite (spec 065) |
+| `store_map_viewed` (boutiques visibles, filtre ouvertes, filtre catégorie ; jamais la position) | App | Carte des boutiques (spec 095) |
 | `courier_relaunched` (rang, élargie, livreurs prévenus), `courier_ready_alerted` ; `order_rejected` avec le motif `no_response` (acteur système) | Serveur | Livreurs relancés, alerte « prête », refus automatique (spec 066) |

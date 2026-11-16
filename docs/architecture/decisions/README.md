@@ -26,3 +26,4 @@ Format : **Statut** · **Contexte** · **Décision** · **Conséquences** · **A
 | 0019 | [Appels du chat par LiveKit](0019-appels-livekit.md) | Acceptée |
 | 0020 | [Analytics dans la base et MCP admin](0020-analytics-mcp.md) | Acceptée |
 | 0021 | [Secrets centralisés dans Doppler](0021-secrets-doppler.md) | Acceptée |
+| 0022 | [Carte : MapLibre et OpenFreeMap derrière une interface](0022-carte-maplibre.md) | Acceptée |

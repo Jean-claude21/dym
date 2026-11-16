@@ -116,6 +116,9 @@ Notifications (FCM) : `google-services.json` (console Firebase, projet `do-your-
 l'app se construit sans push. Côté serveur, `FCM_SERVICE_ACCOUNT` (clé de compte de service, JSON sur
 une ligne) dans le fichier d'environnement des Functions.
 
+Android : JDK 21 exigé par la carte (MapLibre, décision 0022) : `fvm flutter config --jdk-dir <dossier du JDK 21>`.
+iOS : cible minimale 15.5 (MapLibre).
+
 Builds de release Android : `apps/dym_client/android/key.properties` (et `dym_vendor`), hors dépôt,
 avec `storeFile`, `storePassword`, `keyAlias`, `keyPassword`. Sans ce fichier, la release est signée
 avec les clés de debug (essais seulement).

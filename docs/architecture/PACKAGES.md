@@ -34,7 +34,8 @@ dym/
 │  ├─ data/
 │  │  └─ dym_data/       # Repositories par domaine → Result<T>
 │  ├─ ui/
-│  │  └─ dym_ui/         # Design tokens, thème, composants, motion
+│  │  ├─ dym_ui/         # Design tokens, thème, composants, motion
+│  │  └─ dym_map/        # Carte (MapLibre, OpenFreeMap) derrière une interface
 │  └─ features/
 │     ├─ dym_auth/       # Écrans + viewmodels Stacked d'authentification (4 apps)
 │     ├─ dym_notifications/  # Centre de notifications (créé avec order-lifecycle)
@@ -56,6 +57,7 @@ dym/
 | `dym_models` | Domaine | `dym_core`, `json_annotation` (freezed : no-go, décision 0013) | `dym_data`, features, apps | `reference-data` (spec 004) |
 | `dym_data` | Données | `neon_kit`, `dym_models` | Features, apps | `reference-data` (spec 004) |
 | `dym_ui` | UI (thème généré depuis `docs/design/tokens/dym.tokens.json`) | `dym_core`, `dym_l10n` | Features, apps | `foundation` |
+| `dym_map` | UI (carte, décision 0022) | `dym_core`, `dym_ui`, `maplibre_gl` | Client, vendeur (livreur : spec 096) | `carte` (spec 095) |
 | `dym_auth` | Feature | Stacked, `dym_data`, `dym_ui` | 4 apps | `auth` |
 | `dym_notifications` | Feature | idem | Client, vendeur, livreur | `order-lifecycle` |
 | `dym_chat` | Feature | idem | Client, vendeur | `messaging` |
@@ -84,6 +86,7 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | QR : affichage et lecture (spec 046) | `qr_flutter`, `mobile_scanner` (derrière `DymQrImage`, `QrScanView`) | `dym_platform` |
 | Identifiant d'installation (spec 039) | UUID aléatoire dans `flutter_secure_storage` (derrière `InstallIdProvider`) | `dym_platform` |
 | Import TikTok (spec 040) | oEmbed public dans la Function (derrière `VideoImportProvider`) ; Login Kit et Share Kit à l'ouverture de l'accès | Functions |
+| Carte (spec 095) | `maplibre_gl` + tuiles OpenFreeMap, derrière `DymMapEngine` (décision 0022) | `dym_map` |
 | Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |

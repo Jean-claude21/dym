@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_map/dym_map.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/store/my_store/my_store_viewmodel.dart';
 import 'package:dym_vendor/features/store/onboarding/store_onboarding_viewmodel.dart';
@@ -392,7 +395,11 @@ Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
   final chosen = await showModalBottomSheet<int>(
     context: context,
     showDragHandle: true,
-    builder: (_) => _RadiusSheet(initialKm: vm.store!.deliveryRadiusM ~/ 1000),
+    isScrollControlled: true,
+    builder: (_) => _RadiusSheet(
+      initialKm: vm.store!.deliveryRadiusM ~/ 1000,
+      center: vm.storePoint,
+    ),
   );
   if (chosen == null) return;
   final ok = await vm.setDeliveryRadius(chosen * 1000);
@@ -404,9 +411,12 @@ Future<void> _editRadius(BuildContext context, MyStoreViewModel vm) async {
 }
 
 class _RadiusSheet extends StatefulWidget {
-  const new({required this.initialKm});
+  const new({required this.initialKm, this.center});
 
   final int initialKm;
+
+  /// Point de la boutique ; sans lui, pas de carte (le rayon reste réglable).
+  final DymLatLng? center;
 
   @override
   State<_RadiusSheet> createState() => _RadiusSheetState();
@@ -414,6 +424,11 @@ class _RadiusSheet extends StatefulWidget {
 
 class _RadiusSheetState extends State<_RadiusSheet> {
   late double _km = widget.initialKm.clamp(1, 30).toDouble();
+  DymMapControls? _controls;
+  static const _mapHeight = 220.0;
+
+  double _zoom(double width) =>
+      zoomForRadius(_km * 1000, width, widget.center?.latitude ?? 0);
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +454,37 @@ class _RadiusSheetState extends State<_RadiusSheet> {
               l10n.storeDeliveryRadiusHint,
               style: t.body.copyWith(color: c.textSecondary),
             ),
-            const SizedBox(height: DymTokenSpace.s4),
+            if (widget.center case final center?) ...[
+              const SizedBox(height: DymTokenSpace.s3),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(DymTokenRadius.card),
+                child: SizedBox(
+                  height: _mapHeight,
+                  child: LayoutBuilder(
+                    builder: (context, box) => DymMap(
+                      initialCenter: center,
+                      initialZoom: _zoom(box.maxWidth),
+                      interactive: false,
+                      semanticLabel: l10n.storeDeliveryMapHint,
+                      areas: [
+                        DymMapArea(
+                          id: 'radius',
+                          center: center,
+                          radiusM: _km * 1000,
+                        ),
+                      ],
+                      onReady: (controls) => _controls = controls,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: DymTokenSpace.s1),
+              Text(
+                l10n.storeDeliveryMapHint,
+                style: t.label.copyWith(color: c.textSecondary),
+              ),
+            ],
+            const SizedBox(height: DymTokenSpace.s3),
             Text(
               label,
               textAlign: TextAlign.center,
@@ -452,6 +497,12 @@ class _RadiusSheetState extends State<_RadiusSheet> {
               divisions: 29,
               label: label,
               onChanged: (v) => setState(() => _km = v),
+              onChangeEnd: (_) {
+                final center = widget.center;
+                if (center == null) return;
+                final width = MediaQuery.sizeOf(context).width;
+                unawaited(_controls?.moveTo(center, zoom: _zoom(width)));
+              },
             ),
             const SizedBox(height: DymTokenSpace.s3),
             DymButton(
