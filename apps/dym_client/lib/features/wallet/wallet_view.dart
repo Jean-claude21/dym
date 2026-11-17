@@ -518,6 +518,32 @@ class _MovementRow extends StatelessWidget {
         Icons.account_balance_rounded,
         l10n.walletKindWithdrawal,
       ),
+      WalletMovementKind.membership => (
+        Icons.workspace_premium_rounded,
+        l10n.walletKindMembership,
+      ),
+      WalletMovementKind.memberBenefit => (
+        Icons.workspace_premium_rounded,
+        l10n.walletKindMemberBenefit,
+      ),
+      WalletMovementKind.qrPayment => (
+        Icons.qr_code_2_rounded,
+        l10n.walletKindQrPayment,
+      ),
+      WalletMovementKind.p2pSent => (
+        Icons.north_east_rounded,
+        switch (movement.counterpart) {
+          final name? when name.isNotEmpty => l10n.walletKindP2pSent(name),
+          _ => l10n.walletKindP2pAnonymous,
+        },
+      ),
+      WalletMovementKind.p2pReceived => (
+        Icons.south_west_rounded,
+        switch (movement.counterpart) {
+          final name? when name.isNotEmpty => l10n.walletKindP2pReceived(name),
+          _ => l10n.walletKindP2pAnonymous,
+        },
+      ),
       WalletMovementKind.unknown => (
         Icons.sync_alt_rounded,
         l10n.walletKindOther,

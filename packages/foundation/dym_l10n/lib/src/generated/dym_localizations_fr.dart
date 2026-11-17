@@ -8265,4 +8265,55 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get contentCoverSaved => 'Miniature enregistrée';
+
+  @override
+  String get familyCategoriesLabel => 'Rayons autorisés';
+
+  @override
+  String get familyCategoriesAll => 'Tous les rayons';
+
+  @override
+  String familyCategoriesSome(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n rayons autorisés',
+      one: '1 rayon autorisé',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get walletKindMembership => 'Abonnement DYM+';
+
+  @override
+  String get walletKindMemberBenefit => 'Avantage DYM+';
+
+  @override
+  String get walletKindQrPayment => 'Paiement en boutique';
+
+  @override
+  String walletKindP2pSent(String name) {
+    return 'À $name';
+  }
+
+  @override
+  String walletKindP2pReceived(String name) {
+    return 'De $name';
+  }
+
+  @override
+  String get walletKindP2pAnonymous => 'Entre proches';
+
+  @override
+  String get peopleChildCategory =>
+      'Ce rayon n\'est pas autorisé par ton parent.';
+
+  @override
+  String get courierShareRun => 'Partager ma course';
+
+  @override
+  String courierShareRunText(String url) {
+    return 'Je suis en livraison avec DYM. Suis ma course en direct : $url';
+  }
 }

@@ -137,7 +137,7 @@ class StaffView extends StackedView<StaffViewModel> {
                   title: failure is NetworkFailure
                       ? l10n.errorOffline
                       : l10n.errorGeneric,
-                  message: l10n.staffHelp,
+                  message: l10n.errorLoadMessage,
                   actionLabel: l10n.retry,
                   onAction: vm.load,
                 )

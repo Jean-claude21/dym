@@ -13722,6 +13722,78 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Miniature enregistrée'**
   String get contentCoverSaved;
+
+  /// Famille : rayons que l'enfant peut acheter
+  ///
+  /// In fr, this message translates to:
+  /// **'Rayons autorisés'**
+  String get familyCategoriesLabel;
+
+  /// Famille : aucun filtre
+  ///
+  /// In fr, this message translates to:
+  /// **'Tous les rayons'**
+  String get familyCategoriesAll;
+
+  /// Famille : nombre de rayons
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 rayon autorisé} other{{n} rayons autorisés}}'**
+  String familyCategoriesSome(int n);
+
+  /// Mouvement : abonnement
+  ///
+  /// In fr, this message translates to:
+  /// **'Abonnement DYM+'**
+  String get walletKindMembership;
+
+  /// Mouvement : avantage membre
+  ///
+  /// In fr, this message translates to:
+  /// **'Avantage DYM+'**
+  String get walletKindMemberBenefit;
+
+  /// Mouvement : paiement par QR
+  ///
+  /// In fr, this message translates to:
+  /// **'Paiement en boutique'**
+  String get walletKindQrPayment;
+
+  /// Mouvement : envoyé à un proche
+  ///
+  /// In fr, this message translates to:
+  /// **'À {name}'**
+  String walletKindP2pSent(String name);
+
+  /// Mouvement : reçu d'un proche
+  ///
+  /// In fr, this message translates to:
+  /// **'De {name}'**
+  String walletKindP2pReceived(String name);
+
+  /// Mouvement entre proches sans prénom
+  ///
+  /// In fr, this message translates to:
+  /// **'Entre proches'**
+  String get walletKindP2pAnonymous;
+
+  /// Erreur : rayon bloqué
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce rayon n\'est pas autorisé par ton parent.'**
+  String get peopleChildCategory;
+
+  /// Livreur : partager la course avec un proche
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager ma course'**
+  String get courierShareRun;
+
+  /// Message envoyé au proche
+  ///
+  /// In fr, this message translates to:
+  /// **'Je suis en livraison avec DYM. Suis ma course en direct : {url}'**
+  String courierShareRunText(String url);
 }
 
 class _DymLocalizationsDelegate

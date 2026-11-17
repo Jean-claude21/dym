@@ -305,4 +305,16 @@ void main() {
       expect(find.text('Fragile'), findsOneWidget);
     });
   });
+
+  test('partager ma course avec un proche (spec 104)', () async {
+    final service = MemoryMissionsService(
+      config: _togo(),
+      accepted: [_mission('o9', status: 'out_for_delivery')],
+    );
+    final vm = MyRunsViewModel(service: service);
+    await vm.load();
+    final url = await vm.shareRun();
+    expect(url.toString(), 'https://dym.test/t/o9');
+    expect(service.gestures, contains('share:o9'));
+  });
 }

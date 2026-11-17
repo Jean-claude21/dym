@@ -9583,5 +9583,73 @@
   "contentCoverSaved": "Miniature enregistrée",
   "@contentCoverSaved": {
     "description": "Confirmation"
+  },
+  "familyCategoriesLabel": "Rayons autorisés",
+  "@familyCategoriesLabel": {
+    "description": "Famille : rayons que l'enfant peut acheter"
+  },
+  "familyCategoriesAll": "Tous les rayons",
+  "@familyCategoriesAll": {
+    "description": "Famille : aucun filtre"
+  },
+  "familyCategoriesSome": "{n, plural, =1{1 rayon autorisé} other{{n} rayons autorisés}}",
+  "@familyCategoriesSome": {
+    "description": "Famille : nombre de rayons",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "walletKindMembership": "Abonnement DYM+",
+  "@walletKindMembership": {
+    "description": "Mouvement : abonnement"
+  },
+  "walletKindMemberBenefit": "Avantage DYM+",
+  "@walletKindMemberBenefit": {
+    "description": "Mouvement : avantage membre"
+  },
+  "walletKindQrPayment": "Paiement en boutique",
+  "@walletKindQrPayment": {
+    "description": "Mouvement : paiement par QR"
+  },
+  "walletKindP2pSent": "À {name}",
+  "@walletKindP2pSent": {
+    "description": "Mouvement : envoyé à un proche",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "walletKindP2pReceived": "De {name}",
+  "@walletKindP2pReceived": {
+    "description": "Mouvement : reçu d'un proche",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "walletKindP2pAnonymous": "Entre proches",
+  "@walletKindP2pAnonymous": {
+    "description": "Mouvement entre proches sans prénom"
+  },
+  "peopleChildCategory": "Ce rayon n'est pas autorisé par ton parent.",
+  "@peopleChildCategory": {
+    "description": "Erreur : rayon bloqué"
+  },
+  "courierShareRun": "Partager ma course",
+  "@courierShareRun": {
+    "description": "Livreur : partager la course avec un proche"
+  },
+  "courierShareRunText": "Je suis en livraison avec DYM. Suis ma course en direct : {url}",
+  "@courierShareRunText": {
+    "description": "Message envoyé au proche",
+    "placeholders": {
+      "url": {
+        "type": "String"
+      }
+    }
   }
 }

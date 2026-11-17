@@ -51,6 +51,8 @@ enum OrderError {
   paymentUnavailable,
   ownStore,
   walletInsufficient,
+  childLimit,
+  childCategory,
   slotRequired,
   slotInvalid,
   slotClosed,
@@ -69,6 +71,10 @@ OrderError orderErrorOf(Failure failure) => switch (failure) {
   ValidationFailure(message: 'own_store_purchase') => OrderError.ownStore,
   ValidationFailure(message: 'wallet_insufficient') =>
     OrderError.walletInsufficient,
+  // Règles du parent (specs 100 et 104).
+  ValidationFailure(message: 'child_daily_limit') => OrderError.childLimit,
+  ValidationFailure(message: 'child_category_blocked') =>
+    OrderError.childCategory,
   ValidationFailure(message: 'slot_required') => OrderError.slotRequired,
   ValidationFailure(message: 'invalid_slot' || 'slot_too_early') =>
     OrderError.slotInvalid,

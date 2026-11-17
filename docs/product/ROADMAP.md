@@ -258,6 +258,7 @@ restent simulés et signalés (décision 0015). Une spec à la fois, dans cet or
 | `cuisine-sociale` | Cuisine sociale : profils de créatrices et boutiques, s'abonner, fils Pour toi / Abonnements / Près de moi, commentaires, « Mes recettes », « J'ai fait la recette » ; vidéo adaptative (HLS) dès que le compte vidéo est fourni | 18 h | ✅ Spec 101 (HLS actif sur staging) |
 | `connexion-google` | Pont de connexion (Function) : jeton Google vérifié puis session ouverte ; prêt pour WhatsApp dès que le compte Meta est fourni | 6 h | ✅ Spec 102 (pont : jeton vérifié puis code à usage unique) |
 | `cuisine-fluide` | Cuisine fluide : miniature immédiate, préchargement, économie de données (240p gardée sur le téléphone), aperçu animé, « Mes vidéos » (temps moyen, fin de lecture, ventes générées, miniature choisie) | 8 h | ✅ Spec 103 |
+| `finitions` | Rayons autorisés pour un enfant, « Partager ma course » du livreur, mouvements du wallet nommés, messages de chargement | 4 h | ✅ Spec 104 |
 
 Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
 porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.

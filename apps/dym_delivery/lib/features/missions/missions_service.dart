@@ -56,6 +56,9 @@ abstract interface class MissionsService {
   /// Alerte SOS à l'équipe (avec la position si elle est disponible).
   Future<Result<void>> sos({Mission? mission});
 
+  /// Lien de suivi de la course en cours, à envoyer à un proche (spec 104).
+  Future<Result<Uri>> shareRun(Mission mission);
+
   /// Envoie la position pendant une course (rien hors course).
   Future<void> ping();
 }
@@ -70,10 +73,14 @@ class NeonMissionsService implements MissionsService {
     this._live = LiveFeed.none,
     this._delivery,
     this._location,
+    this._trackingBase,
   });
 
   /// Suivi et outils de course (spec 096) ; absents : simulés comme refusés.
   final DeliveryRepository? _delivery;
+
+  /// Adresse publique des Functions (page `/t/<jeton>`).
+  final Uri? _trackingBase;
   final LocationProvider? _location;
 
   @override
@@ -85,6 +92,17 @@ class NeonMissionsService implements MissionsService {
   Future<Result<int>> reportUnreachable(Mission mission) async =>
       await _delivery?.reportUnreachable(mission.orderId) ??
       const Err(NotFoundFailure('livraison'));
+
+  @override
+  Future<Result<Uri>> shareRun(Mission mission) async {
+    final delivery = _delivery;
+    final base = _trackingBase;
+    if (delivery == null || base == null) {
+      return const Err(NotFoundFailure('suivi'));
+    }
+    return (await delivery.share(mission.orderId))
+        .map((share) => base.replace(path: '${base.path}/t/${share.token}'));
+  }
 
   @override
   Future<Result<void>> sos({Mission? mission}) async {
@@ -398,6 +416,12 @@ class MemoryMissionsService implements MissionsService {
   Future<Result<int>> reportUnreachable(Mission mission) async {
     unreachable.add(mission.orderId);
     return const Ok(10);
+  }
+
+  @override
+  Future<Result<Uri>> shareRun(Mission mission) async {
+    gestures.add('share:${mission.orderId}');
+    return Ok(Uri.parse('https://dym.test/t/${mission.orderId}'));
   }
 
   @override

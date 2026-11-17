@@ -28,6 +28,9 @@ abstract interface class PeopleWalletService {
     int everyDays = 7,
     int? dailyLimitMinor,
   });
+
+  /// Rayons autorisés pour un enfant (spec 104) ; vide : tous.
+  Future<Result<Family>> setCategories(String childId, List<String> ids);
 }
 
 class NeonPeopleWalletService implements PeopleWalletService {
@@ -92,6 +95,10 @@ class NeonPeopleWalletService implements PeopleWalletService {
     everyDays: everyDays,
     dailyLimitMinor: dailyLimitMinor,
   );
+
+  @override
+  Future<Result<Family>> setCategories(String childId, List<String> ids) =>
+      _repository.setCategories(childId, ids);
 }
 
 /// Gestes possibles depuis l'écran « Entre proches ».
@@ -168,6 +175,9 @@ class PeopleWalletViewModel extends BaseViewModel {
       dailyLimitMinor: dailyLimitMinor,
     ),
   );
+
+  Future<bool> setCategories(FamilyMember child, List<String> ids) =>
+      _act(() => service.setCategories(child.userId, ids));
 }
 
 /// Message d'un refus de la base.
@@ -176,6 +186,7 @@ String peopleErrorText(DymLocalizations l10n, Failure? f) =>
       'wallet_insufficient' => l10n.walletErrorInsufficient,
       'recipient_unknown' => l10n.peopleUnknownCode,
       'child_daily_limit' => l10n.peopleChildLimit,
+      'child_category_blocked' => l10n.peopleChildCategory,
       'currency_mismatch' => l10n.peopleCurrencyMismatch,
       _ => f is NetworkFailure ? l10n.errorOffline : l10n.errorGeneric,
     };
@@ -586,46 +597,82 @@ class FamilyView extends StatelessWidget {
     final allowance = TextEditingController(text: text(child.allowanceMinor));
     final limit = TextEditingController(text: text(child.dailyLimitMinor));
     var every = child.allowanceEveryDays;
+    final allowed = {...child.allowedCategories};
+    final locale = Localizations.localeOf(context).languageCode;
+    final aisles = vm.config?.topCategories ?? const <Category>[];
     final ok = await showDialog<bool>(
       context: context,
       builder: (d) => StatefulBuilder(
         builder: (d, set) => AlertDialog(
           title: Text(l10n.familyRules),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: allowance,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: allowance,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(
+                    labelText: l10n.familyAllowanceLabel,
+                  ),
                 ),
-                decoration: InputDecoration(
-                  labelText: l10n.familyAllowanceLabel,
+                DropdownButton<int>(
+                  value: every,
+                  items: [
+                    for (final d in const [1, 7, 30])
+                      DropdownMenuItem(
+                        value: d,
+                        child: Text(switch (d) {
+                          1 => l10n.familyEveryDay,
+                          30 => l10n.familyEveryMonth,
+                          _ => l10n.familyEveryWeek,
+                        }),
+                      ),
+                  ],
+                  onChanged: (v) => set(() => every = v ?? 7),
                 ),
-              ),
-              DropdownButton<int>(
-                value: every,
-                items: [
-                  for (final d in const [1, 7, 30])
-                    DropdownMenuItem(
-                      value: d,
-                      child: Text(switch (d) {
-                        1 => l10n.familyEveryDay,
-                        30 => l10n.familyEveryMonth,
-                        _ => l10n.familyEveryWeek,
-                      }),
+                TextField(
+                  controller: limit,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: InputDecoration(labelText: l10n.familyLimitLabel),
+                ),
+                if (aisles.isNotEmpty) ...[
+                  const SizedBox(height: DymTokenSpace.s3),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(l10n.familyCategoriesLabel),
+                  ),
+                  const SizedBox(height: DymTokenSpace.s1),
+                  Wrap(
+                    spacing: DymTokenSpace.s1,
+                    runSpacing: DymTokenSpace.s1,
+                    children: [
+                      for (final a in aisles)
+                        FilterChip(
+                          label: Text(a.label.resolve(locale)),
+                          selected: allowed.contains(a.id),
+                          onSelected: (on) => set(
+                            () => on ? allowed.add(a.id) : allowed.remove(a.id),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      allowed.isEmpty
+                          ? l10n.familyCategoriesAll
+                          : l10n.familyCategoriesSome(allowed.length),
+                      style: context.dym.text.label,
                     ),
+                  ),
                 ],
-                onChanged: (v) => set(() => every = v ?? 7),
-              ),
-              TextField(
-                controller: limit,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                decoration: InputDecoration(labelText: l10n.familyLimitLabel),
-              ),
-            ],
+              ],
+            ),
           ),
           actions: [
             TextButton(
@@ -651,6 +698,10 @@ class FamilyView extends StatelessWidget {
         everyDays: every,
         dailyLimitMinor: l,
       );
+      final before = {...child.allowedCategories};
+      if (before.length != allowed.length || !before.containsAll(allowed)) {
+        await vm.setCategories(child, allowed.toList());
+      }
     }
   }
 }
