@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6668024A034309CA02A5756D /* dym_order.wav in Resources */ = {isa = PBXBuildFile; fileRef = 878961584DFE5B0049955CF1 /* dym_order.wav */; };
+		D502396D922F41366ED5E507 /* dym_message.wav in Resources */ = {isa = PBXBuildFile; fileRef = E478A16675DC27DB70C3D83B /* dym_message.wav */; };
+		2133A5286A68AEC100BFF928 /* dym_mission.wav in Resources */ = {isa = PBXBuildFile; fileRef = 952D102936BE026D2DD60FBF /* dym_mission.wav */; };
+		9B7EBA2D75F5CA10EC5D94F4 /* dym_ring.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6D675E7E5E4962C6824C08DA /* dym_ring.wav */; };
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
@@ -42,6 +46,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		878961584DFE5B0049955CF1 /* dym_order.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dym_order.wav; sourceTree = "<group>"; };
+		E478A16675DC27DB70C3D83B /* dym_message.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dym_message.wav; sourceTree = "<group>"; };
+		952D102936BE026D2DD60FBF /* dym_mission.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dym_mission.wav; sourceTree = "<group>"; };
+		6D675E7E5E4962C6824C08DA /* dym_ring.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = dym_ring.wav; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
@@ -117,6 +125,10 @@
 			children = (
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
 				97C146FD1CF9000F007C117D /* Assets.xcassets */,
+				878961584DFE5B0049955CF1 /* dym_order.wav */,
+				E478A16675DC27DB70C3D83B /* dym_message.wav */,
+				952D102936BE026D2DD60FBF /* dym_mission.wav */,
+				6D675E7E5E4962C6824C08DA /* dym_ring.wav */,
 				97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */,
 				97C147021CF9000F007C117D /* Info.plist */,
 				1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */,
@@ -228,6 +240,10 @@
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
+				6668024A034309CA02A5756D /* dym_order.wav in Resources */,
+				D502396D922F41366ED5E507 /* dym_message.wav in Resources */,
+				2133A5286A68AEC100BFF928 /* dym_mission.wav in Resources */,
+				9B7EBA2D75F5CA10EC5D94F4 /* dym_ring.wav in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

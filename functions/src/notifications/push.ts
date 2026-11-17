@@ -39,6 +39,24 @@ const channelSounds: Record<string, string> = {
   dym_calls_v2: "dym_ring",
 };
 
+/**
+ * Bloc iPhone (spec 108) : titre, texte et son de l'événement (WAV embarqués dans l'app iOS),
+ * regroupés par sujet ; priorité immédiate.
+ */
+export function apnsFor(message: { title: string; body: string; channel?: string; tag?: string }) {
+  const sound = message.channel && channelSounds[message.channel];
+  return {
+    headers: { "apns-priority": "10" },
+    payload: {
+      aps: {
+        alert: { title: message.title, body: message.body },
+        sound: sound ? `${sound}.wav` : "default",
+        ...(message.tag ? { "thread-id": message.tag } : {}),
+      },
+    },
+  };
+}
+
 /** Courses du livreur : canal à part, pour un son et une importance dédiés. */
 const missionKinds = new Set([
   "mission_available",
@@ -170,6 +188,8 @@ export function fcmPushSender(
                       ...(message.tag ? { tag: message.tag } : {}),
                     },
                     android: { priority: "high", ttl: "60s" },
+                    // iPhone (spec 108) : iOS n'affiche pas les données seules ; alerte et son.
+                    apns: apnsFor(message),
                   }
                 : {
                     token: device,
@@ -187,6 +207,7 @@ export function fcmPushSender(
                         ...(message.tag ? { tag: message.tag } : {}),
                       },
                     },
+                    apns: apnsFor(message),
                   },
             }),
           },

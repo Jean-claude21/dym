@@ -262,6 +262,7 @@ restent simulés et signalés (décision 0015). Une spec à la fois, dans cet or
 | `connexion-whatsapp` | Connexion par WhatsApp : code à 6 chiffres (modèle d'authentification Meta), même compte pour le même numéro ; simulé sur staging jusqu'au compte Meta | 5 h | ✅ Spec 105 (simulé ; clé Meta à fournir) |
 | `surveillance` | Contrôle de staging toutes les 30 min (API, base, services branchés) avec alerte par e-mail | 1 h | ✅ Spec 106 |
 | `hors-ligne` | Premier écran sans réseau (dernières lectures gardées), rupture de la vendeuse gardée hors ligne et rejouée | 5 h | ✅ Spec 107 (complète la 062) |
+| `iphone` | Notifications iPhone (son par événement, affichage app fermée), compilation iOS automatique ; CallKit et clé APNs avec le compte Apple | 3 h | ✅ Spec 108 (CallKit : compte Apple) |
 
 Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
 porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.

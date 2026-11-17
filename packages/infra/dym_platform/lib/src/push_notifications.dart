@@ -194,6 +194,14 @@ Future<void> _display(
             : AudioAttributesUsage.notification,
         additionalFlags: call ? Int32List.fromList(const [4]) : null,
       ),
+      // iPhone (spec 108) : son de l'événement (WAV de l'app), sujet.
+      iOS: DarwinNotificationDetails(
+        sound: spec?.$2 == null ? null : '${spec!.$2}.wav',
+        threadIdentifier: data['tag'] as String?,
+        interruptionLevel: call
+            ? InterruptionLevel.timeSensitive
+            : InterruptionLevel.active,
+      ),
     ),
     payload: jsonEncode(data),
   );
@@ -418,6 +426,10 @@ class PushNotifications {
               ? null
               : RawResourceAndroidNotificationSound(spec!.$2),
           tag: tag,
+        ),
+        iOS: DarwinNotificationDetails(
+          sound: spec?.$2 == null ? null : '${spec!.$2}.wav',
+          threadIdentifier: tag,
         ),
       ),
       payload: jsonEncode(message.data),

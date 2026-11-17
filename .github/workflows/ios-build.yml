@@ -1,0 +1,62 @@
+# Compilation iOS (spec 108) : vérifie que les apps iPhone se construisent (sans signature Apple)
+# quand le code iOS ou les plugins changent. Les Mac de GitHub sont gratuits pour un dépôt public.
+name: iOS (compilation)
+
+on:
+  pull_request:
+    paths:
+      - "apps/dym_client/ios/**"
+      - "apps/dym_vendor/ios/**"
+      - "packages/infra/dym_platform/**"
+      - ".github/workflows/ios-build.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-26
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        app: [dym_client, dym_vendor]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version de Flutter
+        id: fvm
+        run: echo "flutter=$(jq -r .flutter .fvmrc)" >> "$GITHUB_OUTPUT"
+
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ steps.fvm.outputs.flutter }}
+          channel: stable
+          cache: true
+
+      - name: Lien du SDK pour Melos
+        run: |
+          mkdir -p .fvm
+          ln -sfn "$(dirname "$(dirname "$(which flutter)")")" .fvm/flutter_sdk
+
+      - name: Xcode le plus récent
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode_*.app | sort -V | tail -1)"
+          xcodebuild -version
+
+      - name: Compiler (sans signature)
+        working-directory: apps/${{ matrix.app }}
+        run: |
+          flutter config --no-enable-swift-package-manager
+          flutter pub get
+          flutter build ios --release --no-codesign \
+            --dart-define-from-file=../../config/staging.json
+
+      - name: Sons embarqués
+        working-directory: apps/${{ matrix.app }}
+        run: |
+          for s in dym_order dym_message dym_mission dym_ring; do
+            test -f "build/ios/iphoneos/Runner.app/$s.wav" || { echo "::error::$s.wav absent de l'app"; exit 1; }
+          done
+          echo "4 sons présents dans Runner.app"

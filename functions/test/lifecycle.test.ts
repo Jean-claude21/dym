@@ -173,7 +173,11 @@ describe("transitions", () => {
     const sender = fcmPushSender(serviceAccount, fetchImpl);
     await sender.send({ tokens: ["tel"], title: "T", body: "B", data: {}, channel: "dym_orders_v2", tag: "o-1" });
     expect(bodies[0]).toMatchObject({
-      message: { android: { notification: { channel_id: "dym_orders_v2", tag: "o-1" } } },
+      message: {
+        android: { notification: { channel_id: "dym_orders_v2", tag: "o-1" } },
+        // iPhone (spec 108) : alerte, son de l'événement, sujet.
+        apns: { payload: { aps: { alert: { title: "T", body: "B" }, sound: "dym_order.wav", "thread-id": "o-1" } } },
+      },
     });
   });
 
