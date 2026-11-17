@@ -9651,5 +9651,55 @@
         "type": "String"
       }
     }
+  },
+  "authContinueWhatsApp": "Continuer avec WhatsApp",
+  "@authContinueWhatsApp": {
+    "description": "Bienvenue : connexion par WhatsApp"
+  },
+  "authPhoneTitle": "Ton numéro WhatsApp",
+  "@authPhoneTitle": {
+    "description": "Étape numéro"
+  },
+  "authPhoneSubtitle": "On t'envoie un code à 6 chiffres sur WhatsApp. Ton numéro n'est montré à personne.",
+  "@authPhoneSubtitle": {
+    "description": "Étape numéro : explication"
+  },
+  "authPhoneLabel": "Numéro",
+  "@authPhoneLabel": {
+    "description": "Champ numéro"
+  },
+  "authDialCode": "Indicatif",
+  "@authDialCode": {
+    "description": "Champ indicatif"
+  },
+  "authCodeSentToPhone": "Code envoyé sur WhatsApp au {phone}",
+  "@authCodeSentToPhone": {
+    "description": "Code : envoyé au numéro",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "authChangePhone": "Changer de numéro",
+  "@authChangePhone": {
+    "description": "Code : changer de numéro"
+  },
+  "authSimulatedCode": "Code simulé (WhatsApp pas encore branché) : {code}",
+  "@authSimulatedCode": {
+    "description": "Mode simulé : code affiché",
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "authPhoneInvalid": "Numéro incomplet : vérifie l'indicatif et le numéro.",
+  "@authPhoneInvalid": {
+    "description": "Erreur : numéro"
+  },
+  "authTooManyCodes": "Trop de codes demandés. Réessaie dans quelques minutes.",
+  "@authTooManyCodes": {
+    "description": "Erreur : trop de codes"
   }
 }

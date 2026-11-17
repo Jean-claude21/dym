@@ -47,6 +47,12 @@ export default defineConfig({
         BUNNY_STREAM_API_KEY: process.env.BUNNY_STREAM_API_KEY ?? "",
         BUNNY_STREAM_CDN: process.env.BUNNY_STREAM_CDN ?? "",
         GOOGLE_CLIENT_IDS: process.env.GOOGLE_CLIENT_IDS ?? "",
+        // Connexion WhatsApp (spec 105) : compte Meta ; WHATSAPP_SIMULATED=1 sur staging seulement.
+        WHATSAPP_TOKEN: process.env.WHATSAPP_TOKEN ?? "",
+        WHATSAPP_PHONE_NUMBER_ID: process.env.WHATSAPP_PHONE_NUMBER_ID ?? "",
+        WHATSAPP_TEMPLATE: process.env.WHATSAPP_TEMPLATE ?? "",
+        WHATSAPP_TEMPLATE_LANG: process.env.WHATSAPP_TEMPLATE_LANG ?? "",
+        WHATSAPP_SIMULATED: process.env.WHATSAPP_SIMULATED ?? "",
       },
     },
   },

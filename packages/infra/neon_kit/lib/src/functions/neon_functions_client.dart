@@ -43,6 +43,19 @@ class NeonFunctionsClient {
     'functions:POST $path',
   );
 
+  /// `GET` sans session.
+  Future<Result<T>> getPublic<T>(
+    String path, {
+    required T Function(Object? json) decode,
+  }) => _call(
+    () => _dio.get<Object?>(
+      path,
+      options: Options(extra: {NeonAuthInterceptor.publicKey: true}),
+    ),
+    decode,
+    'functions:GET $path',
+  );
+
   /// `GET <slug/chemin>`.
   Future<Result<T>> get<T>(
     String path, {

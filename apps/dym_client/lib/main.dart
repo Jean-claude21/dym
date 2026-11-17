@@ -95,6 +95,8 @@ Future<void> configureServices(DymEnvironment environment) async {
     )
     ..registerSingleton(locale)
     ..registerSingleton<AuthService>(auth)
+    // Connexion WhatsApp (spec 105).
+    ..registerSingleton<WhatsAppSignIn>(NeonWhatsAppSignIn(auth))
     ..registerSingleton(visitor)
     ..registerLazySingleton<DiscoveryService>(
       () => NeonDiscoveryService(

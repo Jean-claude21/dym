@@ -363,6 +363,20 @@ class _Actions extends StatelessWidget {
             icon: Icons.mail_outline_rounded,
             onPressed: vm.chooseEmail,
           ),
+        // Connexion WhatsApp (spec 105), quand elle est branchée.
+        if (vm.whatsAppAvailable)
+          TextButton.icon(
+            onPressed: vm.isBusy ? null : vm.chooseWhatsApp,
+            style: TextButton.styleFrom(
+              minimumSize: const Size.fromHeight(DymTokenSize.touchMin),
+              foregroundColor: c.brandDeep,
+              textStyle: context.dym.text.body.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            icon: const Icon(Icons.chat_rounded, size: 20),
+            label: Text(l10n.authContinueWhatsApp),
+          ),
         if (vm.canBrowse)
           TextButton(
             onPressed: vm.isBusy ? null : vm.chooseBrowse,

@@ -13794,6 +13794,66 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Je suis en livraison avec DYM. Suis ma course en direct : {url}'**
   String courierShareRunText(String url);
+
+  /// Bienvenue : connexion par WhatsApp
+  ///
+  /// In fr, this message translates to:
+  /// **'Continuer avec WhatsApp'**
+  String get authContinueWhatsApp;
+
+  /// Étape numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton numéro WhatsApp'**
+  String get authPhoneTitle;
+
+  /// Étape numéro : explication
+  ///
+  /// In fr, this message translates to:
+  /// **'On t\'envoie un code à 6 chiffres sur WhatsApp. Ton numéro n\'est montré à personne.'**
+  String get authPhoneSubtitle;
+
+  /// Champ numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro'**
+  String get authPhoneLabel;
+
+  /// Champ indicatif
+  ///
+  /// In fr, this message translates to:
+  /// **'Indicatif'**
+  String get authDialCode;
+
+  /// Code : envoyé au numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Code envoyé sur WhatsApp au {phone}'**
+  String authCodeSentToPhone(String phone);
+
+  /// Code : changer de numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer de numéro'**
+  String get authChangePhone;
+
+  /// Mode simulé : code affiché
+  ///
+  /// In fr, this message translates to:
+  /// **'Code simulé (WhatsApp pas encore branché) : {code}'**
+  String authSimulatedCode(String code);
+
+  /// Erreur : numéro
+  ///
+  /// In fr, this message translates to:
+  /// **'Numéro incomplet : vérifie l\'indicatif et le numéro.'**
+  String get authPhoneInvalid;
+
+  /// Erreur : trop de codes
+  ///
+  /// In fr, this message translates to:
+  /// **'Trop de codes demandés. Réessaie dans quelques minutes.'**
+  String get authTooManyCodes;
 }
 
 class _DymLocalizationsDelegate

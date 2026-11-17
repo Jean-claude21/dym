@@ -128,4 +128,45 @@ class NeonClient {
       Ok(:final value) => await auth.verifyEmailOtp(value.email, value.code),
     };
   }
+
+  /// Connexion WhatsApp (spec 105) : disponible ; simulée (code rendu).
+  Future<Result<({bool available, bool simulated})>> whatsAppStatus() =>
+      functions.getPublic(
+        '/v1/auth/whatsapp',
+        decode: (json) {
+          final map = json! as Map;
+          return (
+            available: map['available'] == true,
+            simulated: map['simulated'] == true,
+          );
+        },
+      );
+
+  /// Envoie un code par WhatsApp au numéro international [phone] ; en mode
+  /// simulé, le code est rendu (affiché « simulé » par l'app).
+  Future<Result<String?>> whatsAppStart(String phone) =>
+      functions.postPublic<String?>(
+        '/v1/auth/whatsapp/start',
+        body: {'phone': phone},
+        decode: (json) => (json! as Map)['code'] as String?,
+      );
+
+  /// Vérifie le code reçu par WhatsApp puis ouvre une session Neon Auth.
+  Future<Result<NeonSession>> signInWithWhatsApp(
+    String phone,
+    String code,
+  ) async {
+    final bridge = await functions.postPublic<({String email, String code})>(
+      '/v1/auth/whatsapp/verify',
+      body: {'phone': phone, 'code': code},
+      decode: (json) {
+        final map = json! as Map;
+        return (email: map['email'] as String, code: map['code'] as String);
+      },
+    );
+    return switch (bridge) {
+      Err(:final failure) => Err(failure),
+      Ok(:final value) => await auth.verifyEmailOtp(value.email, value.code),
+    };
+  }
 }

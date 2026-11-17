@@ -4,8 +4,10 @@ import 'package:dym_auth/src/auth_flow_viewmodel.dart';
 import 'package:dym_auth/src/auth_service.dart';
 import 'package:dym_auth/src/steps/code_step.dart';
 import 'package:dym_auth/src/steps/email_step.dart';
+import 'package:dym_auth/src/steps/phone_step.dart';
 import 'package:dym_auth/src/steps/profile_step.dart';
 import 'package:dym_auth/src/steps/welcome_step.dart';
+import 'package:dym_auth/src/whatsapp_sign_in.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
@@ -27,6 +29,7 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
     this.initialStep = AuthStep.welcome,
     this.initialEmail = '',
     this.onBrowse,
+    this.whatsApp,
   });
 
   final AuthService service;
@@ -45,11 +48,15 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
   /// Découvrir sans compte (cliente seulement, spec 093).
   final void Function(String zoneId, String countryCode)? onBrowse;
 
+  /// Connexion WhatsApp (spec 105) ; nulle : pas proposée.
+  final WhatsAppSignIn? whatsApp;
+
   @override
   AuthFlowViewModel viewModelBuilder(BuildContext context) => AuthFlowViewModel(
     service: service,
     onReady: onReady,
     onBrowse: onBrowse,
+    whatsApp: whatsApp,
     locale: Localizations.localeOf(context).languageCode,
     supportedLocales: [
       for (final l in DymLocalizations.supportedLocales) l.languageCode,
@@ -61,6 +68,7 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
   @override
   void onViewModelReady(AuthFlowViewModel viewModel) {
     if (startWithProfile) unawaited(viewModel.startProfile());
+    unawaited(viewModel.loadWhatsApp());
   }
 
   @override
@@ -79,6 +87,7 @@ class AuthFlowView extends StackedView<AuthFlowViewModel> {
         AuthVariant.client => WelcomeStep(viewModel: viewModel),
       },
       AuthStep.email => EmailStep(viewModel: viewModel),
+      AuthStep.phone => PhoneStep(viewModel: viewModel),
       AuthStep.code => CodeStep(viewModel: viewModel),
       AuthStep.profile => ProfileStep(viewModel: viewModel),
     };

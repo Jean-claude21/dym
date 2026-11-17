@@ -6,4 +6,5 @@ export 'src/auth_flow_view.dart';
 export 'src/auth_flow_viewmodel.dart'
     show AuthError, AuthFlowViewModel, AuthStep, ZoneLocation;
 export 'src/auth_service.dart';
+export 'src/whatsapp_sign_in.dart';
 export 'src/widgets/step_scaffold.dart' show AuthErrorBanner;

@@ -2403,5 +2403,15 @@
   "walletKindP2pAnonymous": "Between relatives",
   "peopleChildCategory": "This aisle isn't allowed by your parent.",
   "courierShareRun": "Share my run",
-  "courierShareRunText": "I'm delivering with DYM. Follow my run live: {url}"
+  "courierShareRunText": "I'm delivering with DYM. Follow my run live: {url}",
+  "authContinueWhatsApp": "Continue with WhatsApp",
+  "authPhoneTitle": "Your WhatsApp number",
+  "authPhoneSubtitle": "We'll send you a 6-digit code on WhatsApp. Your number is never shown to anyone.",
+  "authPhoneLabel": "Number",
+  "authDialCode": "Code",
+  "authCodeSentToPhone": "Code sent on WhatsApp to {phone}",
+  "authChangePhone": "Change number",
+  "authSimulatedCode": "Simulated code (WhatsApp not connected yet): {code}",
+  "authPhoneInvalid": "Incomplete number: check the country code and the number.",
+  "authTooManyCodes": "Too many codes requested. Try again in a few minutes."
 }
