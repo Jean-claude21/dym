@@ -13986,6 +13986,318 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Garder pour plus tard'**
   String get cartElsewhereKeep;
+
+  /// Action : répondre à un message (spec 111)
+  ///
+  /// In fr, this message translates to:
+  /// **'Répondre'**
+  String get chatReply;
+
+  /// Action : copier le texte d'un message
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get chatCopy;
+
+  /// Confirmation après copie
+  ///
+  /// In fr, this message translates to:
+  /// **'Message copié'**
+  String get chatCopied;
+
+  /// Action : transférer un message
+  ///
+  /// In fr, this message translates to:
+  /// **'Transférer'**
+  String get chatForward;
+
+  /// Titre de la feuille de transfert
+  ///
+  /// In fr, this message translates to:
+  /// **'Transférer à…'**
+  String get chatForwardTo;
+
+  /// Mention sur un message transféré
+  ///
+  /// In fr, this message translates to:
+  /// **'Transféré'**
+  String get chatForwarded;
+
+  /// Confirmation de transfert
+  ///
+  /// In fr, this message translates to:
+  /// **'Message transféré'**
+  String get chatForwardDone;
+
+  /// Transfert impossible : pas d'autre conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune autre conversation'**
+  String get chatForwardNone;
+
+  /// Action : supprimer un message pour soi
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer pour moi'**
+  String get chatDeleteForMe;
+
+  /// Action : supprimer pour tous (dans l'heure)
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer pour tout le monde'**
+  String get chatDeleteForAll;
+
+  /// Titre de la confirmation de suppression
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer ce message ?'**
+  String get chatDeleteTitle;
+
+  /// Bulle d'un message supprimé pour tous
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce message a été supprimé'**
+  String get chatDeletedMessage;
+
+  /// Suppression pour tous refusée (trop tard)
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'une heure : supprime-le seulement pour toi'**
+  String get chatDeleteTooLate;
+
+  /// Bandeau au-dessus du champ pendant une réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Réponse à {name}'**
+  String chatReplyingTo(String name);
+
+  /// Auteur d'un message cité quand c'est moi
+  ///
+  /// In fr, this message translates to:
+  /// **'Toi'**
+  String get chatYouName;
+
+  /// Fermer le bandeau de réponse
+  ///
+  /// In fr, this message translates to:
+  /// **'Annuler la réponse'**
+  String get chatCancelReply;
+
+  /// Séparateur avant les messages non lus
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 nouveau message} other{{count} nouveaux messages}}'**
+  String chatNewMessages(int count);
+
+  /// Indicateur de saisie de l'autre personne
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} écrit…'**
+  String chatTyping(String name);
+
+  /// Indicateur de saisie sans nom
+  ///
+  /// In fr, this message translates to:
+  /// **'écrit…'**
+  String get chatTypingSomeone;
+
+  /// État d'un message reçu par l'autre app (✓✓ gris)
+  ///
+  /// In fr, this message translates to:
+  /// **'Reçu'**
+  String get chatDelivered;
+
+  /// Bouton qui ouvre le panneau d'émojis
+  ///
+  /// In fr, this message translates to:
+  /// **'Émojis'**
+  String get chatEmoji;
+
+  /// Bouton qui revient au clavier
+  ///
+  /// In fr, this message translates to:
+  /// **'Clavier'**
+  String get chatKeyboard;
+
+  /// Ouvrir tous les émojis pour réagir
+  ///
+  /// In fr, this message translates to:
+  /// **'Autres réactions'**
+  String get chatMoreReactions;
+
+  /// Libellé de la ligne des réactions
+  ///
+  /// In fr, this message translates to:
+  /// **'Réactions'**
+  String get chatReactions;
+
+  /// Pièce jointe : document
+  ///
+  /// In fr, this message translates to:
+  /// **'Document'**
+  String get chatDocument;
+
+  /// Ouvrir un document reçu
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir le document'**
+  String get chatDocumentOpen;
+
+  /// Erreur d'envoi d'un document trop lourd
+  ///
+  /// In fr, this message translates to:
+  /// **'Document trop lourd : 10 Mo au plus'**
+  String get chatDocumentTooLarge;
+
+  /// Erreur d'envoi : type refusé
+  ///
+  /// In fr, this message translates to:
+  /// **'Ce type de document n\'est pas accepté'**
+  String get chatDocumentUnsupported;
+
+  /// Aide pendant l'enregistrement d'un vocal
+  ///
+  /// In fr, this message translates to:
+  /// **'Glisse à gauche pour annuler'**
+  String get chatVoiceSlideCancel;
+
+  /// Garder le micro ouvert sans appuyer
+  ///
+  /// In fr, this message translates to:
+  /// **'Verrouiller l\'enregistrement'**
+  String get chatVoiceLock;
+
+  /// Aide après un simple tap sur le micro
+  ///
+  /// In fr, this message translates to:
+  /// **'Garde le doigt appuyé pour enregistrer'**
+  String get chatVoiceHold;
+
+  /// Mettre un vocal en pause
+  ///
+  /// In fr, this message translates to:
+  /// **'Pause'**
+  String get chatVoicePause;
+
+  /// Changer la vitesse d'un vocal
+  ///
+  /// In fr, this message translates to:
+  /// **'Vitesse de lecture'**
+  String get chatVoiceSpeed;
+
+  /// Vidéo : couper le son
+  ///
+  /// In fr, this message translates to:
+  /// **'Couper le son'**
+  String get chatVideoMute;
+
+  /// Vidéo : remettre le son
+  ///
+  /// In fr, this message translates to:
+  /// **'Remettre le son'**
+  String get chatVideoUnmute;
+
+  /// Vidéo : pause
+  ///
+  /// In fr, this message translates to:
+  /// **'Pause'**
+  String get chatVideoPause;
+
+  /// Ouvrir une photo ou une vidéo en plein écran
+  ///
+  /// In fr, this message translates to:
+  /// **'Plein écran'**
+  String get chatFullScreen;
+
+  /// Champ de recherche dans un fil
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher dans la conversation'**
+  String get chatSearchInThread;
+
+  /// Recherche sans résultat
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun message trouvé'**
+  String get chatSearchEmpty;
+
+  /// Aide de la recherche dans un fil
+  ///
+  /// In fr, this message translates to:
+  /// **'Tape au moins 2 lettres'**
+  String get chatSearchHint;
+
+  /// Titre de la galerie d'une conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Médias et documents'**
+  String get chatMediaTitle;
+
+  /// Onglet photos et vidéos
+  ///
+  /// In fr, this message translates to:
+  /// **'Médias'**
+  String get chatMediaTab;
+
+  /// Onglet documents
+  ///
+  /// In fr, this message translates to:
+  /// **'Documents'**
+  String get chatDocumentsTab;
+
+  /// Galerie vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune photo ni vidéo pour l\'instant'**
+  String get chatMediaEmpty;
+
+  /// Onglet documents vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun document pour l\'instant'**
+  String get chatDocumentsEmpty;
+
+  /// Filtre : toutes les conversations
+  ///
+  /// In fr, this message translates to:
+  /// **'Toutes'**
+  String get chatFilterAll;
+
+  /// Filtre : conversations non lues
+  ///
+  /// In fr, this message translates to:
+  /// **'Non lues'**
+  String get chatFilterUnread;
+
+  /// Filtre : fils de commande
+  ///
+  /// In fr, this message translates to:
+  /// **'Commandes'**
+  String get chatFilterOrders;
+
+  /// Liste filtrée vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune conversation ici'**
+  String get chatFilterEmpty;
+
+  /// Mention d'un fil de commande épinglé
+  ///
+  /// In fr, this message translates to:
+  /// **'Commande en cours'**
+  String get chatPinnedOrder;
+
+  /// Menu de l'en-tête d'une conversation
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d\'options'**
+  String get chatMoreOptions;
+
+  /// Fermer une vue (recherche, plein écran)
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer'**
+  String get chatClose;
 }
 
 class _DymLocalizationsDelegate

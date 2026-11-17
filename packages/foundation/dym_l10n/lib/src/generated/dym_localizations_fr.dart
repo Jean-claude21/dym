@@ -8438,4 +8438,174 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get cartElsewhereKeep => 'Garder pour plus tard';
+
+  @override
+  String get chatReply => 'Répondre';
+
+  @override
+  String get chatCopy => 'Copier';
+
+  @override
+  String get chatCopied => 'Message copié';
+
+  @override
+  String get chatForward => 'Transférer';
+
+  @override
+  String get chatForwardTo => 'Transférer à…';
+
+  @override
+  String get chatForwarded => 'Transféré';
+
+  @override
+  String get chatForwardDone => 'Message transféré';
+
+  @override
+  String get chatForwardNone => 'Aucune autre conversation';
+
+  @override
+  String get chatDeleteForMe => 'Supprimer pour moi';
+
+  @override
+  String get chatDeleteForAll => 'Supprimer pour tout le monde';
+
+  @override
+  String get chatDeleteTitle => 'Supprimer ce message ?';
+
+  @override
+  String get chatDeletedMessage => 'Ce message a été supprimé';
+
+  @override
+  String get chatDeleteTooLate =>
+      'Plus d\'une heure : supprime-le seulement pour toi';
+
+  @override
+  String chatReplyingTo(String name) {
+    return 'Réponse à $name';
+  }
+
+  @override
+  String get chatYouName => 'Toi';
+
+  @override
+  String get chatCancelReply => 'Annuler la réponse';
+
+  @override
+  String chatNewMessages(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count nouveaux messages',
+      one: '1 nouveau message',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String chatTyping(String name) {
+    return '$name écrit…';
+  }
+
+  @override
+  String get chatTypingSomeone => 'écrit…';
+
+  @override
+  String get chatDelivered => 'Reçu';
+
+  @override
+  String get chatEmoji => 'Émojis';
+
+  @override
+  String get chatKeyboard => 'Clavier';
+
+  @override
+  String get chatMoreReactions => 'Autres réactions';
+
+  @override
+  String get chatReactions => 'Réactions';
+
+  @override
+  String get chatDocument => 'Document';
+
+  @override
+  String get chatDocumentOpen => 'Ouvrir le document';
+
+  @override
+  String get chatDocumentTooLarge => 'Document trop lourd : 10 Mo au plus';
+
+  @override
+  String get chatDocumentUnsupported =>
+      'Ce type de document n\'est pas accepté';
+
+  @override
+  String get chatVoiceSlideCancel => 'Glisse à gauche pour annuler';
+
+  @override
+  String get chatVoiceLock => 'Verrouiller l\'enregistrement';
+
+  @override
+  String get chatVoiceHold => 'Garde le doigt appuyé pour enregistrer';
+
+  @override
+  String get chatVoicePause => 'Pause';
+
+  @override
+  String get chatVoiceSpeed => 'Vitesse de lecture';
+
+  @override
+  String get chatVideoMute => 'Couper le son';
+
+  @override
+  String get chatVideoUnmute => 'Remettre le son';
+
+  @override
+  String get chatVideoPause => 'Pause';
+
+  @override
+  String get chatFullScreen => 'Plein écran';
+
+  @override
+  String get chatSearchInThread => 'Rechercher dans la conversation';
+
+  @override
+  String get chatSearchEmpty => 'Aucun message trouvé';
+
+  @override
+  String get chatSearchHint => 'Tape au moins 2 lettres';
+
+  @override
+  String get chatMediaTitle => 'Médias et documents';
+
+  @override
+  String get chatMediaTab => 'Médias';
+
+  @override
+  String get chatDocumentsTab => 'Documents';
+
+  @override
+  String get chatMediaEmpty => 'Aucune photo ni vidéo pour l\'instant';
+
+  @override
+  String get chatDocumentsEmpty => 'Aucun document pour l\'instant';
+
+  @override
+  String get chatFilterAll => 'Toutes';
+
+  @override
+  String get chatFilterUnread => 'Non lues';
+
+  @override
+  String get chatFilterOrders => 'Commandes';
+
+  @override
+  String get chatFilterEmpty => 'Aucune conversation ici';
+
+  @override
+  String get chatPinnedOrder => 'Commande en cours';
+
+  @override
+  String get chatMoreOptions => 'Plus d\'options';
+
+  @override
+  String get chatClose => 'Fermer';
 }

@@ -292,6 +292,8 @@ class MemoryChatService implements ChatService {
     String? body,
     String? productId,
     bool media = false,
+    String? replyTo,
+    Map<String, dynamic>? payload,
   }) async {
     final failed = _fail<ChatMessage>();
     if (failed != null) return failed;
@@ -314,6 +316,8 @@ class MemoryChatService implements ChatService {
       hasMedia: media,
       product: product,
       productId: productId,
+      payload: payload,
+      replyTo: _quote(t, replyTo),
       createdAt: _now,
     );
     _threads[conversationId] = t.copyWith(messages: [...t.messages, message]);
@@ -321,12 +325,31 @@ class MemoryChatService implements ChatService {
     return Ok(message);
   }
 
+  MessageQuote? _quote(ConversationThread t, String? id) {
+    final m = t.messages.where((m) => m.id == id).firstOrNull;
+    if (m == null) return null;
+    return MessageQuote(
+      id: m.id,
+      authorRole: m.authorRole,
+      kind: m.kind,
+      body: m.deleted ? null : m.body,
+      deleted: m.deleted,
+    );
+  }
+
   @override
   Future<Result<ChatMessage>> sendText(
     String conversationId,
     String body, {
     required String idempotencyKey,
-  }) => _add(conversationId, MessageKind.text, key: idempotencyKey, body: body);
+    String? replyTo,
+  }) => _add(
+    conversationId,
+    MessageKind.text,
+    key: idempotencyKey,
+    body: body,
+    replyTo: replyTo,
+  );
 
   @override
   Future<Result<ChatMessage>> sendProduct(
@@ -345,16 +368,201 @@ class MemoryChatService implements ChatService {
     String conversationId,
     PickedPhoto photo, {
     required String idempotencyKey,
-  }) =>
-      _add(conversationId, MessageKind.image, key: idempotencyKey, media: true);
+    String? replyTo,
+  }) => _add(
+    conversationId,
+    MessageKind.image,
+    key: idempotencyKey,
+    media: true,
+    replyTo: replyTo,
+  );
 
   @override
   Future<Result<ChatMessage>> sendAudio(
     String conversationId,
     RecordedAudio audio, {
     required String idempotencyKey,
-  }) =>
-      _add(conversationId, MessageKind.audio, key: idempotencyKey, media: true);
+    String? replyTo,
+  }) => _add(
+    conversationId,
+    MessageKind.audio,
+    key: idempotencyKey,
+    media: true,
+    replyTo: replyTo,
+  );
+
+  // ---------------------------------------------------------------- spec 111
+
+  @override
+  DocumentPicker? documents;
+
+  @override
+  ExternalPageOpener? opener;
+
+  /// Gestes enregistrés (tests) : réactions, suppressions, transferts…
+  final actions = <String>[];
+
+  @override
+  Future<Result<ChatMessage>> sendFile(
+    String conversationId,
+    PickedDocument document, {
+    required String idempotencyKey,
+    String? replyTo,
+  }) => _add(
+    conversationId,
+    MessageKind.file,
+    key: idempotencyKey,
+    media: true,
+    replyTo: replyTo,
+    payload: {
+      'name': document.name,
+      'size': document.size,
+      'mime': document.contentType,
+    },
+  );
+
+  (String, ConversationThread, ChatMessage)? _find(String messageId) {
+    for (final e in _threads.entries) {
+      final m = e.value.messages.where((m) => m.id == messageId).firstOrNull;
+      if (m != null) return (e.key, e.value, m);
+    }
+    return null;
+  }
+
+  void _replace(String conv, ConversationThread t, ChatMessage m) =>
+      _threads[conv] = t.copyWith(
+        messages: [
+          for (final x in t.messages)
+            if (x.id == m.id) m else x,
+        ],
+      );
+
+  ChatMessage _copy(
+    ChatMessage m, {
+    List<MessageReaction>? reactions,
+    bool? deleted,
+  }) {
+    final gone = deleted ?? m.deleted;
+    return ChatMessage(
+      id: m.id,
+      conversationId: m.conversationId,
+      authorRole: m.authorRole,
+      kind: m.kind,
+      createdAt: m.createdAt,
+      body: gone ? null : m.body,
+      hasMedia: !gone && m.hasMedia,
+      product: m.product,
+      productId: m.productId,
+      durationMs: m.durationMs,
+      payload: gone ? null : m.payload,
+      replyTo: m.replyTo,
+      reactions: reactions ?? m.reactions,
+      deleted: gone,
+      forwarded: m.forwarded,
+    );
+  }
+
+  @override
+  Future<Result<ChatMessage>> react(String messageId, String? emoji) async {
+    final failed = _fail<ChatMessage>();
+    if (failed != null) return failed;
+    final found = _find(messageId);
+    if (found == null) return const Err(NotFoundFailure('message'));
+    final (conv, t, m) = found;
+    actions.add('react:$messageId:${emoji ?? 'none'}');
+    final me = role.code;
+    final others = <MessageReaction>[
+      for (final r in m.reactions)
+        if (r.roles.any((x) => x != me))
+          MessageReaction(
+            emoji: r.emoji,
+            count: r.roles.where((x) => x != me).length,
+            roles: [...r.roles.where((x) => x != me)],
+          ),
+    ];
+    final updated = _copy(
+      m,
+      reactions: emoji == null ? others : _withReaction(others, emoji, me),
+    );
+    _replace(conv, t, updated);
+    return Ok(updated);
+  }
+
+  static List<MessageReaction> _withReaction(
+    List<MessageReaction> list,
+    String emoji,
+    String who,
+  ) {
+    if (!list.any((r) => r.emoji == emoji)) {
+      return [
+        ...list,
+        MessageReaction(emoji: emoji, count: 1, roles: [who]),
+      ];
+    }
+    return [
+      for (final r in list)
+        if (r.emoji == emoji)
+          MessageReaction(
+            emoji: emoji,
+            count: r.count + 1,
+            roles: [...r.roles, who],
+          )
+        else
+          r,
+    ];
+  }
+
+  @override
+  Future<Result<void>> deleteMessage(
+    String messageId, {
+    required bool forAll,
+  }) async {
+    final failed = _fail<void>();
+    if (failed != null) return failed;
+    final found = _find(messageId);
+    if (found == null) return const Err(NotFoundFailure('message'));
+    final (conv, t, m) = found;
+    actions.add('delete:$messageId:${forAll ? 'all' : 'me'}');
+    if (forAll) {
+      _replace(conv, t, _copy(m, deleted: true));
+    } else {
+      _threads[conv] = t.copyWith(
+        messages: [...t.messages.where((x) => x.id != messageId)],
+      );
+    }
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<ChatMessage>> forward(
+    String messageId,
+    String conversationId, {
+    required String idempotencyKey,
+  }) async {
+    final found = _find(messageId);
+    if (found == null) return const Err(NotFoundFailure('message'));
+    actions.add('forward:$messageId:$conversationId');
+    final m = found.$3;
+    return await _add(
+      conversationId,
+      m.kind,
+      key: idempotencyKey,
+      body: m.body,
+      productId: m.productId,
+    );
+  }
+
+  @override
+  Future<Result<void>> markDelivered() async {
+    actions.add('delivered');
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<void>> typing(String conversationId) async {
+    actions.add('typing:$conversationId');
+    return const Ok(null);
+  }
 
   @override
   VoiceRecorder? recorder;

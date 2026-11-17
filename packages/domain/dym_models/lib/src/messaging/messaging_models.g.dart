@@ -42,6 +42,16 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
         'live_until',
         (v) => v == null ? null : DateTime.parse(v as String),
       ),
+      replyTo: $checkedConvert(
+        'reply_to',
+        (v) => MessageQuote.maybeFromJson(v),
+      ),
+      reactions: $checkedConvert(
+        'reactions',
+        (v) => v == null ? const [] : MessageReaction.listFromJson(v),
+      ),
+      deleted: $checkedConvert('deleted', (v) => v as bool? ?? false),
+      forwarded: $checkedConvert('forwarded', (v) => v as bool? ?? false),
     );
     return val;
   },
@@ -53,6 +63,7 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
     'productId': 'product_id',
     'durationMs': 'duration_ms',
     'liveUntil': 'live_until',
+    'replyTo': 'reply_to',
   },
 );
 
@@ -67,6 +78,7 @@ const _$MessageKindEnumMap = {
   MessageKind.quote: 'quote',
   MessageKind.paymentRequest: 'payment_request',
   MessageKind.coupon: 'coupon',
+  MessageKind.file: 'file',
   MessageKind.unknown: 'unknown',
 };
 
@@ -141,6 +153,14 @@ ConversationThread _$ConversationThreadFromJson(Map<String, dynamic> json) =>
             'peer_read_at',
             (v) => v == null ? null : DateTime.parse(v as String),
           ),
+          peerDeliveredAt: $checkedConvert(
+            'peer_delivered_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
+          myReadAt: $checkedConvert(
+            'my_read_at',
+            (v) => v == null ? null : DateTime.parse(v as String),
+          ),
           activeOrder: $checkedConvert(
             'active_order',
             (v) => ChatOrder.maybeFromJson(v),
@@ -150,6 +170,8 @@ ConversationThread _$ConversationThreadFromJson(Map<String, dynamic> json) =>
       },
       fieldKeyMap: const {
         'peerReadAt': 'peer_read_at',
+        'peerDeliveredAt': 'peer_delivered_at',
+        'myReadAt': 'my_read_at',
         'activeOrder': 'active_order',
       },
     );

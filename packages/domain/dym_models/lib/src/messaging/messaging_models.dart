@@ -21,6 +21,8 @@ enum MessageKind {
   quote,
   paymentRequest,
   coupon,
+  // Chat refait (spec 111).
+  file,
   unknown,
 }
 
@@ -54,9 +56,44 @@ class ChatMessage {
     this.payload,
     this.transcript,
     this.liveUntil,
+    this.replyTo,
+    this.reactions = const [],
+    this.deleted = false,
+    this.forwarded = false,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
+
+  /// Message cité (spec 111).
+  @JsonKey(fromJson: MessageQuote.maybeFromJson, includeToJson: false)
+  final MessageQuote? replyTo;
+
+  /// Réactions, une par personne (spec 111).
+  @JsonKey(fromJson: MessageReaction.listFromJson, includeToJson: false)
+  final List<MessageReaction> reactions;
+
+  /// Supprimé pour tout le monde : plus aucun contenu.
+  final bool deleted;
+
+  /// Transféré depuis une autre conversation.
+  final bool forwarded;
+
+  /// Document (spec 111) : nom, taille et type.
+  String? get fileName => payloadText('name');
+  int? get fileSize => payloadNumber('size')?.toInt();
+
+  /// Seuls le texte, le produit et la position se transfèrent.
+  bool get forwardable =>
+      !deleted &&
+      (kind == MessageKind.text ||
+          kind == MessageKind.product ||
+          (kind == MessageKind.location && !isLive));
+
+  /// Réaction posée par [role] (une par personne).
+  String? reactionOf(ChatRole role) => reactions
+      .where((r) => r.roles.contains(role.code))
+      .firstOrNull
+      ?.emoji;
 
   /// Contenu structuré (spec 099) : position, devis, demande de paiement,
   /// coupon ; l'état (accepté, payé, expiré) est relu en base.
@@ -106,6 +143,63 @@ class ChatMessage {
   final CallSummary? call;
 
   bool fromMe(ChatRole me) => authorRole == me.code;
+}
+
+/// Message cité dans une réponse (spec 111).
+@immutable
+class MessageQuote {
+  const new({
+    required this.id,
+    required this.authorRole,
+    required this.kind,
+    this.body,
+    this.deleted = false,
+  });
+
+  static MessageQuote? maybeFromJson(Object? json) => switch (json) {
+    final Map<dynamic, dynamic> m => MessageQuote(
+      id: m['id'] as String,
+      authorRole: m['author_role'] as String? ?? '',
+      kind: MessageKind.values.firstWhere(
+        (k) => _snake(k.name) == m['kind'],
+        orElse: () => MessageKind.unknown,
+      ),
+      body: m['body'] as String?,
+      deleted: m['deleted'] as bool? ?? false,
+    ),
+    _ => null,
+  };
+
+  final String id;
+  final String authorRole;
+  final MessageKind kind;
+  final String? body;
+  final bool deleted;
+}
+
+String _snake(String name) =>
+    name.replaceAllMapped(RegExp('[A-Z]'), (m) => '_${m[0]!.toLowerCase()}');
+
+/// Réaction à un message : emoji, nombre et rôles qui l'ont posée.
+@immutable
+class MessageReaction {
+  const new({required this.emoji, required this.count, this.roles = const []});
+
+  static List<MessageReaction> listFromJson(Object? json) => switch (json) {
+    final List<dynamic> list => [
+      for (final r in list.whereType<Map<dynamic, dynamic>>())
+        MessageReaction(
+          emoji: r['emoji'] as String? ?? '',
+          count: (r['count'] as num?)?.toInt() ?? 1,
+          roles: [for (final role in r['roles'] as List? ?? const []) '$role'],
+        ),
+    ],
+    _ => const [],
+  };
+
+  final String emoji;
+  final int count;
+  final List<String> roles;
 }
 
 /// Conversation entre une cliente et une boutique.
@@ -158,6 +252,8 @@ class ConversationThread {
     required this.role,
     this.messages = const [],
     this.peerReadAt,
+    this.peerDeliveredAt,
+    this.myReadAt,
     this.activeOrder,
   });
 
@@ -175,6 +271,13 @@ class ConversationThread {
   /// avant sont « vus ».
   final DateTime? peerReadAt;
 
+  /// Dernière ouverture de l'app par l'autre personne (spec 111) : mes
+  /// messages envoyés avant sont « reçus » (✓✓ gris).
+  final DateTime? peerDeliveredAt;
+
+  /// Ma lecture précédente : les messages reçus après sont « nouveaux ».
+  final DateTime? myReadAt;
+
   /// Commande en cours entre la cliente et la boutique (spec 070).
   @JsonKey(fromJson: ChatOrder.maybeFromJson, includeToJson: false)
   final ChatOrder? activeOrder;
@@ -185,12 +288,21 @@ class ConversationThread {
     return read != null && !message.createdAt.isAfter(read);
   }
 
+  /// Vrai si l'app de l'autre personne a reçu [message].
+  bool delivered(ChatMessage message) {
+    if (seen(message)) return true;
+    final at = peerDeliveredAt;
+    return at != null && !message.createdAt.isAfter(at);
+  }
+
   ConversationThread copyWith({List<ChatMessage>? messages}) =>
       ConversationThread(
         conversation: conversation,
         role: role,
         messages: messages ?? this.messages,
         peerReadAt: peerReadAt,
+        peerDeliveredAt: peerDeliveredAt,
+        myReadAt: myReadAt,
         activeOrder: activeOrder,
       );
 }

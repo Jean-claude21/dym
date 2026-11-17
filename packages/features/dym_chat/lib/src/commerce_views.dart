@@ -277,6 +277,7 @@ class CommerceBubble extends StatelessWidget {
           MessageKind.product ||
           MessageKind.audio ||
           MessageKind.call ||
+          MessageKind.file ||
           MessageKind.unknown:
         return const SizedBox.shrink();
     }

@@ -89,7 +89,8 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Identifiant d'installation (spec 039) | UUID aléatoire dans `flutter_secure_storage` (derrière `InstallIdProvider`) | `dym_platform` |
 | Import TikTok (spec 040) | oEmbed public dans la Function (derrière `VideoImportProvider`) ; Login Kit et Share Kit à l'ouverture de l'accès | Functions |
 | Carte (spec 095) | `maplibre_gl` + tuiles OpenFreeMap, derrière `DymMapEngine` (décision 0022) | `dym_map` |
-| Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
+| Lecture vidéo (contenus shoppables, spec 020 ; vidéo dans le chat, spec 111 derrière `InlineVideo`) | `video_player` | `apps/dym_client`, `dym_platform` |
+| Documents du chat (spec 111) | `file_picker` (derrière `DocumentPicker`) | `dym_platform` |
 | Vidéo légère gardée (économie de données, spec 103) | `flutter_cache_manager` | `apps/dym_client` |
 | Cache local et file hors ligne (spec 107) | `path_provider` (fichiers JSON, décision 0023) | `dym_platform`, `neon_kit` (interface) |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |

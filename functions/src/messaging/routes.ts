@@ -26,6 +26,10 @@ export interface MessagingStore {
     idempotencyKey: string;
     /** Vocal (spec 035). */
     durationMs?: number | null;
+    /** Document : `{name, size, mime}` (spec 111). */
+    payload?: Record<string, unknown> | null;
+    /** Message cité (spec 111). */
+    replyTo?: string | null;
   }): Promise<MessagingJson>;
   uploadAllowed(userId: string, conversationId: string): Promise<boolean>;
   /** Clés des images lisibles par l'utilisatrice, par message. */
@@ -55,7 +59,7 @@ export function pgMessagingStore(pool: pg.Pool): MessagingStore {
   return {
     start: (u, s) => one<MessagingJson>("select app.start_conversation($1, $2) as value", [u, s]),
     send: (i) =>
-      one<MessagingJson>("select app.send_message($1, $2, $3, $4, $5, $6, $7, $8) as value", [
+      one<MessagingJson>("select app.send_message($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) as value", [
         i.userId,
         i.conversationId,
         i.kind,
@@ -64,6 +68,8 @@ export function pgMessagingStore(pool: pg.Pool): MessagingStore {
         i.productId,
         i.idempotencyKey,
         i.durationMs ?? null,
+        i.payload ?? null,
+        i.replyTo ?? null,
       ]),
     uploadAllowed: (u, c) => one<boolean>("select app.chat_upload_allowed($1, $2) as value", [u, c]),
     mediaKeys: (u, ids) =>
@@ -124,16 +130,30 @@ const extensions = {
   "video/mp4": "mp4",
   "video/webm": "webm",
   "video/quicktime": "mov",
+  // Documents (spec 111).
+  "application/pdf": "pdf",
+  "application/msword": "doc",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+  "application/vnd.ms-excel": "xls",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+  "application/vnd.ms-powerpoint": "ppt",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
+  "application/vnd.oasis.opendocument.text": "odt",
+  "application/vnd.oasis.opendocument.spreadsheet": "ods",
+  "text/plain": "txt",
+  "text/csv": "csv",
 } as const;
+
+const contentTypes = Object.keys(extensions) as [keyof typeof extensions, ...(keyof typeof extensions)[]];
 
 const audioMedia: Record<string, string> = { wav: "audio/wav", m4a: "audio/mp4", webm: "audio/webm", ogg: "audio/ogg" };
 
 /**
  * Messagerie (spec 015) ; la base vérifie la participation :
  * - `POST /v1/conversations` `{store_id}` : ouvrir ou retrouver (cliente) ;
- * - `POST /v1/conversations/:id/messages` `{kind, body?, media_key?, product_id?}`
+ * - `POST /v1/conversations/:id/messages` `{kind, body?, media_key?, product_id?, reply_to?, file?}`
  *   (en-tête `Idempotency-Key`) : envoyer, prévenir la destinataire ;
- * - `POST /v1/conversations/:id/media-uploads` `{content_type}` : envoi d'image ;
+ * - `POST /v1/conversations/:id/media-uploads` `{content_type}` : photo, vocal, vidéo, document ;
  * - `POST /v1/chat-media/urls` `{message_ids}` : liens de lecture signés.
  */
 export function registerMessagingRoutes(
@@ -165,13 +185,23 @@ export function registerMessagingRoutes(
     const body = await parseBody(
       c,
       z.object({
-        kind: z.enum(["text", "image", "product", "audio", "video"]),
+        kind: z.enum(["text", "image", "product", "audio", "video", "file"]),
         body: z.string().max(1000).nullable().optional(),
         media_key: z.string().max(300).nullable().optional(),
         product_id: uuid.nullable().optional(),
         duration_ms: z.number().int().min(500).max(60000).nullable().optional(),
+        reply_to: uuid.nullable().optional(),
+        file: z
+          .object({
+            name: z.string().trim().min(1).max(120),
+            size: z.number().int().min(1).max(10 * 1024 * 1024),
+            mime: z.enum(contentTypes).optional(),
+          })
+          .nullable()
+          .optional(),
       }),
     );
+    if (body.kind === "file" && !body.file) throw httpErrors.badRequest("file obligatoire");
     const message = await need().store.send({
       userId: c.get("user").id,
       conversationId,
@@ -181,6 +211,8 @@ export function registerMessagingRoutes(
       productId: body.product_id ?? null,
       idempotencyKey: key,
       durationMs: body.duration_ms ?? null,
+      payload: body.kind === "file" && body.file ? body.file : null,
+      replyTo: body.reply_to ?? null,
     });
     return c.json(message, 201);
   });
@@ -188,17 +220,7 @@ export function registerMessagingRoutes(
   app.post("/v1/conversations/:id/media-uploads", auth, async (c) => {
     const conversationId = id(c.req.param("id"));
     const body = await parseBody(c, z.object({
-        content_type: z.enum([
-          "image/jpeg",
-          "image/webp",
-          "audio/wav",
-          "audio/mp4",
-          "audio/webm",
-          "audio/ogg",
-          "video/mp4",
-          "video/webm",
-          "video/quicktime",
-        ]),
+        content_type: z.enum(contentTypes),
       }));
     const d = need();
     if (!d.signer) throw httpErrors.unavailable("stockage non configuré");

@@ -105,6 +105,9 @@ Future<void> configureServices(DymEnvironment environment) async {
             dymNetworkImage(environment.media(key).toString()),
         recorder: PluginVoiceRecorder(),
         playback: PluginAudioPlayback(),
+        // Documents et leur ouverture (spec 111).
+        documents: const PluginDocumentPicker(),
+        opener: const PluginExternalPageOpener(),
         liveFeed: live,
       ),
     )
