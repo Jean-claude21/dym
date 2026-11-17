@@ -2429,5 +2429,6 @@
   "orderLiveDelivered": "Delivered and confirmed with the code",
   "orderLiveWaiting": "Waiting for a courier",
   "orderLiveEta": "{minutes} min",
-  "orderLiveTitle": "Delivery tracking"
+  "orderLiveTitle": "Delivery tracking",
+  "chatEmptyOrderThread": "During the delivery, the customer, the shop and the courier write to each other here."
 }

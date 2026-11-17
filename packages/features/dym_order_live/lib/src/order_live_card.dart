@@ -159,6 +159,7 @@ class OrderLiveCard extends StackedView<OrderLiveViewModel> {
                     pins: pins,
                     pinStyles: styles(c),
                     routes: routes,
+                    cluster: false,
                     semanticLabel: l10n.orderLiveTitle,
                     onReady: (controls) {
                       vm.controls = controls;

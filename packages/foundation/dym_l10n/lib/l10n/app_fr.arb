@@ -9775,5 +9775,9 @@
   "orderLiveTitle": "Suivi de la livraison",
   "@orderLiveTitle": {
     "description": "Titre de la carte de suivi"
+  },
+  "chatEmptyOrderThread": "Pendant la livraison, la cliente, la boutique et le livreur s'écrivent ici.",
+  "@chatEmptyOrderThread": {
+    "description": "Fil de commande vide"
   }
 }

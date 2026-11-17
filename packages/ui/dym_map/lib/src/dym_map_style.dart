@@ -44,7 +44,11 @@ String _hex(Color c) {
 /// Style MapLibre complet aux couleurs DYM (« Épuré » : fond clair, verts
 /// doux, routes blanches, textes sobres). Les épingles et zones de DYM sont
 /// des calques du style, alimentés ensuite par `setGeoJsonSource`.
-String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
+String dymMapStyle(
+  DymColors c, {
+  DymMapTiles tiles = const DymMapTiles(),
+  bool cluster = true,
+}) {
   final land = _hex(c.background);
   final muted = _hex(c.muted);
   final park = _hex(c.tintVertTendre);
@@ -111,7 +115,7 @@ String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
       DymMapLayers.pinsSource: {
         'type': 'geojson',
         'data': {'type': 'FeatureCollection', 'features': <Object>[]},
-        'cluster': true,
+        'cluster': cluster,
         'clusterRadius': 44,
         'clusterMaxZoom': 14,
       },

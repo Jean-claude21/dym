@@ -46,7 +46,11 @@ class _MapLibreViewState extends State<_MapLibreView>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _style ??= dymMapStyle(context.dym.colors, tiles: widget.tiles);
+    _style ??= dymMapStyle(
+      context.dym.colors,
+      tiles: widget.tiles,
+      cluster: spec.cluster,
+    );
   }
 
   @override

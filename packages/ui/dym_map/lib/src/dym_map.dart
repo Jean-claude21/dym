@@ -20,6 +20,7 @@ class DymMapSpec {
     this.onReady,
     this.interactive = true,
     this.semanticLabel,
+    this.cluster = true,
   });
 
   /// Épingle mise en avant (jamais regroupée).
@@ -27,6 +28,10 @@ class DymMapSpec {
 
   /// Itinéraires tracés (spec 109).
   final List<DymMapRoute> routes;
+
+  /// Épingles proches regroupées en vue éloignée ; non pour un suivi de
+  /// livraison (quelques épingles toujours visibles).
+  final bool cluster;
 
   final DymLatLng initialCenter;
   final double initialZoom;
@@ -65,6 +70,7 @@ class DymMap extends StatelessWidget {
     this.onReady,
     this.interactive = true,
     this.semanticLabel,
+    this.cluster = true,
   });
 
   /// Épingle mise en avant (jamais regroupée).
@@ -82,6 +88,9 @@ class DymMap extends StatelessWidget {
 
   /// Itinéraires tracés (spec 109).
   final List<DymMapRoute> routes;
+
+  /// Épingles regroupées en vue éloignée.
+  final bool cluster;
   final ValueChanged<String>? onPinTap;
   final ValueChanged<DymLatLng>? onMapTap;
   final ValueChanged<DymMapView>? onCameraIdle;
@@ -106,6 +115,7 @@ class DymMap extends StatelessWidget {
       onReady: onReady,
       interactive: interactive,
       semanticLabel: semanticLabel,
+      cluster: cluster,
     ),
   );
 }

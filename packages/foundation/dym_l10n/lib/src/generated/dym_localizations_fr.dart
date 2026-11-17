@@ -8414,4 +8414,8 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get orderLiveTitle => 'Suivi de la livraison';
+
+  @override
+  String get chatEmptyOrderThread =>
+      'Pendant la livraison, la cliente, la boutique et le livreur s\'écrivent ici.';
 }
