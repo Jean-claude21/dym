@@ -13866,6 +13866,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Hors ligne : affichage de ta dernière visite.'**
   String get homeFromCache;
+
+  /// Code : astuce WhatsApp
+  ///
+  /// In fr, this message translates to:
+  /// **'Astuce : le code arrive dans WhatsApp en moins d\'une minute.'**
+  String get authCodeTipWhatsApp;
 }
 
 class _DymLocalizationsDelegate

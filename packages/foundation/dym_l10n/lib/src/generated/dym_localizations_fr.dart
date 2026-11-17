@@ -8367,4 +8367,8 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get homeFromCache => 'Hors ligne : affichage de ta dernière visite.';
+
+  @override
+  String get authCodeTipWhatsApp =>
+      'Astuce : le code arrive dans WhatsApp en moins d\'une minute.';
 }

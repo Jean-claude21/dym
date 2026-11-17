@@ -101,7 +101,7 @@ class CodeStep extends StatelessWidget {
               const SizedBox(width: DymTokenSpace.s2 + 2),
               Expanded(
                 child: Text(
-                  l10n.authCodeTip,
+                  vm.viaWhatsApp ? l10n.authCodeTipWhatsApp : l10n.authCodeTip,
                   style: t.label.copyWith(
                     fontWeight: FontWeight.w400,
                     color: c.textPrimary,

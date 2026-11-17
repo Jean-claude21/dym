@@ -8316,4 +8316,8 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get homeFromCache => 'Offline: showing your last visit.';
+
+  @override
+  String get authCodeTipWhatsApp =>
+      'Tip: the code arrives in WhatsApp in less than a minute.';
 }
