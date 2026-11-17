@@ -52,11 +52,99 @@ class MessagingRepository {
     (json) => Conversation.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// Texte ; [replyTo] : message cité (spec 111).
   Future<Result<ChatMessage>> sendText(
     String conversationId,
     String body, {
     required String idempotencyKey,
-  }) => _send(conversationId, {'kind': 'text', 'body': body}, idempotencyKey);
+    String? replyTo,
+  }) => _send(conversationId, {
+    'kind': 'text',
+    'body': body,
+    'reply_to': ?replyTo,
+  }, idempotencyKey);
+
+  /// Document (spec 111) : PDF, Word, Excel… 10 Mo au plus, espace privé de
+  /// la conversation.
+  Future<Result<ChatMessage>> sendFile(
+    String conversationId,
+    List<int> bytes, {
+    required String name,
+    required String contentType,
+    required String idempotencyKey,
+    String? replyTo,
+  }) async {
+    final grant = await _functions.post<Map<String, dynamic>>(
+      '/v1/conversations/$conversationId/media-uploads',
+      body: {'content_type': contentType},
+      decode: (json) => json! as Map<String, dynamic>,
+    );
+    switch (grant) {
+      case Err(:final failure):
+        return Err(failure);
+      case Ok(:final value):
+        final sent = await _uploads.put(
+          Uri.parse(value['upload_url'] as String),
+          bytes,
+          contentType: contentType,
+        );
+        if (sent case Err(:final failure)) return Err(failure);
+        return await _send(conversationId, {
+          'kind': 'file',
+          'media_key': value['object_key'],
+          'file': {'name': name, 'size': bytes.length, 'mime': contentType},
+          'reply_to': ?replyTo,
+        }, idempotencyKey);
+    }
+  }
+
+  /// Réaction (une par personne) ; `null` la retire. Message relu.
+  Future<Result<ChatMessage>> react(String messageId, String? emoji) async =>
+      _message(
+        await _data.rpc<Object?>(
+          'react_message',
+          params: {'p_message': messageId, 'p_emoji': emoji},
+        ),
+      );
+
+  /// Supprimer pour moi, ou pour tout le monde (mon message, dans l'heure).
+  /// Refus : `too_late`, interdit pour le message d'un autre.
+  Future<Result<void>> delete(String messageId, {required bool forAll}) async =>
+      (await _data.rpc<Object?>(
+        'delete_message',
+        params: {'p_message': messageId, 'p_for_all': forAll},
+      )).map((_) {});
+
+  /// Transfère un texte, un produit ou une position vers une autre
+  /// conversation. Refus : `forward_not_allowed`.
+  Future<Result<ChatMessage>> forward(
+    String messageId,
+    String conversationId, {
+    required String idempotencyKey,
+  }) async => _message(
+    await _data.rpc<Object?>(
+      'forward_message',
+      params: {
+        'p_message': messageId,
+        'p_conversation': conversationId,
+        'p_key': idempotencyKey,
+      },
+    ),
+  );
+
+  /// L'app est ouverte : les messages reçus passent « reçus » (✓✓ gris).
+  Future<Result<void>> markDelivered(ChatRole role) async =>
+      (await _data.rpc<Object?>(
+        'mark_delivered',
+        params: {'p_role': role.code},
+      )).map((_) {});
+
+  /// « Écrit… » : signal envoyé aux autres personnes (3 s au plus souvent).
+  Future<Result<void>> typing(String conversationId) async =>
+      (await _data.rpc<Object?>(
+        'chat_typing',
+        params: {'p_conversation': conversationId},
+      )).map((_) {});
 
   Future<Result<ChatMessage>> sendProduct(
     String conversationId,
@@ -74,6 +162,7 @@ class MessagingRepository {
     required String contentType,
     required int durationMs,
     required String idempotencyKey,
+    String? replyTo,
   }) async {
     final grant = await _functions.post<Map<String, dynamic>>(
       '/v1/conversations/$conversationId/media-uploads',
@@ -94,6 +183,7 @@ class MessagingRepository {
           'kind': 'audio',
           'media_key': value['object_key'],
           'duration_ms': durationMs,
+          'reply_to': ?replyTo,
         }, idempotencyKey);
     }
   }
@@ -104,6 +194,7 @@ class MessagingRepository {
     List<int> bytes, {
     required String contentType,
     required String idempotencyKey,
+    String? replyTo,
   }) async {
     final grant = await _functions.post<Map<String, dynamic>>(
       '/v1/conversations/$conversationId/media-uploads',
@@ -123,6 +214,7 @@ class MessagingRepository {
         return await _send(conversationId, {
           'kind': 'image',
           'media_key': value['object_key'],
+          'reply_to': ?replyTo,
         }, idempotencyKey);
     }
   }

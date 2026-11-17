@@ -9809,5 +9809,228 @@
   "cartElsewhereKeep": "Garder pour plus tard",
   "@cartElsewhereKeep": {
     "description": "Garder le panier de l'autre pays"
+  },
+  "chatReply": "Répondre",
+  "@chatReply": {
+    "description": "Action : répondre à un message (spec 111)"
+  },
+  "chatCopy": "Copier",
+  "@chatCopy": {
+    "description": "Action : copier le texte d'un message"
+  },
+  "chatCopied": "Message copié",
+  "@chatCopied": {
+    "description": "Confirmation après copie"
+  },
+  "chatForward": "Transférer",
+  "@chatForward": {
+    "description": "Action : transférer un message"
+  },
+  "chatForwardTo": "Transférer à…",
+  "@chatForwardTo": {
+    "description": "Titre de la feuille de transfert"
+  },
+  "chatForwarded": "Transféré",
+  "@chatForwarded": {
+    "description": "Mention sur un message transféré"
+  },
+  "chatForwardDone": "Message transféré",
+  "@chatForwardDone": {
+    "description": "Confirmation de transfert"
+  },
+  "chatForwardNone": "Aucune autre conversation",
+  "@chatForwardNone": {
+    "description": "Transfert impossible : pas d'autre conversation"
+  },
+  "chatDeleteForMe": "Supprimer pour moi",
+  "@chatDeleteForMe": {
+    "description": "Action : supprimer un message pour soi"
+  },
+  "chatDeleteForAll": "Supprimer pour tout le monde",
+  "@chatDeleteForAll": {
+    "description": "Action : supprimer pour tous (dans l'heure)"
+  },
+  "chatDeleteTitle": "Supprimer ce message ?",
+  "@chatDeleteTitle": {
+    "description": "Titre de la confirmation de suppression"
+  },
+  "chatDeletedMessage": "Ce message a été supprimé",
+  "@chatDeletedMessage": {
+    "description": "Bulle d'un message supprimé pour tous"
+  },
+  "chatDeleteTooLate": "Plus d'une heure : supprime-le seulement pour toi",
+  "@chatDeleteTooLate": {
+    "description": "Suppression pour tous refusée (trop tard)"
+  },
+  "chatReplyingTo": "Réponse à {name}",
+  "@chatReplyingTo": {
+    "description": "Bandeau au-dessus du champ pendant une réponse",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatYouName": "Toi",
+  "@chatYouName": {
+    "description": "Auteur d'un message cité quand c'est moi"
+  },
+  "chatCancelReply": "Annuler la réponse",
+  "@chatCancelReply": {
+    "description": "Fermer le bandeau de réponse"
+  },
+  "chatNewMessages": "{count, plural, =1{1 nouveau message} other{{count} nouveaux messages}}",
+  "@chatNewMessages": {
+    "description": "Séparateur avant les messages non lus",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatTyping": "{name} écrit…",
+  "@chatTyping": {
+    "description": "Indicateur de saisie de l'autre personne",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatTypingSomeone": "écrit…",
+  "@chatTypingSomeone": {
+    "description": "Indicateur de saisie sans nom"
+  },
+  "chatDelivered": "Reçu",
+  "@chatDelivered": {
+    "description": "État d'un message reçu par l'autre app (✓✓ gris)"
+  },
+  "chatEmoji": "Émojis",
+  "@chatEmoji": {
+    "description": "Bouton qui ouvre le panneau d'émojis"
+  },
+  "chatKeyboard": "Clavier",
+  "@chatKeyboard": {
+    "description": "Bouton qui revient au clavier"
+  },
+  "chatMoreReactions": "Autres réactions",
+  "@chatMoreReactions": {
+    "description": "Ouvrir tous les émojis pour réagir"
+  },
+  "chatReactions": "Réactions",
+  "@chatReactions": {
+    "description": "Libellé de la ligne des réactions"
+  },
+  "chatDocument": "Document",
+  "@chatDocument": {
+    "description": "Pièce jointe : document"
+  },
+  "chatDocumentOpen": "Ouvrir le document",
+  "@chatDocumentOpen": {
+    "description": "Ouvrir un document reçu"
+  },
+  "chatDocumentTooLarge": "Document trop lourd : 10 Mo au plus",
+  "@chatDocumentTooLarge": {
+    "description": "Erreur d'envoi d'un document trop lourd"
+  },
+  "chatDocumentUnsupported": "Ce type de document n'est pas accepté",
+  "@chatDocumentUnsupported": {
+    "description": "Erreur d'envoi : type refusé"
+  },
+  "chatVoiceSlideCancel": "Glisse à gauche pour annuler",
+  "@chatVoiceSlideCancel": {
+    "description": "Aide pendant l'enregistrement d'un vocal"
+  },
+  "chatVoiceLock": "Verrouiller l'enregistrement",
+  "@chatVoiceLock": {
+    "description": "Garder le micro ouvert sans appuyer"
+  },
+  "chatVoiceHold": "Garde le doigt appuyé pour enregistrer",
+  "@chatVoiceHold": {
+    "description": "Aide après un simple tap sur le micro"
+  },
+  "chatVoicePause": "Pause",
+  "@chatVoicePause": {
+    "description": "Mettre un vocal en pause"
+  },
+  "chatVoiceSpeed": "Vitesse de lecture",
+  "@chatVoiceSpeed": {
+    "description": "Changer la vitesse d'un vocal"
+  },
+  "chatVideoMute": "Couper le son",
+  "@chatVideoMute": {
+    "description": "Vidéo : couper le son"
+  },
+  "chatVideoUnmute": "Remettre le son",
+  "@chatVideoUnmute": {
+    "description": "Vidéo : remettre le son"
+  },
+  "chatVideoPause": "Pause",
+  "@chatVideoPause": {
+    "description": "Vidéo : pause"
+  },
+  "chatFullScreen": "Plein écran",
+  "@chatFullScreen": {
+    "description": "Ouvrir une photo ou une vidéo en plein écran"
+  },
+  "chatSearchInThread": "Rechercher dans la conversation",
+  "@chatSearchInThread": {
+    "description": "Champ de recherche dans un fil"
+  },
+  "chatSearchEmpty": "Aucun message trouvé",
+  "@chatSearchEmpty": {
+    "description": "Recherche sans résultat"
+  },
+  "chatSearchHint": "Tape au moins 2 lettres",
+  "@chatSearchHint": {
+    "description": "Aide de la recherche dans un fil"
+  },
+  "chatMediaTitle": "Médias et documents",
+  "@chatMediaTitle": {
+    "description": "Titre de la galerie d'une conversation"
+  },
+  "chatMediaTab": "Médias",
+  "@chatMediaTab": {
+    "description": "Onglet photos et vidéos"
+  },
+  "chatDocumentsTab": "Documents",
+  "@chatDocumentsTab": {
+    "description": "Onglet documents"
+  },
+  "chatMediaEmpty": "Aucune photo ni vidéo pour l'instant",
+  "@chatMediaEmpty": {
+    "description": "Galerie vide"
+  },
+  "chatDocumentsEmpty": "Aucun document pour l'instant",
+  "@chatDocumentsEmpty": {
+    "description": "Onglet documents vide"
+  },
+  "chatFilterAll": "Toutes",
+  "@chatFilterAll": {
+    "description": "Filtre : toutes les conversations"
+  },
+  "chatFilterUnread": "Non lues",
+  "@chatFilterUnread": {
+    "description": "Filtre : conversations non lues"
+  },
+  "chatFilterOrders": "Commandes",
+  "@chatFilterOrders": {
+    "description": "Filtre : fils de commande"
+  },
+  "chatFilterEmpty": "Aucune conversation ici",
+  "@chatFilterEmpty": {
+    "description": "Liste filtrée vide"
+  },
+  "chatPinnedOrder": "Commande en cours",
+  "@chatPinnedOrder": {
+    "description": "Mention d'un fil de commande épinglé"
+  },
+  "chatMoreOptions": "Plus d'options",
+  "@chatMoreOptions": {
+    "description": "Menu de l'en-tête d'une conversation"
+  },
+  "chatClose": "Fermer",
+  "@chatClose": {
+    "description": "Fermer une vue (recherche, plein écran)"
   }
 }

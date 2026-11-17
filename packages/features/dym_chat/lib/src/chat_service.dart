@@ -55,10 +55,12 @@ abstract interface class ChatService {
 
   Future<Result<int>> unreadCount();
 
+  /// [replyTo] : message cité (spec 111).
   Future<Result<ChatMessage>> sendText(
     String conversationId,
     String body, {
     required String idempotencyKey,
+    String? replyTo,
   });
 
   Future<Result<ChatMessage>> sendProduct(
@@ -71,6 +73,7 @@ abstract interface class ChatService {
     String conversationId,
     PickedPhoto photo, {
     required String idempotencyKey,
+    String? replyTo,
   });
 
   /// Vocal (spec 035), envoyé dans l'espace privé de la conversation.
@@ -78,7 +81,43 @@ abstract interface class ChatService {
     String conversationId,
     RecordedAudio audio, {
     required String idempotencyKey,
+    String? replyTo,
   });
+
+  // ---------------------------------------------------------------- spec 111
+
+  /// Document (PDF, Word, Excel…), 10 Mo au plus.
+  Future<Result<ChatMessage>> sendFile(
+    String conversationId,
+    PickedDocument document, {
+    required String idempotencyKey,
+    String? replyTo,
+  });
+
+  /// Sélecteur de documents ; absent : pas d'envoi de document.
+  DocumentPicker? get documents;
+
+  /// Ouvre un document reçu (lien signé) ; absent : pas d'ouverture.
+  ExternalPageOpener? get opener;
+
+  /// Réaction (une par personne) ; `null` la retire.
+  Future<Result<ChatMessage>> react(String messageId, String? emoji);
+
+  /// Supprimer pour moi, ou pour tout le monde (mon message, dans l'heure).
+  Future<Result<void>> deleteMessage(String messageId, {required bool forAll});
+
+  /// Transfère un texte, un produit ou une position.
+  Future<Result<ChatMessage>> forward(
+    String messageId,
+    String conversationId, {
+    required String idempotencyKey,
+  });
+
+  /// L'app est ouverte : messages reçus (✓✓ gris chez l'autre personne).
+  Future<Result<void>> markDelivered();
+
+  /// « Écrit… » envoyé aux autres personnes de la conversation.
+  Future<Result<void>> typing(String conversationId);
 
   /// Micro (spec 035) ; absent : pas de vocaux.
   VoiceRecorder? get recorder;
@@ -116,8 +155,16 @@ class NeonChatService implements ChatService {
     this.playback,
     this.calls,
     this.commerce,
+    this.documents,
+    this.opener,
     this.liveFeed = LiveFeed.none,
   });
+
+  @override
+  final DocumentPicker? documents;
+
+  @override
+  final ExternalPageOpener? opener;
 
   @override
   final ChatCommerce? commerce;
@@ -172,10 +219,12 @@ class NeonChatService implements ChatService {
     String conversationId,
     String body, {
     required String idempotencyKey,
+    String? replyTo,
   }) => _repository.sendText(
     conversationId,
     body,
     idempotencyKey: idempotencyKey,
+    replyTo: replyTo,
   );
 
   @override
@@ -194,11 +243,13 @@ class NeonChatService implements ChatService {
     String conversationId,
     PickedPhoto photo, {
     required String idempotencyKey,
+    String? replyTo,
   }) => _repository.sendImage(
     conversationId,
     photo.bytes,
     contentType: photo.contentType,
     idempotencyKey: idempotencyKey,
+    replyTo: replyTo,
   );
 
   @override
@@ -206,13 +257,58 @@ class NeonChatService implements ChatService {
     String conversationId,
     RecordedAudio audio, {
     required String idempotencyKey,
+    String? replyTo,
   }) => _repository.sendAudio(
     conversationId,
     audio.bytes,
     contentType: audio.contentType,
     durationMs: audio.duration.inMilliseconds,
     idempotencyKey: idempotencyKey,
+    replyTo: replyTo,
   );
+
+  @override
+  Future<Result<ChatMessage>> sendFile(
+    String conversationId,
+    PickedDocument document, {
+    required String idempotencyKey,
+    String? replyTo,
+  }) => _repository.sendFile(
+    conversationId,
+    document.bytes,
+    name: document.name,
+    contentType: document.contentType,
+    idempotencyKey: idempotencyKey,
+    replyTo: replyTo,
+  );
+
+  @override
+  Future<Result<ChatMessage>> react(String messageId, String? emoji) =>
+      _repository.react(messageId, emoji);
+
+  @override
+  Future<Result<void>> deleteMessage(
+    String messageId, {
+    required bool forAll,
+  }) => _repository.delete(messageId, forAll: forAll);
+
+  @override
+  Future<Result<ChatMessage>> forward(
+    String messageId,
+    String conversationId, {
+    required String idempotencyKey,
+  }) => _repository.forward(
+    messageId,
+    conversationId,
+    idempotencyKey: idempotencyKey,
+  );
+
+  @override
+  Future<Result<void>> markDelivered() => _repository.markDelivered(role);
+
+  @override
+  Future<Result<void>> typing(String conversationId) =>
+      _repository.typing(conversationId);
 
   @override
   Future<Result<Map<String, String>>> mediaUrls(List<String> messageIds) =>

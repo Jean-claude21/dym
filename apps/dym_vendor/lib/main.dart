@@ -239,6 +239,9 @@ Future<void> configureServices(DymEnvironment environment) async {
             dymNetworkImage(environment.media(key).toString()),
         recorder: PluginVoiceRecorder(),
         playback: PluginAudioPlayback(),
+        // Documents et leur ouverture (spec 111).
+        documents: const PluginDocumentPicker(),
+        opener: const PluginExternalPageOpener(),
         calls: _callService(
           CallRepository(neon.data, functions: neon.functions),
         ),

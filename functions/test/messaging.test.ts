@@ -105,6 +105,34 @@ describe("messagerie", () => {
     expect(json.object_key).toMatch(new RegExp(`^chats/${conv}/[0-9a-f-]{36}\.wav$`));
   });
 
+  it("document et réponse citée (spec 111)", async () => {
+    const fake = new FakeStore();
+    const up = await post(fake, `/v1/conversations/${conv}/media-uploads`, { content_type: "application/pdf" });
+    expect(up.status).toBe(200);
+    const objectKey = ((await up.json()) as { object_key: string }).object_key;
+    expect(objectKey).toMatch(new RegExp(`^chats/${conv}/[0-9a-f-]+\.pdf$`));
+    const exe = await post(fake, `/v1/conversations/${conv}/media-uploads`, { content_type: "application/x-msdownload" });
+    expect(exe.status).toBe(422);
+    const headers = { "Idempotency-Key": key };
+    expect((await post(fake, `/v1/conversations/${conv}/messages`, { kind: "file", media_key: objectKey }, headers)).status)
+      .toBe(400);
+    const res = await post(
+      fake,
+      `/v1/conversations/${conv}/messages`,
+      { kind: "file", media_key: objectKey, file: { name: "facture.pdf", size: 52000, mime: "application/pdf" }, reply_to: msg },
+      headers,
+    );
+    expect(res.status).toBe(201);
+    expect(fake.calls[0]).toMatchObject({
+      kind: "file",
+      payload: { name: "facture.pdf", size: 52000, mime: "application/pdf" },
+      replyTo: msg,
+    });
+    const text = await post(fake, `/v1/conversations/${conv}/messages`, { kind: "text", body: "ok", file: { name: "a", size: 1 } }, headers);
+    expect(text.status).toBe(201);
+    expect(fake.calls[1]).toMatchObject({ payload: null, replyTo: null });
+  });
+
   it("liens de lecture : seulement les images visibles", async () => {
     const res = await post(new FakeStore(), "/v1/chat-media/urls", { message_ids: [msg, key] });
     expect(await res.json()).toEqual({

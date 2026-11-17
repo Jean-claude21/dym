@@ -27,6 +27,18 @@ class ConversationsViewModel extends BaseViewModel {
   String _query = '';
 
   List<Conversation> get conversations => _conversations ?? const [];
+
+  /// Filtre de la liste (spec 111).
+  ConversationFilter filter = ConversationFilter.all;
+
+  void setFilter(ConversationFilter value) {
+    filter = value;
+    notifyListeners();
+  }
+
+  /// Fils de commande proposés en filtre (au moins un dans la liste).
+  bool get hasOrderThreads => conversations.any((c) => c.isOrderThread);
+  bool _delivered = false;
   Failure? get failure => _failure;
   bool get ready => _conversations != null;
   bool get offline => _failure is NetworkFailure;
@@ -34,15 +46,29 @@ class ConversationsViewModel extends BaseViewModel {
   bool get searchable => conversations.length >= searchFrom;
   String get query => _query;
 
-  /// Conversations filtrées par nom (cliente ou boutique).
+  /// Conversations filtrées (nom, non lues, commandes) ; les fils d'une
+  /// commande en cours restent en tête.
   List<Conversation> get shown {
     final q = _query.trim().toLowerCase();
-    if (q.isEmpty) return conversations;
-    return [
+    final list = [
       for (final c in conversations)
-        if (c.title(service.role).toLowerCase().contains(q)) c,
+        if ((q.isEmpty || c.title(service.role).toLowerCase().contains(q)) &&
+            switch (filter) {
+              ConversationFilter.all => true,
+              ConversationFilter.unread => c.unread > 0,
+              ConversationFilter.orders => c.isOrderThread,
+            })
+          c,
     ];
+    final pinned = [
+      for (final c in list)
+        if (c.isOrderThread && !c.closed) c,
+    ];
+    return [...pinned, ...list.where((c) => !pinned.contains(c))];
   }
+
+  /// Fil d'une commande en cours : épinglé en tête.
+  bool pinned(Conversation c) => c.isOrderThread && !c.closed;
 
   void setQuery(String value) {
     _query = value;
@@ -56,6 +82,11 @@ class ConversationsViewModel extends BaseViewModel {
       case Ok(:final value):
         _conversations = value;
         _failure = null;
+        // App ouverte : les messages reçus passent « reçus » chez l'autre.
+        if (!_delivered) {
+          _delivered = true;
+          unawaited(service.markDelivered());
+        }
       case Err(:final failure):
         _failure = failure;
     }
@@ -78,6 +109,12 @@ class ConversationsViewModel extends BaseViewModel {
     super.dispose();
   }
 }
+
+/// Filtres de la liste des conversations (spec 111).
+enum ConversationFilter { all, unread, orders }
+
+/// Réactions proposées d'un appui long (spec 111).
+const quickReactions = ['👍', '💚', '😂', '😮', '😢', '🙏'];
 
 /// Réponse rapide proposée au-dessus du champ (spec 070). Le texte vient de
 /// la localisation ; la liste dépend du rôle.
@@ -125,9 +162,17 @@ class OutgoingMessage {
     this.productId,
     this.photo,
     this.audio,
+    this.document,
+    this.replyTo,
   });
 
   final String key;
+
+  /// Document (spec 111).
+  final PickedDocument? document;
+
+  /// Message cité.
+  final ChatMessage? replyTo;
   final MessageKind kind;
   final DateTime createdAt;
   final String? body;
@@ -151,16 +196,31 @@ final class ChatDayEntry extends ChatEntry {
   final DateTime day;
 }
 
+/// « Nouveaux messages » : premier message reçu depuis ma dernière lecture.
+final class ChatNewEntry extends ChatEntry {
+  const new(this.count);
+
+  final int count;
+}
+
 final class ChatMessageEntry extends ChatEntry {
-  const new(this.message, {required this.continued, required this.seen});
+  const new(
+    this.message, {
+    required this.continued,
+    required this.seen,
+    this.delivered = false,
+  });
 
   final ChatMessage message;
 
   /// Suite d'un message de la même personne, à moins de 5 minutes.
   final bool continued;
 
-  /// Mon message, ouvert par l'autre personne.
+  /// Mon message, ouvert par l'autre personne (✓✓ en couleur).
   final bool seen;
+
+  /// Mon message, reçu par l'app de l'autre personne (✓✓ gris).
+  final bool delivered;
 }
 
 final class ChatOutgoingEntry extends ChatEntry {
@@ -292,13 +352,20 @@ class ChatViewModel extends BaseViewModel {
     }
 
     final t = _thread;
+    final newFrom = _newFromId;
     for (final m in messages) {
       dayOf(m.createdAt);
+      if (m.id == newFrom) {
+        out.add(ChatNewEntry(_newCount));
+        lastAuthor = null;
+      }
+      final mine = m.fromMe(role);
       out.add(
         ChatMessageEntry(
           m,
           continued: continues(m.authorRole, m.createdAt),
-          seen: m.fromMe(role) && t != null && t.seen(m),
+          seen: mine && t != null && t.seen(m),
+          delivered: mine && t != null && t.delivered(m),
         ),
       );
       lastAuthor = m.authorRole;
@@ -326,6 +393,9 @@ class ChatViewModel extends BaseViewModel {
     if (_disposed) return;
     switch (result) {
       case Ok(:final value):
+        // Fil ouvert (aussi depuis une notification) : « reçu » signalé.
+        if (!_newMarked) unawaited(service.markDelivered());
+        _markNew(value);
         _thread = value;
         _failure = null;
         _outbox.removeWhere((o) => value.messages.any((m) => m.id == o.key));
@@ -346,7 +416,307 @@ class ChatViewModel extends BaseViewModel {
         reload: () => unawaited(load()),
         debounce: const Duration(milliseconds: 150),
       );
+      // « Écrit… » (spec 111) : affiché 5 s après le dernier signal.
+      _typingSub ??= service.live
+          .where((s) => s.kind == 'typing' && s.entityId == conversationId)
+          .listen((s) {
+            typingRole = s.payload['role'] as String? ?? '';
+            _typingTimer?.cancel();
+            _typingTimer = Timer(const Duration(seconds: 5), () {
+              typingRole = null;
+              if (!_disposed) notifyListeners();
+            });
+            if (!_disposed) notifyListeners();
+          });
     }
+  }
+
+  // ---------------------------------------------------------------- spec 111
+
+  String? _newFromId;
+  int _newCount = 0;
+  bool _newMarked = false;
+
+  /// Au premier chargement : premier message reçu après ma dernière lecture.
+  void _markNew(ConversationThread t) {
+    if (_newMarked) return;
+    _newMarked = true;
+    final since = t.myReadAt;
+    final fresh = [
+      for (final m in t.messages)
+        if (!m.fromMe(role) && (since == null || m.createdAt.isAfter(since))) m,
+    ];
+    // Première ouverture d'une conversation : pas de séparateur.
+    if (fresh.isEmpty || since == null) return;
+    _newFromId = fresh.first.id;
+    _newCount = fresh.length;
+  }
+
+  /// Rôle de la personne en train d'écrire (nul : personne).
+  String? typingRole;
+  StreamSubscription<LiveSignal>? _typingSub;
+  Timer? _typingTimer;
+  DateTime? _typingSentAt;
+
+  /// Nom affiché dans « … écrit ».
+  String get typingName {
+    final r = typingRole;
+    final conv = _thread?.conversation;
+    if (r == null || conv == null) return '';
+    return conv.authorName(r);
+  }
+
+  /// Message auquel je réponds (glisser ou « Répondre »).
+  ChatMessage? replyingTo;
+
+  void startReply(ChatMessage m) {
+    if (m.deleted) return;
+    replyingTo = m;
+    notifyListeners();
+  }
+
+  void cancelReply() {
+    replyingTo = null;
+    notifyListeners();
+  }
+
+  /// Retrouve un message du fil (citation touchée).
+  ChatMessage? messageById(String id) =>
+      messages.where((m) => m.id == id).firstOrNull;
+
+  void _replaceMessage(ChatMessage updated) {
+    final t = _thread;
+    if (t == null) return;
+    _thread = t.copyWith(
+      messages: [
+        for (final m in t.messages)
+          if (m.id == updated.id) updated else m,
+      ],
+    );
+  }
+
+  /// Réaction : la même retire, une autre remplace.
+  Future<void> react(ChatMessage m, String emoji) async {
+    final next = m.reactionOf(role) == emoji ? null : emoji;
+    final result = await service.react(m.id, next);
+    if (_disposed) return;
+    switch (result) {
+      case Ok(:final value):
+        _replaceMessage(value);
+      case Err(:final failure):
+        _sendFailure = failure;
+    }
+    notifyListeners();
+  }
+
+  /// Mon message, envoyé il y a moins d'une heure.
+  bool canDeleteForAll(ChatMessage m) =>
+      m.fromMe(role) &&
+      !m.deleted &&
+      _clock().toUtc().difference(m.createdAt.toUtc()) <
+          const Duration(hours: 1);
+
+  Future<bool> deleteMessage(ChatMessage m, {required bool forAll}) async {
+    final result = await service.deleteMessage(m.id, forAll: forAll);
+    if (_disposed) return result.isOk;
+    if (result case Err(:final failure)) {
+      _sendFailure = failure;
+      notifyListeners();
+      return false;
+    }
+    if (replyingTo?.id == m.id) replyingTo = null;
+    await load();
+    return true;
+  }
+
+  /// Conversations où transférer (toutes sauf celle-ci).
+  Future<List<Conversation>> forwardTargets() async {
+    final result = await service.conversations();
+    return [
+      for (final c in result.valueOrNull ?? const <Conversation>[])
+        if (c.id != conversationId && !c.closed) c,
+    ];
+  }
+
+  Future<bool> forward(ChatMessage m, String target) async {
+    final result = await service.forward(
+      m.id,
+      target,
+      idempotencyKey: Uuid.v4(),
+    );
+    if (_disposed) return result.isOk;
+    if (result case Err(:final failure)) _sendFailure = failure;
+    notifyListeners();
+    return result.isOk;
+  }
+
+  /// Envoi de documents possible.
+  bool get canSendDocuments => service.documents != null;
+
+  /// Document choisi puis envoyé (10 Mo au plus).
+  Future<bool> sendDocument() async {
+    final picker = service.documents;
+    if (picker == null) return false;
+    switch (await picker.pick()) {
+      case Err(:final failure):
+        _sendFailure = failure;
+        notifyListeners();
+        return false;
+      case Ok(value: null):
+        return false;
+      case Ok(value: final PickedDocument document):
+        _sendFailure = null;
+        return await _queue(
+          OutgoingMessage(
+            key: Uuid.v4(),
+            kind: MessageKind.file,
+            document: document,
+            createdAt: _clock().toUtc(),
+            replyTo: _takeReply(),
+          ),
+        );
+    }
+  }
+
+  /// Ouvre un document reçu (lien signé du moment).
+  Future<void> openDocument(ChatMessage m) async {
+    final url = _media[m.id];
+    final opener = service.opener;
+    if (url == null || opener == null) return;
+    await opener.open(Uri.parse(url));
+  }
+
+  ChatMessage? _takeReply() {
+    final r = replyingTo;
+    replyingTo = null;
+    return r;
+  }
+
+  /// Recherche dans la conversation (textes et noms de documents).
+  String searchQuery = '';
+  bool searching = false;
+
+  void openSearch() {
+    searching = true;
+    notifyListeners();
+  }
+
+  void closeSearch() {
+    searching = false;
+    searchQuery = '';
+    notifyListeners();
+  }
+
+  void setSearch(String value) {
+    searchQuery = value;
+    notifyListeners();
+  }
+
+  List<ChatMessage> get searchResults {
+    final q = searchQuery.trim().toLowerCase();
+    if (q.length < 2) return const [];
+    return [
+      for (final m in messages.reversed)
+        if (!m.deleted &&
+            ((m.body ?? '').toLowerCase().contains(q) ||
+                (m.fileName ?? '').toLowerCase().contains(q) ||
+                (m.product?.name ?? '').toLowerCase().contains(q)))
+          m,
+    ];
+  }
+
+  /// Photos et vidéos du fil (galerie), du plus récent au plus ancien.
+  List<ChatMessage> get mediaMessages => [
+    for (final m in messages.reversed)
+      if (!m.deleted &&
+          (m.kind == MessageKind.image || m.kind == MessageKind.video))
+        m,
+  ];
+
+  List<ChatMessage> get documentMessages => [
+    for (final m in messages.reversed)
+      if (!m.deleted && m.kind == MessageKind.file) m,
+  ];
+
+  // ------------------------------------------------- vocal : temps et niveau
+
+  /// Durée de l'enregistrement en cours (affichée à la seconde).
+  Duration recordElapsed = Duration.zero;
+
+  /// Niveaux récents du micro (onde), entre 0 et 1.
+  final recordLevels = <double>[];
+
+  /// Enregistrement verrouillé (plus besoin de garder le doigt appuyé).
+  bool recordLocked = false;
+  Timer? _recordTimer;
+  StreamSubscription<double>? _levelSub;
+  DateTime? _recordStart;
+
+  /// Vocal limité à une minute (comme la base).
+  static const maxRecord = Duration(seconds: 60);
+
+  void _startRecordClock() {
+    _recordStart = _clock();
+    recordElapsed = Duration.zero;
+    recordLevels.clear();
+    _recordTimer?.cancel();
+    _recordTimer = Timer.periodic(const Duration(milliseconds: 250), (_) {
+      final start = _recordStart;
+      if (start == null) return;
+      recordElapsed = _clock().difference(start);
+      if (recordElapsed >= maxRecord) {
+        unawaited(stopAndSendRecording());
+        return;
+      }
+      if (!_disposed) notifyListeners();
+    });
+    _levelSub = service.recorder?.level.listen((l) {
+      recordLevels.add(l.clamp(0, 1));
+      if (recordLevels.length > 40) recordLevels.removeAt(0);
+    });
+  }
+
+  void _stopRecordClock() {
+    _recordTimer?.cancel();
+    _recordTimer = null;
+    unawaited(_levelSub?.cancel());
+    _levelSub = null;
+    _recordStart = null;
+    recordLocked = false;
+  }
+
+  void lockRecording() {
+    if (!recording || recordLocked) return;
+    recordLocked = true;
+    notifyListeners();
+  }
+
+  // ---------------------------------------------- vocal : lecture, vitesse
+
+  /// Position du vocal en cours de lecture.
+  Duration playPosition = Duration.zero;
+  bool playPaused = false;
+
+  /// Vitesse de lecture des vocaux (1, 1.5, 2).
+  double playSpeed = 1;
+  StreamSubscription<Duration>? _positionSub;
+
+  Future<void> cycleSpeed() async {
+    playSpeed = switch (playSpeed) {
+      1 => 1.5,
+      1.5 => 2,
+      _ => 1,
+    };
+    await service.playback?.setSpeed(playSpeed);
+    notifyListeners();
+  }
+
+  /// Progression (0 à 1) du vocal [m] en cours de lecture.
+  double progressOf(ChatMessage m) {
+    if (playingId != m.id) return 0;
+    final total = m.durationMs ?? 0;
+    if (total <= 0) return 0;
+    return (playPosition.inMilliseconds / total).clamp(0, 1);
   }
 
   Future<void> _resendFailed() async {
@@ -379,9 +749,21 @@ class ChatViewModel extends BaseViewModel {
   /// La saisie a changé (les réponses rapides se cachent pendant l'écriture).
   void textChanged([String value = '']) {
     final empty = value.trim().isEmpty;
+    if (!empty) _signalTyping();
     if (empty == _draftEmpty) return;
     _draftEmpty = empty;
     notifyListeners();
+  }
+
+  /// « Écrit… » : un signal toutes les 3 s au plus pendant la saisie.
+  void _signalTyping() {
+    final now = _clock();
+    final last = _typingSentAt;
+    if (last != null && now.difference(last) < const Duration(seconds: 3)) {
+      return;
+    }
+    _typingSentAt = now;
+    unawaited(service.typing(conversationId));
   }
 
   /// Envoie [body] : affiché aussitôt, puis confirmé. `true` si le serveur
@@ -396,6 +778,7 @@ class ChatViewModel extends BaseViewModel {
         kind: MessageKind.text,
         body: text,
         createdAt: _clock().toUtc(),
+        replyTo: _takeReply(),
       ),
     );
   }
@@ -636,6 +1019,7 @@ class ChatViewModel extends BaseViewModel {
             kind: MessageKind.image,
             photo: photo,
             createdAt: _clock().toUtc(),
+            replyTo: _takeReply(),
           ),
         );
     }
@@ -658,6 +1042,7 @@ class ChatViewModel extends BaseViewModel {
       case Ok():
         recording = true;
         _sendFailure = null;
+        _startRecordClock();
       case Err(:final failure):
         _sendFailure = failure;
     }
@@ -667,6 +1052,7 @@ class ChatViewModel extends BaseViewModel {
   Future<void> cancelRecording() async {
     if (!recording) return;
     recording = false;
+    _stopRecordClock();
     await service.recorder?.cancel();
     notifyListeners();
   }
@@ -676,6 +1062,7 @@ class ChatViewModel extends BaseViewModel {
     final recorder = service.recorder;
     if (recorder == null || !recording) return false;
     recording = false;
+    _stopRecordClock();
     notifyListeners();
     switch (await recorder.stop()) {
       case Err(:final failure):
@@ -690,6 +1077,7 @@ class ChatViewModel extends BaseViewModel {
             kind: MessageKind.audio,
             audio: audio,
             createdAt: _clock().toUtc(),
+            replyTo: _takeReply(),
           ),
         );
       case Ok():
@@ -708,12 +1096,28 @@ class ChatViewModel extends BaseViewModel {
           : _media.entries.where((e) => e.value == u).firstOrNull?.key;
       if (id != playingId) {
         playingId = id;
+        playPaused = false;
+        playPosition = Duration.zero;
         notifyListeners();
       }
     });
+    _positionSub ??= playback.position.listen((p) {
+      playPosition = p;
+      if (!_disposed && playingId != null) notifyListeners();
+    });
     if (playingId == message.id) {
-      await playback.stop();
+      // Même vocal : pause, puis reprise là où il s'était arrêté.
+      if (playPaused) {
+        playPaused = false;
+        await playback.resume();
+      } else {
+        playPaused = true;
+        await playback.pause();
+      }
+      notifyListeners();
     } else {
+      playPaused = false;
+      playPosition = Duration.zero;
       await playback.play(url);
     }
   }
@@ -733,13 +1137,26 @@ class ChatViewModel extends BaseViewModel {
       conversationId,
       o.photo!,
       idempotencyKey: o.key,
+      replyTo: o.replyTo?.id,
     ),
     MessageKind.audio => service.sendAudio(
       conversationId,
       o.audio!,
       idempotencyKey: o.key,
+      replyTo: o.replyTo?.id,
     ),
-    _ => service.sendText(conversationId, o.body!, idempotencyKey: o.key),
+    MessageKind.file => service.sendFile(
+      conversationId,
+      o.document!,
+      idempotencyKey: o.key,
+      replyTo: o.replyTo?.id,
+    ),
+    _ => service.sendText(
+      conversationId,
+      o.body!,
+      idempotencyKey: o.key,
+      replyTo: o.replyTo?.id,
+    ),
   };
 
   Future<bool> _deliver(OutgoingMessage o) async {
@@ -768,6 +1185,11 @@ class ChatViewModel extends BaseViewModel {
     _disposed = true;
     _liveTimer?.cancel();
     _timer?.cancel();
+    _typingTimer?.cancel();
+    _recordTimer?.cancel();
+    unawaited(_levelSub?.cancel());
+    unawaited(_typingSub?.cancel());
+    unawaited(_positionSub?.cancel());
     unawaited(_live?.cancel());
     unawaited(_playing?.cancel());
     if (recording) unawaited(service.recorder?.cancel());

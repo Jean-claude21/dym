@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:async';
 
 import 'package:dym_chat/src/call_service.dart';
 import 'package:dym_chat/src/call_views.dart';
@@ -11,7 +11,11 @@ import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
+
+part 'chat_composer.dart';
+part 'chat_message_parts.dart';
 
 /// Heure courte (aujourd'hui), « hier », sinon la date.
 String chatTime(BuildContext context, DateTime at, DateTime now) {
@@ -46,6 +50,9 @@ String chatDayLabel(BuildContext context, DateTime day, DateTime now) {
 String chatPreview(DymLocalizations l10n, ChatMessage? m, [ChatRole? me]) {
   final text = switch (m) {
     null => '',
+    ChatMessage(deleted: true) => l10n.chatDeletedMessage,
+    ChatMessage(kind: MessageKind.file, :final fileName) =>
+      fileName ?? l10n.chatDocument,
     ChatMessage(kind: MessageKind.image) => l10n.chatPhoto,
     ChatMessage(kind: MessageKind.audio) => l10n.chatVoicePreview,
     ChatMessage(kind: MessageKind.call) => l10n.chatCallPreview,
@@ -101,6 +108,7 @@ IconData? _previewIcon(MessageKind? kind) => switch (kind) {
   MessageKind.quote => Icons.request_quote_outlined,
   MessageKind.paymentRequest => Icons.payments_outlined,
   MessageKind.coupon => Icons.local_offer_outlined,
+  MessageKind.file => Icons.description_rounded,
   _ => null,
 };
 
@@ -293,12 +301,23 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
                               ),
                             ),
                           ),
+                        if (vm.conversations.isNotEmpty)
+                          DymContentWidth.form(child: _FilterChips(vm: vm)),
                         if (vm.conversations.isEmpty)
                           DymStateView(
                             kind: DymStateKind.empty,
                             icon: Icons.chat_bubble_outline_rounded,
                             title: l10n.chatEmptyList,
                             message: '',
+                          )
+                        else if (shown.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.all(DymTokenSpace.s4),
+                            child: Text(
+                              l10n.chatFilterEmpty,
+                              textAlign: TextAlign.center,
+                              style: t.body.copyWith(color: c.textSecondary),
+                            ),
                           ),
                         for (final conv in shown)
                           DymContentWidth.form(
@@ -306,6 +325,7 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
                               conversation: conv,
                               role: service.role,
                               now: now,
+                              pinned: vm.pinned(conv),
                               onTap: () => onOpen(conv.id),
                             ),
                           ),
@@ -319,18 +339,61 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
   }
 }
 
+/// Toutes · Non lues · Commandes.
+class _FilterChips extends StatelessWidget {
+  const new({required this.vm});
+
+  final ConversationsViewModel vm;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final l10n = DymLocalizations.of(context);
+    final filters = [
+      (ConversationFilter.all, l10n.chatFilterAll),
+      (ConversationFilter.unread, l10n.chatFilterUnread),
+      if (vm.hasOrderThreads)
+        (ConversationFilter.orders, l10n.chatFilterOrders),
+    ];
+    return Padding(
+      padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+      child: Wrap(
+        spacing: DymTokenSpace.s1,
+        children: [
+          for (final (filter, label) in filters)
+            ChoiceChip(
+              label: Text(label),
+              selected: vm.filter == filter,
+              showCheckmark: false,
+              selectedColor: c.tintVertTendre,
+              labelStyle: context.dym.text.label.copyWith(
+                fontWeight: FontWeight.w600,
+                color: vm.filter == filter ? c.brandDeep : c.textPrimary,
+              ),
+              onSelected: (_) => vm.setFilter(filter),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ConversationTile extends StatelessWidget {
   const new({
     required this.conversation,
     required this.role,
     required this.now,
     required this.onTap,
+    this.pinned = false,
   });
 
   final Conversation conversation;
   final ChatRole role;
   final DateTime now;
   final VoidCallback onTap;
+
+  /// Fil d'une commande en cours, en tête.
+  final bool pinned;
 
   @override
   Widget build(BuildContext context) {
@@ -372,6 +435,24 @@ class _ConversationTile extends StatelessWidget {
                           fontWeight: unread ? FontWeight.w700 : null,
                         ),
                       ),
+                      if (pinned)
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.push_pin_rounded,
+                              size: 14,
+                              color: c.brandDeep,
+                            ),
+                            const SizedBox(width: 2),
+                            Text(
+                              l10n.chatPinnedOrder,
+                              style: t.label.copyWith(
+                                color: c.brandDeep,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                       const SizedBox(height: 2),
                       Row(
                         children: [
@@ -536,7 +617,20 @@ class ChatView extends StackedView<ChatViewModel> {
                 overflow: TextOverflow.ellipsis,
                 style: t.title.copyWith(fontSize: 18),
               ),
-              if (openStore != null)
+              // « Awa écrit… » remplace le sous-titre (spec 111).
+              if (vm.typingRole != null)
+                Text(
+                  vm.typingName.isEmpty
+                      ? l10n.chatTypingSomeone
+                      : l10n.chatTyping(vm.typingName),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.label.copyWith(
+                    color: c.brandDeep,
+                    fontStyle: FontStyle.italic,
+                  ),
+                )
+              else if (openStore != null)
                 Text(
                   l10n.chatSeeStore,
                   maxLines: 1,
@@ -590,6 +684,64 @@ class ChatView extends StackedView<ChatViewModel> {
                   icon: Icon(Icons.videocam_rounded, color: c.brandDeep),
                 ),
             ],
+            if (vm.ready)
+              PopupMenuButton<String>(
+                tooltip: l10n.chatMoreOptions,
+                icon: const Icon(Icons.more_vert_rounded),
+                onSelected: (value) {
+                  if (value == 'search') vm.openSearch();
+                  if (value == 'media') {
+                    Navigator.of(context).push<void>(
+                      MaterialPageRoute(builder: (_) => ChatMediaPage(vm: vm)),
+                    );
+                  }
+                },
+                itemBuilder: (_) => [
+                  PopupMenuItem(
+                    value: 'search',
+                    child: ListTile(
+                      leading: const Icon(Icons.search_rounded),
+                      title: Text(l10n.chatSearchInThread),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: 'media',
+                    child: ListTile(
+                      leading: const Icon(Icons.perm_media_outlined),
+                      title: Text(l10n.chatMediaTitle),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
+      ),
+    );
+    final searchHeader = Material(
+      color: c.card,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 4, DymTokenSpace.s2, 4),
+        child: Row(
+          children: [
+            IconButton(
+              tooltip: l10n.chatClose,
+              onPressed: vm.closeSearch,
+              icon: const Icon(Icons.arrow_back_rounded),
+            ),
+            Expanded(
+              child: TextField(
+                autofocus: true,
+                onChanged: vm.setSearch,
+                textInputAction: TextInputAction.search,
+                decoration: InputDecoration(
+                  hintText: l10n.chatSearchInThread,
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  filled: false,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -619,121 +771,141 @@ class ChatView extends StackedView<ChatViewModel> {
     return Scaffold(
       backgroundColor: c.background,
       body: SafeArea(
-        child: Column(
-          children: [
-            header,
-            Divider(height: 1, color: c.hairline),
-            if (order != null)
-              _OrderBanner(
-                order: order,
-                total: vm.activeOrderTotal,
-                onOpen: openOrder == null ? null : () => openOrder(order.id),
-              ),
-            if (vm.offline) const _OfflineNote(),
-            Expanded(
-              child: entries.isEmpty
-                  ? _EmptyThread(
-                      name: name,
-                      vendor: vendor,
-                      orderThread: conv?.isOrderThread ?? false,
-                    )
-                  : ListView.builder(
-                      reverse: true,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: DymLayout.gutter(context),
-                        vertical: DymTokenSpace.s2,
+        child: vm.searching
+            ? Column(
+                children: [
+                  searchHeader,
+                  Divider(height: 1, color: c.hairline),
+                  Expanded(child: _SearchResults(vm: vm)),
+                ],
+              )
+            : Column(
+                children: [
+                  header,
+                  Divider(height: 1, color: c.hairline),
+                  if (order != null)
+                    _OrderBanner(
+                      order: order,
+                      total: vm.activeOrderTotal,
+                      onOpen: openOrder == null
+                          ? null
+                          : () => openOrder(order.id),
+                    ),
+                  if (vm.offline) const _OfflineNote(),
+                  Expanded(
+                    child: entries.isEmpty
+                        ? _EmptyThread(
+                            name: name,
+                            vendor: vendor,
+                            orderThread: conv?.isOrderThread ?? false,
+                          )
+                        : ListView.builder(
+                            reverse: true,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: DymLayout.gutter(context),
+                              vertical: DymTokenSpace.s2,
+                            ),
+                            itemCount: entries.length,
+                            itemBuilder: (context, i) => DymContentWidth.form(
+                              child: switch (entries[i]) {
+                                ChatDayEntry(:final day) => _DaySeparator(
+                                  label: chatDayLabel(context, day, now),
+                                ),
+                                ChatNewEntry(:final count) =>
+                                  _NewMessagesSeparator(count: count),
+                                final ChatMessageEntry e => _Bubble(
+                                  entry: e,
+                                  vm: vm,
+                                  onAddToCart: onAddToCart,
+                                  onOpenProduct: onOpenProduct,
+                                ),
+                                final ChatOutgoingEntry e => _OutgoingBubble(
+                                  entry: e,
+                                  vm: vm,
+                                ),
+                              },
+                            ),
+                          ),
+                  ),
+                  if (vm.sendFailure != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: DymTokenSpace.s3,
+                        vertical: DymTokenSpace.s1,
                       ),
-                      itemCount: entries.length,
-                      itemBuilder: (context, i) => DymContentWidth.form(
-                        child: switch (entries[i]) {
-                          ChatDayEntry(:final day) => _DaySeparator(
-                            label: chatDayLabel(context, day, now),
+                      child: Text(
+                        switch (vm.sendFailure) {
+                          NetworkFailure() => l10n.errorOffline,
+                          ValidationFailure(message: 'too_large') =>
+                            l10n.chatDocumentTooLarge,
+                          ValidationFailure(message: 'unsupported') =>
+                            l10n.chatDocumentUnsupported,
+                          ServerFailure(message: final m)
+                              when m.contains('too_late') =>
+                            l10n.chatDeleteTooLate,
+                          _ => l10n.chatSendFailed,
+                        },
+                        style: t.label.copyWith(
+                          color: c.pimentStrong,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  if (vm.pendingProductId != null)
+                    DymContentWidth.form(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(
+                          DymTokenSpace.s3,
+                          DymTokenSpace.s1,
+                          DymTokenSpace.s3,
+                          0,
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: DymButton(
+                                label: l10n.chatAttachProduct,
+                                icon: Icons.sell_rounded,
+                                variant: DymButtonVariant.secondary,
+                                onPressed: vm.sendPendingProduct,
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: l10n.chatDismiss,
+                              onPressed: vm.dismissPendingProduct,
+                              icon: const Icon(Icons.close_rounded),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  // Fil d'une commande terminée (spec 109) : lecture seule.
+                  if (conv?.closed ?? false)
+                    Padding(
+                      padding: const EdgeInsets.all(DymTokenSpace.s3),
+                      child: Text(
+                        l10n.chatThreadClosed,
+                        textAlign: TextAlign.center,
+                        style: t.label.copyWith(color: c.textSecondary),
+                      ),
+                    )
+                  else ...[
+                    if (vm.quickReplies.isNotEmpty) _QuickReplies(vm: vm),
+                    DymContentWidth.form(
+                      child: _Composer(
+                        vm: vm,
+                        pickProducts: switch ((pickProducts, conv)) {
+                          (final pick?, final conv?) => (context) => pick(
+                            context,
+                            conv.storeId,
                           ),
-                          final ChatMessageEntry e => _Bubble(
-                            entry: e,
-                            vm: vm,
-                            onAddToCart: onAddToCart,
-                            onOpenProduct: onOpenProduct,
-                          ),
-                          final ChatOutgoingEntry e => _OutgoingBubble(
-                            entry: e,
-                            vm: vm,
-                          ),
+                          _ => null,
                         },
                       ),
                     ),
-            ),
-            if (vm.sendFailure != null)
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: DymTokenSpace.s3,
-                  vertical: DymTokenSpace.s1,
-                ),
-                child: Text(
-                  vm.sendFailure is NetworkFailure
-                      ? l10n.errorOffline
-                      : l10n.chatSendFailed,
-                  style: t.label.copyWith(
-                    color: c.pimentStrong,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                  ],
+                ],
               ),
-            if (vm.pendingProductId != null)
-              DymContentWidth.form(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    DymTokenSpace.s3,
-                    DymTokenSpace.s1,
-                    DymTokenSpace.s3,
-                    0,
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: DymButton(
-                          label: l10n.chatAttachProduct,
-                          icon: Icons.sell_rounded,
-                          variant: DymButtonVariant.secondary,
-                          onPressed: vm.sendPendingProduct,
-                        ),
-                      ),
-                      IconButton(
-                        tooltip: l10n.chatDismiss,
-                        onPressed: vm.dismissPendingProduct,
-                        icon: const Icon(Icons.close_rounded),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            // Fil d'une commande terminée (spec 109) : lecture seule.
-            if (conv?.closed ?? false)
-              Padding(
-                padding: const EdgeInsets.all(DymTokenSpace.s3),
-                child: Text(
-                  l10n.chatThreadClosed,
-                  textAlign: TextAlign.center,
-                  style: t.label.copyWith(color: c.textSecondary),
-                ),
-              )
-            else ...[
-              if (vm.quickReplies.isNotEmpty) _QuickReplies(vm: vm),
-              DymContentWidth.form(
-                child: _Composer(
-                  vm: vm,
-                  pickProducts: switch ((pickProducts, conv)) {
-                    (final pick?, final conv?) => (context) => pick(
-                      context,
-                      conv.storeId,
-                    ),
-                    _ => null,
-                  },
-                ),
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }
@@ -913,6 +1085,7 @@ class _Meta extends StatelessWidget {
     required this.onBrand,
     this.mine = false,
     this.seen = false,
+    this.delivered = false,
     this.pending = false,
   });
 
@@ -920,6 +1093,9 @@ class _Meta extends StatelessWidget {
   final bool onBrand;
   final bool mine;
   final bool seen;
+
+  /// Reçu par l'app de l'autre personne (✓✓ sans couleur).
+  final bool delivered;
   final bool pending;
 
   @override
@@ -929,7 +1105,13 @@ class _Meta extends StatelessWidget {
     final color = onBrand ? c.onBrand : c.textSecondary;
     final status = pending
         ? l10n.chatSending
-        : (seen ? l10n.chatSeen : l10n.chatSent);
+        : seen
+        ? l10n.chatSeen
+        : delivered
+        ? l10n.chatDelivered
+        : l10n.chatSent;
+    // Lu : ✓✓ en couleur (plantain sur la bulle verte, indigo ailleurs).
+    final tick = seen ? (onBrand ? c.plantain : c.indigo) : color;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -942,9 +1124,11 @@ class _Meta extends StatelessWidget {
           Icon(
             pending
                 ? Icons.schedule_rounded
-                : (seen ? Icons.done_all_rounded : Icons.done_rounded),
+                : (seen || delivered
+                      ? Icons.done_all_rounded
+                      : Icons.done_rounded),
             size: 16,
-            color: color,
+            color: tick,
             semanticLabel: status,
           ),
         ],
@@ -970,55 +1154,133 @@ class _Bubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = DymLocalizations.of(context);
     final message = entry.message;
+    final conv = vm.thread?.conversation;
     final mine = message.fromMe(vm.role);
     final clock = chatClock(context, message.createdAt);
-    Widget meta({bool onBrand = false}) =>
-        _Meta(time: clock, onBrand: onBrand, mine: mine, seen: entry.seen);
-    final content = switch (message.kind) {
-      MessageKind.image => _Photo(
-        url: vm.mediaUrl(message.id),
-        vm: vm,
-        meta: meta(),
-        mine: mine,
+    Widget meta({bool onBrand = false}) => _Meta(
+      time: clock,
+      onBrand: onBrand,
+      mine: mine,
+      seen: entry.seen,
+      delivered: entry.delivered,
+    );
+    // Citation et « Transféré » : dans la bulle de texte, au-dessus sinon.
+    final textKind =
+        message.kind == MessageKind.text || message.kind == MessageKind.unknown;
+    final top = <Widget>[
+      if (message.forwarded) _ForwardedLabel(onBrand: mine && textKind),
+      if (message.replyTo case final quote?)
+        _QuoteBlock(quote: quote, vm: vm, onBrand: mine && textKind),
+    ];
+    final content = message.deleted
+        ? _DeletedBubble(mine: mine, meta: meta())
+        : switch (message.kind) {
+            MessageKind.image => _Photo(
+              url: vm.mediaUrl(message.id),
+              vm: vm,
+              meta: meta(),
+              mine: mine,
+            ),
+            MessageKind.video => _VideoBubble(
+              message: message,
+              vm: vm,
+              mine: mine,
+              meta: meta(),
+            ),
+            MessageKind.file => _FileBubble(
+              name: message.fileName ?? l10n.chatDocument,
+              size: message.fileSize,
+              mine: mine,
+              meta: meta(),
+              onOpen:
+                  vm.service.opener == null || vm.mediaUrl(message.id) == null
+                  ? null
+                  : () => unawaited(vm.openDocument(message)),
+            ),
+            MessageKind.audio => Column(
+              crossAxisAlignment: mine
+                  ? CrossAxisAlignment.end
+                  : CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _AudioBubble(
+                  message: message,
+                  vm: vm,
+                  mine: mine,
+                  meta: meta(),
+                ),
+                TranscriptLine(message: message, vm: vm),
+              ],
+            ),
+            MessageKind.call => _CallBubble(message: message, meta: meta()),
+            // Chat de commerce (spec 099).
+            MessageKind.location ||
+            MessageKind.quote ||
+            MessageKind.paymentRequest ||
+            MessageKind.coupon => CommerceBubble(
+              message: message,
+              vm: vm,
+              mine: mine,
+              meta: meta(),
+            ),
+            MessageKind.product => _ProductCard(
+              message: message,
+              vm: vm,
+              meta: meta(),
+              onAddToCart: mine ? null : onAddToCart,
+              onOpenProduct: onOpenProduct,
+            ),
+            _ => _TextBubble(
+              text: message.body ?? l10n.errorGeneric,
+              mine: mine,
+              continued: entry.continued,
+              meta: meta(onBrand: mine),
+              top: top,
+            ),
+          };
+    final framed = !message.deleted && !textKind && top.isNotEmpty
+        ? Column(
+            crossAxisAlignment: mine
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 280),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: top,
+                ),
+              ),
+              content,
+            ],
+          )
+        : content;
+    final withReactions = message.reactions.isEmpty
+        ? framed
+        : Column(
+            crossAxisAlignment: mine
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              framed,
+              _ReactionsRow(message: message, vm: vm),
+            ],
+          );
+    // Glisser pour répondre, appui long pour réagir et agir (spec 111).
+    final interactive = _SwipeToReply(
+      enabled: !message.deleted && !(conv?.closed ?? false),
+      onReply: () => vm.startReply(message),
+      child: GestureDetector(
+        onLongPress: conv?.closed ?? false
+            ? null
+            : () => unawaited(_messageActions(context, vm, message)),
+        child: withReactions,
       ),
-      MessageKind.audio => Column(
-        crossAxisAlignment: mine
-            ? CrossAxisAlignment.end
-            : CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _AudioBubble(message: message, vm: vm, mine: mine, meta: meta()),
-          TranscriptLine(message: message, vm: vm),
-        ],
-      ),
-      MessageKind.call => _CallBubble(message: message, meta: meta()),
-      // Chat de commerce (spec 099).
-      MessageKind.video ||
-      MessageKind.location ||
-      MessageKind.quote ||
-      MessageKind.paymentRequest ||
-      MessageKind.coupon => CommerceBubble(
-        message: message,
-        vm: vm,
-        mine: mine,
-        meta: meta(),
-      ),
-      MessageKind.product => _ProductCard(
-        message: message,
-        vm: vm,
-        meta: meta(),
-        onAddToCart: mine ? null : onAddToCart,
-        onOpenProduct: onOpenProduct,
-      ),
-      _ => _TextBubble(
-        text: message.body ?? l10n.errorGeneric,
-        mine: mine,
-        continued: entry.continued,
-        meta: meta(onBrand: mine),
-      ),
-    };
+    );
     // Fil à plusieurs (spec 109) : le nom de l'auteur au-dessus de sa bulle.
-    final conv = vm.thread?.conversation;
     final named = !mine && !entry.continued && (conv?.isOrderThread ?? false);
     return _Placed(
       mine: mine,
@@ -1041,10 +1303,10 @@ class _Bubble extends StatelessWidget {
                     ),
                   ),
                 ),
-                content,
+                interactive,
               ],
             )
-          : content,
+          : interactive,
     );
   }
 }
@@ -1079,6 +1341,7 @@ class _TextBubble extends StatelessWidget {
     required this.continued,
     required this.meta,
     this.faded = false,
+    this.top = const [],
   });
 
   final String text;
@@ -1086,6 +1349,9 @@ class _TextBubble extends StatelessWidget {
   final bool continued;
   final Widget meta;
   final bool faded;
+
+  /// « Transféré » et citation, dans la bulle.
+  final List<Widget> top;
 
   @override
   Widget build(BuildContext context) {
@@ -1109,6 +1375,12 @@ class _TextBubble extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if (top.isNotEmpty)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: top,
+              ),
             Padding(
               padding: const EdgeInsets.only(right: 4),
               child: Text(
@@ -1150,6 +1422,26 @@ class _OutgoingBubble extends StatelessWidget {
         text: o.body ?? '',
         mine: true,
         continued: entry.continued,
+        meta: meta,
+        faded: !failed,
+        top: [
+          if (o.replyTo case final r?)
+            _QuoteBlock(
+              quote: MessageQuote(
+                id: r.id,
+                authorRole: r.authorRole,
+                kind: r.kind,
+                body: r.body,
+              ),
+              vm: vm,
+              onBrand: true,
+            ),
+        ],
+      ),
+      MessageKind.file when o.document != null => _FileBubble(
+        name: o.document!.name,
+        size: o.document!.size,
+        mine: true,
         meta: meta,
         faded: !failed,
       ),
@@ -1280,6 +1572,11 @@ class _Photo extends StatelessWidget {
             // Photo illisible : un cadre menthe, jamais une icône flottante.
             errorBuilder: (_, _, _) => placeholder,
           );
+    final full = local != null
+        ? MemoryImage(local)
+        : remote == null
+        ? null
+        : vm.service.mediaImage(remote);
     return Column(
       crossAxisAlignment: mine
           ? CrossAxisAlignment.end
@@ -1288,7 +1585,20 @@ class _Photo extends StatelessWidget {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(DymTokenRadius.tile),
-          child: SizedBox(width: 220, height: 165, child: image),
+          child: SizedBox(
+            width: 220,
+            height: 165,
+            child: full == null
+                ? image
+                : Semantics(
+                    button: true,
+                    label: l10n.chatFullScreen,
+                    child: InkWell(
+                      onTap: () => unawaited(_openPhoto(context, full)),
+                      child: image,
+                    ),
+                  ),
+          ),
         ),
         const SizedBox(height: 2),
         meta,
@@ -1412,7 +1722,7 @@ class _ProductCard extends StatelessWidget {
   }
 }
 
-/// Vocal : lecture, durée.
+/// Vocal : lecture et pause, onde qui avance, temps écoulé, vitesse.
 class _AudioBubble extends StatelessWidget {
   const new({
     required this.message,
@@ -1426,38 +1736,88 @@ class _AudioBubble extends StatelessWidget {
   final bool mine;
   final Widget meta;
 
+  /// Onde stable propre à chaque vocal (dérivée de son identifiant).
+  static List<double> _shape(String id) {
+    var seed = id.hashCode;
+    return [
+      for (var i = 0; i < 32; i++)
+        () {
+          seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+          return 0.2 + (seed % 80) / 100;
+        }(),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final playing = vm.playingId == message.id;
-    final seconds = ((message.durationMs ?? 0) / 1000).round();
+    final current = vm.playingId == message.id;
+    final playing = current && !vm.playPaused;
+    final total = Duration(milliseconds: message.durationMs ?? 0);
+    final shown = current ? vm.playPosition : total;
     return Container(
-      padding: const EdgeInsets.fromLTRB(4, 4, DymTokenSpace.s3, 4),
+      width: 270,
+      padding: const EdgeInsets.fromLTRB(4, 4, DymTokenSpace.s2, 6),
       decoration: BoxDecoration(
         color: mine ? c.tintVertTendre : c.card,
         borderRadius: BorderRadius.circular(DymTokenRadius.card),
         border: mine ? null : Border.all(color: c.hairline),
       ),
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            tooltip: playing ? l10n.chatVoiceStop : l10n.chatVoicePlay,
+            tooltip: playing ? l10n.chatVoicePause : l10n.chatVoicePlay,
             onPressed: vm.mediaUrl(message.id) == null
                 ? null
                 : () => vm.togglePlay(message),
             icon: Icon(
-              playing ? Icons.stop_rounded : Icons.play_arrow_rounded,
+              playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
               color: c.brandDeep,
+              size: 32,
             ),
           ),
-          Icon(Icons.graphic_eq_rounded, color: c.brandDeep),
-          const SizedBox(width: DymTokenSpace.s1),
-          Text(l10n.chatVoiceDuration(seconds), style: t.label),
-          const SizedBox(width: DymTokenSpace.s2),
-          meta,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _Wave(
+                  levels: _shape(message.id),
+                  color: c.brandDeep,
+                  progress: vm.progressOf(message),
+                ),
+                Row(
+                  children: [
+                    Text(
+                      _clockOf(shown),
+                      style: t.label.copyWith(
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                    const Spacer(),
+                    meta,
+                  ],
+                ),
+              ],
+            ),
+          ),
+          if (current)
+            TextButton(
+              onPressed: vm.cycleSpeed,
+              style: TextButton.styleFrom(
+                minimumSize: const Size(48, DymTokenSize.touchMin),
+                foregroundColor: c.brandDeep,
+              ),
+              child: Semantics(
+                label: l10n.chatVoiceSpeed,
+                child: Text(
+                  '${vm.playSpeed == 1.5 ? '1,5' : vm.playSpeed.toInt()}×',
+                  style: t.label.copyWith(fontWeight: FontWeight.w700),
+                ),
+              ),
+            ),
         ],
       ),
     );
@@ -1552,207 +1912,6 @@ class _QuickReplies extends StatelessWidget {
                 child: Text(quickReplyText(l10n, reply)),
               ),
             ),
-        ],
-      ),
-    );
-  }
-}
-
-enum _Attach { camera, gallery, products }
-
-class _Composer extends StatefulWidget {
-  const new({required this.vm, this.pickProducts});
-
-  final ChatViewModel vm;
-  final Future<List<String>?> Function(BuildContext context)? pickProducts;
-
-  @override
-  State<_Composer> createState() => _ComposerState();
-}
-
-class _ComposerState extends State<_Composer> {
-  final _text = TextEditingController();
-
-  @override
-  void dispose() {
-    _text.dispose();
-    super.dispose();
-  }
-
-  Future<void> _attach() async {
-    final l10n = DymLocalizations.of(context);
-    final c = context.dym.colors;
-    Widget option(_Attach value, IconData icon, String label) => ListTile(
-      minTileHeight: DymTokenSize.touchMin + 8,
-      leading: CircleAvatar(
-        backgroundColor: c.tintVertTendre,
-        child: Icon(icon, color: c.brandDeep),
-      ),
-      title: Text(label),
-      onTap: () => Navigator.pop(context, value),
-    );
-    final extra = commerceOptions(l10n, widget.vm);
-    CommerceAction? commerce;
-    final choice = await showModalBottomSheet<_Attach>(
-      context: context,
-      showDragHandle: true,
-      backgroundColor: c.card,
-      constraints: const BoxConstraints(maxWidth: DymTokenLayout.formMax),
-      builder: (context) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.pickProducts != null)
-              option(
-                _Attach.products,
-                Icons.sell_rounded,
-                l10n.chatShareProduct,
-              ),
-            option(_Attach.camera, Icons.photo_camera_rounded, l10n.chatCamera),
-            option(
-              _Attach.gallery,
-              Icons.photo_library_rounded,
-              l10n.chatGallery,
-            ),
-            for (final (action, icon, label) in extra)
-              ListTile(
-                minTileHeight: DymTokenSize.touchMin + 8,
-                leading: CircleAvatar(
-                  backgroundColor: c.tintPlantainClair,
-                  child: Icon(icon, color: c.brandDeep),
-                ),
-                title: Text(label),
-                onTap: () {
-                  commerce = action;
-                  Navigator.pop(context);
-                },
-              ),
-          ],
-        ),
-      ),
-    );
-    if (commerce case final action? when mounted) {
-      await runCommerceAction(context, widget.vm, action);
-      return;
-    }
-    if (!mounted) return;
-    switch (choice) {
-      case _Attach.camera:
-        await widget.vm.sendPhoto(PhotoSource.camera);
-      case _Attach.gallery:
-        await widget.vm.sendPhoto(PhotoSource.gallery);
-      case _Attach.products:
-        final ids = await widget.pickProducts!(context);
-        if (ids != null && ids.isNotEmpty) await widget.vm.sendProducts(ids);
-      case null:
-        break;
-    }
-  }
-
-  Future<void> _send() async {
-    final text = _text.text;
-    if (text.trim().isEmpty) return;
-    _text.clear();
-    await widget.vm.sendText(text);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final c = context.dym.colors;
-    final l10n = DymLocalizations.of(context);
-    final vm = widget.vm;
-    if (vm.recording) {
-      return Container(
-        color: c.card,
-        padding: const EdgeInsets.all(DymTokenSpace.s2),
-        child: Row(
-          children: [
-            IconButton(
-              tooltip: l10n.chatVoiceCancel,
-              onPressed: vm.cancelRecording,
-              icon: Icon(Icons.delete_rounded, color: c.pimentStrong),
-            ),
-            Icon(Icons.fiber_manual_record_rounded, color: c.pimentStrong),
-            const SizedBox(width: DymTokenSpace.s2),
-            Expanded(
-              child: Semantics(
-                liveRegion: true,
-                child: Text(
-                  l10n.chatVoiceRecording,
-                  style: context.dym.text.body,
-                ),
-              ),
-            ),
-            IconButton.filled(
-              tooltip: l10n.chatVoiceSend,
-              style: IconButton.styleFrom(
-                backgroundColor: c.brand,
-                minimumSize: const Size(52, 52),
-              ),
-              onPressed: vm.stopAndSendRecording,
-              icon: Icon(Icons.send_rounded, color: c.onBrand),
-            ),
-          ],
-        ),
-      );
-    }
-    return Container(
-      color: c.card,
-      padding: const EdgeInsets.all(DymTokenSpace.s2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          IconButton(
-            tooltip: l10n.chatAttach,
-            style: IconButton.styleFrom(minimumSize: const Size(48, 52)),
-            onPressed: _attach,
-            icon: Icon(Icons.add_circle_outline_rounded, color: c.brandDeep),
-          ),
-          Expanded(
-            child: TextField(
-              controller: _text,
-              minLines: 1,
-              maxLines: 4,
-              maxLength: 1000,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: vm.textChanged,
-              onSubmitted: (_) => _send(),
-              decoration: InputDecoration(
-                hintText: l10n.chatWriteHint,
-                counterText: '',
-                filled: true,
-                fillColor: c.background,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: DymTokenSpace.s3,
-                  vertical: 14,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(26),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: DymTokenSpace.s1),
-          ValueListenableBuilder<TextEditingValue>(
-            valueListenable: _text,
-            builder: (context, value, _) {
-              final empty = value.text.trim().isEmpty;
-              final voice = empty && vm.canRecord;
-              return IconButton.filled(
-                tooltip: voice ? l10n.chatVoiceRecord : l10n.chatSend,
-                style: IconButton.styleFrom(
-                  backgroundColor: c.brand,
-                  minimumSize: const Size(52, 52),
-                ),
-                onPressed: voice ? vm.startRecording : _send,
-                icon: Icon(
-                  voice ? Icons.mic_rounded : Icons.send_rounded,
-                  color: c.onBrand,
-                ),
-              );
-            },
-          ),
         ],
       ),
     );
