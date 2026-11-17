@@ -9701,5 +9701,18 @@
   "authTooManyCodes": "Trop de codes demandés. Réessaie dans quelques minutes.",
   "@authTooManyCodes": {
     "description": "Erreur : trop de codes"
+  },
+  "catalogOfflinePending": "{n, plural, =1{1 geste gardé hors ligne : il partira au retour du réseau.} other{{n} gestes gardés hors ligne : ils partiront au retour du réseau.}}",
+  "@catalogOfflinePending": {
+    "description": "Catalogue : gestes en attente du réseau",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "homeFromCache": "Hors ligne : affichage de ta dernière visite.",
+  "@homeFromCache": {
+    "description": "Accueil affiché depuis le cache"
   }
 }

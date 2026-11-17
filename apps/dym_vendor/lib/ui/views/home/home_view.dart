@@ -268,6 +268,9 @@ class _HomeViewState extends State<HomeView> {
           onEdit: (product) => _navigator.toProductEditor(product: product),
           onCategories: _navigator.toStoreCategories,
           onImport: _navigator.toImportProducts,
+          offline: locator.isRegistered<OfflineQueue>()
+              ? locator<OfflineQueue>()
+              : null,
         ),
         HomeTab.store => MyStoreView(
           service: _stores,

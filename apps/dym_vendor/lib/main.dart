@@ -83,6 +83,8 @@ Future<void> configureServices(DymEnvironment environment) async {
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    // Gestes gardés hors ligne (spec 107), sur l'appareil.
+    ..registerSingleton(OfflineQueue(FileJsonStore(), name: 'vendor_offline'))
     ..registerSingleton<LiveFeed>(live)
     // Notifications du téléphone (spec 069) : démarrées à l'accueil, une fois
     // la personne connectée ; le toucher ouvre l'écran concerné.

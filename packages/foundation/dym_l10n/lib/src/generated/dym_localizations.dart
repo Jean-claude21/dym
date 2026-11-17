@@ -13854,6 +13854,18 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Trop de codes demandés. Réessaie dans quelques minutes.'**
   String get authTooManyCodes;
+
+  /// Catalogue : gestes en attente du réseau
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =1{1 geste gardé hors ligne : il partira au retour du réseau.} other{{n} gestes gardés hors ligne : ils partiront au retour du réseau.}}'**
+  String catalogOfflinePending(int n);
+
+  /// Accueil affiché depuis le cache
+  ///
+  /// In fr, this message translates to:
+  /// **'Hors ligne : affichage de ta dernière visite.'**
+  String get homeFromCache;
 }
 
 class _DymLocalizationsDelegate
