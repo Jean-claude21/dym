@@ -45,6 +45,13 @@ class MessagingRepository {
     decode: (json) => Conversation.fromJson(json! as Map<String, dynamic>),
   );
 
+  /// Fil d'une commande (spec 109) : cliente, boutique et livreur ; ouvert
+  /// dès qu'un livreur est affecté. Refus : `no_courier`.
+  Future<Result<Conversation>> orderThread(String orderId) async => _decode(
+    await _data.rpc<Object?>('order_thread', params: {'p_order': orderId}),
+    (json) => Conversation.fromJson(json! as Map<String, dynamic>),
+  );
+
   Future<Result<ChatMessage>> sendText(
     String conversationId,
     String body, {

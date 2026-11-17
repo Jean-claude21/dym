@@ -38,13 +38,9 @@ class ConversationsViewModel extends BaseViewModel {
   List<Conversation> get shown {
     final q = _query.trim().toLowerCase();
     if (q.isEmpty) return conversations;
-    final vendor = service.role == ChatRole.vendor;
     return [
       for (final c in conversations)
-        if ((vendor ? (c.clientFirstName ?? '') : c.storeName)
-            .toLowerCase()
-            .contains(q))
-          c,
+        if (c.title(service.role).toLowerCase().contains(q)) c,
     ];
   }
 
@@ -93,7 +89,10 @@ enum QuickReply {
   yesAvailable,
   soldOut,
   preparing,
-  thanksOrder;
+  thanksOrder,
+  onMyWay,
+  atTheDoor,
+  cantFind;
 
   static const List<QuickReply> client = [
     isAvailable,
@@ -107,6 +106,9 @@ enum QuickReply {
     preparing,
     thanksOrder,
   ];
+
+  /// Livreur (spec 109).
+  static const List<QuickReply> courier = [onMyWay, atTheDoor, cantFind];
 }
 
 /// État d'un message parti de cet appareil et pas encore confirmé.
@@ -234,7 +236,11 @@ class ChatViewModel extends BaseViewModel {
   /// Réponses rapides : champ vide, pas d'enregistrement en cours.
   List<QuickReply> get quickReplies => !_draftEmpty || recording
       ? const []
-      : (role == ChatRole.vendor ? QuickReply.vendor : QuickReply.client);
+      : switch (role) {
+          ChatRole.vendor => QuickReply.vendor,
+          ChatRole.courier => QuickReply.courier,
+          ChatRole.client => QuickReply.client,
+        };
 
   /// Produit à joindre (ouverte depuis une fiche produit).
   String? get pendingProductId => _pendingProductId;

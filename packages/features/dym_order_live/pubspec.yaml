@@ -1,0 +1,28 @@
+name: dym_order_live
+description: "Livraison en direct (spec 109) : carte de suivi avec itinéraire et fil de commande, partagée par les apps cliente, vendeuse et livreur."
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.13.0
+  flutter: ">=3.47.0"
+
+dependencies:
+  dym_core: ^0.1.0
+  dym_data: ^0.1.0
+  dym_l10n: ^0.1.0
+  dym_map: ^0.1.0
+  dym_models: ^0.1.0
+  dym_ui: ^0.1.0
+  flutter:
+    sdk: flutter
+  stacked: ^3.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  very_good_analysis: ^11.0.0
+
+flutter:
+  uses-material-design: true

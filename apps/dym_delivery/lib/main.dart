@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_delivery/app/app.locator.dart';
@@ -9,7 +10,9 @@ import 'package:dym_delivery/app/delivery_app.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
+import 'package:dym_models/dym_models.dart';
 import 'package:dym_notifications/dym_notifications.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 
@@ -50,6 +53,11 @@ Future<void> configureServices(DymEnvironment environment) async {
     app: AccountApp.delivery,
     locale: locale,
   );
+  final messaging = MessagingRepository(
+    data: neon.data,
+    functions: neon.functions,
+    uploads: neon.uploads,
+  );
   // Temps réel (spec 067) : ouvert tant qu'un écran écoute, au premier plan.
   final live = LiveConnection(neon.live)..attach();
   locator
@@ -81,6 +89,32 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton<AuthService>(auth)
     // Connexion WhatsApp (spec 105).
     ..registerSingleton<WhatsAppSignIn>(NeonWhatsAppSignIn(auth))
+    // Fil de commande du livreur (spec 109) : texte, photo, vocal, position.
+    ..registerSingleton<ChatService>(
+      NeonChatService(
+        repository: messaging,
+        commerce: NeonChatCommerce(
+          repository: messaging,
+          videos: PluginVideoPicker(),
+          location: const PluginLocationProvider(),
+        ),
+        role: ChatRole.courier,
+        countryConfig: () => locator<MissionsService>().countryConfig(),
+        photos: PluginPhotoPicker(),
+        productPhoto: (key) =>
+            dymNetworkImage(environment.media(key).toString()),
+        recorder: PluginVoiceRecorder(),
+        playback: PluginAudioPlayback(),
+        liveFeed: live,
+      ),
+    )
+    // Course en direct avec itinéraire (spec 109).
+    ..registerSingleton<OrderLiveService>(
+      NeonOrderLiveService(
+        DeliveryRepository(neon.data),
+        RouteRepository(neon.functions),
+      ),
+    )
     ..registerSingleton<MissionsService>(
       NeonMissionsService(
         couriers: CourierRepository(neon.data),

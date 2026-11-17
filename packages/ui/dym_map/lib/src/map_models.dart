@@ -1,7 +1,7 @@
 import 'package:dym_map/dym_map.dart' show DymMap;
 import 'package:dym_map/src/dym_map.dart' show DymMap;
 import 'package:dym_map/src/geo.dart';
-import 'package:flutter/foundation.dart' show immutable;
+import 'package:flutter/foundation.dart' show immutable, listEquals;
 import 'package:flutter/widgets.dart' show Color, EdgeInsets, IconData;
 
 /// Apparence d'un type d'épingle : carré à pointe, icône et couleurs DYM.
@@ -82,6 +82,27 @@ class DymMapArea {
 
   @override
   int get hashCode => Object.hash(id, center, radiusM);
+}
+
+/// Trait d'itinéraire (spec 109) : suite de points ; [dashed] pour un tronçon
+/// approximatif (ligne droite quand l'itinéraire n'est pas connu).
+@immutable
+class DymMapRoute {
+  const new({required this.id, required this.points, this.dashed = false});
+
+  final String id;
+  final List<DymLatLng> points;
+  final bool dashed;
+
+  @override
+  bool operator ==(Object other) =>
+      other is DymMapRoute &&
+      other.id == id &&
+      other.dashed == dashed &&
+      listEquals(other.points, points);
+
+  @override
+  int get hashCode => Object.hash(id, dashed, Object.hashAll(points));
 }
 
 /// Position visible de la carte après un déplacement.

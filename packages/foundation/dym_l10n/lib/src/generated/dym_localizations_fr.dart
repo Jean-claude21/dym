@@ -8371,4 +8371,47 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get authCodeTipWhatsApp =>
       'Astuce : le code arrive dans WhatsApp en moins d\'une minute.';
+
+  @override
+  String get chatQuickOnMyWay => 'Je suis en route.';
+
+  @override
+  String get chatQuickAtTheDoor => 'Je suis devant chez toi.';
+
+  @override
+  String get chatQuickCantFind =>
+      'Je ne trouve pas l\'adresse, peux-tu m\'aider ?';
+
+  @override
+  String get chatThreadClosed =>
+      'Livraison terminée : cette conversation est fermée.';
+
+  @override
+  String get orderLiveChat => 'Discuter avec la boutique et le livreur';
+
+  @override
+  String get orderLiveChatVendor => 'Discuter avec la cliente et le livreur';
+
+  @override
+  String get orderLiveChatCourier => 'Discuter avec la cliente et la boutique';
+
+  @override
+  String get orderLiveToStore => 'En route vers la boutique';
+
+  @override
+  String get orderLiveToDoor => 'En route vers la cliente';
+
+  @override
+  String get orderLiveDelivered => 'Livrée et confirmée par le code';
+
+  @override
+  String get orderLiveWaiting => 'En attente d\'un livreur';
+
+  @override
+  String orderLiveEta(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get orderLiveTitle => 'Suivi de la livraison';
 }

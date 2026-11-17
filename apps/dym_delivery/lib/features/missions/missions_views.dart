@@ -4,6 +4,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -976,7 +977,15 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
     this.history = false,
     this.onCall,
     this.onRoute,
+    this.live,
+    this.onChat,
   }) : embedded = !history;
+
+  /// Course en direct sur la carte, itinéraire tracé (spec 109).
+  final OrderLiveService? live;
+
+  /// Fil de la commande : cliente, boutique et livreur (spec 109).
+  final ValueChanged<String>? onChat;
 
   final MissionsService service;
 
@@ -1007,7 +1016,7 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
     final l10n = DymLocalizations.of(context);
     final all = vm.runs;
     final runs = all?.where((m) => m.delivered == history).toList();
-    Widget card(Mission m) => MissionCard(
+    Widget missionCard(Mission m) => MissionCard(
       mission: m,
       money: vm.money,
       onCall: onCall,
@@ -1047,6 +1056,34 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
             )
           : null,
     );
+
+    Widget card(Mission m) {
+      final mission = missionCard(m);
+      final service = live;
+      if (service == null || !embedded || m.delivered) return mission;
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          mission,
+          const SizedBox(height: DymTokenSpace.s2),
+          OrderLiveCard(
+            service: service,
+            orderId: m.orderId,
+            height: 260,
+            actions: [
+              if (onChat case final chat?)
+                DymButton(
+                  label: l10n.orderLiveChatCourier,
+                  icon: Icons.forum_rounded,
+                  variant: DymButtonVariant.secondary,
+                  onPressed: () => chat(m.orderId),
+                ),
+            ],
+          ),
+        ],
+      );
+    }
+
     if (embedded) {
       // Rien en cours : la section disparaît.
       if (runs == null || runs.isEmpty) return const SizedBox.shrink();

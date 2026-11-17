@@ -6,6 +6,7 @@ import 'package:dym_chat/dym_chat.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/app.router.dart';
@@ -525,7 +526,19 @@ class StackedAppNavigator implements AppNavigator {
         adjustments: locator.isRegistered<VendorAdjustmentsService>()
             ? locator<VendorAdjustmentsService>()
             : null,
+        // Livraison en direct et fil de commande (spec 109).
+        live: locator.isRegistered<OrderLiveService>()
+            ? locator<OrderLiveService>()
+            : null,
+        onOrderChat: (orderId) => unawaited(_toOrderChat(orderId)),
       ),
     ),
   );
+
+  /// Fil de la commande : cliente, boutique et livreur (spec 109).
+  Future<void> _toOrderChat(String orderId) async {
+    if (!locator.isRegistered<ChatService>()) return;
+    final result = await locator<ChatService>().orderThread(orderId);
+    if (result case Ok(:final value)) toChat(value.id);
+  }
 }

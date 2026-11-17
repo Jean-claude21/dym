@@ -113,17 +113,22 @@ class LiveMapCard extends StatelessWidget {
     );
   }
 
-  /// WhatsApp s'ouvre avec le lien ; sinon le texte est copié, prêt à coller
-  /// dans n'importe quelle messagerie.
-  Future<void> _share(BuildContext context) async {
-    final l10n = DymLocalizations.of(context);
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    final url = await vm.shareTracking();
-    if (url == null) {
-      messenger?.showSnackBar(SnackBar(content: Text(l10n.shareFailed)));
-      return;
-    }
-    if (!context.mounted) return;
-    await shareTextOrCopy(context, l10n.trackShareText(url.toString()));
+  Future<void> _share(BuildContext context) => shareLiveTracking(context, vm);
+}
+
+/// WhatsApp s'ouvre avec le lien du suivi ; sinon le texte est copié, prêt à
+/// coller dans n'importe quelle messagerie.
+Future<void> shareLiveTracking(
+  BuildContext context,
+  TrackingViewModel vm,
+) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final url = await vm.shareTracking();
+  if (url == null) {
+    messenger?.showSnackBar(SnackBar(content: Text(l10n.shareFailed)));
+    return;
   }
+  if (!context.mounted) return;
+  await shareTextOrCopy(context, l10n.trackShareText(url.toString()));
 }

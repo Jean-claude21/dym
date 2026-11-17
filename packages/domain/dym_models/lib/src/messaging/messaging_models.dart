@@ -27,7 +27,10 @@ enum MessageKind {
 /// Rôle dans une conversation.
 enum ChatRole {
   client,
-  vendor;
+  vendor,
+
+  /// Livreur, dans le fil d'une commande (spec 109).
+  courier;
 
   String get code => name;
 }
@@ -119,6 +122,9 @@ class Conversation {
     this.lastMessageAt,
     this.lastMessage,
     this.unread = 0,
+    this.orderId,
+    this.courierName,
+    this.closed = false,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ConversationFromJson(json);
@@ -132,6 +138,15 @@ class Conversation {
   final DateTime? lastMessageAt;
   final ChatMessage? lastMessage;
   final int unread;
+
+  /// Fil d'une commande (spec 109) : cliente, boutique et livreur ensemble.
+  final String? orderId;
+  final String? courierName;
+
+  /// Fil terminé (24 h après la remise) : lecture seule.
+  final bool closed;
+
+  bool get isOrderThread => orderId != null;
 }
 
 /// Conversation ouverte : fil des messages (du plus ancien au plus récent).

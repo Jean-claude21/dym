@@ -8,6 +8,7 @@ import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_notifications/dym_notifications.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/app/app.locator.dart';
 import 'package:dym_vendor/app/config_error_app.dart';
@@ -83,6 +84,13 @@ Future<void> configureServices(DymEnvironment environment) async {
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    // Livraison en direct avec itinéraire (spec 109).
+    ..registerSingleton<OrderLiveService>(
+      NeonOrderLiveService(
+        DeliveryRepository(neon.data),
+        RouteRepository(neon.functions),
+      ),
+    )
     // Gestes gardés hors ligne (spec 107), sur l'appareil.
     ..registerSingleton(OfflineQueue(FileJsonStore(), name: 'vendor_offline'))
     ..registerSingleton<LiveFeed>(live)

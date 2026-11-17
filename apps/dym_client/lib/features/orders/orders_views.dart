@@ -8,6 +8,7 @@ import 'package:dym_client/features/orders/orders_viewmodels.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
@@ -299,6 +300,8 @@ class TrackingView extends StackedView<TrackingViewModel> {
     this.onReordered,
     this.onChat,
     this.onCall,
+    this.live,
+    this.onOrderChat,
     this.clock = DateTime.now,
     this.adjustments,
   });
@@ -311,6 +314,12 @@ class TrackingView extends StackedView<TrackingViewModel> {
 
   /// Appeler un numéro (livreur).
   final ValueChanged<String>? onCall;
+
+  /// Livraison en direct avec itinéraire (spec 109) ; nulle : carte simple.
+  final OrderLiveService? live;
+
+  /// Fil de la commande (cliente, boutique, livreur), par la commande.
+  final ValueChanged<String>? onOrderChat;
 
   /// Remplacements et garantie fraîcheur (spec 034) ; absents : masqués.
   final AdjustmentsService? adjustments;
@@ -380,6 +389,8 @@ class TrackingView extends StackedView<TrackingViewModel> {
                       onReordered: onReordered,
                       onChat: onChat,
                       onCall: onCall,
+                      live: live,
+                      onOrderChat: onOrderChat,
                       adjustments: adjustments,
                     ),
             ),
@@ -394,6 +405,8 @@ class _Tracking extends StatelessWidget {
   const new({
     required this.vm,
     required this.order,
+    this.live,
+    this.onOrderChat,
     this.onReport,
     this.onDispute,
     this.onReview,
@@ -405,6 +418,8 @@ class _Tracking extends StatelessWidget {
 
   final TrackingViewModel vm;
   final CustomerOrder order;
+  final OrderLiveService? live;
+  final ValueChanged<String>? onOrderChat;
   final ValueChanged<String>? onChat;
   final ValueChanged<String>? onCall;
   final AdjustmentsService? adjustments;
@@ -528,7 +543,32 @@ class _Tracking extends StatelessWidget {
             ],
           ),
         ),
-      LiveMapCard(vm: vm),
+      if (live case final service? when vm.showMap)
+        OrderLiveCard(
+          service: service,
+          orderId: order.id,
+          actions: [
+            if (onOrderChat case final chat?)
+              DymButton(
+                label: l10n.orderLiveChat,
+                icon: Icons.forum_rounded,
+                variant: DymButtonVariant.secondary,
+                onPressed: () => chat(order.id),
+              ),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: TextButton.icon(
+                onPressed: vm.sharing
+                    ? null
+                    : () => shareLiveTracking(context, vm),
+                icon: const Icon(Icons.ios_share_rounded),
+                label: Text(l10n.trackShare),
+              ),
+            ),
+          ],
+        )
+      else
+        LiveMapCard(vm: vm),
       if (vm.handoverCode case final code?)
         CartCard(
           child: Row(

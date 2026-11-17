@@ -9,6 +9,9 @@ abstract final class DymMapLayers {
   static const areasSource = 'dym-areas';
   static const areaFill = 'dym-area-fill';
   static const areaLine = 'dym-area-line';
+  static const routesSource = 'dym-routes';
+  static const routeCase = 'dym-route-case';
+  static const routeLine = 'dym-route-line';
   static const clusters = 'dym-clusters';
   static const clusterCount = 'dym-cluster-count';
   static const pins = 'dym-pins-icons';
@@ -113,6 +116,10 @@ String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
         'clusterMaxZoom': 14,
       },
       DymMapLayers.areasSource: {
+        'type': 'geojson',
+        'data': {'type': 'FeatureCollection', 'features': <Object>[]},
+      },
+      DymMapLayers.routesSource: {
         'type': 'geojson',
         'data': {'type': 'FeatureCollection', 'features': <Object>[]},
       },
@@ -287,6 +294,35 @@ String dymMapStyle(DymColors c, {DymMapTiles tiles = const DymMapTiles()}) {
           'line-color': brand,
           'line-width': 2,
           'line-dasharray': [3, 2],
+        },
+      },
+      // Itinéraire (spec 109) : trait vert bordé de blanc, sous les épingles ;
+      // tronçon déjà fait ou prévisionnel en pointillés.
+      {
+        'id': DymMapLayers.routeCase,
+        'type': 'line',
+        'source': DymMapLayers.routesSource,
+        'layout': {'line-cap': 'round', 'line-join': 'round'},
+        'paint': {'line-color': '#ffffff', 'line-width': 8},
+      },
+      {
+        'id': DymMapLayers.routeLine,
+        'type': 'line',
+        'source': DymMapLayers.routesSource,
+        'layout': {'line-cap': 'round', 'line-join': 'round'},
+        'paint': {
+          'line-color': brand,
+          'line-width': 5,
+          'line-opacity': [
+            'case',
+            [
+              '==',
+              ['get', 'dashed'],
+              true,
+            ],
+            0.55,
+            1,
+          ],
         },
       },
       // Regroupements : carré vert, nombre en blanc.

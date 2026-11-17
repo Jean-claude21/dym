@@ -53,6 +53,8 @@ export default defineConfig({
         WHATSAPP_TEMPLATE: process.env.WHATSAPP_TEMPLATE ?? "",
         WHATSAPP_TEMPLATE_LANG: process.env.WHATSAPP_TEMPLATE_LANG ?? "",
         WHATSAPP_SIMULATED: process.env.WHATSAPP_SIMULATED ?? "",
+        // Itinéraires (spec 109) : serveur OSRM ; vide = serveur public de démonstration.
+        ROUTING_URL: process.env.ROUTING_URL ?? "",
       },
     },
   },
