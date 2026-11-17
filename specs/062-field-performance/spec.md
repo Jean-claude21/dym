@@ -4,7 +4,7 @@
 
 **Created**: 2026-11-11
 
-**Status**: Partiel (voir « Reste à faire »)
+**Status**: Done (le « Reste à faire » est traité par les specs 103 et 107 ; mesures dans la spec 107)
 
 **Input**: Spec `field-performance` de la roadmap (Phase 14). [PARCOURS.md](../../docs/design/PARCOURS.md)
 §8 (règles d'implémentation) : Android 11, 2 Go, 3G instable, données chères.
