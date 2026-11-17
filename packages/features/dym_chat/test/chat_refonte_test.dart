@@ -128,9 +128,9 @@ void main() {
       await vm.react(vm.messageById('m1')!, '👍');
       expect(vm.messageById('m1')!.reactions.single.emoji, '👍');
       expect(vm.messageById('m1')!.reactionOf(ChatRole.client), '👍');
-      await vm.react(vm.messageById('m1')!, '❤️');
-      expect(vm.messageById('m1')!.reactions.single.emoji, '❤️');
-      await vm.react(vm.messageById('m1')!, '❤️');
+      await vm.react(vm.messageById('m1')!, '💚');
+      expect(vm.messageById('m1')!.reactions.single.emoji, '💚');
+      await vm.react(vm.messageById('m1')!, '💚');
       expect(vm.messageById('m1')!.reactions, isEmpty);
     });
 

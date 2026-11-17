@@ -736,6 +736,9 @@ class ChatView extends StackedView<ChatViewModel> {
                 decoration: InputDecoration(
                   hintText: l10n.chatSearchInThread,
                   border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  filled: false,
                 ),
               ),
             ),

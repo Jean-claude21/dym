@@ -114,7 +114,7 @@ class ConversationsViewModel extends BaseViewModel {
 enum ConversationFilter { all, unread, orders }
 
 /// Réactions proposées d'un appui long (spec 111).
-const quickReactions = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+const quickReactions = ['👍', '💚', '😂', '😮', '😢', '🙏'];
 
 /// Réponse rapide proposée au-dessus du champ (spec 070). Le texte vient de
 /// la localisation ; la liste dépend du rôle.

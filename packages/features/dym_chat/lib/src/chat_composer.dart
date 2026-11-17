@@ -6,7 +6,7 @@ const chatEmojis = [
   '😀', '😁', '😂', '🤣', '😊', '😍', '😘', '😉', '🙂', '😅', //
   '😎', '🤩', '🤔', '😮', '😢', '😭', '😡', '😴', '🥳', '🤗',
   '👍', '👎', '👌', '🙏', '👏', '🙌', '💪', '🤝', '👋', '✌️',
-  '❤️', '🧡', '💛', '💚', '💙', '💜', '🔥', '⭐', '✅', '❌',
+  '💚', '🧡', '💛', '💚', '💙', '💜', '🔥', '⭐', '✅', '❌',
   '🍅', '🧅', '🧄', '🌶️', '🥕', '🥔', '🍠', '🥬', '🥦', '🌽',
   '🍆', '🫑', '🥒', '🍌', '🍍', '🥭', '🍊', '🍋', '🍉', '🥥',
   '🍎', '🍐', '🍇', '🍓', '🥑', '🥜', '🍚', '🍞', '🥚', '🐟',
@@ -30,6 +30,7 @@ class _ComposerState extends State<_Composer> {
   final _text = TextEditingController();
   final _focus = FocusNode();
   bool _emojis = false;
+  String? _focusedReply;
 
   /// Décalage du doigt pendant un vocal tenu.
   Offset _drag = Offset.zero;
@@ -214,6 +215,15 @@ class _ComposerState extends State<_Composer> {
     final l10n = DymLocalizations.of(context);
     final vm = widget.vm;
     final reply = vm.replyingTo;
+    // « Répondre » choisi : le clavier s'ouvre aussitôt.
+    if (reply != null && reply.id != _focusedReply) {
+      _focusedReply = reply.id;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && !_emojis) _focus.requestFocus();
+      });
+    } else if (reply == null) {
+      _focusedReply = null;
+    }
     return Material(
       color: c.card,
       child: Column(
@@ -274,6 +284,9 @@ class _ComposerState extends State<_Composer> {
                                       vertical: 14,
                                     ),
                                     border: InputBorder.none,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                    filled: false,
                                   ),
                                 ),
                               ),
@@ -562,6 +575,7 @@ class _Wave extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SizedBox(
     height: 32,
+    width: double.infinity,
     child: CustomPaint(
       painter: _WavePainter(
         levels: levels.isEmpty ? const [0.1] : levels,

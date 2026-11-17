@@ -825,9 +825,8 @@ class _SearchResults extends StatelessWidget {
       separatorBuilder: (_, _) => Divider(height: 1, color: c.hairline),
       itemBuilder: (context, i) {
         final m = results[i];
-        final day = MaterialLocalizations.of(
-          context,
-        ).formatShortMonthDay(m.createdAt.toLocal());
+        final day = MaterialLocalizations.of(context)
+            .formatShortMonthDay(m.createdAt.toLocal());
         final text = m.kind == MessageKind.file
             ? (m.fileName ?? '')
             : m.kind == MessageKind.product
