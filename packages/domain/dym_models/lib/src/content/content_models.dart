@@ -204,6 +204,9 @@ class ContentItem {
     this.cooked = false,
     this.cookCount = 0,
     this.streamUrl,
+    this.coverFrame,
+    this.streamThumbCount = 0,
+    this.stats,
   });
 
   factory fromJson(Map<String, dynamic> json) => ContentItem(
@@ -252,7 +255,58 @@ class ContentItem {
     cooked: json['cooked'] as bool? ?? false,
     cookCount: (json['cook_count'] as num?)?.toInt() ?? 0,
     streamUrl: json['stream_url'] as String?,
+    coverFrame: (json['cover_frame'] as num?)?.toInt(),
+    streamThumbCount: (json['stream_thumb_count'] as num?)?.toInt() ?? 0,
+    stats: switch (json['stats']) {
+      final Map<String, dynamic> m => ContentStats.fromJson(m),
+      _ => null,
+    },
   );
+
+  /// Image de la vidéo choisie comme miniature (spec 103) ; null : par défaut.
+  final int? coverFrame;
+
+  /// Images de la vidéo proposées pour la miniature (spec 103).
+  final int streamThumbCount;
+
+  /// Statistiques pour la propriétaire (« Mes vidéos », spec 103).
+  final ContentStats? stats;
+
+  /// Dossier de la vidéo adaptative (`…/<id>/`), une fois convertie.
+  String? get _streamBase {
+    final url = streamUrl;
+    if (url == null || !url.endsWith('/playlist.m3u8')) return null;
+    return url.substring(0, url.length - 'playlist.m3u8'.length);
+  }
+
+  /// Miniature de la vidéo convertie : image choisie, sinon par défaut.
+  String? get posterUrl => switch (_streamBase) {
+    final base? =>
+      coverFrame == null
+          ? '${base}thumbnail.jpg'
+          : '${base}thumbnail_$coverFrame.jpg',
+    null => null,
+  };
+
+  /// Images proposées pour la miniature (1..n).
+  List<String> get frameUrls => switch (_streamBase) {
+    final base? => [
+      for (var i = 1; i <= streamThumbCount; i++) '${base}thumbnail_$i.jpg',
+    ],
+    null => const [],
+  };
+
+  /// Aperçu animé de quelques secondes.
+  String? get previewUrl => switch (_streamBase) {
+    final base? => '${base}preview.webp',
+    null => null,
+  };
+
+  /// Version légère (MP4 240p) pour l'économie de données.
+  String? get lightVideoUrl => switch (_streamBase) {
+    final base? => '${base}play_240p.mp4',
+    null => null,
+  };
 
   /// « Mes recettes » (spec 101).
   final bool saved;
@@ -318,6 +372,8 @@ class ContentItem {
     int? saveCount,
     bool? cooked,
     int? cookCount,
+    int? coverFrame,
+    bool clearCover = false,
   }) => ContentItem(
     id: id,
     kind: kind,
@@ -347,6 +403,9 @@ class ContentItem {
     cooked: cooked ?? this.cooked,
     cookCount: cookCount ?? this.cookCount,
     streamUrl: streamUrl,
+    coverFrame: clearCover ? null : coverFrame ?? this.coverFrame,
+    streamThumbCount: streamThumbCount,
+    stats: stats,
   );
 }
 
@@ -508,4 +567,34 @@ class ContentProfile {
   final int followers;
   final bool following;
   final List<ContentItem> contents;
+}
+
+/// Statistiques d'une vidéo pour sa propriétaire (spec 103) : temps moyen,
+/// fin de lecture, ventes générées (commandes livrées des produits tagués,
+/// passées dans les 7 jours après avoir regardé la vidéo).
+@immutable
+class ContentStats {
+  const new({
+    this.avgWatchMs = 0,
+    this.completionRate = 0,
+    this.salesOrders = 0,
+    this.salesMinor = 0,
+    this.salesCurrency,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => ContentStats(
+    avgWatchMs: (json['avg_watch_ms'] as num?)?.toInt() ?? 0,
+    completionRate: (json['completion_rate'] as num?)?.toDouble() ?? 0,
+    salesOrders: (json['sales_orders'] as num?)?.toInt() ?? 0,
+    salesMinor: (json['sales_minor'] as num?)?.toInt() ?? 0,
+    salesCurrency: json['sales_currency'] as String?,
+  );
+
+  final int avgWatchMs;
+
+  /// Part des vues regardées jusqu'au bout (0..1).
+  final double completionRate;
+  final int salesOrders;
+  final int salesMinor;
+  final String? salesCurrency;
 }

@@ -9521,5 +9521,67 @@
   "authEmailSubtitlePassword": "Connecte-toi avec ton email et ton mot de passe.",
   "@authEmailSubtitlePassword": {
     "description": "Sous-titre de l'étape email en mode mot de passe"
+  },
+  "accountDataSaver": "Économie de données",
+  "@accountDataSaver": {
+    "description": "Menu Moi : réglage d'économie de données"
+  },
+  "dataSaverTitle": "Économie de données",
+  "@dataSaverTitle": {
+    "description": "Titre de la feuille d'économie de données"
+  },
+  "dataSaverBody": "Vidéos en version légère, gardées sur ton téléphone pour les revoir sans data. Rien n'est préchargé.",
+  "@dataSaverBody": {
+    "description": "Explication de l'économie de données"
+  },
+  "dataSaverSwitch": "Économiser mes données",
+  "@dataSaverSwitch": {
+    "description": "Interrupteur d'économie de données"
+  },
+  "contentStatsAvgWatch": "{seconds} s regardées en moyenne",
+  "@contentStatsAvgWatch": {
+    "description": "Mes vidéos : temps moyen",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "contentStatsCompletion": "{percent} % jusqu'au bout",
+  "@contentStatsCompletion": {
+    "description": "Mes vidéos : fin de lecture",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "contentStatsSales": "{n, plural, =0{Aucune vente générée} =1{1 vente générée · {amount}} other{{n} ventes générées · {amount}}}",
+  "@contentStatsSales": {
+    "description": "Mes vidéos : ventes générées",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "contentCoverChoose": "Choisir la miniature",
+  "@contentCoverChoose": {
+    "description": "Action : miniature d'une vidéo"
+  },
+  "contentCoverDefault": "Image par défaut",
+  "@contentCoverDefault": {
+    "description": "Miniature par défaut"
+  },
+  "contentCoverPending": "La vidéo est en préparation : ses images arrivent bientôt.",
+  "@contentCoverPending": {
+    "description": "Miniature indisponible pendant la conversion"
+  },
+  "contentCoverSaved": "Miniature enregistrée",
+  "@contentCoverSaved": {
+    "description": "Confirmation"
   }
 }

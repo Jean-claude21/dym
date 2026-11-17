@@ -5,6 +5,7 @@ import 'package:dym_auth/dym_auth.dart';
 import 'package:dym_client/app/app.locator.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/content/data_saver.dart';
 import 'package:dym_client/features/content/feed_view.dart';
 import 'package:dym_client/features/content/stories.dart';
 import 'package:dym_client/features/discovery/discovery_service.dart';
@@ -233,6 +234,11 @@ class _HomeViewState extends State<HomeView> {
           onOrders: _navigator.toMyOrders,
           onAddresses: hasCart ? _navigator.toAddresses : null,
           onNotifications: _navigator.toNotificationSettings,
+          onDataSaver: locator.isRegistered<DataSaverPreference>()
+              ? () => unawaited(
+                  showDataSaverSheet(context, locator<DataSaverPreference>()),
+                )
+              : null,
           onMessages: _navigator.toMessages,
           onHelp: _navigator.toHelp,
           onWallet: _navigator.toWallet,

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/content_service.dart';
+import 'package:dym_client/features/content/data_saver.dart';
 import 'package:dym_client/features/content/recipe_sheets.dart';
 import 'package:dym_client/features/content/report_sheet.dart';
 import 'package:dym_client/features/content/share_content.dart';
@@ -10,7 +11,9 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:dym_ui/dym_ui.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:stacked/stacked.dart';
 import 'package:video_player/video_player.dart';
 
@@ -304,6 +307,8 @@ class FeedView extends StackedView<FeedViewModel> {
         key: ValueKey('feed-${vm.pageEpoch}'),
         controller: PageController(initialPage: vm.index),
         scrollDirection: Axis.vertical,
+        // La vidéo suivante se prépare d'avance, sauf en économie de données.
+        allowImplicitScrolling: !dataSaverOn(),
         itemCount: items.length,
         onPageChanged: vm.onPage,
         itemBuilder: (context, i) => _ContentPage(
@@ -628,17 +633,34 @@ class _ContentPage extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (content.isVideo)
-          videoBuilder(
-            context,
-            // Lecture adaptative HLS quand la vidéo est convertie (spec 101).
-            switch (content.streamUrl) {
-              final hls? => Uri.parse(hls),
-              _ => service.mediaUrl(content.mediaKey!),
-            },
-            active: active,
-          )
-        else
+        if (content.isVideo) ...[
+          // Miniature tout de suite, sous la vidéo qui se prépare (spec 103).
+          if (contentPoster(content, service) case final poster?)
+            Image(
+              image: poster,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => const SizedBox.shrink(),
+            ),
+          if (identical(videoBuilder, networkVideo))
+            _NetworkVideo(
+              key: ValueKey('video-${content.id}'),
+              url: videoSource(content, service, dataSaver: dataSaverOn()),
+              fallback: switch (content.streamUrl) {
+                final hls? => Uri.parse(hls),
+                _ => null,
+              },
+              cacheFile: dataSaverOn(),
+              active: active,
+              onWatched: (ms, {required completed}) =>
+                  service.watched(content, ms: ms, completed: completed),
+            )
+          else
+            videoBuilder(
+              context,
+              videoSource(content, service, dataSaver: false),
+              active: active,
+            ),
+        ] else
           Image(
             image: service.photo(content.mediaKey!),
             fit: BoxFit.cover,
@@ -1117,68 +1139,159 @@ Widget networkVideo(BuildContext context, Uri url, {required bool active}) =>
     _NetworkVideo(url: url, active: active);
 
 class _NetworkVideo extends StatefulWidget {
-  const new({required this.url, required this.active});
+  const new({
+    required this.url,
+    required this.active,
+    super.key,
+    this.fallback,
+    this.cacheFile = false,
+    this.onWatched,
+  });
 
   final Uri url;
   final bool active;
+
+  /// Source de secours si [url] ne se lit pas (version légère absente…).
+  final Uri? fallback;
+
+  /// Vidéo gardée sur le téléphone (économie de données) : revue sans data.
+  final bool cacheFile;
+
+  /// Temps regardé (ms) et fin de lecture, à chaque sortie de la page.
+  final void Function(int ms, {required bool completed})? onWatched;
 
   @override
   State<_NetworkVideo> createState() => _NetworkVideoState();
 }
 
 class _NetworkVideoState extends State<_NetworkVideo> {
-  late final VideoPlayerController _controller =
-      VideoPlayerController.networkUrl(widget.url);
+  VideoPlayerController? _controller;
   bool _ready = false;
+  final Stopwatch _watch = Stopwatch();
+  bool _completed = false;
+  Duration _last = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    unawaited(
-      _controller.initialize().then((_) async {
-        if (!mounted) return;
-        await _controller.setLooping(true);
-        setState(() => _ready = true);
-        if (widget.active) await _controller.play();
-      }),
-    );
+    unawaited(_open(widget.url, allowFallback: true));
+  }
+
+  Future<void> _open(Uri url, {required bool allowFallback}) async {
+    VideoPlayerController controller;
+    try {
+      if (widget.cacheFile && !kIsWeb) {
+        final file = await DefaultCacheManager().getSingleFile(url.toString());
+        controller = VideoPlayerController.file(file);
+      } else {
+        controller = VideoPlayerController.networkUrl(url);
+      }
+      if (!mounted) return;
+      await controller.initialize();
+    } on Object {
+      final fallback = widget.fallback;
+      if (allowFallback && fallback != null && mounted) {
+        await _open(fallback, allowFallback: false);
+        return;
+      }
+      return;
+    }
+    if (!mounted) {
+      unawaited(controller.dispose());
+      return;
+    }
+    await controller.setLooping(true);
+    controller.addListener(_tick);
+    _controller = controller;
+    setState(() => _ready = true);
+    if (widget.active) _play();
+  }
+
+  /// Fin de lecture : la position repart au début après être passée par la fin.
+  void _tick() {
+    final value = _controller?.value;
+    if (value == null) return;
+    final total = value.duration.inMilliseconds;
+    if (total > 0 &&
+        value.position < _last &&
+        _last.inMilliseconds >= total * 0.85) {
+      _completed = true;
+    }
+    _last = value.position;
+  }
+
+  void _play() {
+    unawaited(_controller?.play());
+    _watch.start();
+  }
+
+  void _pause() {
+    unawaited(_controller?.pause());
+    _watch.stop();
+  }
+
+  void _report() {
+    final ms = _watch.elapsedMilliseconds;
+    if (ms >= 500) widget.onWatched?.call(ms, completed: _completed);
+    _watch.reset();
+    _completed = false;
   }
 
   @override
   void didUpdateWidget(_NetworkVideo old) {
     super.didUpdateWidget(old);
-    if (!_ready) return;
-    unawaited(widget.active ? _controller.play() : _controller.pause());
+    if (!_ready || old.active == widget.active) return;
+    if (widget.active) {
+      _play();
+    } else {
+      _pause();
+      _report();
+    }
   }
 
   @override
   void dispose() {
-    unawaited(_controller.dispose());
+    _watch.stop();
+    _report();
+    final controller = _controller;
+    controller?.removeListener(_tick);
+    unawaited(controller?.dispose());
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!_ready) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    final controller = _controller;
+    // En préparation : la miniature, posée dessous, reste visible.
+    if (!_ready || controller == null) return const SizedBox.expand();
     return GestureDetector(
-      onTap: () => unawaited(
-        _controller.value.isPlaying ? _controller.pause() : _controller.play(),
-      ),
+      onTap: () => controller.value.isPlaying ? _pause() : _play(),
       child: FittedBox(
         fit: BoxFit.cover,
         child: SizedBox(
-          width: _controller.value.size.width,
-          height: _controller.value.size.height,
-          child: VideoPlayer(_controller),
+          width: controller.value.size.width,
+          height: controller.value.size.height,
+          child: VideoPlayer(controller),
         ),
       ),
     );
   }
 }
 
-/// Vignette de la grille (spec 037).
+/// Source d'une vidéo (spec 103) : version légère en économie de données,
+/// sinon lecture adaptative (HLS) une fois convertie, sinon l'originale.
+Uri videoSource(
+  ContentItem content,
+  ContentService service, {
+  required bool dataSaver,
+}) {
+  if (dataSaver) {
+    if (content.lightVideoUrl case final light?) return Uri.parse(light);
+  }
+  if (content.streamUrl case final hls?) return Uri.parse(hls);
+  return service.mediaUrl(content.mediaKey!);
+}
+
 class _GridTile extends StatelessWidget {
   const new({
     required this.content,
@@ -1192,30 +1305,13 @@ class _GridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
     final t = context.dym.text;
     return InkWell(
       onTap: onTap,
       child: Stack(
         fit: StackFit.expand,
         children: [
-          if (contentPoster(content, service) case final poster?)
-            Image(
-              image: poster,
-              fit: BoxFit.cover,
-              errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
-            )
-          else
-            ColoredBox(color: c.brandDeep),
-          if (content.isVideo)
-            const Center(
-              child: Icon(
-                Icons.play_circle_rounded,
-                color: Colors.white,
-                size: 40,
-                shadows: [Shadow(blurRadius: 6)],
-              ),
-            ),
+          ContentThumb(item: content, service: service),
           Positioned(
             left: 4,
             right: 4,
@@ -1562,7 +1658,6 @@ class ContentGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final c = context.dym.colors;
     final l10n = DymLocalizations.of(context);
     if (items.isEmpty) {
       return DymStateView(
@@ -1585,18 +1680,7 @@ class ContentGrid extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                if (contentPoster(item, service) case final poster?)
-                  Image(
-                    image: poster,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
-                  )
-                else
-                  ColoredBox(color: c.brandDeep),
-                if (item.isVideo)
-                  const Center(
-                    child: Icon(Icons.play_arrow_rounded, color: Colors.white),
-                  ),
+                ContentThumb(item: item, service: service),
                 Positioned(
                   left: 6,
                   right: 6,
@@ -1661,14 +1745,74 @@ ImageProvider? contentPoster(ContentItem item, ContentService service) {
   if (!item.isVideo) {
     return item.mediaKey == null ? null : service.photo(item.mediaKey!);
   }
-  final stream = item.streamUrl;
-  if (stream != null && stream.endsWith('/playlist.m3u8')) {
-    return NetworkImage(
-      stream.replaceFirst(RegExp(r'playlist\.m3u8$'), 'thumbnail.jpg'),
-    );
-  }
+  // Miniature choisie par la propriétaire, sinon celle de la vidéo (Bunny).
+  if (item.posterUrl case final url?) return NetworkImage(url);
   for (final p in item.products) {
     if (p.photoKey != null) return service.photo(p.photoKey!);
   }
   return null;
+}
+
+/// Vignette d'un contenu dans une grille (spec 103) : miniature ; pour une
+/// vidéo convertie, aperçu animé tant qu'on appuie longuement (pas en
+/// économie de données).
+class ContentThumb extends StatefulWidget {
+  const new({required this.item, required this.service, super.key});
+
+  final ContentItem item;
+  final ContentService service;
+
+  @override
+  State<ContentThumb> createState() => _ContentThumbState();
+}
+
+class _ContentThumbState extends State<ContentThumb> {
+  bool _preview = false;
+
+  void _set(bool on) {
+    if (_preview != on) setState(() => _preview = on);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final item = widget.item;
+    final preview = item.previewUrl;
+    final canPreview = preview != null && !dataSaverOn();
+    final poster = contentPoster(item, widget.service);
+    return GestureDetector(
+      onLongPressStart: canPreview ? (_) => _set(true) : null,
+      onLongPressEnd: canPreview ? (_) => _set(false) : null,
+      onLongPressCancel: canPreview ? () => _set(false) : null,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (_preview && canPreview)
+            Image.network(
+              preview,
+              fit: BoxFit.cover,
+              gaplessPlayback: true,
+              errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
+            )
+          else if (poster != null)
+            Image(
+              image: poster,
+              fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
+            )
+          else
+            ColoredBox(color: c.brandDeep),
+          if (item.isVideo && !_preview)
+            const Center(
+              child: Icon(
+                Icons.play_circle_rounded,
+                color: Colors.white,
+                size: 40,
+                shadows: [Shadow(blurRadius: 6)],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
 }

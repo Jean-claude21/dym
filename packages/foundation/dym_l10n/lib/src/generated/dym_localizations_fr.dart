@@ -8217,4 +8217,52 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get authEmailSubtitlePassword =>
       'Connecte-toi avec ton email et ton mot de passe.';
+
+  @override
+  String get accountDataSaver => 'Économie de données';
+
+  @override
+  String get dataSaverTitle => 'Économie de données';
+
+  @override
+  String get dataSaverBody =>
+      'Vidéos en version légère, gardées sur ton téléphone pour les revoir sans data. Rien n\'est préchargé.';
+
+  @override
+  String get dataSaverSwitch => 'Économiser mes données';
+
+  @override
+  String contentStatsAvgWatch(int seconds) {
+    return '$seconds s regardées en moyenne';
+  }
+
+  @override
+  String contentStatsCompletion(int percent) {
+    return '$percent % jusqu\'au bout';
+  }
+
+  @override
+  String contentStatsSales(int n, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n ventes générées · $amount',
+      one: '1 vente générée · $amount',
+      zero: 'Aucune vente générée',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get contentCoverChoose => 'Choisir la miniature';
+
+  @override
+  String get contentCoverDefault => 'Image par défaut';
+
+  @override
+  String get contentCoverPending =>
+      'La vidéo est en préparation : ses images arrivent bientôt.';
+
+  @override
+  String get contentCoverSaved => 'Miniature enregistrée';
 }
