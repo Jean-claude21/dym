@@ -88,6 +88,8 @@ Versions confirmées par une résolution réelle sur la version Flutter retenue 
 | Import TikTok (spec 040) | oEmbed public dans la Function (derrière `VideoImportProvider`) ; Login Kit et Share Kit à l'ouverture de l'accès | Functions |
 | Carte (spec 095) | `maplibre_gl` + tuiles OpenFreeMap, derrière `DymMapEngine` (décision 0022) | `dym_map` |
 | Lecture vidéo (contenus shoppables, spec 020) | `video_player` | `apps/dym_client` |
+| Vidéo légère gardée (économie de données, spec 103) | `flutter_cache_manager` | `apps/dym_client` |
+| Cache local et file hors ligne (spec 107) | `path_provider` (fichiers JSON, décision 0023) | `dym_platform`, `neon_kit` (interface) |
 | Deep links, paiement | `app_links`, `url_launcher` | `dym_platform` |
 | i18n | `intl`, `flutter_localizations` | `dym_l10n` |
 | Motion et illustration | `lottie` (marque : splash et scènes, décision 0018), `flutter_animate`, `flutter_svg` | `dym_ui` |

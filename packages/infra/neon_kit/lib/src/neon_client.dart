@@ -6,6 +6,7 @@ import 'package:neon_kit/src/auth/credentials_adapter.dart'
 import 'package:neon_kit/src/auth/neon_auth_client.dart';
 import 'package:neon_kit/src/config.dart';
 import 'package:neon_kit/src/data/neon_data_client.dart';
+import 'package:neon_kit/src/data/offline_cache.dart';
 import 'package:neon_kit/src/functions/neon_functions_client.dart';
 import 'package:neon_kit/src/live/neon_live_client.dart';
 import 'package:neon_kit/src/retry.dart';
@@ -23,6 +24,7 @@ class NeonClient {
     http.Client? httpClient,
     DateTime Function()? clock,
     Future<void> Function(Duration)? sleep,
+    ResponseCacheStore? offlineCache,
   }) {
     final policy = RetryPolicy(
       maxRetries: config.maxRetries,
@@ -78,7 +80,12 @@ class NeonClient {
 
     return NeonClient._(
       auth: auth,
-      data: NeonDataClient(config: config, auth: auth, httpClient: httpClient),
+      data: NeonDataClient(
+        config: config,
+        auth: auth,
+        httpClient: httpClient,
+        offlineCache: offlineCache,
+      ),
       functions: NeonFunctionsClient(dio: functionsDio),
       uploads: NeonObjectUploader(dio: uploadDio),
       live: NeonLiveClient(

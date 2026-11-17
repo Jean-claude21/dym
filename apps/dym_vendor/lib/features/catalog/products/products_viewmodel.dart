@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:stacked/stacked.dart';
 
@@ -11,7 +14,16 @@ class ProductsViewModel extends BaseViewModel {
     required this._onEdit,
     required this._onCategories,
     this._onImport,
+    this._offline,
   });
+
+  /// File hors ligne (spec 107) : rupture gardée sans réseau, envoyée au
+  /// retour du réseau. Nulle : pas de file (échec affiché).
+  final OfflineQueue? _offline;
+  Timer? _replayTimer;
+
+  /// Gestes en attente du réseau.
+  int get offlineCount => _offline?.items.length ?? 0;
 
   /// Import en masse (spec 081) ; nul : pas de bouton.
   final Future<void> Function()? _onImport;
@@ -70,6 +82,7 @@ class ProductsViewModel extends BaseViewModel {
 
   Future<void> load() async {
     _loadFailure = null;
+    unawaited(replayOffline());
     setBusy(true);
     final results = await Future.wait<Result<Object>>([
       _service.countryConfig(),
@@ -119,14 +132,89 @@ class ProductsViewModel extends BaseViewModel {
       _optimistic[product.id] ?? product.isAvailable;
 
   Future<void> setAvailable(Product product, {required bool available}) async {
+    if (_pending.contains(product.id)) return;
     _optimistic[product.id] = available;
+    _pending.add(product.id);
+    _actionFailure = null;
     notifyListeners();
-    await _apply(
+    final result = await _service.setAvailable(
       product.id,
-      () => _service.setAvailable(product.id, available: available),
+      available: available,
     );
-    _optimistic.remove(product.id);
+    final queue = _offline;
+    switch (result) {
+      case Ok(:final value):
+        _replace(value);
+        _optimistic.remove(product.id);
+      case Err(failure: NetworkFailure()) when queue != null:
+        // Sans réseau : l'interrupteur garde le geste, envoyé plus tard.
+        await queue.add(
+          OfflineGesture(
+            id: 'stock:${product.id}',
+            kind: 'stock',
+            payload: {'product': product.id, 'available': available},
+          ),
+        );
+        _scheduleReplay();
+      case Err(:final failure):
+        _actionFailure = failure;
+        _optimistic.remove(product.id);
+    }
+    _pending.remove(product.id);
     notifyListeners();
+  }
+
+  void _replace(Product value) {
+    _products = [
+      for (final p in _products)
+        if (p.id == value.id) value else p,
+    ];
+  }
+
+  void _scheduleReplay() {
+    _replayTimer ??= Timer.periodic(
+      const Duration(seconds: 30),
+      (_) => unawaited(replayOffline()),
+    );
+  }
+
+  /// Rejoue les gestes gardés hors ligne (au chargement, puis toutes les
+  /// 30 s tant qu'il en reste).
+  Future<void> replayOffline() async {
+    final queue = _offline;
+    if (queue == null) return;
+    await queue.replay((g) async {
+      if (g.kind != 'stock') return ReplayOutcome.dropped;
+      final id = g.payload['product'] as String;
+      final available = g.payload['available'] as bool;
+      final result = await _service.setAvailable(id, available: available);
+      switch (result) {
+        case Ok(:final value):
+          _replace(value);
+          _optimistic.remove(id);
+          return ReplayOutcome.done;
+        case Err(failure: NetworkFailure()):
+          _optimistic[id] = available;
+          return ReplayOutcome.retry;
+        case Err(:final failure):
+          _actionFailure = failure;
+          _optimistic.remove(id);
+          return ReplayOutcome.dropped;
+      }
+    });
+    if (queue.isEmpty) {
+      _replayTimer?.cancel();
+      _replayTimer = null;
+    } else {
+      _scheduleReplay();
+    }
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _replayTimer?.cancel();
+    super.dispose();
   }
 
   /// Date d'arrivage (spec 033) ; nulle : retirée.

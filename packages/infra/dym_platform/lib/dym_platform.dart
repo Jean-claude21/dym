@@ -9,6 +9,7 @@ export 'src/external_page_opener.dart';
 export 'src/google_id_token_provider.dart';
 export 'src/install_id.dart';
 export 'src/live_connection.dart';
+export 'src/local_store.dart';
 export 'src/location_provider.dart';
 export 'src/neon_bootstrap.dart';
 export 'src/network_image.dart';

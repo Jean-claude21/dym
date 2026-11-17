@@ -2,6 +2,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:neon_kit/src/auth/neon_auth_client.dart';
 import 'package:neon_kit/src/config.dart';
+import 'package:neon_kit/src/data/offline_cache.dart';
 import 'package:neon_kit/src/errors.dart';
 import 'package:postgrest/postgrest.dart';
 
@@ -17,9 +18,17 @@ class NeonDataClient {
     required NeonConfig config,
     required NeonAuthClient auth,
     http.Client? httpClient,
+    ResponseCacheStore? offlineCache,
   }) : _client = PostgrestClient(
          config.dataApiUrl.toString(),
-         httpClient: _AuthenticatedClient(auth, httpClient ?? http.Client()),
+         httpClient: switch (offlineCache) {
+           // Premier écran sans réseau (spec 107) : dernières lectures.
+           final store? => OfflineReadCache(
+             _AuthenticatedClient(auth, httpClient ?? http.Client()),
+             store,
+           ),
+           null => _AuthenticatedClient(auth, httpClient ?? http.Client()),
+         },
          retryCount: config.maxRetries,
          retryableStatusCodes: const {500, 502, 503, 504, 520},
        );

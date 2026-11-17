@@ -8353,4 +8353,18 @@ class DymLocalizationsFr extends DymLocalizations {
   @override
   String get authTooManyCodes =>
       'Trop de codes demandés. Réessaie dans quelques minutes.';
+
+  @override
+  String catalogOfflinePending(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n gestes gardés hors ligne : ils partiront au retour du réseau.',
+      one: '1 geste gardé hors ligne : il partira au retour du réseau.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeFromCache => 'Hors ligne : affichage de ta dernière visite.';
 }

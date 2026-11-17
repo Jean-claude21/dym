@@ -8,6 +8,7 @@ export 'package:postgrest/postgrest.dart'
 export 'src/auth/neon_auth_client.dart';
 export 'src/config.dart';
 export 'src/data/neon_data_client.dart';
+export 'src/data/offline_cache.dart';
 export 'src/errors.dart' show failureFrom;
 export 'src/functions/neon_functions_client.dart' show NeonFunctionsClient;
 export 'src/jwt.dart';

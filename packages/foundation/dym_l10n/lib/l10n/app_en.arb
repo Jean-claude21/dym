@@ -2413,5 +2413,7 @@
   "authChangePhone": "Change number",
   "authSimulatedCode": "Simulated code (WhatsApp not connected yet): {code}",
   "authPhoneInvalid": "Incomplete number: check the country code and the number.",
-  "authTooManyCodes": "Too many codes requested. Try again in a few minutes."
+  "authTooManyCodes": "Too many codes requested. Try again in a few minutes.",
+  "catalogOfflinePending": "{n, plural, =1{1 change kept offline: it will be sent when you're back online.} other{{n} changes kept offline: they will be sent when you're back online.}}",
+  "homeFromCache": "Offline: showing your last visit."
 }

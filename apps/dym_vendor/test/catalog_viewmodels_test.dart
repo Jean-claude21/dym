@@ -299,6 +299,30 @@ void main() {
       expect(vm.actionFailure, isA<NetworkFailure>());
     });
 
+    test('hors ligne avec file (spec 107) : gardé, envoyé au retour', () async {
+      final catalog = memoryCatalog();
+      final queue = OfflineQueue(MemoryJsonStore());
+      final vm = ProductsViewModel(
+        service: catalog,
+        onEdit: (_) async {},
+        onCategories: () async {},
+        offline: queue,
+      );
+      await vm.load();
+      final product = vm.visible.first;
+      catalog.failNext = const NetworkFailure('hors ligne');
+      await vm.setAvailable(product, available: false);
+      // L'interrupteur garde le geste, rien n'est signalé comme raté.
+      expect(vm.available(product), isFalse);
+      expect(vm.actionFailure, isNull);
+      expect(vm.offlineCount, 1);
+      // Retour du réseau : le geste part, la base suit.
+      await vm.replayOffline();
+      expect(vm.offlineCount, 0);
+      expect(vm.visible.first.isAvailable, isFalse);
+      vm.dispose();
+    });
+
     test('archiver, restaurer, supprimer un brouillon', () async {
       final vm = await loaded();
       await vm.archive(vm.visible.first, archived: true);

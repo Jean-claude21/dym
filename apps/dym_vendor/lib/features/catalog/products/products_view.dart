@@ -1,5 +1,6 @@
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/catalog/catalog_service.dart';
 import 'package:dym_vendor/features/catalog/products/products_viewmodel.dart';
@@ -15,6 +16,7 @@ class ProductsView extends StackedView<ProductsViewModel> {
     required this.onCategories,
     super.key,
     this.onImport,
+    this.offline,
   });
 
   final CatalogService service;
@@ -24,12 +26,16 @@ class ProductsView extends StackedView<ProductsViewModel> {
   /// Import en masse (spec 081) ; au retour, le catalogue est relu.
   final Future<void> Function()? onImport;
 
+  /// File hors ligne (spec 107) ; nulle : échec affiché sans réseau.
+  final OfflineQueue? offline;
+
   @override
   ProductsViewModel viewModelBuilder(BuildContext context) => ProductsViewModel(
     service: service,
     onEdit: onEdit,
     onCategories: onCategories,
     onImport: onImport,
+    offline: offline,
   );
 
   @override
@@ -217,6 +223,30 @@ class _List extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   StoreErrorBanner(failure: viewModel.actionFailure),
+                  if (viewModel.offlineCount > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.cloud_off_rounded,
+                            size: 18,
+                            color: c.textSecondary,
+                          ),
+                          const SizedBox(width: DymTokenSpace.s2),
+                          Expanded(
+                            child: Text(
+                              l10n.catalogOfflinePending(
+                                viewModel.offlineCount,
+                              ),
+                              style: context.dym.text.label.copyWith(
+                                color: c.textSecondary,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   // Rupture en un geste (planche 04) : lignes à filets.
                   Wrap(
                     spacing: spacing,

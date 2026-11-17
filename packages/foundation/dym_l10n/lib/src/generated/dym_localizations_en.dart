@@ -8301,4 +8301,19 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get authTooManyCodes =>
       'Too many codes requested. Try again in a few minutes.';
+
+  @override
+  String catalogOfflinePending(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other:
+          '$n changes kept offline: they will be sent when you\'re back online.',
+      one: '1 change kept offline: it will be sent when you\'re back online.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get homeFromCache => 'Offline: showing your last visit.';
 }
