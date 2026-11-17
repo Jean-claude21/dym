@@ -632,7 +632,11 @@ class ChatView extends StackedView<ChatViewModel> {
             if (vm.offline) const _OfflineNote(),
             Expanded(
               child: entries.isEmpty
-                  ? _EmptyThread(name: name, vendor: vendor)
+                  ? _EmptyThread(
+                      name: name,
+                      vendor: vendor,
+                      orderThread: conv?.isOrderThread ?? false,
+                    )
                   : ListView.builder(
                       reverse: true,
                       padding: EdgeInsets.symmetric(
@@ -805,10 +809,17 @@ class _OrderBanner extends StatelessWidget {
 }
 
 class _EmptyThread extends StatelessWidget {
-  const new({required this.name, required this.vendor});
+  const new({
+    required this.name,
+    required this.vendor,
+    this.orderThread = false,
+  });
 
   final String name;
   final bool vendor;
+
+  /// Fil d'une commande (spec 109).
+  final bool orderThread;
 
   @override
   Widget build(BuildContext context) {
@@ -832,7 +843,9 @@ class _EmptyThread extends StatelessWidget {
             ),
             const SizedBox(height: DymTokenSpace.s3),
             Text(
-              name.isEmpty
+              orderThread
+                  ? l10n.chatEmptyOrderThread
+                  : name.isEmpty
                   ? l10n.chatEmptyThread
                   : (vendor
                         ? l10n.chatEmptyThreadClient(name)

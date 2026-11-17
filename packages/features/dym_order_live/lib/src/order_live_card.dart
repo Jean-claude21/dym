@@ -44,6 +44,21 @@ class OrderLiveCard extends StackedView<OrderLiveViewModel> {
     ),
   };
 
+  static void _fit(OrderLiveViewModel vm, DymBounds? bounds, int points) {
+    final controls = vm.controls;
+    if (controls == null || bounds == null || points < 2) return;
+    // Cadre arrondi (~100 m) : les petits déplacements ne recadrent pas.
+    String r(double v) => v.toStringAsFixed(3);
+    final b = bounds;
+    final key =
+        '${vm.phase.name}:$points:'
+        '${r(b.southWest.latitude)},${r(b.southWest.longitude)},'
+        '${r(b.northEast.latitude)},${r(b.northEast.longitude)}';
+    if (vm.fittedKey == key) return;
+    vm.fittedKey = key;
+    unawaited(controls.fit(bounds));
+  }
+
   @override
   OrderLiveViewModel viewModelBuilder(BuildContext context) =>
       OrderLiveViewModel(service: service, orderId: orderId);
@@ -85,6 +100,10 @@ class OrderLiveCard extends StackedView<OrderLiveViewModel> {
       for (final p in pins) p.point,
       for (final r in routes) ...r.points,
     ]);
+    // Nouveau point (livreur, porte) ou nouvelle étape : la carte se recadre.
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _fit(vm, bounds, pins.length),
+    );
     final eta = vm.etaMinutes;
     final (icon, label) = switch (vm.phase) {
       LivePhase.waiting => (Icons.hourglass_top_rounded, l10n.orderLiveWaiting),
@@ -140,11 +159,11 @@ class OrderLiveCard extends StackedView<OrderLiveViewModel> {
                     pins: pins,
                     pinStyles: styles(c),
                     routes: routes,
+                    cluster: false,
                     semanticLabel: l10n.orderLiveTitle,
                     onReady: (controls) {
-                      if (bounds != null && pins.length > 1) {
-                        unawaited(controls.fit(bounds));
-                      }
+                      vm.controls = controls;
+                      _fit(vm, bounds, pins.length);
                     },
                   ),
                 ),

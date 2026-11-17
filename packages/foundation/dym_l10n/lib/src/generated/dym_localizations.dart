@@ -13950,6 +13950,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Suivi de la livraison'**
   String get orderLiveTitle;
+
+  /// Fil de commande vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Pendant la livraison, la cliente, la boutique et le livreur s\'écrivent ici.'**
+  String get chatEmptyOrderThread;
 }
 
 class _DymLocalizationsDelegate

@@ -8362,4 +8362,8 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get orderLiveTitle => 'Delivery tracking';
+
+  @override
+  String get chatEmptyOrderThread =>
+      'During the delivery, the customer, the shop and the courier write to each other here.';
 }
