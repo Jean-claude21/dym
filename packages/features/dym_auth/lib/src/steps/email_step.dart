@@ -39,7 +39,11 @@ class _EmailStepState extends State<EmailStep> {
         : DymFieldStatus.error;
     return StepScaffold(
       title: l10n.authEmailTitle,
-      subtitle: Text(l10n.authEmailSubtitle),
+      subtitle: Text(
+        vm.usePassword
+            ? l10n.authEmailSubtitlePassword
+            : l10n.authEmailSubtitle,
+      ),
       onBack: vm.back,
       action: vm.usePassword
           ? DymButton(

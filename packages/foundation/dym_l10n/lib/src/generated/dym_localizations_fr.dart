@@ -8213,4 +8213,8 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get profileNoContent => 'Rien de publié pour l\'instant.';
+
+  @override
+  String get authEmailSubtitlePassword =>
+      'Connecte-toi avec ton email et ton mot de passe.';
 }

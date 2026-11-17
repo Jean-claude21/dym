@@ -9517,5 +9517,9 @@
   "profileNoContent": "Rien de publié pour l'instant.",
   "@profileNoContent": {
     "description": "Profil public : aucun contenu"
+  },
+  "authEmailSubtitlePassword": "Connecte-toi avec ton email et ton mot de passe.",
+  "@authEmailSubtitlePassword": {
+    "description": "Sous-titre de l'étape email en mode mot de passe"
   }
 }

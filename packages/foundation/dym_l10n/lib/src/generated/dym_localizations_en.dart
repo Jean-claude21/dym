@@ -8162,4 +8162,8 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get profileNoContent => 'Nothing published yet.';
+
+  @override
+  String get authEmailSubtitlePassword =>
+      'Sign in with your email and password.';
 }
