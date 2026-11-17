@@ -101,5 +101,14 @@ class PeopleWalletRepository {
     },
   )).map(_family);
 
+  /// Rayons autorisés pour un enfant (spec 104) ; vide : tous.
+  Future<Result<Family>> setCategories(
+    String childId,
+    List<String> categoryIds,
+  ) async => (await _data.rpc<Object?>(
+    'family_set_categories',
+    params: {'p_child': childId, 'p_categories': categoryIds},
+  )).map(_family);
+
   static Family _family(Object? j) => Family.fromJson((j! as Map).cast());
 }

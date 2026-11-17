@@ -113,6 +113,7 @@ class FamilyMember {
     this.allowanceMinor,
     this.allowanceEveryDays = 7,
     this.dailyLimitMinor,
+    this.allowedCategories = const [],
   });
 
   factory fromJson(Map<String, dynamic> j) => FamilyMember(
@@ -128,6 +129,9 @@ class FamilyMember {
       final d => d,
     },
     dailyLimitMinor: (j['daily_limit_minor'] as num?)?.toInt(),
+    allowedCategories: [
+      for (final c in j['allowed_categories'] as List? ?? const []) '$c',
+    ],
   );
 
   final String userId;
@@ -139,6 +143,9 @@ class FamilyMember {
   final int? allowanceMinor;
   final int allowanceEveryDays;
   final int? dailyLimitMinor;
+
+  /// Rayons autorisés (spec 104) ; vide : tous.
+  final List<String> allowedCategories;
 }
 
 /// Famille : mes enfants (vue parentale) et mes parents (invitations).

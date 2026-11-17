@@ -7,6 +7,7 @@ import 'package:dym_models/dym_models.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 /// Refus affichés à l'écran.
@@ -882,6 +883,18 @@ class MyRunsViewModel extends BaseViewModel {
     return result.valueOrNull;
   }
 
+  /// Lien de suivi de la course en cours (spec 104) ; null si impossible.
+  Future<Uri?> shareRun() async {
+    final active = runs?.where((r) => !r.delivered).firstOrNull;
+    if (active == null) return null;
+    final result = await service.shareRun(active);
+    if (result case Err(failure: final f)) {
+      problem = missionErrorOf(f);
+      notifyListeners();
+    }
+    return result.valueOrNull;
+  }
+
   /// SOS : vrai si l'équipe est prévenue.
   Future<bool> sos() async {
     final active = runs?.where((r) => !r.delivered).firstOrNull;
@@ -1050,6 +1063,12 @@ class MyRunsView extends StackedView<MyRunsViewModel> {
                     style: t.body.copyWith(fontWeight: FontWeight.w600),
                   ),
                 ),
+                if (vm.hasActive)
+                  IconButton(
+                    tooltip: l10n.courierShareRun,
+                    onPressed: () => _shareRun(context, vm),
+                    icon: const Icon(Icons.share_location_rounded),
+                  ),
                 if (vm.hasActive)
                   TextButton.icon(
                     style: TextButton.styleFrom(
@@ -1384,6 +1403,26 @@ Future<void> _reportUnreachable(
   messenger?.showSnackBar(
     SnackBar(content: Text(l10n.courierUnreachableSent(minutes))),
   );
+}
+
+/// Partage de la course avec un proche (sécurité) : WhatsApp, sinon copié.
+Future<void> _shareRun(BuildContext context, MyRunsViewModel vm) async {
+  final l10n = DymLocalizations.of(context);
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  final url = await vm.shareRun();
+  if (url == null) {
+    messenger?.showSnackBar(SnackBar(content: Text(l10n.shareFailed)));
+    return;
+  }
+  final text = l10n.courierShareRunText(url.toString());
+  final opened =
+      (await const PluginExternalPageOpener().open(
+        Uri.https('wa.me', '/', {'text': text}),
+      )).valueOrNull ??
+      false;
+  if (opened) return;
+  await Clipboard.setData(ClipboardData(text: text));
+  messenger?.showSnackBar(SnackBar(content: Text(l10n.shareCopied)));
 }
 
 Future<void> _sos(BuildContext context, MyRunsViewModel vm) async {

@@ -8214,4 +8214,54 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get contentCoverSaved => 'Thumbnail saved';
+
+  @override
+  String get familyCategoriesLabel => 'Allowed aisles';
+
+  @override
+  String get familyCategoriesAll => 'All aisles';
+
+  @override
+  String familyCategoriesSome(int n) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n aisles allowed',
+      one: '1 aisle allowed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get walletKindMembership => 'DYM+ membership';
+
+  @override
+  String get walletKindMemberBenefit => 'DYM+ benefit';
+
+  @override
+  String get walletKindQrPayment => 'In-store payment';
+
+  @override
+  String walletKindP2pSent(String name) {
+    return 'To $name';
+  }
+
+  @override
+  String walletKindP2pReceived(String name) {
+    return 'From $name';
+  }
+
+  @override
+  String get walletKindP2pAnonymous => 'Between relatives';
+
+  @override
+  String get peopleChildCategory => 'This aisle isn\'t allowed by your parent.';
+
+  @override
+  String get courierShareRun => 'Share my run';
+
+  @override
+  String courierShareRunText(String url) {
+    return 'I\'m delivering with DYM. Follow my run live: $url';
+  }
 }

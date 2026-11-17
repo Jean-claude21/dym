@@ -77,6 +77,12 @@ class _People implements PeopleWalletService {
     done.add('rules:$c:$allowanceMinor:$dailyLimitMinor');
     return const Ok(Family());
   }
+
+  @override
+  Future<Result<Family>> setCategories(String c, List<String> ids) async {
+    done.add('categories:$c:${ids.join(',')}');
+    return const Ok(Family());
+  }
 }
 
 void main() {
@@ -103,5 +109,28 @@ void main() {
     await vm.load();
     expect(await vm.run(PeopleAction.send, 'MIA12345', 99999), isFalse);
     expect(vm.actionFailure?.message, 'wallet_insufficient');
+  });
+
+  test('rayons autorisés et mouvements nommés (spec 104)', () async {
+    final people = _People();
+    final vm = PeopleWalletViewModel(service: people);
+    await vm.setCategories(
+      const FamilyMember(userId: 'yao', firstName: 'Yao', active: true),
+      ['fruits'],
+    );
+    expect(people.done, contains('categories:yao:fruits'));
+    final sent = WalletMovement.fromJson(const {
+      'id': 't1',
+      'kind': 'p2p_sent',
+      'amount_minor': -1000,
+      'occurred_at': '2026-11-17T08:00:00Z',
+      'counterpart': 'Yao',
+    });
+    expect(sent.kind, WalletMovementKind.p2pSent);
+    expect(sent.counterpart, 'Yao');
+    expect(
+      WalletMovementKind.parse('qr_payment'),
+      WalletMovementKind.qrPayment,
+    );
   });
 }

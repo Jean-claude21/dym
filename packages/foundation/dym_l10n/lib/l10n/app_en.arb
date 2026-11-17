@@ -2391,5 +2391,17 @@
   "contentCoverChoose": "Choose the thumbnail",
   "contentCoverDefault": "Default image",
   "contentCoverPending": "The video is being prepared: its images will be available soon.",
-  "contentCoverSaved": "Thumbnail saved"
+  "contentCoverSaved": "Thumbnail saved",
+  "familyCategoriesLabel": "Allowed aisles",
+  "familyCategoriesAll": "All aisles",
+  "familyCategoriesSome": "{n, plural, =1{1 aisle allowed} other{{n} aisles allowed}}",
+  "walletKindMembership": "DYM+ membership",
+  "walletKindMemberBenefit": "DYM+ benefit",
+  "walletKindQrPayment": "In-store payment",
+  "walletKindP2pSent": "To {name}",
+  "walletKindP2pReceived": "From {name}",
+  "walletKindP2pAnonymous": "Between relatives",
+  "peopleChildCategory": "This aisle isn't allowed by your parent.",
+  "courierShareRun": "Share my run",
+  "courierShareRunText": "I'm delivering with DYM. Follow my run live: {url}"
 }

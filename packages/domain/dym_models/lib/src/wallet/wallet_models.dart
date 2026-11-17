@@ -14,6 +14,11 @@ enum WalletMovementKind {
   courierFee,
   cashTopup,
   walletWithdrawal,
+  membership,
+  memberBenefit,
+  qrPayment,
+  p2pSent,
+  p2pReceived,
   unknown;
 
   static WalletMovementKind parse(Object? value) => switch (value) {
@@ -28,6 +33,11 @@ enum WalletMovementKind {
     'courier_fee' => courierFee,
     'cash_topup' => cashTopup,
     'wallet_withdrawal' => walletWithdrawal,
+    'membership' => membership,
+    'member_benefit' => memberBenefit,
+    'qr_payment' => qrPayment,
+    'p2p_sent' => p2pSent,
+    'p2p_received' => p2pReceived,
     _ => unknown,
   };
 }
@@ -75,6 +85,7 @@ class WalletMovement {
     required this.occurredAt,
     this.pocketId,
     this.orderId,
+    this.counterpart,
   });
 
   factory fromJson(Map<String, dynamic> json) => WalletMovement(
@@ -84,6 +95,7 @@ class WalletMovement {
     occurredAt: DateTime.parse(json['occurred_at']! as String),
     pocketId: json['pocket_id'] as String?,
     orderId: json['order_id'] as String?,
+    counterpart: json['counterpart'] as String?,
   );
 
   final String id;
@@ -92,6 +104,9 @@ class WalletMovement {
   final DateTime occurredAt;
   final String? pocketId;
   final String? orderId;
+
+  /// Prénom de la personne, pour un mouvement entre proches (spec 104).
+  final String? counterpart;
 }
 
 /// Mon wallet (`public.my_wallet()`).

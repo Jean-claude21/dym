@@ -88,6 +88,7 @@ Future<void> configureServices(DymEnvironment environment) async {
         live: live,
         delivery: DeliveryRepository(neon.data),
         location: const PluginLocationProvider(),
+        trackingBase: environment.functionsUrl,
       ),
     );
 }
