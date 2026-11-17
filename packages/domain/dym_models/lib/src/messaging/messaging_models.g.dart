@@ -93,8 +93,8 @@ Conversation _$ConversationFromJson(
   ($checkedConvert) {
     final val = Conversation(
       id: $checkedConvert('id', (v) => v as String),
-      storeId: $checkedConvert('store_id', (v) => v as String),
-      storeName: $checkedConvert('store_name', (v) => v as String),
+      storeId: $checkedConvert('store_id', (v) => v as String? ?? ''),
+      storeName: $checkedConvert('store_name', (v) => v as String? ?? ''),
       storeOrigin: $checkedConvert('store_origin', (v) => v as String?),
       storeActive: $checkedConvert('store_active', (v) => v as bool? ?? true),
       clientFirstName: $checkedConvert(

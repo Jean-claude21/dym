@@ -1,6 +1,6 @@
 -- Groupes de discussion (spec 112) : espace famille et achat groupé.
 
-select plan(24);
+select plan(25);
 
 create temporary table _t as
 select tests.create_user('awa@example.com') as awa,
@@ -30,6 +30,8 @@ update _t set direct = (app.start_conversation(awa, store) ->> 'id')::uuid;
 select tests.login_as((select awa from _t));
 update _t set fam = (public.create_family_group('Famille Mensah') ->> 'id')::uuid;
 select is((public.group_info((select fam from _t)) ->> 'me_admin')::boolean, true, 'créatrice administratrice');
+select is((select c ->> 'store_id' from jsonb_array_elements(public.my_conversations('client')) c
+           where c ->> 'kind' = 'family'), '', 'pas de boutique : identifiant vide (apps installées)');
 select throws_ok($$select public.create_family_group('  ')$$, 'P0001', 'title_invalid', 'nom vide refusé');
 select is(jsonb_array_length(public.group_add_member((select fam from _t), (select h_mia from _t)) -> 'members'), 2,
   'Mia ajoutée par son code');

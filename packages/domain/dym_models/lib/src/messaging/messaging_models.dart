@@ -260,7 +260,10 @@ class Conversation {
   bool get isGroupBuy => kind == 'group_buy';
 
   final String id;
+  /// Vide pour un groupe famille (spec 112) : pas de boutique.
+  @JsonKey(defaultValue: '')
   final String storeId;
+  @JsonKey(defaultValue: '')
   final String storeName;
   final String? storeOrigin;
   final bool storeActive;
