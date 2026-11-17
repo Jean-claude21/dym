@@ -63,6 +63,9 @@ Future<void> configureServices(DymEnvironment environment) async {
   final locale = LocalePreference();
   // Visiteuse sans compte (spec 093) : quartier gardé sur l'appareil.
   final visitor = VisitorPlaceStore();
+  // Économie de données (spec 103) : choix gardé sur l'appareil.
+  final dataSaver = DataSaverPreference();
+  await dataSaver.load();
   final auth = NeonAuthService(
     neon: neon,
     account: AccountRepository(neon.data),
@@ -76,6 +79,7 @@ Future<void> configureServices(DymEnvironment environment) async {
   locator
     ..registerSingleton(environment)
     ..registerSingleton(neon)
+    ..registerSingleton(dataSaver)
     ..registerSingleton<LiveFeed>(live)
     // Notifications du téléphone (spec 069) : démarrées à l'accueil, une fois
     // la personne connectée ; le toucher ouvre l'écran concerné.

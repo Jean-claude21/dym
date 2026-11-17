@@ -46,6 +46,9 @@ abstract interface class CreatorService {
 
   Future<Result<void>> archive(String contentId);
 
+  /// Miniature d'une vidéo (spec 103) : image [frame] ; null : par défaut.
+  Future<Result<ContentItem>> setCover(String contentId, int? frame);
+
   /// Gains d'affiliation (spec 039).
   Future<Result<CreatorCommissions>> commissions();
 
@@ -193,6 +196,10 @@ class NeonCreatorService implements CreatorService {
   @override
   Future<Result<void>> archive(String contentId) =>
       _repository.archive(contentId);
+
+  @override
+  Future<Result<ContentItem>> setCover(String contentId, int? frame) =>
+      _repository.setCover(contentId, frame);
 
   @override
   Future<Result<CreatorCommissions>> commissions() async {

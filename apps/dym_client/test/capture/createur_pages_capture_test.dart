@@ -28,6 +28,10 @@ const _autre = ContentCategory(
 );
 
 class _Fake implements CreatorService {
+  @override
+  Future<Result<ContentItem>> setCover(String contentId, int? frame) async =>
+      const Err(NotFoundFailure('contenu'));
+
   CreatorProfile? current;
   String? suggestion = 'recettes';
   ({

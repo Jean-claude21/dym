@@ -78,6 +78,9 @@ abstract interface class ContentService {
 
   void viewed(ContentItem content);
 
+  /// Temps regardé et fin de lecture (spec 103) : statistiques, classement.
+  void watched(ContentItem content, {required int ms, required bool completed});
+
   /// Produit tagué touché : statistique, puis ajout au panier.
   Future<Result<void>> addToCart(ContentItem content, CatalogItem product);
 
@@ -252,6 +255,14 @@ class NeonContentService implements ContentService {
   void viewed(ContentItem content) => unawaited(_repository.viewed(content.id));
 
   @override
+  void watched(
+    ContentItem content, {
+    required int ms,
+    required bool completed,
+  }) =>
+      unawaited(_repository.watched(content.id, ms: ms, completed: completed));
+
+  @override
   Future<Result<void>> addToCart(
     ContentItem content,
     CatalogItem product,
@@ -400,6 +411,13 @@ class MemoryContentService implements ContentService {
 
   @override
   void viewed(ContentItem content) => gestures.add('${content.id}:view');
+
+  @override
+  void watched(
+    ContentItem content, {
+    required int ms,
+    required bool completed,
+  }) => gestures.add('${content.id}:watch:$ms:$completed');
 
   @override
   Future<Result<void>> addToCart(

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dym_account/dym_account.dart';
 import 'package:dym_client/features/cart/widgets/cart_widgets.dart';
 import 'package:dym_client/features/content/share_content.dart';
 import 'package:dym_client/features/creator/creator_service.dart';
@@ -83,6 +84,24 @@ class CreatorStudioViewModel extends BaseViewModel {
   }
 
   String money(int minor) => _config?.money(minor).format() ?? '';
+
+  /// Miniature choisie (spec 103) : 0 = image par défaut.
+  Future<void> chooseCover(ContentItem content, int frame) async {
+    final result = await service.setCover(
+      content.id,
+      frame == 0 ? null : frame,
+    );
+    if (result case Ok(:final value)) {
+      ContentItem merge(ContentItem c) => c.id != value.id
+          ? c
+          : c.copyWith(
+              coverFrame: value.coverFrame,
+              clearCover: value.coverFrame == null,
+            );
+      posts = posts.map(merge).toList();
+      notifyListeners();
+    }
+  }
 
   bool savingHandle = false;
 
@@ -384,7 +403,9 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
                     borderRadius: BorderRadius.circular(8),
                     child: SizedBox.square(
                       dimension: 56,
-                      child: p.isVideo || p.mediaKey == null
+                      child: p.isVideo && p.posterUrl != null
+                          ? Image.network(p.posterUrl!, fit: BoxFit.cover)
+                          : p.isVideo || p.mediaKey == null
                           ? ColoredBox(
                               color: c.tintVertTendre,
                               child: Icon(
@@ -403,13 +424,19 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  subtitle: Text(
-                    l10n.creatorPostStats(
-                      p.viewCount,
-                      p.clickCount,
-                      p.products.length,
-                    ),
-                    style: t.label.copyWith(color: c.textSecondary),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.creatorPostStats(
+                          p.viewCount,
+                          p.clickCount,
+                          p.products.length,
+                        ),
+                        style: t.label.copyWith(color: c.textSecondary),
+                      ),
+                      ContentStatsLine(item: p, money: vm.money),
+                    ],
                   ),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
@@ -419,6 +446,15 @@ class CreatorStudioView extends StackedView<CreatorStudioViewModel> {
                         onPressed: () => shareContent(context, vm.share, p),
                         icon: const Icon(Icons.share_rounded),
                       ),
+                      if (p.isVideo)
+                        IconButton(
+                          tooltip: l10n.contentCoverChoose,
+                          onPressed: () async {
+                            final frame = await showCoverPicker(context, p);
+                            if (frame != null) await vm.chooseCover(p, frame);
+                          },
+                          icon: const Icon(Icons.photo_library_outlined),
+                        ),
                       IconButton(
                         tooltip: l10n.creatorArchive,
                         onPressed: () => vm.archive(p),

@@ -14,7 +14,13 @@ export interface PendingStream {
 
 export interface StreamStore {
   pending(limit: number): Promise<PendingStream[]>;
-  set(contentId: string, videoId: string | null, status: "processing" | "ready" | "failed", url: string | null): Promise<void>;
+  set(
+    contentId: string,
+    videoId: string | null,
+    status: "processing" | "ready" | "failed",
+    url: string | null,
+    thumbs?: number | null,
+  ): Promise<void>;
 }
 
 /** Fournisseur de vidéo adaptative (Bunny Stream aujourd'hui), derrière une interface. */
@@ -22,7 +28,7 @@ export interface StreamProvider {
   /** Crée la vidéo et demande au fournisseur de la récupérer à [sourceUrl]. */
   ingest(title: string, sourceUrl: string): Promise<string>;
   /** État : `processing`, `ready` (avec l'adresse HLS) ou `failed`. */
-  status(videoId: string): Promise<{ status: "processing" | "ready" | "failed"; url: string | null }>;
+  status(videoId: string): Promise<{ status: "processing" | "ready" | "failed"; url: string | null; thumbs?: number | null }>;
 }
 
 export interface StreamDeps {
@@ -54,7 +60,7 @@ export async function syncStreams(deps: StreamDeps, limit = 10) {
       }
       const state = await provider.status(item.stream_video_id);
       if (state.status === "processing") continue;
-      await deps.store.set(item.id, null, state.status, state.url);
+      await deps.store.set(item.id, null, state.status, state.url, state.thumbs ?? null);
       if (state.status === "ready") ready += 1;
       else failed += 1;
     } catch (error) {
@@ -83,9 +89,9 @@ export function pgStreamStore(pool: pg.Pool): StreamStore {
         throw fromPgError(error);
       }
     },
-    async set(contentId, videoId, status, url) {
+    async set(contentId, videoId, status, url, thumbs) {
       try {
-        await pool.query("select app.set_stream($1, $2, $3, $4)", [contentId, videoId, status, url]);
+        await pool.query("select app.set_stream($1, $2, $3, $4, $5)", [contentId, videoId, status, url, thumbs ?? null]);
       } catch (error) {
         throw fromPgError(error);
       }
@@ -118,10 +124,15 @@ export function bunnyStreamProvider(
       const res = await fetchImpl(`${base}/${videoId}`, { headers });
       if (res.status === 404) return { status: "failed", url: null };
       if (!res.ok) throw new Error(`bunny video ${res.status}`);
-      const video = (await res.json()) as { status?: number };
+      const video = (await res.json()) as { status?: number; thumbnailCount?: number };
       // 4 : terminée ; 5 et 6 : en échec ; le reste : en cours.
       if (video.status === 4) {
-        return { status: "ready", url: `https://${options.cdnHost}/${videoId}/playlist.m3u8` };
+        return {
+          status: "ready",
+          url: `https://${options.cdnHost}/${videoId}/playlist.m3u8`,
+          // Images proposées pour la miniature (thumbnail_<n>.jpg, spec 103).
+          thumbs: video.thumbnailCount ?? null,
+        };
       }
       if (video.status === 5 || video.status === 6) return { status: "failed", url: null };
       return { status: "processing", url: null };

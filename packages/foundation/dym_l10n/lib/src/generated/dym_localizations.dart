@@ -13656,6 +13656,72 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Connecte-toi avec ton email et ton mot de passe.'**
   String get authEmailSubtitlePassword;
+
+  /// Menu Moi : réglage d'économie de données
+  ///
+  /// In fr, this message translates to:
+  /// **'Économie de données'**
+  String get accountDataSaver;
+
+  /// Titre de la feuille d'économie de données
+  ///
+  /// In fr, this message translates to:
+  /// **'Économie de données'**
+  String get dataSaverTitle;
+
+  /// Explication de l'économie de données
+  ///
+  /// In fr, this message translates to:
+  /// **'Vidéos en version légère, gardées sur ton téléphone pour les revoir sans data. Rien n\'est préchargé.'**
+  String get dataSaverBody;
+
+  /// Interrupteur d'économie de données
+  ///
+  /// In fr, this message translates to:
+  /// **'Économiser mes données'**
+  String get dataSaverSwitch;
+
+  /// Mes vidéos : temps moyen
+  ///
+  /// In fr, this message translates to:
+  /// **'{seconds} s regardées en moyenne'**
+  String contentStatsAvgWatch(int seconds);
+
+  /// Mes vidéos : fin de lecture
+  ///
+  /// In fr, this message translates to:
+  /// **'{percent} % jusqu\'au bout'**
+  String contentStatsCompletion(int percent);
+
+  /// Mes vidéos : ventes générées
+  ///
+  /// In fr, this message translates to:
+  /// **'{n, plural, =0{Aucune vente générée} =1{1 vente générée · {amount}} other{{n} ventes générées · {amount}}}'**
+  String contentStatsSales(int n, String amount);
+
+  /// Action : miniature d'une vidéo
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir la miniature'**
+  String get contentCoverChoose;
+
+  /// Miniature par défaut
+  ///
+  /// In fr, this message translates to:
+  /// **'Image par défaut'**
+  String get contentCoverDefault;
+
+  /// Miniature indisponible pendant la conversion
+  ///
+  /// In fr, this message translates to:
+  /// **'La vidéo est en préparation : ses images arrivent bientôt.'**
+  String get contentCoverPending;
+
+  /// Confirmation
+  ///
+  /// In fr, this message translates to:
+  /// **'Miniature enregistrée'**
+  String get contentCoverSaved;
 }
 
 class _DymLocalizationsDelegate

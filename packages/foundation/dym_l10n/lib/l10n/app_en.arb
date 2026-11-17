@@ -2380,5 +2380,16 @@
   "savedRecipesTitle": "My recipes",
   "profileFollowers": "{count, plural, =0{No followers} =1{1 follower} other{{count} followers}}",
   "profileNoContent": "Nothing published yet.",
-  "authEmailSubtitlePassword": "Sign in with your email and password."
+  "authEmailSubtitlePassword": "Sign in with your email and password.",
+  "accountDataSaver": "Data saver",
+  "dataSaverTitle": "Data saver",
+  "dataSaverBody": "Lighter videos, kept on your phone so you can rewatch them without data. Nothing is preloaded.",
+  "dataSaverSwitch": "Save my data",
+  "contentStatsAvgWatch": "{seconds} s watched on average",
+  "contentStatsCompletion": "{percent}% watched to the end",
+  "contentStatsSales": "{n, plural, =0{No sales generated} =1{1 sale generated · {amount}} other{{n} sales generated · {amount}}}",
+  "contentCoverChoose": "Choose the thumbnail",
+  "contentCoverDefault": "Default image",
+  "contentCoverPending": "The video is being prepared: its images will be available soon.",
+  "contentCoverSaved": "Thumbnail saved"
 }

@@ -495,4 +495,23 @@ class ContentRepository {
         'i_cooked_it',
         params: {'p_content': contentId, 'p_note': note},
       )).map((j) => ContentItem.fromJson((j! as Map).cast<String, dynamic>()));
+
+  // ---------------------------------------------------------------- spec 103
+
+  /// Temps regardé (ms) et fin de lecture : statistiques et classement.
+  Future<Result<void>> watched(
+    String contentId, {
+    required int ms,
+    required bool completed,
+  }) async => (await _data.rpc<Object?>(
+    'content_watched',
+    params: {'p_content': contentId, 'p_ms': ms, 'p_completed': completed},
+  )).map((_) {});
+
+  /// Miniature : image [frame] de la vidéo (1..n) ; null : image par défaut.
+  Future<Result<ContentItem>> setCover(String contentId, int? frame) async =>
+      (await _data.rpc<Object?>(
+        'set_content_cover',
+        params: {'p_content': contentId, 'p_frame': frame},
+      )).map((j) => ContentItem.fromJson((j! as Map).cast<String, dynamic>()));
 }

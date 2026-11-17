@@ -8166,4 +8166,52 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get authEmailSubtitlePassword =>
       'Sign in with your email and password.';
+
+  @override
+  String get accountDataSaver => 'Data saver';
+
+  @override
+  String get dataSaverTitle => 'Data saver';
+
+  @override
+  String get dataSaverBody =>
+      'Lighter videos, kept on your phone so you can rewatch them without data. Nothing is preloaded.';
+
+  @override
+  String get dataSaverSwitch => 'Save my data';
+
+  @override
+  String contentStatsAvgWatch(int seconds) {
+    return '$seconds s watched on average';
+  }
+
+  @override
+  String contentStatsCompletion(int percent) {
+    return '$percent% watched to the end';
+  }
+
+  @override
+  String contentStatsSales(int n, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      n,
+      locale: localeName,
+      other: '$n sales generated · $amount',
+      one: '1 sale generated · $amount',
+      zero: 'No sales generated',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get contentCoverChoose => 'Choose the thumbnail';
+
+  @override
+  String get contentCoverDefault => 'Default image';
+
+  @override
+  String get contentCoverPending =>
+      'The video is being prepared: its images will be available soon.';
+
+  @override
+  String get contentCoverSaved => 'Thumbnail saved';
 }

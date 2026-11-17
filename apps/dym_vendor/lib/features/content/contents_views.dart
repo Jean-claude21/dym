@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:dym_account/dym_account.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
@@ -46,6 +47,12 @@ abstract interface class VendorContentService {
   Future<Result<void>> archive(String contentId);
 
   Future<Result<void>> delete(String contentId);
+
+  /// Miniature (spec 103) : image [frame] de la vidéo ; null : par défaut.
+  Future<Result<ContentItem>> setCover(String contentId, int? frame);
+
+  /// Pays de la boutique (devise des statistiques).
+  Future<Result<CountryConfig>> countryConfig();
 
   /// Taux versé aux créatrices qui font vendre (spec 039), de la boutique ou
   /// d'un de ses produits.
@@ -159,6 +166,13 @@ class NeonVendorContentService implements VendorContentService {
   @override
   Future<Result<void>> delete(String contentId) =>
       _repository.delete(contentId);
+
+  @override
+  Future<Result<ContentItem>> setCover(String contentId, int? frame) =>
+      _repository.setCover(contentId, frame);
+
+  @override
+  Future<Result<CountryConfig>> countryConfig() => _config();
 
   @override
   Future<Result<AffiliateRate>> affiliateRate({String? productId}) =>
@@ -594,6 +608,29 @@ class MyContentsViewModel extends BaseViewModel {
   List<ContentItem>? items;
   Failure? failure;
 
+  /// Pays (devise des ventes générées).
+  CountryConfig? config;
+
+  String money(int minor) => config?.money(minor).format() ?? '';
+
+  /// Miniature choisie (spec 103) : 0 = image par défaut.
+  Future<void> chooseCover(ContentItem content, int frame) async {
+    final result = await service.setCover(
+      content.id,
+      frame == 0 ? null : frame,
+    );
+    if (result case Ok(:final value)) {
+      ContentItem merge(ContentItem c) => c.id != value.id
+          ? c
+          : c.copyWith(
+              coverFrame: value.coverFrame,
+              clearCover: value.coverFrame == null,
+            );
+      items = (items ?? const <ContentItem>[]).map(merge).toList();
+      notifyListeners();
+    }
+  }
+
   /// Taux d'affiliation ; null : non chargé (réglage masqué).
   AffiliateRate? rate;
   bool savingRate = false;
@@ -651,6 +688,7 @@ class MyContentsViewModel extends BaseViewModel {
 
   Future<void> load() async {
     failure = null;
+    config ??= (await service.countryConfig()).valueOrNull;
     rate ??= (await service.affiliateRate()).valueOrNull;
     if (rate != null && catalog.isEmpty) {
       catalog = (await service.products()).valueOrNull ?? const [];
@@ -854,13 +892,18 @@ class MyContentsView extends StackedView<MyContentsViewModel> {
                           minTileHeight: 72,
                           leading: CircleAvatar(
                             backgroundColor: c.tintVertTendre,
-                            backgroundImage:
+                            backgroundImage: switch (item.posterUrl) {
+                              final poster? when item.isVideo => NetworkImage(
+                                poster,
+                              ),
+                              _ =>
                                 item.mediaKey == null || item.isVideo
-                                ? null
-                                : service.photo(item.mediaKey!),
+                                    ? null
+                                    : service.photo(item.mediaKey!),
+                            },
                             child: item.isText
                                 ? const Text('Aa')
-                                : item.isVideo
+                                : item.isVideo && item.posterUrl == null
                                 ? Icon(
                                     Icons.play_arrow_rounded,
                                     color: c.brandDeep,
@@ -877,19 +920,43 @@ class MyContentsView extends StackedView<MyContentsViewModel> {
                                 l10n.contentArchived,
                             ].join(' · '),
                           ),
-                          subtitle: Text(
-                            l10n.contentStats(
-                              item.viewCount,
-                              item.clickCount,
-                              item.likeCount,
-                            ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                l10n.contentStats(
+                                  item.viewCount,
+                                  item.clickCount,
+                                  item.likeCount,
+                                ),
+                              ),
+                              ContentStatsLine(item: item, money: vm.money),
+                            ],
                           ),
                           trailing: PopupMenuButton<String>(
                             tooltip: l10n.contentActions,
-                            onSelected: (action) => action == 'archive'
-                                ? vm.archive(item)
-                                : vm.delete(item),
+                            onSelected: (action) async {
+                              switch (action) {
+                                case 'archive':
+                                  await vm.archive(item);
+                                case 'cover':
+                                  final frame = await showCoverPicker(
+                                    context,
+                                    item,
+                                  );
+                                  if (frame != null) {
+                                    await vm.chooseCover(item, frame);
+                                  }
+                                default:
+                                  await vm.delete(item);
+                              }
+                            },
                             itemBuilder: (_) => [
+                              if (item.isVideo)
+                                PopupMenuItem(
+                                  value: 'cover',
+                                  child: Text(l10n.contentCoverChoose),
+                                ),
                               if (item.status == 'published')
                                 PopupMenuItem(
                                   value: 'archive',
@@ -1011,6 +1078,27 @@ class MemoryVendorContentService implements VendorContentService {
     _contents.removeWhere((c) => c.id == contentId);
     return const Ok(null);
   }
+
+  @override
+  Future<Result<ContentItem>> setCover(String contentId, int? frame) async {
+    gestures.add('cover:$contentId:$frame');
+    final i = _contents.indexWhere((c) => c.id == contentId);
+    if (i < 0) return const Err(NotFoundFailure('contenu'));
+    _contents[i] = _contents[i].copyWith(
+      coverFrame: frame,
+      clearCover: frame == null,
+    );
+    return Ok(_contents[i]);
+  }
+
+  /// Pays des statistiques ; null : montants non formatés.
+  CountryConfig? config;
+
+  @override
+  Future<Result<CountryConfig>> countryConfig() async => switch (config) {
+    final c? => Ok(c),
+    null => const Err(NotFoundFailure('pays')),
+  };
 
   AffiliateRate rate = const AffiliateRate(minRateBps: 300);
   final productRates = <String, int?>{};

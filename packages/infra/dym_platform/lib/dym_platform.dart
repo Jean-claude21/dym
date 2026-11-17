@@ -3,6 +3,7 @@ library;
 
 export 'src/audio_playback.dart';
 export 'src/call_provider.dart';
+export 'src/data_saver.dart';
 export 'src/error_reporting.dart';
 export 'src/external_page_opener.dart';
 export 'src/google_id_token_provider.dart';

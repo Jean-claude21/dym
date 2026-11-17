@@ -25,6 +25,7 @@ class AccountView extends StackedView<AccountViewModel> {
     this.onGroupBuys,
     this.onMembership,
     this.onOrders,
+    this.onDataSaver,
     this.banner,
   });
 
@@ -55,6 +56,9 @@ class AccountView extends StackedView<AccountViewModel> {
 
   /// Achats groupés entre voisins (spec 051) ; absent : ligne masquée.
   final VoidCallback? onGroupBuys;
+
+  /// Économie de données (spec 103) ; null : pas de réglage.
+  final VoidCallback? onDataSaver;
 
   /// DYM+ (spec 052) ; absent : ligne masquée.
   final VoidCallback? onMembership;
@@ -119,6 +123,7 @@ class AccountView extends StackedView<AccountViewModel> {
           l10n.accountLanguage(l10n.languageName),
           viewModel.isBusy ? null : () => _chooseLanguage(context, viewModel),
         ),
+        row(Icons.data_saver_on_outlined, l10n.accountDataSaver, onDataSaver),
         row(Icons.help_outline_rounded, l10n.accountHelp, onHelp),
       ]),
       [

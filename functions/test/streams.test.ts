@@ -23,13 +23,13 @@ describe("vidéo adaptative (spec 101)", () => {
       mediaBase: "https://media.test",
       provider: {
         ingest: async (_t, url) => (url.endsWith("c1.mp4") ? "v1" : "x"),
-        status: async () => ({ status: "ready", url: "https://cdn.test/v2/playlist.m3u8" }),
+        status: async () => ({ status: "ready", url: "https://cdn.test/v2/playlist.m3u8", thumbs: 8 }),
       },
     });
     expect(result).toMatchObject({ sent: 1, ready: 1 });
     expect(sets).toEqual([
       ["c1", "v1", "processing", null],
-      ["c2", null, "ready", "https://cdn.test/v2/playlist.m3u8"],
+      ["c2", null, "ready", "https://cdn.test/v2/playlist.m3u8", 8],
     ]);
   });
 
@@ -42,8 +42,8 @@ describe("vidéo adaptative (spec 101)", () => {
   it("Bunny : état 4 = prête, adresse HLS du CDN", async () => {
     const provider = bunnyStreamProvider(
       { libraryId: "1", apiKey: "k", cdnHost: "cdn.test" },
-      (async () => new Response(JSON.stringify({ status: 4 }))) as typeof fetch,
+      (async () => new Response(JSON.stringify({ status: 4, thumbnailCount: 6 }))) as typeof fetch,
     );
-    expect(await provider.status("v9")).toEqual({ status: "ready", url: "https://cdn.test/v9/playlist.m3u8" });
+    expect(await provider.status("v9")).toEqual({ status: "ready", url: "https://cdn.test/v9/playlist.m3u8", thumbs: 6 });
   });
 });
