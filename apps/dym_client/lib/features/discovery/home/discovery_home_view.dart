@@ -59,7 +59,9 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
       DiscoveryHomeViewModel(service: service);
 
   @override
-  void onViewModelReady(DiscoveryHomeViewModel viewModel) => viewModel.load();
+  void onViewModelReady(DiscoveryHomeViewModel viewModel) =>
+      // La position décide du lieu (spec 110) : proposée après l'affichage.
+      unawaited(viewModel.load().then((_) => viewModel.locateOnStart()));
 
   @override
   Widget builder(
@@ -170,6 +172,18 @@ class DiscoveryHomeView extends StackedView<DiscoveryHomeViewModel> {
                       ),
                   ],
                 ),
+                // Ailleurs qu'ici (autre ville, autre pays) : y passer.
+                if (vm.suggestsElsewhere)
+                  _ElsewhereBanner(
+                    city: vm.suggestion!.cityName,
+                    onMove: vm.moveToSuggestion,
+                    onDismiss: vm.dismissSuggestion,
+                  ),
+                if (vm.cartElsewhere != null)
+                  _CartElsewhereBanner(
+                    onClear: vm.clearCartElsewhere,
+                    onKeep: vm.keepCartElsewhere,
+                  ),
                 const SizedBox(height: DymTokenSpace.s3),
                 Semantics(
                   header: true,
@@ -300,7 +314,10 @@ class _ZoneButton extends StatelessWidget {
       excludeSemantics: true,
       child: InkWell(
         borderRadius: BorderRadius.circular(DymTokenRadius.button),
-        onTap: () => showZonePicker(context, viewModel),
+        onTap: () {
+          unawaited(viewModel.loadCountries());
+          unawaited(showZonePicker(context, viewModel));
+        },
         child: ConstrainedBox(
           constraints: const BoxConstraints(minHeight: 48),
           child: Padding(
@@ -357,11 +374,11 @@ Future<void> showZonePicker(
       final c = sheet.dym.colors;
       final t = sheet.dym.text;
       final l10n = DymLocalizations.of(sheet);
-      final config = viewModel.config;
+      final config = viewModel.pickerConfig;
       final suggestion = viewModel.suggestion;
       Future<void> pick(String zoneId) async {
         Navigator.pop(sheet);
-        await viewModel.selectZone(zoneId);
+        await viewModel.pickZone(zoneId);
       }
 
       return DraggableScrollableSheet(
@@ -392,12 +409,36 @@ Future<void> showZonePicker(
                     DymButton(
                       label: l10n.zoneConfirm,
                       icon: Icons.check_rounded,
-                      onPressed: () => pick(suggestion.zoneId),
+                      onPressed: () {
+                        Navigator.pop(sheet);
+                        unawaited(viewModel.moveToSuggestion());
+                      },
                     ),
                   ],
                 ),
               ),
             if (suggestion != null) const SizedBox(height: DymTokenSpace.s3),
+            // Autres pays ouverts (spec 110).
+            if (viewModel.countries.length > 1) ...[
+              Wrap(
+                spacing: DymTokenSpace.s1,
+                runSpacing: DymTokenSpace.s1,
+                children: [
+                  for (final country in viewModel.countries)
+                    ChoiceChip(
+                      label: Text(
+                        country.name.resolve(
+                          Localizations.localeOf(sheet).languageCode,
+                        ),
+                      ),
+                      selected: country.code == config?.country.code,
+                      onSelected: (_) =>
+                          unawaited(viewModel.browseCountry(country.code)),
+                    ),
+                ],
+              ),
+              const SizedBox(height: DymTokenSpace.s3),
+            ],
             DymPlacePicker(
               places: [
                 for (final city in config?.cities ?? const <City>[])
@@ -574,6 +615,117 @@ class _ReorderCard extends StatelessWidget {
             onPressed: onReorder,
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// « Tu es à Rouen » : la position est ailleurs que le lieu affiché.
+class _ElsewhereBanner extends StatelessWidget {
+  const new({
+    required this.city,
+    required this.onMove,
+    required this.onDismiss,
+  });
+
+  final String city;
+  final Future<void> Function() onMove;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: c.tintVertTendre,
+          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.near_me_rounded, color: c.brandDeep),
+                  const SizedBox(width: DymTokenSpace.s2),
+                  Expanded(
+                    child: Text(
+                      l10n.homeElsewhereTitle(city),
+                      style: t.title.copyWith(fontSize: 18),
+                    ),
+                  ),
+                  IconButton(
+                    tooltip: l10n.chatDismiss,
+                    onPressed: onDismiss,
+                    icon: const Icon(Icons.close_rounded),
+                  ),
+                ],
+              ),
+              DymButton(
+                label: l10n.homeElsewhereAction(city),
+                icon: Icons.storefront_rounded,
+                onPressed: () => unawaited(onMove()),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Panier rempli dans un autre pays : le vider, ou le garder pour y revenir.
+class _CartElsewhereBanner extends StatelessWidget {
+  const new({required this.onClear, required this.onKeep});
+
+  final Future<void> Function() onClear;
+  final VoidCallback onKeep;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.dym.colors;
+    final t = context.dym.text;
+    final l10n = DymLocalizations.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(top: DymTokenSpace.s2),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: c.muted,
+          borderRadius: BorderRadius.circular(DymTokenRadius.tile),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(DymTokenSpace.s3),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.cartElsewhereText, style: t.body),
+              const SizedBox(height: DymTokenSpace.s2),
+              Row(
+                children: [
+                  Expanded(
+                    child: DymButton(
+                      label: l10n.cartElsewhereClear,
+                      variant: DymButtonVariant.secondary,
+                      onPressed: () => unawaited(onClear()),
+                    ),
+                  ),
+                  const SizedBox(width: DymTokenSpace.s2),
+                  Expanded(
+                    child: TextButton(
+                      onPressed: onKeep,
+                      child: Text(l10n.cartElsewhereKeep),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

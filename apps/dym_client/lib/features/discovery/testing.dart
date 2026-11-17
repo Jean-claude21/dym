@@ -28,7 +28,7 @@ class MemoryDiscoveryService implements DiscoveryService {
       _fail<StoreReviews>('storeReviews') ??
       Ok(reviews[storeId] ?? const StoreReviews());
 
-  final CountryConfig config;
+  CountryConfig config;
   final List<PublicStore> stores;
 
   /// Fiches complètes (la liste en est dérivée).
@@ -113,6 +113,48 @@ class MemoryDiscoveryService implements DiscoveryService {
   @override
   Future<Result<ZoneMatch?>> locateZone() async =>
       _fail('locateZone') ?? Ok(zoneMatch);
+
+  /// Lieux choisis (spec 110) et panier d'un autre pays simulé.
+  final moves = <String>[];
+  String? cartCountry;
+  int cartItems = 0;
+  bool cartCleared = false;
+
+  /// Référentiels des autres pays (choix du quartier ailleurs).
+  final otherConfigs = <String, CountryConfig>{};
+
+  @override
+  Future<Result<PlaceChange>> moveTo(String zoneId, String countryCode) async {
+    moves.add('$countryCode:$zoneId');
+    _zone.value = zoneId;
+    final other = otherConfigs[countryCode];
+    if (other != null) config = other;
+    return Ok(
+      PlaceChange(
+        countryCode: countryCode,
+        countryChanged: true,
+        cartCountry: cartCountry,
+        cartItems: cartItems,
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void>> clearCart() async {
+    cartCleared = true;
+    cartItems = 0;
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<CountryConfig>> countryConfigOf(String countryCode) async =>
+      switch (otherConfigs[countryCode]) {
+        final c? => Ok(c),
+        null =>
+          countryCode == config.country.code
+              ? Ok(config)
+              : const Err(NotFoundFailure('pays')),
+      };
 
   /// Position renvoyée par [myPosition] (`null` : refusée).
   GeoPoint? position;

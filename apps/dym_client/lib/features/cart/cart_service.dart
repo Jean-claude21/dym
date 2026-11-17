@@ -255,9 +255,10 @@ class NeonCartService implements CartService {
 
   @override
   Future<Result<CountryConfig>> countryConfig() async {
-    final cached = _config;
-    if (cached != null) return Ok(cached);
     final code = _view.value.countryCode ?? _auth.me?.profile?.countryCode;
+    final cached = _config;
+    // Référentiel gardé tant que le pays ne change pas (spec 110).
+    if (cached != null && cached.country.code == code) return Ok(cached);
     if (code == null) return const Err(UnauthenticatedFailure('profil'));
     final result = await _reference.countryConfig(code);
     if (result case Ok(:final value)) _config = value;

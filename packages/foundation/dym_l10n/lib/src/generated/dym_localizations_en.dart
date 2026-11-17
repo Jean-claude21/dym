@@ -8366,4 +8366,24 @@ class DymLocalizationsEn extends DymLocalizations {
   @override
   String get chatEmptyOrderThread =>
       'During the delivery, the customer, the shop and the courier write to each other here.';
+
+  @override
+  String homeElsewhereTitle(String city) {
+    return 'You\'re in $city';
+  }
+
+  @override
+  String homeElsewhereAction(String city) {
+    return 'See the shops in $city';
+  }
+
+  @override
+  String get cartElsewhereText =>
+      'Your cart has products from another country. An order never mixes two countries.';
+
+  @override
+  String get cartElsewhereClear => 'Empty the cart';
+
+  @override
+  String get cartElsewhereKeep => 'Keep it for later';
 }

@@ -9779,5 +9779,35 @@
   "chatEmptyOrderThread": "Pendant la livraison, la cliente, la boutique et le livreur s'écrivent ici.",
   "@chatEmptyOrderThread": {
     "description": "Fil de commande vide"
+  },
+  "homeElsewhereTitle": "Tu es à {city}",
+  "@homeElsewhereTitle": {
+    "description": "Accueil : position dans une autre ville ou un autre pays",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "homeElsewhereAction": "Voir les boutiques de {city}",
+  "@homeElsewhereAction": {
+    "description": "Accueil : passer à la ville de la position",
+    "placeholders": {
+      "city": {
+        "type": "String"
+      }
+    }
+  },
+  "cartElsewhereText": "Ton panier contient des produits d'un autre pays. Une commande ne mélange jamais deux pays.",
+  "@cartElsewhereText": {
+    "description": "Panier d'un autre pays"
+  },
+  "cartElsewhereClear": "Vider le panier",
+  "@cartElsewhereClear": {
+    "description": "Vider le panier de l'autre pays"
+  },
+  "cartElsewhereKeep": "Garder pour plus tard",
+  "@cartElsewhereKeep": {
+    "description": "Garder le panier de l'autre pays"
   }
 }

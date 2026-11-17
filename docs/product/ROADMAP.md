@@ -264,6 +264,7 @@ restent simulés et signalés (décision 0015). Une spec à la fois, dans cet or
 | `hors-ligne` | Premier écran sans réseau (dernières lectures gardées), rupture de la vendeuse gardée hors ligne et rejouée | 5 h | ✅ Spec 107 (complète la 062) |
 | `iphone` | Notifications iPhone (son par événement, affichage app fermée), compilation iOS automatique ; CallKit et clé APNs avec le compte Apple | 3 h | ✅ Spec 108 (CallKit : compte Apple) |
 | `suivi-livraison-complet` | Fil de commande cliente · boutique · livreur ; carte de la livraison avec itinéraire tracé pour les trois apps ; vendeuse prévenue à la remise confirmée | 12 h | ✅ Spec 109 |
+| `position-pays` | La position décide du pays : « Tu es à Rouen · Voir les boutiques de Rouen », pays et devise qui suivent, panier d'un autre pays gardé ou vidé | 4 h | ✅ Spec 110 |
 
 Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
 porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.

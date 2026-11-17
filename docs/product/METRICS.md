@@ -87,4 +87,5 @@ fiabilité (ops).
 | `wallet_shared` (type : envoi, demande payée, recharge, argent de poche ; montant) | Serveur | Avoir entre personnes (spec 100) |
 | `recipe_saved` (contenu) | Serveur | « Mes recettes » (spec 101) |
 | `recipe_cooked` (contenu ; jamais la note) | Serveur | « J'ai fait la recette » (spec 101) |
+| `place_changed` (pays d'avant, pays d'arrivée ; jamais la position) | Serveur | Changement de pays par la position (spec 110) |
 | `courier_relaunched` (rang, élargie, livreurs prévenus), `courier_ready_alerted` ; `order_rejected` avec le motif `no_response` (acteur système) | Serveur | Livreurs relancés, alerte « prête », refus automatique (spec 066) |

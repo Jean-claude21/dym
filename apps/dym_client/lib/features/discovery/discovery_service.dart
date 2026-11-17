@@ -29,6 +29,16 @@ abstract interface class DiscoveryService {
   /// ou hors des villes ouvertes). La position n'est pas conservée.
   Future<Result<ZoneMatch?>> locateZone();
 
+  /// Lieu dans n'importe quel pays ouvert (spec 110) : quartier, pays et
+  /// référentiel suivent ; panier d'un autre pays signalé.
+  Future<Result<PlaceChange>> moveTo(String zoneId, String countryCode);
+
+  /// Vide le panier.
+  Future<Result<void>> clearCart();
+
+  /// Référentiel d'un autre pays (choix du quartier ailleurs).
+  Future<Result<CountryConfig>> countryConfigOf(String countryCode);
+
   /// Recherche ou rayon, dans le quartier choisi.
   Future<Result<SearchResults>> search(SearchQuery query);
 
@@ -128,10 +138,42 @@ class NeonDiscoveryService implements DiscoveryService {
   }
 
   @override
+  Future<Result<PlaceChange>> moveTo(String zoneId, String countryCode) async {
+    PlaceChange change;
+    if (_auth.me == null) {
+      // Visiteuse : lieu gardé sur l'appareil.
+      await _visitor?.save(
+        VisitorPlace(zoneId: zoneId, countryCode: countryCode),
+      );
+      change = PlaceChange(countryCode: countryCode);
+    } else {
+      switch (await _discovery.setMyPlace(zoneId)) {
+        case Ok(:final value):
+          change = value;
+        case Err(:final failure):
+          return Err(failure);
+      }
+      // Profil relu : pays, devise et rayons suivent partout.
+      await _auth.bootstrap();
+    }
+    if (_config?.country.code != countryCode) _config = null;
+    _zone.value = zoneId;
+    return Ok(change);
+  }
+
+  @override
+  Future<Result<void>> clearCart() => _discovery.clearCart();
+
+  @override
+  Future<Result<CountryConfig>> countryConfigOf(String countryCode) =>
+      _reference.countryConfig(countryCode);
+
+  @override
   Future<Result<CountryConfig>> countryConfig() async {
-    final cached = _config;
-    if (cached != null) return Ok(cached);
     final code = _countryCode;
+    final cached = _config;
+    // Référentiel gardé tant que le pays ne change pas (spec 110).
+    if (cached != null && cached.country.code == code) return Ok(cached);
     if (code == null) return const Err(UnauthenticatedFailure('profil'));
     final result = await _reference.countryConfig(code);
     if (result case Ok(:final value)) {
@@ -172,10 +214,10 @@ class NeonDiscoveryService implements DiscoveryService {
       case Ok(value: null):
         return const Ok(null);
       case Ok(value: final point?):
+        // Tous les pays ouverts : la position décide (spec 110).
         final match = await _discovery.nearestZone(
           point.latitude,
           point.longitude,
-          countryCode: _countryCode,
         );
         if (match case Ok(value: final m?) when !m.covered) {
           unawaited(trackOutsideCoverage(_events, m));

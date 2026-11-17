@@ -487,3 +487,30 @@ class HomeFeed {
 
 Object? _endOfMarketPercent(Map<dynamic, dynamic> json, String key) =>
     (json['end_of_market'] as Map?)?['percent'];
+
+/// Lieu changé (spec 110) : pays, et panier d'un autre pays à garder ou vider.
+@immutable
+class PlaceChange {
+  const new({
+    required this.countryCode,
+    this.countryChanged = false,
+    this.cartCountry,
+    this.cartItems = 0,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => PlaceChange(
+    countryCode: json['country_code']! as String,
+    countryChanged: json['country_changed'] as bool? ?? false,
+    cartCountry: json['cart_country'] as String?,
+    cartItems: (json['cart_items'] as num?)?.toInt() ?? 0,
+  );
+
+  final String countryCode;
+  final bool countryChanged;
+  final String? cartCountry;
+  final int cartItems;
+
+  /// Panier rempli dans un autre pays que le nouveau lieu.
+  bool get cartElsewhere =>
+      cartItems > 0 && cartCountry != null && cartCountry != countryCode;
+}
