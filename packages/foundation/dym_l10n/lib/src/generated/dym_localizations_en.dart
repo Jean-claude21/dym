@@ -8264,4 +8264,41 @@ class DymLocalizationsEn extends DymLocalizations {
   String courierShareRunText(String url) {
     return 'I\'m delivering with DYM. Follow my run live: $url';
   }
+
+  @override
+  String get authContinueWhatsApp => 'Continue with WhatsApp';
+
+  @override
+  String get authPhoneTitle => 'Your WhatsApp number';
+
+  @override
+  String get authPhoneSubtitle =>
+      'We\'ll send you a 6-digit code on WhatsApp. Your number is never shown to anyone.';
+
+  @override
+  String get authPhoneLabel => 'Number';
+
+  @override
+  String get authDialCode => 'Code';
+
+  @override
+  String authCodeSentToPhone(String phone) {
+    return 'Code sent on WhatsApp to $phone';
+  }
+
+  @override
+  String get authChangePhone => 'Change number';
+
+  @override
+  String authSimulatedCode(String code) {
+    return 'Simulated code (WhatsApp not connected yet): $code';
+  }
+
+  @override
+  String get authPhoneInvalid =>
+      'Incomplete number: check the country code and the number.';
+
+  @override
+  String get authTooManyCodes =>
+      'Too many codes requested. Try again in a few minutes.';
 }

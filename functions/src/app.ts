@@ -30,6 +30,7 @@ import { type BroadcastStore, registerBroadcastRoutes } from "./broadcast/routes
 import { registerTrackingRoutes, type TrackingStore } from "./orders/tracking.js";
 import { registerStreamJob, type StreamDeps } from "./content/streams.js";
 import { type GoogleBridgeDeps, registerGoogleBridge } from "./auth/google.js";
+import { registerWhatsAppRoutes, type WhatsAppDeps } from "./auth/whatsapp.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -84,6 +85,8 @@ export interface AppDeps {
   streams?: StreamDeps;
   /** Pont de connexion Google (spec 102). */
   google?: GoogleBridgeDeps;
+  /** Connexion WhatsApp (spec 105). */
+  whatsapp?: WhatsAppDeps;
   /** Relance des clientes (spec 021). */
   broadcasts?: BroadcastStore;
   /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
@@ -174,6 +177,7 @@ export function createApp(deps: AppDeps) {
   registerTrackingRoutes(app, deps.tracking);
   registerStreamJob(app, deps.streams);
   registerGoogleBridge(app, deps.google);
+  registerWhatsAppRoutes(app, deps.whatsapp);
 
   return app;
 }

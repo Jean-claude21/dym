@@ -14,6 +14,9 @@ class SignInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) => AuthFlowView(
     service: locator<AuthService>(),
+    whatsApp: locator.isRegistered<WhatsAppSignIn>()
+        ? locator<WhatsAppSignIn>()
+        : null,
     startWithProfile: startWithProfile,
     onReady: (_) => StackedAppNavigator().toHome(),
     onBrowse: (zoneId, countryCode) async {

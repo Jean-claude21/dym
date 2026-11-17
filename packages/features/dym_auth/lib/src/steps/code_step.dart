@@ -23,11 +23,15 @@ class CodeStep extends StatelessWidget {
         crossAxisAlignment: WrapCrossAlignment.center,
         spacing: DymTokenSpace.s2,
         children: [
-          Text(l10n.authCodeSentTo(vm.email)),
+          Text(
+            vm.viaWhatsApp
+                ? l10n.authCodeSentToPhone(vm.phoneE164)
+                : l10n.authCodeSentTo(vm.email),
+          ),
           TextButton(
             onPressed: vm.changeEmail,
             child: Text(
-              l10n.authChangeEmail,
+              vm.viaWhatsApp ? l10n.authChangePhone : l10n.authChangeEmail,
               style: t.title.copyWith(
                 fontSize: 16,
                 color: c.brandDeep,
@@ -53,6 +57,21 @@ class CodeStep extends StatelessWidget {
               ),
             ),
       children: [
+        // Mode simulé (staging, sans compte Meta) : le code est affiché.
+        if (vm.simulatedCode case final code?) ...[
+          Container(
+            padding: const EdgeInsets.all(DymTokenSpace.s3),
+            decoration: BoxDecoration(
+              color: c.muted,
+              borderRadius: BorderRadius.circular(DymTokenRadius.field),
+            ),
+            child: Text(
+              l10n.authSimulatedCode(code),
+              style: t.body.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+          const SizedBox(height: DymTokenSpace.s3),
+        ],
         DymCodeInput(
           label: l10n.authCodeLabel,
           error: vm.codeRejected,

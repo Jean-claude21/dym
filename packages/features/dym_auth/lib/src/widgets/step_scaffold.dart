@@ -54,6 +54,8 @@ class AuthErrorBanner extends StatelessWidget {
         AuthError.zoneRequired => l10n.authZoneRequired,
         AuthError.googleUnavailable => l10n.adminGoogleUnavailable,
         AuthError.googleNoAccount => l10n.authGoogleNoAccount,
+        AuthError.phoneInvalid => l10n.authPhoneInvalid,
+        AuthError.tooManyCodes => l10n.authTooManyCodes,
       };
 
   @override

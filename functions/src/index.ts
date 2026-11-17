@@ -28,6 +28,7 @@ import { pgMcpStore } from "./mcp/server.js";
 import { pgTrackingStore } from "./orders/tracking.js";
 import { bunnyStreamProvider, pgStreamStore } from "./content/streams.js";
 import { googleVerifier, pgLoginCodeStore } from "./auth/google.js";
+import { metaWhatsAppSender, pgPhoneCodeStore } from "./auth/whatsapp.js";
 import { pgCallMediaStore } from "./messaging/calls.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
@@ -131,6 +132,26 @@ export default createApp({
         google: {
           verify: googleVerifier(process.env.GOOGLE_CLIENT_IDS.split(",").map((id) => id.trim()).filter(Boolean)),
           store: pgLoginCodeStore(pool),
+        },
+      }
+    : {}),
+  // Connexion WhatsApp (spec 105) : Meta dès que le compte est fourni ; sinon simulé si permis.
+  ...(process.env.WHATSAPP_TOKEN || process.env.WHATSAPP_SIMULATED === "1"
+    ? {
+        whatsapp: {
+          phones: pgPhoneCodeStore(pool),
+          logins: pgLoginCodeStore(pool),
+          simulated: process.env.WHATSAPP_SIMULATED === "1",
+          ...(process.env.WHATSAPP_TOKEN && process.env.WHATSAPP_PHONE_NUMBER_ID
+            ? {
+                sender: metaWhatsAppSender({
+                  token: process.env.WHATSAPP_TOKEN,
+                  phoneNumberId: process.env.WHATSAPP_PHONE_NUMBER_ID,
+                  template: process.env.WHATSAPP_TEMPLATE || "dym_code",
+                  language: process.env.WHATSAPP_TEMPLATE_LANG || "fr",
+                }),
+              }
+            : {}),
         },
       }
     : {}),

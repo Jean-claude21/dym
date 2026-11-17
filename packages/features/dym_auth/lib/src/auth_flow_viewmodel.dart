@@ -1,12 +1,13 @@
 import 'dart:async';
 
 import 'package:dym_auth/src/auth_service.dart';
+import 'package:dym_auth/src/whatsapp_sign_in.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:stacked/stacked.dart';
 
 /// Étapes du parcours de connexion.
-enum AuthStep { welcome, email, code, profile }
+enum AuthStep { welcome, email, phone, code, profile }
 
 /// Erreur affichable du parcours (traduite par la vue).
 enum AuthError {
@@ -22,6 +23,12 @@ enum AuthError {
   /// Aucun compte Google sur le téléphone.
   googleNoAccount,
   passwordWrong,
+
+  /// Numéro de téléphone incomplet (WhatsApp).
+  phoneInvalid,
+
+  /// Trop de codes demandés : réessayer plus tard.
+  tooManyCodes,
 }
 
 /// Résultat d'une demande de position.
@@ -43,6 +50,7 @@ class AuthFlowViewModel extends BaseViewModel {
     required this._service,
     required this.onReady,
     this.onBrowse,
+    this.whatsApp,
     this.locale = 'fr',
     this.supportedLocales,
     this.resendDelay = const Duration(seconds: 60),
@@ -52,6 +60,9 @@ class AuthFlowViewModel extends BaseViewModel {
        _email = initialEmail;
 
   final AuthService _service;
+
+  /// Connexion WhatsApp (spec 105) ; nulle : pas proposée.
+  final WhatsAppSignIn? whatsApp;
 
   /// Appelé quand le profil est complet : la personne entre dans l'app.
   final void Function(Me me) onReady;
@@ -156,7 +167,10 @@ class AuthFlowViewModel extends BaseViewModel {
   /// « Passer » : dernier écran de bienvenue.
   void skipWelcome() => setWelcomePage(welcomePages - 1);
 
-  void chooseEmail() => _goTo(AuthStep.email);
+  void chooseEmail() {
+    _viaWhatsApp = false;
+    _goTo(AuthStep.email);
+  }
 
   /// « Découvrir sans compte » : choix du quartier (position ou liste).
   Future<void> chooseBrowse() async {
@@ -187,6 +201,91 @@ class AuthFlowViewModel extends BaseViewModel {
         break; // annulé : on reste sur la bienvenue, sans message
       case Ok(:final value?):
         await _handleState(value);
+      case Err(:final failure):
+        _setError(_errorFor(failure));
+    }
+  }
+
+  // --- WhatsApp (spec 105)
+
+  bool _whatsAppAvailable = false;
+  bool _whatsAppSimulated = false;
+  bool _viaWhatsApp = false;
+  String _dialCode = '';
+  String _phone = '';
+  String? _simulatedCode;
+
+  bool get whatsAppAvailable => _whatsAppAvailable;
+  bool get viaWhatsApp => _viaWhatsApp;
+  String get dialCode => _dialCode;
+  String get phone => _phone;
+
+  /// Code rendu en mode simulé (staging) : affiché, signalé « simulé ».
+  String? get simulatedCode => _whatsAppSimulated ? _simulatedCode : null;
+
+  /// Numéro international (+228…) : chiffres seuls, sans 0 de tête.
+  String get phoneE164 {
+    final digits = _phone
+        .replaceAll(RegExp('[^0-9]'), '')
+        .replaceFirst(RegExp('^0+'), '');
+    return '$_dialCode$digits';
+  }
+
+  bool get phoneValid => RegExp(r'^\+[1-9][0-9]{7,14}$').hasMatch(phoneE164);
+
+  /// Indicatifs proposés (pays ouverts).
+  List<Country> get dialCountries => _countries;
+
+  /// Interroge le service une fois (bienvenue).
+  Future<void> loadWhatsApp() async {
+    final service = whatsApp;
+    if (service == null) return;
+    final status = await service.status();
+    _whatsAppAvailable = status.available;
+    _whatsAppSimulated = status.simulated;
+    notifyListeners();
+  }
+
+  Future<void> chooseWhatsApp() async {
+    _clearError();
+    if (_countries.isEmpty) {
+      final countries = await runBusyFuture(_service.countries());
+      if (countries case Ok(:final value)) _countries = value;
+    }
+    if (_dialCode.isEmpty) {
+      _dialCode = _countries.firstOrNull?.dialCode ?? '+228';
+    }
+    _goTo(AuthStep.phone);
+  }
+
+  void setDialCode(String value) {
+    _dialCode = value;
+    notifyListeners();
+  }
+
+  void setPhone(String value) {
+    _phone = value;
+    _clearError(notify: false);
+    notifyListeners();
+  }
+
+  Future<void> submitPhone() async {
+    final service = whatsApp;
+    if (service == null) return;
+    if (!phoneValid) {
+      _setError(AuthError.phoneInvalid);
+      return;
+    }
+    _clearError();
+    final result = await runBusyFuture(service.send(phoneE164));
+    switch (result) {
+      case Ok(:final value):
+        _viaWhatsApp = true;
+        _simulatedCode = value;
+        _code = '';
+        _codeRejected = false;
+        _startResendTimer();
+        _goTo(AuthStep.code);
       case Err(:final failure):
         _setError(_errorFor(failure));
     }
@@ -271,8 +370,11 @@ class AuthFlowViewModel extends BaseViewModel {
   Future<void> verifyCode() async {
     if (_code.length != codeLength || isBusy) return;
     _clearError();
+    final wa = whatsApp;
     final result = await runBusyFuture(
-      _service.verifyEmailCode(_email.trim().toLowerCase(), _code),
+      _viaWhatsApp && wa != null
+          ? wa.verify(phoneE164, _code)
+          : _service.verifyEmailCode(_email.trim().toLowerCase(), _code),
     );
     switch (result) {
       case Ok(:final value):
@@ -290,6 +392,21 @@ class AuthFlowViewModel extends BaseViewModel {
   Future<void> resendCode() async {
     if (!canResend) return;
     _clearError();
+    final wa = whatsApp;
+    if (_viaWhatsApp && wa != null) {
+      final sent = await runBusyFuture(wa.send(phoneE164));
+      switch (sent) {
+        case Ok(:final value):
+          _simulatedCode = value;
+          _code = '';
+          _codeRejected = false;
+          _startResendTimer();
+          notifyListeners();
+        case Err(:final failure):
+          _setError(_errorFor(failure));
+      }
+      return;
+    }
     final result = await runBusyFuture(
       _service.sendEmailCode(_email.trim().toLowerCase()),
     );
@@ -433,11 +550,11 @@ class AuthFlowViewModel extends BaseViewModel {
     switch (_step) {
       case AuthStep.welcome:
         return false;
-      case AuthStep.email:
+      case AuthStep.email || AuthStep.phone:
         _goTo(AuthStep.welcome);
       case AuthStep.code:
         _resendTimer?.cancel();
-        _goTo(AuthStep.email);
+        _goTo(_viaWhatsApp ? AuthStep.phone : AuthStep.email);
       case AuthStep.profile:
         // Visiteuse : retour à la bienvenue ; session ouverte : obligatoire.
         if (!_browsing) return false;
@@ -449,7 +566,7 @@ class AuthFlowViewModel extends BaseViewModel {
 
   void changeEmail() {
     _resendTimer?.cancel();
-    _goTo(AuthStep.email);
+    _goTo(_viaWhatsApp ? AuthStep.phone : AuthStep.email);
   }
 
   Future<void> _handleState(AuthState state) async {
@@ -482,7 +599,9 @@ class AuthFlowViewModel extends BaseViewModel {
   }
 
   AuthError _errorFor(Failure failure) => switch (failure) {
+    RateLimitedFailure() when _step == AuthStep.phone => AuthError.tooManyCodes,
     NetworkFailure() || RateLimitedFailure() => AuthError.offline,
+    ValidationFailure() when _step == AuthStep.phone => AuthError.phoneInvalid,
     NotFoundFailure(message: 'google_no_account') => AuthError.googleNoAccount,
     UnauthenticatedFailure() => AuthError.sessionExpired,
     ValidationFailure() when _step == AuthStep.email => AuthError.emailInvalid,

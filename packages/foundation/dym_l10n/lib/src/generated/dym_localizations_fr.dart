@@ -8316,4 +8316,41 @@ class DymLocalizationsFr extends DymLocalizations {
   String courierShareRunText(String url) {
     return 'Je suis en livraison avec DYM. Suis ma course en direct : $url';
   }
+
+  @override
+  String get authContinueWhatsApp => 'Continuer avec WhatsApp';
+
+  @override
+  String get authPhoneTitle => 'Ton numéro WhatsApp';
+
+  @override
+  String get authPhoneSubtitle =>
+      'On t\'envoie un code à 6 chiffres sur WhatsApp. Ton numéro n\'est montré à personne.';
+
+  @override
+  String get authPhoneLabel => 'Numéro';
+
+  @override
+  String get authDialCode => 'Indicatif';
+
+  @override
+  String authCodeSentToPhone(String phone) {
+    return 'Code envoyé sur WhatsApp au $phone';
+  }
+
+  @override
+  String get authChangePhone => 'Changer de numéro';
+
+  @override
+  String authSimulatedCode(String code) {
+    return 'Code simulé (WhatsApp pas encore branché) : $code';
+  }
+
+  @override
+  String get authPhoneInvalid =>
+      'Numéro incomplet : vérifie l\'indicatif et le numéro.';
+
+  @override
+  String get authTooManyCodes =>
+      'Trop de codes demandés. Réessaie dans quelques minutes.';
 }

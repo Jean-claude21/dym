@@ -188,6 +188,23 @@ class NeonAuthService implements AuthService {
     return await _afterSession(recordSignIn: true);
   }
 
+  // ---------------------------------------------------------------- spec 105
+
+  Future<Result<({bool available, bool simulated})>> whatsAppStatus() =>
+      _neon.whatsAppStatus();
+
+  Future<Result<String?>> whatsAppStart(String phone) =>
+      _neon.whatsAppStart(phone);
+
+  Future<Result<AuthState>> signInWithWhatsApp(
+    String phone,
+    String code,
+  ) async {
+    final session = await _neon.signInWithWhatsApp(phone, code);
+    if (session case Err(:final failure)) return Err(failure);
+    return await _afterSession(recordSignIn: true);
+  }
+
   @override
   Future<Result<List<Country>>> countries() => _reference.countries();
 
