@@ -2416,5 +2416,18 @@
   "authTooManyCodes": "Too many codes requested. Try again in a few minutes.",
   "catalogOfflinePending": "{n, plural, =1{1 change kept offline: it will be sent when you're back online.} other{{n} changes kept offline: they will be sent when you're back online.}}",
   "homeFromCache": "Offline: showing your last visit.",
-  "authCodeTipWhatsApp": "Tip: the code arrives in WhatsApp in less than a minute."
+  "authCodeTipWhatsApp": "Tip: the code arrives in WhatsApp in less than a minute.",
+  "chatQuickOnMyWay": "I'm on my way.",
+  "chatQuickAtTheDoor": "I'm at your door.",
+  "chatQuickCantFind": "I can't find the address, can you help?",
+  "chatThreadClosed": "Delivery completed: this conversation is closed.",
+  "orderLiveChat": "Chat with the shop and the courier",
+  "orderLiveChatVendor": "Chat with the customer and the courier",
+  "orderLiveChatCourier": "Chat with the customer and the shop",
+  "orderLiveToStore": "Heading to the shop",
+  "orderLiveToDoor": "Heading to the customer",
+  "orderLiveDelivered": "Delivered and confirmed with the code",
+  "orderLiveWaiting": "Waiting for a courier",
+  "orderLiveEta": "{minutes} min",
+  "orderLiveTitle": "Delivery tracking"
 }

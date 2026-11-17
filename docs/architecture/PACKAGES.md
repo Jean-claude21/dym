@@ -39,6 +39,7 @@ dym/
 │  └─ features/
 │     ├─ dym_auth/       # Écrans + viewmodels Stacked d'authentification (4 apps)
 │     ├─ dym_notifications/  # Centre de notifications (créé avec order-lifecycle)
+│     ├─ dym_order_live/     # Livraison en direct : carte et itinéraire (spec 109)
 │     ├─ dym_chat/       # Messagerie (créé avec messaging)
 │     └─ dym_account/    # Profil, réglages, FAQ, support, formules (DYM+, Pro)
 ├─ functions/            # Neon Functions (TypeScript)
@@ -60,6 +61,7 @@ dym/
 | `dym_map` | UI (carte, décision 0022) | `dym_core`, `dym_ui`, `maplibre_gl` | Client, vendeur (livreur : spec 096) | `carte` (spec 095) |
 | `dym_auth` | Feature | Stacked, `dym_data`, `dym_ui` | 4 apps | `auth` |
 | `dym_notifications` | Feature | `dym_data`, `dym_ui` | Vendeur, livreur (boîte et cloche, spec 097) | `notifications-appels` |
+| `dym_order_live` | Feature | `dym_data`, `dym_map`, `dym_ui` | Cliente, vendeur, livreur (carte de livraison avec itinéraire, spec 109) | `suivi-livraison-complet` |
 | `dym_chat` | Feature | idem | Client, vendeur | `messaging` |
 | `dym_account` | Feature | idem | Client, vendeur, livreur | `auth` |
 

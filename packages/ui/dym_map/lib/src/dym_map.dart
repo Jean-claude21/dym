@@ -12,6 +12,7 @@ class DymMapSpec {
     this.pins = const [],
     this.pinStyles = const {},
     this.areas = const [],
+    this.routes = const [],
     this.selectedPinId,
     this.onPinTap,
     this.onMapTap,
@@ -23,6 +24,9 @@ class DymMapSpec {
 
   /// Épingle mise en avant (jamais regroupée).
   final String? selectedPinId;
+
+  /// Itinéraires tracés (spec 109).
+  final List<DymMapRoute> routes;
 
   final DymLatLng initialCenter;
   final double initialZoom;
@@ -53,6 +57,7 @@ class DymMap extends StatelessWidget {
     this.pins = const [],
     this.pinStyles = const {},
     this.areas = const [],
+    this.routes = const [],
     this.selectedPinId,
     this.onPinTap,
     this.onMapTap,
@@ -74,6 +79,9 @@ class DymMap extends StatelessWidget {
   final List<DymMapPin> pins;
   final Map<String, DymPinStyle> pinStyles;
   final List<DymMapArea> areas;
+
+  /// Itinéraires tracés (spec 109).
+  final List<DymMapRoute> routes;
   final ValueChanged<String>? onPinTap;
   final ValueChanged<DymLatLng>? onMapTap;
   final ValueChanged<DymMapView>? onCameraIdle;
@@ -90,6 +98,7 @@ class DymMap extends StatelessWidget {
       pins: pins,
       pinStyles: pinStyles,
       areas: areas,
+      routes: routes,
       selectedPinId: selectedPinId,
       onPinTap: onPinTap,
       onMapTap: onMapTap,

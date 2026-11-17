@@ -13872,6 +13872,84 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Astuce : le code arrive dans WhatsApp en moins d\'une minute.'**
   String get authCodeTipWhatsApp;
+
+  /// Réponse rapide du livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Je suis en route.'**
+  String get chatQuickOnMyWay;
+
+  /// Réponse rapide du livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Je suis devant chez toi.'**
+  String get chatQuickAtTheDoor;
+
+  /// Réponse rapide du livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'Je ne trouve pas l\'adresse, peux-tu m\'aider ?'**
+  String get chatQuickCantFind;
+
+  /// Fil de commande fermé
+  ///
+  /// In fr, this message translates to:
+  /// **'Livraison terminée : cette conversation est fermée.'**
+  String get chatThreadClosed;
+
+  /// Ouvrir le fil de commande (cliente)
+  ///
+  /// In fr, this message translates to:
+  /// **'Discuter avec la boutique et le livreur'**
+  String get orderLiveChat;
+
+  /// Ouvrir le fil de commande (vendeuse)
+  ///
+  /// In fr, this message translates to:
+  /// **'Discuter avec la cliente et le livreur'**
+  String get orderLiveChatVendor;
+
+  /// Ouvrir le fil de commande (livreur)
+  ///
+  /// In fr, this message translates to:
+  /// **'Discuter avec la cliente et la boutique'**
+  String get orderLiveChatCourier;
+
+  /// Phase : le livreur va chercher la commande
+  ///
+  /// In fr, this message translates to:
+  /// **'En route vers la boutique'**
+  String get orderLiveToStore;
+
+  /// Phase : le livreur livre
+  ///
+  /// In fr, this message translates to:
+  /// **'En route vers la cliente'**
+  String get orderLiveToDoor;
+
+  /// Phase : remise confirmée
+  ///
+  /// In fr, this message translates to:
+  /// **'Livrée et confirmée par le code'**
+  String get orderLiveDelivered;
+
+  /// Phase : pas encore de livreur
+  ///
+  /// In fr, this message translates to:
+  /// **'En attente d\'un livreur'**
+  String get orderLiveWaiting;
+
+  /// Minutes restantes
+  ///
+  /// In fr, this message translates to:
+  /// **'{minutes} min'**
+  String orderLiveEta(int minutes);
+
+  /// Titre de la carte de suivi
+  ///
+  /// In fr, this message translates to:
+  /// **'Suivi de la livraison'**
+  String get orderLiveTitle;
 }
 
 class _DymLocalizationsDelegate

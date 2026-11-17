@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:dym_account/dym_account.dart';
 import 'package:dym_auth/dym_auth.dart';
+import 'package:dym_chat/dym_chat.dart';
+import 'package:dym_core/dym_core.dart';
 import 'package:dym_delivery/app/app.locator.dart';
 import 'package:dym_delivery/features/earnings/earnings_view.dart';
 import 'package:dym_delivery/features/missions/missions_service.dart';
@@ -9,6 +11,7 @@ import 'package:dym_delivery/features/missions/missions_views.dart';
 import 'package:dym_delivery/ui/navigation.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_notifications/dym_notifications.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +59,26 @@ class _HomeViewState extends State<HomeView> {
     // Notifications du téléphone (spec 069), une fois connecté.
     if (locator.isRegistered<PushNotifications>()) {
       unawaited(locator<PushNotifications>().start());
+    }
+  }
+
+  /// Fil de la commande (cliente, boutique, livreur) : ouvert dès que la
+  /// course est acceptée.
+  Future<void> _openChat(String orderId) async {
+    final chat = locator<ChatService>();
+    final thread = await chat.orderThread(orderId);
+    if (!mounted) return;
+    if (thread case Ok(:final value)) {
+      final navigator = Navigator.of(context);
+      await navigator.push<void>(
+        MaterialPageRoute(
+          builder: (_) => ChatView(
+            service: chat,
+            conversationId: value.id,
+            onBack: navigator.pop,
+          ),
+        ),
+      );
     }
   }
 
@@ -126,6 +149,13 @@ class _HomeViewState extends State<HomeView> {
             service: _missions,
             onCall: _call,
             onRoute: _route,
+            // Carte de la course et fil de commande (spec 109).
+            live: locator.isRegistered<OrderLiveService>()
+                ? locator<OrderLiveService>()
+                : null,
+            onChat: locator.isRegistered<ChatService>()
+                ? (orderId) => unawaited(_openChat(orderId))
+                : null,
           ),
         ),
         HomeTab.runs => MyRunsView(service: _missions, history: true),

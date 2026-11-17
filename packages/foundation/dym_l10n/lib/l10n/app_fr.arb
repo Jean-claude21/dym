@@ -9718,5 +9718,62 @@
   "authCodeTipWhatsApp": "Astuce : le code arrive dans WhatsApp en moins d'une minute.",
   "@authCodeTipWhatsApp": {
     "description": "Code : astuce WhatsApp"
+  },
+  "chatQuickOnMyWay": "Je suis en route.",
+  "@chatQuickOnMyWay": {
+    "description": "Réponse rapide du livreur"
+  },
+  "chatQuickAtTheDoor": "Je suis devant chez toi.",
+  "@chatQuickAtTheDoor": {
+    "description": "Réponse rapide du livreur"
+  },
+  "chatQuickCantFind": "Je ne trouve pas l'adresse, peux-tu m'aider ?",
+  "@chatQuickCantFind": {
+    "description": "Réponse rapide du livreur"
+  },
+  "chatThreadClosed": "Livraison terminée : cette conversation est fermée.",
+  "@chatThreadClosed": {
+    "description": "Fil de commande fermé"
+  },
+  "orderLiveChat": "Discuter avec la boutique et le livreur",
+  "@orderLiveChat": {
+    "description": "Ouvrir le fil de commande (cliente)"
+  },
+  "orderLiveChatVendor": "Discuter avec la cliente et le livreur",
+  "@orderLiveChatVendor": {
+    "description": "Ouvrir le fil de commande (vendeuse)"
+  },
+  "orderLiveChatCourier": "Discuter avec la cliente et la boutique",
+  "@orderLiveChatCourier": {
+    "description": "Ouvrir le fil de commande (livreur)"
+  },
+  "orderLiveToStore": "En route vers la boutique",
+  "@orderLiveToStore": {
+    "description": "Phase : le livreur va chercher la commande"
+  },
+  "orderLiveToDoor": "En route vers la cliente",
+  "@orderLiveToDoor": {
+    "description": "Phase : le livreur livre"
+  },
+  "orderLiveDelivered": "Livrée et confirmée par le code",
+  "@orderLiveDelivered": {
+    "description": "Phase : remise confirmée"
+  },
+  "orderLiveWaiting": "En attente d'un livreur",
+  "@orderLiveWaiting": {
+    "description": "Phase : pas encore de livreur"
+  },
+  "orderLiveEta": "{minutes} min",
+  "@orderLiveEta": {
+    "description": "Minutes restantes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "orderLiveTitle": "Suivi de la livraison",
+  "@orderLiveTitle": {
+    "description": "Titre de la carte de suivi"
   }
 }

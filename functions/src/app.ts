@@ -31,6 +31,7 @@ import { registerTrackingRoutes, type TrackingStore } from "./orders/tracking.js
 import { registerStreamJob, type StreamDeps } from "./content/streams.js";
 import { type GoogleBridgeDeps, registerGoogleBridge } from "./auth/google.js";
 import { registerWhatsAppRoutes, type WhatsAppDeps } from "./auth/whatsapp.js";
+import { registerRouteRoutes, type RouteProvider } from "./routing/route.js";
 
 export interface AppDeps {
   verifyToken: TokenVerifier;
@@ -87,6 +88,8 @@ export interface AppDeps {
   google?: GoogleBridgeDeps;
   /** Connexion WhatsApp (spec 105). */
   whatsapp?: WhatsAppDeps;
+  /** Itinéraire dessiné sur la carte (spec 109). */
+  routes?: RouteProvider;
   /** Services externes branchés (oui/non), lus par la surveillance (spec 106). */
   features?: Record<string, boolean>;
   /** Base joignable (`select 1`), pour `/health?deep=1`. */
@@ -195,6 +198,7 @@ export function createApp(deps: AppDeps) {
   registerStreamJob(app, deps.streams);
   registerGoogleBridge(app, deps.google);
   registerWhatsAppRoutes(app, deps.whatsapp);
+  registerRouteRoutes(app, deps.verifyToken, deps.routes);
 
   return app;
 }

@@ -96,6 +96,9 @@ Conversation _$ConversationFromJson(
             v == null ? null : ChatMessage.fromJson(v as Map<String, dynamic>),
       ),
       unread: $checkedConvert('unread', (v) => (v as num?)?.toInt() ?? 0),
+      orderId: $checkedConvert('order_id', (v) => v as String?),
+      courierName: $checkedConvert('courier_name', (v) => v as String?),
+      closed: $checkedConvert('closed', (v) => v as bool? ?? false),
     );
     return val;
   },
@@ -107,6 +110,8 @@ Conversation _$ConversationFromJson(
     'clientFirstName': 'client_first_name',
     'lastMessageAt': 'last_message_at',
     'lastMessage': 'last_message',
+    'orderId': 'order_id',
+    'courierName': 'courier_name',
   },
 );
 

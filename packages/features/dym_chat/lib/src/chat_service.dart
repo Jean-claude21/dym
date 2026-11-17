@@ -7,6 +7,30 @@ import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/widgets.dart';
 
 /// Messagerie d'une app (cliente ou vendeuse). Remplaçable en test.
+/// Nom affiché d'une conversation selon qui la regarde. Fil d'une commande
+/// (spec 109) : la boutique et la cliente, avec le livreur.
+extension ConversationTitle on Conversation {
+  String title(ChatRole role) {
+    final client = clientFirstName ?? '';
+    final courier = courierName;
+    if (!isOrderThread) {
+      return role == ChatRole.vendor ? client : storeName;
+    }
+    return switch (role) {
+      ChatRole.client => [storeName, ?courier].join(' · '),
+      ChatRole.vendor => [client, ?courier].join(' · '),
+      ChatRole.courier => [storeName, client].join(' → '),
+    };
+  }
+
+  /// Nom de l'auteur d'un message (fil à plusieurs).
+  String authorName(String authorRole) => switch (authorRole) {
+    'vendor' => storeName,
+    'courier' => courierName ?? '',
+    _ => clientFirstName ?? '',
+  };
+}
+
 abstract interface class ChatService {
   /// Nouveaux messages en direct (spec 067).
   Stream<LiveSignal> get live;
@@ -22,6 +46,9 @@ abstract interface class ChatService {
   /// Cliente : ouvrir (ou retrouver) la conversation avec une boutique.
   /// Refus : `store_unavailable`, `own_store`.
   Future<Result<Conversation>> start(String storeId);
+
+  /// Fil d'une commande : cliente, boutique et livreur (spec 109).
+  Future<Result<Conversation>> orderThread(String orderId);
 
   /// Fil d'une conversation ; l'ouvrir la marque lue.
   Future<Result<ConversationThread>> thread(String id);
@@ -128,6 +155,10 @@ class NeonChatService implements ChatService {
   @override
   Future<Result<Conversation>> start(String storeId) =>
       _repository.start(storeId);
+
+  @override
+  Future<Result<Conversation>> orderThread(String orderId) =>
+      _repository.orderThread(orderId);
 
   @override
   Future<Result<ConversationThread>> thread(String id) =>

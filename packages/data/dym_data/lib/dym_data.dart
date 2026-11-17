@@ -27,6 +27,7 @@ export 'src/people_wallet_repository.dart';
 export 'src/pilot_repository.dart';
 export 'src/qr_payment_repository.dart';
 export 'src/reference_repository.dart';
+export 'src/route_repository.dart';
 export 'src/search_ai_repository.dart';
 export 'src/shopping_list_repository.dart';
 export 'src/space_repository.dart';

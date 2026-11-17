@@ -4,6 +4,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_ui/dym_ui.dart';
 import 'package:dym_vendor/features/orders/adjustments_panel.dart';
 import 'package:dym_vendor/features/orders/couriers_view.dart';
@@ -436,10 +437,18 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
     super.key,
     this.clock = DateTime.now,
     this.adjustments,
+    this.live,
+    this.onOrderChat,
   });
 
   /// Remplacement validé par photo (spec 034) ; absent : masqué.
   final VendorAdjustmentsService? adjustments;
+
+  /// Livraison en direct avec itinéraire (spec 109) ; nulle : masquée.
+  final OrderLiveService? live;
+
+  /// Fil de la commande (cliente, boutique, livreur), par la commande.
+  final ValueChanged<String>? onOrderChat;
 
   final OrdersService service;
 
@@ -898,6 +907,27 @@ class OrderDetailView extends StackedView<OrderDetailViewModel> {
             ),
         ],
       ),
+      // Livraison en direct (spec 109) : la vendeuse voit le livreur venir,
+      // repartir, puis la remise confirmée.
+      if ((live, order.courier) case (final service?, final courier?)
+          when courier.isDym &&
+              order.status != OrderStatus.refused &&
+              order.status != OrderStatus.cancelled) ...[
+        const SizedBox(height: DymTokenSpace.s4),
+        OrderLiveCard(
+          service: service,
+          orderId: order.id,
+          actions: [
+            if (onOrderChat case final chat?)
+              DymButton(
+                label: l10n.orderLiveChatVendor,
+                icon: Icons.forum_rounded,
+                variant: DymButtonVariant.secondary,
+                onPressed: () => chat(order.id),
+              ),
+          ],
+        ),
+      ],
       if (order.history.isNotEmpty) ...[
         const SizedBox(height: DymTokenSpace.s4),
         DymSectionHeader(title: l10n.orderTimeline),

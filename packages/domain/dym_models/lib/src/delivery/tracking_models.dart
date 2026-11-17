@@ -263,3 +263,31 @@ class FeeBand {
     'fee_minor': feeMinor,
   };
 }
+
+/// Itinéraire tracé sur la carte (spec 109) : points, distance, durée.
+@immutable
+class DeliveryRoute {
+  const new({
+    required this.points,
+    this.distanceM = 0,
+    this.durationS = 0,
+    this.approximate = false,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => DeliveryRoute(
+    points: [
+      for (final p in json['coordinates'] as List? ?? const [])
+        if (p is List && p.length == 2)
+          TrackPoint((p[0] as num).toDouble(), (p[1] as num).toDouble()),
+    ],
+    distanceM: (json['distance_m'] as num?)?.toInt() ?? 0,
+    durationS: (json['duration_s'] as num?)?.toInt() ?? 0,
+  );
+
+  final List<TrackPoint> points;
+  final int distanceM;
+  final int durationS;
+
+  /// Ligne droite (itinéraire inconnu) : tracée en pointillés.
+  final bool approximate;
+}

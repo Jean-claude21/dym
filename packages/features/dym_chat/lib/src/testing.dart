@@ -233,6 +233,25 @@ class MemoryChatService implements ChatService {
       );
 
   @override
+  Future<Result<Conversation>> orderThread(String orderId) async {
+    final failed = _fail<Conversation>();
+    if (failed != null) return failed;
+    final id = 'o-$orderId';
+    final existing = _threads[id];
+    if (existing != null) return Ok(existing.conversation);
+    final created = Conversation(
+      id: id,
+      storeId: 's',
+      storeName: 'Boutique',
+      clientFirstName: 'Awa',
+      orderId: orderId,
+      courierName: 'Kofi',
+    );
+    _threads[id] = ConversationThread(conversation: created, role: role.code);
+    return Ok(created);
+  }
+
+  @override
   Future<Result<Conversation>> start(String storeId) async {
     final failed = _fail<Conversation>();
     if (failed != null) return failed;

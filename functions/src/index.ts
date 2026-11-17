@@ -29,6 +29,7 @@ import { pgTrackingStore } from "./orders/tracking.js";
 import { bunnyStreamProvider, pgStreamStore } from "./content/streams.js";
 import { googleVerifier, pgLoginCodeStore } from "./auth/google.js";
 import { metaWhatsAppSender, pgPhoneCodeStore } from "./auth/whatsapp.js";
+import { cachedRouteProvider, osrmRouteProvider } from "./routing/route.js";
 import { pgCallMediaStore } from "./messaging/calls.js";
 import { pgMessagingStore, s3MediaSigner } from "./messaging/routes.js";
 import { pgReviewStore } from "./reviews/routes.js";
@@ -77,6 +78,8 @@ const features = {
 
 export default createApp({
   features,
+  // Itinéraires (spec 109) : OSRM ; serveur public de démonstration par défaut (staging).
+  routes: cachedRouteProvider(osrmRouteProvider(process.env.ROUTING_URL || "https://router.project-osrm.org")),
   dbCheck: async () => {
     await pool.query("select 1");
   },

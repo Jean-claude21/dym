@@ -59,6 +59,7 @@ class _MapLibreViewState extends State<_MapLibreView>
       unawaited(_pushPins());
     }
     if (!listEquals(old.spec.areas, spec.areas)) unawaited(_pushAreas());
+    if (!listEquals(old.spec.routes, spec.routes)) unawaited(_pushRoutes());
   }
 
   Future<void> _onStyleLoaded() async {
@@ -66,6 +67,7 @@ class _MapLibreViewState extends State<_MapLibreView>
     _images.clear();
     await _pushPins();
     await _pushAreas();
+    await _pushRoutes();
     spec.onReady?.call(this);
   }
 
@@ -116,6 +118,27 @@ class _MapLibreViewState extends State<_MapLibreView>
       'features': [
         for (final pin in spec.pins)
           if (pin.id != selected) feature(pin),
+      ],
+    });
+  }
+
+  Future<void> _pushRoutes() async {
+    await _controller?.setGeoJsonSource(DymMapLayers.routesSource, {
+      'type': 'FeatureCollection',
+      'features': [
+        for (final route in spec.routes)
+          if (route.points.length >= 2)
+            {
+              'type': 'Feature',
+              'id': route.id,
+              'properties': {'route': route.id, 'dashed': route.dashed},
+              'geometry': {
+                'type': 'LineString',
+                'coordinates': [
+                  for (final p in route.points) [p.longitude, p.latitude],
+                ],
+              },
+            },
       ],
     });
   }

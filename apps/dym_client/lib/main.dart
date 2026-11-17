@@ -26,6 +26,7 @@ import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:neon_kit/neon_kit.dart';
@@ -80,6 +81,13 @@ Future<void> configureServices(DymEnvironment environment) async {
     ..registerSingleton(environment)
     ..registerSingleton(neon)
     ..registerSingleton(dataSaver)
+    // Livraison en direct avec itinéraire (spec 109).
+    ..registerSingleton<OrderLiveService>(
+      NeonOrderLiveService(
+        DeliveryRepository(neon.data),
+        RouteRepository(neon.functions),
+      ),
+    )
     ..registerSingleton<LiveFeed>(live)
     // Notifications du téléphone (spec 069) : démarrées à l'accueil, une fois
     // la personne connectée ; le toucher ouvre l'écran concerné.

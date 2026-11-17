@@ -73,6 +73,9 @@ String quickReplyText(DymLocalizations l10n, QuickReply reply) =>
       QuickReply.soldOut => l10n.chatQuickSoldOut,
       QuickReply.preparing => l10n.chatQuickPreparing,
       QuickReply.thanksOrder => l10n.chatQuickThanksOrder,
+      QuickReply.onMyWay => l10n.chatQuickOnMyWay,
+      QuickReply.atTheDoor => l10n.chatQuickAtTheDoor,
+      QuickReply.cantFind => l10n.chatQuickCantFind,
     };
 
 String _orderStatus(DymLocalizations l10n, OrderStatus status) =>
@@ -334,9 +337,7 @@ class _ConversationTile extends StatelessWidget {
     final c = context.dym.colors;
     final t = context.dym.text;
     final l10n = DymLocalizations.of(context);
-    final name = role == ChatRole.vendor
-        ? (conversation.clientFirstName ?? '')
-        : conversation.storeName;
+    final name = conversation.title(role);
     final last = conversation.lastMessage;
     final at = conversation.lastMessageAt;
     final unread = conversation.unread > 0;
@@ -518,9 +519,7 @@ class ChatView extends StackedView<ChatViewModel> {
     final vm = viewModel;
     final conv = vm.thread?.conversation;
     final vendor = service.role == ChatRole.vendor;
-    final name = conv == null
-        ? ''
-        : (vendor ? (conv.clientFirstName ?? '') : conv.storeName);
+    final name = conv == null ? '' : conv.title(service.role);
     final openStore = vendor || conv == null ? null : onOpenStore;
     final identity = Row(
       children: [
@@ -704,19 +703,31 @@ class ChatView extends StackedView<ChatViewModel> {
                   ),
                 ),
               ),
-            if (vm.quickReplies.isNotEmpty) _QuickReplies(vm: vm),
-            DymContentWidth.form(
-              child: _Composer(
-                vm: vm,
-                pickProducts: switch ((pickProducts, conv)) {
-                  (final pick?, final conv?) => (context) => pick(
-                    context,
-                    conv.storeId,
-                  ),
-                  _ => null,
-                },
+            // Fil d'une commande terminée (spec 109) : lecture seule.
+            if (conv?.closed ?? false)
+              Padding(
+                padding: const EdgeInsets.all(DymTokenSpace.s3),
+                child: Text(
+                  l10n.chatThreadClosed,
+                  textAlign: TextAlign.center,
+                  style: t.label.copyWith(color: c.textSecondary),
+                ),
+              )
+            else ...[
+              if (vm.quickReplies.isNotEmpty) _QuickReplies(vm: vm),
+              DymContentWidth.form(
+                child: _Composer(
+                  vm: vm,
+                  pickProducts: switch ((pickProducts, conv)) {
+                    (final pick?, final conv?) => (context) => pick(
+                      context,
+                      conv.storeId,
+                    ),
+                    _ => null,
+                  },
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),
@@ -993,7 +1004,35 @@ class _Bubble extends StatelessWidget {
         meta: meta(onBrand: mine),
       ),
     };
-    return _Placed(mine: mine, continued: entry.continued, child: content);
+    // Fil à plusieurs (spec 109) : le nom de l'auteur au-dessus de sa bulle.
+    final conv = vm.thread?.conversation;
+    final named = !mine && !entry.continued && (conv?.isOrderThread ?? false);
+    return _Placed(
+      mine: mine,
+      continued: entry.continued,
+      child: named
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: DymTokenSpace.s1,
+                    bottom: 2,
+                  ),
+                  child: Text(
+                    conv!.authorName(message.authorRole),
+                    style: context.dym.text.label.copyWith(
+                      color: context.dym.colors.brandDeep,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                content,
+              ],
+            )
+          : content,
+    );
   }
 }
 

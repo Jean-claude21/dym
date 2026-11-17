@@ -47,6 +47,7 @@ import 'package:dym_client/ui/views/home/home_view.dart';
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_l10n/dym_l10n.dart';
 import 'package:dym_models/dym_models.dart';
+import 'package:dym_order_live/dym_order_live.dart';
 import 'package:dym_platform/dym_platform.dart';
 import 'package:flutter/material.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -512,6 +513,11 @@ class StackedAppNavigator implements AppNavigator {
       adjustments: locator.isRegistered<AdjustmentsService>()
           ? locator<AdjustmentsService>()
           : null,
+      // Livraison en direct et fil de commande (spec 109).
+      live: locator.isRegistered<OrderLiveService>()
+          ? locator<OrderLiveService>()
+          : null,
+      onOrderChat: (orderId) => unawaited(toOrderChat(orderId)),
     ),
   );
 
@@ -809,6 +815,13 @@ class StackedAppNavigator implements AppNavigator {
 
   @override
   void toChat(String conversationId) => _push(_chatView(conversationId));
+
+  /// Fil de la commande : cliente, boutique et livreur (spec 109).
+  Future<void> toOrderChat(String orderId) async {
+    if (await _chat.orderThread(orderId) case Ok(:final value)) {
+      toChat(value.id);
+    }
+  }
 
   Widget _chatView(String id, {String? productId}) => Builder(
     builder: (context) => ChatView(
