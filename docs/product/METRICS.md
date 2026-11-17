@@ -89,4 +89,5 @@ fiabilité (ops).
 | `recipe_cooked` (contenu ; jamais la note) | Serveur | « J'ai fait la recette » (spec 101) |
 | `place_changed` (pays d'avant, pays d'arrivée ; jamais la position) | Serveur | Changement de pays par la position (spec 110) |
 | `chat_reaction_added` (emoji), `chat_message_deleted` (pour tous ou pour soi, type), `chat_message_forwarded` (type) ; `chat_message_sent` compte aussi les documents (`kind: file`) et les réponses (`reply`) ; jamais le contenu | Serveur | Chat refait (spec 111) |
+| `group_created` (type), `group_member_added` (type) ; notifications `new_message_group` et `group_added` sans le message | Serveur | Groupes de discussion (spec 112) |
 | `courier_relaunched` (rang, élargie, livreurs prévenus), `courier_ready_alerted` ; `order_rejected` avec le motif `no_response` (acteur système) | Serveur | Livreurs relancés, alerte « prête », refus automatique (spec 066) |

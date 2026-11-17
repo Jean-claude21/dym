@@ -8608,4 +8608,93 @@ class DymLocalizationsFr extends DymLocalizations {
 
   @override
   String get chatClose => 'Fermer';
+
+  @override
+  String get chatNewGroup => 'Nouveau groupe';
+
+  @override
+  String get chatNewGroupTitle => 'Créer un groupe famille';
+
+  @override
+  String get chatGroupNameLabel => 'Nom du groupe';
+
+  @override
+  String get chatGroupNameHint => 'Ex. : La famille, Les courses du samedi';
+
+  @override
+  String get chatCreate => 'Créer';
+
+  @override
+  String get chatFilterGroups => 'Groupes';
+
+  @override
+  String chatMembers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count membres',
+      one: '1 membre',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatGroupInfo => 'Infos du groupe';
+
+  @override
+  String get chatAddMember => 'Ajouter un proche';
+
+  @override
+  String get chatMemberCodeHelp =>
+      'Son code est dans « Entre proches », sous son QR.';
+
+  @override
+  String get chatAdmin => 'Administratrice';
+
+  @override
+  String chatRemoveMember(String name) {
+    return 'Retirer $name du groupe';
+  }
+
+  @override
+  String get chatLeaveGroup => 'Quitter le groupe';
+
+  @override
+  String chatLeaveConfirm(String name) {
+    return 'Quitter « $name » ?';
+  }
+
+  @override
+  String get chatRenameGroup => 'Renommer le groupe';
+
+  @override
+  String get chatMemberUnknown => 'Aucun compte avec ce code';
+
+  @override
+  String get chatGroupFull => 'Le groupe est complet (20 personnes)';
+
+  @override
+  String get chatGroupDiscuss => 'Discuter avec le groupe';
+
+  @override
+  String get chatEmptyGroup => 'Écris le premier message du groupe.';
+
+  @override
+  String get chatGroupBuyLabel => 'Achat groupé';
+
+  @override
+  String get chatFamilyLabel => 'Groupe famille';
+
+  @override
+  String notifGroupMessageBody(String name) {
+    return '$name a écrit dans le groupe.';
+  }
+
+  @override
+  String get notifGroupAddedTitle => 'Nouveau groupe';
+
+  @override
+  String notifGroupAddedBody(String name, String group) {
+    return '$name t\'a ajoutée au groupe « $group ».';
+  }
 }

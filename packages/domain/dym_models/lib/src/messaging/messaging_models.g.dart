@@ -52,6 +52,8 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
       ),
       deleted: $checkedConvert('deleted', (v) => v as bool? ?? false),
       forwarded: $checkedConvert('forwarded', (v) => v as bool? ?? false),
+      authorName: $checkedConvert('author_name', (v) => v as String?),
+      mine: $checkedConvert('mine', (v) => v as bool?),
     );
     return val;
   },
@@ -64,6 +66,7 @@ ChatMessage _$ChatMessageFromJson(Map<String, dynamic> json) => $checkedCreate(
     'durationMs': 'duration_ms',
     'liveUntil': 'live_until',
     'replyTo': 'reply_to',
+    'authorName': 'author_name',
   },
 );
 
@@ -111,6 +114,13 @@ Conversation _$ConversationFromJson(
       orderId: $checkedConvert('order_id', (v) => v as String?),
       courierName: $checkedConvert('courier_name', (v) => v as String?),
       closed: $checkedConvert('closed', (v) => v as bool? ?? false),
+      kind: $checkedConvert('kind', (v) => v as String? ?? 'direct'),
+      groupTitle: $checkedConvert('title', (v) => v as String?),
+      groupOfferId: $checkedConvert('group_offer_id', (v) => v as String?),
+      membersCount: $checkedConvert(
+        'members_count',
+        (v) => (v as num?)?.toInt(),
+      ),
     );
     return val;
   },
@@ -124,6 +134,9 @@ Conversation _$ConversationFromJson(
     'lastMessage': 'last_message',
     'orderId': 'order_id',
     'courierName': 'courier_name',
+    'groupTitle': 'title',
+    'groupOfferId': 'group_offer_id',
+    'membersCount': 'members_count',
   },
 );
 

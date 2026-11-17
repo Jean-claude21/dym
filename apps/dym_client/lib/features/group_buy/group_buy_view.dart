@@ -90,10 +90,18 @@ class GroupBuysViewModel extends BaseViewModel {
 
 /// « Achats groupés » : prix de groupe et livraison partagée entre voisins.
 class GroupBuysView extends StackedView<GroupBuysViewModel> {
-  const new({required this.service, required this.onBack, super.key});
+  const new({
+    required this.service,
+    required this.onBack,
+    super.key,
+    this.onDiscuss,
+  });
 
   final GroupBuyService service;
   final VoidCallback onBack;
+
+  /// Fil du groupe (spec 112) ; nul : pas de discussion.
+  final ValueChanged<String>? onDiscuss;
 
   @override
   GroupBuysViewModel viewModelBuilder(BuildContext context) =>
@@ -155,7 +163,11 @@ class GroupBuysView extends StackedView<GroupBuysViewModel> {
                       ),
                     for (final o in offers)
                       DymContentWidth(
-                        child: GroupOfferCard(vm: vm, offer: o),
+                        child: GroupOfferCard(
+                          vm: vm,
+                          offer: o,
+                          onDiscuss: onDiscuss,
+                        ),
                       ),
                   ],
                 ),
@@ -166,10 +178,11 @@ class GroupBuysView extends StackedView<GroupBuysViewModel> {
 }
 
 class GroupOfferCard extends StatelessWidget {
-  const new({required this.vm, required this.offer, super.key});
+  const new({required this.vm, required this.offer, super.key, this.onDiscuss});
 
   final GroupBuysViewModel vm;
   final GroupOffer offer;
+  final ValueChanged<String>? onDiscuss;
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +237,15 @@ class GroupOfferCard extends StatelessWidget {
             ),
             if (offer.myQuantity case final q?)
               Text(l10n.groupBuyMine(q), style: t.body),
+            if (onDiscuss case final discuss? when offer.joined)
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton.icon(
+                  onPressed: () => discuss(offer.id),
+                  icon: const Icon(Icons.forum_rounded),
+                  label: Text(l10n.chatGroupDiscuss),
+                ),
+              ),
             if (offer.canOrder && CartScope.maybeOf(context) != null) ...[
               const SizedBox(height: DymTokenSpace.s2),
               DymButton(

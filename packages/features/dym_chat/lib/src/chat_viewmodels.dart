@@ -38,6 +38,27 @@ class ConversationsViewModel extends BaseViewModel {
 
   /// Fils de commande proposés en filtre (au moins un dans la liste).
   bool get hasOrderThreads => conversations.any((c) => c.isOrderThread);
+
+  /// Groupes (spec 112) : filtre dès qu'il y en a un.
+  bool get hasGroups => conversations.any((c) => c.isGroup);
+
+  /// Seule une cliente crée un groupe famille.
+  bool get canCreateGroups => service.role == ChatRole.client;
+
+  /// Crée un groupe famille ; son identifiant (nul : échec).
+  Future<String?> createFamilyGroup(String title) async {
+    final result = await service.createFamilyGroup(title);
+    switch (result) {
+      case Ok(:final value):
+        await load();
+        return value.id;
+      case Err(:final failure):
+        _failure = failure;
+        notifyListeners();
+        return null;
+    }
+  }
+
   bool _delivered = false;
   Failure? get failure => _failure;
   bool get ready => _conversations != null;
@@ -57,6 +78,7 @@ class ConversationsViewModel extends BaseViewModel {
               ConversationFilter.all => true,
               ConversationFilter.unread => c.unread > 0,
               ConversationFilter.orders => c.isOrderThread,
+              ConversationFilter.groups => c.isGroup,
             })
           c,
     ];
@@ -111,7 +133,7 @@ class ConversationsViewModel extends BaseViewModel {
 }
 
 /// Filtres de la liste des conversations (spec 111).
-enum ConversationFilter { all, unread, orders }
+enum ConversationFilter { all, unread, orders, groups }
 
 /// Réactions proposées d'un appui long (spec 111).
 const quickReactions = ['👍', '💚', '😂', '😮', '😢', '🙏'];
@@ -294,7 +316,7 @@ class ChatViewModel extends BaseViewModel {
   ChatOrder? get activeOrder => _thread?.activeOrder;
 
   /// Réponses rapides : champ vide, pas d'enregistrement en cours.
-  List<QuickReply> get quickReplies => !_draftEmpty || recording
+  List<QuickReply> get quickReplies => !_draftEmpty || recording || isGroup
       ? const []
       : switch (role) {
           ChatRole.vendor => QuickReply.vendor,
@@ -421,6 +443,7 @@ class ChatViewModel extends BaseViewModel {
           .where((s) => s.kind == 'typing' && s.entityId == conversationId)
           .listen((s) {
             typingRole = s.payload['role'] as String? ?? '';
+            _typingFrom = s.payload['name'] as String?;
             _typingTimer?.cancel();
             _typingTimer = Timer(const Duration(seconds: 5), () {
               typingRole = null;
@@ -454,6 +477,9 @@ class ChatViewModel extends BaseViewModel {
 
   /// Rôle de la personne en train d'écrire (nul : personne).
   String? typingRole;
+
+  /// Prénom envoyé avec « écrit… » (groupe, spec 112).
+  String? _typingFrom;
   StreamSubscription<LiveSignal>? _typingSub;
   Timer? _typingTimer;
   DateTime? _typingSentAt;
@@ -463,7 +489,63 @@ class ChatViewModel extends BaseViewModel {
     final r = typingRole;
     final conv = _thread?.conversation;
     if (r == null || conv == null) return '';
+    if (conv.isGroup && r == 'client') return _typingFrom ?? '';
     return conv.authorName(r);
+  }
+
+  // ---------------------------------------------------------------- spec 112
+
+  /// Conversation de groupe (famille, achat groupé).
+  bool get isGroup => _thread?.conversation.isGroup ?? false;
+
+  /// Détail du groupe (page « Infos du groupe »).
+  GroupInfo? group;
+
+  Future<void> loadGroup() async {
+    if (await service.groupInfo(conversationId) case Ok(:final value)) {
+      group = value;
+      if (!_disposed) notifyListeners();
+    }
+  }
+
+  /// Ajoute un proche par son code ; nul si c'est fait, sinon la raison
+  /// (`recipient_unknown`, `group_full`, autre).
+  Future<String?> addMember(String code) async {
+    switch (await service.addGroupMember(conversationId, code)) {
+      case Ok(:final value):
+        group = value;
+        notifyListeners();
+        return null;
+      case Err(failure: NotFoundFailure()):
+        return 'recipient_unknown';
+      case Err(:final failure) when failure.message.contains('group_full'):
+        return 'group_full';
+      case Err():
+        return 'error';
+    }
+  }
+
+  Future<void> removeMember(String userId) async {
+    if (await service.removeGroupMember(conversationId, userId) case Ok()) {
+      await loadGroup();
+    }
+  }
+
+  /// Quitter le groupe (pas l'administratrice).
+  Future<bool> leaveGroup() async {
+    final me = group?.members.where((m) => m.me).firstOrNull;
+    if (me == null) return false;
+    return (await service.removeGroupMember(conversationId, me.userId)).isOk;
+  }
+
+  Future<void> renameGroup(String title) async {
+    if (await service.renameGroup(conversationId, title) case Ok(
+      :final value,
+    )) {
+      group = value;
+      notifyListeners();
+      await load();
+    }
   }
 
   /// Message auquel je réponds (glisser ou « Répondre »).

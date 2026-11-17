@@ -14298,6 +14298,150 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Fermer'**
   String get chatClose;
+
+  /// Bouton : créer un groupe famille (spec 112)
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau groupe'**
+  String get chatNewGroup;
+
+  /// Titre de la fenêtre de création
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer un groupe famille'**
+  String get chatNewGroupTitle;
+
+  /// Champ : nom du groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom du groupe'**
+  String get chatGroupNameLabel;
+
+  /// Exemple de nom de groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'Ex. : La famille, Les courses du samedi'**
+  String get chatGroupNameHint;
+
+  /// Valider la création
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer'**
+  String get chatCreate;
+
+  /// Filtre : groupes
+  ///
+  /// In fr, this message translates to:
+  /// **'Groupes'**
+  String get chatFilterGroups;
+
+  /// Nombre de membres d'un groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =1{1 membre} other{{count} membres}}'**
+  String chatMembers(int count);
+
+  /// Menu : détail du groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'Infos du groupe'**
+  String get chatGroupInfo;
+
+  /// Ajouter une personne au groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter un proche'**
+  String get chatAddMember;
+
+  /// Où trouver le code d'une personne
+  ///
+  /// In fr, this message translates to:
+  /// **'Son code est dans « Entre proches », sous son QR.'**
+  String get chatMemberCodeHelp;
+
+  /// Rôle de la créatrice du groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'Administratrice'**
+  String get chatAdmin;
+
+  /// Action : retirer un membre
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer {name} du groupe'**
+  String chatRemoveMember(String name);
+
+  /// Action : quitter le groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter le groupe'**
+  String get chatLeaveGroup;
+
+  /// Confirmation avant de quitter
+  ///
+  /// In fr, this message translates to:
+  /// **'Quitter « {name} » ?'**
+  String chatLeaveConfirm(String name);
+
+  /// Action : renommer
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer le groupe'**
+  String get chatRenameGroup;
+
+  /// Ajout refusé : code inconnu
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun compte avec ce code'**
+  String get chatMemberUnknown;
+
+  /// Ajout refusé : groupe complet
+  ///
+  /// In fr, this message translates to:
+  /// **'Le groupe est complet (20 personnes)'**
+  String get chatGroupFull;
+
+  /// Ouvrir le fil d'une offre groupée
+  ///
+  /// In fr, this message translates to:
+  /// **'Discuter avec le groupe'**
+  String get chatGroupDiscuss;
+
+  /// Fil de groupe vide
+  ///
+  /// In fr, this message translates to:
+  /// **'Écris le premier message du groupe.'**
+  String get chatEmptyGroup;
+
+  /// Mention d'un fil d'achat groupé
+  ///
+  /// In fr, this message translates to:
+  /// **'Achat groupé'**
+  String get chatGroupBuyLabel;
+
+  /// Mention d'un groupe famille
+  ///
+  /// In fr, this message translates to:
+  /// **'Groupe famille'**
+  String get chatFamilyLabel;
+
+  /// Notification : message dans un groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} a écrit dans le groupe.'**
+  String notifGroupMessageBody(String name);
+
+  /// Notification : ajoutée à un groupe (titre)
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau groupe'**
+  String get notifGroupAddedTitle;
+
+  /// Notification : ajoutée à un groupe
+  ///
+  /// In fr, this message translates to:
+  /// **'{name} t\'a ajoutée au groupe « {group} ».'**
+  String notifGroupAddedBody(String name, String group);
 }
 
 class _DymLocalizationsDelegate

@@ -265,8 +265,8 @@ restent simulés et signalés (décision 0015). Une spec à la fois, dans cet or
 | `iphone` | Notifications iPhone (son par événement, affichage app fermée), compilation iOS automatique ; CallKit et clé APNs avec le compte Apple | 3 h | ✅ Spec 108 (CallKit : compte Apple) |
 | `suivi-livraison-complet` | Fil de commande cliente · boutique · livreur ; carte de la livraison avec itinéraire tracé pour les trois apps ; vendeuse prévenue à la remise confirmée | 12 h | ✅ Spec 109 |
 | `position-pays` | La position décide du pays : « Tu es à Rouen · Voir les boutiques de Rouen », pays et devise qui suivent, panier d'un autre pays gardé ou vidé | 4 h | ✅ Spec 110 |
-| `chat-refonte` | Chat refait de bout en bout : répondre (glisser), vocal tenu ou verrouillé avec les secondes, vidéo lue dans la bulle, documents, émojis, réactions, supprimer (pour tous dans l'heure), transférer, ✓✓ reçu et lu, « écrit… », nouveaux messages, recherche, médias, filtres | 14 h | ✅ Spec 111 (groupes : spec suivante) |
-| `chat-groupes` | Groupes : espace famille et achat groupé | 8 h | À faire |
+| `chat-refonte` | Chat refait de bout en bout : répondre (glisser), vocal tenu ou verrouillé avec les secondes, vidéo lue dans la bulle, documents, émojis, réactions, supprimer (pour tous dans l'heure), transférer, ✓✓ reçu et lu, « écrit… », nouveaux messages, recherche, médias, filtres | 14 h | ✅ Spec 111 |
+| `chat-groupes` | Groupes : espace famille (proches ajoutés par leur code DYM, produits de toutes les boutiques) et fil de chaque achat groupé avec la boutique ; lecture, réception et « écrit… » par personne | 8 h | ✅ Spec 112 |
 
 Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
 porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.

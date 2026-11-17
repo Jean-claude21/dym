@@ -149,7 +149,15 @@ String _problem(DymLocalizations l10n, String code) => switch (code) {
 };
 
 class GroupOffersView extends StackedView<GroupOffersViewModel> {
-  const new({required this.service, required this.onBack, super.key});
+  const new({
+    required this.service,
+    required this.onBack,
+    super.key,
+    this.onDiscuss,
+  });
+
+  /// Fil du groupe (spec 112) ; nul : pas de discussion.
+  final ValueChanged<String>? onDiscuss;
 
   final GroupOffersService service;
   final VoidCallback onBack;
@@ -268,14 +276,23 @@ class GroupOffersView extends StackedView<GroupOffersViewModel> {
                                         .formatShortDate(o.closesAt.toLocal()),
                                   ),
                                 }, style: t.label),
-                                if (o.open)
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: TextButton(
-                                      onPressed: () => vm.cancel(o),
-                                      child: Text(l10n.groupOfferCancel),
-                                    ),
-                                  ),
+                                Wrap(
+                                  alignment: WrapAlignment.spaceBetween,
+                                  children: [
+                                    if (onDiscuss case final discuss?
+                                        when o.members > 0)
+                                      TextButton.icon(
+                                        onPressed: () => discuss(o.id),
+                                        icon: const Icon(Icons.forum_rounded),
+                                        label: Text(l10n.chatGroupDiscuss),
+                                      ),
+                                    if (o.open)
+                                      TextButton(
+                                        onPressed: () => vm.cancel(o),
+                                        child: Text(l10n.groupOfferCancel),
+                                      ),
+                                  ],
+                                ),
                               ],
                             ),
                           ),
