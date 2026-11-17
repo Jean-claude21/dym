@@ -95,14 +95,19 @@ class FeedViewModel extends BaseViewModel {
     final on = !content.saved;
     _replace(content.copyWith(saved: on));
     if (await service.toggleSave(content, on: on) case Ok(:final value)) {
-      _replace(value);
+      // Seuls les champs du geste : le reste (commentaires…) vient du fil.
+      _replace(
+        content.copyWith(saved: value.saved, saveCount: value.saveCount),
+      );
     }
   }
 
   /// « J'ai fait la recette » (spec 101).
   Future<void> markCooked(ContentItem content, {String? note}) async {
     if (await service.cooked(content, note: note) case Ok(:final value)) {
-      _replace(value);
+      _replace(
+        content.copyWith(cooked: value.cooked, cookCount: value.cookCount),
+      );
     }
   }
 
@@ -1194,19 +1199,21 @@ class _GridTile extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          if (!content.isVideo && content.mediaKey != null)
+          if (contentPoster(content, service) case final poster?)
             Image(
-              image: service.photo(content.mediaKey!),
+              image: poster,
               fit: BoxFit.cover,
               errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
             )
           else
-            ColoredBox(
-              color: c.brandDeep,
-              child: const Icon(
+            ColoredBox(color: c.brandDeep),
+          if (content.isVideo)
+            const Center(
+              child: Icon(
                 Icons.play_circle_rounded,
                 color: Colors.white,
                 size: 40,
+                shadows: [Shadow(blurRadius: 6)],
               ),
             ),
           Positioned(
@@ -1578,8 +1585,12 @@ class ContentGrid extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                if (item.mediaKey != null && !item.isVideo)
-                  Image(image: service.photo(item.mediaKey!), fit: BoxFit.cover)
+                if (contentPoster(item, service) case final poster?)
+                  Image(
+                    image: poster,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, _, _) => ColoredBox(color: c.brandDeep),
+                  )
                 else
                   ColoredBox(color: c.brandDeep),
                 if (item.isVideo)
@@ -1642,4 +1653,22 @@ class _SavedRecipesViewState extends State<SavedRecipesView> {
             ),
     );
   }
+}
+
+/// Image d'un contenu dans une grille : la photo ; pour une vidéo, la vignette
+/// de la vidéo adaptative (Bunny), sinon la photo du premier produit tagué.
+ImageProvider? contentPoster(ContentItem item, ContentService service) {
+  if (!item.isVideo) {
+    return item.mediaKey == null ? null : service.photo(item.mediaKey!);
+  }
+  final stream = item.streamUrl;
+  if (stream != null && stream.endsWith('/playlist.m3u8')) {
+    return NetworkImage(
+      stream.replaceFirst(RegExp(r'playlist\.m3u8$'), 'thumbnail.jpg'),
+    );
+  }
+  for (final p in item.products) {
+    if (p.photoKey != null) return service.photo(p.photoKey!);
+  }
+  return null;
 }

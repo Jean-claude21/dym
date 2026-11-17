@@ -13650,6 +13650,12 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Rien de publié pour l\'instant.'**
   String get profileNoContent;
+
+  /// Sous-titre de l'étape email en mode mot de passe
+  ///
+  /// In fr, this message translates to:
+  /// **'Connecte-toi avec ton email et ton mot de passe.'**
+  String get authEmailSubtitlePassword;
 }
 
 class _DymLocalizationsDelegate
