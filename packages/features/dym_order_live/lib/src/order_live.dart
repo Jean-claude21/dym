@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:dym_core/dym_core.dart';
 import 'package:dym_data/dym_data.dart';
+import 'package:dym_map/dym_map.dart';
 import 'package:dym_models/dym_models.dart';
 import 'package:stacked/stacked.dart';
 
@@ -78,6 +79,12 @@ class OrderLiveViewModel extends BaseViewModel {
   Timer? _timer;
   LivePhase? _routedPhase;
   TrackPoint? _routedFrom;
+
+  /// Cadrage de la carte : refait quand un point apparaît ou l'étape change.
+  String? fittedKey;
+
+  /// Commandes de la carte affichée (cadrage).
+  DymMapControls? controls;
 
   LivePhase get phase {
     final t = tracking;
