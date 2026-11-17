@@ -170,7 +170,6 @@ void main() {
     );
     expect(find.textContaining('Livré en 35 min'), findsOneWidget);
     await _tap(tester, find.text('Bè, Lomé'));
-    await _tap(tester, find.text('Utiliser ma position'));
     expect(find.text('Tu es à Tokoin ?'), findsOneWidget);
     await _tap(tester, find.text("Oui, c'est ça"));
     expect(service.zone.value, 'tokoin');

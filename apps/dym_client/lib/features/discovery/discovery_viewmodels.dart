@@ -106,6 +106,102 @@ class DiscoveryHomeViewModel extends _LoadingViewModel {
     await load();
   }
 
+  // ---------------------------------------- position et pays (spec 110)
+
+  bool _autoLocated = false;
+
+  /// Panier rempli dans un autre pays que le nouveau lieu (code du pays).
+  String? cartElsewhere;
+
+  /// Le lieu proposé est dans une autre ville ou un autre pays que l'actuel.
+  bool get suggestsElsewhere {
+    final s = _suggestion;
+    if (s == null || !s.covered) return false;
+    return s.countryCode != _config?.country.code || s.cityId != zone?.cityId;
+  }
+
+  /// Au premier affichage : la position est cherchée dans tous les pays
+  /// ouverts ; ailleurs qu'ici, l'accueil propose d'y passer.
+  Future<void> locateOnStart() async {
+    if (_autoLocated) return;
+    _autoLocated = true;
+    final result = await _service.locateZone();
+    if (result case Ok(value: final match?) when match.covered) {
+      if (match.zoneId != zoneId) {
+        _suggestion = match;
+        notifyListeners();
+      }
+    }
+  }
+
+  /// Passe au lieu proposé ; autre pays : pays, devise et boutiques suivent.
+  Future<void> moveToSuggestion() async {
+    final match = _suggestion;
+    if (match == null) return;
+    await moveTo(match.zoneId, match.countryCode);
+  }
+
+  Future<void> moveTo(String zoneId, String countryCode) async {
+    _suggestion = null;
+    if (countryCode == _config?.country.code) {
+      await selectZone(zoneId);
+      return;
+    }
+    final result = await _service.moveTo(zoneId, countryCode);
+    if (result case Ok(:final value) when value.cartElsewhere) {
+      cartElsewhere = value.cartCountry;
+    }
+    if (result case Err(:final failure)) {
+      _failure = failure;
+      notifyListeners();
+      return;
+    }
+    await load();
+  }
+
+  /// Panier de l'autre pays : vidé, ou gardé pour y revenir plus tard.
+  Future<void> clearCartElsewhere() async {
+    await _service.clearCart();
+    cartElsewhere = null;
+    notifyListeners();
+  }
+
+  void keepCartElsewhere() {
+    cartElsewhere = null;
+    notifyListeners();
+  }
+
+  // ------------------------------------ quartier dans un autre pays
+
+  List<Country> countries = const [];
+  CountryConfig? _pickerConfig;
+
+  /// Référentiel affiché dans le choix du quartier (pays courant par défaut).
+  CountryConfig? get pickerConfig => _pickerConfig ?? _config;
+
+  Future<void> loadCountries() async {
+    if (countries.isNotEmpty) return;
+    countries = (await _service.countries()).valueOrNull ?? const [];
+    notifyListeners();
+  }
+
+  Future<void> browseCountry(String code) async {
+    if (code == _config?.country.code) {
+      _pickerConfig = null;
+    } else if (await _service.countryConfigOf(code) case Ok(:final value)) {
+      _pickerConfig = value;
+    }
+    notifyListeners();
+  }
+
+  /// Quartier choisi dans la liste (pays courant ou autre).
+  Future<void> pickZone(String zoneId) async {
+    final country = pickerConfig?.country.code ?? _config?.country.code;
+    _pickerConfig = null;
+    if (country == null) return;
+    await moveTo(zoneId, country);
+  }
+
   /// Propose le quartier le plus proche de la position.
   Future<void> locate() async {
     _locating = true;

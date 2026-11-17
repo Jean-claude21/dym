@@ -13956,6 +13956,36 @@ abstract class DymLocalizations {
   /// In fr, this message translates to:
   /// **'Pendant la livraison, la cliente, la boutique et le livreur s\'écrivent ici.'**
   String get chatEmptyOrderThread;
+
+  /// Accueil : position dans une autre ville ou un autre pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Tu es à {city}'**
+  String homeElsewhereTitle(String city);
+
+  /// Accueil : passer à la ville de la position
+  ///
+  /// In fr, this message translates to:
+  /// **'Voir les boutiques de {city}'**
+  String homeElsewhereAction(String city);
+
+  /// Panier d'un autre pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Ton panier contient des produits d\'un autre pays. Une commande ne mélange jamais deux pays.'**
+  String get cartElsewhereText;
+
+  /// Vider le panier de l'autre pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider le panier'**
+  String get cartElsewhereClear;
+
+  /// Garder le panier de l'autre pays
+  ///
+  /// In fr, this message translates to:
+  /// **'Garder pour plus tard'**
+  String get cartElsewhereKeep;
 }
 
 class _DymLocalizationsDelegate

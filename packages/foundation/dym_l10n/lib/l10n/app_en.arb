@@ -2430,5 +2430,10 @@
   "orderLiveWaiting": "Waiting for a courier",
   "orderLiveEta": "{minutes} min",
   "orderLiveTitle": "Delivery tracking",
-  "chatEmptyOrderThread": "During the delivery, the customer, the shop and the courier write to each other here."
+  "chatEmptyOrderThread": "During the delivery, the customer, the shop and the courier write to each other here.",
+  "homeElsewhereTitle": "You're in {city}",
+  "homeElsewhereAction": "See the shops in {city}",
+  "cartElsewhereText": "Your cart has products from another country. An order never mixes two countries.",
+  "cartElsewhereClear": "Empty the cart",
+  "cartElsewhereKeep": "Keep it for later"
 }

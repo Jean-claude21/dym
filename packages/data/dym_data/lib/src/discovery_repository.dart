@@ -144,4 +144,14 @@ class DiscoveryRepository {
         }
     }
   }
+
+  // ---------------------------------------------------------------- spec 110
+
+  /// Change le lieu (quartier, pays) de la cliente connectée.
+  Future<Result<PlaceChange>> setMyPlace(String zoneId) =>
+      _object('set_my_place', {'p_zone': zoneId}, PlaceChange.fromJson);
+
+  /// Vide le panier (avant de commander dans un autre pays).
+  Future<Result<void>> clearCart() async =>
+      (await _data.rpc<Object?>('cart_clear')).map((_) {});
 }
