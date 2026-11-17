@@ -87,6 +87,10 @@ export interface AppDeps {
   google?: GoogleBridgeDeps;
   /** Connexion WhatsApp (spec 105). */
   whatsapp?: WhatsAppDeps;
+  /** Services externes branchés (oui/non), lus par la surveillance (spec 106). */
+  features?: Record<string, boolean>;
+  /** Base joignable (`select 1`), pour `/health?deep=1`. */
+  dbCheck?: () => Promise<void>;
   /** Relance des clientes (spec 021). */
   broadcasts?: BroadcastStore;
   /** Suivi des erreurs 5xx (constitution IX) ; absent : journal seulement. */
@@ -132,19 +136,32 @@ export function createApp(deps: AppDeps) {
   });
 
   // Santé (sans jeton) : vérifie le déploiement et la branche.
-  app.get("/health", (c) =>
-    c.json({
-      status: "ok",
-      branch: deps.branch ?? null,
-      // Services facultatifs branchés (oui/non, jamais de valeur).
-      features: {
-        google: Boolean(deps.google),
-        streams: Boolean(deps.streams?.provider),
-        ai: Boolean(deps.catalog?.suggester),
-        push: Boolean(deps.push),
+  // Santé (sans jeton) ; `?deep=1` : la base répond aussi (surveillance, spec 106).
+  app.get("/health", async (c) => {
+    let db: "ok" | "down" | undefined;
+    if (c.req.query("deep") === "1" && deps.dbCheck) {
+      db = await deps.dbCheck().then(
+        () => "ok" as const,
+        () => "down" as const,
+      );
+    }
+    return c.json(
+      {
+        status: db === "down" ? "degraded" : "ok",
+        branch: deps.branch ?? null,
+        ...(db ? { db } : {}),
+        // Services facultatifs branchés (oui/non, jamais de valeur).
+        features: {
+          google: Boolean(deps.google),
+          streams: Boolean(deps.streams?.provider),
+          ai: Boolean(deps.catalog?.suggester),
+          push: Boolean(deps.push),
+          ...deps.features,
+        },
       },
-    }),
-  );
+      db === "down" ? 503 : 200,
+    );
+  });
 
   // Identité (avec jeton) : vérifie la chaîne Neon Auth → Function (spec 003, US5).
   app.get("/me", requireUser(deps.verifyToken), (c) =>

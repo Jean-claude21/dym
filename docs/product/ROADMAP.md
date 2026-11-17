@@ -260,6 +260,7 @@ restent simulés et signalés (décision 0015). Une spec à la fois, dans cet or
 | `cuisine-fluide` | Cuisine fluide : miniature immédiate, préchargement, économie de données (240p gardée sur le téléphone), aperçu animé, « Mes vidéos » (temps moyen, fin de lecture, ventes générées, miniature choisie) | 8 h | ✅ Spec 103 |
 | `finitions` | Rayons autorisés pour un enfant, « Partager ma course » du livreur, mouvements du wallet nommés, messages de chargement | 4 h | ✅ Spec 104 |
 | `connexion-whatsapp` | Connexion par WhatsApp : code à 6 chiffres (modèle d'authentification Meta), même compte pour le même numéro ; simulé sur staging jusqu'au compte Meta | 5 h | ✅ Spec 105 (simulé ; clé Meta à fournir) |
+| `surveillance` | Contrôle de staging toutes les 30 min (API, base, services branchés) avec alerte par e-mail | 1 h | ✅ Spec 106 |
 
 Gate : une commande passée et suivie sur la carte depuis Rouen et depuis Lomé, de la boutique à la
 porte, avec codes, notifications et chat, rejouée en entier et validée par le porteur produit.

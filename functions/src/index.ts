@@ -65,7 +65,21 @@ const searchModels = openAiKey ? openAiSearchFactories(openAiKey) : undefined;
 
 const errorDsn = process.env.ERROR_REPORTING_DSN ?? "";
 
+// Services réellement branchés (surveillance, spec 106) : clés présentes, jamais leurs valeurs.
+const features = {
+  push: Boolean(process.env.FCM_SERVICE_ACCOUNT),
+  payments: Boolean(process.env.MONEROO_SECRET_KEY),
+  calls: Boolean(process.env.LIVEKIT_URL && process.env.LIVEKIT_API_KEY && process.env.LIVEKIT_API_SECRET),
+  errors: Boolean(errorDsn),
+  whatsapp: Boolean(process.env.WHATSAPP_TOKEN),
+  media: Boolean(process.env.MEDIA_PUBLIC_URL),
+};
+
 export default createApp({
+  features,
+  dbCheck: async () => {
+    await pool.query("select 1");
+  },
   reportError: errorDsn
     ? sentryReporter(errorDsn, { environment: process.env.NEON_BRANCH })
     : undefined,
