@@ -53,6 +53,18 @@ describe("santé", () => {
     expect(await res.json()).toMatchObject({ status: "ok", branch: "preview", features: { google: false } });
   });
 
+  it("santé profonde : base joignable ou non (spec 106)", async () => {
+    const base = { verifyToken: async () => ({ id: "u", claims: {} }), features: { payments: true } };
+    const up = createApp({ ...base, dbCheck: async () => {} });
+    const ok = await up.request("/health?deep=1");
+    expect(ok.status).toBe(200);
+    expect(await ok.json()).toMatchObject({ status: "ok", db: "ok", features: { payments: true } });
+    const down = createApp({ ...base, dbCheck: async () => { throw new Error("x"); } });
+    const ko = await down.request("/health?deep=1");
+    expect(ko.status).toBe(503);
+    expect(await ko.json()).toMatchObject({ status: "degraded", db: "down" });
+  });
+
   it("route inconnue : 404 normalisé", async () => {
     const res = await call("/nulle-part");
     expect(res.status).toBe(404);

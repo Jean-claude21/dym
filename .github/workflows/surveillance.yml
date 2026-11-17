@@ -1,0 +1,47 @@
+# Surveillance de staging (spec 106) : toutes les 30 minutes, la Function répond, la base aussi, et
+# chaque service externe attendu a sa clé. Un échec fait échouer le contrôle : GitHub prévient par
+# e-mail. Aucune clé n'est lue ni affichée : `/health` ne donne que oui/non.
+name: Surveillance
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      HEALTH_URL: https://br-autumn-base-b1sqtmn4-api.compute.c-5.eu-central-1.aws.neon.tech/health?deep=1
+      # Services qui doivent être branchés sur staging.
+      REQUIRED: google streams ai push payments calls errors media
+    steps:
+      - name: Santé de l'API, de la base et des services
+        run: |
+          set -euo pipefail
+          body=""
+          for attempt in 1 2 3; do
+            if body=$(curl -fsS --max-time 20 "$HEALTH_URL"); then break; fi
+            echo "tentative $attempt en échec" >&2
+            sleep 20
+          done
+          if [ -z "$body" ]; then
+            echo "::error::L'API de staging ne répond pas"
+            exit 1
+          fi
+          echo "$body" | jq .
+          [ "$(echo "$body" | jq -r .status)" = "ok" ] || { echo "::error::Statut dégradé"; exit 1; }
+          [ "$(echo "$body" | jq -r .db)" = "ok" ] || { echo "::error::La base ne répond pas"; exit 1; }
+          missing=""
+          for f in $REQUIRED; do
+            [ "$(echo "$body" | jq -r ".features.$f")" = "true" ] || missing="$missing $f"
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Services sans clé :$missing"
+            exit 1
+          fi
+          echo "Tout est branché."
