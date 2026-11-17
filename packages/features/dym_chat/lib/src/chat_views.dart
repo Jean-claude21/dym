@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
 part 'chat_composer.dart';
+part 'chat_groups.dart';
 part 'chat_message_parts.dart';
 
 /// Heure courte (aujourd'hui), « hier », sinon la date.
@@ -166,24 +167,30 @@ class _OfflineNote extends StatelessWidget {
 }
 
 class _Avatar extends StatelessWidget {
-  const new({required this.name, required this.radius});
+  const new({required this.name, required this.radius, this.icon});
 
   final String name;
   final double radius;
 
+  /// Groupe (spec 112) : une icône au lieu de l'initiale.
+  final IconData? icon;
+
   @override
   Widget build(BuildContext context) {
     final c = context.dym.colors;
+    final glyph = icon;
     return CircleAvatar(
       radius: radius,
       backgroundColor: c.tintVertTendre,
-      child: Text(
-        name.isEmpty ? '?' : name.characters.first.toUpperCase(),
-        style: context.dym.text.title.copyWith(
-          fontSize: radius * 0.8,
-          color: c.brandDeep,
-        ),
-      ),
+      child: glyph != null
+          ? Icon(glyph, color: c.brandDeep, size: radius)
+          : Text(
+              name.isEmpty ? '?' : name.characters.first.toUpperCase(),
+              style: context.dym.text.title.copyWith(
+                fontSize: radius * 0.8,
+                color: c.brandDeep,
+              ),
+            ),
     );
   }
 }
@@ -235,6 +242,17 @@ class ConversationsView extends StackedView<ConversationsViewModel> {
             icon: const Icon(Icons.arrow_back_rounded),
           ),
         Expanded(child: Text(l10n.chatMessagesTitle, style: t.display)),
+        if (vm.ready && vm.canCreateGroups)
+          IconButton(
+            tooltip: l10n.chatNewGroup,
+            onPressed: () async {
+              final title = await askGroupName(context);
+              if (title == null) return;
+              final id = await vm.createFamilyGroup(title);
+              if (id != null) onOpen(id);
+            },
+            icon: Icon(Icons.group_add_rounded, color: c.brandDeep),
+          ),
         if (vm.ready && vm.unread > 0)
           Container(
             padding: const EdgeInsets.symmetric(
@@ -354,6 +372,7 @@ class _FilterChips extends StatelessWidget {
       (ConversationFilter.unread, l10n.chatFilterUnread),
       if (vm.hasOrderThreads)
         (ConversationFilter.orders, l10n.chatFilterOrders),
+      if (vm.hasGroups) (ConversationFilter.groups, l10n.chatFilterGroups),
     ];
     return Padding(
       padding: const EdgeInsets.only(bottom: DymTokenSpace.s2),
@@ -420,7 +439,15 @@ class _ConversationTile extends StatelessWidget {
             padding: const EdgeInsets.all(DymTokenSpace.s3),
             child: Row(
               children: [
-                _Avatar(name: name, radius: 26),
+                _Avatar(
+                  name: name,
+                  radius: 26,
+                  icon: switch (conversation.kind) {
+                    'family' => Icons.family_restroom_rounded,
+                    'group_buy' => Icons.shopping_basket_rounded,
+                    _ => null,
+                  },
+                ),
                 const SizedBox(width: DymTokenSpace.s3),
                 Expanded(
                   child: Column(
@@ -462,7 +489,15 @@ class _ConversationTile extends StatelessWidget {
                           ],
                           Expanded(
                             child: Text(
-                              chatPreview(l10n, last, role),
+                              // Groupe : « Awa : … » pour les autres.
+                              switch ((conversation.isGroup, last)) {
+                                (true, final m?)
+                                    when !m.fromMe(role) &&
+                                        (m.authorName ?? '').isNotEmpty =>
+                                  '${m.authorName} : '
+                                      '${chatPreview(l10n, m, role)}',
+                                _ => chatPreview(l10n, last, role),
+                              },
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: t.body.copyWith(
@@ -601,10 +636,26 @@ class ChatView extends StackedView<ChatViewModel> {
     final conv = vm.thread?.conversation;
     final vendor = service.role == ChatRole.vendor;
     final name = conv == null ? '' : conv.title(service.role);
-    final openStore = vendor || conv == null ? null : onOpenStore;
+    final openStore = vendor || conv == null || conv.isGroup
+        ? null
+        : onOpenStore;
+    void openGroup() => Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => GroupInfoPage(vm: viewModel, onLeft: onBack),
+      ),
+    );
+    final group = conv?.isGroup ?? false;
     final identity = Row(
       children: [
-        _Avatar(name: name, radius: 20),
+        _Avatar(
+          name: name,
+          radius: 20,
+          icon: switch (conv?.kind) {
+            'family' => Icons.family_restroom_rounded,
+            'group_buy' => Icons.shopping_basket_rounded,
+            _ => null,
+          },
+        ),
         const SizedBox(width: DymTokenSpace.s2),
         Flexible(
           child: Column(
@@ -629,6 +680,13 @@ class ChatView extends StackedView<ChatViewModel> {
                     color: c.brandDeep,
                     fontStyle: FontStyle.italic,
                   ),
+                )
+              else if (group)
+                Text(
+                  l10n.chatMembers(conv?.membersCount ?? 0),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: t.label.copyWith(color: c.textSecondary),
                 )
               else if (openStore != null)
                 Text(
@@ -657,7 +715,18 @@ class ChatView extends StackedView<ChatViewModel> {
               icon: const Icon(Icons.arrow_back_rounded),
             ),
             Expanded(
-              child: openStore == null
+              child: (conv?.isGroup ?? false)
+                  ? InkWell(
+                      borderRadius: BorderRadius.circular(DymTokenRadius.chip),
+                      onTap: openGroup,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          minHeight: DymTokenSize.touchMin,
+                        ),
+                        child: identity,
+                      ),
+                    )
+                  : openStore == null
                   ? identity
                   : InkWell(
                       borderRadius: BorderRadius.circular(DymTokenRadius.chip),
@@ -670,7 +739,9 @@ class ChatView extends StackedView<ChatViewModel> {
                       ),
                     ),
             ),
-            if (service.calls case final calls?) ...[
+            // Appels : à deux seulement.
+            if (service.calls case final calls?
+                when !(conv?.isGroup ?? false)) ...[
               IconButton(
                 tooltip: l10n.callAudio,
                 onPressed: () => _call(context, calls, CallKind.audio, name),
@@ -689,6 +760,7 @@ class ChatView extends StackedView<ChatViewModel> {
                 tooltip: l10n.chatMoreOptions,
                 icon: const Icon(Icons.more_vert_rounded),
                 onSelected: (value) {
+                  if (value == 'group') openGroup();
                   if (value == 'search') vm.openSearch();
                   if (value == 'media') {
                     Navigator.of(context).push<void>(
@@ -697,6 +769,14 @@ class ChatView extends StackedView<ChatViewModel> {
                   }
                 },
                 itemBuilder: (_) => [
+                  if (conv?.isGroup ?? false)
+                    PopupMenuItem(
+                      value: 'group',
+                      child: ListTile(
+                        leading: const Icon(Icons.groups_rounded),
+                        title: Text(l10n.chatGroupInfo),
+                      ),
+                    ),
                   PopupMenuItem(
                     value: 'search',
                     child: ListTile(
@@ -798,6 +878,7 @@ class ChatView extends StackedView<ChatViewModel> {
                             name: name,
                             vendor: vendor,
                             orderThread: conv?.isOrderThread ?? false,
+                            group: conv?.isGroup ?? false,
                           )
                         : ListView.builder(
                             reverse: true,
@@ -985,10 +1066,14 @@ class _EmptyThread extends StatelessWidget {
     required this.name,
     required this.vendor,
     this.orderThread = false,
+    this.group = false,
   });
 
   final String name;
   final bool vendor;
+
+  /// Groupe (spec 112).
+  final bool group;
 
   /// Fil d'une commande (spec 109).
   final bool orderThread;
@@ -1015,7 +1100,9 @@ class _EmptyThread extends StatelessWidget {
             ),
             const SizedBox(height: DymTokenSpace.s3),
             Text(
-              orderThread
+              group
+                  ? l10n.chatEmptyGroup
+                  : orderThread
                   ? l10n.chatEmptyOrderThread
                   : name.isEmpty
                   ? l10n.chatEmptyThread
@@ -1281,7 +1368,8 @@ class _Bubble extends StatelessWidget {
       ),
     );
     // Fil à plusieurs (spec 109) : le nom de l'auteur au-dessus de sa bulle.
-    final named = !mine && !entry.continued && (conv?.isOrderThread ?? false);
+    final many = (conv?.isOrderThread ?? false) || (conv?.isGroup ?? false);
+    final named = !mine && !entry.continued && many;
     return _Placed(
       mine: mine,
       continued: entry.continued,
@@ -1296,7 +1384,7 @@ class _Bubble extends StatelessWidget {
                     bottom: 2,
                   ),
                   child: Text(
-                    conv!.authorName(message.authorRole),
+                    message.authorName ?? conv!.authorName(message.authorRole),
                     style: context.dym.text.label.copyWith(
                       color: context.dym.colors.brandDeep,
                       fontWeight: FontWeight.w700,

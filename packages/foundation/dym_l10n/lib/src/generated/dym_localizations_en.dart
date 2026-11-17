@@ -8555,4 +8555,93 @@ class DymLocalizationsEn extends DymLocalizations {
 
   @override
   String get chatClose => 'Close';
+
+  @override
+  String get chatNewGroup => 'New group';
+
+  @override
+  String get chatNewGroupTitle => 'Create a family group';
+
+  @override
+  String get chatGroupNameLabel => 'Group name';
+
+  @override
+  String get chatGroupNameHint => 'E.g. The family, Saturday shopping';
+
+  @override
+  String get chatCreate => 'Create';
+
+  @override
+  String get chatFilterGroups => 'Groups';
+
+  @override
+  String chatMembers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count members',
+      one: '1 member',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get chatGroupInfo => 'Group info';
+
+  @override
+  String get chatAddMember => 'Add someone';
+
+  @override
+  String get chatMemberCodeHelp =>
+      'Their code is in \"Between people\", under their QR.';
+
+  @override
+  String get chatAdmin => 'Admin';
+
+  @override
+  String chatRemoveMember(String name) {
+    return 'Remove $name from the group';
+  }
+
+  @override
+  String get chatLeaveGroup => 'Leave group';
+
+  @override
+  String chatLeaveConfirm(String name) {
+    return 'Leave \"$name\"?';
+  }
+
+  @override
+  String get chatRenameGroup => 'Rename group';
+
+  @override
+  String get chatMemberUnknown => 'No account with this code';
+
+  @override
+  String get chatGroupFull => 'The group is full (20 people)';
+
+  @override
+  String get chatGroupDiscuss => 'Chat with the group';
+
+  @override
+  String get chatEmptyGroup => 'Write the group\'s first message.';
+
+  @override
+  String get chatGroupBuyLabel => 'Group buy';
+
+  @override
+  String get chatFamilyLabel => 'Family group';
+
+  @override
+  String notifGroupMessageBody(String name) {
+    return '$name wrote in the group.';
+  }
+
+  @override
+  String get notifGroupAddedTitle => 'New group';
+
+  @override
+  String notifGroupAddedBody(String name, String group) {
+    return '$name added you to the group \"$group\".';
+  }
 }

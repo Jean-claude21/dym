@@ -245,6 +245,7 @@ class StackedAppNavigator implements AppNavigator {
         builder: (_) => GroupOffersView(
           service: locator<GroupOffersService>(),
           onBack: () => _navigator.pop(),
+          onDiscuss: (offerId) => unawaited(_toGroupOfferChat(offerId)),
         ),
       ),
     );
@@ -534,6 +535,13 @@ class StackedAppNavigator implements AppNavigator {
       ),
     ),
   );
+
+  /// Fil d'une offre groupée (spec 112).
+  Future<void> _toGroupOfferChat(String offerId) async {
+    if (await _chat.groupOfferThread(offerId) case Ok(:final value)) {
+      toChat(value.id);
+    }
+  }
 
   /// Fil de la commande : cliente, boutique et livreur (spec 109).
   Future<void> _toOrderChat(String orderId) async {

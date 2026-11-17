@@ -60,9 +60,17 @@ class ChatMessage {
     this.reactions = const [],
     this.deleted = false,
     this.forwarded = false,
+    this.authorName,
+    this.mine,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);
+
+  /// Groupe (spec 112) : prénom de l'autrice ou de l'auteur.
+  final String? authorName;
+
+  /// Mon message (selon la session) ; nul : déduit du rôle.
+  final bool? mine;
 
   /// Message cité (spec 111).
   @JsonKey(fromJson: MessageQuote.maybeFromJson, includeToJson: false)
@@ -91,7 +99,7 @@ class ChatMessage {
 
   /// Réaction posée par [role] (une par personne).
   String? reactionOf(ChatRole role) => reactions
-      .where((r) => r.roles.contains(role.code))
+      .where((r) => r.mine ?? r.roles.contains(role.code))
       .firstOrNull
       ?.emoji;
 
@@ -142,7 +150,9 @@ class ChatMessage {
   @JsonKey(fromJson: CallSummary.maybeFromJson)
   final CallSummary? call;
 
-  bool fromMe(ChatRole me) => authorRole == me.code;
+  /// Dans un groupe, plusieurs personnes ont le même rôle : la base dit si
+  /// le message est le mien.
+  bool fromMe(ChatRole me) => mine ?? authorRole == me.code;
 }
 
 /// Message cité dans une réponse (spec 111).
@@ -183,7 +193,12 @@ String _snake(String name) =>
 /// Réaction à un message : emoji, nombre et rôles qui l'ont posée.
 @immutable
 class MessageReaction {
-  const new({required this.emoji, required this.count, this.roles = const []});
+  const new({
+    required this.emoji,
+    required this.count,
+    this.roles = const [],
+    this.mine,
+  });
 
   static List<MessageReaction> listFromJson(Object? json) => switch (json) {
     final List<dynamic> list => [
@@ -192,6 +207,7 @@ class MessageReaction {
           emoji: r['emoji'] as String? ?? '',
           count: (r['count'] as num?)?.toInt() ?? 1,
           roles: [for (final role in r['roles'] as List? ?? const []) '$role'],
+          mine: r['mine'] as bool?,
         ),
     ],
     _ => const [],
@@ -200,6 +216,9 @@ class MessageReaction {
   final String emoji;
   final int count;
   final List<String> roles;
+
+  /// Ma réaction (groupe : plusieurs personnes du même rôle).
+  final bool? mine;
 }
 
 /// Conversation entre une cliente et une boutique.
@@ -219,12 +238,32 @@ class Conversation {
     this.orderId,
     this.courierName,
     this.closed = false,
+    this.kind = 'direct',
+    this.groupTitle,
+    this.groupOfferId,
+    this.membersCount,
   });
 
   factory fromJson(Map<String, dynamic> json) => _$ConversationFromJson(json);
 
+  /// `direct`, `order`, `family` ou `group_buy` (spec 112).
+  final String kind;
+
+  /// Nom du groupe (ou du produit de l'offre groupée).
+  @JsonKey(name: 'title')
+  final String? groupTitle;
+  final String? groupOfferId;
+  final int? membersCount;
+
+  bool get isGroup => kind == 'family' || kind == 'group_buy';
+  bool get isFamily => kind == 'family';
+  bool get isGroupBuy => kind == 'group_buy';
+
   final String id;
+  /// Vide pour un groupe famille (spec 112) : pas de boutique.
+  @JsonKey(defaultValue: '')
   final String storeId;
+  @JsonKey(defaultValue: '')
   final String storeName;
   final String? storeOrigin;
   final bool storeActive;
@@ -411,4 +450,64 @@ class CallSession {
   bool get active =>
       status == CallStatus.ringing || status == CallStatus.ongoing;
   bool get simulated => provider == 'simulated';
+}
+
+/// Membre d'un groupe (spec 112) : prénom seulement.
+@immutable
+class GroupMember {
+  const new({
+    required this.userId,
+    required this.firstName,
+    this.admin = false,
+    this.me = false,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => GroupMember(
+    userId: json['user_id']! as String,
+    firstName: json['first_name'] as String? ?? '',
+    admin: json['admin'] as bool? ?? false,
+    me: json['me'] as bool? ?? false,
+  );
+
+  final String userId;
+  final String firstName;
+  final bool admin;
+  final bool me;
+}
+
+/// Détail d'un groupe : nom, membres, suis-je administratrice.
+@immutable
+class GroupInfo {
+  const new({
+    required this.id,
+    required this.kind,
+    required this.title,
+    this.meAdmin = false,
+    this.members = const [],
+    this.storeName,
+    this.groupOfferId,
+  });
+
+  factory fromJson(Map<String, dynamic> json) => GroupInfo(
+    id: json['id']! as String,
+    kind: json['kind'] as String? ?? 'family',
+    title: json['title'] as String? ?? '',
+    meAdmin: json['me_admin'] as bool? ?? false,
+    members: [
+      for (final m in json['members'] as List? ?? const [])
+        GroupMember.fromJson((m as Map).cast<String, dynamic>()),
+    ],
+    storeName: json['store_name'] as String?,
+    groupOfferId: json['group_offer_id'] as String?,
+  );
+
+  final String id;
+  final String kind;
+  final String title;
+  final bool meAdmin;
+  final List<GroupMember> members;
+  final String? storeName;
+  final String? groupOfferId;
+
+  bool get isFamily => kind == 'family';
 }

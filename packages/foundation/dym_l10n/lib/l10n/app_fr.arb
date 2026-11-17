@@ -10032,5 +10032,129 @@
   "chatClose": "Fermer",
   "@chatClose": {
     "description": "Fermer une vue (recherche, plein écran)"
+  },
+  "chatNewGroup": "Nouveau groupe",
+  "@chatNewGroup": {
+    "description": "Bouton : créer un groupe famille (spec 112)"
+  },
+  "chatNewGroupTitle": "Créer un groupe famille",
+  "@chatNewGroupTitle": {
+    "description": "Titre de la fenêtre de création"
+  },
+  "chatGroupNameLabel": "Nom du groupe",
+  "@chatGroupNameLabel": {
+    "description": "Champ : nom du groupe"
+  },
+  "chatGroupNameHint": "Ex. : La famille, Les courses du samedi",
+  "@chatGroupNameHint": {
+    "description": "Exemple de nom de groupe"
+  },
+  "chatCreate": "Créer",
+  "@chatCreate": {
+    "description": "Valider la création"
+  },
+  "chatFilterGroups": "Groupes",
+  "@chatFilterGroups": {
+    "description": "Filtre : groupes"
+  },
+  "chatMembers": "{count, plural, =1{1 membre} other{{count} membres}}",
+  "@chatMembers": {
+    "description": "Nombre de membres d'un groupe",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatGroupInfo": "Infos du groupe",
+  "@chatGroupInfo": {
+    "description": "Menu : détail du groupe"
+  },
+  "chatAddMember": "Ajouter un proche",
+  "@chatAddMember": {
+    "description": "Ajouter une personne au groupe"
+  },
+  "chatMemberCodeHelp": "Son code est dans « Entre proches », sous son QR.",
+  "@chatMemberCodeHelp": {
+    "description": "Où trouver le code d'une personne"
+  },
+  "chatAdmin": "Administratrice",
+  "@chatAdmin": {
+    "description": "Rôle de la créatrice du groupe"
+  },
+  "chatRemoveMember": "Retirer {name} du groupe",
+  "@chatRemoveMember": {
+    "description": "Action : retirer un membre",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatLeaveGroup": "Quitter le groupe",
+  "@chatLeaveGroup": {
+    "description": "Action : quitter le groupe"
+  },
+  "chatLeaveConfirm": "Quitter « {name} » ?",
+  "@chatLeaveConfirm": {
+    "description": "Confirmation avant de quitter",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "chatRenameGroup": "Renommer le groupe",
+  "@chatRenameGroup": {
+    "description": "Action : renommer"
+  },
+  "chatMemberUnknown": "Aucun compte avec ce code",
+  "@chatMemberUnknown": {
+    "description": "Ajout refusé : code inconnu"
+  },
+  "chatGroupFull": "Le groupe est complet (20 personnes)",
+  "@chatGroupFull": {
+    "description": "Ajout refusé : groupe complet"
+  },
+  "chatGroupDiscuss": "Discuter avec le groupe",
+  "@chatGroupDiscuss": {
+    "description": "Ouvrir le fil d'une offre groupée"
+  },
+  "chatEmptyGroup": "Écris le premier message du groupe.",
+  "@chatEmptyGroup": {
+    "description": "Fil de groupe vide"
+  },
+  "chatGroupBuyLabel": "Achat groupé",
+  "@chatGroupBuyLabel": {
+    "description": "Mention d'un fil d'achat groupé"
+  },
+  "chatFamilyLabel": "Groupe famille",
+  "@chatFamilyLabel": {
+    "description": "Mention d'un groupe famille"
+  },
+  "notifGroupMessageBody": "{name} a écrit dans le groupe.",
+  "@notifGroupMessageBody": {
+    "description": "Notification : message dans un groupe",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "notifGroupAddedTitle": "Nouveau groupe",
+  "@notifGroupAddedTitle": {
+    "description": "Notification : ajoutée à un groupe (titre)"
+  },
+  "notifGroupAddedBody": "{name} t'a ajoutée au groupe « {group} ».",
+  "@notifGroupAddedBody": {
+    "description": "Notification : ajoutée à un groupe",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "group": {
+        "type": "String"
+      }
+    }
   }
 }

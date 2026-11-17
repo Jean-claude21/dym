@@ -85,6 +85,18 @@ String timeAgo(DymLocalizations l10n, DateTime at, DateTime now) {
       l10n.notifNewMessageTitle,
       l10n.notifNewMessageBody(n.param('sender_name') ?? ''),
     ),
+    // Groupes (spec 112).
+    'new_message_group' => (
+      n.param('group') ?? l10n.notifNewMessageTitle,
+      l10n.notifGroupMessageBody(n.param('sender_name') ?? ''),
+    ),
+    'group_added' => (
+      l10n.notifGroupAddedTitle,
+      l10n.notifGroupAddedBody(
+        n.param('by_name') ?? '',
+        n.param('group') ?? '',
+      ),
+    ),
     'dispute_replied' => (
       l10n.notifDisputeRepliedTitle,
       l10n.notifDisputeRepliedBody(n.param('author') ?? ''),
@@ -131,6 +143,7 @@ IconData notificationIcon(String kind) => switch (kind) {
   'payment_failed' => Icons.error_rounded,
   'dispute_replied' => Icons.forum_rounded,
   'new_message' => Icons.chat_bubble_rounded,
+  'new_message_group' || 'group_added' => Icons.groups_rounded,
   'dispute_resolved' => Icons.verified_rounded,
   'store_broadcast' => Icons.campaign_rounded,
   'shopping_list_due' => Icons.checklist_rounded,

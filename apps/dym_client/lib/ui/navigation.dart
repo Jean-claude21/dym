@@ -684,7 +684,20 @@ class StackedAppNavigator implements AppNavigator {
   @override
   void toGroupBuys() {
     if (!locator.isRegistered<GroupBuyService>()) return;
-    _push(GroupBuysView(service: locator<GroupBuyService>(), onBack: _back));
+    _push(
+      GroupBuysView(
+        service: locator<GroupBuyService>(),
+        onBack: _back,
+        onDiscuss: (offerId) => unawaited(_toGroupOfferChat(offerId)),
+      ),
+    );
+  }
+
+  /// Fil d'une offre groupée (spec 112).
+  Future<void> _toGroupOfferChat(String offerId) async {
+    if (await _chat.groupOfferThread(offerId) case Ok(:final value)) {
+      toChat(value.id);
+    }
   }
 
   @override

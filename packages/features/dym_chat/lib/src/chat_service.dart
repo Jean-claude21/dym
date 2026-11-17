@@ -13,6 +13,8 @@ extension ConversationTitle on Conversation {
   String title(ChatRole role) {
     final client = clientFirstName ?? '';
     final courier = courierName;
+    // Groupe (spec 112) : son nom.
+    if (isGroup) return groupTitle ?? storeName;
     if (!isOrderThread) {
       return role == ChatRole.vendor ? client : storeName;
     }
@@ -118,6 +120,24 @@ abstract interface class ChatService {
 
   /// « Écrit… » envoyé aux autres personnes de la conversation.
   Future<Result<void>> typing(String conversationId);
+
+  // ---------------------------------------------------------------- spec 112
+
+  /// Espace famille (cliente).
+  Future<Result<Conversation>> createFamilyGroup(String title);
+
+  Future<Result<GroupInfo>> groupInfo(String conversationId);
+
+  /// Ajoute un proche par son code DYM (administratrice).
+  Future<Result<GroupInfo>> addGroupMember(String conversationId, String code);
+
+  /// Retire quelqu'un, ou quitte le groupe (soi-même).
+  Future<Result<void>> removeGroupMember(String conversationId, String userId);
+
+  Future<Result<GroupInfo>> renameGroup(String conversationId, String title);
+
+  /// Fil d'une offre groupée.
+  Future<Result<Conversation>> groupOfferThread(String offerId);
 
   /// Micro (spec 035) ; absent : pas de vocaux.
   VoiceRecorder? get recorder;
@@ -309,6 +329,34 @@ class NeonChatService implements ChatService {
   @override
   Future<Result<void>> typing(String conversationId) =>
       _repository.typing(conversationId);
+
+  @override
+  Future<Result<Conversation>> createFamilyGroup(String title) =>
+      _repository.createFamilyGroup(title);
+
+  @override
+  Future<Result<GroupInfo>> groupInfo(String conversationId) =>
+      _repository.groupInfo(conversationId);
+
+  @override
+  Future<Result<GroupInfo>> addGroupMember(
+    String conversationId,
+    String code,
+  ) => _repository.addGroupMember(conversationId, code);
+
+  @override
+  Future<Result<void>> removeGroupMember(
+    String conversationId,
+    String userId,
+  ) => _repository.removeGroupMember(conversationId, userId);
+
+  @override
+  Future<Result<GroupInfo>> renameGroup(String conversationId, String title) =>
+      _repository.renameGroup(conversationId, title);
+
+  @override
+  Future<Result<Conversation>> groupOfferThread(String offerId) =>
+      _repository.groupOfferThread(offerId);
 
   @override
   Future<Result<Map<String, String>>> mediaUrls(List<String> messageIds) =>

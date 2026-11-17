@@ -213,6 +213,10 @@ class MemoryChatService implements ChatService {
     storeOrigin: t.conversation.storeOrigin,
     storeActive: t.conversation.storeActive,
     clientFirstName: t.conversation.clientFirstName,
+    kind: t.conversation.kind,
+    groupTitle: t.conversation.groupTitle,
+    groupOfferId: t.conversation.groupOfferId,
+    membersCount: t.conversation.membersCount,
     lastMessageAt: t.messages.isEmpty ? null : t.messages.last.createdAt,
     lastMessage: t.messages.isEmpty ? null : t.messages.last,
     unread: _unread(t),
@@ -562,6 +566,124 @@ class MemoryChatService implements ChatService {
   Future<Result<void>> typing(String conversationId) async {
     actions.add('typing:$conversationId');
     return const Ok(null);
+  }
+
+  // ---------------------------------------------------------------- spec 112
+
+  /// Membres des groupes en mémoire ; codes DYM connus.
+  final _groups = <String, GroupInfo>{};
+  final knownCodes = <String, String>{'MIA12345': 'Mia', 'YAO12345': 'Yao'};
+
+  @override
+  Future<Result<Conversation>> createFamilyGroup(String title) async {
+    final failed = _fail<Conversation>();
+    if (failed != null) return failed;
+    final id = 'g${_groups.length + 1}';
+    final conv = Conversation(
+      id: id,
+      storeId: '',
+      storeName: '',
+      kind: 'family',
+      groupTitle: title,
+      membersCount: 1,
+    );
+    _threads[id] = ConversationThread(conversation: conv, role: role.code);
+    _groups[id] = GroupInfo(
+      id: id,
+      kind: 'family',
+      title: title,
+      meAdmin: true,
+      members: const [
+        GroupMember(userId: 'me', firstName: 'Awa', admin: true, me: true),
+      ],
+    );
+    actions.add('group:$title');
+    return Ok(conv);
+  }
+
+  @override
+  Future<Result<GroupInfo>> groupInfo(String conversationId) async {
+    final failed = _fail<GroupInfo>();
+    if (failed != null) return failed;
+    final g = _groups[conversationId];
+    return g == null ? const Err(NotFoundFailure('groupe')) : Ok(g);
+  }
+
+  @override
+  Future<Result<GroupInfo>> addGroupMember(
+    String conversationId,
+    String code,
+  ) async {
+    final g = _groups[conversationId];
+    final name = knownCodes[code.trim().toUpperCase()];
+    if (g == null) return const Err(NotFoundFailure('groupe'));
+    if (name == null) return const Err(NotFoundFailure('recipient_unknown'));
+    final updated = GroupInfo(
+      id: g.id,
+      kind: g.kind,
+      title: g.title,
+      meAdmin: g.meAdmin,
+      members: [
+        ...g.members,
+        GroupMember(userId: 'u-$name', firstName: name),
+      ],
+    );
+    _groups[conversationId] = updated;
+    return Ok(updated);
+  }
+
+  @override
+  Future<Result<void>> removeGroupMember(
+    String conversationId,
+    String userId,
+  ) async {
+    final g = _groups[conversationId];
+    if (g == null) return const Err(NotFoundFailure('groupe'));
+    _groups[conversationId] = GroupInfo(
+      id: g.id,
+      kind: g.kind,
+      title: g.title,
+      meAdmin: g.meAdmin,
+      members: [...g.members.where((m) => m.userId != userId)],
+    );
+    actions.add('remove:$userId');
+    return const Ok(null);
+  }
+
+  @override
+  Future<Result<GroupInfo>> renameGroup(
+    String conversationId,
+    String title,
+  ) async {
+    final g = _groups[conversationId];
+    if (g == null) return const Err(NotFoundFailure('groupe'));
+    final updated = GroupInfo(
+      id: g.id,
+      kind: g.kind,
+      title: title,
+      meAdmin: g.meAdmin,
+      members: g.members,
+    );
+    _groups[conversationId] = updated;
+    return Ok(updated);
+  }
+
+  @override
+  Future<Result<Conversation>> groupOfferThread(String offerId) async {
+    final id = 'offer-$offerId';
+    final existing = _threads[id];
+    if (existing != null) return Ok(existing.conversation);
+    final conv = Conversation(
+      id: id,
+      storeId: 's1',
+      storeName: "Étal d'Akossiwa",
+      kind: 'group_buy',
+      groupTitle: 'Igname',
+      groupOfferId: offerId,
+      membersCount: 3,
+    );
+    _threads[id] = ConversationThread(conversation: conv, role: role.code);
+    return Ok(conv);
   }
 
   @override

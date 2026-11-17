@@ -393,6 +393,69 @@ class MessagingRepository {
     },
   );
 
+  // ---------------------------------------------------------------- spec 112
+
+  /// Espace famille : la créatrice en est l'administratrice.
+  Future<Result<Conversation>> createFamilyGroup(String title) async =>
+      _decode(
+        await _data.rpc<Object?>(
+          'create_family_group',
+          params: {'p_title': title},
+        ),
+        (json) => Conversation.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
+  Future<Result<GroupInfo>> groupInfo(String conversationId) async => _decode(
+    await _data.rpc<Object?>(
+      'group_info',
+      params: {'p_conversation': conversationId},
+    ),
+    (json) => GroupInfo.fromJson((json! as Map).cast<String, dynamic>()),
+  );
+
+  /// Ajoute un proche par son code DYM. Refus : `recipient_unknown`,
+  /// `group_full`, interdit hors administratrice.
+  Future<Result<GroupInfo>> addGroupMember(
+    String conversationId,
+    String handle,
+  ) async => _decode(
+    await _data.rpc<Object?>(
+      'group_add_member',
+      params: {'p_conversation': conversationId, 'p_handle': handle},
+    ),
+    (json) => GroupInfo.fromJson((json! as Map).cast<String, dynamic>()),
+  );
+
+  /// Retire quelqu'un, ou quitte le groupe (soi-même).
+  Future<Result<void>> removeGroupMember(
+    String conversationId,
+    String userId,
+  ) async => (await _data.rpc<Object?>(
+    'group_remove_member',
+    params: {'p_conversation': conversationId, 'p_user': userId},
+  )).map((_) {});
+
+  Future<Result<GroupInfo>> renameGroup(
+    String conversationId,
+    String title,
+  ) async => _decode(
+    await _data.rpc<Object?>(
+      'group_rename',
+      params: {'p_conversation': conversationId, 'p_title': title},
+    ),
+    (json) => GroupInfo.fromJson((json! as Map).cast<String, dynamic>()),
+  );
+
+  /// Fil d'une offre groupée (membres et boutique).
+  Future<Result<Conversation>> groupOfferThread(String offerId) async =>
+      _decode(
+        await _data.rpc<Object?>(
+          'group_offer_thread',
+          params: {'p_offer': offerId},
+        ),
+        (json) => Conversation.fromJson((json! as Map).cast<String, dynamic>()),
+      );
+
   Result<ChatMessage> _message(Result<Object?> result) => _decode(
     result,
     (json) => ChatMessage.fromJson((json! as Map).cast<String, dynamic>()),
