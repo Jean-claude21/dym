@@ -59,13 +59,18 @@ export default defineConfig({
     },
   },
   // `main` (production) et `staging` sont durables ; les branches de
+  // Cadences (LEARNINGS-BASES-SERVERLESS.md) : chaque passage réveille la base Neon au moins
+  // 5 minutes et le quota gratuit est partagé par toutes les branches du projet. Tout tombe aux
+  // mêmes minutes pour partager un réveil ; seule la surveillance des livraisons reste au quart
+  // d'heure en production (DYM_DISPATCH_CRON), le reste est horaire. En staging, le fichier de
+  // déploiement règle DYM_DISPATCH_CRON="0 * * * *".
   triggers: {
     dispatchWatch: {
       type: "schedule",
       function: "api",
       functionPath: "/v1/jobs/dispatch-watch",
       // SQL refuse les commandes sans réponse et relance les livreurs selon les délais du pays (spec 066).
-      cron: "*/5 * * * *",
+      cron: process.env.DYM_DISPATCH_CRON ?? "*/15 * * * *",
       enabled: true,
     },
     vendorRecaps: {
@@ -73,7 +78,7 @@ export default defineConfig({
       function: "api",
       functionPath: "/v1/jobs/vendor-recaps",
       // SQL applique 19 h dans chaque fuseau ; un seul récap par boutique/jour.
-      cron: "*/15 * * * *",
+      cron: "0 * * * *",
       enabled: true,
     },
     shoppingReminders: {
@@ -81,7 +86,7 @@ export default defineConfig({
       function: "api",
       functionPath: "/v1/jobs/shopping-reminders",
       // SQL applique 8 h dans chaque fuseau ; un seul rappel par échéance (spec 029).
-      cron: "*/15 * * * *",
+      cron: "0 * * * *",
       enabled: true,
     },
     affiliateSettlement: {
@@ -89,7 +94,7 @@ export default defineConfig({
       function: "api",
       functionPath: "/v1/jobs/affiliate-settlement",
       // SQL verse les commissions dont le délai de réclamation est passé, une fois chacune (spec 039).
-      cron: "*/15 * * * *",
+      cron: "0 * * * *",
       enabled: true,
     },
     fraudSignals: {
@@ -97,15 +102,16 @@ export default defineConfig({
       function: "api",
       functionPath: "/v1/jobs/fraud-signals",
       // Règles SQL des dernières 24 h ; un signal par règle, sujet et jour (spec 054).
-      cron: "*/15 * * * *",
+      cron: "0 * * * *",
       enabled: true,
     },
     contentStreams: {
       type: "schedule",
       function: "api",
       functionPath: "/v1/jobs/content-streams",
-      // Vidéos des contenus envoyées à Bunny puis suivies jusqu'à la lecture HLS (spec 101).
-      cron: "*/5 * * * *",
+      // Vidéos envoyées à Bunny ; la fin de conversion arrive par le webhook /v1/hooks/bunny-stream.
+      // Ce passage horaire n'est qu'un filet (vidéos pas encore envoyées, webhook manqué).
+      cron: "0 * * * *",
       enabled: true,
     },
     moderationTriage: {
@@ -113,7 +119,7 @@ export default defineConfig({
       function: "api",
       functionPath: "/v1/jobs/moderation-triage",
       // Avis de l'IA sur les signalements sans avis ; l'équipe décide (spec 054).
-      cron: "*/15 * * * *",
+      cron: "0 * * * *",
       enabled: true,
     },
   },

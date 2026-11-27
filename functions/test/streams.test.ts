@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { bunnyStreamProvider, type StreamStore, syncStreams } from "../src/content/streams.js";
+import { bunnyStreamProvider, onStreamHook, type StreamStore, syncStreams } from "../src/content/streams.js";
 
 const store = () => {
   const sets: unknown[][] = [];
@@ -45,5 +45,31 @@ describe("vidéo adaptative (spec 101)", () => {
       (async () => new Response(JSON.stringify({ status: 4, thumbnailCount: 6 }))) as typeof fetch,
     );
     expect(await provider.status("v9")).toEqual({ status: "ready", url: "https://cdn.test/v9/playlist.m3u8", thumbs: 6 });
+  });
+});
+
+describe("webhook Bunny Stream (fin de l'interrogation toutes les 5 minutes)", () => {
+  const provider = {
+    ingest: async () => "x",
+    status: async (id: string) =>
+      id === "v2"
+        ? ({ status: "ready", url: "https://cdn.test/v2/playlist.m3u8", thumbs: 6 } as const)
+        : ({ status: "processing", url: null } as const),
+  };
+
+  it("relit chez Bunny la vidéo annoncée et la marque prête", async () => {
+    const { s, sets } = store();
+    const r = await onStreamHook({ store: s, provider, libraryId: "42" }, { VideoLibraryId: 42, VideoGuid: "v2", Status: 3 });
+    expect(r).toEqual({ status: 200, body: { updated: true, status: "ready" } });
+    expect(sets).toEqual([["c2", null, "ready", "https://cdn.test/v2/playlist.m3u8", 6]]);
+  });
+
+  it("ne croit pas le corps : autre bibliothèque, vidéo inconnue ou encore en cours = rien", async () => {
+    const { s, sets } = store();
+    const deps = { store: s, provider, libraryId: "42" };
+    expect((await onStreamHook(deps, { VideoLibraryId: 7, VideoGuid: "v2" })).body).toMatchObject({ updated: false, reason: "other_library" });
+    expect((await onStreamHook(deps, { VideoLibraryId: 42, VideoGuid: "pirate" })).body).toMatchObject({ updated: false, reason: "unknown_video" });
+    expect((await onStreamHook(deps, { VideoLibraryId: 42 })).status).toBe(400);
+    expect(sets).toEqual([]);
   });
 });
