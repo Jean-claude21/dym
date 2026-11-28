@@ -36,6 +36,30 @@ export interface StreamDeps {
   provider?: StreamProvider;
   /** Adresse publique des médias du catalogue (`MEDIA_PUBLIC_URL`). */
   mediaBase?: string;
+  /** Bibliothèque Bunny attendue dans le webhook (`BUNNY_STREAM_LIBRARY_ID`). */
+  libraryId?: string;
+}
+
+/**
+ * Webhook de la bibliothèque Bunny Stream : prévient quand une vidéo change d'état, au lieu de lui
+ * demander toutes les 5 minutes (la base Neon ne dormait plus, LEARNINGS-BASES-SERVERLESS.md).
+ * Le corps n'est pas cru : il ne sert qu'à savoir quelle vidéo relire chez Bunny, et seule une
+ * vidéo de DYM en cours de conversion est mise à jour.
+ */
+export async function onStreamHook(deps: StreamDeps, body: unknown) {
+  const hook = body as { VideoLibraryId?: unknown; VideoGuid?: unknown } | null;
+  const guid = typeof hook?.VideoGuid === "string" ? hook.VideoGuid : null;
+  if (!guid) return { status: 400 as const, body: { error: "invalid_body" } };
+  if (deps.libraryId && String(hook?.VideoLibraryId ?? "") !== deps.libraryId) {
+    return { status: 200 as const, body: { updated: false, reason: "other_library" } };
+  }
+  if (!deps.provider) return { status: 200 as const, body: { updated: false, reason: "no_provider" } };
+  const item = (await deps.store.pending(200)).find((p) => p.stream_video_id === guid);
+  if (!item) return { status: 200 as const, body: { updated: false, reason: "unknown_video" } };
+  const state = await deps.provider.status(guid);
+  if (state.status === "processing") return { status: 200 as const, body: { updated: false, reason: "processing" } };
+  await deps.store.set(item.id, null, state.status, state.url, state.thumbs ?? null);
+  return { status: 200 as const, body: { updated: true, status: state.status } };
 }
 
 /**
@@ -76,6 +100,11 @@ export function registerStreamJob(app: Hono<{ Variables: AuthVariables }>, deps?
     if (!parsed.ok) return c.json({ error: parsed.error }, parsed.error === "invalid_body" ? 400 : 401);
     if (!deps) return c.json({ error: "unavailable" }, 503);
     return c.json(await syncStreams(deps));
+  });
+  app.post("/v1/hooks/bunny-stream", async (c) => {
+    if (!deps) return c.json({ error: "unavailable" }, 503);
+    const result = await onStreamHook(deps, await c.req.json().catch(() => null));
+    return c.json(result.body, result.status);
   });
 }
 

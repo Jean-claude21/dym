@@ -133,6 +133,7 @@ export default createApp({
   streams: {
     store: pgStreamStore(pool),
     ...(process.env.MEDIA_PUBLIC_URL ? { mediaBase: process.env.MEDIA_PUBLIC_URL } : {}),
+    ...(process.env.BUNNY_STREAM_LIBRARY_ID ? { libraryId: process.env.BUNNY_STREAM_LIBRARY_ID } : {}),
     ...(process.env.BUNNY_STREAM_LIBRARY_ID && process.env.BUNNY_STREAM_API_KEY && process.env.BUNNY_STREAM_CDN
       ? {
           provider: bunnyStreamProvider({
